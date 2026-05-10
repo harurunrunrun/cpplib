@@ -3,7 +3,7 @@ title: Dynamic Segment Tree
 documentation_of: ../src/structure/segtree/dynamic_segtree.hpp
 ---
 
-巨大なモノイドの列について、必要なところだけノードを作成して、区間に対する演算を $O(\log MAX_SIZE)$ で行う。
+巨大なモノイドの列について、必要なところだけノードを作成して、区間に対する演算を $O(\log {MAX}_{SIZE})$ で行う。
 
 indexはすべて0-indexed。
 
@@ -45,7 +45,7 @@ void set(long long k, const S& x)
 `k` 番目の要素を `x` に変更する。
 
 ## 時間計算量
-- $O(\log MAX_SIZE)$
+- $O(\log {MAX}_{SIZE})$
 
 
 # get
@@ -57,7 +57,7 @@ S get(long long k)
 `k` 番目の要素を取得する。
 
 ## 時間計算量
-- $O(\log MAX_SIZE)$
+- $O(\log {MAX}_{SIZE})$
 
 # prod
 
@@ -68,7 +68,7 @@ S prod(long long l, long long r)
 区間 `[l,r)` の演算結果を返す。
 
 ## 時間計算量
-- $O(\log MAX_SIZE)$
+- $O(\log {MAX}_{SIZE})$
 
 # all_prod
 
@@ -96,7 +96,7 @@ long long max_right(long long l, auto f, auto&&... args)
 `f(Monoid.e(), args...) = true` が必要。
 
 ## 時間計算量
-- $O(\log MAX_SIZE)$
+- $O(\log {MAX}_{SIZE})$
 
 # min_left
 ```cpp
@@ -112,4 +112,4 @@ long long min_left(long long r, auto f, auto&&... args)
 `f(Monoid.e(), args...) = true` が必要。
 
 ## 時間計算量
-- $O(\log MAX_SIZE)$
+- $O(\log {MAX}_{SIZE})$
