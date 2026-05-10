@@ -3,7 +3,7 @@ title: Dynamic Segment Tree
 documentation_of: ../src/structure/segtree/dynamic_segtree.hpp
 ---
 
-巨大なモノイドの列について、必要なところだけノードを作成して、区間に対する演算を $O(\log {MAX}\_{SIZE})$ で行う。
+巨大なモノイドの列について、必要なところだけノードを作成して、1点更新、区間に対する演算を $O(\log {MAX}\_{SIZE})$ で行う。
 
 indexはすべて0-indexed。
 

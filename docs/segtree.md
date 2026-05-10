@@ -3,7 +3,7 @@ title: Segment Tree
 documentation_of: ../src/structure/segtree/segtree.hpp
 ---
 
-モノイドの列について、区間に対する演算を $O(\log n)$ で行う。
+モノイドの列について、1点更新、区間に対する演算を $O(\log n)$ で行う。
 
 indexはすべて0-indexed。
 

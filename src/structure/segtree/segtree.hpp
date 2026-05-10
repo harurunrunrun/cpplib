@@ -100,10 +100,10 @@ struct Segtree{
             while((l & 1) == 0) {
                 l >>= 1;
             }
-            if(!std::invoke(f, Monoid.op(sm, data[l]), std::forward<decltype(args)>(args)...)) {
+            if(!std::invoke(f, Monoid.op(sm, data[l]), args...)) {
                 while(l < sz) {
                     l <<= 1;
-                    if(std::invoke(f, Monoid.op(sm, data[l]), std::forward<decltype(args)>(args)...)) {
+                    if(std::invoke(f, Monoid.op(sm, data[l]), args...)) {
                         sm = Monoid.op(sm, data[l]);
                         l++;
                     }
@@ -131,10 +131,10 @@ struct Segtree{
             while(r > 1 && (r & 1)) {
                 r >>= 1;
             }
-            if(!f(Monoid.op(data[r], sm), args...)) {
+            if(!std::invoke(f,Monoid.op(data[r], sm), args...)) {
                 while(r < sz) {
                     r = 2 * r + 1;
-                    if(f(Monoid.op(data[r], sm), args...)) {
+                    if(std::invoke(f,Monoid.op(data[r], sm), args...)) {
                         sm = Monoid.op(data[r], sm);
                         r--;
                     }
