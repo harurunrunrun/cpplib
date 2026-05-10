@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# competitive-verifier: DISPLAY hidden
 
 import argparse
 import os
