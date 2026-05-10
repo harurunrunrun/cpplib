@@ -10,7 +10,7 @@ indexはすべて0-indexed。
 # コンストラクタ
 
 ```cpp
-Segtree<auto Monoid, long long MAX_SIZE>()
+DynamicSegtree<auto Monoid, long long MAX_SIZE>()
 ```
 - モノイド `Monoid`
 - 配列の最大制約 `MAX_SIZE`
