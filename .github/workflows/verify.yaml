@@ -1,0 +1,82 @@
+name: verify
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  verify-and-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up competitive-verifier
+        uses: competitive-verifier/actions/setup@v2
+        with:
+          python-version: "3.12"
+          cache-pip: true
+
+      - name: Resolve verify files
+        uses: competitive-verifier/actions/oj-resolve@v2
+        with:
+          output-path: verify-files.json
+          config: config.toml
+
+      - name: Verify
+        uses: competitive-verifier/actions/verify@v2
+        with:
+          verify-files: verify-files.json
+          destination: result.json
+          check: true
+
+      - name: Generate docs
+        uses: competitive-verifier/actions/docs@v2
+        with:
+          verify-files: verify-files.json
+          verify-result: result.json
+          destination: _jekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: _jekyll
+          destination: _site
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: verify-and-docs
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
