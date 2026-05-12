@@ -1,5 +1,5 @@
 ---
-title: BitAssign RangeSum
+title: BitAssign RangeSum RangeFlip
 documentation_of: ../src/structure/segtree/bitassign_rangesum_rangeflip.hpp
 ---
 
