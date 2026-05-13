@@ -29,7 +29,7 @@ void insert(const L& x)
 存在する場合は何もしない。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 
 # erase
@@ -42,7 +42,7 @@ void erase(const L& x)
 存在しない場合は何もしない。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 
 # contain
@@ -54,7 +54,7 @@ bool contain(const L& x)
 `x` が存在するか判定する。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 # range_sum
 
@@ -65,7 +65,7 @@ L range_sum(const L& l, const L& r)
 区間 `[l,r)` に存在する要素数を返す。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$ (SIMD)
+- $O(\log {MAXSIZE / 16})$ (SIMD)
 
 # least
 
@@ -76,7 +76,7 @@ std::optional<L> least(const L& x)
 `x <= y` を満たす最小の `y` を返す。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 # more
 
@@ -87,7 +87,7 @@ std::optional<L> more(const L& x)
 `x < y` を満たす最小の `y` を返す。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 
 # most
@@ -99,7 +99,7 @@ std::optional<L> most(const L& x)
 `x >= y` を満たす最小の `y` を返す。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 # more
 
@@ -110,7 +110,7 @@ std::optional<L> less(const L& x)
 `x > y` を満たす最小の `y` を返す。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 
 # empty
@@ -131,7 +131,7 @@ std::optional<L> max()
 最大値を返す。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 
 # min
@@ -142,7 +142,7 @@ std::optional<L> min()
 最小値を返す。
 
 ## 時間計算量
-- $O(\log {{MAXSIZE} / 16})$
+- $O(\log {MAXSIZE / 16})$
 
 
 # clear
@@ -153,7 +153,7 @@ void clear()
 要素をすべて削除する。
 
 ## 時間計算量
-- $O(|要素数|\log {{MAXSIZE} / 16})$ (だと思われる)
+- $O(|要素数|\log {MAXSIZE / 16})$ (だと思われる)
 
 
 # list
@@ -165,7 +165,7 @@ std::vector<L> list()
 要素を昇順に列挙する。
 
 ## 時間計算量
-- $O(|要素数|\log {{MAXSIZE} / 16})$ (だと思われる)
+- $O(|要素数|\log {MAXSIZE / 16})$ (だと思われる)
 
 
 # kth_ge
@@ -177,7 +177,7 @@ std::optional<L> kth_ge(const L& x, const L& y)
 `x <= y` を満たす `y` のうち、昇順で `k` 番目の値を返す。
 
 ## 時間計算量
-- $O(16\log {{MAXSIZE} / 16})$ (だと思われる)
+- $O(16\log {MAXSIZE / 16})$ (だと思われる)
 
 # kth_gt
 
@@ -188,7 +188,7 @@ std::optional<L> kth_gt(const L& x, const L& y)
 `x < y` を満たす `y` のうち、昇順で `k` 番目の値を返す。
 
 ## 時間計算量
-- $O(16\log {{MAXSIZE} / 16})$ (だと思われる)
+- $O(16\log {MAXSIZE / 16})$ (だと思われる)
 
 # kth_le
 
@@ -199,7 +199,7 @@ std::optional<L> kth_le(const L& x, const L& y)
 `x >= y` を満たす `y` のうち、降順で `k` 番目の値を返す。
 
 ## 時間計算量
-- $O(16\log {{MAXSIZE} / 16})$ (だと思われる)
+- $O(16\log {MAXSIZE / 16})$ (だと思われる)
 
 # kth_gt
 
@@ -210,6 +210,6 @@ std::optional<L> kth_lt(const L& x, const L& y)
 `x > y` を満たす `y` のうち、降順で `k` 番目の値を返す。
 
 ## 時間計算量
-- $O(16\log {{MAXSIZE} / 16})$ (だと思われる)
+- $O(16\log {MAXSIZE / 16})$ (だと思われる)
 
 
