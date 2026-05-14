@@ -5,7 +5,8 @@ documentation_of: ../src/structure/tree/integer_set.hpp
 
 非負整数限定で定数倍を削ったordered? set。
 
-AVX512が使える環境じゃないとエラー。
+時間計算量はAVX512が使える環境を想定。
+使えない場合はAVX2なので定数倍が悪化する。
 
 TODO:
 
@@ -96,18 +97,18 @@ std::optional<L> more(const L& x)
 std::optional<L> most(const L& x)
 ```
 
-`x >= y` を満たす最小の `y` を返す。
+`x >= y` を満たす最大の `y` を返す。
 
 ## 時間計算量
 - $O(\log {MAXSIZE / 16})$
 
-# more
+# less
 
 ```cpp
 std::optional<L> less(const L& x)
 ```
 
-`x > y` を満たす最小の `y` を返す。
+`x > y` を満たす最大の `y` を返す。
 
 ## 時間計算量
 - $O(\log {MAXSIZE / 16})$
@@ -201,7 +202,7 @@ std::optional<L> kth_le(const L& x, const L& y)
 ## 時間計算量
 - $O(16\log {MAXSIZE / 16})$ (だと思われる)
 
-# kth_gt
+# kth_lt
 
 ```cpp
 std::optional<L> kth_lt(const L& x, const L& y)

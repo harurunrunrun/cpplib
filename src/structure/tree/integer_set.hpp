@@ -9,6 +9,17 @@
 #include <stdexcept>
 #include <limits>
 
+
+#if (defined(__GNUC__) || defined(__clang__)) && (defined(__x86_64__) || defined(__i386__))
+#define INT_SET_GNU_X86_TARGET 1
+#define INT_SET_TARGET_AVX512F __attribute__((target("avx512f")))
+#define INT_SET_TARGET_AVX2 __attribute__((target("avx2")))
+#else
+#define INT_SET_GNU_X86_TARGET 0
+#define INT_SET_TARGET_AVX512F
+#define INT_SET_TARGET_AVX2
+#endif
+
 template<class L, L MAX_SIZE>
 struct Int_Set{
     static_assert(std::is_same_v<L, unsigned int> || std::is_same_v<L, unsigned long long>);
@@ -64,8 +75,19 @@ struct Int_Set{
             );
         }
 
+        static inline void apply_diff_scalar(std::array<int, 16>& a, std::array<int, 16>& diff){
+            int cur = 0;
+            for(int i = 0; i < 16; i++){
+                cur += diff[i];
+                a[i] += cur;
+                diff[i] = 0;
+            }
+        }
+
+#if INT_SET_GNU_X86_TARGET || defined(__AVX512F__)
         template<int K>
-        static inline __m512i shift_left_epi32(__m512i v) {
+        INT_SET_TARGET_AVX512F
+        static inline __m512i shift_left_epi32_avx512(__m512i v) {
             static_assert(1 <= K && K < 16);
 
             alignas(64) static constexpr int idx_arr[16] = {
@@ -92,22 +114,118 @@ struct Int_Set{
             return _mm512_maskz_permutexvar_epi32(mask, idx, v);
         }
 
-        static inline __m512i prefix_sum16_epi32(__m512i v) {
-            v = _mm512_add_epi32(v, shift_left_epi32<1>(v));
-            v = _mm512_add_epi32(v, shift_left_epi32<2>(v));
-            v = _mm512_add_epi32(v, shift_left_epi32<4>(v));
-            v = _mm512_add_epi32(v, shift_left_epi32<8>(v));
+        INT_SET_TARGET_AVX512F
+        static inline __m512i prefix_sum16_epi32_avx512(__m512i v) {
+            v = _mm512_add_epi32(v, shift_left_epi32_avx512<1>(v));
+            v = _mm512_add_epi32(v, shift_left_epi32_avx512<2>(v));
+            v = _mm512_add_epi32(v, shift_left_epi32_avx512<4>(v));
+            v = _mm512_add_epi32(v, shift_left_epi32_avx512<8>(v));
             return v;
         }
 
-        void apply_diff_avx512(std::array<int, 16>& a, std::array<int, 16>& diff){
+        INT_SET_TARGET_AVX512F
+        static inline void apply_diff_avx512(std::array<int, 16>& a, std::array<int, 16>& diff){
             __m512i d = _mm512_loadu_si512(diff.data());
-            d = prefix_sum16_epi32(d);
+            d = prefix_sum16_epi32_avx512(d);
             __m512i old = _mm512_loadu_si512(a.data());
             __m512i res = _mm512_add_epi32(old, d);
             _mm512_storeu_si512(a.data(), res);
             __m512i zero = _mm512_setzero_si512();
             _mm512_storeu_si512(diff.data(), zero);
+        }
+#endif
+
+#if INT_SET_GNU_X86_TARGET || defined(__AVX2__)
+        template<int K>
+        INT_SET_TARGET_AVX2
+        static inline __m256i shift_left_epi32_avx2(__m256i v) {
+            static_assert(1 <= K && K < 8);
+
+            alignas(32) static constexpr int idx_arr[8] = {
+                0 >= K ? 0 : 0 - K,
+                1 >= K ? 1 - K : 0,
+                2 >= K ? 2 - K : 0,
+                3 >= K ? 3 - K : 0,
+                4 >= K ? 4 - K : 0,
+                5 >= K ? 5 - K : 0,
+                6 >= K ? 6 - K : 0,
+                7 >= K ? 7 - K : 0
+            };
+            alignas(32) static constexpr int mask_arr[8] = {
+                0 >= K ? -1 : 0,
+                1 >= K ? -1 : 0,
+                2 >= K ? -1 : 0,
+                3 >= K ? -1 : 0,
+                4 >= K ? -1 : 0,
+                5 >= K ? -1 : 0,
+                6 >= K ? -1 : 0,
+                7 >= K ? -1 : 0
+            };
+
+            __m256i idx = _mm256_load_si256(reinterpret_cast<const __m256i*>(idx_arr));
+            __m256i mask = _mm256_load_si256(reinterpret_cast<const __m256i*>(mask_arr));
+            return _mm256_and_si256(_mm256_permutevar8x32_epi32(v, idx), mask);
+        }
+
+        INT_SET_TARGET_AVX2
+        static inline __m256i prefix_sum8_epi32_avx2(__m256i v) {
+            v = _mm256_add_epi32(v, shift_left_epi32_avx2<1>(v));
+            v = _mm256_add_epi32(v, shift_left_epi32_avx2<2>(v));
+            v = _mm256_add_epi32(v, shift_left_epi32_avx2<4>(v));
+            return v;
+        }
+
+        INT_SET_TARGET_AVX2
+        static inline void apply_diff_avx2(std::array<int, 16>& a, std::array<int, 16>& diff){
+            __m256i d0 = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(diff.data()));
+            __m256i d1 = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(diff.data() + 8));
+
+            d0 = prefix_sum8_epi32_avx2(d0);
+            d1 = prefix_sum8_epi32_avx2(d1);
+
+            alignas(32) int tmp[8];
+            _mm256_store_si256(reinterpret_cast<__m256i*>(tmp), d0);
+            d1 = _mm256_add_epi32(d1, _mm256_set1_epi32(tmp[7]));
+
+            __m256i a0 = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(a.data()));
+            __m256i a1 = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(a.data() + 8));
+            a0 = _mm256_add_epi32(a0, d0);
+            a1 = _mm256_add_epi32(a1, d1);
+            _mm256_storeu_si256(reinterpret_cast<__m256i*>(a.data()), a0);
+            _mm256_storeu_si256(reinterpret_cast<__m256i*>(a.data() + 8), a1);
+
+            __m256i zero = _mm256_setzero_si256();
+            _mm256_storeu_si256(reinterpret_cast<__m256i*>(diff.data()), zero);
+            _mm256_storeu_si256(reinterpret_cast<__m256i*>(diff.data() + 8), zero);
+        }
+#endif
+
+        using apply_diff_func = void (*)(std::array<int, 16>&, std::array<int, 16>&);
+
+        static inline apply_diff_func select_apply_diff(){
+#if INT_SET_GNU_X86_TARGET
+            __builtin_cpu_init();
+            if(__builtin_cpu_supports("avx512f")){
+                return apply_diff_avx512;
+            }
+            if(__builtin_cpu_supports("avx2")){
+                return apply_diff_avx2;
+            }
+            return apply_diff_scalar;
+#else
+#if defined(__AVX512F__)
+            return apply_diff_avx512;
+#elif defined(__AVX2__)
+            return apply_diff_avx2;
+#else
+            return apply_diff_scalar;
+#endif
+#endif
+        }
+
+        static inline void apply_diff(std::array<int, 16>& a, std::array<int, 16>& diff){
+            static const apply_diff_func func = select_apply_diff();
+            func(a, diff);
         }
 
         bool internal_insert(Node* node, L l, L r, const L& x){
@@ -198,7 +316,7 @@ struct Int_Set{
                 return (L)0;
             }
             if(node->is_lazy){
-                apply_diff_avx512(node->sum, node->lazy);
+                apply_diff(node->sum, node->lazy);
                 node->is_lazy = false;
             }
             if(ql <= l && r <= qr){
@@ -412,14 +530,14 @@ struct Int_Set{
             return res;
         }
 
-        // x <= y を満たす y のうち、昇順で k 番目
+        // x <= y 繧呈ｺ�縺溘☆ y 縺ｮ縺��■縲∵��鬆��〒 k 逡ｪ逶ｮ
         std::optional<L> internal_kth_ge(Node* node, L l, L r, const L& x, L k){
             if(!node || node->exist == 0 || r <= x){
                 return std::nullopt;
             }
 
             if(node->is_lazy){
-                apply_diff_avx512(node->sum, node->lazy);
+                apply_diff(node->sum, node->lazy);
                 node->is_lazy = false;
             }
 
@@ -489,14 +607,14 @@ struct Int_Set{
             return std::nullopt;
         }
 
-        // x >= y を満たす y のうち、降順で k 番目
+        // x >= y 繧呈ｺ�縺溘☆ y 縺ｮ縺��■縲��剄鬆��〒 k 逡ｪ逶ｮ
         std::optional<L> internal_kth_le(Node* node, L l, L r, const L& x, L k){
             if(!node || node->exist == 0 || x < l){
                 return std::nullopt;
             }
 
             if(node->is_lazy){
-                apply_diff_avx512(node->sum, node->lazy);
+                apply_diff(node->sum, node->lazy);
                 node->is_lazy = false;
             }
 
@@ -649,7 +767,7 @@ struct Int_Set{
             return range_sum(ll, rr);
         }
 
-        // x <= y を満たす最小の y
+        // x < y を満たす最小の y
         std::optional<L> least(const L& x){
             if(x >= MAX_SIZE){
                 return std::nullopt;
@@ -743,7 +861,6 @@ struct Int_Set{
         }
 
         // x <= y を満たす y のうち、昇順で k 番目
-        // k は 0-indexed
         std::optional<L> kth_ge(const L& x, const L& k){
             if(x >= MAX_SIZE){
                 return std::nullopt;
@@ -776,7 +893,6 @@ struct Int_Set{
         }
 
         // x < y を満たす y のうち、昇順で k 番目
-        // k は 0-indexed
         std::optional<L> kth_gt(const L& x, const L& k){
             if(x >= MAX_SIZE - 1){
                 return std::nullopt;
@@ -809,7 +925,6 @@ struct Int_Set{
         }
 
         // x >= y を満たす y のうち、降順で k 番目
-        // k は 0-indexed
         std::optional<L> kth_le(const L& x, const L& k){
             if(x >= MAX_SIZE){
                 return internal_kth_le(root.get(), (L)0, MAX_SIZE, MAX_SIZE - 1, k);
@@ -842,7 +957,6 @@ struct Int_Set{
         }
 
         // x > y を満たす y のうち、降順で k 番目
-        // k は 0-indexed
         std::optional<L> kth_lt(const L& x, const L& k){
             if(x == 0){
                 return std::nullopt;
@@ -875,4 +989,6 @@ struct Int_Set{
         }
 };
 
-
+#undef INT_SET_GNU_X86_TARGET
+#undef INT_SET_TARGET_AVX512F
+#undef INT_SET_TARGET_AVX2
