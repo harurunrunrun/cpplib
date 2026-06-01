@@ -10,7 +10,7 @@ on:
       - "docs/**"
       - ".competitive-verifier/**"
       - "config.toml"
-      - ".github/workflows/verify.yml"
+      - ".github/workflows/verify.yaml"
 
   pull_request:
     paths:
@@ -19,7 +19,7 @@ on:
       - "docs/**"
       - ".competitive-verifier/**"
       - "config.toml"
-      - ".github/workflows/verify.yml"
+      - ".github/workflows/verify.yaml"
 
   workflow_dispatch:
 
@@ -64,9 +64,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .competitive-verifier/cache/result.json
-          key: competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yml') }}-${{ github.run_id }}
+          key: competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-${{ github.run_id }}
           restore-keys: |
-            competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yml') }}-
+            competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-
 
       - name: Detect previous verify result
         id: prev-result
@@ -103,6 +103,14 @@ jobs:
         with:
           source: _jekyll
           destination: _site
+      
+      - name: Check generated site for unsafe CDN references
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' _site; then
+            echo "::error::Unsafe CDN reference remains in generated site"
+            exit 1
+          fi
 
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main'
