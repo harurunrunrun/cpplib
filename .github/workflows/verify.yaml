@@ -107,16 +107,22 @@ jobs:
       - name: Remove unsafe polyfill.io reference
         if: github.ref == 'refs/heads/main'
         run: |
+          sudo chown -R "$USER":"$USER" _site
+
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
-          unsafe = '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>'
+          pattern = re.compile(
+              r'\s*<script\s+src="https://polyfill\.io/v3/polyfill\.min\.js\?features=es6"></script>\s*',
+              re.IGNORECASE,
+          )
 
           for path in Path("_site").rglob("*.html"):
               text = path.read_text(encoding="utf-8", errors="ignore")
-              if unsafe in text:
-                  text = text.replace(unsafe, "")
-                  path.write_text(text, encoding="utf-8")
+              new_text = pattern.sub("\n", text)
+              if new_text != text:
+                  path.write_text(new_text, encoding="utf-8")
                   print(f"removed from {path}")
           PY
 
