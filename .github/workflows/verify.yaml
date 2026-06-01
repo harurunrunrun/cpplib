@@ -104,6 +104,22 @@ jobs:
           source: _jekyll
           destination: _site
       
+      - name: Remove unsafe polyfill.io reference
+        if: github.ref == 'refs/heads/main'
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          unsafe = '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>'
+
+          for path in Path("_site").rglob("*.html"):
+              text = path.read_text(encoding="utf-8", errors="ignore")
+              if unsafe in text:
+                  text = text.replace(unsafe, "")
+                  path.write_text(text, encoding="utf-8")
+                  print(f"removed from {path}")
+          PY
+
       - name: Check generated site for unsafe CDN references
         if: github.ref == 'refs/heads/main'
         run: |
