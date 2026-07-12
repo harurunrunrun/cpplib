@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <random>
 #include <string>
@@ -9,6 +10,60 @@
 #include "../../src/structure/wavelet_matrix/compressed_wavelet_matrix.hpp"
 
 int main(){
+    int input_n, q;
+    if(std::cin >> input_n >> q){
+        std::vector<int> input(static_cast<std::size_t>(input_n));
+        for(int& value: input) std::cin >> value;
+        CompressedWaveletMatrix<int, 256> matrix(input);
+        auto print_optional = [](const std::optional<int>& value){
+            if(value) std::cout << *value << '\n';
+            else std::cout << "NONE\n";
+        };
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "ACCESS"){
+                int k;
+                std::cin >> k;
+                std::cout << matrix[k] << '\n';
+            }else if(type == "RANK"){
+                int value, l, r;
+                std::cin >> value >> l >> r;
+                std::cout << matrix.rank(value, l, r) << '\n';
+            }else if(type == "SELECT"){
+                int value, k;
+                std::cin >> value >> k;
+                std::cout << matrix.select(value, k) << '\n';
+            }else if(type == "KTH" || type == "KLARG"){
+                int l, r, k;
+                std::cin >> l >> r >> k;
+                if(type == "KTH") std::cout << matrix.kth_smallest(l, r, k) << '\n';
+                else std::cout << matrix.kth_largest(l, r, k) << '\n';
+            }else if(type == "FREQ"){
+                int l, r, upper;
+                std::cin >> l >> r >> upper;
+                std::cout << matrix.range_freq(l, r, upper) << '\n';
+            }else if(type == "RANGE"){
+                int l, r, lower, upper;
+                std::cin >> l >> r >> lower >> upper;
+                std::cout << matrix.range_freq(l, r, lower, upper) << '\n';
+            }else if(type == "MIN" || type == "MAX" || type == "MFLOOR" || type == "MCEIL"){
+                int l, r;
+                std::cin >> l >> r;
+                if(type == "MIN") std::cout << matrix.range_min(l, r) << '\n';
+                if(type == "MAX") std::cout << matrix.range_max(l, r) << '\n';
+                if(type == "MFLOOR") std::cout << matrix.median_floor(l, r) << '\n';
+                if(type == "MCEIL") std::cout << matrix.median_ceil(l, r) << '\n';
+            }else if(type == "PREV" || type == "NEXT"){
+                int l, r, value;
+                std::cin >> l >> r >> value;
+                if(type == "PREV") print_optional(matrix.prev_value(l, r, value));
+                else print_optional(matrix.next_value(l, r, value));
+            }
+        }
+        return 0;
+    }
+
     constexpr int n = 149;
     std::mt19937 rng(161803);
     std::vector<int> values(n);

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <random>
 #include <vector>
 #include "../../src/algorithm/graph/bellman_ford.hpp"
@@ -30,6 +31,32 @@ long long brute_force_dist(
 }
 
 int main(){
+    int test_count;
+    if(std::cin >> test_count){
+        constexpr long long INF = 1LL << 60;
+        while(test_count--){
+            int n, m, source;
+            std::cin >> n >> m >> source;
+            std::vector<BellmanFordEdge<long long>> edges(static_cast<std::size_t>(m));
+            for(auto& edge: edges){
+                std::cin >> edge.from >> edge.to >> edge.cost;
+            }
+            const auto result = bellman_ford<long long>(n, edges, source, INF);
+            for(int v = 0; v < n; v++){
+                if(v != 0) std::cout << ' ';
+                if(result.negative[static_cast<std::size_t>(v)]){
+                    std::cout << "NEG";
+                }else if(result.dist[static_cast<std::size_t>(v)] == INF){
+                    std::cout << "INF";
+                }else{
+                    std::cout << result.dist[static_cast<std::size_t>(v)];
+                }
+            }
+            std::cout << '\n';
+        }
+        return 0;
+    }
+
     {
         std::vector<BellmanFordEdge<long long>> edges = {
             {0, 1, 2},

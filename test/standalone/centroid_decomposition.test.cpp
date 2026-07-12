@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 
@@ -101,6 +102,33 @@ void test_exceptions(){
 }
 
 int main(){
+    int test_count;
+    if(std::cin >> test_count){
+        while(test_count--){
+            int n;
+            std::cin >> n;
+            std::vector<std::vector<int>> graph(static_cast<std::size_t>(n));
+            for(int i = 0; i + 1 < n; i++){
+                int u, v;
+                std::cin >> u >> v;
+                add_edge(graph, u, v);
+            }
+            CentroidDecomposition decomposition(graph);
+            std::cout << decomposition.root() << '\n';
+            for(int v = 0; v < n; v++){
+                if(v != 0) std::cout << ' ';
+                std::cout << decomposition.parent(v);
+            }
+            std::cout << '\n';
+            for(int v = 0; v < n; v++){
+                if(v != 0) std::cout << ' ';
+                std::cout << decomposition.depth(v);
+            }
+            std::cout << '\n';
+        }
+        return 0;
+    }
+
     test_path();
     test_star();
     test_empty_and_single();

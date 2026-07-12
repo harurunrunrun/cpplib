@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <random>
 #include <string>
 #include <vector>
@@ -46,6 +47,33 @@ std::string random_string(std::mt19937& rng, int n){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            std::string a, b;
+            int insert_cost, erase_cost, replace_cost;
+            std::cin >> a >> b >> insert_cost >> erase_cost >> replace_cost;
+            if(a == "-") a.clear();
+            if(b == "-") b.clear();
+            const auto operations = diff_sequence(a, b);
+            int equal_count = 0;
+            int insert_count = 0;
+            int erase_count = 0;
+            for(const auto& operation: operations){
+                if(operation.tag == DiffTag::Equal) equal_count++;
+                if(operation.tag == DiffTag::Insert) insert_count++;
+                if(operation.tag == DiffTag::Erase) erase_count++;
+            }
+            const bool reconstructs =
+                apply_diff_source(operations) == a && apply_diff_target(operations) == b;
+            std::cout
+                << edit_distance(a, b, insert_cost, erase_cost, replace_cost) << ' '
+                << equal_count << ' ' << insert_count << ' ' << erase_count << ' '
+                << reconstructs << '\n';
+        }
+        return 0;
+    }
+
     assert(edit_distance(std::string("kitten"), std::string("sitting")) == 3);
     assert(edit_distance(std::string("abc"), std::string("abc")) == 0);
     assert(edit_distance(std::string("abc"), std::string("")) == 3);

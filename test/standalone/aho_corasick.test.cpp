@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <random>
 #include <string>
 #include <vector>
@@ -31,6 +32,25 @@ long long naive_count(const std::vector<std::string>& patterns, const std::strin
 }
 
 int main(){
+    int pattern_count, query_count;
+    if(std::cin >> pattern_count >> query_count){
+        AhoCorasick<3, 4096> ac;
+        for(int i = 0; i < pattern_count; i++){
+            std::string pattern;
+            std::cin >> pattern;
+            if(pattern == "-") pattern.clear();
+            ac.add(pattern);
+        }
+        ac.build();
+        while(query_count--){
+            std::string text;
+            std::cin >> text;
+            if(text == "-") text.clear();
+            std::cout << ac.count_matches(text) << '\n';
+        }
+        return 0;
+    }
+
     {
         AhoCorasick<26, 32> ac;
         ac.add("a");

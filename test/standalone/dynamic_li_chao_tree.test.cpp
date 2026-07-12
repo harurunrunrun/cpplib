@@ -3,13 +3,34 @@
 #define PROBLEM "https://example.com/standalone/dynamic_li_chao_tree"
 
 #include <cassert>
+#include <iostream>
 #include <limits>
 #include <random>
+#include <string>
 #include <utility>
 #include <vector>
 #include "../../src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp"
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        DynamicLiChaoTree<-1000000, 1000000, 8192> tree;
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "ADD"){
+                long long a, b;
+                std::cin >> a >> b;
+                tree.add_line(a, b);
+            }else{
+                long long x;
+                std::cin >> x;
+                std::cout << tree.query(x) << '\n';
+            }
+        }
+        return 0;
+    }
+
     DynamicLiChaoTree<-50, 50, 300> cht;
     assert(cht.empty());
     assert(cht.query(0) == decltype(cht)::INF);

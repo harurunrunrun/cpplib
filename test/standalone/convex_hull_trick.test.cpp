@@ -3,6 +3,7 @@
 #define PROBLEM "https://example.com/standalone/convex_hull_trick"
 
 #include <cassert>
+#include <iostream>
 #include <limits>
 #include <random>
 #include <utility>
@@ -10,6 +11,31 @@
 #include "../../src/structure/convex_hull_trick/convex_hull_trick.hpp"
 
 int main(){
+    int line_count, query_count, monotone_count;
+    if(std::cin >> line_count >> query_count >> monotone_count){
+        std::vector<std::pair<long long, long long>> input_lines(
+            static_cast<std::size_t>(line_count)
+        );
+        ConvexHullTrick<512> arbitrary;
+        ConvexHullTrick<512> monotone;
+        for(auto& [a, b]: input_lines){
+            std::cin >> a >> b;
+            arbitrary.add_line(a, b);
+            monotone.add_line(a, b);
+        }
+        while(query_count--){
+            long long x;
+            std::cin >> x;
+            std::cout << arbitrary.query(x) << '\n';
+        }
+        while(monotone_count--){
+            long long x;
+            std::cin >> x;
+            std::cout << monotone.query_monotone_inc(x) << '\n';
+        }
+        return 0;
+    }
+
     ConvexHullTrick<300> cht;
     assert(cht.empty());
 

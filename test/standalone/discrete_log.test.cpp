@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 
 #include "../../src/algorithm/math/basic_number_theory.hpp"
@@ -62,6 +63,16 @@ void test_exceptions(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            long long a, target, mod;
+            std::cin >> a >> target >> mod;
+            std::cout << math::discrete_log(a, target, mod) << '\n';
+        }
+        return 0;
+    }
+
     test_coprime();
     test_non_coprime();
     test_against_naive();

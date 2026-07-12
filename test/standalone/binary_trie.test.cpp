@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <random>
+#include <string>
 #include <vector>
 #include "../../src/structure/trie/binary_trie.hpp"
 
@@ -26,6 +28,55 @@ int count_naive(const std::vector<int>& values, int x){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        BinaryTrie<int, 20, 30000> trie;
+        auto print_optional = [](const std::optional<int>& value){
+            if(value) std::cout << *value << '\n';
+            else std::cout << "NONE\n";
+        };
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "INSERT"){
+                int x;
+                std::cin >> x;
+                trie.insert(x);
+            }else if(type == "ERASE"){
+                int x;
+                std::cin >> x;
+                std::cout << trie.erase(x) << '\n';
+            }else if(type == "COUNT"){
+                int x;
+                std::cin >> x;
+                std::cout << trie.count(x) << '\n';
+            }else if(type == "CONTAINS"){
+                int x;
+                std::cin >> x;
+                std::cout << trie.contains(x) << '\n';
+            }else if(type == "KTH"){
+                int k, xor_value;
+                std::cin >> k >> xor_value;
+                print_optional(trie.kth(k, xor_value));
+            }else if(type == "MIN"){
+                int xor_value;
+                std::cin >> xor_value;
+                print_optional(trie.min_element(xor_value));
+            }else if(type == "MAX"){
+                int xor_value;
+                std::cin >> xor_value;
+                print_optional(trie.max_element(xor_value));
+            }else if(type == "LESS"){
+                int x, xor_value;
+                std::cin >> x >> xor_value;
+                std::cout << trie.count_less(x, xor_value) << '\n';
+            }else if(type == "SIZE"){
+                std::cout << trie.size() << '\n';
+            }
+        }
+        return 0;
+    }
+
     BinaryTrie<int, 10, 20000> trie;
     std::vector<int> values;
     std::mt19937 rng(20260716);

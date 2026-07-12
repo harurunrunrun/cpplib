@@ -1,7 +1,9 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "../../src/algorithm/fft/convolution.hpp"
@@ -93,6 +95,37 @@ void test_exceptions(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            std::string type;
+            int n, m;
+            std::cin >> type >> n >> m;
+            if(type == "NTT"){
+                using mint = Modint<998244353>;
+                std::vector<mint> a(static_cast<std::size_t>(n));
+                std::vector<mint> b(static_cast<std::size_t>(m));
+                for(auto& value: a) std::cin >> value;
+                for(auto& value: b) std::cin >> value;
+                const auto result = convolution_ntt(a, b);
+                std::cout << result.size();
+                for(const auto& value: result) std::cout << ' ' << value;
+                std::cout << '\n';
+            }else{
+                using mint = Modint<1000000007>;
+                std::vector<mint> a(static_cast<std::size_t>(n));
+                std::vector<mint> b(static_cast<std::size_t>(m));
+                for(auto& value: a) std::cin >> value;
+                for(auto& value: b) std::cin >> value;
+                const auto result = arbitrary_mod_convolution(a, b);
+                std::cout << result.size();
+                for(const auto& value: result) std::cout << ' ' << value;
+                std::cout << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_ntt();
     test_arbitrary_mod();
     test_empty();
