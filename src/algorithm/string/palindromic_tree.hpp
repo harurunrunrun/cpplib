@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
+#include <vector>
 
 template<int ALPHABET, int MAX_NODES, char OFFSET = 'a'>
 struct PalindromicTree{
@@ -14,6 +16,9 @@ struct PalindromicTree{
         std::array<int, ALPHABET> next;
         int link = 0;
         int length = 0;
+        int diff = 0;
+        int series_link = 0;
+        int terminal_occurrence = 0;
         int occurrence = 0;
         int first_position = -1;
 
@@ -57,8 +62,10 @@ public:
         nodes[1] = Node();
         nodes[0].length = -1;
         nodes[0].link = 0;
+        nodes[0].series_link = 0;
         nodes[1].length = 0;
         nodes[1].link = 0;
+        nodes[1].series_link = 0;
     }
 
     explicit PalindromicTree(std::string_view s): PalindromicTree(){
@@ -75,6 +82,11 @@ public:
         }
         return nodes[v];
     }
+    int length(int v) const{ return (*this)[v].length; }
+    int link(int v) const{ return (*this)[v].link; }
+    int diff(int v) const{ return (*this)[v].diff; }
+    int series_link(int v) const{ return (*this)[v].series_link; }
+    const std::string& str() const{ return text; }
 
     int add(char c){
         occurrence_built = false;
@@ -84,12 +96,14 @@ public:
         int cur = suffix_candidate(last_node, pos, c);
         if(nodes[cur].next[id] != -1){
             last_node = nodes[cur].next[id];
+            nodes[last_node].terminal_occurrence++;
             nodes[last_node].occurrence++;
             return last_node;
         }
 
         int created = new_node();
         nodes[created].length = nodes[cur].length + 2;
+        nodes[created].terminal_occurrence = 1;
         nodes[created].occurrence = 1;
         nodes[created].first_position = pos;
         nodes[cur].next[id] = created;
@@ -100,12 +114,21 @@ public:
             int link_candidate = suffix_candidate(nodes[cur].link, pos, c);
             nodes[created].link = nodes[link_candidate].next[id];
         }
+        nodes[created].diff = nodes[created].length - nodes[nodes[created].link].length;
+        if(nodes[created].diff == nodes[nodes[created].link].diff){
+            nodes[created].series_link = nodes[nodes[created].link].series_link;
+        }else{
+            nodes[created].series_link = nodes[created].link;
+        }
         last_node = created;
         return created;
     }
 
     void build_occurrences(){
         if(occurrence_built) return;
+        for(int v = 0; v < used; v++){
+            nodes[v].occurrence = nodes[v].terminal_occurrence;
+        }
         for(int v = used - 1; v >= 2; v--){
             nodes[nodes[v].link].occurrence += nodes[v].occurrence;
         }
@@ -123,7 +146,8 @@ public:
         return nodes[last_node].length;
     }
 
-    bool contains(std::string_view s) const{
+    int find_node(std::string_view s) const{
+        if(s.empty()) return 1;
         for(int v = 2; v < used; v++){
             if(nodes[v].length != static_cast<int>(s.size())) continue;
             int l = nodes[v].first_position - nodes[v].length + 1;
@@ -134,25 +158,78 @@ public:
                     break;
                 }
             }
-            if(ok) return true;
+            if(ok) return v;
         }
-        return false;
+        return -1;
+    }
+
+    bool contains(std::string_view s) const{
+        return find_node(s) != -1;
     }
 
     int occurrence_count(std::string_view s){
+        if(s.empty()) return static_cast<int>(text.size()) + 1;
         build_occurrences();
-        for(int v = 2; v < used; v++){
-            if(nodes[v].length != static_cast<int>(s.size())) continue;
-            int l = nodes[v].first_position - nodes[v].length + 1;
-            bool ok = true;
-            for(int i = 0; i < nodes[v].length; i++){
-                if(text[static_cast<std::size_t>(l + i)] != s[static_cast<std::size_t>(i)]){
-                    ok = false;
-                    break;
-                }
-            }
-            if(ok) return nodes[v].occurrence;
+        int v = find_node(s);
+        return v == -1 ? 0 : nodes[v].occurrence;
+    }
+
+    std::pair<int, int> first_occurrence_range(int v) const{
+        const Node& node = (*this)[v];
+        if(node.length < 0)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: root does not represent a string.");
         }
-        return 0;
+        if(node.length == 0) return {0, 0};
+        int r = node.first_position + 1;
+        return {r - node.length, r};
+    }
+
+    std::string palindrome(int v) const{
+        const auto [l, r] = first_occurrence_range(v);
+        return text.substr(static_cast<std::size_t>(l), static_cast<std::size_t>(r - l));
+    }
+
+    std::vector<int> palindrome_nodes() const{
+        std::vector<int> result;
+        result.reserve(static_cast<std::size_t>(distinct_palindromes()));
+        for(int v = 2; v < used; v++) result.push_back(v);
+        return result;
+    }
+
+    std::vector<std::string> palindromes() const{
+        std::vector<std::string> result;
+        result.reserve(static_cast<std::size_t>(distinct_palindromes()));
+        for(int v = 2; v < used; v++) result.push_back(palindrome(v));
+        return result;
+    }
+
+    std::vector<int> suffix_palindrome_nodes() const{
+        std::vector<int> result;
+        for(int v = last_node; v > 1; v = nodes[v].link) result.push_back(v);
+        return result;
+    }
+
+    std::vector<int> suffix_palindrome_lengths() const{
+        std::vector<int> result;
+        for(int v = last_node; v > 1; v = nodes[v].link) result.push_back(nodes[v].length);
+        return result;
+    }
+
+    int count_suffix_palindromes() const{
+        int result = 0;
+        for(int v = last_node; v > 1; v = nodes[v].link) result++;
+        return result;
+    }
+
+    int longest_palindrome_node() const{
+        int result = 1;
+        for(int v = 2; v < used; v++){
+            if(nodes[result].length < nodes[v].length) result = v;
+        }
+        return result;
+    }
+
+    int longest_palindrome_length() const{
+        return nodes[longest_palindrome_node()].length;
     }
 };
