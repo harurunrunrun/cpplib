@@ -78,9 +78,10 @@ struct Dinic{
     }
 
     T max_flow(int s, int t, T flow_limit = std::numeric_limits<T>::max() / 4){
-        if(s < 0 || n <= s || t < 0 || n <= t)[[unlikely]]{
+        if(s < 0 || n <= s || t < 0 || n <= t || flow_limit < T(0))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (Dinic::max_flow).");
         }
+        if(s == t) return T(0);
         T flow = T(0);
         while(flow < flow_limit && bfs(s, t)){
             std::fill(iter.begin(), iter.end(), 0);

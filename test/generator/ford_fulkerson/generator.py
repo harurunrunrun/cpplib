@@ -9,6 +9,8 @@ from pathlib import Path
 
 
 def solve(n: int, s: int, t: int, edges: list[tuple[int, int, int]]) -> int:
+    if s == t:
+        return 0
     best = 1 << 60
     for mask in range(1 << n):
         if not ((mask >> s) & 1) or ((mask >> t) & 1):
@@ -39,8 +41,10 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     cases: list[tuple[int, int, int, list[tuple[int, int, int]]]] = [
+        (1, 0, 0, [(0, 0, 7)]),
         (2, 0, 1, []),
-        (4, 0, 3, [(0, 1, 3), (0, 2, 2), (1, 2, 1), (1, 3, 2), (2, 3, 4)]),
+        (4, 0, 3, [(0, 0, 100), (0, 1, 3), (0, 2, 2),
+                    (1, 2, 1), (1, 3, 2), (2, 3, 4), (3, 3, 100)]),
     ]
     rng = random.Random(20260826)
     for n in [2, 5, 8, 10]:

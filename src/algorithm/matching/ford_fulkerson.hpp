@@ -30,6 +30,7 @@ struct FordFulkerson{
         }
         int from_rev = static_cast<int>(graph[static_cast<std::size_t>(to)].size());
         int to_rev = static_cast<int>(graph[static_cast<std::size_t>(from)].size());
+        if(from == to) from_rev++;
         graph[static_cast<std::size_t>(from)].push_back({to, from_rev, cap});
         graph[static_cast<std::size_t>(to)].push_back({from, to_rev, T(0)});
     }
@@ -50,9 +51,10 @@ struct FordFulkerson{
     }
 
     T max_flow(int s, int t, T flow_limit = std::numeric_limits<T>::max() / 4){
-        if(s < 0 || n <= s || t < 0 || n <= t)[[unlikely]]{
+        if(s < 0 || n <= s || t < 0 || n <= t || flow_limit < T(0))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (FordFulkerson::max_flow).");
         }
+        if(s == t) return T(0);
         T flow = T(0);
         while(flow < flow_limit){
             std::fill(used.begin(), used.end(), 0);

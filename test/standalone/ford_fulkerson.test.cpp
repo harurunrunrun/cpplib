@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 #include "../../src/algorithm/matching/ford_fulkerson.hpp"
@@ -35,6 +36,26 @@ void self_test(){
         graph.add_edge(1, 3, 2);
         graph.add_edge(2, 3, 4);
         assert(graph.max_flow(0, 3) == 5);
+    }
+    {
+        FordFulkerson<long long> graph(2);
+        graph.add_edge(0, 0, 7);
+        assert(graph.graph[0].size() == 2);
+        assert(graph.graph[0][0].rev == 1);
+        assert(graph.graph[0][1].rev == 0);
+        graph.add_edge(0, 1, 4);
+        assert(graph.max_flow(0, 1) == 4);
+    }
+    {
+        FordFulkerson<long long> graph(1);
+        assert(graph.max_flow(0, 0, 123) == 0);
+        bool thrown = false;
+        try{
+            (void)graph.max_flow(0, 0, -1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
     }
     std::mt19937 rng(20260826);
     for(int n = 2; n <= 10; n++){
