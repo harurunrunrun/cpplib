@@ -82,6 +82,28 @@ int main(){
     };
     check();
 
+    for(int length = 0; length <= 130; ++length){
+        for(int pattern = 0; pattern < 4; ++pattern){
+            std::vector<bool> bits(static_cast<std::size_t>(length));
+            for(int i = 0; i < length; ++i){
+                if(pattern == 1) bits[static_cast<std::size_t>(i)] = true;
+                else if(pattern == 2) bits[static_cast<std::size_t>(i)] = (i & 1) != 0;
+                else if(pattern == 3) bits[static_cast<std::size_t>(i)] = i % 3 == 0;
+            }
+            FullyIndexableDictionary<130> dictionary(bits);
+            for(int value = 0; value < 2; ++value){
+                std::vector<int> position;
+                for(int i = 0; i < length; ++i){
+                    if(bits[static_cast<std::size_t>(i)] == static_cast<bool>(value)) position.push_back(i);
+                }
+                for(int k = 0; k <= static_cast<int>(position.size()); ++k){
+                    const int expected = k == static_cast<int>(position.size()) ? length : position[static_cast<std::size_t>(k)];
+                    assert(dictionary.select(value, k) == expected);
+                }
+            }
+        }
+    }
+
     for(int step = 0; step < 1000; step++){
         int k = static_cast<int>(rng() % n);
         if(rng() & 1){

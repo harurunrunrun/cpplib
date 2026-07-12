@@ -58,4 +58,4 @@ int select(bool value, int k) const
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log (\mathrm{MAX\_SIZE}/64) + 64)$

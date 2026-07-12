@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <bit>
 #include <cstddef>
@@ -84,12 +85,31 @@ public:
         }
         int total = rank(value, _n);
         if(total <= k) return _n;
-        int low = 0, high = _n;
+
+        const int words = (_n + 63) >> 6;
+        auto count_before_word = [&](int word){
+            const int ones = prefix[static_cast<std::size_t>(word)];
+            return value ? ones : std::min(_n, word << 6) - ones;
+        };
+        int low = 0, high = words;
         while(low < high){
-            int mid = low + (high - low) / 2;
-            if(rank(value, mid + 1) <= k) low = mid + 1;
+            const int mid = low + (high - low) / 2;
+            if(count_before_word(mid + 1) <= k) low = mid + 1;
             else high = mid;
         }
-        return low;
+
+        const int word = low;
+        const int offset = k - count_before_word(word);
+        const int length = std::min(64, _n - (word << 6));
+        const std::uint64_t valid = length == 64
+            ? ~std::uint64_t{0}
+            : (std::uint64_t{1} << length) - 1;
+        std::uint64_t candidates = value
+            ? bit[static_cast<std::size_t>(word)] & valid
+            : ~bit[static_cast<std::size_t>(word)] & valid;
+        for(int order = 0; order < offset; ++order){
+            candidates &= candidates - 1;
+        }
+        return (word << 6) + static_cast<int>(std::countr_zero(candidates));
     }
 };
