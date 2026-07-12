@@ -5,7 +5,7 @@
 #include <limits>
 #include <type_traits>
 #include <vector>
-#include "detail/persistent_weighted_wavelet_matrix_base.hpp"
+#include "detail/partially_persistent_weighted_wavelet_matrix_base.hpp"
 
 template<
     class T,
@@ -16,9 +16,9 @@ template<
     int BLOCK_SIZE = 512
 >
 struct PartiallyPersistentWeightedWaveletMatrix :
-    wavelet_matrix_detail::PersistentWeightedWaveletMatrixBase<
+    wavelet_matrix_detail::PartiallyPersistentWeightedWaveletMatrixBase<
         T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>{
-    using Base = wavelet_matrix_detail::PersistentWeightedWaveletMatrixBase<
+    using Base = wavelet_matrix_detail::PartiallyPersistentWeightedWaveletMatrixBase<
         T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>;
     using Base::Base;
 
@@ -36,7 +36,7 @@ struct PartiallyPersistentWeightedWaveletMatrix :
     }
 
     int set(int k, T value, W weight){
-        return Base::set_from_version(Base::latest_version(), k, value, weight);
+        return Base::set_latest(k, value, weight);
     }
     int set_value(int k, T value){
         return set(k, value, Base::weight(Base::latest_version(), k));
