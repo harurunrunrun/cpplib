@@ -48,6 +48,7 @@ struct MinCostFlow{
         edges.push_back({from, to, cap, T(0), cost});
         int from_rev = static_cast<int>(graph[static_cast<std::size_t>(to)].size());
         int to_rev = static_cast<int>(graph[static_cast<std::size_t>(from)].size());
+        if(from == to) from_rev++;
         graph[static_cast<std::size_t>(from)].push_back({to, from_rev, cap, cost, id});
         graph[static_cast<std::size_t>(to)].push_back({from, to_rev, T(0), -cost, id});
         return id;
@@ -59,7 +60,7 @@ struct MinCostFlow{
         T flow_limit = std::numeric_limits<T>::max() / 4,
         T inf = std::numeric_limits<T>::max() / 4
     ){
-        if(source < 0 || n <= source || sink < 0 || n <= sink)[[unlikely]]{
+        if(source < 0 || n <= source || sink < 0 || n <= sink || source == sink || flow_limit < T(0))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (MinCostFlow::min_cost_flow).");
         }
         MinCostFlowResult<T> result{T(0), T(0)};
@@ -85,6 +86,9 @@ struct MinCostFlow{
                         }
                     }
                 }
+            }
+            if(updated)[[unlikely]]{
+                throw std::runtime_error("library assertion fault: reachable negative cycle (MinCostFlow::min_cost_flow).");
             }
             if(dist[static_cast<std::size_t>(sink)] == inf) break;
 

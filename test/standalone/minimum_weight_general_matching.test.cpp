@@ -79,6 +79,18 @@ void self_test(){
         assert(res.cost == -1);
         assert(valid(5, res));
     }
+    {
+        std::vector<MinimumWeightGeneralMatchingEdge<long long>> edges = {
+            {0, 1, 10},
+            {1, 0, -5},
+            {2, 3, 7},
+            {1, 1, -100},
+        };
+        auto res = minimum_weight_general_matching<long long>(4, edges);
+        assert(res.size == 2);
+        assert(res.cost == 2);
+        assert(valid(4, res));
+    }
     std::mt19937 rng(20260829);
     for(int n = 0; n <= 12; n++){
         for(int step = 0; step < 60; step++){

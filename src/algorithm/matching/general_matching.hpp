@@ -114,6 +114,10 @@ struct GeneralMatching{
 
     GeneralMatchingResult solve(){
         int result = 0;
+        for(int v = 0; v < n; v++){
+            if(match[static_cast<std::size_t>(v)] != -1) result++;
+        }
+        result /= 2;
         for(int i = 0; i < n; i++){
             if(match[static_cast<std::size_t>(i)] != -1) continue;
             int v = find_path(i);

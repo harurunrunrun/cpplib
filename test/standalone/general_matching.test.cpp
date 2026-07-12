@@ -49,6 +49,20 @@ void self_test(){
         auto res = graph.solve();
         assert(res.size == 2);
         assert(valid(5, res));
+
+        auto again = graph.solve();
+        assert(again.size == 2);
+        assert(valid(5, again));
+    }
+    {
+        GeneralMatching graph(4);
+        graph.add_edge(0, 1);
+        auto first = graph.solve();
+        assert(first.size == 1);
+        graph.add_edge(2, 3);
+        auto extended = graph.solve();
+        assert(extended.size == 2);
+        assert(valid(4, extended));
     }
     std::mt19937 rng(20260828);
     for(int n = 0; n <= 12; n++){
@@ -66,6 +80,9 @@ void self_test(){
             auto res = graph.solve();
             assert(valid(n, res));
             assert(res.size == brute(n, edges));
+            auto again = graph.solve();
+            assert(valid(n, again));
+            assert(again.size == res.size);
         }
     }
 }

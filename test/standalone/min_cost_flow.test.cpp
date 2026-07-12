@@ -12,7 +12,8 @@ std::pair<long long, long long> brute(
     int n,
     int source,
     int sink,
-    const std::vector<std::tuple<int, int, long long, long long>>& edges
+    const std::vector<std::tuple<int, int, long long, long long>>& edges,
+    long long flow_limit = (1LL << 60)
 ){
     std::vector<long long> flow(edges.size(), 0);
     long long best_flow = -1;
@@ -33,7 +34,7 @@ std::pair<long long, long long> brute(
                 if(balance[static_cast<std::size_t>(v)] != 0) return;
             }
             long long sent = -balance[static_cast<std::size_t>(source)];
-            if(balance[static_cast<std::size_t>(sink)] != sent) return;
+            if(balance[static_cast<std::size_t>(sink)] != sent || sent > flow_limit) return;
             if(best_flow < sent || (best_flow == sent && cost < best_cost)){
                 best_flow = sent;
                 best_cost = cost;
@@ -65,6 +66,37 @@ void self_test(){
         assert(res.flow == 3);
         assert(res.cost == 9);
     }
+    {
+        MinCostFlow<long long> graph(2);
+        graph.add_edge(0, 0, 3, 4);
+        assert(graph.graph[0].size() == 2);
+        assert(graph.graph[0][0].rev == 1);
+        assert(graph.graph[0][1].rev == 0);
+    }
+    {
+        MinCostFlow<long long> graph(1);
+        bool threw = false;
+        try{
+            (void)graph.min_cost_flow(0, 0);
+        }catch(const std::runtime_error&){
+            threw = true;
+        }
+        assert(threw);
+    }
+    {
+        MinCostFlow<long long> graph(4);
+        graph.add_edge(0, 1, 1, 0);
+        graph.add_edge(1, 2, 1, -1);
+        graph.add_edge(2, 1, 1, 0);
+        graph.add_edge(2, 3, 1, 0);
+        bool threw = false;
+        try{
+            (void)graph.min_cost_flow(0, 3);
+        }catch(const std::runtime_error&){
+            threw = true;
+        }
+        assert(threw);
+    }
     std::mt19937 rng(20260827);
     for(int n = 2; n <= 5; n++){
         for(int step = 0; step < 80; step++){
@@ -85,6 +117,49 @@ void self_test(){
             auto actual = graph.min_cost_flow(source, sink);
             assert(actual.flow == expected.first);
             assert(actual.cost == expected.second);
+        }
+    }
+
+    for(int n = 2; n <= 5; n++){
+        for(int step = 0; step < 250; step++){
+            int source = 0, sink = n - 1;
+            std::vector<long long> potential(static_cast<std::size_t>(n));
+            for(long long& value: potential){
+                value = static_cast<int>(rng() % 11) - 5;
+            }
+            MinCostFlow<long long> graph(n);
+            std::vector<std::tuple<int, int, long long, long long>> edges;
+            for(int u = 0; u < n; u++){
+                for(int v = 0; v < n; v++){
+                    if(rng() % 5 != 0 || static_cast<int>(edges.size()) == 7) continue;
+                    long long cap = static_cast<int>(rng() % 3);
+                    long long cost = static_cast<int>(rng() % 6)
+                                   + potential[static_cast<std::size_t>(v)]
+                                   - potential[static_cast<std::size_t>(u)];
+                    graph.add_edge(u, v, cap, cost);
+                    edges.push_back({u, v, cap, cost});
+                }
+            }
+            long long flow_limit = static_cast<int>(rng() % 5);
+            auto expected = brute(n, source, sink, edges, flow_limit);
+            auto actual = graph.min_cost_flow(source, sink, flow_limit);
+            assert(actual.flow == expected.first);
+            assert(actual.cost == expected.second);
+
+            std::vector<long long> balance(static_cast<std::size_t>(n), 0);
+            long long restored_cost = 0;
+            for(const auto& edge: graph.edges){
+                assert(0 <= edge.flow && edge.flow <= edge.cap);
+                balance[static_cast<std::size_t>(edge.from)] -= edge.flow;
+                balance[static_cast<std::size_t>(edge.to)] += edge.flow;
+                restored_cost += edge.flow * edge.cost;
+            }
+            assert(-balance[static_cast<std::size_t>(source)] == actual.flow);
+            assert(balance[static_cast<std::size_t>(sink)] == actual.flow);
+            for(int v = 1; v + 1 < n; v++){
+                assert(balance[static_cast<std::size_t>(v)] == 0);
+            }
+            assert(restored_cost == actual.cost);
         }
     }
 }

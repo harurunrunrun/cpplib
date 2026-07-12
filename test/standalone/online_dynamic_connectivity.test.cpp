@@ -131,6 +131,17 @@ int main(){
             int v = static_cast<int>(rng() % n);
             assert(graph.same(u, v) == naive_same(u, v, n, edge_count));
         }
+        int sample = static_cast<int>(rng() % n);
+        int expected_size = 0;
+        for(int v = 0; v < n; v++){
+            expected_size += naive_same(sample, v, n, edge_count);
+        }
+        assert(graph.component_size(sample) == expected_size);
+
+        int a = static_cast<int>(rng() % n);
+        int b = static_cast<int>(rng() % n);
+        auto sampled_edge = normalize(a, b);
+        assert(graph.edge_multiplicity(a, b) == edge_count[sampled_edge]);
         assert(graph.groups() == naive_groups(n, edge_count));
     }
 }

@@ -73,6 +73,20 @@ void self_test(){
         auto res = directed_mst<long long>(2, 0, edges, INF);
         assert(!res.exists);
     }
+    {
+        std::vector<DirectedMstEdge<long long>> edges = {
+            {0, 0, -100},
+            {0, 1, 5},
+            {0, 1, 2},
+            {1, 2, -4},
+            {2, 1, 0},
+            {0, 2, 10},
+        };
+        auto expected = brute(3, 0, edges);
+        auto actual = directed_mst<long long>(3, 0, edges, INF);
+        assert(actual.exists == expected.second);
+        assert(actual.cost == expected.first);
+    }
     std::mt19937 rng(20260816);
     for(int n = 1; n <= 7; n++){
         for(int step = 0; step < 80; step++){

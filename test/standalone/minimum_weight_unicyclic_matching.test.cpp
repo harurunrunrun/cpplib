@@ -105,6 +105,15 @@ void self_test(){
             assert(valid(n, edges, res));
             assert(res.size == expected.first);
             assert(res.cost == expected.second);
+
+            if(!edges.empty()){
+                edges.pop_back();
+                auto forest_result = minimum_weight_unicyclic_matching<long long>(n, edges);
+                auto forest_expected = brute(n, edges);
+                assert(valid(n, edges, forest_result));
+                assert(forest_result.size == forest_expected.first);
+                assert(forest_result.cost == forest_expected.second);
+            }
         }
     }
 }

@@ -18,6 +18,9 @@ graph.add_edge(from, to, cap, cost)
 graph.min_cost_flow(source, sink, flow_limit, inf)
 ```
 
+`source` と `sink` は異なる頂点、`flow_limit` は非負でなければならない。
+残余グラフで `source` から到達可能な負閉路を検出した場合は `runtime_error` を送出する。
+
 `MinCostFlowResult<T>` は次を持つ。
 
 ```cpp
