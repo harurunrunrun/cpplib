@@ -3,159 +3,119 @@ title: Integer Set
 documentation_of: ../src/structure/tree/integer_set.hpp
 ---
 
-非負整数限定で定数倍を削ったordered? set。
-
-時間計算量はAVX512が使える環境を想定。
-使えない場合はAVX2なので定数倍が悪化する。
-
-TODO:
-
-- kthをwrapperにする
-
-# コンストラクタ
+`[0, MAX_SIZE)` の整数を管理する集合です。各ノードを16分岐にした多分木で、要素数の累積和をノード内に保持します。
 
 ```cpp
-Int_Set<class L, L MAX_SIZE>()
+template<class L, L MAX_SIZE>
+struct Int_Set;
 ```
 
-- `L`: 型、`unsigned int` or `unsigned long long`
-- `MAX_SIZE`: 最大値 (閉区間なので実際の最大値+1して)
+- `L` は `unsigned int` または `unsigned long long`
+- `0 < MAX_SIZE <= std::numeric_limits<int>::max()`
+
+x86環境では実行時にAVX-512、AVX2の順に利用可能か判定し、どちらも利用できない場合はscalar実装を使います。AVXを有効にするコンパイルオプションは不要です。
+
+以下で $h = O(\log_{16} MAX_SIZE)$ とします。`kth_*` の `k` は0始まりです。戻り値が存在しない操作は `std::nullopt` を返します。
 
 # insert
 
 ```cpp
-void insert(const L& x)
+void insert(L x)
 ```
-`x` を挿入する。
-存在する場合は何もしない。
 
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
+`x` を挿入します。すでに存在する場合は何もしません。`x` が範囲外の場合は `std::runtime_error` を送出します。
 
+計算量: $O(h)$
 
 # erase
 
 ```cpp
-void erase(const L& x)
+void erase(L x)
 ```
 
-`x` を削除する。
-存在しない場合は何もしない。
+`x` を削除します。存在しない場合は何もしません。`x` が範囲外の場合は `std::runtime_error` を送出します。
 
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
-
+計算量: $O(h)$
 
 # contain
 
 ```cpp
-bool contain(const L& x)
+bool contain(L x)
 ```
 
-`x` が存在するか判定する。
+`x` が存在するかを返します。範囲外では `false` を返します。
 
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
+計算量: $O(h)$
 
 # range_sum
 
 ```cpp
-L range_sum(const L& l, const L& r)
+L range_sum(L l, L r)
 ```
 
-区間 `[l,r)` に存在する要素数を返す。
+`[l, r)` に含まれる要素数を返します。区間の範囲外部分は `[0, MAX_SIZE)` に切り詰められます。
 
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$ (SIMD)
+計算量: $O(h)$
 
-# least
+# least / more
 
 ```cpp
-std::optional<L> least(const L& x)
+std::optional<L> least(L x)
+std::optional<L> more(L x)
 ```
 
-`x <= y` を満たす最小の `y` を返す。
+- `least(x)`: `x <= y` を満たす最小の要素 `y`
+- `more(x)`: `x < y` を満たす最小の要素 `y`
 
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
+計算量: $O(h)$
 
-# more
+# most / less
 
 ```cpp
-std::optional<L> more(const L& x)
+std::optional<L> most(L x)
+std::optional<L> less(L x)
 ```
 
-`x < y` を満たす最小の `y` を返す。
+- `most(x)`: `y <= x` を満たす最大の要素 `y`
+- `less(x)`: `y < x` を満たす最大の要素 `y`
 
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
+計算量: $O(h)$
 
-
-# most
+# kth_ge / kth_gt
 
 ```cpp
-std::optional<L> most(const L& x)
+std::optional<L> kth_ge(L x, L k)
+std::optional<L> kth_gt(L x, L k)
 ```
 
-`x >= y` を満たす最大の `y` を返す。
+- `kth_ge(x, k)`: `x <= y` を満たす要素を昇順に並べたときの `k` 番目
+- `kth_gt(x, k)`: `x < y` を満たす要素を昇順に並べたときの `k` 番目
 
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
+計算量: $O(16h)$
 
-# less
+# kth_le / kth_lt
 
 ```cpp
-std::optional<L> less(const L& x)
+std::optional<L> kth_le(L x, L k)
+std::optional<L> kth_lt(L x, L k)
 ```
 
-`x > y` を満たす最大の `y` を返す。
+- `kth_le(x, k)`: `y <= x` を満たす要素を降順に並べたときの `k` 番目
+- `kth_lt(x, k)`: `y < x` を満たす要素を降順に並べたときの `k` 番目
 
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
+計算量: $O(16h)$
 
+`kth_*` には符号付きの `x` と `k` を受け取るオーバーロードもあります。負の `k` に対しては `std::nullopt` を返します。
 
-# empty
+# min / max / empty
+
 ```cpp
+std::optional<L> min()
+std::optional<L> max()
 bool empty()
 ```
 
-空か否かを返す。
-
-## 時間計算量
-- $O(1)$
-
-# max
-```cpp
-std::optional<L> max()
-```
-
-最大値を返す。
-
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
-
-
-# min
-```cpp
-std::optional<L> min()
-```
-
-最小値を返す。
-
-## 時間計算量
-- $O(\log {MAXSIZE / 16})$
-
-
-# clear
-```cpp
-void clear()
-```
-
-要素をすべて削除する。
-
-## 時間計算量
-- $O(|要素数|\log {MAXSIZE / 16})$ (だと思われる)
-
+最小要素、最大要素、集合が空かを返します。`min` と `max` は $O(h)$、`empty` は $O(1)$ です。
 
 # list
 
@@ -163,54 +123,20 @@ void clear()
 std::vector<L> list()
 ```
 
-要素を昇順に列挙する。
+全要素を昇順に返します。
 
-## 時間計算量
-- $O(|要素数|\log {MAXSIZE / 16})$ (だと思われる)
+計算量: $O(ノード数 + 要素数)$
 
-
-# kth_ge
+# clear
 
 ```cpp
-std::optional<L> kth_ge(const L& x, const L& y)
+void clear()
 ```
 
-`x <= y` を満たす `y` のうち、昇順で `k` 番目の値を返す。
+全要素を削除します。
 
-## 時間計算量
-- $O(16\log {MAXSIZE / 16})$ (だと思われる)
+計算量: $O(ノード数)$
 
-# kth_gt
+# copy / move
 
-```cpp
-std::optional<L> kth_gt(const L& x, const L& y)
-```
-
-`x < y` を満たす `y` のうち、昇順で `k` 番目の値を返す。
-
-## 時間計算量
-- $O(16\log {MAXSIZE / 16})$ (だと思われる)
-
-# kth_le
-
-```cpp
-std::optional<L> kth_le(const L& x, const L& y)
-```
-
-`x >= y` を満たす `y` のうち、降順で `k` 番目の値を返す。
-
-## 時間計算量
-- $O(16\log {MAXSIZE / 16})$ (だと思われる)
-
-# kth_lt
-
-```cpp
-std::optional<L> kth_lt(const L& x, const L& y)
-```
-
-`x > y` を満たす `y` のうち、降順で `k` 番目の値を返す。
-
-## 時間計算量
-- $O(16\log {MAXSIZE / 16})$ (だと思われる)
-
-
+コピー後の集合は元の集合と独立です。コピーの計算量は $O(ノード数)$ です。move後の移動元は空集合になります。

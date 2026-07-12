@@ -1,13 +1,19 @@
+#pragma once
+
 #include <type_traits>
 #include <array>
 #include <memory>
 #include <algorithm>
 #include <optional>
-#include <immintrin.h>
 #include <bit>
 #include <vector>
 #include <stdexcept>
 #include <limits>
+#include <utility>
+
+#if defined(__x86_64__) || defined(__i386__) || defined(_M_X64) || defined(_M_IX86)
+#include <immintrin.h>
+#endif
 
 
 #if (defined(__GNUC__) || defined(__clang__)) && (defined(__x86_64__) || defined(__i386__))
@@ -34,8 +40,8 @@ struct Int_Set{
             std::array<std::unique_ptr<Node>, node_size> nodes{};
             unsigned short exist = 0;
             unsigned short full = 0;
-            std::array<int, node_size> sum;
-            std::array<int, node_size> lazy;
+            std::array<int, node_size> sum{};
+            std::array<int, node_size> lazy{};
             bool is_lazy = false;
             Node() = default;
         };
@@ -56,22 +62,22 @@ struct Int_Set{
             }
         }
 
-        inline unsigned short full_mask(int n){
+        static inline unsigned short full_mask(int n){
             return (unsigned short)(((unsigned int)1 << n) - 1); 
         }
 
-        inline L child_index(L l, L r, L x){
-            return (L)(((__uint128_t)(x - l + 1) * node_size - 1) / (r - l));
+        static inline L child_index(L l, L r, L x){
+            return (L)((static_cast<unsigned long long>(x - l + 1) * node_size - 1) / (r - l));
         }
 
-        inline L child_l(L l, L r, L child){
-            return l + (L)(((__uint128_t)child * (r - l)) >> shift_num);
+        static inline L child_l(L l, L r, L child){
+            return l + (L)((static_cast<unsigned long long>(child) * (r - l)) >> shift_num);
         }
 
-        inline L child_r(L l, L r, L child){
+        static inline L child_r(L l, L r, L child){
             return std::min<L>(
                 MAX_SIZE,
-                l + (L)(((__uint128_t)(child + 1) * (r - l)) >> shift_num)
+                l + (L)((static_cast<unsigned long long>(child + 1) * (r - l)) >> shift_num)
             );
         }
 
@@ -203,7 +209,9 @@ struct Int_Set{
         using apply_diff_func = void (*)(std::array<int, 16>&, std::array<int, 16>&);
 
         static inline apply_diff_func select_apply_diff(){
-#if INT_SET_GNU_X86_TARGET
+#if defined(CPPLIB_INT_SET_FORCE_SCALAR)
+            return apply_diff_scalar;
+#elif INT_SET_GNU_X86_TARGET
             __builtin_cpu_init();
             if(__builtin_cpu_supports("avx512f")){
                 return apply_diff_avx512;
@@ -389,7 +397,7 @@ struct Int_Set{
                 }
                 return res;
             }else{
-                __builtin_unreachable();
+                return (L)0;
             }
         }
 
@@ -530,7 +538,7 @@ struct Int_Set{
             return res;
         }
 
-        // x <= y 繧呈ｺ�縺溘☆ y 縺ｮ縺��■縲∵��鬆��〒 k 逡ｪ逶ｮ
+        // k-th value among elements not less than x, in ascending order
         std::optional<L> internal_kth_ge(Node* node, L l, L r, const L& x, L k){
             if(!node || node->exist == 0 || r <= x){
                 return std::nullopt;
@@ -607,7 +615,7 @@ struct Int_Set{
             return std::nullopt;
         }
 
-        // x >= y 繧呈ｺ�縺溘☆ y 縺ｮ縺��■縲��剄鬆��〒 k 逡ｪ逶ｮ
+        // k-th value among elements not greater than x, in descending order
         std::optional<L> internal_kth_le(Node* node, L l, L r, const L& x, L k){
             if(!node || node->exist == 0 || x < l){
                 return std::nullopt;
@@ -689,9 +697,8 @@ struct Int_Set{
             root = std::make_unique<Node>();
         }
 
-        Int_Set(const Int_Set& other){
+        Int_Set(const Int_Set& other) : root(std::make_unique<Node>()){
             if(other.root){
-                root = std::make_unique<Node>();
                 internal_copy(root.get(), other.root.get());
             }
         }
@@ -703,17 +710,25 @@ struct Int_Set{
                     internal_copy(new_root.get(), other.root.get());
                     root = std::move(new_root);
                 }else{
-                    root.reset();
+                    root = std::make_unique<Node>();
                 }
             }
             return *this;
         }
 
-        Int_Set(Int_Set&&) noexcept = default;
-        Int_Set& operator=(Int_Set&&) noexcept = default;
+        Int_Set(Int_Set&& other)
+            : root(std::exchange(other.root, std::make_unique<Node>())){}
+
+        Int_Set& operator=(Int_Set&& other){
+            if(this != &other){
+                auto empty_root = std::make_unique<Node>();
+                root = std::exchange(other.root, std::move(empty_root));
+            }
+            return *this;
+        }
 
         void insert(const L& x){
-            if(x < 0 || MAX_SIZE <= x)[[unlikely]]{
+            if(MAX_SIZE <= x)[[unlikely]]{
                 throw std::runtime_error("library assertion fault: range violation (insert).");
             }
             internal_insert(root.get(), (L)0, MAX_SIZE, x);
@@ -727,7 +742,7 @@ struct Int_Set{
         }
 
         void erase(const L& x){
-            if(x < 0 || MAX_SIZE <= x)[[unlikely]]{
+            if(MAX_SIZE <= x)[[unlikely]]{
                 throw std::runtime_error("library assertion fault: range violation (erase).");
             }
             internal_erase(root.get(), (L)0, MAX_SIZE, x);
@@ -741,21 +756,21 @@ struct Int_Set{
         }
 
         bool contain(const L& x){
-            if(x < 0 || MAX_SIZE <= x)[[unlikely]]{
+            if(MAX_SIZE <= x)[[unlikely]]{
                 return false;
             }
             return internal_contain(root.get(), (L)0, MAX_SIZE, x);
         }
 
         bool contain(const std::make_signed_t<L>& x){
-            return contain(static_cast<L>(x));
+            return x >= 0 && contain(static_cast<L>(x));
         }
 
         L range_sum(const L& l, const L& r){
-            if(l >= r){
+            if(l >= r || l >= MAX_SIZE){
                 return (L)0;
             }
-            return internal_range_sum(root.get(), (L)0, MAX_SIZE, l, r);
+            return internal_range_sum(root.get(), (L)0, MAX_SIZE, l, std::min(r, MAX_SIZE));
         }
 
         L range_sum(const std::make_signed_t<L>& l, const std::make_signed_t<L>& r){
@@ -767,7 +782,7 @@ struct Int_Set{
             return range_sum(ll, rr);
         }
 
-        // x < y を満たす最小の y
+        // x <= y を満たす最小の y
         std::optional<L> least(const L& x){
             if(x >= MAX_SIZE){
                 return std::nullopt;
@@ -805,7 +820,7 @@ struct Int_Set{
 
         // x >= y を満たす最大の y
         std::optional<L> most(const L& x){
-            return internal_most(root.get(), (L)0, MAX_SIZE, x);
+            return internal_most(root.get(), (L)0, MAX_SIZE, std::min(x, MAX_SIZE - 1));
         }
 
         std::optional<L> most(const std::make_signed_t<L>& x){
@@ -845,7 +860,7 @@ struct Int_Set{
         }
 
         std::optional<L> min(){
-            return least(0);
+            return least((L)0);
         }
 
         void clear(){
