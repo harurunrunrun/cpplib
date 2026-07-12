@@ -66,20 +66,24 @@ struct MinCostFlow{
         MinCostFlowResult<T> result{T(0), T(0)};
         while(result.flow < flow_limit){
             std::vector<T> dist(static_cast<std::size_t>(n), inf);
+            std::vector<char> reached(static_cast<std::size_t>(n), 0);
             std::vector<int> parent_v(static_cast<std::size_t>(n), -1);
             std::vector<int> parent_e(static_cast<std::size_t>(n), -1);
             dist[static_cast<std::size_t>(source)] = T(0);
+            reached[static_cast<std::size_t>(source)] = 1;
             bool updated = true;
             for(int iter = 0; iter < n && updated; iter++){
                 updated = false;
                 for(int v = 0; v < n; v++){
-                    if(dist[static_cast<std::size_t>(v)] == inf) continue;
+                    if(!reached[static_cast<std::size_t>(v)]) continue;
                     for(int i = 0; i < static_cast<int>(graph[static_cast<std::size_t>(v)].size()); i++){
                         const auto& e = graph[static_cast<std::size_t>(v)][static_cast<std::size_t>(i)];
                         if(e.cap <= T(0)) continue;
                         T nd = dist[static_cast<std::size_t>(v)] + e.cost;
-                        if(nd < dist[static_cast<std::size_t>(e.to)]){
+                        if(!reached[static_cast<std::size_t>(e.to)] ||
+                           nd < dist[static_cast<std::size_t>(e.to)]){
                             dist[static_cast<std::size_t>(e.to)] = nd;
+                            reached[static_cast<std::size_t>(e.to)] = 1;
                             parent_v[static_cast<std::size_t>(e.to)] = v;
                             parent_e[static_cast<std::size_t>(e.to)] = i;
                             updated = true;
@@ -90,7 +94,7 @@ struct MinCostFlow{
             if(updated)[[unlikely]]{
                 throw std::runtime_error("library assertion fault: reachable negative cycle (MinCostFlow::min_cost_flow).");
             }
-            if(dist[static_cast<std::size_t>(sink)] == inf) break;
+            if(!reached[static_cast<std::size_t>(sink)]) break;
 
             T add = flow_limit - result.flow;
             for(int v = sink; v != source; v = parent_v[static_cast<std::size_t>(v)]){

@@ -20,6 +20,7 @@ graph.min_cost_flow(source, sink, flow_limit, inf)
 
 `source` と `sink` は異なる頂点、`flow_limit` は非負でなければならない。
 残余グラフで `source` から到達可能な負閉路を検出した場合は `runtime_error` を送出する。
+経路費用と `flow * cost` は `T` の表現範囲内である必要がある。
 
 `MinCostFlowResult<T>` は次を持つ。
 

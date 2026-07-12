@@ -74,6 +74,14 @@ void self_test(){
         assert(graph.graph[0][1].rev == 0);
     }
     {
+        constexpr long long large_cost = 3000000000000000000LL;
+        MinCostFlow<long long> graph(2);
+        graph.add_edge(0, 1, 1, large_cost);
+        auto result = graph.min_cost_flow(0, 1, 1);
+        assert(result.flow == 1);
+        assert(result.cost == large_cost);
+    }
+    {
         MinCostFlow<long long> graph(1);
         bool threw = false;
         try{
