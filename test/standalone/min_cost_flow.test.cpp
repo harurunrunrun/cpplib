@@ -1,0 +1,107 @@
+// competitive-verifier: STANDALONE
+
+#include <algorithm>
+#include <cassert>
+#include <iostream>
+#include <random>
+#include <tuple>
+#include <vector>
+#include "../../src/algorithm/matching/min_cost_flow.hpp"
+
+std::pair<long long, long long> brute(
+    int n,
+    int source,
+    int sink,
+    const std::vector<std::tuple<int, int, long long, long long>>& edges
+){
+    std::vector<long long> flow(edges.size(), 0);
+    long long best_flow = -1;
+    long long best_cost = 0;
+    auto dfs = [&](auto&& self, int id) -> void {
+        if(id == static_cast<int>(edges.size())){
+            std::vector<long long> balance(static_cast<std::size_t>(n), 0);
+            long long cost = 0;
+            for(std::size_t i = 0; i < edges.size(); i++){
+                auto [u, v, cap, edge_cost] = edges[i];
+                (void)cap;
+                balance[static_cast<std::size_t>(u)] -= flow[i];
+                balance[static_cast<std::size_t>(v)] += flow[i];
+                cost += flow[i] * edge_cost;
+            }
+            for(int v = 0; v < n; v++){
+                if(v == source || v == sink) continue;
+                if(balance[static_cast<std::size_t>(v)] != 0) return;
+            }
+            long long sent = -balance[static_cast<std::size_t>(source)];
+            if(balance[static_cast<std::size_t>(sink)] != sent) return;
+            if(best_flow < sent || (best_flow == sent && cost < best_cost)){
+                best_flow = sent;
+                best_cost = cost;
+            }
+            return;
+        }
+        auto [u, v, cap, cost] = edges[static_cast<std::size_t>(id)];
+        (void)u;
+        (void)v;
+        (void)cost;
+        for(long long f = 0; f <= cap; f++){
+            flow[static_cast<std::size_t>(id)] = f;
+            self(self, id + 1);
+        }
+    };
+    dfs(dfs, 0);
+    return {best_flow, best_cost};
+}
+
+void self_test(){
+    {
+        MinCostFlow<long long> graph(4);
+        graph.add_edge(0, 1, 2, 1);
+        graph.add_edge(0, 2, 1, 5);
+        graph.add_edge(1, 2, 1, -2);
+        graph.add_edge(1, 3, 1, 2);
+        graph.add_edge(2, 3, 2, 1);
+        auto res = graph.min_cost_flow(0, 3);
+        assert(res.flow == 3);
+        assert(res.cost == 9);
+    }
+    std::mt19937 rng(20260827);
+    for(int n = 2; n <= 5; n++){
+        for(int step = 0; step < 80; step++){
+            int source = 0, sink = n - 1;
+            MinCostFlow<long long> graph(n);
+            std::vector<std::tuple<int, int, long long, long long>> edges;
+            for(int u = 0; u < n; u++){
+                for(int v = 0; v < n; v++){
+                    if(u < v && rng() % 4 == 0 && static_cast<int>(edges.size()) < 8){
+                        long long cap = static_cast<int>(rng() % 4);
+                        long long cost = static_cast<int>(rng() % 11) - 5;
+                        graph.add_edge(u, v, cap, cost);
+                        edges.push_back({u, v, cap, cost});
+                    }
+                }
+            }
+            auto expected = brute(n, source, sink, edges);
+            auto actual = graph.min_cost_flow(source, sink);
+            assert(actual.flow == expected.first);
+            assert(actual.cost == expected.second);
+        }
+    }
+}
+
+int main(){
+    int n, m, s, t;
+    if(!(std::cin >> n >> m >> s >> t)){
+        self_test();
+        return 0;
+    }
+    MinCostFlow<long long> graph(n);
+    for(int i = 0; i < m; i++){
+        int u, v;
+        long long cap, cost;
+        std::cin >> u >> v >> cap >> cost;
+        graph.add_edge(u, v, cap, cost);
+    }
+    auto res = graph.min_cost_flow(s, t);
+    std::cout << res.flow << ' ' << res.cost << '\n';
+}
