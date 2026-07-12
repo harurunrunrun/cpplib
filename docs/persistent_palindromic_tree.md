@@ -60,5 +60,5 @@ pair<int,int> first_occurrence_range(int node)
 
 - `append`: amortized $O(1)$
 - `distinct_palindromes`, `count_palindromic_substrings`, longest 系: $O(1)$
-- `contains`, `find_node`: $O(VL)$
+- `contains`, `find_node`: $O(L)$
 - `palindromes`: 返す文字列長の合計に線形

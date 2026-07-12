@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <memory>
 #include <random>
 #include <set>
 #include <string>
@@ -152,6 +153,11 @@ int main(){
         std::string s;
         int m;
         std::cin >> s >> m;
+        if(m == -1){
+            auto large_tree = std::make_unique<PalindromicTree<1, 100005>>(s);
+            std::cout << large_tree->count_palindromic_substrings() << '\n';
+            continue;
+        }
         PalindromicTree<4, 256> tree(s);
         auto pals = tree.palindromes();
         std::sort(pals.begin(), pals.end());

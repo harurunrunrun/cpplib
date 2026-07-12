@@ -27,7 +27,7 @@ int longest_suffix_palindrome_length()
 int longest_palindrome_length()
 int longest_palindrome_node()
 void build_occurrences()
-int count_palindromic_substrings()
+long long count_palindromic_substrings()
 int find_node(string_view s)
 bool contains(string_view s)
 int occurrence_count(string_view s)
@@ -52,5 +52,5 @@ int series_link(int v)
 
 - 構築: $O(N)$
 - occurrence 前計算: $O(V)$
-- contains / occurrence_count / find_node: $O(VL)$
+- contains / occurrence_count / find_node: $O(L)$
 - palindromes: 返す文字列長の合計に線形

@@ -135,9 +135,9 @@ public:
         occurrence_built = true;
     }
 
-    int count_palindromic_substrings(){
+    long long count_palindromic_substrings(){
         build_occurrences();
-        int result = 0;
+        long long result = 0;
         for(int v = 2; v < used; v++) result += nodes[v].occurrence;
         return result;
     }
@@ -148,19 +148,18 @@ public:
 
     int find_node(std::string_view s) const{
         if(s.empty()) return 1;
-        for(int v = 2; v < used; v++){
-            if(nodes[v].length != static_cast<int>(s.size())) continue;
-            int l = nodes[v].first_position - nodes[v].length + 1;
-            bool ok = true;
-            for(int i = 0; i < nodes[v].length; i++){
-                if(text[static_cast<std::size_t>(l + i)] != s[static_cast<std::size_t>(i)]){
-                    ok = false;
-                    break;
-                }
+        int node = s.size() % 2 == 0 ? 1 : 0;
+        for(int left = (static_cast<int>(s.size()) - 1) / 2; left >= 0; left--){
+            int right = static_cast<int>(s.size()) - 1 - left;
+            if(s[static_cast<std::size_t>(left)] != s[static_cast<std::size_t>(right)]){
+                return -1;
             }
-            if(ok) return v;
+            int id = static_cast<int>(s[static_cast<std::size_t>(left)] - OFFSET);
+            if(id < 0 || ALPHABET <= id) return -1;
+            node = nodes[node].next[static_cast<std::size_t>(id)];
+            if(node == -1) return -1;
         }
-        return -1;
+        return node;
     }
 
     bool contains(std::string_view s) const{

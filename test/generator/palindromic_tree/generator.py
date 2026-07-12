@@ -52,7 +52,7 @@ def main() -> None:
         n = rng.randrange(1, 31)
         cases.append("".join(chr(ord("a") + rng.randrange(4)) for _ in range(n)))
 
-    input_lines = [str(len(cases))]
+    input_lines = [str(len(cases) + 1)]
     output_lines: list[str] = []
     for s in cases:
         pals = sorted(palindromes(s))
@@ -69,6 +69,10 @@ def main() -> None:
         output_lines.append(" ".join(map(str, suffix)))
         for t in queries:
             output_lines.append(f"{int(t in pals)} {occurrence(s, t) if t in pals else 0}")
+
+    large_n = 100000
+    input_lines.append("a" * large_n + " -1")
+    output_lines.append(str(large_n * (large_n + 1) // 2))
 
     (out_dir / "case_00.in").write_text("\n".join(input_lines) + "\n", encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(output_lines) + "\n", encoding="utf-8")

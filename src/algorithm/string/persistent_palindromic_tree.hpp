@@ -203,20 +203,18 @@ public:
     int find_node(std::string_view s, int version) const{
         check_version(version);
         if(s.empty()) return 1;
-        for(int node = 2; node < used; node++){
-            if(nodes[node].length != static_cast<int>(s.size())) continue;
-            if(nodes[node].first_position >= version) continue;
-            int l = nodes[node].first_position - nodes[node].length + 1;
-            bool ok = true;
-            for(int i = 0; i < nodes[node].length; i++){
-                if(text[static_cast<std::size_t>(l + i)] != s[static_cast<std::size_t>(i)]){
-                    ok = false;
-                    break;
-                }
+        int node = s.size() % 2 == 0 ? 1 : 0;
+        for(int left = (static_cast<int>(s.size()) - 1) / 2; left >= 0; left--){
+            int right = static_cast<int>(s.size()) - 1 - left;
+            if(s[static_cast<std::size_t>(left)] != s[static_cast<std::size_t>(right)]){
+                return -1;
             }
-            if(ok) return node;
+            int id = static_cast<int>(s[static_cast<std::size_t>(left)] - OFFSET);
+            if(id < 0 || ALPHABET <= id) return -1;
+            node = nodes[node].next[static_cast<std::size_t>(id)];
+            if(node == -1) return -1;
         }
-        return -1;
+        return nodes[node].first_position < version ? node : -1;
     }
 
     bool contains(std::string_view s, int version) const{
