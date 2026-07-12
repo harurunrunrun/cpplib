@@ -1,4 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/structure/array/persistent_array.hpp"
-#include "array_exceptions.test.inc"
+#include "../generator/array_exceptions/generator.inc"
+#include "../checker/array_exceptions/checker.inc"
+
+int main(){
+    generate_array_exceptions_standalone_cases();
+    run_array_exceptions_standalone_check();
+}

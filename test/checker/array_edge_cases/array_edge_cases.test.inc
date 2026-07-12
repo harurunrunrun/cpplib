@@ -1,11 +1,9 @@
-// competitive-verifier: STANDALONE
-
 #include <cassert>
 #include <stdexcept>
-#include "../../src/structure/array/partially_persistent_array.hpp"
-#include "../../src/structure/array/rollback_array.hpp"
+#include "../../../src/structure/array/partially_persistent_array.hpp"
+#include "../../../src/structure/array/rollback_array.hpp"
 
-int main(){
+inline void run_array_edge_cases_standalone_check(){
     PersistentArray<int, 1, 0> persistent(1);
     assert(persistent.size() == 1);
     assert(persistent.versions() == 1);

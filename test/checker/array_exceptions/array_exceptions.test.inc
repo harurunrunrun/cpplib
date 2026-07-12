@@ -1,12 +1,10 @@
-// competitive-verifier: STANDALONE
-
 #include <array>
 #include <cassert>
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
-#include "../../src/structure/array/partially_persistent_array.hpp"
-#include "../../src/structure/array/rollback_array.hpp"
+#include "../../../src/structure/array/partially_persistent_array.hpp"
+#include "../../../src/structure/array/rollback_array.hpp"
 
 using Persistent = PersistentArray<int, 2, 2>;
 using Partial = PartiallyPersistentArray<int, 2, 2>;
@@ -31,7 +29,7 @@ bool throws_runtime_error(F&& f){
     return false;
 }
 
-int main(){
+inline void run_array_exceptions_standalone_check(){
     assert(throws_runtime_error([]{ Persistent a(-1); }));
     assert(throws_runtime_error([]{ Persistent a(3); }));
     assert(throws_runtime_error([]{ Partial a(-1); }));

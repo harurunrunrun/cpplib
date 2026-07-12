@@ -1,4 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/structure/array/persistent_array.hpp"
-#include "array_edge_cases.test.inc"
+#include "../generator/array_edge_cases/generator.inc"
+#include "../checker/array_edge_cases/checker.inc"
+
+int main(){
+    generate_array_edge_cases_standalone_cases();
+    run_array_edge_cases_standalone_check();
+}

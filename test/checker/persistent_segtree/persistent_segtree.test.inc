@@ -1,5 +1,3 @@
-// competitive-verifier: STANDALONE
-
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -11,8 +9,8 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "../../src/structure/segtree/partially_persistent_segtree.hpp"
-#include "../../src/structure/segtree/rollback_segtree.hpp"
+#include "../../../src/structure/segtree/partially_persistent_segtree.hpp"
+#include "../../../src/structure/segtree/rollback_segtree.hpp"
 
 using ll = long long;
 
@@ -67,7 +65,7 @@ int naive_min_left(const std::vector<ll>& a, int r, ll limit){
     return r;
 }
 
-int main(){
+inline void run_persistent_segtree_standalone_check(){
     constexpr int N = 29;
     std::mt19937_64 rng(0x2718281828459045ULL);
 
