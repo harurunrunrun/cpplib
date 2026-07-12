@@ -1,2 +1,6 @@
 *.exe
 test/in.txt
+.competitive-verifier/venv/
+.competitive-verifier/cache/
+.competitive-verifier/bundled/
+.competitive-verifier/_jekyll/
