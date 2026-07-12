@@ -61,7 +61,7 @@ def main() -> None:
     commands: list[str] = []
     outputs: list[str] = []
     for _ in range(1300):
-        kind = rng.randrange(8)
+        kind = rng.randrange(9)
         if kind == 0:
             v = rng.randrange(n)
             value = rng.randrange(-10**9, 10**9 + 1)
@@ -109,12 +109,16 @@ def main() -> None:
             edges.add((min(u, v), max(u, v)))
             commands.append(f"LINK {u} {v}")
             outputs.append("1")
-        else:
+        elif kind == 7:
             u, v = rng.randrange(n), rng.randrange(n)
             delta = rng.randrange(-10**6, 10**6 + 1)
             commands.append(f"APPLY {u} {v} {delta}")
             for x in path_vertices(u, v):
                 values[x] += delta
+        else:
+            v = rng.randrange(n)
+            commands.append(f"STATS {v} {len(component(v))}")
+            outputs.append("1")
 
     lines = [f"{n} {len(initial_edges)} {len(commands)}", " ".join(map(str, initial_values))]
     lines.extend(f"{u} {v}" for u, v in initial_edges)

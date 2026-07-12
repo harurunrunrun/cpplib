@@ -18,6 +18,24 @@ long long composition_add(long long f, long long g){ return f + g; }
 long long id_add(){ return 0; }
 constexpr Monoid_Act_Len<op_sum, e_sum, mapping_add, composition_add, id_add> range_add_sum;
 
+std::string op_concat(std::string left, long long, std::string right, long long){
+    return left + right;
+}
+std::string e_concat(){ return ""; }
+std::string mapping_shift(int shift, std::string value, long long){
+    for(char& character: value) character = static_cast<char>(character + shift);
+    return value;
+}
+int composition_shift(int left, int right){ return left + right; }
+int id_shift(){ return 0; }
+constexpr Monoid_Act_Len<
+    op_concat,
+    e_concat,
+    mapping_shift,
+    composition_shift,
+    id_shift
+> range_shift_concat;
+
 std::vector<int> path_vertices(int s, int t, const std::vector<std::vector<int>>& graph){
     int n = static_cast<int>(graph.size());
     std::vector<int> parent(n, -1);
@@ -117,6 +135,15 @@ int main(){
                 int u, v;
                 std::cin >> u >> v;
                 std::cout << tree.path_prod(u, v) << '\n';
+            }else if(type == "STATS"){
+                int v, component_size;
+                std::cin >> v >> component_size;
+                auto stats = tree.cluster_statistics(v);
+                bool valid = stats.edge == 2 * component_size - 1 &&
+                    stats.total() >= stats.edge &&
+                    stats.total() <= 2 * stats.edge - 1 &&
+                    stats.compress > 0 && stats.rake > 0 && stats.depth > 0;
+                std::cout << valid << '\n';
             }
         }
         return 0;
@@ -124,14 +151,36 @@ int main(){
 
 
     {
+        std::vector<std::string> value = {"a", "b", "c", "d"};
+        LazyTopTree<range_shift_concat, 10> tree(value);
+        assert(tree.link(0, 1));
+        assert(tree.link(0, 2));
+        assert(tree.link(0, 3));
+        assert(tree.path_prod(1, 2) == "bac");
+        tree.path_apply(3, 2, 1);
+        assert(tree.path_prod(1, 3) == "bbe");
+        assert(tree.path_prod(3, 1) == "ebb");
+        auto stats = tree.cluster_statistics(0);
+        assert(stats.compress > 0 && stats.rake > 0);
+    }
+
+    {
         std::vector<long long> value = {1, 2, 3};
         LazyTopTree<range_add_sum, 10> tree(value);
         assert(tree.link(0, 1));
         assert(tree.link(1, 2));
+        assert(tree.root(0) == 2);
         assert(tree.path_prod(0, 2) == 6);
         tree.path_apply(2, 0, 5);
         assert(tree.path_prod(0, 2) == 21);
         assert(tree.get(1) == 7);
+        tree.evert(0);
+        assert(tree.root(2) == 0);
+        auto stats = tree.cluster_statistics(0);
+        assert(stats.edge == 5 && stats.compress > 0 && stats.total() >= 5);
+        assert(tree.cut(1, 2));
+        assert(tree.root(0) == 1 && tree.root(2) == 2);
+        assert(tree.link(2, 1));
     }
 
     constexpr int n = 50;

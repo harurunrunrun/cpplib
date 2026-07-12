@@ -106,6 +106,15 @@ int main(){
                 int u, v;
                 std::cin >> u >> v;
                 std::cout << tree.path_prod(u, v) << '\n';
+            }else if(type == "STATS"){
+                int v, component_size;
+                std::cin >> v >> component_size;
+                auto stats = tree.cluster_statistics(v);
+                bool valid = stats.edge == 2 * component_size - 1 &&
+                    stats.total() >= stats.edge &&
+                    stats.total() <= 2 * stats.edge - 1 &&
+                    stats.compress > 0 && stats.rake > 0 && stats.depth > 0;
+                std::cout << valid << '\n';
             }
         }
         return 0;
@@ -113,12 +122,32 @@ int main(){
 
 
     {
+        std::vector<std::string> value = {"a", "b", "c", "d"};
+        TopTree<concat_monoid, 10> tree(value);
+        assert(tree.link(0, 1));
+        assert(tree.link(0, 2));
+        assert(tree.link(0, 3));
+        assert(tree.path_prod(1, 2) == "bac");
+        assert(tree.path_prod(3, 1) == "dab");
+        auto stats = tree.cluster_statistics(0);
+        assert(stats.compress > 0 && stats.rake > 0);
+    }
+
+    {
         std::vector<std::string> value = {"a", "b", "c"};
         TopTree<concat_monoid, 10> tree(value);
         assert(tree.link(0, 1));
         assert(tree.link(1, 2));
+        assert(tree.root(0) == 2);
         assert(tree.path_prod(0, 2) == "abc");
         assert(tree.path_prod(2, 0) == "cba");
+        tree.evert(0);
+        assert(tree.root(2) == 0);
+        auto stats = tree.cluster_statistics(0);
+        assert(stats.edge == 5 && stats.compress > 0 && stats.total() >= 5);
+        assert(tree.cut(1, 2));
+        assert(tree.root(0) == 1 && tree.root(2) == 2);
+        assert(tree.link(2, 1));
     }
 
     constexpr int n = 50;

@@ -61,7 +61,7 @@ def main() -> None:
     commands: list[str] = []
     outputs: list[str] = []
     for _ in range(1300):
-        kind = rng.randrange(7)
+        kind = rng.randrange(8)
         if kind == 0:
             v = rng.randrange(n)
             value = rng.randrange(-10**9, 10**9 + 1)
@@ -108,6 +108,10 @@ def main() -> None:
             graph[v].add(u)
             edges.add((min(u, v), max(u, v)))
             commands.append(f"LINK {u} {v}")
+            outputs.append("1")
+        else:
+            v = rng.randrange(n)
+            commands.append(f"STATS {v} {len(component(v))}")
             outputs.append("1")
 
     lines = [f"{n} {len(initial_edges)} {len(commands)}", " ".join(map(str, initial_values))]

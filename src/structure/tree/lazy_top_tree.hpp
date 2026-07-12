@@ -1,12 +1,15 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <memory>
+#include <map>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
 #include <vector>
+#include "top_tree_internal.hpp"
 
 template<auto MonoidActLen, int MAX_SIZE>
 struct LazyTopTree{
@@ -14,138 +17,64 @@ struct LazyTopTree{
     using S = typename std::remove_cvref_t<decltype(MonoidActLen)>::S;
     using T = typename std::remove_cvref_t<decltype(MonoidActLen)>::T;
 
+    struct ClusterStatistics{
+        int edge = 0;
+        int compress = 0;
+        int rake = 0;
+        int depth = 0;
+
+        int total() const{ return edge + compress + rake; }
+    };
+
 private:
+    struct Traits{
+        using S = LazyTopTree::S;
+        using T = LazyTopTree::T;
+
+        static S e(){ return MonoidActLen.e(); }
+        static S op(const S& left, int left_length, const S& right, int right_length){
+            return MonoidActLen.op(left, left_length, right, right_length);
+        }
+        static S mapping(const T& action, const S& value, int length){
+            return MonoidActLen.mapping(action, value, length);
+        }
+        static T composition(const T& left, const T& right){
+            return MonoidActLen.composition(left, right);
+        }
+        static T id(){ return MonoidActLen.id(); }
+    };
+
+    using Engine = top_tree_internal::SelfAdjustingTopTree<Traits, MAX_SIZE>;
+    using Vertex = typename Engine::Vertex;
+
     struct State{
-        std::array<int, MAX_SIZE> left{};
-        std::array<int, MAX_SIZE> right{};
-        std::array<int, MAX_SIZE> parent{};
-        std::array<int, MAX_SIZE> size{};
-        std::array<bool, MAX_SIZE> reversed{};
-        std::array<S, MAX_SIZE> value;
-        std::array<S, MAX_SIZE> aggregate;
-        std::array<S, MAX_SIZE> rev_aggregate;
-        std::array<T, MAX_SIZE> lazy;
+        Engine engine;
+        std::array<Vertex*, MAX_SIZE> vertex{};
+        std::array<int, MAX_SIZE> free_edge{};
+        int free_edge_count = 0;
+        std::map<std::pair<int, int>, int> edge_index;
     };
 
     int _n = 0;
     std::unique_ptr<State> state;
 
-    void check_vertex(int v, const char* message) const{
-        if(v < 0 || _n <= v)[[unlikely]] throw std::runtime_error(message);
+    void check_vertex(int vertex, const char* message) const{
+        if(vertex < 0 || _n <= vertex)[[unlikely]] throw std::runtime_error(message);
     }
-    int size_or_zero(int v) const{
-        return v == -1 ? 0 : state->size[v];
-    }
-    S aggregate_or_e(int v) const{
-        return v == -1 ? MonoidActLen.e() : state->aggregate[v];
-    }
-    S rev_aggregate_or_e(int v) const{
-        return v == -1 ? MonoidActLen.e() : state->rev_aggregate[v];
-    }
-    bool is_root(int v) const{
-        int p = state->parent[v];
-        return p == -1 || (state->left[p] != v && state->right[p] != v);
-    }
-    void pull(int v){
-        int l = state->left[v], r = state->right[v];
-        int ls = size_or_zero(l), rs = size_or_zero(r);
-        state->size[v] = ls + 1 + rs;
 
-        S prefix = MonoidActLen.op(aggregate_or_e(l), ls, state->value[v], 1);
-        state->aggregate[v] = MonoidActLen.op(prefix, ls + 1, aggregate_or_e(r), rs);
 
-        S rev_prefix = MonoidActLen.op(rev_aggregate_or_e(r), rs, state->value[v], 1);
-        state->rev_aggregate[v] = MonoidActLen.op(rev_prefix, rs + 1, rev_aggregate_or_e(l), ls);
-    }
-    void all_apply(int v, const T& f){
-        if(v == -1) return;
-        state->value[v] = MonoidActLen.mapping(f, state->value[v], 1);
-        state->aggregate[v] = MonoidActLen.mapping(f, state->aggregate[v], state->size[v]);
-        state->rev_aggregate[v] = MonoidActLen.mapping(f, state->rev_aggregate[v], state->size[v]);
-        state->lazy[v] = MonoidActLen.composition(f, state->lazy[v]);
-    }
-    void toggle(int v){
-        if(v == -1) return;
-        std::swap(state->left[v], state->right[v]);
-        std::swap(state->aggregate[v], state->rev_aggregate[v]);
-        state->reversed[v] = !state->reversed[v];
-    }
-    void push(int v){
-        if(state->reversed[v]){
-            toggle(state->left[v]);
-            toggle(state->right[v]);
-            state->reversed[v] = false;
-        }
-        all_apply(state->left[v], state->lazy[v]);
-        all_apply(state->right[v], state->lazy[v]);
-        state->lazy[v] = MonoidActLen.id();
-    }
-    void rotate(int v){
-        int p = state->parent[v];
-        int g = state->parent[p];
-        bool dir = state->right[p] == v;
-        int b = dir ? state->left[v] : state->right[v];
-        if(!is_root(p)){
-            if(state->left[g] == p) state->left[g] = v;
-            else state->right[g] = v;
-        }
-        state->parent[v] = g;
-        if(dir){
-            state->left[v] = p;
-            state->right[p] = b;
-        }else{
-            state->right[v] = p;
-            state->left[p] = b;
-        }
-        if(b != -1) state->parent[b] = p;
-        state->parent[p] = v;
-        pull(p);
-        pull(v);
-    }
-    void splay(int v){
-        static std::array<int, MAX_SIZE> stack;
-        int count = 0;
-        int x = v;
-        stack[count++] = x;
-        while(!is_root(x)){
-            x = state->parent[x];
-            stack[count++] = x;
-        }
-        while(count > 0) push(stack[--count]);
-        while(!is_root(v)){
-            int p = state->parent[v];
-            int g = state->parent[p];
-            if(!is_root(p)){
-                bool zigzig = (state->left[p] == v) == (state->left[g] == p);
-                rotate(zigzig ? p : v);
-            }
-            rotate(v);
+    void evert_unchecked(int vertex){
+        int old_root = state->engine.represented_root(state->vertex[vertex]);
+        if(old_root != vertex){
+            state->engine.set_represented_root(state->vertex[old_root], false);
+            state->engine.set_represented_root(state->vertex[vertex], true);
         }
     }
-    int expose(int v){
-        int last = -1;
-        for(int x = v; x != -1; x = state->parent[x]){
-            splay(x);
-            state->right[x] = last;
-            pull(x);
-            last = x;
+
+    void require_connected(int left, int right, const char* message){
+        if(!state->engine.connected(state->vertex[left], state->vertex[right]))[[unlikely]]{
+            throw std::runtime_error(message);
         }
-        splay(v);
-        return last;
-    }
-    void make_root_unchecked(int v){
-        expose(v);
-        toggle(v);
-    }
-    int find_root_unchecked(int v){
-        expose(v);
-        while(true){
-            push(v);
-            if(state->left[v] == -1) break;
-            v = state->left[v];
-        }
-        splay(v);
-        return v;
     }
 
 public:
@@ -154,25 +83,21 @@ public:
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
         state = std::make_unique<State>();
-        for(int k = 0; k < MAX_SIZE; k++){
-            state->left[k] = state->right[k] = state->parent[k] = -1;
-            state->size[k] = 1;
-            state->reversed[k] = false;
-            state->value[k] = MonoidActLen.e();
-            state->aggregate[k] = MonoidActLen.e();
-            state->rev_aggregate[k] = MonoidActLen.e();
-            state->lazy[k] = MonoidActLen.id();
+        for(int index = 0; index < _n; ++index){
+            state->free_edge[state->free_edge_count++] = index;
+        }
+        for(int vertex = 0; vertex < _n; ++vertex){
+            state->vertex[vertex] = state->engine.create_vertex(MonoidActLen.e(), vertex);
         }
     }
+
     explicit LazyTopTree(const std::vector<S>& values):
         LazyTopTree(static_cast<int>(values.size())){
         if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
-        for(int k = 0; k < _n; k++){
-            state->value[k] = values[static_cast<std::size_t>(k)];
-            state->aggregate[k] = state->value[k];
-            state->rev_aggregate[k] = state->value[k];
+        for(int vertex = 0; vertex < _n; ++vertex){
+            state->engine.set_vertex(state->vertex[vertex], values[static_cast<std::size_t>(vertex)]);
         }
     }
 
@@ -183,64 +108,84 @@ public:
 
     int size() const{ return _n; }
 
-    void evert(int v){
-        check_vertex(v, "library assertion fault: range violation (evert).");
-        make_root_unchecked(v);
-    }
-    int root(int v){
-        check_vertex(v, "library assertion fault: range violation (root).");
-        return find_root_unchecked(v);
-    }
-    bool connected(int u, int v){
-        check_vertex(u, "library assertion fault: range violation (connected).");
-        check_vertex(v, "library assertion fault: range violation (connected).");
-        if(u == v) return true;
-        return find_root_unchecked(u) == find_root_unchecked(v);
+    void evert(int vertex){
+        check_vertex(vertex, "library assertion fault: range violation (evert).");
+        evert_unchecked(vertex);
     }
 
-    bool link(int u, int v){
-        check_vertex(u, "library assertion fault: range violation (link).");
-        check_vertex(v, "library assertion fault: range violation (link).");
-        make_root_unchecked(u);
-        if(find_root_unchecked(v) == u) return false;
-        state->parent[u] = v;
-        return true;
+    int root(int vertex){
+        check_vertex(vertex, "library assertion fault: range violation (root).");
+        int result = state->engine.represented_root(state->vertex[vertex]);
+        if(result == -1)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: represented root is missing.");
+        }
+        return result;
     }
-    bool cut(int u, int v){
-        check_vertex(u, "library assertion fault: range violation (cut).");
-        check_vertex(v, "library assertion fault: range violation (cut).");
-        make_root_unchecked(u);
-        expose(v);
-        if(state->left[v] != u || state->right[u] != -1) return false;
-        state->left[v] = -1;
-        state->parent[u] = -1;
-        pull(v);
+
+    bool connected(int left, int right){
+        check_vertex(left, "library assertion fault: range violation (connected).");
+        check_vertex(right, "library assertion fault: range violation (connected).");
+        return state->engine.connected(state->vertex[left], state->vertex[right]);
+    }
+
+    bool link(int left, int right){
+        check_vertex(left, "library assertion fault: range violation (link).");
+        check_vertex(right, "library assertion fault: range violation (link).");
+        if(state->engine.connected(state->vertex[left], state->vertex[right])) return false;
+        if(state->free_edge_count == 0)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: top tree edge capacity exceeded.");
+        }
+        int slot = state->free_edge[--state->free_edge_count];
+        int old_root = state->engine.represented_root(state->vertex[left]);
+        state->engine.set_represented_root(state->vertex[old_root], false);
+        state->engine.link(state->vertex[left], state->vertex[right]);
+        state->edge_index.emplace(std::minmax(left, right), slot);
         return true;
     }
 
-    void set(int v, const S& x){
-        check_vertex(v, "library assertion fault: range violation (set).");
-        expose(v);
-        state->value[v] = x;
-        pull(v);
+    bool cut(int left, int right){
+        check_vertex(left, "library assertion fault: range violation (cut).");
+        check_vertex(right, "library assertion fault: range violation (cut).");
+        auto iterator = state->edge_index.find(std::minmax(left, right));
+        if(iterator == state->edge_index.end()) return false;
+        int slot = iterator->second;
+        int old_root = state->engine.represented_root(state->vertex[left]);
+        state->engine.set_represented_root(state->vertex[old_root], false);
+        state->engine.cut(state->vertex[left], state->vertex[right]);
+        state->edge_index.erase(iterator);
+        state->free_edge[state->free_edge_count++] = slot;
+        state->engine.set_represented_root(state->vertex[left], true);
+        state->engine.set_represented_root(state->vertex[right], true);
+        return true;
     }
-    S get(int v){
-        check_vertex(v, "library assertion fault: range violation (get).");
-        expose(v);
-        return state->value[v];
+
+    void set(int vertex, const S& value){
+        check_vertex(vertex, "library assertion fault: range violation (set).");
+        state->engine.set_vertex(state->vertex[vertex], value);
     }
-    void path_apply(int u, int v, const T& f){
-        check_vertex(u, "library assertion fault: range violation (path_apply).");
-        check_vertex(v, "library assertion fault: range violation (path_apply).");
-        make_root_unchecked(u);
-        expose(v);
-        all_apply(v, f);
+
+    S get(int vertex){
+        check_vertex(vertex, "library assertion fault: range violation (get).");
+        return state->engine.get_vertex(state->vertex[vertex]);
     }
-    S path_prod(int u, int v){
-        check_vertex(u, "library assertion fault: range violation (path_prod).");
-        check_vertex(v, "library assertion fault: range violation (path_prod).");
-        make_root_unchecked(u);
-        expose(v);
-        return state->aggregate[v];
+
+    void path_apply(int left, int right, const T& action){
+        check_vertex(left, "library assertion fault: range violation (path_apply).");
+        check_vertex(right, "library assertion fault: range violation (path_apply).");
+        require_connected(left, right, "library assertion fault: disconnected path (path_apply).");
+        state->engine.path_apply(state->vertex[left], state->vertex[right], action);
+    }
+
+    S path_prod(int left, int right){
+        check_vertex(left, "library assertion fault: range violation (path_prod).");
+        check_vertex(right, "library assertion fault: range violation (path_prod).");
+        require_connected(left, right, "library assertion fault: disconnected path (path_prod).");
+        return state->engine.path_product(state->vertex[left], state->vertex[right]);
+    }
+
+    ClusterStatistics cluster_statistics(int vertex){
+        check_vertex(vertex, "library assertion fault: range violation (cluster_statistics).");
+        auto source = state->engine.statistics(state->vertex[vertex]);
+        return {source.edge, source.compress, source.rake, source.depth};
     }
 };
