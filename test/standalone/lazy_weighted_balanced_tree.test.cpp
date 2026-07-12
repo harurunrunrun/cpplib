@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <numeric>
 #include <random>
 #include <string>
@@ -42,6 +43,53 @@ void check_all(LazyWeightedBalancedTree<range_add_sum, 512>& tree, const std::ve
 }
 
 int main(){
+    int input_n, q;
+    if(std::cin >> input_n >> q){
+        std::vector<long long> input(static_cast<std::size_t>(input_n));
+        for(long long& value: input) std::cin >> value;
+        LazyWeightedBalancedTree<range_add_sum, 1024> tree(input);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "INSERT"){
+                int pos;
+                long long value;
+                std::cin >> pos >> value;
+                tree.insert(pos, value);
+            }else if(type == "ERASE"){
+                int pos;
+                std::cin >> pos;
+                tree.erase(pos);
+            }else if(type == "SET"){
+                int pos;
+                long long value;
+                std::cin >> pos >> value;
+                tree.set(pos, value);
+            }else if(type == "APPLY"){
+                int l, r;
+                long long value;
+                std::cin >> l >> r >> value;
+                tree.apply(l, r, value);
+            }else if(type == "REVERSE"){
+                int l, r;
+                std::cin >> l >> r;
+                tree.reverse(l, r);
+            }else if(type == "PROD"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << tree.prod(l, r) << '\n';
+            }else if(type == "GET"){
+                int pos;
+                std::cin >> pos;
+                std::cout << tree.get(pos) << '\n';
+            }else if(type == "SIZE"){
+                std::cout << tree.size() << '\n';
+            }else if(type == "ALL"){
+                std::cout << tree.all_prod() << '\n';
+            }
+        }
+        return 0;
+    }
     {
         std::vector<std::string> value = {"a", "b", "c", "d"};
         LazyWeightedBalancedTree<concat_act, 16> tree(value);

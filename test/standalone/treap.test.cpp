@@ -1,10 +1,12 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <random>
 #include <set>
 #include <stdexcept>
+#include <string>
 #include "../../src/structure/tree/treap.hpp"
 
 std::optional<int> kth_naive(const std::set<int>& s, int k){
@@ -58,6 +60,68 @@ void check_all(const TreapSet<int, 256>& tree, const std::set<int>& s){
 }
 
 int main(){
+    int input_q;
+    if(std::cin >> input_q){
+        TreapSet<int, 512> tree;
+        auto print_optional = [](std::optional<int> value){
+            if(value.has_value()){
+                std::cout << *value << '\n';
+            }else{
+                std::cout << "NONE\n";
+            }
+        };
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "INSERT"){
+                int value;
+                std::cin >> value;
+                std::cout << tree.insert(value) << '\n';
+            }else if(type == "ERASE"){
+                int value;
+                std::cin >> value;
+                std::cout << tree.erase(value) << '\n';
+            }else if(type == "CONTAINS"){
+                int value;
+                std::cin >> value;
+                std::cout << tree.contains(value) << '\n';
+            }else if(type == "KTH"){
+                int k;
+                std::cin >> k;
+                print_optional(tree.kth(k));
+            }else if(type == "ORDER"){
+                int value;
+                std::cin >> value;
+                std::cout << tree.order_of_key(value) << '\n';
+            }else if(type == "ORDERU"){
+                int value;
+                std::cin >> value;
+                std::cout << tree.order_of_key_upper(value) << '\n';
+            }else if(type == "LOWER"){
+                int value;
+                std::cin >> value;
+                print_optional(tree.lower_bound(value));
+            }else if(type == "UPPER"){
+                int value;
+                std::cin >> value;
+                print_optional(tree.upper_bound(value));
+            }else if(type == "LEQ"){
+                int value;
+                std::cin >> value;
+                print_optional(tree.max_leq(value));
+            }else if(type == "LESS"){
+                int value;
+                std::cin >> value;
+                print_optional(tree.max_less(value));
+            }else if(type == "SIZE"){
+                std::cout << tree.size() << '\n';
+            }else if(type == "CLEAR"){
+                tree.clear();
+                std::cout << tree.size() << '\n';
+            }
+        }
+        return 0;
+    }
     {
         TreapSet<int, 3> tree;
         assert(tree.insert(1));
