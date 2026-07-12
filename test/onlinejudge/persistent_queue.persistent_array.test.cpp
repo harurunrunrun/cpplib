@@ -1,22 +1,12 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/persistent_queue
 
-#include <algorithm>
 #include <array>
 #include <iostream>
-#include "../src/structure/segtree/persistent_segtree.hpp"
+#include "../../src/structure/array/persistent_array.hpp"
 
-int max_op(int a, int b){
-    return std::max(a, b);
-}
-
-int max_e(){
-    return 0;
-}
-
-constexpr Monoid<max_op, max_e> max_monoid{};
 constexpr int MAX_Q = 500000;
 
-PersistentSegtree<max_monoid, MAX_Q, MAX_Q> values(MAX_Q);
+PersistentArray<int, MAX_Q, MAX_Q> values(MAX_Q, 0);
 std::array<int, MAX_Q + 1> roots{};
 std::array<int, MAX_Q + 1> left_index{};
 std::array<int, MAX_Q + 1> right_index{};

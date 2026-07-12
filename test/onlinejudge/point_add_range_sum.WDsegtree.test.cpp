@@ -2,8 +2,8 @@
 
 
 
-#include "../src/structure/other/fastio.hpp"
-#include "../src/structure/segtree/widesegtree.hpp"
+#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/segtree/widesegtree.hpp"
 
 using ll=long long;
 using namespace std;

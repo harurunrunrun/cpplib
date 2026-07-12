@@ -4,8 +4,8 @@
 #include <iostream>
 #include <utility>
 
-#include "../src/structure/modint/modint.hpp"
-#include "../src/structure/segtree/lazysegtree.hpp"
+#include "../../src/structure/modint/modint.hpp"
+#include "../../src/structure/segtree/lazysegtree.hpp"
 
 
 using namespace std;

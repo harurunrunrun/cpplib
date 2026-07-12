@@ -1,13 +1,11 @@
-// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/range_affine_point_get
+// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/range_affine_range_sum_large_array
 
 
 #include <iostream>
 #include <utility>
 
-
-
-#include "../src/structure/modint/modint.hpp"
-#include "../src/structure/segtree/dualsegtree.hpp"
+#include "../../src/structure/modint/modint.hpp"
+#include "../../src/structure/segtree/dynamic_lazysegtree.hpp"
 
 
 using namespace std;
@@ -16,17 +14,18 @@ using mint=Modint998244353;
 
 using S = mint;
 using T = pair<mint,mint>;
+using ll = long long;
 
-S op(S a, S b){
-    return 0;
+S op(S a, ll a_len, S b, ll b_len){
+    return a+b;
 }
 
 S e(){
     return 0;
 }
 
-S mapping(T f, S x){
-    return f.first*x+f.second;
+S mapping(T f, S x, ll len){
+    return f.first*x+f.second*len;
 }
 
 T composition(T f, T g){
@@ -38,7 +37,9 @@ T id(){
 }
 
 
-constexpr Monoid_Act<op,e,mapping,composition,id> monoid;
+
+
+constexpr Monoid_Act_Len<op,e,mapping,composition,id> monoid;
 
 int main(){
     ios::sync_with_stdio(false);
@@ -46,14 +47,7 @@ int main(){
 
     int N,Q;
     cin>>N>>Q;
-    vector<S> A(N);
-    for(int i=0;i<N;i++){
-        int a;
-        cin>>a;
-        A[i]=a;
-    }
-
-    DualSegtree<monoid,500000> seg(A);
+    DynamicLazySegtree<monoid,1'000'000'000> seg(N);
     for(int i=0;i<Q;i++){
         int t;
         cin>>t;
@@ -62,9 +56,9 @@ int main(){
             cin>>l>>r>>b>>c;
             seg.apply(l,r,T{b,c});
         }else{
-            int idx;
-            cin>>idx;
-            cout<<seg.get(idx).val()<<"\n";
+            int l,r;
+            cin>>l>>r;
+            cout<<seg.prod(l,r).val()<<"\n";
         }
     }
 }

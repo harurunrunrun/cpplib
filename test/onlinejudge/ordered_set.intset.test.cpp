@@ -4,8 +4,8 @@
 #include <vector>
 #include <utility>
 
-#include "../src/structure/other/fastio.hpp"
-#include "../src/structure/tree/integer_set.hpp"
+#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/tree/integer_set.hpp"
 
 using namespace std;
 

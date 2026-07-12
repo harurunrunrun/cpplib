@@ -34,9 +34,10 @@ Jekyll sourceのみ生成する場合は `make docs-source` を実行する。
 
 ## Test layout
 
-- `test/*.test.cpp`: online judgeを使うverification
+- `test/onlinejudge/*.test.cpp`: online judgeを使うverification
 - `test/standalone/*.test.cpp`: 自己完結する独自テスト
 - `test/generator/<name>/`: 独自テストケースのgenerator
 - `test/checker/<name>/`: 独自checker
+- `test/tools/`: verification用の補助ツール
 
 独自テストは `competitive-verifier: STANDALONE` を指定し、`make verify` から実行する。generatorとcheckerもテスト資産として残し、テスト本体と一緒にコミットする。

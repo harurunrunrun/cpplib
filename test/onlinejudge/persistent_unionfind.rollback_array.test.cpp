@@ -4,7 +4,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-#include "../src/structure/array/rollback_array.hpp"
+#include "../../src/structure/array/rollback_array.hpp"
 
 constexpr int MAX_N = 200000;
 

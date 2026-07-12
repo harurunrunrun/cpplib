@@ -1,0 +1,5 @@
+# Test checkers
+
+独自の入出力テストで使用するcheckerをテストごとのサブディレクトリに配置する。
+
+checkerのsourceと設定はverification本体と一緒にコミットする。
