@@ -101,9 +101,6 @@ private:
             recurrence[static_cast<std::size_t>(i)] =
                 -current[static_cast<std::size_t>(i + 1)];
         }
-        while(!recurrence.empty() && recurrence.back() == T()){
-            recurrence.pop_back();
-        }
         return recurrence;
     }
 

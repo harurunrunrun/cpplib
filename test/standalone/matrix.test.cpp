@@ -3,6 +3,7 @@
 #define PROBLEM "https://example.com/standalone/matrix"
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 #include "../../src/structure/matrix/matrix.hpp"
@@ -30,6 +31,22 @@ Matrix<T, N, N> matrix_pow(Matrix<T, N, N> base, long long exponent){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        using input_mint = Modint998244353;
+        while(q--){
+            int n, row, col;
+            long long exponent;
+            std::cin >> n >> exponent >> row >> col;
+            Matrix<input_mint, 8, 8> matrix(n, n);
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++) std::cin >> matrix(i, j);
+            }
+            std::cout << matrix.pow_entry_bmbm(exponent, row, col) << '\n';
+        }
+        return 0;
+    }
+
     Matrix<long long, 3, 4> a(2, 3);
     assert(a.rows() == 2);
     assert(a.cols() == 3);
