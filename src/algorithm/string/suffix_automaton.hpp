@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <vector>
 
 template<int ALPHABET, int MAX_STATES, char OFFSET = 'a'>
 struct SuffixAutomaton{
@@ -32,6 +33,7 @@ private:
     int last_state = 0;
     bool occurrence_built = false;
     std::array<State, MAX_STATES> states{};
+    std::array<bool, MAX_STATES> terminal_contribution{};
 
     int char_id(char c) const{
         int id = static_cast<int>(c - OFFSET);
@@ -45,6 +47,7 @@ private:
             throw std::runtime_error("library assertion fault: capacity exceeded (extend).");
         }
         states[used] = State();
+        terminal_contribution[used] = false;
         return used++;
     }
 
@@ -70,6 +73,7 @@ public:
         int cur = new_state();
         states[cur].length = states[last_state].length + 1;
         states[cur].occurrence = 1;
+        terminal_contribution[cur] = true;
 
         int p = last_state;
         while(p != -1 && states[p].next[x] == -1){
@@ -119,7 +123,10 @@ public:
     void build_occurrences(){
         if(occurrence_built) return;
         int max_len = 0;
-        for(int v = 0; v < used; v++) max_len = std::max(max_len, states[v].length);
+        for(int v = 0; v < used; v++){
+            states[v].occurrence = terminal_contribution[v] ? 1 : 0;
+            max_len = std::max(max_len, states[v].length);
+        }
         std::vector<int> count(static_cast<std::size_t>(max_len) + 1), order(static_cast<std::size_t>(used));
         for(int v = 0; v < used; v++) count[static_cast<std::size_t>(states[v].length)]++;
         for(int i = 1; i <= max_len; i++) count[static_cast<std::size_t>(i)] += count[static_cast<std::size_t>(i - 1)];
