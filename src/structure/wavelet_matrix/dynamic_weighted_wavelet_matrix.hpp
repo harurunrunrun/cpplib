@@ -36,6 +36,11 @@ private:
     std::array<std::array<W, BLOCK_SIZE + 1>, block_count_max> sorted_prefix{};
     std::array<W, block_count_max> block_sum{};
 
+    struct Entry{
+        U value{};
+        W weight{};
+        int offset = 0;
+    };
     static constexpr U sign_mask = std::is_signed_v<T>
         ? U{1} << (digits - 1) : U{0};
     static U encode(T value){ return static_cast<U>(value) ^ sign_mask; }
@@ -64,32 +69,28 @@ private:
         int first = block * BLOCK_SIZE;
         int last = std::min(_n, first + BLOCK_SIZE);
         int size = last - first;
-        std::array<std::pair<U, W>, BLOCK_SIZE> buffer{};
+        std::array<Entry, BLOCK_SIZE> buffer{};
         W total{};
         for(int i = 0; i < size; i++){
             int index = first + i;
             buffer[static_cast<std::size_t>(i)] = {
                 values[static_cast<std::size_t>(index)],
-                weights[static_cast<std::size_t>(index)]
+                weights[static_cast<std::size_t>(index)],
+                i
             };
             total += weights[static_cast<std::size_t>(index)];
         }
-        for(int i = 1; i < size; i++){
-            auto value = buffer[static_cast<std::size_t>(i)];
-            int j = i;
-            while(j > 0 && value.first < buffer[static_cast<std::size_t>(j - 1)].first){
-                buffer[static_cast<std::size_t>(j)] = buffer[static_cast<std::size_t>(j - 1)];
-                j--;
-            }
-            buffer[static_cast<std::size_t>(j)] = value;
-        }
+        std::sort(buffer.begin(), buffer.begin() + size, [](const Entry& lhs, const Entry& rhs){
+            if(lhs.value != rhs.value) return lhs.value < rhs.value;
+            return lhs.offset < rhs.offset;
+        });
         sorted_prefix[static_cast<std::size_t>(block)][0] = W{};
         for(int i = 0; i < size; i++){
             sorted_value[static_cast<std::size_t>(block)][static_cast<std::size_t>(i)] =
-                buffer[static_cast<std::size_t>(i)].first;
+                buffer[static_cast<std::size_t>(i)].value;
             sorted_prefix[static_cast<std::size_t>(block)][static_cast<std::size_t>(i + 1)] =
                 sorted_prefix[static_cast<std::size_t>(block)][static_cast<std::size_t>(i)] +
-                buffer[static_cast<std::size_t>(i)].second;
+                buffer[static_cast<std::size_t>(i)].weight;
         }
         block_sum[static_cast<std::size_t>(block)] = total;
     }
@@ -173,6 +174,40 @@ private:
         while(l < r){
             if(values[static_cast<std::size_t>(l)] == key) result++;
             l++;
+        }
+        return result;
+    }
+
+    W sum_first_equal_encoded(int l, int r, U key, int count) const{
+        W result{};
+        while(l < r && l % BLOCK_SIZE != 0 && count > 0){
+            if(values[static_cast<std::size_t>(l)] == key){
+                result += weights[static_cast<std::size_t>(l)];
+                --count;
+            }
+            ++l;
+        }
+        while(l + BLOCK_SIZE <= r && count > 0){
+            const int block = l / BLOCK_SIZE;
+            const auto begin = sorted_value[static_cast<std::size_t>(block)].begin();
+            const int size = block_size(block);
+            const auto first = std::lower_bound(begin, begin + size, key);
+            const auto last = std::upper_bound(first, begin + size, key);
+            const int available = static_cast<int>(last - first);
+            const int take = std::min(count, available);
+            const int offset = static_cast<int>(first - begin);
+            const auto& prefix = sorted_prefix[static_cast<std::size_t>(block)];
+            result += prefix[static_cast<std::size_t>(offset + take)] -
+                      prefix[static_cast<std::size_t>(offset)];
+            count -= take;
+            l += BLOCK_SIZE;
+        }
+        while(l < r && count > 0){
+            if(values[static_cast<std::size_t>(l)] == key){
+                result += weights[static_cast<std::size_t>(l)];
+                --count;
+            }
+            ++l;
         }
         return result;
     }
@@ -335,14 +370,7 @@ public:
         T border = kth_smallest(l, r, k - 1);
         W result = range_sum(l, r, border);
         int need = k - range_freq(l, r, border);
-        U key = encode(border);
-        for(int i = l; i < r && need > 0; i++){
-            if(values[static_cast<std::size_t>(i)] == key){
-                result += weights[static_cast<std::size_t>(i)];
-                need--;
-            }
-        }
-        return result;
+        return result + sum_first_equal_encoded(l, r, encode(border), need);
     }
 
     W sum_k_largest(int l, int r, int k) const{

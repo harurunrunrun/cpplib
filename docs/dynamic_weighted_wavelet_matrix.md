@@ -41,4 +41,4 @@ $B = BLOCK\_SIZE$ とする。
 - `set`: $O(B\log B)$
 - `rank`, `range_freq`, `range_sum`: $O(B + \frac{N}{B}\log B)$
 - `kth_smallest`, `kth_largest`: $O(BIT\_WIDTH \cdot (B + \frac{N}{B}\log B))$
-- `sum_k_smallest`, `sum_k_largest`: `kth_smallest` に加えて、同値の探索に $O(r-l)$
+- `sum_k_smallest`, `sum_k_largest`: $O(BIT\_WIDTH \cdot (B + \frac{N}{B}\log B))$
