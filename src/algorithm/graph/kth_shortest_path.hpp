@@ -25,20 +25,13 @@ struct KthShortestPathResult{
 namespace kth_shortest_path_internal{
 
 template<class T>
-bool banned_edge(int from, int to, const std::vector<std::pair<int, int>>& banned_edges){
-    for(auto [a, b]: banned_edges){
-        if(a == from && b == to) return true;
-    }
-    return false;
-}
-
-template<class T>
 KthShortestPathResult<T> shortest_path(
     const std::vector<std::vector<KthShortestPathEdge<T>>>& graph,
     int source,
     int target,
     const std::vector<char>& banned_vertices,
-    const std::vector<std::pair<int, int>>& banned_edges,
+    int banned_from,
+    const std::vector<int>& banned_to,
     T inf
 ){
     const int n = static_cast<int>(graph.size());
@@ -64,7 +57,10 @@ KthShortestPathResult<T> shortest_path(
         if(v == target) break;
         for(const auto& e: graph[static_cast<std::size_t>(v)]){
             if(banned_vertices[static_cast<std::size_t>(e.to)]) continue;
-            if(banned_edge<T>(v, e.to, banned_edges)) continue;
+            if(v == banned_from &&
+               std::binary_search(banned_to.begin(), banned_to.end(), e.to)){
+                continue;
+            }
             T nd = d + e.cost;
             if(!reachable[static_cast<std::size_t>(e.to)] ||
                nd < dist[static_cast<std::size_t>(e.to)]){
@@ -132,13 +128,14 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
     if(k == 0) return result;
 
     std::vector<char> banned_vertices(static_cast<std::size_t>(n), 0);
-    std::vector<std::pair<int, int>> banned_edges;
+    std::vector<int> banned_to;
     auto first = kth_shortest_path_internal::shortest_path(
         graph,
         source,
         target,
         banned_vertices,
-        banned_edges,
+        -1,
+        banned_to,
         inf
     );
     if(first.vertices.empty()) return result;
@@ -161,7 +158,7 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
             for(int i = 0; i < spur_index; i++){
                 banned_vertices[static_cast<std::size_t>(base.vertices[static_cast<std::size_t>(i)])] = 1;
             }
-            banned_edges.clear();
+            banned_to.clear();
             for(const auto& path: result){
                 if(static_cast<int>(path.vertices.size()) <= spur_index + 1) continue;
                 bool same_root = true;
@@ -172,19 +169,19 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
                     }
                 }
                 if(same_root){
-                    banned_edges.push_back({
-                        path.vertices[static_cast<std::size_t>(spur_index)],
-                        path.vertices[static_cast<std::size_t>(spur_index + 1)]
-                    });
+                    banned_to.push_back(path.vertices[static_cast<std::size_t>(spur_index + 1)]);
                 }
             }
+            std::sort(banned_to.begin(), banned_to.end());
+            banned_to.erase(std::unique(banned_to.begin(), banned_to.end()), banned_to.end());
 
             auto spur_path = kth_shortest_path_internal::shortest_path(
                 graph,
                 spur,
                 target,
                 banned_vertices,
-                banned_edges,
+                spur,
+                banned_to,
                 inf
             );
             if(spur_path.vertices.empty()) continue;

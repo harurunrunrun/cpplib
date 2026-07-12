@@ -70,6 +70,14 @@ def main() -> None:
                         edges.append((u, v, rng.randrange(8)))
             cases.append((n, edges, rng.randrange(n), rng.randrange(n), 6))
 
+    branch_count = 1200
+    target = branch_count + 1
+    large_edges: list[tuple[int, int, int]] = []
+    for vertex in range(1, branch_count + 1):
+        large_edges.append((0, vertex, vertex))
+        large_edges.append((vertex, target, 0))
+    cases.append((target + 1, large_edges, 0, target, 600))
+
     for i, case in enumerate(cases):
         write_case(out_dir, i, *case)
 
