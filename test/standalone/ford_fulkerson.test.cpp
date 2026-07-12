@@ -1,0 +1,73 @@
+// competitive-verifier: STANDALONE
+
+#include <algorithm>
+#include <cassert>
+#include <iostream>
+#include <random>
+#include <tuple>
+#include <vector>
+#include "../../src/algorithm/matching/ford_fulkerson.hpp"
+
+long long brute_min_cut(
+    int n,
+    int s,
+    int t,
+    const std::vector<std::tuple<int, int, long long>>& edges
+){
+    long long best = (1LL << 60);
+    for(int mask = 0; mask < (1 << n); mask++){
+        if(((mask >> s) & 1) == 0 || ((mask >> t) & 1) != 0) continue;
+        long long cut = 0;
+        for(auto [u, v, c]: edges){
+            if(((mask >> u) & 1) && !((mask >> v) & 1)) cut += c;
+        }
+        best = std::min(best, cut);
+    }
+    return best;
+}
+
+void self_test(){
+    {
+        FordFulkerson<long long> graph(4);
+        graph.add_edge(0, 1, 3);
+        graph.add_edge(0, 2, 2);
+        graph.add_edge(1, 2, 1);
+        graph.add_edge(1, 3, 2);
+        graph.add_edge(2, 3, 4);
+        assert(graph.max_flow(0, 3) == 5);
+    }
+    std::mt19937 rng(20260826);
+    for(int n = 2; n <= 10; n++){
+        for(int step = 0; step < 80; step++){
+            int s = 0, t = n - 1;
+            FordFulkerson<long long> graph(n);
+            std::vector<std::tuple<int, int, long long>> edges;
+            for(int u = 0; u < n; u++){
+                for(int v = 0; v < n; v++){
+                    if(u != v && rng() % 5 == 0){
+                        long long c = static_cast<int>(rng() % 6);
+                        graph.add_edge(u, v, c);
+                        edges.push_back({u, v, c});
+                    }
+                }
+            }
+            assert(graph.max_flow(s, t) == brute_min_cut(n, s, t, edges));
+        }
+    }
+}
+
+int main(){
+    int n, m, s, t;
+    if(!(std::cin >> n >> m >> s >> t)){
+        self_test();
+        return 0;
+    }
+    FordFulkerson<long long> graph(n);
+    for(int i = 0; i < m; i++){
+        int u, v;
+        long long c;
+        std::cin >> u >> v >> c;
+        graph.add_edge(u, v, c);
+    }
+    std::cout << graph.max_flow(s, t) << '\n';
+}
