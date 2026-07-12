@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/matching/minimum_weight_general_matching.hpp
 
 一般グラフの最小重み最大マッチング。
 
-まずマッチング数を最大化し、その中で重み和を最小化する。
+まずマッチング数を最大化し、その中で重み和を最小化する。Edmondsのblossom algorithmをprimal-dual法で重み付きへ拡張している。
 
 # 関数
 
@@ -13,7 +13,7 @@ documentation_of: ../src/algorithm/matching/minimum_weight_general_matching.hpp
 minimum_weight_general_matching<T>(n, edges, inf)
 ```
 
-`edges` は `MinimumWeightGeneralMatchingEdge<T>{from, to, cost}` の列。多重辺がある場合は最小コストの辺を使う。
+`edges` は `MinimumWeightGeneralMatchingEdge<T>{from, to, cost}` の列。自己ループは無視する。多重辺がある場合は最小コストの辺を使う。`T` は64bit以下の整数型。
 
 `MinimumWeightGeneralMatchingResult<T>` は次を持つ。
 
@@ -23,8 +23,9 @@ T cost;
 vector<int> match;
 ```
 
-実装上 `N <= 22`。
+`match[v]` は `v` と対応する頂点、未マッチなら `-1`。重み和が `T` に収まらない場合は `std::overflow_error` を送出する。`inf` は以前のAPIとの互換性のために残している。
 
 ## 時間計算量
 
-- $O(2^N N^2)$
+- 時間: $O(N^3)$
+- 空間: $O(N^2 + M)$

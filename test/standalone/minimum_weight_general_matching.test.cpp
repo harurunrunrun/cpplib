@@ -126,5 +126,6 @@ int main(){
         edges.push_back({u, v, c});
     }
     auto res = minimum_weight_general_matching<long long>(n, edges);
+    assert(valid(n, res));
     std::cout << res.size << ' ' << res.cost << '\n';
 }

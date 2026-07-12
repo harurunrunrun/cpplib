@@ -1,9 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include <limits>
 #include <stdexcept>
+#include <type_traits>
+#include <utility>
 #include <vector>
+
+#include "minimum_weight_general_matching_internal.hpp"
 
 template<class T>
 struct MinimumWeightGeneralMatchingEdge{
@@ -19,93 +22,78 @@ struct MinimumWeightGeneralMatchingResult{
     std::vector<int> match;
 };
 
-namespace minimum_weight_general_matching_internal{
-
-template<class T>
-struct State{
-    int size = -1;
-    T cost = T(0);
-};
-
-template<class T>
-bool better(const State<T>& lhs, const State<T>& rhs){
-    if(lhs.size != rhs.size) return lhs.size > rhs.size;
-    return lhs.cost < rhs.cost;
-}
-
-} // namespace minimum_weight_general_matching_internal
-
 template<class T>
 MinimumWeightGeneralMatchingResult<T> minimum_weight_general_matching(
     int n,
     const std::vector<MinimumWeightGeneralMatchingEdge<T>>& edges,
     T inf = std::numeric_limits<T>::max() / 4
 ){
-    if(n < 0 || 22 < n)[[unlikely]]{
+    static_assert(std::is_integral_v<T> && sizeof(T) <= sizeof(long long));
+    static_assert(!std::is_same_v<std::remove_cv_t<T>, bool>);
+    if(n < 0 || std::numeric_limits<int>::max() / 2 < n)[[unlikely]]{
         throw std::runtime_error("library assertion fault: range violation (minimum_weight_general_matching).");
     }
-    std::vector<std::vector<char>> exists(static_cast<std::size_t>(n), std::vector<char>(static_cast<std::size_t>(n), 0));
-    std::vector<std::vector<T>> cost(static_cast<std::size_t>(n), std::vector<T>(static_cast<std::size_t>(n), inf));
-    for(const auto& e: edges){
-        if(e.from < 0 || n <= e.from || e.to < 0 || n <= e.to)[[unlikely]]{
+    (void)inf;
+
+    std::vector<std::vector<char>> exists(
+        static_cast<std::size_t>(n),
+        std::vector<char>(static_cast<std::size_t>(n), 0)
+    );
+    std::vector<std::vector<T>> costs(
+        static_cast<std::size_t>(n),
+        std::vector<T>(static_cast<std::size_t>(n), T(0))
+    );
+    for(const auto& edge: edges){
+        if(edge.from < 0 || n <= edge.from || edge.to < 0 || n <= edge.to)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (minimum_weight_general_matching).");
         }
-        if(e.from == e.to) continue;
-        int u = e.from;
-        int v = e.to;
-        if(!exists[static_cast<std::size_t>(u)][static_cast<std::size_t>(v)] ||
-           e.cost < cost[static_cast<std::size_t>(u)][static_cast<std::size_t>(v)]){
-            exists[static_cast<std::size_t>(u)][static_cast<std::size_t>(v)] = 1;
-            exists[static_cast<std::size_t>(v)][static_cast<std::size_t>(u)] = 1;
-            cost[static_cast<std::size_t>(u)][static_cast<std::size_t>(v)] = e.cost;
-            cost[static_cast<std::size_t>(v)][static_cast<std::size_t>(u)] = e.cost;
+        if(edge.from == edge.to) continue;
+        const std::size_t from = static_cast<std::size_t>(edge.from);
+        const std::size_t to = static_cast<std::size_t>(edge.to);
+        if(!exists[from][to] || edge.cost < costs[from][to]){
+            exists[from][to] = 1;
+            exists[to][from] = 1;
+            costs[from][to] = edge.cost;
+            costs[to][from] = edge.cost;
         }
     }
 
-    using State = minimum_weight_general_matching_internal::State<T>;
-    const std::uint64_t full = n == 64 ? ~std::uint64_t(0) : ((std::uint64_t(1) << n) - 1);
-    std::vector<State> dp(static_cast<std::size_t>(full + 1));
-    std::vector<char> seen(static_cast<std::size_t>(full + 1), 0);
-    std::vector<int> choice(static_cast<std::size_t>(full + 1), -1);
-
-    auto solve = [&](auto&& self, std::uint64_t mask) -> State {
-        if(mask == 0) return {0, T(0)};
-        if(seen[static_cast<std::size_t>(mask)]) return dp[static_cast<std::size_t>(mask)];
-        seen[static_cast<std::size_t>(mask)] = 1;
-        int v = __builtin_ctzll(mask);
-        std::uint64_t rest = mask ^ (std::uint64_t(1) << v);
-        State best = self(self, rest);
-        choice[static_cast<std::size_t>(mask)] = -1;
-        for(int u = v + 1; u < n; u++){
-            if(!(rest >> u & 1U)) continue;
-            if(!exists[static_cast<std::size_t>(v)][static_cast<std::size_t>(u)]) continue;
-            State candidate = self(self, rest ^ (std::uint64_t(1) << u));
-            candidate.size++;
-            candidate.cost += cost[static_cast<std::size_t>(v)][static_cast<std::size_t>(u)];
-            if(minimum_weight_general_matching_internal::better(candidate, best)){
-                best = candidate;
-                choice[static_cast<std::size_t>(mask)] = u;
-            }
+    using minimum_weight_general_matching_internal::Wide;
+    using minimum_weight_general_matching_internal::WeightedEdge;
+    std::vector<WeightedEdge> weighted_edges;
+    weighted_edges.reserve(edges.size());
+    for(int from = 0; from < n; ++from){
+        for(int to = from + 1; to < n; ++to){
+            if(!exists[static_cast<std::size_t>(from)][static_cast<std::size_t>(to)]) continue;
+            weighted_edges.push_back({
+                from,
+                to,
+                -static_cast<Wide>(costs[static_cast<std::size_t>(from)][static_cast<std::size_t>(to)])
+            });
         }
-        dp[static_cast<std::size_t>(mask)] = best;
-        return best;
-    };
+    }
 
-    State best = solve(solve, full);
+    if(weighted_edges.size() > static_cast<std::size_t>(std::numeric_limits<int>::max() / 2))[[unlikely]]{
+        throw std::runtime_error("library assertion fault: too many edges (minimum_weight_general_matching).");
+    }
+    minimum_weight_general_matching_internal::WeightedBlossom solver(n, std::move(weighted_edges));
     MinimumWeightGeneralMatchingResult<T> result;
-    result.size = best.size;
-    result.cost = best.cost;
-    result.match.assign(static_cast<std::size_t>(n), -1);
-    std::uint64_t mask = full;
-    while(mask){
-        int v = __builtin_ctzll(mask);
-        int u = choice[static_cast<std::size_t>(mask)];
-        mask ^= std::uint64_t(1) << v;
-        if(u != -1){
-            result.match[static_cast<std::size_t>(v)] = u;
-            result.match[static_cast<std::size_t>(u)] = v;
-            mask ^= std::uint64_t(1) << u;
+    result.match = solver.solve();
+    result.size = 0;
+    Wide total_cost = 0;
+    for(int vertex = 0; vertex < n; ++vertex){
+        const int other = result.match[static_cast<std::size_t>(vertex)];
+        if(vertex < other){
+            ++result.size;
+            total_cost += static_cast<Wide>(costs[static_cast<std::size_t>(vertex)][static_cast<std::size_t>(other)]);
         }
     }
+
+    const Wide minimum = static_cast<Wide>(std::numeric_limits<T>::lowest());
+    const Wide maximum = static_cast<Wide>(std::numeric_limits<T>::max());
+    if(total_cost < minimum || maximum < total_cost)[[unlikely]]{
+        throw std::overflow_error("library assertion fault: overflow (minimum_weight_general_matching).");
+    }
+    result.cost = static_cast<T>(total_cost);
     return result;
 }
