@@ -83,3 +83,23 @@ A.transposed()
 ## 時間計算量
 
 - $O(rows \cdot cols)$
+
+# pow_entry_bmbm
+
+```cpp
+A.pow_entry_bmbm(m, i, j)
+A.pow_entry_bmbm(m, k)
+```
+
+BM + Bostan-Mori で、正方行列 `A` の `A^m` の指定成分だけを求める。
+`k` は行優先で数えた添字。
+
+要素型 `T` は加減乗除と比較ができる体を想定している。典型的には `Modint`。
+
+## 時間計算量
+
+$n = rows = cols$、線形漸化式の次数を $d$ とすると、
+
+- サンプル列の生成: $O(n^3)$
+- Berlekamp-Massey: $O(n^2)$
+- Bostan-Mori: $O(d^2 \log m)$

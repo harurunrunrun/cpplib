@@ -39,6 +39,132 @@ private:
         }
     }
 
+    void check_square(const char* message) const{
+        if(_rows != _cols)[[unlikely]]{
+            throw std::runtime_error(message);
+        }
+    }
+
+    static std::vector<T> convolution(
+        const std::vector<T>& lhs,
+        const std::vector<T>& rhs
+    ){
+        if(lhs.empty() || rhs.empty()) return {};
+        std::vector<T> res(lhs.size() + rhs.size() - 1);
+        for(std::size_t i = 0; i < lhs.size(); i++){
+            for(std::size_t j = 0; j < rhs.size(); j++){
+                res[i + j] += lhs[i] * rhs[j];
+            }
+        }
+        return res;
+    }
+
+    static std::vector<T> berlekamp_massey(const std::vector<T>& sequence){
+        std::vector<T> current{T(1)};
+        std::vector<T> previous{T(1)};
+        int degree = 0;
+        int shift = 1;
+        T last = T(1);
+
+        for(int i = 0; i < static_cast<int>(sequence.size()); i++){
+            T diff = sequence[static_cast<std::size_t>(i)];
+            for(int j = 1; j <= degree; j++){
+                diff += current[static_cast<std::size_t>(j)] *
+                    sequence[static_cast<std::size_t>(i - j)];
+            }
+            if(diff == T()){
+                shift++;
+                continue;
+            }
+
+            std::vector<T> backup = current;
+            T coeff = diff / last;
+            if(current.size() < previous.size() + static_cast<std::size_t>(shift)){
+                current.resize(previous.size() + static_cast<std::size_t>(shift));
+            }
+            for(std::size_t j = 0; j < previous.size(); j++){
+                current[j + static_cast<std::size_t>(shift)] -= coeff * previous[j];
+            }
+
+            if(2 * degree <= i){
+                degree = i + 1 - degree;
+                previous = backup;
+                last = diff;
+                shift = 1;
+            }else{
+                shift++;
+            }
+        }
+
+        std::vector<T> recurrence(static_cast<std::size_t>(degree));
+        for(int i = 0; i < degree; i++){
+            recurrence[static_cast<std::size_t>(i)] =
+                -current[static_cast<std::size_t>(i + 1)];
+        }
+        while(!recurrence.empty() && recurrence.back() == T()){
+            recurrence.pop_back();
+        }
+        return recurrence;
+    }
+
+    static T bostan_mori(
+        const std::vector<T>& initial,
+        const std::vector<T>& recurrence,
+        long long k
+    ){
+        int degree = static_cast<int>(recurrence.size());
+        if(degree == 0) return T();
+        if(k < static_cast<long long>(initial.size())){
+            return initial[static_cast<std::size_t>(k)];
+        }
+
+        std::vector<T> q(static_cast<std::size_t>(degree + 1));
+        q[0] = T(1);
+        for(int i = 0; i < degree; i++){
+            q[static_cast<std::size_t>(i + 1)] =
+                -recurrence[static_cast<std::size_t>(i)];
+        }
+
+        std::vector<T> p(static_cast<std::size_t>(degree));
+        for(int i = 0; i < degree; i++){
+            T value = initial[static_cast<std::size_t>(i)];
+            for(int j = 1; j <= i; j++){
+                value += q[static_cast<std::size_t>(j)] *
+                    initial[static_cast<std::size_t>(i - j)];
+            }
+            p[static_cast<std::size_t>(i)] = value;
+        }
+
+        while(k > 0){
+            std::vector<T> q_neg = q;
+            for(std::size_t i = 1; i < q_neg.size(); i += 2){
+                q_neg[i] = -q_neg[i];
+            }
+
+            std::vector<T> next_p_full = convolution(p, q_neg);
+            std::vector<T> next_q_full = convolution(q, q_neg);
+
+            std::vector<T> next_p;
+            for(std::size_t i = static_cast<std::size_t>(k & 1);
+                i < next_p_full.size();
+                i += 2
+            ){
+                next_p.push_back(next_p_full[i]);
+            }
+
+            std::vector<T> next_q;
+            for(std::size_t i = 0; i < next_q_full.size(); i += 2){
+                next_q.push_back(next_q_full[i]);
+            }
+
+            p = std::move(next_p);
+            q = std::move(next_q);
+            k >>= 1;
+        }
+
+        return p[0] / q[0];
+    }
+
 public:
     Matrix() = default;
 
@@ -216,5 +342,56 @@ public:
             }
         }
         return res;
+    }
+
+    T pow_entry_bmbm(long long exponent, int row, int col) const{
+        if(exponent < 0)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: negative exponent (pow_entry_bmbm)."
+            );
+        }
+        check_square("library assertion fault: shape violation (pow_entry_bmbm).");
+        check_index(row, col, "library assertion fault: range violation (pow_entry_bmbm).");
+
+        int n = _rows;
+        std::vector<T> samples;
+        samples.reserve(static_cast<std::size_t>(2 * n));
+
+        std::vector<T> vec(static_cast<std::size_t>(n));
+        vec[static_cast<std::size_t>(col)] = T(1);
+        std::vector<T> next(static_cast<std::size_t>(n));
+        for(int step = 0; step < 2 * n; step++){
+            samples.push_back(vec[static_cast<std::size_t>(row)]);
+            for(int i = 0; i < n; i++){
+                T value{};
+                for(int j = 0; j < n; j++){
+                    value += data[index(i, j)] * vec[static_cast<std::size_t>(j)];
+                }
+                next[static_cast<std::size_t>(i)] = value;
+            }
+            vec.swap(next);
+        }
+
+        if(exponent < static_cast<long long>(samples.size())){
+            return samples[static_cast<std::size_t>(exponent)];
+        }
+
+        std::vector<T> recurrence = berlekamp_massey(samples);
+        return bostan_mori(samples, recurrence, exponent);
+    }
+
+    T pow_entry_bmbm(long long exponent, int k) const{
+        if(exponent < 0)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: negative exponent (pow_entry_bmbm)."
+            );
+        }
+        check_square("library assertion fault: shape violation (pow_entry_bmbm).");
+        if(k < 0 || _rows * _cols <= k)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (pow_entry_bmbm)."
+            );
+        }
+        return pow_entry_bmbm(exponent, k / _cols, k % _cols);
     }
 };
