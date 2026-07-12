@@ -207,6 +207,42 @@ def write_case(out_dir: Path, idx: int, queries: list[str]) -> None:
     (out_dir / f"{name}.out").write_text(solve(queries), encoding="utf-8")
 
 
+def write_convex_query_case(out_dir: Path) -> None:
+    radius = 20_000
+    top = radius * radius + 4 * radius
+    polygon = [(x, x * x) for x in range(-radius, radius + 1)]
+    polygon.extend([(radius, top), (-radius, top)])
+
+    points: list[Point] = []
+    answers: list[int] = []
+    for index in range(60_000):
+        x = -radius + 1 + index % (2 * radius - 1)
+        kind = index % 6
+        if kind == 0:
+            point, answer = (x, x * x), 1
+        elif kind == 1:
+            point, answer = (x, x * x + 1), 2
+        elif kind == 2:
+            point, answer = (x, x * x - 1), 0
+        elif kind == 3:
+            point, answer = (x, top), 1
+        elif kind == 4:
+            point, answer = (x, top + 1), 0
+        else:
+            point, answer = (x, (x * x + top) // 2), 2
+        points.append(point)
+        answers.append(answer)
+
+    input_lines = ["1", f"CONVEX_QUERY {len(polygon)} {len(points)}"]
+    input_lines.extend(f"{x} {y}" for x, y in polygon)
+    input_lines.extend(f"{x} {y}" for x, y in points)
+    (out_dir / "case_03.in").write_text("\n".join(input_lines) + "\n", encoding="utf-8")
+    (out_dir / "case_03.out").write_text(
+        " ".join(map(str, [len(answers), *answers])) + "\n",
+        encoding="utf-8",
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True)
@@ -295,6 +331,7 @@ def main() -> None:
             nums = [rng.randrange(-5, 6), rng.randrange(-5, 6), rng.randrange(1, 6), rng.randrange(-5, 6), rng.randrange(-5, 6), rng.randrange(1, 6)]
             queries.append("COMMON_TANGENT_COUNT " + " ".join(map(str, nums)))
     write_case(out_dir, 2, queries)
+    write_convex_query_case(out_dir)
 
 
 if __name__ == "__main__":

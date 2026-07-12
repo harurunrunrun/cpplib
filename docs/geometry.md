@@ -73,6 +73,8 @@ segment_intersection(a, b)
 area(polygon)
 contains(polygon, p)
 contains_convex(polygon, p)
+ConvexPolygonQuery query(polygon)
+query.contains(p)
 is_convex(polygon)
 convex_hull(points)
 convex_diameter(convex_polygon)
@@ -80,7 +82,9 @@ convex_cut(polygon, line)
 closest_pair(points)
 ```
 
-`area` is signed. `contains` and `contains_convex` return `0` outside, `1` on the boundary, and `2` inside. `contains_convex` accepts clockwise and counterclockwise convex polygons, including collinear edges and repeated vertices. `is_convex` and `convex_diameter` also accept either orientation. `convex_diameter` supports collinear and repeated consecutive vertices. `convex_hull` returns a counterclockwise hull without intermediate collinear points. `convex_cut` keeps the left side of the directed line.
+`area` is signed. `contains`, `contains_convex`, and `ConvexPolygonQuery::contains` return `0` outside, `1` on the boundary, and `2` inside. `ConvexPolygonQuery` accepts clockwise and counterclockwise convex polygons, removes consecutive duplicate and intermediate collinear vertices, and reduces an all-collinear polygon to its two endpoints. Use it when querying the same polygon more than once. `contains_convex` performs the same normalization for a single query.
+
+`is_convex` and `convex_diameter` accept either orientation. `convex_diameter` supports collinear and repeated consecutive vertices. `convex_hull` returns a counterclockwise hull without intermediate collinear points. `convex_cut` keeps the left side of the directed line.
 
 # Circles
 
@@ -117,7 +121,9 @@ CIRCLE_COINCIDENT = 5
 # Complexity
 
 - `contains`: $O(N)$
-- `contains_convex`: $O(\log N)$, or $O(N)$ for a degenerate boundary direction
+- `contains_convex`: $O(N)$ including normalization
+- `ConvexPolygonQuery` construction: $O(N)$ time and memory
+- `ConvexPolygonQuery::contains`: $O(\log N)$
 - `is_convex`: $O(N)$
 - `convex_hull`: $O(N \log N)$
 - `convex_diameter`: $O(N)$

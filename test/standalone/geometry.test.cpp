@@ -9,6 +9,7 @@
 #include <random>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 #include "../../src/algorithm/geometry/geometry.hpp"
 
@@ -74,6 +75,13 @@ void self_test(){
     std::vector<Point> weak_convex = {
         {0, 0}, {0, 0}, {2, 0}, {4, 0}, {4, 2}, {4, 4}, {0, 4}, {0, 2}
     };
+    ConvexPolygonQuery weak_query(weak_convex);
+    assert(weak_query.size() == 4);
+    assert(weak_query.contains({2, 2}) == 2);
+    assert(weak_query.contains({3, 0}) == 1);
+    assert(weak_query.contains({5, 2}) == 0);
+    ConvexPolygonQuery line_query({{2, 0}, {0, 0}, {1, 0}, {2, 0}});
+    assert(line_query.contains({1, 0}) == 1 && line_query.contains({1, 1}) == 0);
     for(int x = -1; x <= 5; x++){
         for(int y = -1; y <= 5; y++){
             Point point{static_cast<long double>(x), static_cast<long double>(y)};
@@ -224,6 +232,10 @@ void self_test(){
         assert(close(convex_diameter(weak_hull), expected_diameter));
         std::vector<Point> reverse_weak_hull = weak_hull;
         std::reverse(reverse_weak_hull.begin(), reverse_weak_hull.end());
+        ConvexPolygonQuery hull_query(random_hull);
+        ConvexPolygonQuery reverse_hull_query(reverse_hull);
+        ConvexPolygonQuery weak_hull_query(weak_hull);
+        ConvexPolygonQuery reverse_weak_hull_query(reverse_weak_hull);
         assert(close(convex_diameter(reverse_weak_hull), expected_diameter));
         for(int query = 0; query < 20; query++){
             Point point = random_point();
@@ -232,6 +244,10 @@ void self_test(){
             assert(contains_convex(reverse_hull, point) == expected);
             assert(contains_convex(weak_hull, point) == expected);
             assert(contains_convex(reverse_weak_hull, point) == expected);
+            assert(hull_query.contains(point) == expected);
+            assert(reverse_hull_query.contains(point) == expected);
+            assert(weak_hull_query.contains(point) == expected);
+            assert(reverse_weak_hull_query.contains(point) == expected);
         }
         long double expected_closest = std::numeric_limits<long double>::infinity();
         for(std::size_t i = 0; i < points.size(); i++){
@@ -281,6 +297,19 @@ int main(){
             Point p;
             std::cin >> p.x >> p.y;
             std::cout << contains_convex(polygon, p) << '\n';
+        }else if(type == "CONVEX_QUERY"){
+            int n, m;
+            std::cin >> n >> m;
+            std::vector<Point> polygon(static_cast<std::size_t>(n));
+            for(auto& vertex: polygon) std::cin >> vertex.x >> vertex.y;
+            ConvexPolygonQuery query(std::move(polygon));
+            std::cout << m;
+            while(m--){
+                Point point;
+                std::cin >> point.x >> point.y;
+                std::cout << ' ' << query.contains(point);
+            }
+            std::cout << '\n';
         }else if(type == "IS_CONVEX"){
             int n;
             std::cin >> n;

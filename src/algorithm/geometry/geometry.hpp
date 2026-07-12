@@ -4,6 +4,7 @@
 #include <cmath>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 constexpr long double GEOMETRY_EPS = 1e-10L;
@@ -299,39 +300,117 @@ inline int contains(const std::vector<Point>& polygon, const Point& p){
     return inside ? 2 : 0;
 }
 
-inline int contains_convex(const std::vector<Point>& polygon, const Point& p){
-    int n = static_cast<int>(polygon.size());
-    if(n == 0) return 0;
-    if(n == 1) return polygon[0] == p ? 1 : 0;
-    if(n == 2) return on_segment({polygon[0], polygon[1]}, p) ? 1 : 0;
-    int orientation = geometry_sign(area(polygon));
-    if(orientation == 0) return contains(polygon, p);
-    auto at = [&](int i) -> const Point& {
-        if(orientation > 0) return polygon[static_cast<std::size_t>(i)];
-        return polygon[static_cast<std::size_t>((n - i) % n)];
-    };
-    const Point& origin = at(0);
-    if(geometry_sign(abs(at(1) - origin)) == 0 || geometry_sign(abs(at(n - 1) - origin)) == 0){
-        return contains(polygon, p);
+class ConvexPolygonQuery{
+    std::vector<Point> polygon_;
+
+    static std::vector<Point> normalize(std::vector<Point> polygon);
+
+public:
+    explicit ConvexPolygonQuery(std::vector<Point> polygon);
+
+    int size() const{ return static_cast<int>(polygon_.size()); }
+    const std::vector<Point>& vertices() const{ return polygon_; }
+    int contains(const Point& point) const;
+};
+
+inline std::vector<Point> ConvexPolygonQuery::normalize(std::vector<Point> polygon){
+    std::size_t write = 0;
+    for(const Point& point: polygon){
+        if(write == 0 || !(polygon[write - 1] == point)){
+            polygon[write++] = point;
+        }
     }
-    if(on_segment({origin, at(1)}, p) || on_segment({origin, at(n - 1)}, p)) return 1;
-    int first_side = geometry_sign(cross(at(1) - origin, p - origin));
-    int last_side = geometry_sign(cross(at(n - 1) - origin, p - origin));
+    polygon.resize(write);
+    if(polygon.size() >= 2 && polygon.front() == polygon.back()) polygon.pop_back();
+    if(polygon.size() <= 2) return polygon;
+
+    const int n = static_cast<int>(polygon.size());
+    int orientation = 0;
+    for(int i = 0; i < n; ++i){
+        orientation = geometry_sign(cross(
+            polygon[static_cast<std::size_t>((i + 1) % n)] - polygon[static_cast<std::size_t>(i)],
+            polygon[static_cast<std::size_t>((i + 2) % n)] - polygon[static_cast<std::size_t>((i + 1) % n)]
+        ));
+        if(orientation != 0) break;
+    }
+    if(orientation == 0){
+        const auto [minimum, maximum] = std::minmax_element(polygon.begin(), polygon.end());
+        if(*minimum == *maximum) return {*minimum};
+        return {*minimum, *maximum};
+    }
+    if(orientation < 0) std::reverse(polygon.begin(), polygon.end());
+
+    int start = 0;
+    for(int i = 0; i < n; ++i){
+        const Point& previous = polygon[static_cast<std::size_t>((i + n - 1) % n)];
+        const Point& current = polygon[static_cast<std::size_t>(i)];
+        const Point& next = polygon[static_cast<std::size_t>((i + 1) % n)];
+        if(geometry_sign(cross(current - previous, next - current)) > 0){
+            start = i;
+            break;
+        }
+    }
+
+    std::vector<Point> result;
+    result.reserve(polygon.size() + 1);
+    for(int offset = 0; offset <= n; ++offset){
+        const Point& point = polygon[static_cast<std::size_t>((start + offset) % n)];
+        while(result.size() >= 2 && geometry_sign(cross(
+            result.back() - result[result.size() - 2],
+            point - result.back()
+        )) == 0){
+            result.pop_back();
+        }
+        result.push_back(point);
+    }
+    result.pop_back();
+    return result;
+}
+
+inline ConvexPolygonQuery::ConvexPolygonQuery(std::vector<Point> polygon)
+    : polygon_(normalize(std::move(polygon))){}
+
+inline int ConvexPolygonQuery::contains(const Point& point) const{
+    const int n = size();
+    if(n == 0) return 0;
+    if(n == 1) return polygon_[0] == point ? 1 : 0;
+    if(n == 2) return on_segment({polygon_[0], polygon_[1]}, point) ? 1 : 0;
+
+    const Point& origin = polygon_[0];
+    const int first_side = geometry_sign(cross(polygon_[1] - origin, point - origin));
+    const int last_side = geometry_sign(cross(
+        polygon_[static_cast<std::size_t>(n - 1)] - origin,
+        point - origin
+    ));
     if(first_side < 0 || last_side > 0) return 0;
-    if(first_side == 0 || last_side == 0) return contains(polygon, p);
+    if(first_side == 0) return on_segment({origin, polygon_[1]}, point) ? 1 : 0;
+    if(last_side == 0){
+        return on_segment({origin, polygon_[static_cast<std::size_t>(n - 1)]}, point) ? 1 : 0;
+    }
+
     int low = 1;
     int high = n - 1;
     while(high - low > 1){
-        int mid = (low + high) / 2;
-        if(geometry_sign(cross(at(mid) - origin, p - origin)) >= 0){
-            low = mid;
+        const int middle = low + (high - low) / 2;
+        if(geometry_sign(cross(
+            polygon_[static_cast<std::size_t>(middle)] - origin,
+            point - origin
+        )) >= 0){
+            low = middle;
         }else{
-            high = mid;
+            high = middle;
         }
     }
-    int side = geometry_sign(cross(at(low + 1) - at(low), p - at(low)));
-    if(side == 0) return contains(polygon, p);
+    const int side = geometry_sign(cross(
+        polygon_[static_cast<std::size_t>(low + 1)] - polygon_[static_cast<std::size_t>(low)],
+        point - polygon_[static_cast<std::size_t>(low)]
+    ));
+    if(side == 0) return 1;
     return side > 0 ? 2 : 0;
+}
+
+inline int contains_convex(const std::vector<Point>& polygon, const Point& point){
+    return ConvexPolygonQuery(polygon).contains(point);
 }
 inline bool is_convex(const std::vector<Point>& polygon){
     int n = static_cast<int>(polygon.size());
