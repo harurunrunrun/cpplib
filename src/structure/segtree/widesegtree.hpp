@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 #include <memory>
 #include <immintrin.h>
@@ -283,7 +285,7 @@ struct Wide_Segtree{
             if(l == r){
                 return 0LL;
             }
-        return internal_prod(root.get(), 0LL, MAX_SIZE, l, r);
+            return internal_prod(root.get(), 0LL, MAX_SIZE, l, r);
         }
 
         long long all_prod(){
