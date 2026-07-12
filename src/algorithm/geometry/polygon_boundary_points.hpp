@@ -7,9 +7,6 @@
 
 #include "geometry.hpp"
 
-inline bool on_segment(const Segment& segment, const Point& point){
-    return ccw(segment.a, segment.b, point) == ON_SEGMENT;
-}
 
 inline std::vector<int> enumerate_points_on_polygon_boundary(
     const std::vector<Point>& polygon,
@@ -35,7 +32,7 @@ inline std::vector<int> enumerate_points_on_polygon_boundary(
             current.push_back({parameter, j});
         }
         std::sort(current.begin(), current.end(), [](const auto& lhs, const auto& rhs){
-            if(geometry_sign(lhs.first - rhs.first) != 0) return lhs.first < rhs.first;
+            if(lhs.first != rhs.first) return lhs.first < rhs.first;
             return lhs.second < rhs.second;
         });
         for(auto [parameter, index]: current){

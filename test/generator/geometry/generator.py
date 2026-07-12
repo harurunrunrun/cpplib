@@ -65,10 +65,56 @@ def contains(poly: list[Point], p: Point) -> int:
     return 2 if inside else 0
 
 
+def line_intersection(nums: list[int]) -> tuple[int, int]:
+    ax, ay, bx, by, cx, cy, dx, dy = nums
+    rx, ry = bx - ax, by - ay
+    sx, sy = dx - cx, dy - cy
+    denominator = cross((rx, ry), (sx, sy))
+    numerator = cross((cx - ax, cy - ay), (sx, sy))
+    assert denominator != 0
+    assert (ax * denominator + rx * numerator) % denominator == 0
+    assert (ay * denominator + ry * numerator) % denominator == 0
+    return (
+        (ax * denominator + rx * numerator) // denominator,
+        (ay * denominator + ry * numerator) // denominator,
+    )
+
+
+def is_convex(poly: list[Point]) -> int:
+    direction = 0
+    n = len(poly)
+    for i in range(n):
+        turn = sign(cross(sub(poly[(i + 1) % n], poly[i]), sub(poly[(i + 2) % n], poly[(i + 1) % n])))
+        if turn == 0:
+            continue
+        if direction == 0:
+            direction = turn
+        elif direction != turn:
+            return 0
+    return 1
+
+
+def diameter_squared(poly: list[Point]) -> int:
+    return max(
+        (poly[i][0] - poly[j][0]) ** 2 + (poly[i][1] - poly[j][1]) ** 2
+        for i in range(len(poly))
+        for j in range(len(poly))
+    ) if poly else 0
+
+
+def closest_pair_squared(points: list[Point]) -> int:
+    return min(
+        (points[i][0] - points[j][0]) ** 2 + (points[i][1] - points[j][1]) ** 2
+        for i in range(len(points))
+        for j in range(i)
+    )
+
 def circle_relation(x1: int, y1: int, r1: int, x2: int, y2: int, r2: int) -> int:
     d2 = (x1 - x2) ** 2 + (y1 - y2) ** 2
     rsum = r1 + r2
     rdiff = abs(r1 - r2)
+    if d2 == 0 and r1 == r2:
+        return 5
     if d2 > rsum * rsum:
         return 4
     if d2 == rsum * rsum:
@@ -96,6 +142,8 @@ def circle_line_count(nums: list[int]) -> int:
 
 def circle_circle_count(nums: list[int]) -> int:
     relation = circle_relation(*nums)
+    if relation == 5:
+        return -1
     if relation == 2:
         return 2
     if relation in (1, 3):
@@ -105,6 +153,8 @@ def circle_circle_count(nums: list[int]) -> int:
 
 def common_tangent_count(nums: list[int]) -> int:
     relation = circle_relation(*nums)
+    if relation == 5:
+        return -1
     return [0, 1, 2, 3, 4][relation]
 
 
@@ -120,12 +170,25 @@ def solve(queries: list[str]) -> str:
         elif xs[0] == "INTERSECT":
             nums = list(map(int, xs[1:]))
             out.append(str(intersect(((nums[0], nums[1]), (nums[2], nums[3])), ((nums[4], nums[5]), (nums[6], nums[7])))))
+        elif xs[0] == "LINE_INTERSECTION":
+            point = line_intersection(list(map(int, xs[1:])))
+            out.append(f"{point[0]} {point[1]}")
         elif xs[0] in {"CONTAINS", "CONTAINS_CONVEX"}:
             n = int(xs[1])
             nums = list(map(int, xs[2:]))
             poly = [(nums[2 * i], nums[2 * i + 1]) for i in range(n)]
             p = (nums[2 * n], nums[2 * n + 1])
             out.append(str(contains(poly, p)))
+        elif xs[0] in {"IS_CONVEX", "CONVEX_DIAMETER2", "CLOSEST_PAIR2"}:
+            n = int(xs[1])
+            nums = list(map(int, xs[2:]))
+            poly = [(nums[2 * i], nums[2 * i + 1]) for i in range(n)]
+            if xs[0] == "IS_CONVEX":
+                out.append(str(is_convex(poly)))
+            elif xs[0] == "CONVEX_DIAMETER2":
+                out.append(str(diameter_squared(poly)))
+            else:
+                out.append(str(closest_pair_squared(poly)))
         elif xs[0] == "CIRCLE_RELATION":
             out.append(str(circle_relation(*map(int, xs[1:]))))
         elif xs[0] == "CIRCLE_LINE_COUNT":
@@ -157,19 +220,33 @@ def main() -> None:
         "CCW 0 0 2 0 3 0",
         "INTERSECT 0 0 2 2 0 2 2 0",
         "INTERSECT 0 0 1 0 2 0 3 0",
+        "INTERSECT 0 0 0 0 1 0 1 0",
+        "INTERSECT 0 0 0 0 0 0 0 0",
+        "LINE_INTERSECTION 0 0 1 0 2 -1 2 1",
         "CONTAINS 4 0 0 4 0 4 4 0 4 2 2",
         "CONTAINS 4 0 0 4 0 4 4 0 4 4 2",
         "CONTAINS 4 0 0 4 0 4 4 0 4 5 2",
         "CONTAINS_CONVEX 4 0 0 4 0 4 4 0 4 2 2",
+        "CONTAINS_CONVEX 4 0 4 4 4 4 0 0 0 2 2",
+        "CONTAINS_CONVEX 8 0 0 0 0 2 0 4 0 4 2 4 4 0 4 0 2 3 0",
+        "IS_CONVEX 4 0 4 4 4 4 0 0 0",
+        "IS_CONVEX 5 0 0 2 0 1 1 2 2 0 2",
+        "CONVEX_DIAMETER2 4 0 0 4 0 4 4 0 4",
+        "CONVEX_DIAMETER2 9 0 0 2 0 2 0 4 0 4 2 4 4 2 4 0 4 0 2",
+        "CONVEX_DIAMETER2 8 0 2 0 4 2 4 4 4 4 2 4 0 2 0 0 0",
+        "CLOSEST_PAIR2 5 0 0 10 0 3 4 3 5 0 0",
         "CIRCLE_RELATION 0 0 2 5 0 1",
         "CIRCLE_RELATION 0 0 2 3 0 1",
         "CIRCLE_RELATION 0 0 2 2 0 2",
         "CIRCLE_RELATION 0 0 3 2 0 1",
         "CIRCLE_RELATION 0 0 4 1 0 1",
+        "CIRCLE_RELATION 1 2 3 1 2 3",
         "CIRCLE_LINE_COUNT 0 0 5 -10 0 10 0",
         "CIRCLE_LINE_COUNT 0 0 5 -10 5 10 5",
         "CIRCLE_CIRCLE_COUNT 0 0 5 8 0 5",
+        "CIRCLE_CIRCLE_COUNT 0 0 5 0 0 5",
         "COMMON_TANGENT_COUNT 0 0 1 4 0 1",
+        "COMMON_TANGENT_COUNT 0 0 1 0 0 1",
     ]
     write_case(out_dir, 0, fixed)
 
@@ -189,6 +266,35 @@ def main() -> None:
             px, py = rng.randrange(-6, 8), rng.randrange(-6, 8)
             queries.append(f"CONTAINS 4 {x1} {y1} {x2} {y1} {x2} {y2} {x1} {y2} {px} {py}")
     write_case(out_dir, 1, queries)
+
+    queries = []
+    for _ in range(80):
+        kind = rng.randrange(5)
+        if kind == 0:
+            qx, qy = rng.randrange(-20, 21), rng.randrange(-20, 21)
+            while True:
+                rx, ry = rng.randrange(-5, 6), rng.randrange(-5, 6)
+                sx, sy = rng.randrange(-5, 6), rng.randrange(-5, 6)
+                if (rx or ry) and (sx or sy) and cross((rx, ry), (sx, sy)) != 0:
+                    break
+            queries.append(f"LINE_INTERSECTION {qx-rx} {qy-ry} {qx+rx} {qy+ry} {qx-sx} {qy-sy} {qx+sx} {qy+sy}")
+        elif kind == 1:
+            x1, y1 = rng.randrange(-20, 0), rng.randrange(-20, 0)
+            x2, y2 = rng.randrange(1, 21), rng.randrange(1, 21)
+            if rng.randrange(2):
+                queries.append(f"CONVEX_DIAMETER2 4 {x1} {y1} {x2} {y1} {x2} {y2} {x1} {y2}")
+            else:
+                queries.append(f"IS_CONVEX 4 {x1} {y2} {x2} {y2} {x2} {y1} {x1} {y1}")
+        elif kind == 2:
+            points = [(rng.randrange(-10, 11), rng.randrange(-10, 11)) for _ in range(12)]
+            queries.append("CLOSEST_PAIR2 12 " + " ".join(f"{x} {y}" for x, y in points))
+        elif kind == 3:
+            nums = [rng.randrange(-5, 6), rng.randrange(-5, 6), rng.randrange(0, 6), rng.randrange(-5, 6), rng.randrange(-5, 6), rng.randrange(0, 6)]
+            queries.append("CIRCLE_RELATION " + " ".join(map(str, nums)))
+        else:
+            nums = [rng.randrange(-5, 6), rng.randrange(-5, 6), rng.randrange(1, 6), rng.randrange(-5, 6), rng.randrange(-5, 6), rng.randrange(1, 6)]
+            queries.append("COMMON_TANGENT_COUNT " + " ".join(map(str, nums)))
+    write_case(out_dir, 2, queries)
 
 
 if __name__ == "__main__":

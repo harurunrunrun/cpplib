@@ -21,6 +21,14 @@ void self_test(){
     auto duplicated = enumerate_points_on_polygon_boundary(polygon, points, false);
     std::vector<int> expected_duplicated = {0, 1, 2, 5, 4, 0};
     assert(duplicated == expected_duplicated);
+
+    std::vector<Point> repeated_vertex = {{0, 0}, {0, 0}, {2, 0}, {2, 2}, {0, 2}};
+    std::vector<Point> candidates = {{0, 0}, {1, 0}, {1, 1}, {2, 1}, {0, 2}, {9, 9}};
+    std::vector<int> expected_repeated = {0, 1, 3, 4};
+    assert(enumerate_points_on_polygon_boundary(repeated_vertex, candidates) == expected_repeated);
+    assert(enumerate_points_on_polygon_boundary({}, candidates).empty());
+    assert(on_segment({{3, 4}, {3, 4}}, {3, 4}));
+    assert(!on_segment({{3, 4}, {3, 4}}, {3, 5}));
 }
 
 int main(){

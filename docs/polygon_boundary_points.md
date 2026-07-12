@@ -3,20 +3,18 @@ title: Polygon Boundary Points
 documentation_of: ../src/algorithm/geometry/polygon_boundary_points.hpp
 ---
 
-与えられた点のうち、多角形の辺上にある点を列挙する。
+Enumerates the given points that lie on the boundary of a polygon.
 
-# 関数
+# Function
 
 ```cpp
 enumerate_points_on_polygon_boundary(polygon, points, unique)
 ```
 
-`polygon` は多角形の頂点列。`points` は調べる点の列。
+The return value contains indices into `points`. Polygon edges are processed in vertex order. Points on one edge are ordered from its first endpoint to its second endpoint. Zero-length edges are supported.
 
-返り値は `points` の index の列。多角形の辺を頂点列の順に見て、同じ辺上では辺の始点から近い順に並べる。
+If `unique = true`, each point index occurs only at its first position. If `unique = false`, a point on a polygon vertex can occur once for each incident edge.
 
-`unique = true` のとき、頂点上の点のように複数の辺に含まれる点は最初に現れた位置だけに出る。
+# Complexity
 
-## 時間計算量
-
-- $O(NM \log M)$
+$O(NM \log M)$ for $N$ polygon vertices and $M$ given points.
