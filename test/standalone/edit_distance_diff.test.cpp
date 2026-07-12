@@ -98,6 +98,32 @@ int main(){
         }
     }
 
+    {
+        std::string a(50000, 'a');
+        std::string b = a;
+        b.insert(b.begin() + 12345, 'b');
+        b.erase(b.begin() + 40000);
+        auto large_diff = diff_sequence(a, b);
+        assert(apply_diff_source(large_diff) == a);
+        assert(apply_diff_target(large_diff) == b);
+        int edits = 0;
+        for(const auto& operation: large_diff) edits += operation.tag != DiffTag::Equal;
+        assert(edits == 2);
+    }
+
+    {
+        std::string a(4200, 'a');
+        std::string b(4200, 'b');
+        auto fallback_diff = diff_sequence(a, b);
+        assert(apply_diff_source(fallback_diff) == a);
+        assert(apply_diff_target(fallback_diff) == b);
+        int equal = 0;
+        for(const auto& operation: fallback_diff){
+            equal += operation.tag == DiffTag::Equal;
+        }
+        assert(equal == 0);
+    }
+
     std::vector<int> x = {1, 2, 3};
     std::vector<int> y = {2, 4, 3};
     auto ops = diff_sequence(x, y);
