@@ -1,0 +1,102 @@
+// competitive-verifier: STANDALONE
+
+#include <cassert>
+#include <map>
+#include <queue>
+#include <random>
+#include <set>
+#include <utility>
+#include <vector>
+#include "../../src/structure/graph/offline_dynamic_connectivity.hpp"
+
+bool naive_same(
+    int s,
+    int t,
+    int n,
+    const std::map<std::pair<int, int>, int>& edge_count
+){
+    std::vector<std::vector<int>> graph(n);
+    for(auto [edge, count]: edge_count){
+        if(count == 0) continue;
+        auto [u, v] = edge;
+        if(u == v) continue;
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+    std::vector<int> seen(n, 0);
+    std::queue<int> que;
+    seen[s] = 1;
+    que.push(s);
+    while(!que.empty()){
+        int v = que.front();
+        que.pop();
+        if(v == t) return true;
+        for(int to: graph[v]){
+            if(!seen[to]){
+                seen[to] = 1;
+                que.push(to);
+            }
+        }
+    }
+    return false;
+}
+
+int main(){
+    {
+        OfflineDynamicConnectivity<2, 4, 20> dc(2, 4);
+        dc.add_edge(0, 0, 1);
+        dc.add_edge(1, 0, 1);
+        dc.erase_edge(2, 0, 1);
+        dc.erase_edge(3, 0, 1);
+        std::vector<bool> expected = {true, true, true, false};
+        dc.run([&](int time, const auto& dsu){
+            assert(dsu.same(0, 1) == expected[static_cast<std::size_t>(time)]);
+        });
+    }
+
+    constexpr int n = 30;
+    constexpr int q = 400;
+    OfflineDynamicConnectivity<40, 500, 20000> dc(n, q);
+    std::mt19937 rng(998244353);
+
+    std::map<std::pair<int, int>, int> edge_count;
+    std::vector<std::pair<int, int>> active_edges;
+    std::vector<std::vector<std::tuple<int, int, bool>>> queries(q);
+
+    auto normalize = [](int u, int v){
+        if(v < u) std::swap(u, v);
+        return std::pair<int, int>{u, v};
+    };
+
+    for(int time = 0; time < q; time++){
+        int type = static_cast<int>(rng() % 10);
+        if(type < 5 || active_edges.empty()){
+            int u = static_cast<int>(rng() % n);
+            int v = static_cast<int>(rng() % n);
+            auto edge = normalize(u, v);
+            dc.add_edge(time, edge.first, edge.second);
+            edge_count[edge]++;
+            active_edges.push_back(edge);
+        }else{
+            int id = static_cast<int>(rng() % active_edges.size());
+            auto edge = active_edges[static_cast<std::size_t>(id)];
+            dc.erase_edge(time, edge.first, edge.second);
+            edge_count[edge]--;
+            active_edges[static_cast<std::size_t>(id)] = active_edges.back();
+            active_edges.pop_back();
+        }
+
+        for(int k = 0; k < 4; k++){
+            int u = static_cast<int>(rng() % n);
+            int v = static_cast<int>(rng() % n);
+            bool expected = naive_same(u, v, n, edge_count);
+            queries[static_cast<std::size_t>(time)].push_back({u, v, expected});
+        }
+    }
+
+    dc.run([&](int time, const auto& dsu){
+        for(auto [u, v, expected]: queries[static_cast<std::size_t>(time)]){
+            assert(dsu.same(u, v) == expected);
+        }
+    });
+}
