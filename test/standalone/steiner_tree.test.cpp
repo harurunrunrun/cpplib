@@ -5,6 +5,7 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 #include "../../src/algorithm/graph/steiner_tree.hpp"
@@ -35,7 +36,8 @@ long long brute(
     const std::vector<int>& terminals
 ){
     if(terminals.empty()) return 0;
-    long long best = INF;
+    long long best = 0;
+    bool found = false;
     const int m = static_cast<int>(edges.size());
     for(int mask = 0; mask < (1 << m); mask++){
         Dsu dsu(n);
@@ -52,9 +54,12 @@ long long brute(
         for(int t: terminals){
             if(dsu.leader(t) != root) ok = false;
         }
-        if(ok) best = std::min(best, cost);
+        if(ok && (!found || cost < best)){
+            best = cost;
+            found = true;
+        }
     }
-    return best;
+    return found ? best : INF;
 }
 
 void self_test(){
@@ -71,6 +76,38 @@ void self_test(){
         add(2, 4, 10);
         assert(steiner_tree<long long>(graph, {0, 2, 4}, INF) == 6);
     }
+    {
+        std::vector<std::vector<SteinerTreeEdge<long long>>> graph(3);
+        graph[0].push_back({1, INF});
+        graph[1].push_back({0, INF});
+        graph[1].push_back({2, 2000000000000000000LL});
+        graph[2].push_back({1, 2000000000000000000LL});
+        assert(steiner_tree<long long>(graph, {0, 2}, INF) ==
+               INF + 2000000000000000000LL);
+    }
+    {
+        std::vector<std::vector<SteinerTreeEdge<long long>>> graph(2);
+        graph[1].push_back({1, -1});
+        bool thrown = false;
+        try{
+            (void)steiner_tree<long long>(graph, {0}, INF);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+    {
+        std::vector<std::vector<SteinerTreeEdge<long long>>> graph(1);
+        std::vector<int> terminals(31, 0);
+        bool thrown = false;
+        try{
+            (void)steiner_tree<long long>(graph, terminals, INF);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+
     std::mt19937 rng(20260808);
     for(int n = 1; n <= 8; n++){
         for(int step = 0; step < 80; step++){

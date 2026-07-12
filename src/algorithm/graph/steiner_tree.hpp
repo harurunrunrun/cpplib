@@ -29,17 +29,25 @@ T steiner_tree(
     }
     for(const auto& edges: graph){
         for(const auto& e: edges){
-            if(e.to < 0 || n <= e.to)[[unlikely]]{
+            if(e.to < 0 || n <= e.to || e.cost < T(0))[[unlikely]]{
                 throw std::runtime_error("library assertion fault: range violation (steiner_tree).");
             }
         }
     }
     if(k == 0) return T(0);
+    if(k >= std::numeric_limits<int>::digits)[[unlikely]]{
+        throw std::runtime_error("library assertion fault: range violation (steiner_tree).");
+    }
 
     const int full = 1 << k;
     std::vector<std::vector<T>> dp(static_cast<std::size_t>(full), std::vector<T>(static_cast<std::size_t>(n), inf));
+    std::vector<std::vector<char>> reachable(
+        static_cast<std::size_t>(full),
+        std::vector<char>(static_cast<std::size_t>(n), 0));
     for(int i = 0; i < k; i++){
-        dp[static_cast<std::size_t>(1 << i)][static_cast<std::size_t>(terminals[static_cast<std::size_t>(i)])] = T(0);
+        int terminal = terminals[static_cast<std::size_t>(i)];
+        dp[static_cast<std::size_t>(1 << i)][static_cast<std::size_t>(terminal)] = T(0);
+        reachable[static_cast<std::size_t>(1 << i)][static_cast<std::size_t>(terminal)] = 1;
     }
 
     using Pair = std::pair<T, int>;
@@ -48,18 +56,25 @@ T steiner_tree(
             int other = mask ^ sub;
             if(other == 0) continue;
             for(int v = 0; v < n; v++){
-                T a = dp[static_cast<std::size_t>(sub)][static_cast<std::size_t>(v)];
-                T b = dp[static_cast<std::size_t>(other)][static_cast<std::size_t>(v)];
-                if(a == inf || b == inf) continue;
-                dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)] =
-                    std::min(dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)], a + b);
+                if(!reachable[static_cast<std::size_t>(sub)][static_cast<std::size_t>(v)] ||
+                   !reachable[static_cast<std::size_t>(other)][static_cast<std::size_t>(v)]){
+                    continue;
+                }
+                T candidate = dp[static_cast<std::size_t>(sub)][static_cast<std::size_t>(v)] +
+                    dp[static_cast<std::size_t>(other)][static_cast<std::size_t>(v)];
+                if(!reachable[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)] ||
+                   candidate < dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)]){
+                    dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)] = candidate;
+                    reachable[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)] = 1;
+                }
             }
         }
 
         std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> que;
         for(int v = 0; v < n; v++){
-            T d = dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)];
-            if(d != inf) que.push({d, v});
+            if(reachable[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)]){
+                que.push({dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)], v});
+            }
         }
         while(!que.empty()){
             auto [d, v] = que.top();
@@ -67,12 +82,23 @@ T steiner_tree(
             if(dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(v)] != d) continue;
             for(const auto& e: graph[static_cast<std::size_t>(v)]){
                 T nd = d + e.cost;
-                if(nd < dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(e.to)]){
+                if(!reachable[static_cast<std::size_t>(mask)][static_cast<std::size_t>(e.to)] ||
+                   nd < dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(e.to)]){
                     dp[static_cast<std::size_t>(mask)][static_cast<std::size_t>(e.to)] = nd;
+                    reachable[static_cast<std::size_t>(mask)][static_cast<std::size_t>(e.to)] = 1;
                     que.push({nd, e.to});
                 }
             }
         }
     }
-    return *std::min_element(dp[static_cast<std::size_t>(full - 1)].begin(), dp[static_cast<std::size_t>(full - 1)].end());
+    T result = inf;
+    bool found = false;
+    for(int v = 0; v < n; v++){
+        if(reachable[static_cast<std::size_t>(full - 1)][static_cast<std::size_t>(v)] &&
+           (!found || dp[static_cast<std::size_t>(full - 1)][static_cast<std::size_t>(v)] < result)){
+            result = dp[static_cast<std::size_t>(full - 1)][static_cast<std::size_t>(v)];
+            found = true;
+        }
+    }
+    return result;
 }

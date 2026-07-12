@@ -30,7 +30,7 @@ class Dsu:
 def solve(n: int, edges: list[tuple[int, int, int]], terminals: list[int]) -> int:
     if not terminals:
         return 0
-    best = INF
+    best: int | None = None
     m = len(edges)
     for mask in range(1 << m):
         dsu = Dsu(n)
@@ -41,8 +41,8 @@ def solve(n: int, edges: list[tuple[int, int, int]], terminals: list[int]) -> in
                 cost += w
         root = dsu.leader(terminals[0])
         if all(dsu.leader(t) == root for t in terminals):
-            best = min(best, cost)
-    return -1 if best == INF else best
+            best = cost if best is None else min(best, cost)
+    return -1 if best is None else best
 
 
 def write_case(out_dir: Path, idx: int, n: int, edges: list[tuple[int, int, int]], terminals: list[int]) -> None:
@@ -70,6 +70,7 @@ def main() -> None:
         (1, [], []),
         (5, [(0, 1, 2), (1, 2, 2), (1, 3, 1), (3, 4, 1), (2, 4, 10)], [0, 2, 4]),
         (4, [(0, 1, 1), (2, 3, 1)], [0, 3]),
+        (3, [(0, 1, INF), (1, 2, 2_000_000_000_000_000_000)], [0, 2]),
     ]
     rng = random.Random(20260808)
     for n in [2, 5, 8]:

@@ -50,6 +50,16 @@ void self_test(){
         assert(res.size == 2);
         assert(res.cost == 3);
     }
+    {
+        std::vector<MinimumWeightBipartiteMatchingEdge<long long>> edges = {
+            {0, 0, 3000000000000000000LL},
+        };
+        auto res = minimum_weight_bipartite_matching<long long>(1, 1, edges);
+        assert(res.size == 1);
+        assert(res.cost == 3000000000000000000LL);
+        assert(res.left_match[0] == 0);
+        assert(res.right_match[0] == 0);
+    }
     std::mt19937 rng(20260824);
     for(int l = 0; l <= 8; l++){
         for(int r = 0; r <= 8; r++){
