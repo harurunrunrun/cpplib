@@ -35,8 +35,18 @@ wm.next_value(version, l, r, lower)
 
 # 時間計算量
 
-$B = BLOCK\_SIZE$ とする。
+$B = BLOCK\_SIZE$、$M = \lceil N / B \rceil$ とする。
+区間が触れるブロック数を $C$ とする。
 
-- `set`: $O(B\log B + N / B)$
-- `rank`, `range_freq`: $O(B + \frac{N}{B}\log B)$
-- `kth_smallest`: $O(BIT\_WIDTH \cdot (B + \frac{N}{B}\log B))$
+- `set`: $O(B\log B + \log M)$
+- `fork`: $O(1)$
+- `access`: $O(\log M)$
+- `rank`, `range_freq`: $O(B + C(\log B + \log M))$
+- `kth_smallest`: $O(BIT\_WIDTH \cdot (B + C(\log B + \log M)))$
+
+ブロック参照は永続セグメント木で管理する。
+`set` は変更ブロックと参照木の根から葉までだけを複製し、
+`fork` は参照木の根を共有する。
+
+更新を行ったバージョン数を $U$、全バージョン数を $V$ とした追加メモリは
+$O(N + U(B + \log M) + V)$。

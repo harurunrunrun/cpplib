@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
+#include "detail/persistent_block_reference.hpp"
 
 template<
     class T,
@@ -34,7 +35,9 @@ private:
     int block_count = 0;
     int _versions = 0;
     int block_nodes = 0;
-    std::array<std::array<int, block_count_max>, MAX_VERSION + 1> version_block{};
+    std::array<int, MAX_VERSION + 1> version_root{};
+    wavelet_matrix_detail::PersistentBlockReference<
+        block_count_max, MAX_VERSION> block_reference;
     std::array<std::array<U, BLOCK_SIZE>, block_node_max> block_value{};
     std::array<std::array<U, BLOCK_SIZE>, block_node_max> block_sorted{};
     std::array<int, block_node_max> block_size{};
@@ -107,38 +110,32 @@ private:
         return node;
     }
 
-    void copy_version_blocks(int from, int to){
-        for(int block = 0; block < block_count; block++){
-            version_block[static_cast<std::size_t>(to)][static_cast<std::size_t>(block)] =
-                version_block[static_cast<std::size_t>(from)][static_cast<std::size_t>(block)];
-        }
+    int block_at(int version, int block) const{
+        return block_reference.get(
+            version_root[static_cast<std::size_t>(version)], block
+        );
     }
 
     int count_less_encoded(int version, int l, int r, U upper) const{
         int result = 0;
-        while(l < r && l % BLOCK_SIZE != 0){
-            int node = version_block[static_cast<std::size_t>(version)][
-                static_cast<std::size_t>(block_index(l))];
-            if(block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(local_index(l))] < upper){
-                result++;
-            }
-            l++;
-        }
-        while(l + BLOCK_SIZE <= r){
-            int node = version_block[static_cast<std::size_t>(version)][
-                static_cast<std::size_t>(block_index(l))];
-            auto begin = block_sorted[static_cast<std::size_t>(node)].begin();
-            int size = block_size[static_cast<std::size_t>(node)];
-            result += static_cast<int>(std::lower_bound(begin, begin + size, upper) - begin);
-            l += BLOCK_SIZE;
-        }
         while(l < r){
-            int node = version_block[static_cast<std::size_t>(version)][
-                static_cast<std::size_t>(block_index(l))];
-            if(block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(local_index(l))] < upper){
-                result++;
+            int block = block_index(l);
+            int node = block_at(version, block);
+            int block_end = std::min(r, (block + 1) * BLOCK_SIZE);
+            int first = local_index(l);
+            int count = block_end - l;
+            if(first == 0 && count == block_size[static_cast<std::size_t>(node)]){
+                auto begin = block_sorted[static_cast<std::size_t>(node)].begin();
+                result += static_cast<int>(
+                    std::lower_bound(begin, begin + count, upper) - begin);
+            }else{
+                for(int i = 0; i < count; i++){
+                    if(block_value[static_cast<std::size_t>(node)][
+                        static_cast<std::size_t>(first + i)] < upper
+                    ) result++;
+                }
             }
-            l++;
+            l = block_end;
         }
         return result;
     }
@@ -151,30 +148,24 @@ private:
 
     int count_equal_encoded(int version, int l, int r, U key) const{
         int result = 0;
-        while(l < r && l % BLOCK_SIZE != 0){
-            int node = version_block[static_cast<std::size_t>(version)][
-                static_cast<std::size_t>(block_index(l))];
-            if(block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(local_index(l))] == key){
-                result++;
-            }
-            l++;
-        }
-        while(l + BLOCK_SIZE <= r){
-            int node = version_block[static_cast<std::size_t>(version)][
-                static_cast<std::size_t>(block_index(l))];
-            auto begin = block_sorted[static_cast<std::size_t>(node)].begin();
-            int size = block_size[static_cast<std::size_t>(node)];
-            auto range = std::equal_range(begin, begin + size, key);
-            result += static_cast<int>(range.second - range.first);
-            l += BLOCK_SIZE;
-        }
         while(l < r){
-            int node = version_block[static_cast<std::size_t>(version)][
-                static_cast<std::size_t>(block_index(l))];
-            if(block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(local_index(l))] == key){
-                result++;
+            int block = block_index(l);
+            int node = block_at(version, block);
+            int block_end = std::min(r, (block + 1) * BLOCK_SIZE);
+            int first = local_index(l);
+            int count = block_end - l;
+            if(first == 0 && count == block_size[static_cast<std::size_t>(node)]){
+                auto begin = block_sorted[static_cast<std::size_t>(node)].begin();
+                auto range = std::equal_range(begin, begin + count, key);
+                result += static_cast<int>(range.second - range.first);
+            }else{
+                for(int i = 0; i < count; i++){
+                    if(block_value[static_cast<std::size_t>(node)][
+                        static_cast<std::size_t>(first + i)] == key
+                    ) result++;
+                }
             }
-            l++;
+            l = block_end;
         }
         return result;
     }
@@ -189,6 +180,7 @@ public:
         if(sequence.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
+        std::array<int, block_count_max> initial_block{};
         for(int block = 0; block < block_count; block++){
             int node = new_block();
             block_size[static_cast<std::size_t>(node)] = actual_block_size(block);
@@ -201,8 +193,9 @@ public:
                     );
             }
             rebuild_block(node);
-            version_block[0][static_cast<std::size_t>(block)] = node;
+            initial_block[static_cast<std::size_t>(block)] = node;
         }
+        version_root[0] = block_reference.build(initial_block, block_count);
     }
 
     template<std::size_t N>
@@ -218,8 +211,7 @@ public:
     T access(int version, int k) const{
         check_version(version, "library assertion fault: range violation (access).");
         check_index(k, "library assertion fault: range violation (access).");
-        int node = version_block[static_cast<std::size_t>(version)][
-            static_cast<std::size_t>(block_index(k))];
+        int node = block_at(version, block_index(k));
         return decode(block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(local_index(k))]);
     }
 
@@ -228,24 +220,35 @@ public:
         check_index(k, "library assertion fault: range violation (set).");
         U encoded = encode_checked(value, "library assertion fault: bit width violation (set).");
         check_version_capacity();
-        _versions++;
-        int next_version = _versions - 1;
-        copy_version_blocks(version, next_version);
+        int block_snapshot = block_nodes;
+        int reference_snapshot = block_reference.nodes_used();
         int block = block_index(k);
-        int old_node = version_block[static_cast<std::size_t>(version)][static_cast<std::size_t>(block)];
-        int node = copy_block(old_node);
-        block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(local_index(k))] = encoded;
-        rebuild_block(node);
-        version_block[static_cast<std::size_t>(next_version)][static_cast<std::size_t>(block)] = node;
-        return next_version;
+        try{
+            int node = copy_block(block_at(version, block));
+            block_value[static_cast<std::size_t>(node)][
+                static_cast<std::size_t>(local_index(k))] = encoded;
+            rebuild_block(node);
+            int root = block_reference.set(
+                version_root[static_cast<std::size_t>(version)], block, node
+            );
+            int next_version = _versions;
+            version_root[static_cast<std::size_t>(next_version)] = root;
+            _versions++;
+            return next_version;
+        }catch(...){
+            block_nodes = block_snapshot;
+            block_reference.rollback(reference_snapshot);
+            throw;
+        }
     }
 
     int fork(int version){
         check_version(version, "library assertion fault: range violation (fork).");
         check_version_capacity();
+        int next_version = _versions;
+        version_root[static_cast<std::size_t>(next_version)] =
+            version_root[static_cast<std::size_t>(version)];
         _versions++;
-        int next_version = _versions - 1;
-        copy_version_blocks(version, next_version);
         return next_version;
     }
 

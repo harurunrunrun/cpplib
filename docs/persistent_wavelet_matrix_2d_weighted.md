@@ -12,3 +12,9 @@ wm.set_weight(version, k, weight)
 wm.rectangle_count(version, xl, xr, yl, yr)
 wm.rectangle_sum(version, xl, xr, yl, yr)
 ```
+# 時間計算量
+
+x 座標の範囲取得に $O(\log N)$、以降は
+`PersistentWeightedWaveletMatrix` と同じ。
+`set`, `set_y`, `set_weight` は $O(B\log B + \log M)$、
+`fork` は $O(1)$。

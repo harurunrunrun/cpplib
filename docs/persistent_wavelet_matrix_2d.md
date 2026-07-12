@@ -23,3 +23,7 @@ wm.kth_smallest_y(version, xl, xr, k)
 wm.prev_y(version, xl, xr, upper)
 wm.next_y(version, xl, xr, lower)
 ```
+# 時間計算量
+
+x 座標の範囲取得に $O(\log N)$、以降は `PersistentWaveletMatrix` と同じ。
+`set_y` は $O(B\log B + \log M)$、`fork` は $O(1)$。

@@ -26,4 +26,10 @@ wm.sum_k_largest(version, l, r, k)
 
 # 時間計算量
 
-`PersistentWaveletMatrix` と同じブロック分割。`sum_k_smallest` は同値の処理に $O(r-l)$ かかる。
+`PersistentWaveletMatrix` と同じ永続ブロック参照を使う。
+`set` は $O(B\log B + \log M)$、`fork` は $O(1)$。
+`sum`, `range_sum` は $O(B + C(\log B + \log M))$。
+`sum_k_smallest` はこれらに加え、境界値と等しい要素の処理に $O(r-l)$ かかる。
+
+$B = BLOCK\_SIZE$、$M = \lceil N / B \rceil$、
+$C$ は区間が触れるブロック数とする。
