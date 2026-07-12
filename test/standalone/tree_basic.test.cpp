@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -104,6 +105,31 @@ void test_exceptions(){
 }
 
 int main(){
+    int case_count;
+    if(std::cin >> case_count){
+        while(case_count--){
+            int n;
+            std::cin >> n;
+            std::vector<std::vector<int>> graph(n);
+            std::vector<std::vector<std::pair<int, long long>>> weighted(n);
+            for(int i = 0; i + 1 < n; i++){
+                int u, v;
+                long long weight;
+                std::cin >> u >> v >> weight;
+                add_edge(graph, u, v);
+                add_weighted_edge(weighted, u, v, weight);
+            }
+            const auto diameter = tree_diameter(graph);
+            const auto weighted_diameter = weighted_tree_diameter(weighted);
+            auto centroids = tree_centroids(graph);
+            std::sort(centroids.begin(), centroids.end());
+            std::cout << diameter.length << ' ' << weighted_diameter.length << ' '
+                      << centroids.size();
+            for(int centroid: centroids) std::cout << ' ' << centroid;
+            std::cout << '\n';
+        }
+        return 0;
+    }
     test_diameter();
     test_centroid();
     test_exceptions();

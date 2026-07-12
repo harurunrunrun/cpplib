@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 
 #include "../../src/algorithm/math/series_sum.hpp"
@@ -54,6 +55,32 @@ void test_exceptions(){
 }
 
 int main(){
+    int query_count;
+    if(std::cin >> query_count){
+        while(query_count--){
+            int type;
+            long long first, ratio, n;
+            std::cin >> type;
+            if(type == 0){
+                std::cin >> first >> ratio >> n;
+                std::cout << math::arithmetic_progression_sum(first, ratio, n) << ' '
+                          << math::arithmetic_progression_sum(mint(first), mint(ratio), n).val() << '\n';
+            }else if(type == 1){
+                std::cin >> ratio >> n;
+                std::cout << math::geometric_series_sum(ratio, n) << ' '
+                          << math::geometric_series_sum(mint(ratio), n).val() << '\n';
+            }else if(type == 2){
+                std::cin >> first >> ratio >> n;
+                std::cout << math::geometric_progression_sum(first, ratio, n) << ' '
+                          << math::geometric_progression_sum(mint(first), mint(ratio), n).val() << '\n';
+            }else{
+                std::cin >> ratio >> n;
+                const auto [power, sum] = math::geometric_series_pow_sum(mint(ratio), n);
+                std::cout << power.val() << ' ' << sum.val() << '\n';
+            }
+        }
+        return 0;
+    }
     test_integer();
     test_modint();
     test_exceptions();

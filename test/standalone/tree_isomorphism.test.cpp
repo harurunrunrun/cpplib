@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 
@@ -124,6 +125,34 @@ void test_exceptions(){
 }
 
 int main(){
+    int case_count;
+    if(std::cin >> case_count){
+        while(case_count--){
+            int n, m, root_a, root_b;
+            std::cin >> n >> m >> root_a >> root_b;
+            std::vector<std::vector<int>> a(n), b(m);
+            for(int i = 0; i + 1 < n; i++){
+                int u, v;
+                std::cin >> u >> v;
+                add_edge(a, u, v);
+            }
+            for(int i = 0; i + 1 < m; i++){
+                int u, v;
+                std::cin >> u >> v;
+                add_edge(b, u, v);
+            }
+            const auto centers_a = tree_centers(a);
+            const auto centers_b = tree_centers(b);
+            std::cout << tree_isomorphic(a, b) << ' '
+                      << rooted_tree_isomorphic(a, root_a, b, root_b) << ' '
+                      << centers_a.size();
+            for(int center: centers_a) std::cout << ' ' << center;
+            std::cout << ' ' << centers_b.size();
+            for(int center: centers_b) std::cout << ' ' << center;
+            std::cout << '\n';
+        }
+        return 0;
+    }
     test_centers();
     test_unrooted_isomorphism();
     test_rooted_isomorphism();

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <numeric>
 #include <stdexcept>
 #include <string>
@@ -187,6 +188,29 @@ void test_longest_common_substring(){
 }
 
 int main(){
+    int case_count;
+    if(std::cin >> case_count){
+        auto print_vector = [](const std::vector<int>& values){
+            std::cout << values.size();
+            for(int value: values) std::cout << ' ' << value;
+            std::cout << '\n';
+        };
+        while(case_count--){
+            std::string s, t;
+            std::cin >> s >> t;
+            if(s == "-") s.clear();
+            if(t == "-") t.clear();
+            const auto sa = suffix_array(s);
+            print_vector(z_algorithm(s));
+            print_vector(manacher_odd(s));
+            print_vector(manacher_even(s));
+            print_vector(sa);
+            print_vector(lcp_array(s, sa));
+            std::cout << longest_palindrome(s).second << ' '
+                      << longest_common_substring(s, t).length << '\n';
+        }
+        return 0;
+    }
     test_z_algorithm();
     test_manacher();
     test_suffix_array();

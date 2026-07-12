@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -238,6 +239,53 @@ void test_exceptions(){
 }
 
 int main(){
+    int case_count;
+    if(std::cin >> case_count){
+        auto add_ecc_vertex = [](int aggregate, int vertex){
+            (void)vertex;
+            return aggregate;
+        };
+        auto add_ecc_edge = [](int value, int from, int to, int edge_id){
+            (void)from;
+            (void)to;
+            (void)edge_id;
+            return value + 1;
+        };
+        auto add_sum_vertex = [](DistanceValue aggregate, int vertex){
+            (void)vertex;
+            return DistanceValue{aggregate.size + 1, aggregate.sum};
+        };
+        auto add_sum_edge = [](DistanceValue value, int from, int to, int edge_id){
+            (void)from;
+            (void)to;
+            (void)edge_id;
+            return DistanceValue{value.size, value.sum + value.size};
+        };
+        while(case_count--){
+            int n;
+            std::cin >> n;
+            RerootingDP<max_int_monoid, decltype(add_ecc_vertex), decltype(add_ecc_edge)> eccentricity(
+                n, add_ecc_vertex, add_ecc_edge
+            );
+            RerootingDP<distance_monoid, decltype(add_sum_vertex), decltype(add_sum_edge)> distance_sum(
+                n, add_sum_vertex, add_sum_edge
+            );
+            for(int i = 0; i + 1 < n; i++){
+                int u, v;
+                std::cin >> u >> v;
+                eccentricity.add_edge(u, v);
+                distance_sum.add_edge(u, v);
+            }
+            const auto ecc = eccentricity.solve();
+            const auto sums = distance_sum.solve();
+            std::cout << n;
+            for(int value: ecc) std::cout << ' ' << value;
+            std::cout << '\n' << n;
+            for(const auto& value: sums) std::cout << ' ' << value.sum;
+            std::cout << '\n';
+        }
+        return 0;
+    }
     test_eccentricity();
     test_sum_of_distances();
     test_empty_and_single();

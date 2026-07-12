@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <random>
 #include <string>
 #include <vector>
@@ -39,6 +40,22 @@ std::string random_string(std::mt19937& rng, int n){
 }
 
 int main(){
+    int query_count;
+    if(std::cin >> query_count){
+        while(query_count--){
+            std::string s;
+            std::cin >> s;
+            if(s == "-") s.clear();
+            const auto sa = suffix_array(s);
+            const auto lcp = lcp_array(s, sa);
+            std::cout << sa.size();
+            for(int value: sa) std::cout << ' ' << value;
+            std::cout << '\n' << lcp.size();
+            for(int value: lcp) std::cout << ' ' << value;
+            std::cout << '\n';
+        }
+        return 0;
+    }
     {
         std::string s = "banana";
         std::vector<int> expected_sa = {5, 3, 1, 0, 4, 2};

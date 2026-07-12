@@ -3,10 +3,36 @@
 #define PROBLEM "https://example.com/standalone/square_matrix"
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include "../../src/structure/matrix/square_matrix.hpp"
+#include "../../src/structure/modint/modint.hpp"
 
 int main(){
+    int query_count;
+    if(std::cin >> query_count){
+        using external_mint = Modint<998244353>;
+        while(query_count--){
+            int n;
+            long long exponent;
+            std::cin >> n >> exponent;
+            SquareMatrix<external_mint, 8> matrix(n);
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++){
+                    long long value;
+                    std::cin >> value;
+                    matrix(i, j) = value;
+                }
+            }
+            const auto power = matrix.pow(exponent);
+            std::cout << n;
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++) std::cout << ' ' << power(i, j).val();
+            }
+            std::cout << '\n';
+        }
+        return 0;
+    }
     SquareMatrix<long long, 4> a({{1, 2}, {3, 4}});
     assert(a.size() == 2);
     assert(!a.empty());

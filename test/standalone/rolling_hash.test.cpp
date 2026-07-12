@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <random>
 #include <string>
 #include "../../src/algorithm/string/rolling_hash.hpp"
@@ -22,6 +23,35 @@ int lcp_naive(const std::string& a, const std::string& b, int i, int j){
 }
 
 int main(){
+    int case_count;
+    if(std::cin >> case_count){
+        while(case_count--){
+            std::string s, t;
+            int query_count;
+            std::cin >> s >> t >> query_count;
+            if(s == "-") s.clear();
+            if(t == "-") t.clear();
+            RollingHash hs(s), ht(t);
+            while(query_count--){
+                int type;
+                std::cin >> type;
+                if(type == 0){
+                    int l, r, x;
+                    std::cin >> l >> r >> x;
+                    std::cout << (hs.get(l, r) == hs.get(x, x + r - l)) << '\n';
+                }else if(type == 1){
+                    int i, j;
+                    std::cin >> i >> j;
+                    std::cout << hs.lcp(ht, i, j) << '\n';
+                }else{
+                    int l, r, x, y;
+                    std::cin >> l >> r >> x >> y;
+                    std::cout << (r - l == y - x && hs.get(l, r) == ht.get(x, y)) << '\n';
+                }
+            }
+        }
+        return 0;
+    }
     {
         std::string s = "abracadabra";
         RollingHash rh(s);

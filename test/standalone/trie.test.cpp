@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <map>
 #include <random>
 #include <string>
@@ -25,6 +26,28 @@ int prefix_count_naive(const std::map<std::string, int>& mp, const std::string& 
 }
 
 int main(){
+    int query_count;
+    if(std::cin >> query_count){
+        Trie<4, 65536> trie;
+        while(query_count--){
+            int type;
+            std::string s;
+            std::cin >> type >> s;
+            if(s == "-") s.clear();
+            if(type == 0){
+                trie.insert(s);
+                std::cout << trie.size() << '\n';
+            }else if(type == 1){
+                std::cout << trie.erase(s) << ' ' << trie.size() << '\n';
+            }else if(type == 2){
+                std::cout << trie.count(s) << ' ' << trie.contains(s) << ' '
+                          << trie.size() << '\n';
+            }else{
+                std::cout << trie.prefix_count(s) << ' ' << trie.size() << '\n';
+            }
+        }
+        return 0;
+    }
     Trie<4, 2048> trie;
     std::map<std::string, int> naive;
     std::mt19937 rng(20260715);

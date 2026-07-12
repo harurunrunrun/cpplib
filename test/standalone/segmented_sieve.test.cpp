@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 
@@ -56,6 +57,18 @@ void test_exceptions(){
 }
 
 int main(){
+    int query_count;
+    if(std::cin >> query_count){
+        while(query_count--){
+            long long left, right;
+            std::cin >> left >> right;
+            const auto primes = math::primes_in_range(left, right);
+            std::cout << primes.size();
+            for(long long prime: primes) std::cout << ' ' << prime;
+            std::cout << '\n';
+        }
+        return 0;
+    }
     test_basic();
     test_ranges();
     test_empty();
