@@ -19,6 +19,53 @@ struct CowGameResult{
 };
 
 template<class T>
+struct CowGameMaximumResult{
+    bool feasible = false;
+    bool bounded = false;
+    T value{};
+};
+
+template<class T>
+struct CowGameRangeResult{
+    bool feasible = false;
+    bool has_minimum = false;
+    bool has_maximum = false;
+    T minimum{};
+    T maximum{};
+};
+
+template<class T>
+void cow_game_add_at_most(
+    std::vector<CowGameConstraint<T>>& constraints,
+    int from,
+    int to,
+    T cost
+){
+    constraints.push_back({from, to, cost});
+}
+
+template<class T>
+void cow_game_add_at_least(
+    std::vector<CowGameConstraint<T>>& constraints,
+    int from,
+    int to,
+    T cost
+){
+    constraints.push_back({to, from, -cost});
+}
+
+template<class T>
+void cow_game_add_equal(
+    std::vector<CowGameConstraint<T>>& constraints,
+    int from,
+    int to,
+    T cost
+){
+    cow_game_add_at_most(constraints, from, to, cost);
+    cow_game_add_at_least(constraints, from, to, cost);
+}
+
+template<class T>
 CowGameResult<T> cow_game(
     int n,
     int source,
@@ -81,4 +128,59 @@ bool cow_game_has_maximum(const CowGameResult<T>& result, int target){
         throw std::runtime_error("library assertion fault: range violation (cow_game_has_maximum).");
     }
     return result.bounded[static_cast<std::size_t>(target)];
+}
+
+template<class T>
+CowGameMaximumResult<T> cow_game_max_difference(
+    int n,
+    int source,
+    int target,
+    const std::vector<CowGameConstraint<T>>& constraints,
+    T inf = std::numeric_limits<T>::max() / 4
+){
+    if(target < 0 || n <= target)[[unlikely]]{
+        throw std::runtime_error("library assertion fault: range violation (cow_game_max_difference).");
+    }
+    auto result = cow_game(n, source, constraints, inf);
+    if(!result.feasible){
+        return {};
+    }
+
+    CowGameMaximumResult<T> answer;
+    answer.feasible = true;
+    answer.bounded = result.bounded[static_cast<std::size_t>(target)];
+    if(answer.bounded){
+        answer.value = result.maximum[static_cast<std::size_t>(target)];
+    }
+    return answer;
+}
+
+template<class T>
+CowGameRangeResult<T> cow_game_difference_range(
+    int n,
+    int source,
+    int target,
+    const std::vector<CowGameConstraint<T>>& constraints,
+    T inf = std::numeric_limits<T>::max() / 4
+){
+    auto upper = cow_game_max_difference(n, source, target, constraints, inf);
+    if(!upper.feasible){
+        return {};
+    }
+    auto lower_dual = cow_game_max_difference(n, target, source, constraints, inf);
+    if(!lower_dual.feasible){
+        return {};
+    }
+
+    CowGameRangeResult<T> answer;
+    answer.feasible = true;
+    answer.has_maximum = upper.bounded;
+    if(answer.has_maximum){
+        answer.maximum = upper.value;
+    }
+    answer.has_minimum = lower_dual.bounded;
+    if(answer.has_minimum){
+        answer.minimum = -lower_dual.value;
+    }
+    return answer;
 }
