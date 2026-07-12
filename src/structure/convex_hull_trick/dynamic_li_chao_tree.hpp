@@ -24,8 +24,12 @@ struct DynamicLiChaoTree{
 
         long long eval(long long x) const{
             __int128 y = eval128(x);
-            if(y > INF) return INF;
-            if(y < -static_cast<__int128>(INF)) return -INF;
+            if(y > std::numeric_limits<long long>::max()){
+                return std::numeric_limits<long long>::max();
+            }
+            if(y < std::numeric_limits<long long>::min()){
+                return std::numeric_limits<long long>::min();
+            }
             return static_cast<long long>(y);
         }
     };
@@ -47,6 +51,27 @@ private:
 
     static bool less_at(const Line& f, const Line& g, long long x){
         return f.eval128(x) < g.eval128(x);
+    }
+
+    bool needs_new_node(Line line) const{
+        int current = root;
+        long long l = X_MIN;
+        long long r = X_MAX;
+        while(current != -1){
+            long long m = midpoint(l, r);
+            bool left_better = less_at(line, nodes[current].line, l);
+            bool mid_better = less_at(line, nodes[current].line, m);
+            if(mid_better) line = nodes[current].line;
+            if(l == r) return false;
+            if(left_better != mid_better){
+                current = nodes[current].left;
+                r = m;
+            }else{
+                current = nodes[current].right;
+                l = m + 1;
+            }
+        }
+        return true;
     }
 
     int new_node(Line line){
@@ -91,6 +116,11 @@ public:
     }
 
     void add_line(Line line){
+        if(needs_new_node(line) && node_count == MAX_NODE)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: node capacity exceeded (add_line)."
+            );
+        }
         add_line_impl(root, X_MIN, X_MAX, line);
     }
 
@@ -101,7 +131,8 @@ public:
             );
         }
 
-        long long res = INF;
+        if(root == -1) return INF;
+        long long res = std::numeric_limits<long long>::max();
         int current = root;
         long long l = X_MIN;
         long long r = X_MAX;

@@ -47,6 +47,10 @@ long long query(int version, long long x)
 
 version の hull での最小値を返す。
 
+`a * x + b` は `__int128` で評価し、`long long` の範囲外だけを上下限へ丸める。
+
+line、node、version の容量例外が発生した場合、既存 version と使用済み node 数は変化しない。
+
 ## 時間計算量
 
 - $O(\log^2 N)$

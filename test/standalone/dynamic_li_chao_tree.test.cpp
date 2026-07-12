@@ -6,6 +6,7 @@
 #include <iostream>
 #include <limits>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -54,5 +55,28 @@ int main(){
             }
             assert(cht.query(x) == expected);
         }
+    }
+    {
+        DynamicLiChaoTree<-2, 2, 2> large;
+        large.add_line(0, 3000000000000000000LL);
+        assert(large.query(0) == 3000000000000000000LL);
+    }
+    {
+        DynamicLiChaoTree<1000000, 1000000, 1> saturated;
+        saturated.add_line(1000000000000000LL, 1000000000000000000LL);
+        assert(saturated.query(1000000) == std::numeric_limits<long long>::max());
+    }
+    {
+        DynamicLiChaoTree<-2, 2, 1> capacity;
+        capacity.add_line(0, 0);
+        bool thrown = false;
+        try{
+            capacity.add_line(-1, -1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        assert(capacity.nodes_used() == 1);
+        for(long long x = -2; x <= 2; x++) assert(capacity.query(x) == 0);
     }
 }

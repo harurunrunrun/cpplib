@@ -35,6 +35,8 @@ long long query(long long x)
 
 追加された直線の `x` における最小値を返す。
 
+`a * x + b` は `__int128` で評価し、`long long` の範囲外だけを上下限へ丸める。
+
 ## 時間計算量
 
 - $O(\log N)$

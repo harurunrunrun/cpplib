@@ -4,6 +4,7 @@
 #include <iostream>
 #include <limits>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -84,5 +85,49 @@ int main(){
                 assert(cht.query(version, x) == naive_query(naive[static_cast<std::size_t>(version)], x));
             }
         }
+    }
+    {
+        PersistentConvexHullTrick<4, 8, 128> boundary;
+        int v1 = boundary.add_line(0, 3, -8000000000000000000LL);
+        int v2 = boundary.add_line(v1, 2, 8000000000000000000LL);
+        int v3 = boundary.add_line(v2, 1, -7000000000000000000LL);
+        assert(boundary.query(v3, 0) == -8000000000000000000LL);
+        assert(boundary.query(v3, 10) == -7999999999999999970LL);
+    }
+    {
+        PersistentConvexHullTrick<2, 8, 64> capacity;
+        int v1 = capacity.add_line(0, 2, 0);
+        int v2 = capacity.add_line(v1, 1, 100);
+        int v3 = capacity.add_line(v2, 0, 0);
+        assert(capacity.size(v3) == 2);
+        assert(capacity.query(v3, 0) == 0);
+    }
+    {
+        PersistentConvexHullTrick<4, 2, 64> versions;
+        int v1 = versions.add_line(0, 1, 3);
+        int nodes_before = versions.nodes_used();
+        bool thrown = false;
+        try{
+            (void)versions.add_line(v1, 0, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        assert(versions.versions() == 2);
+        assert(versions.nodes_used() == nodes_before);
+        assert(versions.query(v1, 5) == 8);
+    }
+    {
+        PersistentConvexHullTrick<4, 4, 3> nodes;
+        bool thrown = false;
+        try{
+            (void)nodes.add_line(0, 0, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        assert(nodes.versions() == 1);
+        assert(nodes.nodes_used() == 1);
+        assert(nodes.empty(0));
     }
 }

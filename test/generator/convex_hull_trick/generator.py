@@ -41,6 +41,22 @@ def main() -> None:
     (out_dir / "case_00.in").write_text("\n".join(input_lines) + "\n", encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
 
+    fixed_cases = [
+        ([(3, -8_000_000_000_000_000_000),
+          (2, 8_000_000_000_000_000_000),
+          (1, -7_000_000_000_000_000_000)], [-10, 0, 10]),
+        ([(0, 3_000_000_000_000_000_000)], [-1, 0, 1]),
+    ]
+    for index, (fixed_lines, queries) in enumerate(fixed_cases, start=1):
+        fixed_input = [f"{len(fixed_lines)} {len(queries)} 0"]
+        fixed_input.extend(f"{a} {b}" for a, b in fixed_lines)
+        fixed_input.extend(map(str, queries))
+        fixed_output = [str(min(a * x + b for a, b in fixed_lines)) for x in queries]
+        (out_dir / f"case_{index:02d}.in").write_text(
+            "\n".join(fixed_input) + "\n", encoding="utf-8")
+        (out_dir / f"case_{index:02d}.out").write_text(
+            "\n".join(fixed_output) + "\n", encoding="utf-8")
+
 
 if __name__ == "__main__":
     main()

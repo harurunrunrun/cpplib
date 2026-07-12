@@ -21,8 +21,12 @@ struct ConvexHullTrick{
 
         long long eval(long long x) const{
             __int128 y = eval128(x);
-            if(y > INF) return INF;
-            if(y < -static_cast<__int128>(INF)) return -INF;
+            if(y > std::numeric_limits<long long>::max()){
+                return std::numeric_limits<long long>::max();
+            }
+            if(y < std::numeric_limits<long long>::min()){
+                return std::numeric_limits<long long>::min();
+            }
             return static_cast<long long>(y);
         }
     };
@@ -32,10 +36,31 @@ private:
     int pointer = 0;
     std::array<Line, MAX_LINE> hull;
 
+    static bool product_ge(
+        __int128 lhs_x, __int128 lhs_y,
+        __int128 rhs_x, __int128 rhs_y
+    ){
+        bool lhs_negative = (lhs_x < 0) != (lhs_y < 0);
+        bool rhs_negative = (rhs_x < 0) != (rhs_y < 0);
+        unsigned __int128 lhs = static_cast<unsigned __int128>(
+            lhs_x < 0 ? -lhs_x : lhs_x) * static_cast<unsigned __int128>(
+            lhs_y < 0 ? -lhs_y : lhs_y);
+        unsigned __int128 rhs = static_cast<unsigned __int128>(
+            rhs_x < 0 ? -rhs_x : rhs_x) * static_cast<unsigned __int128>(
+            rhs_y < 0 ? -rhs_y : rhs_y);
+        if(lhs == 0) lhs_negative = false;
+        if(rhs == 0) rhs_negative = false;
+        if(lhs_negative != rhs_negative) return !lhs_negative;
+        return lhs_negative ? lhs <= rhs : lhs >= rhs;
+    }
+
     static bool unnecessary(const Line& f, const Line& g, const Line& h){
-        return
-            static_cast<__int128>(g.b - f.b) * (g.a - h.a) >=
-            static_cast<__int128>(h.b - g.b) * (f.a - g.a);
+        return product_ge(
+            static_cast<__int128>(g.b) - f.b,
+            static_cast<__int128>(g.a) - h.a,
+            static_cast<__int128>(h.b) - g.b,
+            static_cast<__int128>(f.a) - g.a
+        );
     }
 
     void check_not_empty(const char* message) const{
@@ -61,11 +86,6 @@ public:
             if(pointer > line_count) pointer = line_count;
         }
 
-        if(line_count >= MAX_LINE)[[unlikely]]{
-            throw std::runtime_error(
-                "library assertion fault: line capacity exceeded (add_line)."
-            );
-        }
 
         while(
             line_count >= 2 &&
@@ -73,6 +93,12 @@ public:
         ){
             line_count--;
             if(pointer > line_count) pointer = line_count;
+        }
+
+        if(line_count >= MAX_LINE)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: line capacity exceeded (add_line)."
+            );
         }
 
         hull[line_count++] = line;

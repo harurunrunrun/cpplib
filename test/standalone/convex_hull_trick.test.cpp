@@ -72,4 +72,34 @@ int main(){
         }
         assert(monotone_query.query_monotone_inc(x) == expected);
     }
+    {
+        ConvexHullTrick<4> boundary;
+        std::vector<std::pair<long long, long long>> boundary_lines = {
+            {3, -8000000000000000000LL},
+            {2, 8000000000000000000LL},
+            {1, -7000000000000000000LL},
+        };
+        for(auto [a, b]: boundary_lines) boundary.add_line(a, b);
+        for(long long x: {-10LL, 0LL, 10LL}){
+            long long expected = std::numeric_limits<long long>::max();
+            for(auto [a, b]: boundary_lines){
+                expected = std::min(expected, static_cast<long long>(
+                    static_cast<__int128>(a) * x + b));
+            }
+            assert(boundary.query(x) == expected);
+        }
+    }
+    {
+        ConvexHullTrick<2> capacity;
+        capacity.add_line(2, 0);
+        capacity.add_line(1, 100);
+        capacity.add_line(0, 0);
+        assert(capacity.size() == 2);
+        assert(capacity.query(0) == 0);
+    }
+    {
+        ConvexHullTrick<1> large;
+        large.add_line(0, 3000000000000000000LL);
+        assert(large.query(0) == 3000000000000000000LL);
+    }
 }

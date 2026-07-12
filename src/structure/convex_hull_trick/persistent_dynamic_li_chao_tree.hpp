@@ -24,8 +24,12 @@ struct PersistentDynamicLiChaoTree{
 
         long long eval(long long x) const{
             __int128 y = eval128(x);
-            if(y > INF) return INF;
-            if(y < -static_cast<__int128>(INF)) return -INF;
+            if(y > std::numeric_limits<long long>::max()){
+                return std::numeric_limits<long long>::max();
+            }
+            if(y < std::numeric_limits<long long>::min()){
+                return std::numeric_limits<long long>::min();
+            }
             return static_cast<long long>(y);
         }
     };
@@ -159,6 +163,11 @@ public:
             version,
             "library assertion fault: range violation (add_line)."
         );
+        if(version_count > MAX_VERSION)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: version capacity exceeded (add_line)."
+            );
+        }
 
         int node_snapshot = node_count;
         int new_root;
@@ -183,8 +192,9 @@ public:
             );
         }
 
-        long long res = INF;
         int current = root[version];
+        if(current == -1) return INF;
+        long long res = std::numeric_limits<long long>::max();
         long long l = X_MIN;
         long long r = X_MAX;
 

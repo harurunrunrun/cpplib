@@ -48,5 +48,29 @@ def main() -> None:
     )
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
 
+    fixed_commands = [
+        "EMPTY 0",
+        "ADD 0 3 -8000000000000000000",
+        "ADD 1 2 8000000000000000000",
+        "ADD 2 1 -7000000000000000000",
+        "QUERY 3 0",
+        "QUERY 3 10",
+        "QUERY 1 0",
+        "ADD 0 0 3000000000000000000",
+        "QUERY 4 0",
+    ]
+    fixed_outputs = [
+        "1", "1", "2", "3",
+        "-8000000000000000000",
+        "-7999999999999999970",
+        "-8000000000000000000",
+        "4", "3000000000000000000",
+    ]
+    (out_dir / "case_01.in").write_text(
+        str(len(fixed_commands)) + "\n" + "\n".join(fixed_commands) + "\n",
+        encoding="utf-8")
+    (out_dir / "case_01.out").write_text(
+        "\n".join(fixed_outputs) + "\n", encoding="utf-8")
+
 if __name__ == "__main__":
     main()

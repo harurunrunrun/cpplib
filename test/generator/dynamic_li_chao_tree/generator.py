@@ -7,11 +7,13 @@ import argparse
 import random
 from pathlib import Path
 
-INF = ((1 << 63) - 1) // 4
+EMPTY = ((1 << 63) - 1) // 4
+LONG_LONG_MIN = -(1 << 63)
+LONG_LONG_MAX = (1 << 63) - 1
 
 
 def clamp(value: int) -> int:
-    return max(-INF, min(INF, value))
+    return max(LONG_LONG_MIN, min(LONG_LONG_MAX, value))
 
 
 def main() -> None:
@@ -24,7 +26,7 @@ def main() -> None:
     rng = random.Random(20260713)
     lines: list[tuple[int, int]] = []
     commands = ["QUERY 0"]
-    outputs = [str(INF)]
+    outputs = [str(EMPTY)]
     add_count = 0
     for _ in range(1100):
         if add_count < 300 and (not lines or rng.randrange(10) < 3):
@@ -43,6 +45,21 @@ def main() -> None:
         encoding="utf-8",
     )
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
+
+    fixed_cases = [
+        (["QUERY 0", "ADD 0 3000000000000000000", "QUERY 0"],
+         [str(EMPTY), "3000000000000000000"]),
+        (["ADD 9000000000000000000 1000000000000000000", "QUERY 1000000"],
+         [str(LONG_LONG_MAX)]),
+        (["ADD -9000000000000000000 -1000000000000000000", "QUERY 1000000"],
+         [str(LONG_LONG_MIN)]),
+    ]
+    for index, (fixed_commands, fixed_outputs) in enumerate(fixed_cases, start=1):
+        (out_dir / f"case_{index:02d}.in").write_text(
+            str(len(fixed_commands)) + "\n" + "\n".join(fixed_commands) + "\n",
+            encoding="utf-8")
+        (out_dir / f"case_{index:02d}.out").write_text(
+            "\n".join(fixed_outputs) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

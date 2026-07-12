@@ -40,6 +40,10 @@ long long query(long long x)
 
 追加された直線の `x` における最小値を返す。
 
+空の場合は `DynamicLiChaoTree::INF` を返す。非空の場合の値は `INF` 以上でも扱える。
+
+`a * x + b` は `__int128` で評価し、`long long` の範囲外だけを上下限へ丸める。容量例外が発生した場合、既存の木は変化しない。
+
 ## 時間計算量
 
 - $O(\log (X\_MAX - X\_MIN + 1))$
