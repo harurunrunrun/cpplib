@@ -13,11 +13,15 @@ DOCS_RESULT := $(VERIFIER_CACHE)/docs-result.json
 DOCS_SOURCE := $(VERIFIER_ROOT)/_jekyll
 DOCS_OUTPUT := $(VERIFIER_ROOT)/site
 BUNDLE_PATH := $(VERIFIER_ROOT)/vendor/bundle
+STANDALONE_ASSET_CACHE := $(VERIFIER_CACHE)/standalone-assets
+CXX ?= g++
+CXXFLAGS ?= -std=c++20 -O2 -Wall -Wextra
 
-.PHONY: help verifier-setup verifier-resolve verify docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-resolve standalone-assets verify docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
+	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
 	@echo "make docs    testを実行せずHTMLを$(DOCS_OUTPUT)へ生成"
 	@echo "make docs-serve  HTMLを生成してlocalhost:4000で配信"
 	@echo "make verifier-clean  ローカル生成物とvenvを削除"
@@ -33,7 +37,13 @@ verifier-resolve: verifier-setup
 	$(VERIFIER) oj-resolve --include src test --config config.toml > $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
-verify: verifier-resolve
+standalone-assets:
+	$(PYTHON) scripts/run_standalone_assets.py \
+		--cache-dir $(STANDALONE_ASSET_CACHE) \
+		--cxx "$(CXX)" \
+		--cxxflags "$(CXXFLAGS)"
+
+verify: standalone-assets verifier-resolve
 	$(VERIFIER) verify \
 		--verify-json $(VERIFY_FILES) \
 		--check-error \

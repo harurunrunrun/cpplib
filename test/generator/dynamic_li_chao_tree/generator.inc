@@ -1,3 +1,0 @@
-#pragma once
-
-inline void generate_dynamic_li_chao_tree_standalone_cases(){}
