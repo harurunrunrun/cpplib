@@ -1,5 +1,6 @@
 // competitive-verifier: STANDALONE
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 
@@ -31,8 +32,17 @@ int main(){
             std::string value;
             std::cin >> value;
             std::cout << tree.contains(value, version) << '\n';
-        }else{
+        }else if(operation == 'T'){
             const auto lengths = tree.suffix_palindrome_lengths(version);
+            std::cout << lengths.size();
+            for(int length: lengths) std::cout << ' ' << length;
+            std::cout << '\n';
+        }else{
+            const auto nodes = tree.palindrome_nodes(version);
+            std::vector<int> lengths;
+            lengths.reserve(nodes.size());
+            for(int node: nodes) lengths.push_back(tree.length(node));
+            std::sort(lengths.begin(), lengths.end());
             std::cout << lengths.size();
             for(int length: lengths) std::cout << ' ' << length;
             std::cout << '\n';

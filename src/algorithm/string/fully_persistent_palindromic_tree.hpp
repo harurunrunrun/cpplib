@@ -151,6 +151,22 @@ private:
         return result;
     }
 
+    void collect_set_nodes(
+        int root,
+        int left,
+        int right,
+        std::vector<int>& result
+    ) const{
+        if(root == -1) return;
+        if(right - left == 1){
+            if(set_nodes[static_cast<std::size_t>(root)].value) result.push_back(left);
+            return;
+        }
+        const int middle = left + (right - left) / 2;
+        collect_set_nodes(set_nodes[static_cast<std::size_t>(root)].left, left, middle, result);
+        collect_set_nodes(set_nodes[static_cast<std::size_t>(root)].right, middle, right, result);
+    }
+
 public:
     FullyPersistentPalindromicTree(){
         nodes[0] = Node();
@@ -352,11 +368,7 @@ public:
         check_version(version);
         std::vector<int> result;
         result.reserve(static_cast<std::size_t>(distinct_at[static_cast<std::size_t>(version)]));
-        for(int node = 2; node < used; ++node){
-            if(set_contains(present_root[static_cast<std::size_t>(version)], 0, MAX_NODES, node)){
-                result.push_back(node);
-            }
-        }
+        collect_set_nodes(present_root[static_cast<std::size_t>(version)], 0, MAX_NODES, result);
         return result;
     }
     std::vector<std::string> palindromes(int version) const{

@@ -31,7 +31,7 @@ def write_case(out_dir: Path, index: int, seed: int, operation_count: int) -> No
             continue
         version = rng.randrange(len(versions))
         text = versions[version]
-        choice = rng.randrange(7)
+        choice = rng.randrange(8)
         if choice == 0:
             lines.append(f"D {version}")
             output.append(str(len(palindromes(text))))
@@ -57,9 +57,13 @@ def write_case(out_dir: Path, index: int, seed: int, operation_count: int) -> No
                 value = "".join(rng.choice("abc") for _ in range(rng.randint(1, 8)))
             lines.append(f"H {version} {value}")
             output.append(str(int(value == value[::-1] and value in text)))
-        else:
+        elif choice == 6:
             lines.append(f"T {version}")
             lengths = suffix_lengths(text)
+            output.append(" ".join([str(len(lengths)), *map(str, lengths)]))
+        else:
+            lines.append(f"P {version}")
+            lengths = sorted(map(len, palindromes(text)))
             output.append(" ".join([str(len(lengths)), *map(str, lengths)]))
     stem = f"case_{index:02d}"
     (out_dir / f"{stem}.in").write_text(str(len(lines)) + "\n" + "\n".join(lines) + "\n", encoding="utf-8")
