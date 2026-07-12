@@ -138,8 +138,7 @@ private:
         int current = new_node(source, tree_index);
 
         if(r - l == 1){
-            values[current].reset();
-            values[current].emplace(x);
+            *values[current] = x;
             return current;
         }
 
@@ -158,8 +157,7 @@ private:
             value_at(nodes[current].left, 2 * tree_index),
             value_at(nodes[current].right, 2 * tree_index + 1)
         );
-        values[current].reset();
-        values[current].emplace(merged);
+        *values[current] = merged;
         return current;
     }
 
