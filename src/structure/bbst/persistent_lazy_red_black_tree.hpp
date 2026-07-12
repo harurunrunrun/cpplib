@@ -1,9 +1,7 @@
 #pragma once
 
-#include <algorithm>
 #include <array>
 #include <cstddef>
-#include <cstdint>
 #include <functional>
 #include <optional>
 #include <stdexcept>
@@ -24,7 +22,7 @@ private:
         int left = -1;
         int right = -1;
         int size = 0;
-        std::uint64_t priority = 0;
+        bool red = false;
         bool lazy_flag = false;
         Key key{};
         Key min_key{};
@@ -38,21 +36,23 @@ private:
     std::array<int, MAX_VERSION> roots{};
     int used = 0;
     int version_count = 1;
+    int mutation_begin = 0;
     Compare comp;
-
-    static std::uint64_t splitmix64(std::uint64_t x){
-        x += 0x9e3779b97f4a7c15ULL;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9ULL;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111ebULL;
-        return x ^ (x >> 31);
-    }
 
     bool equal_key(const Key& a, const Key& b) const{
         return !comp(a, b) && !comp(b, a);
     }
 
+    bool is_red(int node) const{
+        return node != -1 && nodes[static_cast<std::size_t>(node)].red;
+    }
+
     int size_or_zero(int node) const{
         return node == -1 ? 0 : nodes[static_cast<std::size_t>(node)].size;
+    }
+
+    int left_of(int node) const{
+        return node == -1 ? -1 : nodes[static_cast<std::size_t>(node)].left;
     }
 
     S aggregate_or_e(int node) const{
@@ -61,25 +61,35 @@ private:
 
     void pull(int node){
         auto& current = nodes[static_cast<std::size_t>(node)];
-        int left = current.left;
-        int right = current.right;
-        int left_size = size_or_zero(left);
-        int right_size = size_or_zero(right);
+        int left_size = size_or_zero(current.left);
+        int right_size = size_or_zero(current.right);
         current.size = left_size + 1 + right_size;
-        current.min_key = left == -1 ? current.key : nodes[static_cast<std::size_t>(left)].min_key;
-        current.max_key = right == -1 ? current.key : nodes[static_cast<std::size_t>(right)].max_key;
-
-        S prefix = MonoidActLen.op(aggregate_or_e(left), left_size, current.value, 1);
-        current.aggregate = MonoidActLen.op(prefix, left_size + 1, aggregate_or_e(right), right_size);
+        current.min_key = current.left == -1
+            ? current.key
+            : nodes[static_cast<std::size_t>(current.left)].min_key;
+        current.max_key = current.right == -1
+            ? current.key
+            : nodes[static_cast<std::size_t>(current.right)].max_key;
+        S prefix = MonoidActLen.op(aggregate_or_e(current.left), left_size, current.value, 1);
+        current.aggregate = MonoidActLen.op(
+            prefix,
+            left_size + 1,
+            aggregate_or_e(current.right),
+            right_size
+        );
     }
 
     int copy_node(int node){
-        if(node == -1) return -1;
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentLazyRedBlackTree).");
         }
         nodes[static_cast<std::size_t>(used)] = nodes[static_cast<std::size_t>(node)];
         return used++;
+    }
+
+    int make_mutable(int node){
+        if(node == -1 || mutation_begin <= node) return node;
+        return copy_node(node);
     }
 
     int new_node(const Key& key, const S& value){
@@ -91,7 +101,7 @@ private:
         current.left = -1;
         current.right = -1;
         current.size = 1;
-        current.priority = splitmix64(static_cast<std::uint64_t>(node) + 1);
+        current.red = true;
         current.lazy_flag = false;
         current.key = key;
         current.min_key = key;
@@ -112,95 +122,192 @@ private:
     }
 
     void push(int node){
-        if(node == -1) return;
         auto& current = nodes[static_cast<std::size_t>(node)];
         if(!current.lazy_flag) return;
-        if(current.left != -1){
-            current.left = copy_node(current.left);
-            all_apply_node(current.left, current.lazy);
-        }
-        if(current.right != -1){
-            current.right = copy_node(current.right);
-            all_apply_node(current.right, current.lazy);
-        }
+        current.left = make_mutable(current.left);
+        current.right = make_mutable(current.right);
+        all_apply_node(current.left, current.lazy);
+        all_apply_node(current.right, current.lazy);
         current.lazy = MonoidActLen.id();
         current.lazy_flag = false;
     }
 
-    std::pair<int, int> split_less(int root, const Key& key){
-        if(root == -1) return {-1, -1};
-        int node = copy_node(root);
-        push(node);
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        if(comp(current.key, key)){
-            auto [left, right] = split_less(current.right, key);
-            current.right = left;
-            pull(node);
-            return {node, right};
-        }else{
-            auto [left, right] = split_less(current.left, key);
-            current.left = right;
-            pull(node);
-            return {left, node};
+    int rotate_left(int root){
+        push(root);
+        auto& current = nodes[static_cast<std::size_t>(root)];
+        current.right = make_mutable(current.right);
+        int right = current.right;
+        push(right);
+        current.right = nodes[static_cast<std::size_t>(right)].left;
+        nodes[static_cast<std::size_t>(right)].left = root;
+        nodes[static_cast<std::size_t>(right)].red = current.red;
+        current.red = true;
+        pull(root);
+        pull(right);
+        return right;
+    }
+
+    int rotate_right(int root){
+        push(root);
+        auto& current = nodes[static_cast<std::size_t>(root)];
+        current.left = make_mutable(current.left);
+        int left = current.left;
+        push(left);
+        current.left = nodes[static_cast<std::size_t>(left)].right;
+        nodes[static_cast<std::size_t>(left)].right = root;
+        nodes[static_cast<std::size_t>(left)].red = current.red;
+        current.red = true;
+        pull(root);
+        pull(left);
+        return left;
+    }
+
+    void color_flip(int root){
+        auto& current = nodes[static_cast<std::size_t>(root)];
+        current.left = make_mutable(current.left);
+        current.right = make_mutable(current.right);
+        current.red = !current.red;
+        if(current.left != -1){
+            nodes[static_cast<std::size_t>(current.left)].red =
+                !nodes[static_cast<std::size_t>(current.left)].red;
+        }
+        if(current.right != -1){
+            nodes[static_cast<std::size_t>(current.right)].red =
+                !nodes[static_cast<std::size_t>(current.right)].red;
         }
     }
 
-    int merge(int left, int right){
-        if(left == -1) return right;
-        if(right == -1) return left;
-        if(nodes[static_cast<std::size_t>(left)].priority < nodes[static_cast<std::size_t>(right)].priority){
-            int node = copy_node(left);
-            push(node);
-            nodes[static_cast<std::size_t>(node)].right = merge(nodes[static_cast<std::size_t>(node)].right, right);
-            pull(node);
-            return node;
-        }else{
-            int node = copy_node(right);
-            push(node);
-            nodes[static_cast<std::size_t>(node)].left = merge(left, nodes[static_cast<std::size_t>(node)].left);
-            pull(node);
-            return node;
+    int fix_up(int root){
+        push(root);
+        if(is_red(nodes[static_cast<std::size_t>(root)].right) &&
+           !is_red(nodes[static_cast<std::size_t>(root)].left)){
+            root = rotate_left(root);
         }
+        if(is_red(nodes[static_cast<std::size_t>(root)].left) &&
+           is_red(left_of(nodes[static_cast<std::size_t>(root)].left))){
+            root = rotate_right(root);
+        }
+        if(is_red(nodes[static_cast<std::size_t>(root)].left) &&
+           is_red(nodes[static_cast<std::size_t>(root)].right)){
+            color_flip(root);
+        }
+        pull(root);
+        return root;
     }
 
-    int erase_rec(int root, const Key& key, bool& erased){
-        if(root == -1) return -1;
-        int node = copy_node(root);
-        push(node);
-        auto& current = nodes[static_cast<std::size_t>(node)];
+    int move_red_left(int root){
+        push(root);
+        color_flip(root);
+        int right = nodes[static_cast<std::size_t>(root)].right;
+        if(is_red(left_of(right))){
+            nodes[static_cast<std::size_t>(root)].right = rotate_right(right);
+            root = rotate_left(root);
+            color_flip(root);
+        }
+        return root;
+    }
+
+    int move_red_right(int root){
+        push(root);
+        color_flip(root);
+        if(is_red(left_of(nodes[static_cast<std::size_t>(root)].left))){
+            root = rotate_right(root);
+            color_flip(root);
+        }
+        return root;
+    }
+
+    int insert_rec(int root, const Key& key, const S& value){
+        if(root == -1) return new_node(key, value);
+        root = make_mutable(root);
+        push(root);
+        auto& current = nodes[static_cast<std::size_t>(root)];
         if(comp(key, current.key)){
-            current.left = erase_rec(current.left, key, erased);
-            pull(node);
-            return node;
+            current.left = insert_rec(current.left, key, value);
+        }else{
+            current.right = insert_rec(current.right, key, value);
         }
-        if(comp(current.key, key)){
-            current.right = erase_rec(current.right, key, erased);
-            pull(node);
-            return node;
-        }
-        erased = true;
-        return merge(current.left, current.right);
+        return fix_up(root);
     }
 
-    int set_rec(int root, const Key& key, const S& value, bool& found){
-        if(root == -1) return -1;
-        int node = copy_node(root);
-        push(node);
-        auto& current = nodes[static_cast<std::size_t>(node)];
+    std::pair<Key, S> min_entry(int root, T carry) const{
+        while(true){
+            const auto& current = nodes[static_cast<std::size_t>(root)];
+            if(current.left == -1){
+                return {current.key, MonoidActLen.mapping(carry, current.value, 1)};
+            }
+            if(current.lazy_flag){
+                carry = MonoidActLen.composition(carry, current.lazy);
+            }
+            root = current.left;
+        }
+    }
+
+    int erase_min(int root){
+        root = make_mutable(root);
+        push(root);
+        if(nodes[static_cast<std::size_t>(root)].left == -1) return -1;
+        if(!is_red(nodes[static_cast<std::size_t>(root)].left) &&
+           !is_red(left_of(nodes[static_cast<std::size_t>(root)].left))){
+            root = move_red_left(root);
+        }
+        nodes[static_cast<std::size_t>(root)].left =
+            erase_min(nodes[static_cast<std::size_t>(root)].left);
+        return fix_up(root);
+    }
+
+    int erase_rec(int root, const Key& key){
+        root = make_mutable(root);
+        push(root);
+        if(comp(key, nodes[static_cast<std::size_t>(root)].key)){
+            if(!is_red(nodes[static_cast<std::size_t>(root)].left) &&
+               !is_red(left_of(nodes[static_cast<std::size_t>(root)].left))){
+                root = move_red_left(root);
+            }
+            nodes[static_cast<std::size_t>(root)].left =
+                erase_rec(nodes[static_cast<std::size_t>(root)].left, key);
+        }else{
+            if(is_red(nodes[static_cast<std::size_t>(root)].left)){
+                root = rotate_right(root);
+            }
+            if(equal_key(key, nodes[static_cast<std::size_t>(root)].key) &&
+               nodes[static_cast<std::size_t>(root)].right == -1){
+                return -1;
+            }
+            if(!is_red(nodes[static_cast<std::size_t>(root)].right) &&
+               !is_red(left_of(nodes[static_cast<std::size_t>(root)].right))){
+                root = move_red_right(root);
+            }
+            if(equal_key(key, nodes[static_cast<std::size_t>(root)].key)){
+                auto successor = min_entry(
+                    nodes[static_cast<std::size_t>(root)].right,
+                    MonoidActLen.id()
+                );
+                nodes[static_cast<std::size_t>(root)].key = successor.first;
+                nodes[static_cast<std::size_t>(root)].value = successor.second;
+                nodes[static_cast<std::size_t>(root)].right =
+                    erase_min(nodes[static_cast<std::size_t>(root)].right);
+            }else{
+                nodes[static_cast<std::size_t>(root)].right =
+                    erase_rec(nodes[static_cast<std::size_t>(root)].right, key);
+            }
+        }
+        return fix_up(root);
+    }
+
+    int set_rec(int root, const Key& key, const S& value){
+        root = make_mutable(root);
+        push(root);
+        auto& current = nodes[static_cast<std::size_t>(root)];
         if(comp(key, current.key)){
-            current.left = set_rec(current.left, key, value, found);
-            pull(node);
-            return node;
+            current.left = set_rec(current.left, key, value);
+        }else if(comp(current.key, key)){
+            current.right = set_rec(current.right, key, value);
+        }else{
+            current.value = value;
         }
-        if(comp(current.key, key)){
-            current.right = set_rec(current.right, key, value, found);
-            pull(node);
-            return node;
-        }
-        found = true;
-        current.value = value;
-        pull(node);
-        return node;
+        pull(root);
+        return root;
     }
 
     bool disjoint(int node, const Key& l, const Key& r) const{
@@ -215,6 +322,24 @@ private:
 
     bool in_range(const Key& key, const Key& l, const Key& r) const{
         return !comp(key, l) && comp(key, r);
+    }
+
+    int apply_rec(int root, const Key& l, const Key& r, const T& f){
+        if(root == -1 || disjoint(root, l, r)) return root;
+        root = make_mutable(root);
+        if(covered(root, l, r)){
+            all_apply_node(root, f);
+            return root;
+        }
+        push(root);
+        auto& current = nodes[static_cast<std::size_t>(root)];
+        current.left = apply_rec(current.left, l, r, f);
+        if(in_range(current.key, l, r)){
+            current.value = MonoidActLen.mapping(f, current.value, 1);
+        }
+        current.right = apply_rec(current.right, l, r, f);
+        pull(root);
+        return root;
     }
 
     T compose_carry(int node, const T& carry) const{
@@ -244,17 +369,17 @@ private:
         }
         T child_carry = compose_carry(node, carry);
         auto [left_value, left_size] = prod_rec(current.left, l, r, child_carry);
-        S mid_value = MonoidActLen.e();
-        int mid_size = 0;
+        S middle_value = MonoidActLen.e();
+        int middle_size = 0;
         if(in_range(current.key, l, r)){
-            mid_value = MonoidActLen.mapping(carry, current.value, 1);
-            mid_size = 1;
+            middle_value = MonoidActLen.mapping(carry, current.value, 1);
+            middle_size = 1;
         }
         auto [right_value, right_size] = prod_rec(current.right, l, r, child_carry);
-        S prefix = MonoidActLen.op(left_value, left_size, mid_value, mid_size);
+        S prefix = MonoidActLen.op(left_value, left_size, middle_value, middle_size);
         return {
-            MonoidActLen.op(prefix, left_size + mid_size, right_value, right_size),
-            left_size + mid_size + right_size
+            MonoidActLen.op(prefix, left_size + middle_size, right_value, right_size),
+            left_size + middle_size + right_size
         };
     }
 
@@ -267,10 +392,14 @@ private:
         to_vector_rec(current.right, child_carry, result);
     }
 
-    int register_root(int root){
+    void check_version_capacity() const{
         if(version_count == MAX_VERSION)[[unlikely]]{
             throw std::runtime_error("library assertion fault: version capacity exceeded (PersistentLazyRedBlackTree).");
         }
+    }
+
+    int register_root(int root){
+        check_version_capacity();
         roots[static_cast<std::size_t>(version_count)] = root;
         return version_count++;
     }
@@ -312,27 +441,58 @@ public:
 
     int insert(const Key& key, const S& value, int version = 0){
         check_version(version);
+        check_version_capacity();
         int root = roots[static_cast<std::size_t>(version)];
         if(contains(key, version)) return register_root(root);
-        auto [left, right] = split_less(root, key);
-        int node = new_node(key, value);
-        return register_root(merge(merge(left, node), right));
+        int checkpoint = used;
+        mutation_begin = checkpoint;
+        try{
+            root = insert_rec(root, key, value);
+            nodes[static_cast<std::size_t>(root)].red = false;
+            return register_root(root);
+        }catch(...){
+            used = checkpoint;
+            throw;
+        }
     }
 
     int erase(const Key& key, int version = 0){
         check_version(version);
+        check_version_capacity();
         int root = roots[static_cast<std::size_t>(version)];
         if(!contains(key, version)) return register_root(root);
-        bool erased = false;
-        return register_root(erase_rec(root, key, erased));
+        int checkpoint = used;
+        mutation_begin = checkpoint;
+        try{
+            root = make_mutable(root);
+            push(root);
+            if(!is_red(nodes[static_cast<std::size_t>(root)].left) &&
+               !is_red(nodes[static_cast<std::size_t>(root)].right)){
+                nodes[static_cast<std::size_t>(root)].red = true;
+            }
+            root = erase_rec(root, key);
+            if(root != -1) nodes[static_cast<std::size_t>(root)].red = false;
+            return register_root(root);
+        }catch(...){
+            used = checkpoint;
+            throw;
+        }
     }
 
     int set(const Key& key, const S& value, int version = 0){
         check_version(version);
+        check_version_capacity();
         int root = roots[static_cast<std::size_t>(version)];
         if(!contains(key, version)) return register_root(root);
-        bool found = false;
-        return register_root(set_rec(root, key, value, found));
+        int checkpoint = used;
+        mutation_begin = checkpoint;
+        try{
+            root = set_rec(root, key, value);
+            return register_root(root);
+        }catch(...){
+            used = checkpoint;
+            throw;
+        }
     }
 
     std::optional<S> get(const Key& key, int version = 0) const{
@@ -342,12 +502,18 @@ public:
 
     int apply(const Key& l, const Key& r, const T& f, int version = 0){
         check_version(version);
+        check_version_capacity();
         int root = roots[static_cast<std::size_t>(version)];
         if(root == -1 || !comp(l, r)) return register_root(root);
-        auto [less_l, ge_l] = split_less(root, l);
-        auto [mid, ge_r] = split_less(ge_l, r);
-        all_apply_node(mid, f);
-        return register_root(merge(merge(less_l, mid), ge_r));
+        int checkpoint = used;
+        mutation_begin = checkpoint;
+        try{
+            root = apply_rec(root, l, r, f);
+            return register_root(root);
+        }catch(...){
+            used = checkpoint;
+            throw;
+        }
     }
 
     S prod(const Key& l, const Key& r, int version = 0) const{
@@ -358,11 +524,19 @@ public:
 
     int all_apply(const T& f, int version = 0){
         check_version(version);
+        check_version_capacity();
         int root = roots[static_cast<std::size_t>(version)];
         if(root == -1) return register_root(root);
-        root = copy_node(root);
-        all_apply_node(root, f);
-        return register_root(root);
+        int checkpoint = used;
+        mutation_begin = checkpoint;
+        try{
+            root = make_mutable(root);
+            all_apply_node(root, f);
+            return register_root(root);
+        }catch(...){
+            used = checkpoint;
+            throw;
+        }
     }
 
     S all_prod(int version = 0) const{

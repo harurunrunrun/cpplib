@@ -149,10 +149,157 @@ void self_test(){
     }
 }
 
+constexpr long long AFFINE_MOD = 998244353;
+
+struct Affine{
+    long long a;
+    long long b;
+};
+
+long long affine_op(long long x, long long, long long y, long long){
+    return (x + y) % AFFINE_MOD;
+}
+long long affine_e(){ return 0; }
+long long affine_mapping(Affine f, long long x, long long len){
+    return (f.a * x + f.b * (len % AFFINE_MOD)) % AFFINE_MOD;
+}
+Affine affine_composition(Affine f, Affine g){
+    return {
+        f.a * g.a % AFFINE_MOD,
+        (f.a * g.b + f.b) % AFFINE_MOD
+    };
+}
+Affine affine_id(){ return {1, 0}; }
+constexpr Monoid_Act_Len<
+    affine_op,
+    affine_e,
+    affine_mapping,
+    affine_composition,
+    affine_id
+> affine_range_sum;
+
+using AffineTree = PersistentLazyRedBlackTree<int, affine_range_sum, 400000, 2000>;
+
+long long affine_naive_prod(const std::map<int, long long>& values, int l, int r){
+    long long result = 0;
+    for(auto it = values.lower_bound(l); it != values.end() && it->first < r; ++it){
+        result = (result + it->second) % AFFINE_MOD;
+    }
+    return result;
+}
+
+void check_affine_version(
+    const AffineTree& tree,
+    int version,
+    const std::map<int, long long>& values
+){
+    assert(tree.size(version) == static_cast<int>(values.size()));
+    assert(tree.all_prod(version) == affine_naive_prod(values, -1000, 1000));
+    std::vector<std::pair<int, long long>> expected(values.begin(), values.end());
+    assert(tree.to_vector(version) == expected);
+    for(int key = -2; key <= 82; key += 3){
+        auto got = tree.get(key, version);
+        auto it = values.find(key);
+        if(it == values.end()) assert(!got);
+        else assert(got == it->second);
+    }
+    for(int l = -2; l <= 80; l += 11){
+        for(int r = l; r <= 82; r += 17){
+            assert(tree.prod(l, r, version) == affine_naive_prod(values, l, r));
+        }
+    }
+}
+
+void affine_self_test(){
+    auto tree = std::make_unique<AffineTree>();
+    std::vector<std::map<int, long long>> naive(1);
+    std::mt19937 rng(20260713);
+    for(int step = 0; step < 900; step++){
+        int base = static_cast<int>(rng() % naive.size());
+        int key = static_cast<int>(rng() % 81);
+        int type = static_cast<int>(rng() % 5);
+        auto next = naive[static_cast<std::size_t>(base)];
+        int version;
+        if(type == 0){
+            long long value = rng() % AFFINE_MOD;
+            next.emplace(key, value);
+            version = tree->insert(key, value, base);
+        }else if(type == 1){
+            next.erase(key);
+            version = tree->erase(key, base);
+        }else if(type == 2){
+            long long value = rng() % AFFINE_MOD;
+            auto it = next.find(key);
+            if(it != next.end()) it->second = value;
+            version = tree->set(key, value, base);
+        }else{
+            Affine f{
+                static_cast<long long>(rng() % 8),
+                static_cast<long long>(rng() % 31)
+            };
+            if(type == 3){
+                int l = static_cast<int>(rng() % 86) - 2;
+                int r = static_cast<int>(rng() % 86) - 2;
+                if(l > r) std::swap(l, r);
+                for(auto it = next.lower_bound(l); it != next.end() && it->first < r; ++it){
+                    it->second = affine_mapping(f, it->second, 1);
+                }
+                version = tree->apply(l, r, f, base);
+            }else{
+                for(auto& [_, value]: next){
+                    value = affine_mapping(f, value, 1);
+                }
+                version = tree->all_apply(f, base);
+            }
+        }
+        naive.push_back(next);
+        assert(version == static_cast<int>(naive.size()) - 1);
+        check_affine_version(*tree, base, naive[static_cast<std::size_t>(base)]);
+        check_affine_version(*tree, version, next);
+    }
+}
+
+void capacity_self_test(){
+    using SmallTree = PersistentLazyRedBlackTree<int, range_add_sum, 4, 8>;
+    SmallTree tree;
+    int v1 = tree.insert(1, 10);
+    int v2 = tree.insert(2, 20, v1);
+    bool thrown = false;
+    try{
+        tree.apply(1, 2, 5, v2);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    assert(tree.versions() == 3);
+    assert(tree.get(1, v1) == 10);
+    assert(tree.get(1, v2) == 10);
+    assert(tree.get(2, v2) == 20);
+
+    int v3 = tree.all_apply(5, v1);
+    assert(tree.get(1, v1) == 10);
+    assert(tree.get(1, v3) == 15);
+    assert(tree.get(2, v2) == 20);
+
+    using VersionLimitedTree = PersistentLazyRedBlackTree<int, range_add_sum, 8, 2>;
+    VersionLimitedTree version_limited;
+    int only = version_limited.insert(4, 9);
+    thrown = false;
+    try{
+        version_limited.set(4, 10, only);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    assert(version_limited.versions() == 2);
+    assert(version_limited.get(4, only) == 9);
+}
 int main(){
     int q;
     if(!(std::cin >> q)){
         self_test();
+        affine_self_test();
+        capacity_self_test();
         return 0;
     }
 

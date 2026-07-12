@@ -54,10 +54,42 @@ void self_test(){
     }
 }
 
+void capacity_self_test(){
+    PersistentRedBlackSet<int, 4, 8> tree;
+    int v1 = tree.insert(1);
+    int v2 = tree.insert(2, v1);
+    bool thrown = false;
+    try{
+        tree.insert(3, v2);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    assert(tree.versions() == 3);
+    assert((tree.to_vector(v1) == std::vector<int>{1}));
+    assert((tree.to_vector(v2) == std::vector<int>{1, 2}));
+
+    int v3 = tree.erase(1, v1);
+    assert(tree.empty(v3));
+    assert((tree.to_vector(v2) == std::vector<int>{1, 2}));
+
+    PersistentRedBlackSet<int, 8, 2> version_limited;
+    int only = version_limited.insert(7);
+    thrown = false;
+    try{
+        version_limited.insert(7, only);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    assert(version_limited.versions() == 2);
+    assert(version_limited.contains(7, only));
+}
 int main(){
     int q;
     if(!(std::cin >> q)){
         self_test();
+        capacity_self_test();
         return 0;
     }
     PersistentRedBlackSet<int, 20000, 2000> tree;

@@ -3,6 +3,8 @@ title: Persistent Red Black Tree
 documentation_of: ../src/structure/bbst/persistent_red_black_tree.hpp
 ---
 
+path-copy left-leaning red-black tree による完全永続構造。
+
 永続平衡二分探索木による集合。
 
 同じキーは 1 個だけ保持する。更新は新しい version を返す。
@@ -50,4 +52,5 @@ optional<Key> set.max_less(x, version)
 
 ## 時間計算量
 
-- expected $O(\log N)$
+- insert, erase, search: worst-case $O(\log N)$
+- to_vector: $O(N)$

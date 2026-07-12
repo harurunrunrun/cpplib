@@ -3,6 +3,8 @@ title: Persistent Lazy Red Black Tree
 documentation_of: ../src/structure/bbst/persistent_lazy_red_black_tree.hpp
 ---
 
+path-copy left-leaning red-black tree による完全永続構造。
+
 永続平衡二分探索木によるキー付き列。
 
 キーの半開区間 `[l,r)` に対して、値の作用、値の積を行う。更新は元の version を変更せず、新しい version を返す。
@@ -83,4 +85,6 @@ vector<pair<Key, S>> to_vector(int version = 0)
 
 ## 時間計算量
 
-- 期待 $O(\log N)$
+- insert, erase, set, apply, prod, search: worst-case $O(\log N)$
+- all_apply, all_prod: $O(1)$
+- to_vector: $O(N)$

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <algorithm>
 #include <array>
-#include <cstdint>
+#include <cstddef>
 #include <functional>
 #include <optional>
 #include <stdexcept>
@@ -19,7 +18,7 @@ private:
         int left = -1;
         int right = -1;
         int size = 0;
-        std::uint64_t priority = 0;
+        bool red = false;
         Key key{};
     };
 
@@ -27,31 +26,31 @@ private:
     std::array<int, MAX_VERSION> roots{};
     int used = 0;
     int version_count = 1;
+    int mutation_begin = 0;
     Compare comp;
-
-    static std::uint64_t splitmix64(std::uint64_t x){
-        x += 0x9e3779b97f4a7c15ULL;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9ULL;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111ebULL;
-        return x ^ (x >> 31);
-    }
 
     bool equal_key(const Key& a, const Key& b) const{
         return !comp(a, b) && !comp(b, a);
+    }
+
+    bool is_red(int node) const{
+        return node != -1 && nodes[static_cast<std::size_t>(node)].red;
     }
 
     int size_or_zero(int node) const{
         return node == -1 ? 0 : nodes[static_cast<std::size_t>(node)].size;
     }
 
+    int left_of(int node) const{
+        return node == -1 ? -1 : nodes[static_cast<std::size_t>(node)].left;
+    }
+
     void pull(int node){
-        nodes[static_cast<std::size_t>(node)].size =
-            1 + size_or_zero(nodes[static_cast<std::size_t>(node)].left) +
-            size_or_zero(nodes[static_cast<std::size_t>(node)].right);
+        auto& current = nodes[static_cast<std::size_t>(node)];
+        current.size = 1 + size_or_zero(current.left) + size_or_zero(current.right);
     }
 
     int copy_node(int node){
-        if(node == -1) return -1;
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentRedBlackSet).");
         }
@@ -59,67 +58,168 @@ private:
         return used++;
     }
 
+    int make_mutable(int node){
+        if(node == -1 || mutation_begin <= node) return node;
+        return copy_node(node);
+    }
+
     int new_node(const Key& key){
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentRedBlackSet).");
         }
         int node = used++;
-        nodes[static_cast<std::size_t>(node)] = {-1, -1, 1, splitmix64(static_cast<std::uint64_t>(node) + 1), key};
+        nodes[static_cast<std::size_t>(node)] = {-1, -1, 1, true, key};
         return node;
     }
 
-    std::pair<int, int> split_less(int root, const Key& key){
-        if(root == -1) return {-1, -1};
-        int node = copy_node(root);
-        if(comp(nodes[static_cast<std::size_t>(node)].key, key)){
-            auto [left, right] = split_less(nodes[static_cast<std::size_t>(node)].right, key);
-            nodes[static_cast<std::size_t>(node)].right = left;
-            pull(node);
-            return {node, right};
-        }else{
-            auto [left, right] = split_less(nodes[static_cast<std::size_t>(node)].left, key);
-            nodes[static_cast<std::size_t>(node)].left = right;
-            pull(node);
-            return {left, node};
+    int rotate_left(int root){
+        int right = make_mutable(nodes[static_cast<std::size_t>(root)].right);
+        nodes[static_cast<std::size_t>(root)].right = nodes[static_cast<std::size_t>(right)].left;
+        nodes[static_cast<std::size_t>(right)].left = root;
+        nodes[static_cast<std::size_t>(right)].red = nodes[static_cast<std::size_t>(root)].red;
+        nodes[static_cast<std::size_t>(root)].red = true;
+        pull(root);
+        pull(right);
+        return right;
+    }
+
+    int rotate_right(int root){
+        int left = make_mutable(nodes[static_cast<std::size_t>(root)].left);
+        nodes[static_cast<std::size_t>(root)].left = nodes[static_cast<std::size_t>(left)].right;
+        nodes[static_cast<std::size_t>(left)].right = root;
+        nodes[static_cast<std::size_t>(left)].red = nodes[static_cast<std::size_t>(root)].red;
+        nodes[static_cast<std::size_t>(root)].red = true;
+        pull(root);
+        pull(left);
+        return left;
+    }
+
+    void color_flip(int root){
+        auto& current = nodes[static_cast<std::size_t>(root)];
+        current.left = make_mutable(current.left);
+        current.right = make_mutable(current.right);
+        current.red = !current.red;
+        if(current.left != -1){
+            nodes[static_cast<std::size_t>(current.left)].red =
+                !nodes[static_cast<std::size_t>(current.left)].red;
+        }
+        if(current.right != -1){
+            nodes[static_cast<std::size_t>(current.right)].red =
+                !nodes[static_cast<std::size_t>(current.right)].red;
         }
     }
 
-    int merge(int left, int right){
-        if(left == -1) return right;
-        if(right == -1) return left;
-        if(nodes[static_cast<std::size_t>(left)].priority < nodes[static_cast<std::size_t>(right)].priority){
-            int node = copy_node(left);
-            nodes[static_cast<std::size_t>(node)].right = merge(nodes[static_cast<std::size_t>(node)].right, right);
-            pull(node);
-            return node;
-        }else{
-            int node = copy_node(right);
-            nodes[static_cast<std::size_t>(node)].left = merge(left, nodes[static_cast<std::size_t>(node)].left);
-            pull(node);
-            return node;
+    int fix_up(int root){
+        if(is_red(nodes[static_cast<std::size_t>(root)].right) &&
+           !is_red(nodes[static_cast<std::size_t>(root)].left)){
+            root = rotate_left(root);
         }
+        if(is_red(nodes[static_cast<std::size_t>(root)].left) &&
+           is_red(left_of(nodes[static_cast<std::size_t>(root)].left))){
+            root = rotate_right(root);
+        }
+        if(is_red(nodes[static_cast<std::size_t>(root)].left) &&
+           is_red(nodes[static_cast<std::size_t>(root)].right)){
+            color_flip(root);
+        }
+        pull(root);
+        return root;
     }
 
-    int erase_rec(int root, const Key& key, bool& erased){
-        if(root == -1) return -1;
-        int node = copy_node(root);
-        if(comp(key, nodes[static_cast<std::size_t>(node)].key)){
-            nodes[static_cast<std::size_t>(node)].left = erase_rec(nodes[static_cast<std::size_t>(node)].left, key, erased);
-            pull(node);
-            return node;
+    int move_red_left(int root){
+        color_flip(root);
+        int right = nodes[static_cast<std::size_t>(root)].right;
+        if(is_red(left_of(right))){
+            nodes[static_cast<std::size_t>(root)].right = rotate_right(right);
+            root = rotate_left(root);
+            color_flip(root);
         }
-        if(comp(nodes[static_cast<std::size_t>(node)].key, key)){
-            nodes[static_cast<std::size_t>(node)].right = erase_rec(nodes[static_cast<std::size_t>(node)].right, key, erased);
-            pull(node);
-            return node;
-        }
-        erased = true;
-        return merge(nodes[static_cast<std::size_t>(node)].left, nodes[static_cast<std::size_t>(node)].right);
+        return root;
     }
-    int register_root(int root){
+
+    int move_red_right(int root){
+        color_flip(root);
+        if(is_red(left_of(nodes[static_cast<std::size_t>(root)].left))){
+            root = rotate_right(root);
+            color_flip(root);
+        }
+        return root;
+    }
+
+    int insert_rec(int root, const Key& key){
+        if(root == -1) return new_node(key);
+        root = make_mutable(root);
+        auto& current = nodes[static_cast<std::size_t>(root)];
+        if(comp(key, current.key)){
+            current.left = insert_rec(current.left, key);
+        }else{
+            current.right = insert_rec(current.right, key);
+        }
+        return fix_up(root);
+    }
+
+    int min_node(int root) const{
+        while(nodes[static_cast<std::size_t>(root)].left != -1){
+            root = nodes[static_cast<std::size_t>(root)].left;
+        }
+        return root;
+    }
+
+    int erase_min(int root){
+        root = make_mutable(root);
+        if(nodes[static_cast<std::size_t>(root)].left == -1) return -1;
+        if(!is_red(nodes[static_cast<std::size_t>(root)].left) &&
+           !is_red(left_of(nodes[static_cast<std::size_t>(root)].left))){
+            root = move_red_left(root);
+        }
+        nodes[static_cast<std::size_t>(root)].left =
+            erase_min(nodes[static_cast<std::size_t>(root)].left);
+        return fix_up(root);
+    }
+
+    int erase_rec(int root, const Key& key){
+        root = make_mutable(root);
+        if(comp(key, nodes[static_cast<std::size_t>(root)].key)){
+            if(!is_red(nodes[static_cast<std::size_t>(root)].left) &&
+               !is_red(left_of(nodes[static_cast<std::size_t>(root)].left))){
+                root = move_red_left(root);
+            }
+            nodes[static_cast<std::size_t>(root)].left =
+                erase_rec(nodes[static_cast<std::size_t>(root)].left, key);
+        }else{
+            if(is_red(nodes[static_cast<std::size_t>(root)].left)){
+                root = rotate_right(root);
+            }
+            if(equal_key(key, nodes[static_cast<std::size_t>(root)].key) &&
+               nodes[static_cast<std::size_t>(root)].right == -1){
+                return -1;
+            }
+            if(!is_red(nodes[static_cast<std::size_t>(root)].right) &&
+               !is_red(left_of(nodes[static_cast<std::size_t>(root)].right))){
+                root = move_red_right(root);
+            }
+            if(equal_key(key, nodes[static_cast<std::size_t>(root)].key)){
+                int successor = min_node(nodes[static_cast<std::size_t>(root)].right);
+                nodes[static_cast<std::size_t>(root)].key =
+                    nodes[static_cast<std::size_t>(successor)].key;
+                nodes[static_cast<std::size_t>(root)].right =
+                    erase_min(nodes[static_cast<std::size_t>(root)].right);
+            }else{
+                nodes[static_cast<std::size_t>(root)].right =
+                    erase_rec(nodes[static_cast<std::size_t>(root)].right, key);
+            }
+        }
+        return fix_up(root);
+    }
+
+    void check_version_capacity() const{
         if(version_count == MAX_VERSION)[[unlikely]]{
             throw std::runtime_error("library assertion fault: version capacity exceeded (PersistentRedBlackSet).");
         }
+    }
+
+    int register_root(int root){
+        check_version_capacity();
         roots[static_cast<std::size_t>(version_count)] = root;
         return version_count++;
     }
@@ -161,19 +261,41 @@ public:
 
     int insert(const Key& key, int version = 0){
         check_version(version);
+        check_version_capacity();
         int root = roots[static_cast<std::size_t>(version)];
         if(contains(key, version)) return register_root(root);
-        auto [left, right] = split_less(root, key);
-        int node = new_node(key);
-        return register_root(merge(merge(left, node), right));
+        int checkpoint = used;
+        mutation_begin = checkpoint;
+        try{
+            root = insert_rec(root, key);
+            nodes[static_cast<std::size_t>(root)].red = false;
+            return register_root(root);
+        }catch(...){
+            used = checkpoint;
+            throw;
+        }
     }
 
     int erase(const Key& key, int version = 0){
         check_version(version);
+        check_version_capacity();
         int root = roots[static_cast<std::size_t>(version)];
         if(!contains(key, version)) return register_root(root);
-        bool erased = false;
-        return register_root(erase_rec(root, key, erased));
+        int checkpoint = used;
+        mutation_begin = checkpoint;
+        try{
+            root = make_mutable(root);
+            if(!is_red(nodes[static_cast<std::size_t>(root)].left) &&
+               !is_red(nodes[static_cast<std::size_t>(root)].right)){
+                nodes[static_cast<std::size_t>(root)].red = true;
+            }
+            root = erase_rec(root, key);
+            if(root != -1) nodes[static_cast<std::size_t>(root)].red = false;
+            return register_root(root);
+        }catch(...){
+            used = checkpoint;
+            throw;
+        }
     }
 
     int order_of_key(const Key& key, int version = 0) const{
