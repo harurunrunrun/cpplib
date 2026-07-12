@@ -16,11 +16,16 @@ bellman_ford<T>(int n, vector<BellmanFordEdge<T>> edges, int source, T inf)
 ```cpp
 vector<T> dist;
 vector<int> parent;
+vector<char> reachable;
 vector<char> negative;
 bool has_negative_cycle;
 ```
 
+`reachable[v]` は始点から `v` へ到達可能なら真。`inf` は到達不能な頂点の `dist` に格納する初期値であり、到達可能な最短距離が `inf` 以上でも扱える。
+
 `negative[v]` は、始点から到達可能な負閉路の影響を受ける頂点を表す。
+
+距離と辺コストの加算結果は `T` で表現できる必要がある。
 
 ## 時間計算量
 

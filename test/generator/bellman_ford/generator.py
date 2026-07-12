@@ -7,19 +7,17 @@ import argparse
 import random
 from pathlib import Path
 
-INF = 1 << 60
-
 
 def solve(n: int, edges: list[tuple[int, int, int]], source: int) -> list[str]:
-    distance = [INF] * n
+    distance: list[int | None] = [None] * n
     distance[source] = 0
     for _ in range(n - 1):
         updated = False
         for u, v, cost in edges:
-            if distance[u] == INF:
+            if distance[u] is None:
                 continue
             candidate = distance[u] + cost
-            if candidate < distance[v]:
+            if distance[v] is None or candidate < distance[v]:
                 distance[v] = candidate
                 updated = True
         if not updated:
@@ -28,18 +26,19 @@ def solve(n: int, edges: list[tuple[int, int, int]], source: int) -> list[str]:
     negative = [False] * n
     for _ in range(n):
         for u, v, cost in edges:
-            if distance[u] == INF:
+            if distance[u] is None:
                 continue
-            if distance[u] + cost < distance[v] or negative[u]:
-                if distance[u] + cost < distance[v]:
-                    distance[v] = distance[u] + cost
+            candidate = distance[u] + cost
+            if distance[v] is None or candidate < distance[v] or negative[u]:
+                if distance[v] is None or candidate < distance[v]:
+                    distance[v] = candidate
                 negative[v] = True
 
     result: list[str] = []
     for vertex in range(n):
         if negative[vertex]:
             result.append("NEG")
-        elif distance[vertex] == INF:
+        elif distance[vertex] is None:
             result.append("INF")
         else:
             result.append(str(distance[vertex]))
@@ -53,11 +52,14 @@ def main() -> None:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    sentinel = 1 << 60
     cases: list[tuple[int, list[tuple[int, int, int]], int]] = [
         (3, [(0, 1, 2), (1, 2, -5), (0, 2, 10)], 0),
         (4, [(0, 1, 1), (1, 2, -3), (2, 1, 1), (2, 3, 1)], 0),
         (5, [(0, 1, 2), (2, 3, -2), (3, 2, 1)], 0),
         (1, [], 0),
+        (4, [(0, 1, sentinel), (1, 2, 2_000_000_000_000_000_000), (3, 3, -1)], 0),
+        (3, [(0, 1, 3_000_000_000_000_000_000), (1, 2, -1)], 0),
     ]
     rng = random.Random(20260713)
     for _ in range(40):

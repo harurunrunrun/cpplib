@@ -15,6 +15,7 @@ template<class T>
 struct BellmanFordResult{
     std::vector<T> dist;
     std::vector<int> parent;
+    std::vector<char> reachable;
     std::vector<char> negative;
     bool has_negative_cycle = false;
 };
@@ -38,16 +39,20 @@ BellmanFordResult<T> bellman_ford(
     BellmanFordResult<T> result;
     result.dist.assign(static_cast<std::size_t>(n), inf);
     result.parent.assign(static_cast<std::size_t>(n), -1);
+    result.reachable.assign(static_cast<std::size_t>(n), 0);
     result.negative.assign(static_cast<std::size_t>(n), 0);
     result.dist[static_cast<std::size_t>(source)] = T(0);
+    result.reachable[static_cast<std::size_t>(source)] = 1;
 
     for(int iter = 0; iter < n - 1; iter++){
         bool updated = false;
         for(const auto& e: edges){
-            if(result.dist[static_cast<std::size_t>(e.from)] == inf) continue;
+            if(!result.reachable[static_cast<std::size_t>(e.from)]) continue;
             T nd = result.dist[static_cast<std::size_t>(e.from)] + e.cost;
-            if(nd < result.dist[static_cast<std::size_t>(e.to)]){
+            if(!result.reachable[static_cast<std::size_t>(e.to)] ||
+               nd < result.dist[static_cast<std::size_t>(e.to)]){
                 result.dist[static_cast<std::size_t>(e.to)] = nd;
+                result.reachable[static_cast<std::size_t>(e.to)] = 1;
                 result.parent[static_cast<std::size_t>(e.to)] = e.from;
                 updated = true;
             }
@@ -57,7 +62,7 @@ BellmanFordResult<T> bellman_ford(
 
     for(int iter = 0; iter < n; iter++){
         for(const auto& e: edges){
-            if(result.dist[static_cast<std::size_t>(e.from)] == inf) continue;
+            if(!result.reachable[static_cast<std::size_t>(e.from)]) continue;
             T nd = result.dist[static_cast<std::size_t>(e.from)] + e.cost;
             if(nd < result.dist[static_cast<std::size_t>(e.to)] ||
                result.negative[static_cast<std::size_t>(e.from)]){

@@ -8,17 +8,15 @@ import heapq
 import random
 from pathlib import Path
 
-INF = 1 << 60
-
 
 def solve(n: int, edges: list[tuple[int, int, int]], sources: list[int]) -> list[int]:
     graph: list[list[tuple[int, int]]] = [[] for _ in range(n)]
     for u, v, w in edges:
         graph[u].append((v, w))
-    dist = [INF] * n
+    dist: list[int | None] = [None] * n
     que: list[tuple[int, int]] = []
     for s in sources:
-        if dist[s] != 0:
+        if dist[s] is None:
             dist[s] = 0
             heapq.heappush(que, (0, s))
     while que:
@@ -27,10 +25,10 @@ def solve(n: int, edges: list[tuple[int, int, int]], sources: list[int]) -> list
             continue
         for to, w in graph[v]:
             nd = d + w
-            if nd < dist[to]:
+            if dist[to] is None or nd < dist[to]:
                 dist[to] = nd
                 heapq.heappush(que, (nd, to))
-    return [-1 if x == INF else x for x in dist]
+    return [-1 if value is None else value for value in dist]
 
 
 def write_case(out_dir: Path, idx: int, n: int, edges: list[tuple[int, int, int]], sources: list[int]) -> None:
@@ -54,9 +52,12 @@ def main() -> None:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    sentinel = 1 << 60
     cases: list[tuple[int, list[tuple[int, int, int]], list[int]]] = [
         (1, [], []),
-        (5, [(0, 1, 10), (2, 1, 3), (1, 3, 4), (4, 3, 1)], [0, 2, 4]),
+        (5, [(0, 1, 10), (2, 1, 3), (1, 3, 4), (4, 3, 1)], [0, 2, 2, 4]),
+        (4, [(0, 1, sentinel), (1, 2, 2_000_000_000_000_000_000)], [0]),
+        (4, [(0, 1, 3_000_000_000_000_000_000), (2, 1, 2)], [0, 2]),
     ]
     rng = random.Random(20260801)
     for n in [2, 3, 10, 40]:

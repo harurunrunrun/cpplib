@@ -1,33 +1,43 @@
 // competitive-verifier: STANDALONE
 
-#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <random>
 #include <vector>
 #include "../../src/algorithm/graph/bellman_ford.hpp"
 
-long long brute_force_dist(
+struct BruteDistance{
+    bool reachable;
+    long long value;
+};
+
+BruteDistance brute_force_dist(
     int n,
     const std::vector<BellmanFordEdge<long long>>& edges,
     int s,
     int t
 ){
-    constexpr long long INF = (1LL << 60);
-    std::vector<long long> dp(static_cast<std::size_t>(n), INF);
-    dp[static_cast<std::size_t>(s)] = 0;
+    std::vector<long long> dist(static_cast<std::size_t>(n));
+    std::vector<char> reachable(static_cast<std::size_t>(n), 0);
+    dist[static_cast<std::size_t>(s)] = 0;
+    reachable[static_cast<std::size_t>(s)] = 1;
     for(int iter = 0; iter < n - 1; iter++){
-        auto next = dp;
+        auto next_dist = dist;
+        auto next_reachable = reachable;
         for(auto e: edges){
-            if(dp[static_cast<std::size_t>(e.from)] == INF) continue;
-            next[static_cast<std::size_t>(e.to)] = std::min(
-                next[static_cast<std::size_t>(e.to)],
-                dp[static_cast<std::size_t>(e.from)] + e.cost
-            );
+            if(!reachable[static_cast<std::size_t>(e.from)]) continue;
+            long long candidate = dist[static_cast<std::size_t>(e.from)] + e.cost;
+            if(!next_reachable[static_cast<std::size_t>(e.to)] ||
+               candidate < next_dist[static_cast<std::size_t>(e.to)]){
+                next_dist[static_cast<std::size_t>(e.to)] = candidate;
+                next_reachable[static_cast<std::size_t>(e.to)] = 1;
+            }
         }
-        dp.swap(next);
+        dist.swap(next_dist);
+        reachable.swap(next_reachable);
     }
-    return dp[static_cast<std::size_t>(t)];
+    return {static_cast<bool>(reachable[static_cast<std::size_t>(t)]),
+            dist[static_cast<std::size_t>(t)]};
 }
 
 int main(){
@@ -46,7 +56,7 @@ int main(){
                 if(v != 0) std::cout << ' ';
                 if(result.negative[static_cast<std::size_t>(v)]){
                     std::cout << "NEG";
-                }else if(result.dist[static_cast<std::size_t>(v)] == INF){
+                }else if(!result.reachable[static_cast<std::size_t>(v)]){
                     std::cout << "INF";
                 }else{
                     std::cout << result.dist[static_cast<std::size_t>(v)];
@@ -57,6 +67,7 @@ int main(){
         return 0;
     }
 
+    constexpr long long INF = 1LL << 60;
     {
         std::vector<BellmanFordEdge<long long>> edges = {
             {0, 1, 2},
@@ -64,6 +75,7 @@ int main(){
             {0, 2, 10},
         };
         auto res = bellman_ford<long long>(3, edges, 0);
+        assert(res.reachable[2]);
         assert(res.dist[2] == -3);
         assert(!res.has_negative_cycle);
         assert(!res.negative[2]);
@@ -81,6 +93,18 @@ int main(){
         assert(res.negative[2]);
         assert(res.negative[3]);
     }
+    {
+        std::vector<BellmanFordEdge<long long>> edges = {
+            {0, 1, INF},
+            {1, 2, 2000000000000000000LL},
+            {3, 3, -1},
+        };
+        auto res = bellman_ford<long long>(4, edges, 0, INF);
+        assert(res.reachable[1] && res.dist[1] == INF);
+        assert(res.reachable[2] && res.dist[2] == INF + 2000000000000000000LL);
+        assert(!res.reachable[3] && res.dist[3] == INF);
+        assert(!res.has_negative_cycle);
+    }
 
     std::mt19937 rng(20260726);
     for(int n = 1; n <= 8; n++){
@@ -94,10 +118,14 @@ int main(){
                 }
             }
             int s = static_cast<int>(rng() % n);
-            auto res = bellman_ford<long long>(n, edges, s, 1LL << 60);
+            auto res = bellman_ford<long long>(n, edges, s, INF);
             assert(!res.has_negative_cycle);
             for(int v = 0; v < n; v++){
-                assert(res.dist[static_cast<std::size_t>(v)] == brute_force_dist(n, edges, s, v));
+                auto expected = brute_force_dist(n, edges, s, v);
+                assert(static_cast<bool>(res.reachable[static_cast<std::size_t>(v)]) == expected.reachable);
+                if(expected.reachable){
+                    assert(res.dist[static_cast<std::size_t>(v)] == expected.value);
+                }
             }
         }
     }
