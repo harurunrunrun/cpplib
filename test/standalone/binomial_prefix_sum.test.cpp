@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
+#include <string>
 #include "../../src/algorithm/math/binomial_prefix_sum.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
@@ -16,6 +18,19 @@ long long comb_naive(int n, int k){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        BinomialPrefixSum<mint, 200> table;
+        while(q--){
+            std::string type;
+            int n, k;
+            std::cin >> type >> n >> k;
+            if(type == "COMB") std::cout << table.combination(n, k) << '\n';
+            else std::cout << table.prefix_sum(n, k) << '\n';
+        }
+        return 0;
+    }
+
     BinomialPrefixSum<mint, 30> table;
     for(int n = 0; n <= 30; n++){
         long long prefix = 0;

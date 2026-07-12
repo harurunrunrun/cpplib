@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <cmath>
 #include <complex>
 #include <stdexcept>
@@ -90,6 +91,23 @@ void test_exceptions(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            int n, m;
+            std::cin >> n >> m;
+            std::vector<long long> a(static_cast<std::size_t>(n));
+            std::vector<long long> b(static_cast<std::size_t>(m));
+            for(auto& value: a) std::cin >> value;
+            for(auto& value: b) std::cin >> value;
+            const auto result = convolution_ll(a, b);
+            std::cout << result.size();
+            for(long long value: result) std::cout << ' ' << value;
+            std::cout << '\n';
+        }
+        return 0;
+    }
+
     test_transform();
     test_long_long();
     test_double();

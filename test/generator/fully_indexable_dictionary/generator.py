@@ -1,10 +1,82 @@
 #!/usr/bin/env python3
 # competitive-verifier: DISPLAY hidden
 
-import runpy
+from __future__ import annotations
+
+import argparse
+import random
 from pathlib import Path
 
-runpy.run_path(
-    str(Path(__file__).resolve().parents[3] / "scripts" / "standalone_empty_generator.py"),
-    run_name="__main__",
-)
+
+def select(values: list[int], value: int, occurrence: int) -> int:
+    positions = [index for index, item in enumerate(values) if item == value]
+    return positions[occurrence] if occurrence < len(positions) else len(values)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--out-dir", required=True)
+    args = parser.parse_args()
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    rng = random.Random(20260713)
+    n = 321
+    fixed = [rng.randrange(2) for _ in range(n)]
+    dynamic = fixed[:]
+    commands: list[str] = []
+    outputs: list[str] = []
+
+    for _ in range(1400):
+        kind = rng.randrange(10)
+        if kind == 0:
+            index = rng.randrange(n)
+            commands.append(f"FGET {index}")
+            outputs.append(str(fixed[index]))
+        elif kind == 1:
+            value = rng.randrange(2)
+            l, r = sorted((rng.randrange(n + 1), rng.randrange(n + 1)))
+            commands.append(f"FRANK {value} {l} {r}")
+            outputs.append(str(fixed[l:r].count(value)))
+        elif kind == 2:
+            value = rng.randrange(2)
+            occurrence = rng.randrange(n + 20)
+            commands.append(f"FSELECT {value} {occurrence}")
+            outputs.append(str(select(fixed, value, occurrence)))
+        elif kind == 3:
+            index = rng.randrange(n)
+            commands.append(f"DGET {index}")
+            outputs.append(str(dynamic[index]))
+        elif kind in {4, 5}:
+            value = rng.randrange(2)
+            l, r = sorted((rng.randrange(n + 1), rng.randrange(n + 1)))
+            commands.append(f"DRANK {value} {l} {r}")
+            outputs.append(str(dynamic[l:r].count(value)))
+        elif kind == 6:
+            value = rng.randrange(2)
+            occurrence = rng.randrange(n + 20)
+            commands.append(f"DSELECT {value} {occurrence}")
+            outputs.append(str(select(dynamic, value, occurrence)))
+        elif kind < 9:
+            index = rng.randrange(n)
+            value = rng.randrange(2)
+            commands.append(f"DSET {index} {value}")
+            dynamic[index] = value
+        else:
+            index = rng.randrange(n)
+            commands.append(f"DFLIP {index}")
+            dynamic[index] ^= 1
+
+    input_text = (
+        f"{n} {len(commands)}\n"
+        + " ".join(map(str, fixed))
+        + "\n"
+        + "\n".join(commands)
+        + "\n"
+    )
+    (out_dir / "case_00.in").write_text(input_text, encoding="utf-8")
+    (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

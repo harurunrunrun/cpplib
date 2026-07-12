@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -114,6 +116,31 @@ void test_exceptions(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            std::string type;
+            int lg;
+            std::cin >> type >> lg;
+            const int n = 1 << lg;
+            std::vector<long long> a(static_cast<std::size_t>(n));
+            std::vector<long long> b(static_cast<std::size_t>(n));
+            for(auto& value: a) std::cin >> value;
+            for(auto& value: b) std::cin >> value;
+            std::vector<long long> result;
+            if(type == "OR") result = or_convolution(a, b);
+            if(type == "AND") result = and_convolution(a, b);
+            if(type == "XOR") result = xor_convolution(a, b);
+            if(type == "XNOR") result = xnor_convolution(a, b);
+            for(int i = 0; i < n; i++){
+                if(i != 0) std::cout << ' ';
+                std::cout << result[static_cast<std::size_t>(i)];
+            }
+            std::cout << '\n';
+        }
+        return 0;
+    }
+
     test_long_long();
     test_modint();
     test_transform_inverse();

@@ -1,7 +1,9 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include "../../src/structure/array/persistent_array.hpp"
 #include "../../src/structure/array/rollback_array.hpp"
 
@@ -25,6 +27,53 @@ struct ThrowingCopy{
 };
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        ThrowingCopy::copies_before_throw = -1;
+        PersistentArray<ThrowingCopy, 1, 64> persistent(1, ThrowingCopy(1));
+        RollbackArray<ThrowingCopy, 1, 64> rollback(1, ThrowingCopy(1));
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "PSET"){
+                int version, value, budget;
+                std::cin >> version >> value >> budget;
+                ThrowingCopy::copies_before_throw = budget;
+                try{
+                    std::cout << persistent.set(version, 0, ThrowingCopy(value)) << '\n';
+                }catch(const std::runtime_error&){
+                    std::cout << "THROW\n";
+                }
+            }else if(type == "RSET"){
+                int value, budget;
+                std::cin >> value >> budget;
+                ThrowingCopy::copies_before_throw = budget;
+                try{
+                    rollback.set(0, ThrowingCopy(value));
+                    std::cout << "OK\n";
+                }catch(const std::runtime_error&){
+                    std::cout << "THROW\n";
+                }
+            }else if(type == "PGET"){
+                int version;
+                std::cin >> version;
+                std::cout << persistent.get(version, 0).value << '\n';
+            }else if(type == "RGET"){
+                std::cout << rollback.get(0).value << '\n';
+            }else if(type == "PVERSIONS"){
+                std::cout << persistent.versions() << '\n';
+            }else if(type == "RHISTORY"){
+                std::cout << rollback.history_size() << '\n';
+            }else if(type == "RROLLBACK"){
+                int snapshot;
+                std::cin >> snapshot;
+                rollback.rollback(snapshot);
+                std::cout << "OK\n";
+            }
+        }
+        return 0;
+    }
+
     ThrowingCopy::copies_before_throw = -1;
     PersistentArray<ThrowingCopy, 1, 2> persistent(1, ThrowingCopy(1));
 

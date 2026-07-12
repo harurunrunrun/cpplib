@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 
 #include "../../src/algorithm/math/factorial_mod.hpp"
@@ -72,6 +73,19 @@ void test_exceptions(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            int prime;
+            long long n;
+            std::cin >> prime >> n;
+            const math::FactorialModPrime factorial(prime);
+            const auto result = factorial.factorial(n);
+            std::cout << result.value << ' ' << result.exponent << '\n';
+        }
+        return 0;
+    }
+
     test_small();
     test_naive();
     test_exceptions();

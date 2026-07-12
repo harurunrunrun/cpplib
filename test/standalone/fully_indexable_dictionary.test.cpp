@@ -2,12 +2,54 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <random>
+#include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/dynamic_fully_indexable_dictionary.hpp"
 #include "../../src/structure/wavelet_matrix/fully_indexable_dictionary.hpp"
 
 int main(){
+    int input_n, q;
+    if(std::cin >> input_n >> q){
+        std::vector<bool> input(static_cast<std::size_t>(input_n));
+        for(int k = 0; k < input_n; k++){
+            int value;
+            std::cin >> value;
+            input[static_cast<std::size_t>(k)] = value;
+        }
+        FullyIndexableDictionary<512> fixed(input);
+        DynamicFullyIndexableDictionary<512> dynamic(input);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "FGET" || type == "DGET"){
+                int k;
+                std::cin >> k;
+                std::cout << (type == "FGET" ? fixed[k] : dynamic[k]) << '\n';
+            }else if(type == "FRANK" || type == "DRANK"){
+                int value, l, r;
+                std::cin >> value >> l >> r;
+                if(type == "FRANK") std::cout << fixed.rank(value, l, r) << '\n';
+                else std::cout << dynamic.rank(value, l, r) << '\n';
+            }else if(type == "FSELECT" || type == "DSELECT"){
+                int value, k;
+                std::cin >> value >> k;
+                if(type == "FSELECT") std::cout << fixed.select(value, k) << '\n';
+                else std::cout << dynamic.select(value, k) << '\n';
+            }else if(type == "DSET"){
+                int k, value;
+                std::cin >> k >> value;
+                dynamic.set(k, value);
+            }else if(type == "DFLIP"){
+                int k;
+                std::cin >> k;
+                dynamic.flip(k);
+            }
+        }
+        return 0;
+    }
+
     constexpr int n = 257;
     std::mt19937 rng(712367);
     std::vector<bool> values(n);

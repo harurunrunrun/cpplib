@@ -3,7 +3,9 @@
 #include "../../src/structure/array/persistent_array.hpp"
 #include <array>
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include <type_traits>
 #include <vector>
 #include "../../src/structure/array/partially_persistent_array.hpp"
@@ -33,6 +35,60 @@ bool throws_runtime_error(F&& f){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        PersistentArray<int, 4, 8> persistent(2, 0);
+        PartiallyPersistentArray<int, 4, 8> partial(2, 0);
+        RollbackArray<int, 4, 8> rollback(2, 0);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            try{
+                if(type == "PGET"){
+                    int version, k;
+                    std::cin >> version >> k;
+                    std::cout << persistent.get(version, k) << '\n';
+                }else if(type == "PSET"){
+                    int version, k, value;
+                    std::cin >> version >> k >> value;
+                    std::cout << persistent.set(version, k, value) << '\n';
+                }else if(type == "PFORK"){
+                    int version;
+                    std::cin >> version;
+                    std::cout << persistent.fork(version) << '\n';
+                }else if(type == "TGET"){
+                    int version, k;
+                    std::cin >> version >> k;
+                    std::cout << partial.get(version, k) << '\n';
+                }else if(type == "TSET"){
+                    int k, value;
+                    std::cin >> k >> value;
+                    std::cout << partial.set(k, value) << '\n';
+                }else if(type == "RGET"){
+                    int k;
+                    std::cin >> k;
+                    std::cout << rollback.get(k) << '\n';
+                }else if(type == "RSET"){
+                    int k, value;
+                    std::cin >> k >> value;
+                    rollback.set(k, value);
+                    std::cout << "OK\n";
+                }else if(type == "RUNDO"){
+                    rollback.undo();
+                    std::cout << "OK\n";
+                }else if(type == "RROLLBACK"){
+                    int snapshot;
+                    std::cin >> snapshot;
+                    rollback.rollback(snapshot);
+                    std::cout << "OK\n";
+                }
+            }catch(const std::runtime_error&){
+                std::cout << "THROW\n";
+            }
+        }
+        return 0;
+    }
+
     assert(throws_runtime_error([]{ Persistent a(-1); }));
     assert(throws_runtime_error([]{ Persistent a(3); }));
     assert(throws_runtime_error([]{ Partial a(-1); }));

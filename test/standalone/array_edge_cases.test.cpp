@@ -2,11 +2,39 @@
 
 #include "../../src/structure/array/persistent_array.hpp"
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include "../../src/structure/array/partially_persistent_array.hpp"
 #include "../../src/structure/array/rollback_array.hpp"
 
 int main(){
+    int n, q;
+    if(std::cin >> n >> q){
+        PersistentArray<long long, 8, 128> persistent(n, -1);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int version, k;
+                long long value;
+                std::cin >> version >> k >> value;
+                std::cout << persistent.set(version, k, value) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << persistent.fork(version) << '\n';
+            }else if(type == "GET"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << persistent.get(version, k) << '\n';
+            }else if(type == "VERSIONS"){
+                std::cout << persistent.versions() << '\n';
+            }
+        }
+        return 0;
+    }
+
     PersistentArray<int, 1, 0> persistent(1);
     assert(persistent.size() == 1);
     assert(persistent.versions() == 1);

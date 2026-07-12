@@ -2,9 +2,11 @@
 
 #include <array>
 #include <cassert>
+#include <iostream>
 #include <cstdint>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 #include "../../src/structure/array/persistent_array.hpp"
@@ -18,6 +20,50 @@ struct NonDefaultValue{
 };
 
 int main(){
+    int n, q;
+    if(std::cin >> n >> q){
+        PersistentArray<std::int64_t, 64, 2048> persistent(n);
+        RollbackArray<std::int64_t, 64, 2048> rollback(n);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "PSET"){
+                int version, k;
+                std::int64_t value;
+                std::cin >> version >> k >> value;
+                std::cout << persistent.set(version, k, value) << '\n';
+            }else if(type == "PFORK"){
+                int version;
+                std::cin >> version;
+                std::cout << persistent.fork(version) << '\n';
+            }else if(type == "PGET"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << persistent.get(version, k) << '\n';
+            }else if(type == "PVERSIONS"){
+                std::cout << persistent.versions() << '\n';
+            }else if(type == "RSET"){
+                int k;
+                std::int64_t value;
+                std::cin >> k >> value;
+                rollback.set(k, value);
+            }else if(type == "RGET"){
+                int k;
+                std::cin >> k;
+                std::cout << rollback.get(k) << '\n';
+            }else if(type == "RSNAPSHOT"){
+                std::cout << rollback.snapshot() << '\n';
+            }else if(type == "RUNDO"){
+                rollback.undo();
+            }else if(type == "RROLLBACK"){
+                int snapshot;
+                std::cin >> snapshot;
+                rollback.rollback(snapshot);
+            }
+        }
+        return 0;
+    }
+
     constexpr int N = 37;
     constexpr int MAX_VERSION = 3000;
 

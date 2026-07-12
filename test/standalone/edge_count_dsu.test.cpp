@@ -3,8 +3,10 @@
 #define PROBLEM "https://example.com/standalone/edge_count_dsu"
 
 #include <cassert>
+#include <iostream>
 #include <numeric>
 #include <random>
+#include <string>
 #include <vector>
 #include "../../src/structure/dsu/edge_count_dsu.hpp"
 
@@ -61,6 +63,47 @@ struct NaiveGraph{
 };
 
 int main(){
+    int n, q;
+    if(std::cin >> n >> q){
+        EdgeCountDSU<128> dsu(n);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "ADD"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << dsu.add_edge(u, v) << '\n';
+            }else if(type == "SAME"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << dsu.same(u, v) << '\n';
+            }else if(type == "SIZE"){
+                int v;
+                std::cin >> v;
+                std::cout << dsu.component_size(v) << '\n';
+            }else if(type == "EDGES"){
+                int v;
+                std::cin >> v;
+                std::cout << dsu.edges(v) << '\n';
+            }else if(type == "EXCESS"){
+                int v;
+                std::cin >> v;
+                std::cout << dsu.excess_edges(v) << '\n';
+            }else if(type == "TREE"){
+                int v;
+                std::cin >> v;
+                std::cout << dsu.is_tree(v) << '\n';
+            }else if(type == "UNICYCLIC"){
+                int v;
+                std::cin >> v;
+                std::cout << dsu.is_unicyclic(v) << '\n';
+            }else if(type == "GROUPS"){
+                std::cout << dsu.groups() << '\n';
+            }
+        }
+        return 0;
+    }
+
     constexpr int N = 10;
     EdgeCountDSU<N> dsu(N);
     NaiveGraph naive(N);
