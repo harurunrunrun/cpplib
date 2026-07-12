@@ -22,7 +22,7 @@ sudo apt install ruby-all-dev ruby-bundler
 make docs
 ```
 
-`make docs` はtestを実行せず、HTMLを `.competitive-verifier/site` に生成する。ブラウザで `.competitive-verifier/site/index.html` を開けば確認できる。
+`make docs` はtestを実行せず、HTMLを `.competitive-verifier/site` に生成する。直前の `make verify` の結果があれば、検証状況もHTMLへ反映する。ブラウザで `.competitive-verifier/site/index.html` を開けば確認できる。
 
 ローカルサーバーで確認する場合は次を実行し、<http://127.0.0.1:4000>を開く。
 

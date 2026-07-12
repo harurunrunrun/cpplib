@@ -41,7 +41,7 @@ verify: verifier-resolve
 
 docs-source: verifier-resolve
 	$(PYTHON) scripts/competitive_verifier_docs_result.py \
-		$(VERIFY_FILES) > $(DOCS_RESULT)
+		$(VERIFY_FILES) $(VERIFY_RESULT) > $(DOCS_RESULT)
 	$(VERIFIER) docs \
 		--verify-json $(VERIFY_FILES) \
 		--destination $(DOCS_SOURCE) \
