@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -29,6 +30,8 @@ def main() -> None:
             raise RuntimeError(f"missing checker: {checker}")
 
         case_dir = cache_dir / name / "cases"
+        if case_dir.exists():
+            shutil.rmtree(case_dir)
         build_dir = cache_dir / name / "build"
         subprocess.run(
             ["python3", str(generator), "--out-dir", str(case_dir)],
