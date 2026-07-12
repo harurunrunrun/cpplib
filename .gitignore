@@ -7,3 +7,5 @@ test/in.txt
 .competitive-verifier/site/
 .competitive-verifier/vendor/
 .sass-cache/
+__pycache__/
+*.pyc
