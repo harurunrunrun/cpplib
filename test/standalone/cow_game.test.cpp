@@ -98,6 +98,14 @@ void self_test(){
         assert(!range.has_minimum);
         assert(!range.has_maximum);
     }
+    {
+        constexpr long long large = 3000000000000000000LL;
+        std::vector<CowGameConstraint<long long>> constraints = {{0, 1, large}};
+        auto res = cow_game<long long>(2, 0, constraints);
+        assert(res.feasible);
+        assert(res.bounded[1]);
+        assert(res.maximum[1] == large);
+    }
     std::mt19937 rng(20260821);
     for(int n = 1; n <= 30; n++){
         for(int step = 0; step < 100; step++){

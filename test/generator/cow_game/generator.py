@@ -7,9 +7,6 @@ import argparse
 import random
 from pathlib import Path
 
-INF = 1 << 60
-
-
 def feasible(n: int, constraints: list[tuple[int, int, int]]) -> bool:
     dist = [0] * n
     for it in range(n):
@@ -25,16 +22,17 @@ def feasible(n: int, constraints: list[tuple[int, int, int]]) -> bool:
     return True
 
 
-def shortest(n: int, source: int, constraints: list[tuple[int, int, int]]) -> list[int]:
-    dist = [INF] * n
+def shortest(n: int, source: int, constraints: list[tuple[int, int, int]]) -> list[int | None]:
+    dist: list[int | None] = [None] * n
     dist[source] = 0
     for _ in range(n - 1):
         updated = False
         for u, v, c in constraints:
-            if dist[u] == INF:
+            if dist[u] is None:
                 continue
-            if dist[u] + c < dist[v]:
-                dist[v] = dist[u] + c
+            candidate = dist[u] + c
+            if dist[v] is None or candidate < dist[v]:
+                dist[v] = candidate
                 updated = True
         if not updated:
             break
@@ -45,7 +43,7 @@ def solve_max(n: int, source: int, target: int, constraints: list[tuple[int, int
     if not feasible(n, constraints):
         return "infeasible"
     dist = shortest(n, source, constraints)
-    return "inf" if dist[target] == INF else str(dist[target])
+    return "inf" if dist[target] is None else str(dist[target])
 
 
 def solve_range(n: int, source: int, target: int, constraints: list[tuple[int, int, int]]) -> str:
@@ -53,8 +51,8 @@ def solve_range(n: int, source: int, target: int, constraints: list[tuple[int, i
         return "infeasible"
     upper = shortest(n, source, constraints)[target]
     lower_dual = shortest(n, target, constraints)[source]
-    left = "-inf" if lower_dual == INF else str(-lower_dual)
-    right = "inf" if upper == INF else str(upper)
+    left = "-inf" if lower_dual is None else str(-lower_dual)
+    right = "inf" if upper is None else str(upper)
     return f"{left} {right}"
 
 
@@ -89,6 +87,7 @@ def main() -> None:
         (3, [(0, 1, 3), (1, 2, 4), (0, 2, 10)], [("MAX", 0, 2), ("RANGE", 0, 2)]),
         (2, [(0, 1, 5), (1, 0, -10)], [("MAX", 0, 1), ("RANGE", 0, 1)]),
         (2, [], [("MAX", 0, 1), ("RANGE", 0, 1)]),
+        (2, [(0, 1, 3000000000000000000)], [("MAX", 0, 1), ("RANGE", 0, 1)]),
         (
             3,
             [(0, 1, 5), (1, 0, -5), (2, 1, -2), (1, 2, 4)],

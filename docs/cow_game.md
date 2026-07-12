@@ -48,6 +48,8 @@ vector<char> bounded;
 
 `bounded[v] == true` のとき `maximum[v]` が `d_v - d_source` の最大値。
 
+`bounded[v] == false` の要素では `maximum[v]` の値は未定義。`inf` はその初期値にだけ使われる。
+
 # single objective
 
 ```cpp
@@ -69,6 +71,8 @@ cow_game_difference_range<T>(n, source, target, constraints, inf)
 `has_minimum == false` のとき下に非有界。
 
 `has_maximum == false` のとき上に非有界。
+
+差分制約の経路和は `T` の表現範囲内である必要がある。
 
 ## 計算量
 

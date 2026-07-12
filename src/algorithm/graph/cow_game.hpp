@@ -108,9 +108,10 @@ CowGameResult<T> cow_game(
     for(int iter = 0; iter < n - 1; iter++){
         bool updated = false;
         for(const auto& e: constraints){
-            if(result.maximum[static_cast<std::size_t>(e.from)] == inf) continue;
+            if(!result.bounded[static_cast<std::size_t>(e.from)]) continue;
             T nd = result.maximum[static_cast<std::size_t>(e.from)] + e.cost;
-            if(nd < result.maximum[static_cast<std::size_t>(e.to)]){
+            if(!result.bounded[static_cast<std::size_t>(e.to)] ||
+               nd < result.maximum[static_cast<std::size_t>(e.to)]){
                 result.maximum[static_cast<std::size_t>(e.to)] = nd;
                 result.bounded[static_cast<std::size_t>(e.to)] = 1;
                 updated = true;
