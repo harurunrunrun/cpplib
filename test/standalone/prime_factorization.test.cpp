@@ -1,8 +1,10 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -70,6 +72,28 @@ void test_exceptions(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            std::string type;
+            u64 n;
+            std::cin >> type >> n;
+            if(type == "PRIME"){
+                std::cout << math::is_prime_miller_rabin(n) << '\n';
+            }else if(type == "PHI"){
+                std::cout << math::euler_phi(n) << '\n';
+            }else{
+                const auto factors = math::factorize_pollard_rho(n);
+                std::cout << factors.size();
+                for(auto [prime, exponent]: factors){
+                    std::cout << ' ' << prime << ' ' << exponent;
+                }
+                std::cout << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_miller_rabin();
     test_factorize();
     test_phi();

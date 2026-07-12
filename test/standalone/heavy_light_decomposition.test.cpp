@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -126,6 +128,58 @@ void test_exceptions(){
 }
 
 int main(){
+    int input_n, root, q;
+    if(std::cin >> input_n >> root >> q){
+        HeavyLightDecomposition hld(input_n);
+        for(int i = 0; i + 1 < input_n; i++){
+            int u, v;
+            std::cin >> u >> v;
+            hld.add_edge(u, v);
+        }
+        hld.build(root);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "LCA" || type == "DIST"){
+                int u, v;
+                std::cin >> u >> v;
+                if(type == "LCA") std::cout << hld.lca(u, v) << '\n';
+                else std::cout << hld.dist(u, v) << '\n';
+            }else if(type == "JUMP"){
+                int v, k;
+                std::cin >> v >> k;
+                std::cout << hld.jump(v, k) << '\n';
+            }else if(type == "ANCESTOR"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << hld.is_ancestor(u, v) << '\n';
+            }else if(type == "PARENT" || type == "DEPTH" || type == "SUBSIZE"){
+                int v;
+                std::cin >> v;
+                if(type == "PARENT") std::cout << hld.parent(v) << '\n';
+                if(type == "DEPTH") std::cout << hld.depth(v) << '\n';
+                if(type == "SUBSIZE") std::cout << hld.subtree(v) << '\n';
+            }else if(type == "PATH"){
+                int u, v, include_vertices;
+                std::cin >> u >> v >> include_vertices;
+                const auto vertices = collect(hld, hld.path_query(u, v, include_vertices));
+                std::cout << vertices.size();
+                for(int vertex: vertices) std::cout << ' ' << vertex;
+                std::cout << '\n';
+            }else if(type == "SUBTREE"){
+                int v, include_vertices;
+                std::cin >> v >> include_vertices;
+                const auto vertices = collect_subtree(
+                    hld, hld.subtree_query(v, include_vertices)
+                );
+                std::cout << vertices.size();
+                for(int vertex: vertices) std::cout << ' ' << vertex;
+                std::cout << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_fixed_tree();
     test_root_change();
     test_exceptions();

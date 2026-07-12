@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
+#include <string>
 #include "../../src/algorithm/math/prime_counting.hpp"
 
 bool is_prime_naive(int n){
@@ -12,6 +14,20 @@ bool is_prime_naive(int n){
 }
 
 int main(){
+    int limit, q;
+    if(std::cin >> limit >> q){
+        math::PrimeCounting<1000000> counting(limit);
+        while(q--){
+            std::string type;
+            int n;
+            std::cin >> type >> n;
+            if(type == "IS") std::cout << counting.is_prime(n) << '\n';
+            if(type == "COUNT") std::cout << counting.count_primes(n) << '\n';
+            if(type == "LESS") std::cout << counting.count_primes_less(n) << '\n';
+        }
+        return 0;
+    }
+
     math::PrimeCounting<1000> pc(1000);
     int count = 0;
     for(int n = 0; n <= 1000; n++){

@@ -1,7 +1,9 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -74,6 +76,38 @@ void test_exceptions(){
 }
 
 int main(){
+    int limit, q;
+    if(std::cin >> limit >> q){
+        math::PrimeSieve<200000> sieve(limit);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "COUNT"){
+                std::cout << sieve.prime_count() << '\n';
+                continue;
+            }
+            long long value;
+            std::cin >> value;
+            if(type == "SQRT"){
+                std::cout << math::is_prime_sqrt(value) << '\n';
+            }else if(type == "IS"){
+                std::cout << sieve.is_prime(static_cast<int>(value)) << '\n';
+            }else if(type == "MIN"){
+                std::cout << sieve.min_factor(static_cast<int>(value)) << '\n';
+            }else if(type == "KTH"){
+                std::cout << sieve.prime(static_cast<int>(value)) << '\n';
+            }else if(type == "FACT"){
+                const auto factors = sieve.factorize(static_cast<int>(value));
+                std::cout << factors.size();
+                for(auto [prime, exponent]: factors){
+                    std::cout << ' ' << prime << ' ' << exponent;
+                }
+                std::cout << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_is_prime_sqrt();
     test_sieve();
     test_factorize();

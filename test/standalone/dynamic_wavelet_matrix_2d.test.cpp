@@ -2,9 +2,11 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/dynamic_rectangle_sum.hpp"
@@ -12,6 +14,62 @@
 #include "../../src/structure/wavelet_matrix/dynamic_wavelet_matrix_2d_weighted.hpp"
 
 int main(){
+    int input_n, q;
+    if(std::cin >> input_n >> q){
+        std::vector<int> input_x(static_cast<std::size_t>(input_n));
+        std::vector<int> input_y(static_cast<std::size_t>(input_n));
+        std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
+        for(int k = 0; k < input_n; k++){
+            std::cin >> input_x[static_cast<std::size_t>(k)]
+                >> input_y[static_cast<std::size_t>(k)]
+                >> input_weight[static_cast<std::size_t>(k)];
+        }
+        DynamicWaveletMatrix2D<int, int, 256, 32, 24> plain(input_x, input_y);
+        DynamicWaveletMatrix2DWeighted<int, int, long long, 256, 32, 24> weighted(
+            input_x, input_y, input_weight
+        );
+        auto print_optional = [](const std::optional<int>& value){
+            if(value) std::cout << *value << '\n';
+            else std::cout << "NONE\n";
+        };
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int k, y;
+                long long weight_value;
+                std::cin >> k >> y >> weight_value;
+                plain.set_y(k, y);
+                weighted.set(k, y, weight_value);
+            }else if(type == "SETW"){
+                int k;
+                long long weight_value;
+                std::cin >> k >> weight_value;
+                weighted.set_weight(k, weight_value);
+            }else if(type == "GET"){
+                int k;
+                std::cin >> k;
+                std::cout << plain.x(k) << ' ' << plain.y(k) << ' '
+                    << weighted.weight(k) << '\n';
+            }else if(type == "COUNT" || type == "SUM"){
+                int xl, xr, yl, yr;
+                std::cin >> xl >> xr >> yl >> yr;
+                if(type == "COUNT") std::cout << plain.rectangle_count(xl, xr, yl, yr) << '\n';
+                else std::cout << weighted.rectangle_sum(xl, xr, yl, yr) << '\n';
+            }else if(type == "KTH"){
+                int xl, xr, k;
+                std::cin >> xl >> xr >> k;
+                std::cout << plain.kth_smallest_y(xl, xr, k) << '\n';
+            }else if(type == "PREV" || type == "NEXT"){
+                int xl, xr, value;
+                std::cin >> xl >> xr >> value;
+                if(type == "PREV") print_optional(plain.prev_y(xl, xr, value));
+                else print_optional(plain.next_y(xl, xr, value));
+            }
+        }
+        return 0;
+    }
+
     constexpr int n = 151;
     std::mt19937 rng(11235813);
     std::vector<int> xs(n), ys(n);

@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <random>
 #include <string>
 #include <vector>
@@ -36,6 +37,20 @@ std::string random_string(std::mt19937& rng, int n){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            std::string a, b;
+            std::cin >> a >> b;
+            if(a == "-") a.clear();
+            if(b == "-") b.clear();
+            const auto sequence = longest_common_subsequence(a, b);
+            std::cout << longest_common_subsequence_length(a, b) << ' '
+                << (sequence.empty() ? "-" : sequence) << '\n';
+        }
+        return 0;
+    }
+
     assert(longest_common_subsequence_length(std::string("abcde"), std::string("ace")) == 3);
     assert(longest_common_subsequence(std::string("abcde"), std::string("ace")) == "ace");
 

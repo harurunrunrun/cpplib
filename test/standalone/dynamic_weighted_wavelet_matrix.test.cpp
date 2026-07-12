@@ -2,14 +2,79 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <numeric>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/dynamic_functional_wavelet_matrix.hpp"
 #include "../../src/structure/wavelet_matrix/dynamic_weighted_wavelet_matrix.hpp"
 
 int main(){
+    int input_n, q;
+    if(std::cin >> input_n >> q){
+        std::vector<int> input_value(static_cast<std::size_t>(input_n));
+        std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
+        for(int& value: input_value) std::cin >> value;
+        for(auto& weight_value: input_weight) std::cin >> weight_value;
+        DynamicWeightedWaveletMatrix<int, long long, 512, 32, 24> matrix(
+            input_value, input_weight
+        );
+        auto print_optional = [](const std::optional<int>& value){
+            if(value) std::cout << *value << '\n';
+            else std::cout << "NONE\n";
+        };
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int k, value;
+                long long weight_value;
+                std::cin >> k >> value >> weight_value;
+                matrix.set(k, value, weight_value);
+            }else if(type == "SETV"){
+                int k, value;
+                std::cin >> k >> value;
+                matrix.set_value(k, value);
+            }else if(type == "SETW"){
+                int k;
+                long long weight_value;
+                std::cin >> k >> weight_value;
+                matrix.set_weight(k, weight_value);
+            }else if(type == "GET"){
+                int k;
+                std::cin >> k;
+                std::cout << matrix[k] << ' ' << matrix.weight(k) << '\n';
+            }else if(type == "SUM"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << matrix.sum(l, r) << '\n';
+            }else if(type == "FREQ" || type == "RSUM"){
+                int l, r, lower, upper;
+                std::cin >> l >> r >> lower >> upper;
+                if(type == "FREQ") std::cout << matrix.range_freq(l, r, lower, upper) << '\n';
+                else std::cout << matrix.range_sum(l, r, lower, upper) << '\n';
+            }else if(type == "KTH" || type == "KLARG"){
+                int l, r, k;
+                std::cin >> l >> r >> k;
+                if(type == "KTH") std::cout << matrix.kth_smallest(l, r, k) << '\n';
+                else std::cout << matrix.kth_largest(l, r, k) << '\n';
+            }else if(type == "KSMALL" || type == "KLARGE"){
+                int l, r, k;
+                std::cin >> l >> r >> k;
+                if(type == "KSMALL") std::cout << matrix.sum_k_smallest(l, r, k) << '\n';
+                else std::cout << matrix.sum_k_largest(l, r, k) << '\n';
+            }else if(type == "PREV" || type == "NEXT"){
+                int l, r, value;
+                std::cin >> l >> r >> value;
+                if(type == "PREV") print_optional(matrix.prev_value(l, r, value));
+                else print_optional(matrix.next_value(l, r, value));
+            }
+        }
+        return 0;
+    }
+
     constexpr int n = 181;
     std::mt19937 rng(31415926);
     std::vector<int> values(n);

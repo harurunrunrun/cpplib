@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -126,6 +127,28 @@ void test_exceptions(){
 }
 
 int main(){
+    int input_n, root, q;
+    if(std::cin >> input_n >> root >> q){
+        LowestCommonAncestor lca(input_n);
+        std::vector<std::vector<int>> graph(static_cast<std::size_t>(input_n));
+        for(int i = 0; i + 1 < input_n; i++){
+            int u, v;
+            std::cin >> u >> v;
+            lca.add_edge(u, v);
+            add_edge(graph, u, v);
+        }
+        lca.build(root);
+        std::vector<std::pair<int, int>> queries(static_cast<std::size_t>(q));
+        for(auto& [u, v]: queries) std::cin >> u >> v;
+        const auto offline = offline_lca(graph, queries, root);
+        for(int i = 0; i < q; i++){
+            const auto [u, v] = queries[static_cast<std::size_t>(i)];
+            std::cout << lca.lca(u, v) << ' ' << lca.dist(u, v) << ' '
+                << offline[static_cast<std::size_t>(i)] << '\n';
+        }
+        return 0;
+    }
+
     test_binary_lifting();
     test_root_change();
     test_exceptions();

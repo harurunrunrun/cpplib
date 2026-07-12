@@ -2,13 +2,56 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <numeric>
 #include <random>
+#include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/compressed_weighted_wavelet_matrix.hpp"
 #include "../../src/structure/wavelet_matrix/functional_wavelet_matrix.hpp"
 
 int main(){
+    int input_n, q;
+    if(std::cin >> input_n >> q){
+        std::vector<int> input_value(static_cast<std::size_t>(input_n));
+        std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
+        for(int& value: input_value) std::cin >> value;
+        for(auto& weight_value: input_weight) std::cin >> weight_value;
+        FunctionalWaveletMatrix<int, 512, long long> functional(input_value);
+        CompressedWeightedWaveletMatrix<int, long long, 512> weighted(
+            input_value, input_weight
+        );
+        while(q--){
+            std::string type;
+            int l, r;
+            std::cin >> type >> l >> r;
+            if(type == "FSUM"){
+                std::cout << functional.sum(l, r) << '\n';
+            }else if(type == "WSUM"){
+                std::cout << weighted.sum(l, r) << '\n';
+            }else if(type == "FRANGE" || type == "WRANGE" || type == "FREQ"){
+                int lower, upper;
+                std::cin >> lower >> upper;
+                if(type == "FRANGE") std::cout << functional.range_sum(l, r, lower, upper) << '\n';
+                if(type == "WRANGE") std::cout << weighted.range_sum(l, r, lower, upper) << '\n';
+                if(type == "FREQ") std::cout << functional.range_freq(l, r, lower, upper) << '\n';
+            }else if(type == "FKSMALL" || type == "FKLARGE" ||
+                     type == "WKSMALL" || type == "WKLARGE"){
+                int k;
+                std::cin >> k;
+                if(type == "FKSMALL") std::cout << functional.sum_k_smallest(l, r, k) << '\n';
+                if(type == "FKLARGE") std::cout << functional.sum_k_largest(l, r, k) << '\n';
+                if(type == "WKSMALL") std::cout << weighted.sum_k_smallest(l, r, k) << '\n';
+                if(type == "WKLARGE") std::cout << weighted.sum_k_largest(l, r, k) << '\n';
+            }else if(type == "MFLOOR"){
+                std::cout << functional.median_floor(l, r) << '\n';
+            }else if(type == "MCEIL"){
+                std::cout << functional.median_ceil(l, r) << '\n';
+            }
+        }
+        return 0;
+    }
+
     constexpr int n = 157;
     std::mt19937 rng(57721);
     std::vector<int> values(n);
