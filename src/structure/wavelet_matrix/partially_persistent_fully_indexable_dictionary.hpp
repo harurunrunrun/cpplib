@@ -55,7 +55,7 @@ private:
     }
 
     void check_capacity() const{
-        if(_versions > MAX_VERSION + 1)[[unlikely]]{
+        if(_versions > MAX_VERSION)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity violation (version).");
         }
     }
@@ -164,8 +164,8 @@ public:
 
     int set(int k, bool value){
         check_index(k, "library assertion fault: range violation (set).");
-        _versions++;
         check_capacity();
+        _versions++;
         if constexpr(word_count == 0){
             root[static_cast<std::size_t>(_versions - 1)] = 0;
             return _versions - 1;

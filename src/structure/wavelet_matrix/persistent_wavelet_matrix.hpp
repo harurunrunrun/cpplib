@@ -68,7 +68,7 @@ private:
     }
 
     void check_version_capacity() const{
-        if(_versions > MAX_VERSION + 1)[[unlikely]]{
+        if(_versions > MAX_VERSION)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity violation (version).");
         }
     }
@@ -227,8 +227,8 @@ public:
         check_version(version, "library assertion fault: range violation (set).");
         check_index(k, "library assertion fault: range violation (set).");
         U encoded = encode_checked(value, "library assertion fault: bit width violation (set).");
-        _versions++;
         check_version_capacity();
+        _versions++;
         int next_version = _versions - 1;
         copy_version_blocks(version, next_version);
         int block = block_index(k);
@@ -242,8 +242,8 @@ public:
 
     int fork(int version){
         check_version(version, "library assertion fault: range violation (fork).");
-        _versions++;
         check_version_capacity();
+        _versions++;
         int next_version = _versions - 1;
         copy_version_blocks(version, next_version);
         return next_version;
