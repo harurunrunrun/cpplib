@@ -4,36 +4,141 @@
 from __future__ import annotations
 
 import argparse
+import bisect
 import random
 from pathlib import Path
 
 
 def solve(queries: list[str]) -> str:
-    versions: list[set[int]] = [set()]
+    versions: list[list[int]] = [[]]
     out: list[str] = []
     for query in queries:
-        xs = query.split()
-        typ, v, x = xs[0], int(xs[1]), int(xs[2])
+        typ, version_text, x_text = query.split()
+        version = int(version_text)
+        x = int(x_text)
+        values = versions[version]
+
         if typ == "INSERT":
-            versions.append(set(versions[v]))
-            versions[-1].add(x)
+            nxt = values.copy()
+            position = bisect.bisect_left(nxt, x)
+            if position == len(nxt) or nxt[position] != x:
+                nxt.insert(position, x)
+            versions.append(nxt)
             out.append(str(len(versions) - 1))
         elif typ == "ERASE":
-            versions.append(set(versions[v]))
-            versions[-1].discard(x)
+            nxt = values.copy()
+            position = bisect.bisect_left(nxt, x)
+            if position != len(nxt) and nxt[position] == x:
+                nxt.pop(position)
+            versions.append(nxt)
             out.append(str(len(versions) - 1))
         elif typ == "CONTAINS":
-            out.append(str(int(x in versions[v])))
+            position = bisect.bisect_left(values, x)
+            out.append(str(int(position != len(values) and values[position] == x)))
         elif typ == "KTH":
-            values = sorted(versions[v])
             out.append(str(values[x] if 0 <= x < len(values) else -1))
+        elif typ == "ORDER":
+            out.append(str(bisect.bisect_left(values, x)))
+        elif typ == "ORDER_UPPER":
+            out.append(str(bisect.bisect_right(values, x)))
+        elif typ == "LOWER":
+            position = bisect.bisect_left(values, x)
+            out.append(str(values[position] if position != len(values) else -1))
+        elif typ == "UPPER":
+            position = bisect.bisect_right(values, x)
+            out.append(str(values[position] if position != len(values) else -1))
+        elif typ == "MAX_LEQ":
+            position = bisect.bisect_right(values, x) - 1
+            out.append(str(values[position] if position >= 0 else -1))
+        elif typ == "MAX_LESS":
+            position = bisect.bisect_left(values, x) - 1
+            out.append(str(values[position] if position >= 0 else -1))
+        elif typ == "SIZE":
+            out.append(str(len(values)))
+        elif typ == "DUMP":
+            out.append(" ".join(map(str, values)))
+        else:
+            raise AssertionError(typ)
     return "\n".join(out) + ("\n" if out else "")
 
 
 def write_case(out_dir: Path, idx: int, queries: list[str]) -> None:
     name = f"case_{idx:02d}"
-    (out_dir / f"{name}.in").write_text("\n".join([str(len(queries)), *queries]) + "\n", encoding="utf-8")
+    input_text = "\n".join([str(len(queries)), *queries]) + "\n"
+    (out_dir / f"{name}.in").write_text(input_text, encoding="utf-8")
     (out_dir / f"{name}.out").write_text(solve(queries), encoding="utf-8")
+
+
+def deterministic_queries() -> list[str]:
+    return [
+        "INSERT 0 40",
+        "INSERT 1 10",
+        "INSERT 1 70",
+        "INSERT 2 30",
+        "ERASE 3 40",
+        "INSERT 3 55",
+        "ERASE 4 10",
+        "INSERT 2 10",
+        "ERASE 6 999",
+        "DUMP 0 0",
+        "DUMP 1 0",
+        "DUMP 2 0",
+        "DUMP 3 0",
+        "DUMP 4 0",
+        "DUMP 5 0",
+        "DUMP 6 0",
+        "DUMP 7 0",
+        "DUMP 8 0",
+        "DUMP 9 0",
+        "LOWER 6 56",
+        "UPPER 6 55",
+        "MAX_LEQ 6 69",
+        "MAX_LESS 6 55",
+        "ORDER 6 56",
+        "ORDER_UPPER 6 55",
+        "KTH 6 -1",
+        "KTH 6 3",
+        "SIZE 6 0",
+        "CONTAINS 5 40",
+        "CONTAINS 3 40",
+    ]
+
+
+def random_queries(seed: int, count: int) -> list[str]:
+    rng = random.Random(seed)
+    queries: list[str] = []
+    version_count = 1
+    query_types = [
+        "CONTAINS",
+        "KTH",
+        "ORDER",
+        "ORDER_UPPER",
+        "LOWER",
+        "UPPER",
+        "MAX_LEQ",
+        "MAX_LESS",
+        "SIZE",
+        "DUMP",
+    ]
+    for _ in range(count):
+        action = rng.randrange(100)
+        version = rng.randrange(version_count)
+        if action < 28:
+            queries.append(f"INSERT {version} {rng.randrange(-50, 91)}")
+            version_count += 1
+        elif action < 52:
+            queries.append(f"ERASE {version} {rng.randrange(-50, 91)}")
+            version_count += 1
+        else:
+            typ = rng.choice(query_types)
+            if typ == "KTH":
+                x = rng.randrange(-4, 40)
+            elif typ in {"SIZE", "DUMP"}:
+                x = 0
+            else:
+                x = rng.randrange(-60, 101)
+            queries.append(f"{typ} {version} {x}")
+    return queries
 
 
 def main() -> None:
@@ -43,23 +148,9 @@ def main() -> None:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    write_case(out_dir, 0, ["INSERT 0 5", "INSERT 1 2", "CONTAINS 2 2", "ERASE 2 5", "KTH 3 0"])
-    rng = random.Random(20260921)
-    queries: list[str] = []
-    version_count = 1
-    for _ in range(200):
-        typ = rng.randrange(4)
-        if typ == 0:
-            queries.append(f"INSERT {rng.randrange(version_count)} {rng.randrange(50)}")
-            version_count += 1
-        elif typ == 1:
-            queries.append(f"ERASE {rng.randrange(version_count)} {rng.randrange(50)}")
-            version_count += 1
-        elif typ == 2:
-            queries.append(f"CONTAINS {rng.randrange(version_count)} {rng.randrange(50)}")
-        else:
-            queries.append(f"KTH {rng.randrange(version_count)} {rng.randrange(60) - 5}")
-    write_case(out_dir, 1, queries)
+    write_case(out_dir, 0, deterministic_queries())
+    write_case(out_dir, 1, random_queries(20260921, 350))
+    write_case(out_dir, 2, random_queries(20260922, 700))
 
 
 if __name__ == "__main__":
