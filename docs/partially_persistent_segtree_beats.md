@@ -39,4 +39,4 @@ int latest_version() const
 int changes_used() const
 ```
 
-`range_chmin` と `range_chmax` はamortized $O(\log^2 N)$。最新更新は通常版と同じ計算量。過去nodeの取得は $O(\log\mathtt{MAX\_CHANGES})$ のため、区間queryは $O(\log N\log\mathtt{MAX\_CHANGES})$。空間計算量は $O(N+\mathtt{MAX\_CHANGES}\log\mathtt{MAX\_CHANGES})$。
+`range_chmin` と `range_chmax` はamortized $O(\log^2 N)$。最新更新は通常版と同じ計算量。過去nodeの取得は $O(\log\mathtt{MAX\_CHANGES})$ のため、区間queryは $O(\log N\log\mathtt{MAX\_CHANGES})$。空間計算量は $O(N+\mathtt{MAX\_CHANGES})$。

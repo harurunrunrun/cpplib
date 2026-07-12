@@ -58,10 +58,10 @@ std::optional<T> value = wm.next_value(version, l, r, lower)
 
 `B = BLOCK_SIZE`、区間が触れるブロック数を `C`、バージョン数を `V` とする。
 
-- `set`, `set_value`, `set_weight`: `O(B log B + log V)`
+- `set`, `set_value`, `set_weight`: `O(B log B)`
 - `access`, `weight`: `O(log V)`
 - `rank`, `range_freq`, `sum`, `range_sum`: `O(B + C(log B + log V))`
 - `kth_smallest`, `kth_largest`: `O(BIT_WIDTH * (B + C(log B + log V)))`
-- 追加メモリ: `O(N + V B + V log V)`
+- 追加メモリ: `O(N + V B)`
 
 更新では変更されたブロックだけを複製する。

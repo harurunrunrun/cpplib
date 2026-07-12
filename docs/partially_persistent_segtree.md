@@ -43,7 +43,7 @@ int set(int k, const S& x)
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- $O(\log \mathrm{MAX\_SIZE})$
 
 # 区間取得
 
@@ -60,9 +60,9 @@ versionを指定した場合はその状態、指定しない場合は最新vers
 
 ## 時間計算量
 
-- 過去versionの `get`: $O(\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
-- 過去versionの `prod`: $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
-- 過去versionの `all_prod`: $O(\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- 過去versionの `get`: $O(\log \mathrm{MAX\_UPDATE})$
+- 過去versionの `prod`: $O(\log \mathrm{MAX\_SIZE}\log \mathrm{MAX\_UPDATE})$
+- 過去versionの `all_prod`: $O(\log \mathrm{MAX\_UPDATE})$
 - 最新versionでは順に $O(1)$, $O(\log \mathrm{MAX\_SIZE})$, $O(1)$
 
 # 二分探索
@@ -78,7 +78,7 @@ int min_left(int r, auto f, auto&&... args) const
 
 ## 時間計算量
 
-- 過去version: $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- 過去version: $O(\log \mathrm{MAX\_SIZE}\log \mathrm{MAX\_UPDATE})$
 - 最新version: $O(\log \mathrm{MAX\_SIZE})$
 
 # version情報
@@ -92,3 +92,7 @@ int latest_version() const
 ## 時間計算量
 
 - $O(1)$
+
+# 空間計算量
+
+- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$

@@ -20,4 +20,4 @@ long long max_right(int version, long long l, F f)
 long long min_left(int version, long long r, F f)
 ```
 
-`MAX_NODES`は疎ノード数、`MAX_CHANGES`は値と遅延作用をまとめた変更履歴数の上限。更新・区間取得は $O(\log MAX\_SIZE \log MAX\_CHANGES)$。
+`MAX_NODES`は疎ノード数、`MAX_CHANGES`は値と遅延作用をまとめた変更履歴数の上限。最新versionの更新と問い合わせは $O(\log MAX\_SIZE)$、過去versionの問い合わせは $O(\log MAX\_SIZE \log MAX\_CHANGES)$。空間計算量は $O(MAX\_NODES+MAX\_CHANGES)$。

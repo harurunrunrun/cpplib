@@ -47,7 +47,7 @@ int set(int k, const T& x)
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_UPDATE})$
+- 償却 $O(1)$
 
 # get
 
@@ -61,8 +61,10 @@ int set(int k, const T& x)
 
 ## 時間計算量
 
-- (1): $O(\log \mathrm{MAX\_UPDATE})$
+- (1): $O(\log U_k)$
 - (2): $O(1)$
+
+ここで $U_k$ は添字 `k` の変更回数。
 
 # version情報
 
@@ -77,3 +79,7 @@ int latest_version() const
 ## 時間計算量
 
 - $O(1)$
+
+# 空間計算量
+
+- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE})$

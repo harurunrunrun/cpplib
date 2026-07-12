@@ -5,34 +5,21 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <vector>
 
 template<class T, int SIZE, int MAX_CHANGE>
 struct PartiallyPersistentStorage{
     static_assert(SIZE > 0);
     static_assert(MAX_CHANGE >= 0);
 
-    static constexpr int log = []{
-        int value = MAX_CHANGE;
-        int result = 1;
-        while(value > 1){ value >>= 1; result++; }
-        return result;
-    }();
-
 private:
     struct State{
         int change_count = 0;
         std::array<std::optional<T>, SIZE> initial;
-        std::array<int, SIZE> head;
+        std::array<std::vector<int>, SIZE> history;
         std::array<std::optional<T>, MAX_CHANGE> value;
         std::array<int, MAX_CHANGE> version;
         std::array<int, MAX_CHANGE> index;
-        std::array<int, MAX_CHANGE> previous;
-        std::array<std::array<int, MAX_CHANGE>, log> jump;
-
-        State(){
-            head.fill(-1);
-            for(auto& level: jump) level.fill(-1);
-        }
     };
 
     std::unique_ptr<State> state;
@@ -56,23 +43,27 @@ public:
     int changes() const{ return state->change_count; }
 
     const T& current(int k) const{
-        int node = state->head[k];
-        return node == -1 ? *state->initial[k] : *state->value[node];
+        const auto& history = state->history[k];
+        return history.empty() ?
+            *state->initial[k] : *state->value[history.back()];
     }
 
     const T& get(int k, int target_version) const{
-        int node = state->head[k];
-        if(node == -1 || state->version[node] <= target_version){
-            return node == -1 ? *state->initial[k] : *state->value[node];
+        const auto& history = state->history[k];
+        if(history.empty()) return *state->initial[k];
+        const int newest = history.back();
+        if(state->version[newest] <= target_version){
+            return *state->value[newest];
         }
-        for(int level = log - 1; level >= 0; level--){
-            int ancestor = state->jump[level][node];
-            if(ancestor != -1 && state->version[ancestor] > target_version){
-                node = ancestor;
-            }
+        std::size_t left = 0;
+        std::size_t right = history.size();
+        while(left < right){
+            const std::size_t middle = left + (right - left) / 2;
+            const int change = history[middle];
+            if(state->version[change] <= target_version) left = middle + 1;
+            else right = middle;
         }
-        node = state->previous[node];
-        return node == -1 ? *state->initial[k] : *state->value[node];
+        return left == 0 ? *state->initial[k] : *state->value[history[left - 1]];
     }
 
     void write(int k, int current_version, const T& x){
@@ -81,18 +72,16 @@ public:
                 "library assertion fault: history capacity exceeded (update)."
             );
         }
-        int node = state->change_count;
-        state->value[node].emplace(x);
-        state->version[node] = current_version;
-        state->index[node] = k;
-        state->previous[node] = state->head[k];
-        state->jump[0][node] = state->previous[node];
-        for(int level = 1; level < log; level++){
-            int ancestor = state->jump[level - 1][node];
-            state->jump[level][node] =
-                ancestor == -1 ? -1 : state->jump[level - 1][ancestor];
+        const int change = state->change_count;
+        state->value[change].emplace(x);
+        state->version[change] = current_version;
+        state->index[change] = k;
+        try{
+            state->history[k].push_back(change);
+        }catch(...){
+            state->value[change].reset();
+            throw;
         }
-        state->head[k] = node;
         state->change_count++;
     }
 
@@ -104,9 +93,9 @@ public:
         }
         while(snapshot < state->change_count){
             --state->change_count;
-            int node = state->change_count;
-            state->head[state->index[node]] = state->previous[node];
-            state->value[node].reset();
+            const int change = state->change_count;
+            state->history[state->index[change]].pop_back();
+            state->value[change].reset();
         }
     }
 };

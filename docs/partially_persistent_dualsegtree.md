@@ -38,7 +38,7 @@ int apply(int l, int r, const T& f)
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- $O(\log \mathrm{MAX\_SIZE})$
 
 # get
 
@@ -66,3 +66,7 @@ int latest_version() const
 ## 時間計算量
 
 - $O(1)$
+
+# 空間計算量
+
+- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
