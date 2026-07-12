@@ -76,7 +76,7 @@ int naive_groups(int n, const std::map<std::pair<int, int>, int>& edge_count){
 int main(){
     int input_n, input_q;
     if(std::cin >> input_n >> input_q){
-        OnlineDynamicConnectivity<128> graph(input_n);
+        OnlineDynamicConnectivity<256> graph(input_n);
         while(input_q--){
             std::string type;
             std::cin >> type;
@@ -108,6 +108,22 @@ int main(){
     }
 
     {
+        OnlineDynamicConnectivity<1> empty(0);
+        assert(empty.size() == 0 && empty.groups() == 0);
+        assert(empty.active_levels() == 1);
+    }
+    {
+        OnlineDynamicConnectivity<1> graph(1);
+        assert(graph.same(0, 0));
+        assert(graph.component_size(0) == 1);
+        assert(graph.add_edge(0, 0));
+        assert(!graph.add_edge(0, 0));
+        assert(graph.edge_multiplicity(0, 0) == 2);
+        assert(graph.erase_edge(0, 0));
+        assert(graph.erase_edge(0, 0));
+        assert(graph.groups() == 1);
+    }
+    {
         OnlineDynamicConnectivity<5> graph(4);
         assert(!graph.same(0, 1));
         assert(graph.link(0, 1));
@@ -130,6 +146,32 @@ int main(){
         assert(graph.same(0, 1));
         assert(graph.erase_edge(0, 1));
         assert(!graph.same(0, 1));
+    }
+
+    {
+        constexpr int replacement_n = 2048;
+        OnlineDynamicConnectivity<replacement_n> graph(replacement_n);
+        for(int vertex = 0; vertex + 1 < replacement_n; ++vertex){
+            assert(graph.add_edge(vertex, vertex + 1));
+        }
+        for(int vertex = 0; vertex + 2 < replacement_n; ++vertex){
+            assert(graph.add_edge(vertex, vertex + 2));
+        }
+        assert(graph.add_edge(0, replacement_n - 1));
+        for(int vertex = 0; vertex + 1 < replacement_n; ++vertex){
+            assert(graph.erase_edge(vertex, vertex + 1));
+            if(vertex % 31 == 0){
+                assert(graph.same(0, replacement_n - 1));
+                assert(graph.groups() == 1);
+                assert(graph.component_size(vertex) == replacement_n);
+            }
+        }
+        assert(graph.groups() == 1);
+        assert(graph.active_levels() >= 2);
+        assert(graph.erase_edge(0, replacement_n - 1));
+        assert(graph.groups() == 2);
+        assert(graph.component_size(0) == replacement_n / 2);
+        assert(graph.component_size(1) == replacement_n / 2);
     }
 
     constexpr int n = 35;

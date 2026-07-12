@@ -94,5 +94,64 @@ def main() -> None:
     )
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
 
+    n = 160
+    commands = []
+    outputs = []
+    edge_count = {}
+
+    def add(u: int, v: int) -> None:
+        edge = normalize(u, v)
+        old = edge_count.get(edge, 0)
+        edge_count[edge] = old + 1
+        commands.append(f"ADD {u} {v}")
+        outputs.append(str(int(old == 0)))
+
+    def erase(u: int, v: int) -> None:
+        edge = normalize(u, v)
+        old = edge_count.get(edge, 0)
+        commands.append(f"ERASE {u} {v}")
+        outputs.append(str(int(old > 0)))
+        if old > 0:
+            edge_count[edge] = old - 1
+
+    def query_all(vertex: int) -> None:
+        seen = component(vertex)
+        commands.append(f"SIZE {vertex}")
+        outputs.append(str(sum(seen)))
+        commands.append("GROUPS")
+        outputs.append(str(groups()))
+        commands.append(f"SAME 0 {n - 1}")
+        outputs.append(str(int(component(0)[n - 1])))
+
+    for vertex in range(n - 1):
+        add(vertex, vertex + 1)
+    for vertex in range(n - 2):
+        add(vertex, vertex + 2)
+    add(0, n - 1)
+    add(7, 7)
+    add(7, 7)
+    commands.append("MULT 7 7")
+    outputs.append("2")
+    erase(7, 7)
+    erase(7, 7)
+    for vertex in range(n - 1):
+        erase(vertex, vertex + 1)
+        if vertex % 19 == 0:
+            query_all(vertex)
+    query_all(0)
+    erase(0, n - 1)
+    query_all(0)
+    for vertex in range(0, n - 2, 4):
+        erase(vertex, vertex + 2)
+        if vertex % 20 == 0:
+            query_all(vertex)
+
+    (out_dir / "case_01.in").write_text(
+        f"{n} {len(commands)}\n" + "\n".join(commands) + "\n", encoding="utf-8"
+    )
+    (out_dir / "case_01.out").write_text(
+        "\n".join(outputs) + "\n", encoding="utf-8"
+    )
+
 if __name__ == "__main__":
     main()

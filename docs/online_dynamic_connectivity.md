@@ -3,9 +3,9 @@ title: Online Dynamic Connectivity
 documentation_of: ../src/structure/graph/online_dynamic_connectivity.hpp
 ---
 
-辺の追加削除をオンラインに処理する動的連結性。
+一般無向グラフの辺追加・辺削除・連結性判定をオンラインに処理する。Holm--de Lichtenberg--Thorup のレベル構造を使い、各レベルの全域森を splay Euler Tour Tree で管理する。
 
-連結成分番号を持つため、連結判定は定数時間で行う。辺削除で連結成分が分割される可能性があるときだけ探索する。
+木辺を削除したときは、分割された小さい側の同レベル木辺と非木辺を1レベル上げながら置換辺を探す。連結成分全体のDFSは行わない。
 
 # テンプレート引数
 
@@ -13,7 +13,9 @@ documentation_of: ../src/structure/graph/online_dynamic_connectivity.hpp
 OnlineDynamicConnectivity<MAX_SIZE>
 ```
 
-- 頂点数の上限 `MAX_SIZE`
+`MAX_SIZE` は頂点数の上限。Euler Tour Treeは各レベルにつき最大 `3 * MAX_SIZE` nodeを持ち、レベルは必要になった時点で確保される。レベル数の上限は $\lceil\log_2(\mathtt{MAX\_SIZE})\rceil+1$。
+
+単純辺の情報は `std::map` に保持するため、辺数の上限は固定しない。
 
 # コンストラクタ
 
@@ -32,16 +34,17 @@ bool link(int u, int v)
 bool cut(int u, int v)
 ```
 
-`add_edge` は辺を追加する。同じ辺がすでに存在する場合、多重辺として数える。
+`add_edge` は辺を1本追加する。同じ端点の辺がすでに存在する場合は多重度だけを増やして `false`、新しい単純辺なら `true` を返す。自己ループも多重度を保持するが、連結成分には影響しない。
 
-`erase_edge` は辺を 1 本削除する。辺が存在しなければ `false` を返す。
+`erase_edge` は辺を1本削除する。辺が存在すれば `true`、存在しなければ `false` を返す。多重度が0になったときだけHDLTから単純辺を削除する。
 
 `link` は `add_edge`、`cut` は `erase_edge` と同じ。
 
 ## 時間計算量
 
-- `add_edge`: 併合される小さい成分の頂点数に比例
-- `erase_edge`: 削除辺を含む連結成分の辺数に比例
+- amortized $O(\log^2 N + \log M)$
+
+ここで $M$ は異なる端点対の数。
 
 # 連結判定
 
@@ -49,12 +52,20 @@ bool cut(int u, int v)
 bool same(int u, int v)
 int component_size(int v)
 int groups()
+int active_levels()
 int edge_multiplicity(int u, int v)
 ```
 
+`component_size` は `v` を含む連結成分の頂点数を返す。`groups` は連結成分数、`active_levels` は確保済みのHDLTレベル数、`edge_multiplicity` は端点対の多重度を返す。
+
 ## 時間計算量
 
-- `same`: $O(1)$
-- `component_size`: $O(1)$
+- `same`: amortized $O(\log N)$
+- `component_size`: amortized $O(\log N)$
 - `groups`: $O(1)$
+- `active_levels`: $O(\log N)$
 - `edge_multiplicity`: $O(\log M)$
+
+# 空間計算量
+
+- $O(N\log N + M)$

@@ -1,176 +1,223 @@
 #pragma once
 
-#include <algorithm>
 #include <array>
+#include <cstddef>
+#include <limits>
 #include <map>
+#include <memory>
 #include <stdexcept>
 #include <utility>
-#include <vector>
+#include "online_dynamic_connectivity_internal.hpp"
 
 template<int MAX_SIZE>
 struct OnlineDynamicConnectivity{
     static_assert(MAX_SIZE > 0);
 
 private:
-    int _n = 0;
-    int group_count = 0;
-    int visit_id = 0;
-    std::array<int, MAX_SIZE> component_id{};
-    std::array<int, MAX_SIZE> visited{};
-    std::array<std::vector<int>, MAX_SIZE> component_vertices;
-    std::array<std::vector<int>, MAX_SIZE> graph;
-    std::vector<int> free_component_ids;
-    std::map<std::pair<int, int>, int> edge_count;
+    using Forest = online_dynamic_connectivity_internal::EulerTourForest<MAX_SIZE>;
 
-    void check_vertex(int v, const char* message) const{
-        if(v < 0 || _n <= v)[[unlikely]] throw std::runtime_error(message);
-    }
-    std::pair<int, int> normalize(int u, int v) const{
-        check_vertex(u, "library assertion fault: range violation (edge).");
-        check_vertex(v, "library assertion fault: range violation (edge).");
-        if(v < u) std::swap(u, v);
-        return {u, v};
-    }
-    void add_neighbor(int u, int v){
-        if(u == v) return;
-        graph[u].push_back(v);
-        graph[v].push_back(u);
-    }
-    void erase_neighbor(int u, int v){
-        if(u == v) return;
-        auto it_u = std::find(graph[u].begin(), graph[u].end(), v);
-        auto it_v = std::find(graph[v].begin(), graph[v].end(), u);
-        if(it_u != graph[u].end()){
-            *it_u = graph[u].back();
-            graph[u].pop_back();
-        }
-        if(it_v != graph[v].end()){
-            *it_v = graph[v].back();
-            graph[v].pop_back();
-        }
-    }
-    void merge_components(int a, int b){
-        a = component_id[a];
-        b = component_id[b];
-        if(a == b) return;
-        if(component_vertices[a].size() < component_vertices[b].size()) std::swap(a, b);
-        for(int v: component_vertices[b]){
-            component_id[v] = a;
-            component_vertices[a].push_back(v);
-        }
-        component_vertices[b].clear();
-        free_component_ids.push_back(b);
-        group_count--;
-    }
-    std::vector<int> reachable_vertices(int s){
-        visit_id++;
-        std::vector<int> result;
-        result.reserve(component_vertices[component_id[s]].size());
-        std::vector<int> stack = {s};
-        visited[s] = visit_id;
-        while(!stack.empty()){
-            int v = stack.back();
-            stack.pop_back();
-            result.push_back(v);
-            for(int to: graph[v]){
-                if(visited[to] != visit_id){
-                    visited[to] = visit_id;
-                    stack.push_back(to);
-                }
-            }
+    static constexpr int level_count(){
+        int result = 1;
+        std::size_t bound = 1;
+        while(bound < static_cast<std::size_t>(MAX_SIZE)){
+            bound *= 2;
+            ++result;
         }
         return result;
     }
-    void split_if_needed(int u, int v){
-        int old_id = component_id[u];
-        auto side = reachable_vertices(u);
-        if(visited[v] == visit_id) return;
 
-        if(free_component_ids.empty())[[unlikely]]{
-            throw std::runtime_error("library assertion fault: no free component id (split).");
+    static constexpr int LEVEL_COUNT = level_count();
+
+    struct EdgeInfo{
+        int multiplicity = 0;
+        int level = 0;
+        bool tree = false;
+    };
+
+    struct State{
+        std::array<std::unique_ptr<Forest>, LEVEL_COUNT> forest;
+        std::map<std::pair<int, int>, EdgeInfo> edge;
+        int group_count = 0;
+    };
+
+    int _n = 0;
+    mutable std::unique_ptr<State> state;
+
+    void check_vertex(int vertex, const char* message) const{
+        if(vertex < 0 || _n <= vertex)[[unlikely]] throw std::runtime_error(message);
+    }
+
+    std::pair<int, int> normalize(int left, int right) const{
+        check_vertex(left, "library assertion fault: range violation (edge).");
+        check_vertex(right, "library assertion fault: range violation (edge).");
+        if(right < left) std::swap(left, right);
+        return {left, right};
+    }
+
+    Forest& ensure_level(int level){
+        if(level < 0 || LEVEL_COUNT <= level)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: HDLT level capacity exceeded.");
         }
-        int new_id = free_component_ids.back();
-        free_component_ids.pop_back();
+        if(state->forest[static_cast<std::size_t>(level)] == nullptr){
+            state->forest[static_cast<std::size_t>(level)] = std::make_unique<Forest>(_n);
+        }
+        return *state->forest[static_cast<std::size_t>(level)];
+    }
 
-        auto& all = component_vertices[old_id];
-        if(side.size() * 2 <= all.size()){
-            for(int x: side) component_id[x] = new_id;
-            std::vector<int> remain;
-            remain.reserve(all.size() - side.size());
-            for(int x: all){
-                if(visited[x] != visit_id) remain.push_back(x);
-            }
-            component_vertices[new_id] = std::move(side);
-            all = std::move(remain);
-        }else{
-            std::vector<int> other;
-            other.reserve(all.size() - side.size());
-            for(int x: all){
-                if(visited[x] != visit_id){
-                    component_id[x] = new_id;
-                    other.push_back(x);
+    bool replace_after_cut(int left, int right, int start_level){
+        for(int level = start_level; level >= 0; --level){
+            Forest& current = *state->forest[static_cast<std::size_t>(level)];
+            int smaller = current.component_size(left) <= current.component_size(right) ?
+                left : right;
+
+            while(true){
+                auto edge = current.pop_exact_tree(smaller);
+                if(edge.first == -1) break;
+                if(level + 1 >= LEVEL_COUNT)[[unlikely]]{
+                    throw std::runtime_error("library assertion fault: HDLT tree level overflow.");
                 }
+                auto iterator = state->edge.find(edge);
+                if(iterator == state->edge.end() || !iterator->second.tree)[[unlikely]]{
+                    throw std::runtime_error("library assertion fault: missing promoted tree edge.");
+                }
+                iterator->second.level = level + 1;
+                ensure_level(level + 1).link(edge.first, edge.second, true);
             }
-            all = std::move(side);
-            component_vertices[new_id] = std::move(other);
+
+            while(true){
+                auto edge = current.any_non_tree(smaller);
+                if(edge.first == -1) break;
+                auto iterator = state->edge.find(edge);
+                if(iterator == state->edge.end() || iterator->second.tree ||
+                   iterator->second.level != level)[[unlikely]]{
+                    throw std::runtime_error("library assertion fault: invalid non-tree edge level.");
+                }
+                if(!current.same(edge.first, edge.second)){
+                    current.erase_non_tree(edge.first, edge.second);
+                    iterator->second.tree = true;
+                    iterator->second.level = level;
+                    current.link(edge.first, edge.second, true);
+                    for(int lower = 0; lower < level; ++lower){
+                        state->forest[static_cast<std::size_t>(lower)]->link(
+                            edge.first,
+                            edge.second,
+                            false
+                        );
+                    }
+                    return true;
+                }
+
+                if(level + 1 >= LEVEL_COUNT)[[unlikely]]{
+                    throw std::runtime_error("library assertion fault: HDLT non-tree level overflow.");
+                }
+                current.erase_non_tree(edge.first, edge.second);
+                iterator->second.level = level + 1;
+                ensure_level(level + 1).add_non_tree(edge.first, edge.second);
+            }
         }
-        group_count++;
+        return false;
     }
 
 public:
-    explicit OnlineDynamicConnectivity(int n = MAX_SIZE): _n(n), group_count(n){
+    explicit OnlineDynamicConnectivity(int n = MAX_SIZE): _n(n), state(nullptr){
         if(n < 0 || MAX_SIZE < n)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
-        for(int v = 0; v < _n; v++){
-            component_id[v] = v;
-            visited[v] = 0;
-            component_vertices[v].push_back(v);
-        }
-        for(int v = _n; v < MAX_SIZE; v++) visited[v] = 0;
+        state = std::make_unique<State>();
+        state->group_count = _n;
+        state->forest[0] = std::make_unique<Forest>(_n);
     }
+
+    OnlineDynamicConnectivity(const OnlineDynamicConnectivity&) = delete;
+    OnlineDynamicConnectivity& operator=(const OnlineDynamicConnectivity&) = delete;
+    OnlineDynamicConnectivity(OnlineDynamicConnectivity&&) = default;
+    OnlineDynamicConnectivity& operator=(OnlineDynamicConnectivity&&) = default;
 
     int size() const{ return _n; }
-    int groups() const{ return group_count; }
-
-    bool same(int u, int v) const{
-        check_vertex(u, "library assertion fault: range violation (same).");
-        check_vertex(v, "library assertion fault: range violation (same).");
-        return component_id[u] == component_id[v];
-    }
-    int component_size(int v) const{
-        check_vertex(v, "library assertion fault: range violation (component_size).");
-        return static_cast<int>(component_vertices[component_id[v]].size());
-    }
-    int edge_multiplicity(int u, int v) const{
-        auto edge = normalize(u, v);
-        auto it = edge_count.find(edge);
-        return it == edge_count.end() ? 0 : it->second;
+    int groups() const{ return state->group_count; }
+    int active_levels() const{
+        int result = 0;
+        while(result < LEVEL_COUNT &&
+              state->forest[static_cast<std::size_t>(result)] != nullptr){
+            ++result;
+        }
+        return result;
     }
 
-    bool add_edge(int u, int v){
-        auto edge = normalize(u, v);
-        int& count = edge_count[edge];
-        count++;
-        if(count > 1) return false;
-        add_neighbor(edge.first, edge.second);
-        merge_components(edge.first, edge.second);
-        return true;
+    bool same(int left, int right) const{
+        check_vertex(left, "library assertion fault: range violation (same).");
+        check_vertex(right, "library assertion fault: range violation (same).");
+        return state->forest[0]->same(left, right);
     }
-    bool erase_edge(int u, int v){
-        auto edge = normalize(u, v);
-        auto it = edge_count.find(edge);
-        if(it == edge_count.end() || it->second == 0) return false;
-        it->second--;
-        if(it->second > 0) return true;
-        edge_count.erase(it);
-        erase_neighbor(edge.first, edge.second);
-        if(edge.first != edge.second && component_id[edge.first] == component_id[edge.second]){
-            split_if_needed(edge.first, edge.second);
+
+    int component_size(int vertex) const{
+        check_vertex(vertex, "library assertion fault: range violation (component_size).");
+        return state->forest[0]->component_size(vertex);
+    }
+
+    int edge_multiplicity(int left, int right) const{
+        auto edge = normalize(left, right);
+        auto iterator = state->edge.find(edge);
+        return iterator == state->edge.end() ? 0 : iterator->second.multiplicity;
+    }
+
+    bool add_edge(int left, int right){
+        auto edge = normalize(left, right);
+        auto iterator = state->edge.find(edge);
+        if(iterator != state->edge.end()){
+            if(iterator->second.multiplicity == std::numeric_limits<int>::max())[[unlikely]]{
+                throw std::runtime_error("library assertion fault: edge multiplicity overflow.");
+            }
+            ++iterator->second.multiplicity;
+            return false;
+        }
+
+        EdgeInfo info;
+        info.multiplicity = 1;
+        auto [inserted, success] = state->edge.emplace(edge, info);
+        (void)success;
+        if(edge.first == edge.second) return true;
+
+        Forest& base = *state->forest[0];
+        if(base.same(edge.first, edge.second)){
+            base.add_non_tree(edge.first, edge.second);
+        }else{
+            inserted->second.tree = true;
+            base.link(edge.first, edge.second, true);
+            --state->group_count;
         }
         return true;
     }
 
-    bool link(int u, int v){ return add_edge(u, v); }
-    bool cut(int u, int v){ return erase_edge(u, v); }
+    bool erase_edge(int left, int right){
+        auto edge = normalize(left, right);
+        auto iterator = state->edge.find(edge);
+        if(iterator == state->edge.end()) return false;
+        --iterator->second.multiplicity;
+        if(iterator->second.multiplicity > 0) return true;
+        if(edge.first == edge.second){
+            state->edge.erase(iterator);
+            return true;
+        }
+
+        int level = iterator->second.level;
+        if(!iterator->second.tree){
+            state->forest[static_cast<std::size_t>(level)]->erase_non_tree(
+                edge.first,
+                edge.second
+            );
+            state->edge.erase(iterator);
+            return true;
+        }
+
+        for(int current = 0; current <= level; ++current){
+            state->forest[static_cast<std::size_t>(current)]->cut(edge.first, edge.second);
+        }
+        state->edge.erase(iterator);
+        if(!replace_after_cut(edge.first, edge.second, level)) ++state->group_count;
+        return true;
+    }
+
+    bool link(int left, int right){ return add_edge(left, right); }
+    bool cut(int left, int right){ return erase_edge(left, right); }
 };
