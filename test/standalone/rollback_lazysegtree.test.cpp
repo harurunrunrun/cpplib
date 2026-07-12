@@ -3,7 +3,9 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
 #include <random>
+#include <string>
 #include <vector>
 
 #include "../../src/structure/segtree/rollback_lazysegtree.hpp"
@@ -48,6 +50,81 @@ std::int64_t naive_prod(
 }
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<SumLen> input(static_cast<std::size_t>(input_n));
+        for(auto& value: input){
+            std::cin >> value.sum;
+            value.len = 1;
+        }
+        RollbackLazySegtree<range_add_sum, 128, 700> seg(input);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int k;
+                std::int64_t value;
+                std::cin >> k >> value;
+                seg.set(k, {value, 1});
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "ADD1"){
+                int k;
+                std::int64_t value;
+                std::cin >> k >> value;
+                seg.apply(k, value);
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "ADD"){
+                int l, r;
+                std::int64_t value;
+                std::cin >> l >> r >> value;
+                seg.apply(l, r, value);
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "UNDO"){
+                seg.undo();
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "ROLLBACK"){
+                int snapshot;
+                std::cin >> snapshot;
+                seg.rollback(snapshot);
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "GET"){
+                int k;
+                std::cin >> k;
+                std::cout << seg.get(k).sum << '\n';
+            }else if(type == "SUM"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << seg.prod(l, r).sum << '\n';
+            }else if(type == "ALL"){
+                std::cout << seg.all_prod().sum << '\n';
+            }else if(type == "MR"){
+                int l;
+                std::int64_t limit;
+                std::cin >> l >> limit;
+                std::cout << seg.max_right(
+                    l,
+                    [](SumLen value, std::int64_t bound){
+                        return value.sum <= bound;
+                    },
+                    limit
+                ) << '\n';
+            }else if(type == "ML"){
+                int r;
+                std::int64_t limit;
+                std::cin >> r >> limit;
+                std::cout << seg.min_left(
+                    r,
+                    [](SumLen value, std::int64_t bound){
+                        return value.sum <= bound;
+                    },
+                    limit
+                ) << '\n';
+            }else if(type == "SNAP"){
+                std::cout << seg.snapshot() << '\n';
+            }
+        }
+        return 0;
+    }
     constexpr int n = 37;
     std::mt19937 rng(271828);
     std::vector<SumLen> init(n);

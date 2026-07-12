@@ -2,14 +2,75 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/partially_persistent_wavelet_matrix.hpp"
 #include "../../src/structure/wavelet_matrix/persistent_wavelet_matrix.hpp"
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<int> input(static_cast<std::size_t>(input_n));
+        for(int& value: input) std::cin >> value;
+        PersistentWaveletMatrix<int, 128, 700, 32, 24> matrix(input);
+        auto print_optional = [](std::optional<int> value){
+            if(value.has_value()){
+                std::cout << *value << '\n';
+            }else{
+                std::cout << "NONE\n";
+            }
+        };
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int version, k, value;
+                std::cin >> version >> k >> value;
+                std::cout << matrix.set(version, k, value) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << matrix.fork(version) << '\n';
+            }else if(type == "ACCESS"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << matrix.access(version, k) << '\n';
+            }else if(type == "RANK"){
+                int version, value, l, r;
+                std::cin >> version >> value >> l >> r;
+                std::cout << matrix.rank(version, value, l, r) << '\n';
+            }else if(type == "FREQ"){
+                int version, l, r, lower, upper;
+                std::cin >> version >> l >> r >> lower >> upper;
+                std::cout << matrix.range_freq(
+                    version, l, r, lower, upper
+                ) << '\n';
+            }else if(type == "KTH"){
+                int version, l, r, k;
+                std::cin >> version >> l >> r >> k;
+                std::cout << matrix.kth_smallest(version, l, r, k) << '\n';
+            }else if(type == "PREV"){
+                int version, l, r, upper;
+                std::cin >> version >> l >> r >> upper;
+                print_optional(matrix.prev_value(version, l, r, upper));
+            }else if(type == "NEXT"){
+                int version, l, r, lower;
+                std::cin >> version >> l >> r >> lower;
+                print_optional(matrix.next_value(version, l, r, lower));
+            }else if(type == "SELECT"){
+                int version, value, occurrence;
+                std::cin >> version >> value >> occurrence;
+                std::cout << matrix.select(
+                    version, value, occurrence
+                ) << '\n';
+            }
+        }
+        return 0;
+    }
     constexpr int n = 173;
     constexpr int max_version = 1000;
     std::mt19937 rng(424242);

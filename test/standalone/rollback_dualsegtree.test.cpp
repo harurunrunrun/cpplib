@@ -3,7 +3,9 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
 #include <random>
+#include <string>
 #include <vector>
 
 #include "../../src/structure/segtree/rollback_dualsegtree.hpp"
@@ -36,6 +38,44 @@ Affine id(){
 constexpr Monoid_Act<op, e, mapping, composition, id> affine{};
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<std::int64_t> input(static_cast<std::size_t>(input_n));
+        for(auto& value: input) std::cin >> value;
+        RollbackDualSegtree<affine, 128, 700> seg(input);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int k;
+                std::int64_t value;
+                std::cin >> k >> value;
+                seg.set(k, value);
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "APPLY"){
+                int l, r;
+                Affine f;
+                std::cin >> l >> r >> f.a >> f.b;
+                seg.apply(l, r, f);
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "UNDO"){
+                seg.undo();
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "ROLLBACK"){
+                int snapshot;
+                std::cin >> snapshot;
+                seg.rollback(snapshot);
+                std::cout << seg.snapshot() << '\n';
+            }else if(type == "GET"){
+                int k;
+                std::cin >> k;
+                std::cout << seg.get(k) << '\n';
+            }else if(type == "SNAP"){
+                std::cout << seg.snapshot() << '\n';
+            }
+        }
+        return 0;
+    }
     constexpr int n = 33;
     std::mt19937 rng(424242);
     std::vector<std::int64_t> initial(n);

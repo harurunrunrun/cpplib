@@ -5,6 +5,7 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
 #include <numeric>
 #include <random>
 #include <stdexcept>
@@ -69,6 +70,49 @@ int naive_min_left(const std::vector<ll>& a, int r, ll limit){
 }
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<ll> input(static_cast<std::size_t>(input_n));
+        for(ll& value: input) std::cin >> value;
+        PersistentSegtree<sum_monoid, 128, 700> seg(input);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int version, k;
+                ll value;
+                std::cin >> version >> k >> value;
+                std::cout << seg.set(version, k, value) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << seg.fork(version) << '\n';
+            }else if(type == "GET"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << seg.get(version, k) << '\n';
+            }else if(type == "SUM"){
+                int version, l, r;
+                std::cin >> version >> l >> r;
+                std::cout << seg.prod(version, l, r) << '\n';
+            }else if(type == "ALL"){
+                int version;
+                std::cin >> version;
+                std::cout << seg.all_prod(version) << '\n';
+            }else if(type == "MR"){
+                int version, l;
+                ll limit;
+                std::cin >> version >> l >> limit;
+                std::cout << seg.max_right(version, l, sum_leq, limit) << '\n';
+            }else if(type == "ML"){
+                int version, r;
+                ll limit;
+                std::cin >> version >> r >> limit;
+                std::cout << seg.min_left(version, r, sum_leq, limit) << '\n';
+            }
+        }
+        return 0;
+    }
     constexpr int N = 29;
     std::mt19937_64 rng(0x2718281828459045ULL);
 

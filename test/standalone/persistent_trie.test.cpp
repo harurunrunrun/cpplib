@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <map>
 #include <random>
 #include <string>
@@ -25,6 +26,45 @@ int prefix_count_naive(const std::map<std::string, int>& mp, const std::string& 
 }
 
 int main(){
+    int input_q;
+    if(std::cin >> input_q){
+        PersistentTrie<4, 30000, 1024> input_trie;
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "INSERT"){
+                int version;
+                std::string value;
+                std::cin >> version >> value;
+                std::cout << input_trie.insert(version, value) << '\n';
+            }else if(type == "ERASE"){
+                int version;
+                std::string value;
+                std::cin >> version >> value;
+                std::cout << input_trie.erase(version, value) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << input_trie.fork(version) << '\n';
+            }else if(type == "COUNT"){
+                int version;
+                std::string value;
+                std::cin >> version >> value;
+                std::cout << input_trie.count(version, value) << '\n';
+            }else if(type == "CONTAINS"){
+                int version;
+                std::string value;
+                std::cin >> version >> value;
+                std::cout << input_trie.contains(version, value) << '\n';
+            }else if(type == "PREFIX"){
+                int version;
+                std::string value;
+                std::cin >> version >> value;
+                std::cout << input_trie.prefix_count(version, value) << '\n';
+            }
+        }
+        return 0;
+    }
     PersistentTrie<4, 30000, 1024> trie;
     std::vector<std::map<std::string, int>> versions(1);
     std::mt19937 rng(20260717);

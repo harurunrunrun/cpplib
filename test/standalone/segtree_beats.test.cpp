@@ -4,9 +4,11 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
 #include <numeric>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <type_traits>
 #include <vector>
 #include "../../src/structure/segtree/segtree_beats.hpp"
@@ -18,6 +20,57 @@ static_assert(!std::is_copy_constructible_v<Beats>);
 static_assert(!std::is_move_constructible_v<Beats>);
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<ll> input(static_cast<std::size_t>(input_n));
+        for(ll& value: input) std::cin >> value;
+        SegmentTreeBeats<ll, 128> seg(input);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "CHMIN"){
+                int l, r;
+                ll value;
+                std::cin >> l >> r >> value;
+                seg.range_chmin(l, r, value);
+            }else if(type == "CHMAX"){
+                int l, r;
+                ll value;
+                std::cin >> l >> r >> value;
+                seg.range_chmax(l, r, value);
+            }else if(type == "ADD"){
+                int l, r;
+                ll value;
+                std::cin >> l >> r >> value;
+                seg.range_add(l, r, value);
+            }else if(type == "SET"){
+                int k;
+                ll value;
+                std::cin >> k >> value;
+                seg.set(k, value);
+            }else if(type == "GET"){
+                int k;
+                std::cin >> k;
+                std::cout << seg.get(k) << '\n';
+            }else if(type == "SUM"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << seg.range_sum(l, r) << '\n';
+            }else if(type == "MIN"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << seg.range_min(l, r) << '\n';
+            }else if(type == "MAX"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << seg.range_max(l, r) << '\n';
+            }else if(type == "ALL"){
+                std::cout << seg.all_sum() << ' '
+                    << seg.all_min() << ' ' << seg.all_max() << '\n';
+            }
+        }
+        return 0;
+    }
     constexpr int N = 37;
     std::mt19937_64 rng(0x123456789abcdef0ULL);
 

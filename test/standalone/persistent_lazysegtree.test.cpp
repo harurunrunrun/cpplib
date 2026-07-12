@@ -3,7 +3,9 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
 #include <random>
+#include <string>
 #include <vector>
 
 #include "../../src/structure/segtree/partially_persistent_lazysegtree.hpp"
@@ -286,6 +288,71 @@ void test_binary_search(){
 }
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<SumLen> input(static_cast<std::size_t>(input_n));
+        for(auto& value: input){
+            std::cin >> value.sum;
+            value.len = 1;
+        }
+        PersistentLazySegtree<add_sum, 128, 700> seg(input);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int version, k;
+                std::int64_t value;
+                std::cin >> version >> k >> value;
+                std::cout << seg.set(version, k, {value, 1}) << '\n';
+            }else if(type == "ADD"){
+                int version, l, r;
+                std::int64_t value;
+                std::cin >> version >> l >> r >> value;
+                std::cout << seg.apply(version, l, r, value) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << seg.fork(version) << '\n';
+            }else if(type == "GET"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << seg.get(version, k).sum << '\n';
+            }else if(type == "SUM"){
+                int version, l, r;
+                std::cin >> version >> l >> r;
+                std::cout << seg.prod(version, l, r).sum << '\n';
+            }else if(type == "ALL"){
+                int version;
+                std::cin >> version;
+                std::cout << seg.all_prod(version).sum << '\n';
+            }else if(type == "MR"){
+                int version, l;
+                std::int64_t limit;
+                std::cin >> version >> l >> limit;
+                std::cout << seg.max_right(
+                    version,
+                    l,
+                    [](SumLen value, std::int64_t bound){
+                        return value.sum <= bound;
+                    },
+                    limit
+                ) << '\n';
+            }else if(type == "ML"){
+                int version, r;
+                std::int64_t limit;
+                std::cin >> version >> r >> limit;
+                std::cout << seg.min_left(
+                    version,
+                    r,
+                    [](SumLen value, std::int64_t bound){
+                        return value.sum <= bound;
+                    },
+                    limit
+                ) << '\n';
+            }
+        }
+        return 0;
+    }
     test_persistent_affine();
     test_partially_persistent();
     test_binary_search();

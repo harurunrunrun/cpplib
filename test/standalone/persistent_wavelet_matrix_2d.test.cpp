@@ -2,9 +2,11 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/partially_persistent_rectangle_sum.hpp"
@@ -15,6 +17,102 @@
 #include "../../src/structure/wavelet_matrix/persistent_wavelet_matrix_2d_weighted.hpp"
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<int> input_x(static_cast<std::size_t>(input_n));
+        std::vector<int> input_y(static_cast<std::size_t>(input_n));
+        std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
+        std::vector<std::pair<int, int>> input_points;
+        std::vector<std::tuple<int, int, long long>> input_weighted_points;
+        input_points.reserve(static_cast<std::size_t>(input_n));
+        input_weighted_points.reserve(static_cast<std::size_t>(input_n));
+        for(int k = 0; k < input_n; k++){
+            std::cin >> input_x[k] >> input_y[k] >> input_weight[k];
+            input_points.emplace_back(input_x[k], input_y[k]);
+            input_weighted_points.emplace_back(
+                input_x[k], input_y[k], input_weight[k]
+            );
+        }
+        PersistentWaveletMatrix2D<
+            int, int, 128, 700, 32, 20
+        > plain(input_points);
+        PersistentWaveletMatrix2DWeighted<
+            int, int, long long, 128, 700, 32, 20
+        > weighted(input_x, input_y, input_weight);
+        PersistentRectangleSum<
+            int, int, long long, 128, 700, 32, 20
+        > rectangle_sum(input_weighted_points);
+        auto print_optional = [](std::optional<int> value){
+            if(value.has_value()){
+                std::cout << *value << '\n';
+            }else{
+                std::cout << "NONE\n";
+            }
+        };
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int version, k, y;
+                long long weight;
+                std::cin >> version >> k >> y >> weight;
+                int plain_version = plain.set_y(version, k, y);
+                int weighted_version = weighted.set(
+                    version, k, y, weight
+                );
+                int sum_version = rectangle_sum.set(
+                    version, k, y, weight
+                );
+                assert(plain_version == weighted_version);
+                assert(plain_version == sum_version);
+                std::cout << plain_version << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                int plain_version = plain.fork(version);
+                int weighted_version = weighted.fork(version);
+                int sum_version = rectangle_sum.fork(version);
+                assert(plain_version == weighted_version);
+                assert(plain_version == sum_version);
+                std::cout << plain_version << '\n';
+            }else if(type == "COUNT"){
+                int version, xl, xr, yl, yr;
+                std::cin >> version >> xl >> xr >> yl >> yr;
+                std::cout << plain.rectangle_count(
+                    version, xl, xr, yl, yr
+                ) << ' ' << weighted.rectangle_count(
+                    version, xl, xr, yl, yr
+                ) << '\n';
+            }else if(type == "SUM"){
+                int version, xl, xr, yl, yr;
+                std::cin >> version >> xl >> xr >> yl >> yr;
+                std::cout << weighted.rectangle_sum(
+                    version, xl, xr, yl, yr
+                ) << ' ' << rectangle_sum.range_sum(
+                    version, xl, xr, yl, yr
+                ) << '\n';
+            }else if(type == "KTH"){
+                int version, xl, xr, k;
+                std::cin >> version >> xl >> xr >> k;
+                std::cout << plain.kth_smallest_y(
+                    version, xl, xr, k
+                ) << '\n';
+            }else if(type == "PREV"){
+                int version, xl, xr, upper;
+                std::cin >> version >> xl >> xr >> upper;
+                print_optional(plain.prev_y(
+                    version, xl, xr, upper
+                ));
+            }else if(type == "NEXT"){
+                int version, xl, xr, lower;
+                std::cin >> version >> xl >> xr >> lower;
+                print_optional(plain.next_y(
+                    version, xl, xr, lower
+                ));
+            }
+        }
+        return 0;
+    }
     constexpr int n = 113;
     constexpr int max_version = 500;
     std::mt19937 rng(20260713);

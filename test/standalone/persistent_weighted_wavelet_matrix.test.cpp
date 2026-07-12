@@ -2,9 +2,11 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <numeric>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/partially_persistent_functional_wavelet_matrix.hpp"
 #include "../../src/structure/wavelet_matrix/partially_persistent_weighted_wavelet_matrix.hpp"
@@ -12,6 +14,68 @@
 #include "../../src/structure/wavelet_matrix/persistent_weighted_wavelet_matrix.hpp"
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<int> input_value(static_cast<std::size_t>(input_n));
+        std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
+        for(int& value: input_value) std::cin >> value;
+        for(long long& weight: input_weight) std::cin >> weight;
+        PersistentWeightedWaveletMatrix<
+            int, long long, 128, 700, 32, 20
+        > matrix(input_value, input_weight);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int version, k, value;
+                long long weight;
+                std::cin >> version >> k >> value >> weight;
+                std::cout << matrix.set(
+                    version, k, value, weight
+                ) << '\n';
+            }else if(type == "SETV"){
+                int version, k, value;
+                std::cin >> version >> k >> value;
+                std::cout << matrix.set_value(version, k, value) << '\n';
+            }else if(type == "SETW"){
+                int version, k;
+                long long weight;
+                std::cin >> version >> k >> weight;
+                std::cout << matrix.set_weight(version, k, weight) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << matrix.fork(version) << '\n';
+            }else if(type == "SUM"){
+                int version, l, r;
+                std::cin >> version >> l >> r;
+                std::cout << matrix.sum(version, l, r) << '\n';
+            }else if(type == "FREQ"){
+                int version, l, r, lower, upper;
+                std::cin >> version >> l >> r >> lower >> upper;
+                std::cout << matrix.range_freq(
+                    version, l, r, lower, upper
+                ) << '\n';
+            }else if(type == "RSUM"){
+                int version, l, r, lower, upper;
+                std::cin >> version >> l >> r >> lower >> upper;
+                std::cout << matrix.range_sum(
+                    version, l, r, lower, upper
+                ) << '\n';
+            }else if(type == "KTH"){
+                int version, l, r, k;
+                std::cin >> version >> l >> r >> k;
+                std::cout << matrix.kth_smallest(version, l, r, k) << '\n';
+            }else if(type == "KSMALL"){
+                int version, l, r, k;
+                std::cin >> version >> l >> r >> k;
+                std::cout << matrix.sum_k_smallest(
+                    version, l, r, k
+                ) << '\n';
+            }
+        }
+        return 0;
+    }
     constexpr int n = 139;
     constexpr int max_version = 800;
     std::mt19937 rng(987654321);
