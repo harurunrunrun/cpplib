@@ -3,13 +3,17 @@ title: Partially Persistent Dual Segment Tree
 documentation_of: ../src/structure/segtree/partially_persistent_dualsegtree.hpp
 ---
 
-過去の状態を参照でき、最新の状態のみ更新できるdual segment tree。
+過去の状態を参照でき、最新の状態のみ更新できるdual segment tree。状態は0から始まるversionで指定する。
 
 # テンプレート引数
 
 ```cpp
 PartiallyPersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 ```
+
+- 作用付きモノイド `Monoid_act`
+- 配列長の上限 `MAX_SIZE`
+- 更新回数の上限 `MAX_UPDATE`
 
 # コンストラクタ
 
@@ -26,21 +30,21 @@ PartiallyPersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 # 更新
 
 ```cpp
-(1) int set(int k, const S& x)
-(2) int apply(int l, int r, const T& f)
+int set(int k, const S& x)
+int apply(int l, int r, const T& f)
 ```
 
 最新versionを更新した新しいversionを作り、その番号を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
 
 # get
 
 ```cpp
-(1) S get(int version, int k) const
-(2) S get(int k) const
+S get(int version, int k) const
+S get(int k) const
 ```
 
 1. 指定versionの値を返す。
@@ -48,7 +52,8 @@ PartiallyPersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- (1): $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- (2): $O(\log \mathrm{MAX\_SIZE})$
 
 # version情報
 

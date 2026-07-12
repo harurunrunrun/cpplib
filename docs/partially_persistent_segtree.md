@@ -3,9 +3,7 @@ title: Partially Persistent Segment Tree
 documentation_of: ../src/structure/segtree/partially_persistent_segtree.hpp
 ---
 
-過去の状態を参照でき、最新の状態のみ更新できるsegment tree。
-
-状態は0から始まるversionで指定する。version 0は初期状態。
+過去の状態を参照でき、最新の状態のみ更新できるsegment tree。状態は0から始まるversionで指定する。
 
 # テンプレート引数
 
@@ -41,117 +39,55 @@ PartiallyPersistentSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
 int set(int k, const S& x)
 ```
 
-最新versionの `k` 番目を `x` に変更した新しいversionを作り、その番号を返す。
+最新versionの `k` 番目を `x` に変更し、新しいversion番号を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
 
-# get
+# 区間取得
 
 ```cpp
-(1) S get(int version, int k) const
-(2) S get(int k) const
+S get(int version, int k) const
+S get(int k) const
+S prod(int version, int l, int r) const
+S prod(int l, int r) const
+S all_prod(int version) const
+S all_prod() const
 ```
 
-1. `version` の `k` 番目を返す。
-2. 最新versionの `k` 番目を返す。
+versionを指定した場合はその状態、指定しない場合は最新versionを参照する。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- 過去versionの `get`: $O(\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- 過去versionの `prod`: $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- 過去versionの `all_prod`: $O(\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- 最新versionでは順に $O(1)$, $O(\log \mathrm{MAX\_SIZE})$, $O(1)$
 
-# prod
-
-```cpp
-(1) S prod(int version, int l, int r) const
-(2) S prod(int l, int r) const
-```
-
-1. `version` の区間 $[l, r)$ の積を返す。
-2. 最新versionの区間 $[l, r)$ の積を返す。
-
-## 時間計算量
-
-- $O(\log \mathrm{MAX\_SIZE})$
-
-# all_prod
+# 二分探索
 
 ```cpp
-(1) S all_prod(int version) const
-(2) S all_prod() const
+int max_right(int version, int l, auto f, auto&&... args) const
+int max_right(int l, auto f, auto&&... args) const
+int min_left(int version, int r, auto f, auto&&... args) const
+int min_left(int r, auto f, auto&&... args) const
 ```
-
-1. `version` の全要素の積を返す。
-2. 最新versionの全要素の積を返す。
-
-## 時間計算量
-
-- $O(1)$
-
-# max_right
-
-```cpp
-(1) int max_right(int version, int l, auto f, auto&&... args) const
-(2) int max_right(int l, auto f, auto&&... args) const
-```
-
-1. `version` に対して `f(prod(version, l, r), args...)` がtrueとなる最大の `r` を返す。
-2. 最新versionに対して同様の値を返す。
 
 `f(Monoid.e(), args...)` はtrueでなければならない。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- 過去version: $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
+- 最新version: $O(\log \mathrm{MAX\_SIZE})$
 
-# min_left
-
-```cpp
-(1) int min_left(int version, int r, auto f, auto&&... args) const
-(2) int min_left(int r, auto f, auto&&... args) const
-```
-
-1. `version` に対して `f(prod(version, l, r), args...)` がtrueとなる最小の `l` を返す。
-2. 最新versionに対して同様の値を返す。
-
-`f(Monoid.e(), args...)` はtrueでなければならない。
-
-## 時間計算量
-
-- $O(\log \mathrm{MAX\_SIZE})$
-
-# size
+# version情報
 
 ```cpp
 int size() const
-```
-
-配列長を返す。
-
-## 時間計算量
-
-- $O(1)$
-
-# versions
-
-```cpp
 int versions() const
-```
-
-現在存在するversion数を返す。
-
-## 時間計算量
-
-- $O(1)$
-
-# latest_version
-
-```cpp
 int latest_version() const
 ```
-
-最後に作ったversionの番号を返す。
 
 ## 時間計算量
 

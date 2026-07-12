@@ -35,8 +35,7 @@ PartiallyPersistentArray<T, MAX_SIZE, MAX_UPDATE>
 
 ## 時間計算量
 
-- (1), (2): $O(n)$
-- (3), (4): $O(|v|)$
+- $O(n)$
 
 # set
 
@@ -44,11 +43,11 @@ PartiallyPersistentArray<T, MAX_SIZE, MAX_UPDATE>
 int set(int k, const T& x)
 ```
 
-最新の状態の `k` 番目を `x` に変更し、新しいversionの番号を返す。
+最新状態の `k` 番目を `x` に変更し、新しいversion番号を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \mathrm{MAX\_UPDATE})$
 
 # get
 
@@ -58,43 +57,22 @@ int set(int k, const T& x)
 ```
 
 1. `version` の `k` 番目を返す。
-2. 最新のversionの `k` 番目を返す。
+2. 最新versionの `k` 番目を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- (1): $O(\log \mathrm{MAX\_UPDATE})$
+- (2): $O(1)$
 
-# size
+# version情報
 
 ```cpp
 int size() const
-```
-
-配列長を返す。
-
-## 時間計算量
-
-- $O(1)$
-
-# versions
-
-```cpp
 int versions() const
-```
-
-現在存在するversion数を返す。
-
-## 時間計算量
-
-- $O(1)$
-
-# latest_version
-
-```cpp
 int latest_version() const
 ```
 
-最新のversion番号を返す。
+順に配列長、version数、最新version番号を返す。
 
 ## 時間計算量
 
