@@ -19,4 +19,4 @@ make verify
 make docs
 ```
 
-testを実行した後、生成したJekyll sourceを `.competitive-verifier/_jekyll` に配置する。
+testは実行せず、生成したJekyll sourceを `.competitive-verifier/_jekyll` に配置する。
