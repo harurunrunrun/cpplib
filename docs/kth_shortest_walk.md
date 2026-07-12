@@ -15,6 +15,8 @@ kth_shortest_walks<T>(graph, source, target, k)
 
 戻り値は `source` から `target` への walk の距離列。`source == target` のときは空 walk の距離 `0` も含む。
 
+walk の距離と辺コストの加算結果は `T` で表現できる必要がある。負辺を含む場合は例外を送出する。
+
 ## 時間計算量
 
 - $O(KM\log(KN))$

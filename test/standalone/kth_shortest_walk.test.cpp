@@ -4,6 +4,7 @@
 #include <iostream>
 #include <queue>
 #include <random>
+#include <stdexcept>
 #include <utility>
 #include <vector>
 #include "../../src/algorithm/graph/kth_shortest_walk.hpp"
@@ -57,6 +58,17 @@ void self_test(){
         graph[1].push_back({1, 2});
         auto res = kth_shortest_walks<long long>(graph, 0, 2, 4);
         assert((res == std::vector<long long>{2, 2, 4, 6}));
+    }
+    {
+        std::vector<std::vector<KthShortestWalkEdge<long long>>> graph(2);
+        graph[1].push_back({1, -1});
+        bool thrown = false;
+        try{
+            (void)kth_shortest_walks<long long>(graph, 0, 0, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
     }
     std::mt19937 rng(20260730);
     for(int n = 1; n <= 9; n++){

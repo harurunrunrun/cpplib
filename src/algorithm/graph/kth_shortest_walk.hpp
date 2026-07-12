@@ -26,7 +26,7 @@ std::vector<T> kth_shortest_walks(
     }
     for(const auto& edges: graph){
         for(const auto& e: edges){
-            if(e.to < 0 || n <= e.to)[[unlikely]]{
+            if(e.to < 0 || n <= e.to || e.cost < T(0))[[unlikely]]{
                 throw std::runtime_error("library assertion fault: range violation (kth_shortest_walks).");
             }
         }
