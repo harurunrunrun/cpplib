@@ -130,7 +130,7 @@ private:
             left.root_marker,
             merge_marker(
                 middle.represented_root ? middle.index : -1,
-                right.root_marke
+                right.root_marker
             )
         );
         return result;
