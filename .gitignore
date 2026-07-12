@@ -4,3 +4,6 @@ test/in.txt
 .competitive-verifier/cache/
 .competitive-verifier/bundled/
 .competitive-verifier/_jekyll/
+.competitive-verifier/site/
+.competitive-verifier/vendor/
+.sass-cache/

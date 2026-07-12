@@ -15,8 +15,19 @@ make verify
 
 ## Local documentation
 
+Ubuntu/WSLでは最初にRubyとBundlerをインストールする。
+
 ```sh
+sudo apt install ruby-all-dev ruby-bundler
 make docs
 ```
 
-testは実行せず、生成したJekyll sourceを `.competitive-verifier/_jekyll` に配置する。
+`make docs` はtestを実行せず、HTMLを `.competitive-verifier/site` に生成する。ブラウザで `.competitive-verifier/site/index.html` を開けば確認できる。
+
+ローカルサーバーで確認する場合は次を実行し、<http://127.0.0.1:4000>を開く。
+
+```sh
+make docs-serve
+```
+
+Jekyll sourceのみ生成する場合は `make docs-source` を実行する。

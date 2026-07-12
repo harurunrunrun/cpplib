@@ -10,13 +10,16 @@ VERIFIER_CACHE := $(VERIFIER_ROOT)/cache
 VERIFY_FILES := $(VERIFIER_CACHE)/verify-files.json
 VERIFY_RESULT := $(VERIFIER_CACHE)/result.json
 DOCS_RESULT := $(VERIFIER_CACHE)/docs-result.json
-DOCS_OUTPUT := $(VERIFIER_ROOT)/_jekyll
+DOCS_SOURCE := $(VERIFIER_ROOT)/_jekyll
+DOCS_OUTPUT := $(VERIFIER_ROOT)/site
+BUNDLE_PATH := $(VERIFIER_ROOT)/vendor/bundle
 
-.PHONY: help verifier-setup verifier-resolve verify docs verifier-clean
+.PHONY: help verifier-setup verifier-resolve verify docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
-	@echo "make docs    testを実行せずdocsを$(DOCS_OUTPUT)へ生成"
+	@echo "make docs    testを実行せずHTMLを$(DOCS_OUTPUT)へ生成"
+	@echo "make docs-serve  HTMLを生成してlocalhost:4000で配信"
 	@echo "make verifier-clean  ローカル生成物とvenvを削除"
 
 $(VERIFIER):
@@ -36,13 +39,43 @@ verify: verifier-resolve
 		--check-error \
 		--output $(VERIFY_RESULT)
 
-docs: verifier-resolve
+docs-source: verifier-resolve
 	$(PYTHON) scripts/competitive_verifier_docs_result.py \
 		$(VERIFY_FILES) > $(DOCS_RESULT)
 	$(VERIFIER) docs \
 		--verify-json $(VERIFY_FILES) \
-		--destination $(DOCS_OUTPUT) \
+		--destination $(DOCS_SOURCE) \
 		$(DOCS_RESULT)
 
+
+docs-prerequisites:
+	@command -v ruby >/dev/null || { \
+		echo "Rubyが必要です: sudo apt install ruby-all-dev ruby-bundler"; \
+		exit 1; \
+	}
+	@command -v bundle >/dev/null || { \
+		echo "Bundlerが必要です: sudo apt install ruby-bundler"; \
+		exit 1; \
+	}
+
+docs: docs-prerequisites docs-source
+	BUNDLE_GEMFILE=$(abspath $(DOCS_SOURCE)/Gemfile) \
+	BUNDLE_PATH=$(abspath $(BUNDLE_PATH)) bundle check || \
+	BUNDLE_GEMFILE=$(abspath $(DOCS_SOURCE)/Gemfile) \
+	BUNDLE_PATH=$(abspath $(BUNDLE_PATH)) bundle install
+	BUNDLE_GEMFILE=$(abspath $(DOCS_SOURCE)/Gemfile) \
+	BUNDLE_PATH=$(abspath $(BUNDLE_PATH)) bundle exec jekyll build \
+		--source $(abspath $(DOCS_SOURCE)) \
+		--destination $(abspath $(DOCS_OUTPUT))
+	@echo "Generated HTML: $(DOCS_OUTPUT)/index.html"
+
+docs-serve: docs
+	BUNDLE_GEMFILE=$(abspath $(DOCS_SOURCE)/Gemfile) \
+	BUNDLE_PATH=$(abspath $(BUNDLE_PATH)) bundle exec jekyll serve \
+		--source $(abspath $(DOCS_SOURCE)) \
+		--destination $(abspath $(DOCS_OUTPUT)) \
+		--host 127.0.0.1 --port 4000
+
 verifier-clean:
-	rm -rf $(VERIFIER_VENV) $(VERIFIER_CACHE) $(VERIFIER_ROOT)/bundled $(DOCS_OUTPUT)
+	rm -rf $(VERIFIER_VENV) $(VERIFIER_CACHE) $(VERIFIER_ROOT)/bundled \
+		$(DOCS_SOURCE) $(DOCS_OUTPUT) $(VERIFIER_ROOT)/vendor .sass-cache
