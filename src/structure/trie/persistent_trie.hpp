@@ -54,6 +54,11 @@ private:
         roots[version_count] = root;
         return version_count++;
     }
+    void check_version_capacity() const{
+        if(version_count == MAX_VERSIONS)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: capacity exceeded (version).");
+        }
+    }
 
 public:
     PersistentTrie(){
@@ -76,10 +81,9 @@ public:
         int v = roots[version];
         for(char c: s){
             int id = char_id(c);
-            v = nodes[v].next[id];
-            if(v == 0) return -1;
+            if(v != 0) v = nodes[v].next[id];
         }
-        return v;
+        return v == 0 ? -1 : v;
     }
     int count(int version, std::string_view s) const{
         int v = node(version, s);
@@ -99,39 +103,53 @@ public:
 
     int insert(int version, std::string_view s){
         check_version(version);
-        int old_cur = roots[version];
-        int new_root = clone_node(old_cur);
-        int new_cur = new_root;
-        nodes[new_cur].pass_count++;
-        for(char c: s){
-            int id = char_id(c);
-            int old_next = old_cur == 0 ? 0 : nodes[old_cur].next[id];
-            int new_next = clone_node(old_next);
-            nodes[new_cur].next[id] = new_next;
-            old_cur = old_next;
-            new_cur = new_next;
+        check_version_capacity();
+        int snapshot = used;
+        try{
+            int old_cur = roots[version];
+            int new_root = clone_node(old_cur);
+            int new_cur = new_root;
             nodes[new_cur].pass_count++;
+            for(char c: s){
+                int id = char_id(c);
+                int old_next = old_cur == 0 ? 0 : nodes[old_cur].next[id];
+                int new_next = clone_node(old_next);
+                nodes[new_cur].next[id] = new_next;
+                old_cur = old_next;
+                new_cur = new_next;
+                nodes[new_cur].pass_count++;
+            }
+            nodes[new_cur].terminal_count++;
+            return new_version(new_root);
+        }catch(...){
+            used = snapshot;
+            throw;
         }
-        nodes[new_cur].terminal_count++;
-        return new_version(new_root);
     }
     int erase(int version, std::string_view s){
         check_version(version);
         if(count(version, s) == 0) return fork(version);
-        int old_cur = roots[version];
-        int new_root = clone_node(old_cur);
-        int new_cur = new_root;
-        nodes[new_cur].pass_count--;
-        for(char c: s){
-            int id = char_id(c);
-            int old_next = nodes[old_cur].next[id];
-            int new_next = clone_node(old_next);
-            nodes[new_cur].next[id] = new_next;
-            old_cur = old_next;
-            new_cur = new_next;
+        check_version_capacity();
+        int snapshot = used;
+        try{
+            int old_cur = roots[version];
+            int new_root = clone_node(old_cur);
+            int new_cur = new_root;
             nodes[new_cur].pass_count--;
+            for(char c: s){
+                int id = char_id(c);
+                int old_next = nodes[old_cur].next[id];
+                int new_next = clone_node(old_next);
+                nodes[new_cur].next[id] = new_next;
+                old_cur = old_next;
+                new_cur = new_next;
+                nodes[new_cur].pass_count--;
+            }
+            nodes[new_cur].terminal_count--;
+            return new_version(new_root);
+        }catch(...){
+            used = snapshot;
+            throw;
         }
-        nodes[new_cur].terminal_count--;
-        return new_version(new_root);
     }
 };

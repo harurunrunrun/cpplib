@@ -168,7 +168,8 @@ private:
     }
 
 public:
-    PartiallyPersistentWaveletMatrix() = default;
+    PartiallyPersistentWaveletMatrix():
+        PartiallyPersistentWaveletMatrix(std::vector<T>{}){}
 
     explicit PartiallyPersistentWaveletMatrix(const std::vector<T>& sequence):
         _n(static_cast<int>(sequence.size())),

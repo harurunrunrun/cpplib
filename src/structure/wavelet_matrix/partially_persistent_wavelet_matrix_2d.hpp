@@ -76,7 +76,8 @@ private:
     }
 
 public:
-    PartiallyPersistentWaveletMatrix2D() = default;
+    PartiallyPersistentWaveletMatrix2D():
+        PartiallyPersistentWaveletMatrix2D(std::vector<X>{}, std::vector<Y>{}){}
     PartiallyPersistentWaveletMatrix2D(const std::vector<X>& xs, const std::vector<Y>& ys){ build(xs, ys); }
     explicit PartiallyPersistentWaveletMatrix2D(const std::vector<std::pair<X, Y>>& points){
         std::vector<X> xs(points.size());

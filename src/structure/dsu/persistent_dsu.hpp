@@ -140,6 +140,12 @@ private:
         return res;
     }
 
+    void check_version_capacity(const char* message) const{
+        if(version_count > MAX_VERSION)[[unlikely]]{
+            throw std::runtime_error(message);
+        }
+    }
+
 public:
     explicit PersistentDSU(int n = MAX_SIZE): _n(n){
         if(n < 0 || MAX_SIZE < n)[[unlikely]]{
@@ -155,6 +161,7 @@ public:
     int size() const{ return _n; }
     int versions() const{ return version_count; }
     int latest_version() const{ return version_count - 1; }
+    int nodes_used() const{ return node_count; }
 
     int groups(int version) const{
         check_version(version, "library assertion fault: range violation (groups).");
@@ -202,6 +209,9 @@ public:
         check_version(version, "library assertion fault: range violation (merge).");
         check_vertex(u, "library assertion fault: range violation (merge).");
         check_vertex(v, "library assertion fault: range violation (merge).");
+        check_version_capacity(
+            "library assertion fault: version capacity exceeded (merge)."
+        );
 
         int source_root = root[version];
         u = leader_unchecked(source_root, u);

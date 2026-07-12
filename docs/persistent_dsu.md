@@ -66,9 +66,10 @@ int groups(int version)
 ```cpp
 int versions()
 int latest_version()
+int nodes_used()
 ```
 
-作られたバージョン数、最後に作られたバージョン番号を返す。
+作られたバージョン数、最後に作られたバージョン番号、使用中の永続配列ノード数を返す。
 
 ## 時間計算量
 

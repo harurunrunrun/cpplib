@@ -84,7 +84,8 @@ private:
     }
 
 public:
-    PersistentWaveletMatrix2D() = default;
+    PersistentWaveletMatrix2D():
+        PersistentWaveletMatrix2D(std::vector<X>{}, std::vector<Y>{}){}
     PersistentWaveletMatrix2D(const std::vector<X>& xs, const std::vector<Y>& ys){ build(xs, ys); }
     explicit PersistentWaveletMatrix2D(const std::vector<std::pair<X, Y>>& points){
         std::vector<X> xs(points.size());

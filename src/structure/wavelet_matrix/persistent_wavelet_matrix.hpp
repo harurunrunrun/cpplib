@@ -180,7 +180,7 @@ private:
     }
 
 public:
-    PersistentWaveletMatrix() = default;
+    PersistentWaveletMatrix(): PersistentWaveletMatrix(std::vector<T>{}){}
 
     explicit PersistentWaveletMatrix(const std::vector<T>& sequence):
         _n(static_cast<int>(sequence.size())),

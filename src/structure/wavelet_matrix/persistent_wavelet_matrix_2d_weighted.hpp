@@ -83,7 +83,9 @@ private:
     }
 
 public:
-    PersistentWaveletMatrix2DWeighted() = default;
+    PersistentWaveletMatrix2DWeighted(): PersistentWaveletMatrix2DWeighted(
+        std::vector<X>{}, std::vector<Y>{}, std::vector<W>{}
+    ){}
     PersistentWaveletMatrix2DWeighted(const std::vector<X>& xs, const std::vector<Y>& ys, const std::vector<W>& weights){
         build(xs, ys, weights);
     }

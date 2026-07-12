@@ -11,6 +11,8 @@ documentation_of: ../src/structure/trie/persistent_binary_trie.hpp
 PersistentBinaryTrie<T, BIT, MAX_NODES, MAX_VERSIONS>
 ```
 
+BIT は T のビット幅以下とする。更新が容量不足で失敗した場合、version と node は消費されない。
+
 # version
 
 ```cpp

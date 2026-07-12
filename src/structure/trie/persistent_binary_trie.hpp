@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <limits>
 #include <optional>
 #include <stdexcept>
 #include <type_traits>
@@ -9,6 +10,7 @@ template<class T, int BIT, int MAX_NODES, int MAX_VERSIONS>
 struct PersistentBinaryTrie{
     static_assert(std::is_integral_v<T>);
     static_assert(BIT > 0);
+    static_assert(BIT <= std::numeric_limits<std::make_unsigned_t<T>>::digits);
     static_assert(MAX_NODES > 0);
     static_assert(MAX_VERSIONS > 0);
     using U = std::make_unsigned_t<T>;
@@ -49,6 +51,11 @@ private:
         roots[version_count] = root;
         return version_count++;
     }
+    void check_version_capacity() const{
+        if(version_count == MAX_VERSIONS)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: capacity exceeded (version).");
+        }
+    }
     int count_or_zero(int v) const{
         return v == 0 ? 0 : nodes[v].count;
     }
@@ -88,40 +95,54 @@ public:
     }
     int insert(int version, T value){
         check_version(version);
-        U x = static_cast<U>(value);
-        int old_cur = roots[version];
-        int new_root = clone_node(old_cur);
-        int new_cur = new_root;
-        nodes[new_cur].count++;
-        for(int b = BIT - 1; b >= 0; b--){
-            int bit = static_cast<int>((x >> b) & 1U);
-            int old_next = old_cur == 0 ? 0 : nodes[old_cur].next[bit];
-            int new_next = clone_node(old_next);
-            nodes[new_cur].next[bit] = new_next;
-            old_cur = old_next;
-            new_cur = new_next;
+        check_version_capacity();
+        int snapshot = used;
+        try{
+            U x = static_cast<U>(value);
+            int old_cur = roots[version];
+            int new_root = clone_node(old_cur);
+            int new_cur = new_root;
             nodes[new_cur].count++;
+            for(int b = BIT - 1; b >= 0; b--){
+                int bit = static_cast<int>((x >> b) & 1U);
+                int old_next = old_cur == 0 ? 0 : nodes[old_cur].next[bit];
+                int new_next = clone_node(old_next);
+                nodes[new_cur].next[bit] = new_next;
+                old_cur = old_next;
+                new_cur = new_next;
+                nodes[new_cur].count++;
+            }
+            return new_version(new_root);
+        }catch(...){
+            used = snapshot;
+            throw;
         }
-        return new_version(new_root);
     }
     int erase(int version, T value){
         check_version(version);
         if(count(version, value) == 0) return fork(version);
-        U x = static_cast<U>(value);
-        int old_cur = roots[version];
-        int new_root = clone_node(old_cur);
-        int new_cur = new_root;
-        nodes[new_cur].count--;
-        for(int b = BIT - 1; b >= 0; b--){
-            int bit = static_cast<int>((x >> b) & 1U);
-            int old_next = nodes[old_cur].next[bit];
-            int new_next = clone_node(old_next);
-            nodes[new_cur].next[bit] = new_next;
-            old_cur = old_next;
-            new_cur = new_next;
+        check_version_capacity();
+        int snapshot = used;
+        try{
+            U x = static_cast<U>(value);
+            int old_cur = roots[version];
+            int new_root = clone_node(old_cur);
+            int new_cur = new_root;
             nodes[new_cur].count--;
+            for(int b = BIT - 1; b >= 0; b--){
+                int bit = static_cast<int>((x >> b) & 1U);
+                int old_next = nodes[old_cur].next[bit];
+                int new_next = clone_node(old_next);
+                nodes[new_cur].next[bit] = new_next;
+                old_cur = old_next;
+                new_cur = new_next;
+                nodes[new_cur].count--;
+            }
+            return new_version(new_root);
+        }catch(...){
+            used = snapshot;
+            throw;
         }
-        return new_version(new_root);
     }
 
     std::optional<T> kth(int version, int k, T xor_value = 0) const{

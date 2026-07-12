@@ -252,7 +252,10 @@ protected:
     }
 
 public:
-    PartiallyPersistentWeightedWaveletMatrixBase() = default;
+    PartiallyPersistentWeightedWaveletMatrixBase():
+        PartiallyPersistentWeightedWaveletMatrixBase(
+            std::vector<T>{}, std::vector<W>{}
+        ){}
 
     PartiallyPersistentWeightedWaveletMatrixBase(
         const std::vector<T>& sequence,

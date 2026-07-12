@@ -75,7 +75,10 @@ private:
         state->matrix = std::make_unique<Matrix>(sorted_y, sorted_weight);
     }
 public:
-    PartiallyPersistentWaveletMatrix2DWeighted() = default;
+    PartiallyPersistentWaveletMatrix2DWeighted():
+        PartiallyPersistentWaveletMatrix2DWeighted(
+            std::vector<X>{}, std::vector<Y>{}, std::vector<W>{}
+        ){}
     PartiallyPersistentWaveletMatrix2DWeighted(const std::vector<X>& xs, const std::vector<Y>& ys, const std::vector<W>& weights){ build(xs, ys, weights); }
     explicit PartiallyPersistentWaveletMatrix2DWeighted(const std::vector<std::tuple<X, Y, W>>& points){
         std::vector<X> xs(points.size());

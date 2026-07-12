@@ -241,7 +241,8 @@ protected:
     }
 
 public:
-    PersistentWeightedWaveletMatrixBase() = default;
+    PersistentWeightedWaveletMatrixBase():
+        PersistentWeightedWaveletMatrixBase(std::vector<T>{}, std::vector<W>{}){}
     PersistentWeightedWaveletMatrixBase(const std::vector<T>& sequence, const std::vector<W>& weight_sequence):
         _n(static_cast<int>(sequence.size())), block_count((_n + BLOCK_SIZE - 1) / BLOCK_SIZE), _versions(1){
         if(sequence.size() != weight_sequence.size())[[unlikely]]{

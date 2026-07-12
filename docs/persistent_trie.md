@@ -20,6 +20,8 @@ int versions()
 
 `fork` は同じ根を持つ新しい version を作る。
 
+更新が容量不足で失敗した場合、version と node は消費されない。
+
 # insert / erase
 
 ```cpp
