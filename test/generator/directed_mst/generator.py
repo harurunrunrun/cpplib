@@ -12,7 +12,7 @@ INF = 1 << 60
 
 def solve(n: int, root: int, edges: list[tuple[int, int, int]]) -> int:
     m = len(edges)
-    best = INF
+    best: int | None = None
     for mask in range(1 << m):
         if mask.bit_count() != n - 1:
             continue
@@ -38,8 +38,8 @@ def solve(n: int, root: int, edges: list[tuple[int, int, int]]) -> int:
                     seen[to] = True
                     stack.append(to)
         if all(seen):
-            best = min(best, cost)
-    return -1 if best == INF else best
+            best = cost if best is None else min(best, cost)
+    return -1 if best is None else best
 
 
 def write_case(out_dir: Path, idx: int, n: int, root: int, edges: list[tuple[int, int, int]]) -> None:
@@ -63,6 +63,8 @@ def main() -> None:
         (1, 0, []),
         (4, 0, [(0, 1, 5), (0, 2, 3), (2, 1, 1), (1, 3, 2), (2, 3, 10)]),
         (2, 0, [(1, 0, 1)]),
+        (2, 0, [(0, 1, INF)]),
+        (3, 0, [(0, 1, INF), (0, 2, 3_000_000_000_000_000_000)]),
     ]
     rng = random.Random(20260816)
     for n in [2, 4, 7]:

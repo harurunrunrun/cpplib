@@ -8,11 +8,9 @@ import heapq
 import random
 from pathlib import Path
 
-INF = 1 << 60
 
-
-def dijkstra(n: int, graph: list[list[tuple[int, int]]], s: int) -> list[int]:
-    dist = [INF] * n
+def dijkstra(n: int, graph: list[list[tuple[int, int]]], s: int) -> list[int | None]:
+    dist: list[int | None] = [None] * n
     dist[s] = 0
     que = [(0, s)]
     while que:
@@ -21,7 +19,7 @@ def dijkstra(n: int, graph: list[list[tuple[int, int]]], s: int) -> list[int]:
             continue
         for to, w in graph[v]:
             nd = d + w
-            if nd < dist[to]:
+            if dist[to] is None or nd < dist[to]:
                 dist[to] = nd
                 heapq.heappush(que, (nd, to))
     return dist
@@ -36,9 +34,12 @@ def solve(n: int, edges: list[tuple[int, int, int]], s: int, t: int) -> list[int
     ds = dijkstra(n, graph, s)
     dt = dijkstra(n, rev, t)
     shortest = ds[t]
-    if shortest == INF:
+    if shortest is None:
         return [0] * len(edges)
-    return [int(ds[u] != INF and dt[v] != INF and ds[u] + w + dt[v] == shortest) for u, v, w in edges]
+    return [
+        int(ds[u] is not None and dt[v] is not None and ds[u] + w + dt[v] == shortest)
+        for u, v, w in edges
+    ]
 
 
 def write_case(out_dir: Path, idx: int, n: int, edges: list[tuple[int, int, int]], s: int, t: int) -> None:
@@ -58,10 +59,14 @@ def main() -> None:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    sentinel = 1 << 60
     cases: list[tuple[int, list[tuple[int, int, int]], int, int]] = [
         (1, [], 0, 0),
         (4, [(0, 1, 1), (1, 3, 2), (0, 2, 1), (2, 3, 2), (0, 3, 4)], 0, 3),
         (4, [(0, 1, 1), (2, 3, 1)], 0, 3),
+        (3, [(0, 1, sentinel), (1, 2, 2_000_000_000_000_000_000),
+             (0, 2, 4_000_000_000_000_000_000)], 0, 2),
+        (2, [(0, 1, sentinel)], 0, 1),
     ]
     rng = random.Random(20260802)
     for n in [2, 5, 8, 30]:

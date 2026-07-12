@@ -25,6 +25,10 @@ vector<T> prefix_cost;
 
 `prefix_cost[i]` は `source` から `vertices[i]` までの距離。
 
+`inf` は内部の初期値であり、到達可能なパスの距離が `inf` 以上でも扱える。
+
+パスの距離と辺コストの加算結果は `T` で表現できる必要がある。
+
 ## 時間計算量
 
 Yen法。

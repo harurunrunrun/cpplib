@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <vector>
 #include "../../src/algorithm/graph/kth_shortest_path.hpp"
 
@@ -65,6 +66,29 @@ void self_test(){
         assert((paths[1].vertices == std::vector<int>{0, 1, 2, 3}));
         assert(paths[2].cost == 4);
     }
+    {
+        constexpr long long INF = 1LL << 60;
+        std::vector<std::vector<KthShortestPathEdge<long long>>> graph(3);
+        graph[0].push_back({1, INF});
+        graph[1].push_back({2, 2000000000000000000LL});
+        graph[0].push_back({2, 3000000000000000000LL});
+        auto paths = kth_shortest_paths<long long>(graph, 0, 2, 2, INF);
+        assert(paths.size() == 2);
+        assert(paths[0].cost == 3000000000000000000LL);
+        assert(paths[1].cost == INF + 2000000000000000000LL);
+    }
+    {
+        std::vector<std::vector<KthShortestPathEdge<long long>>> graph(2);
+        graph[1].push_back({1, -1});
+        bool thrown = false;
+        try{
+            (void)kth_shortest_paths<long long>(graph, 0, 0, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+
     std::mt19937 rng(20260729);
     for(int n = 1; n <= 8; n++){
         for(int step = 0; step < 200; step++){

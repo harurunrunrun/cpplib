@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <vector>
 #include "../../src/algorithm/graph/shortest_path_edge_usage.hpp"
 
@@ -56,6 +57,35 @@ void self_test(){
         assert((res.used == std::vector<char>{1, 1, 1, 1, 0}));
         assert(res.unused[4]);
     }
+    {
+        constexpr long long INF = 1LL << 60;
+        std::vector<ShortestPathEdgeUsageEdge<long long>> edges = {
+            {0, 1, INF},
+            {1, 2, 2000000000000000000LL},
+            {0, 2, 4000000000000000000LL},
+        };
+        auto res = shortest_path_edge_usage<long long>(3, edges, 0, 2, INF);
+        assert(res.reachable);
+        assert(res.shortest == INF + 2000000000000000000LL);
+        assert((res.used == std::vector<char>{1, 1, 0}));
+    }
+    {
+        constexpr long long INF = 1LL << 60;
+        auto res = shortest_path_edge_usage<long long>(2, {}, 0, 1, INF);
+        assert(!res.reachable);
+        assert(res.shortest == INF);
+    }
+    {
+        std::vector<ShortestPathEdgeUsageEdge<long long>> edges = {{1, 1, -1}};
+        bool thrown = false;
+        try{
+            (void)shortest_path_edge_usage<long long>(2, edges, 0, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+
     std::mt19937 rng(20260802);
     for(int n = 1; n <= 8; n++){
         for(int step = 0; step < 200; step++){

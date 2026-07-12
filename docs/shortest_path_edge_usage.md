@@ -19,11 +19,16 @@ shortest_path_edge_usage<T>(n, edges, source, target, inf)
 
 ```cpp
 T shortest;
+bool reachable;
 vector<char> used;
 vector<char> unused;
 ```
 
 `used[i]` は辺 `i` が最短路に含まれることを表す。
+
+`reachable` は `target` が到達可能なら真。`inf` は到達不能時の `shortest` に格納する初期値であり、到達可能な最短距離が `inf` 以上でも扱える。
+
+距離と辺コストの加算結果は `T` で表現できる必要がある。
 
 ## 時間計算量
 

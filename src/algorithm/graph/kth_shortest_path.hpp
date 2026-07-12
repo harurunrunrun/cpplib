@@ -50,9 +50,11 @@ KthShortestPathResult<T> shortest_path(
 
     std::vector<T> dist(static_cast<std::size_t>(n), inf);
     std::vector<int> parent(static_cast<std::size_t>(n), -1);
+    std::vector<char> reachable(static_cast<std::size_t>(n), 0);
     using Pair = std::pair<T, int>;
     std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> que;
     dist[static_cast<std::size_t>(source)] = T(0);
+    reachable[static_cast<std::size_t>(source)] = 1;
     que.push({T(0), source});
 
     while(!que.empty()){
@@ -64,15 +66,17 @@ KthShortestPathResult<T> shortest_path(
             if(banned_vertices[static_cast<std::size_t>(e.to)]) continue;
             if(banned_edge<T>(v, e.to, banned_edges)) continue;
             T nd = d + e.cost;
-            if(nd < dist[static_cast<std::size_t>(e.to)]){
+            if(!reachable[static_cast<std::size_t>(e.to)] ||
+               nd < dist[static_cast<std::size_t>(e.to)]){
                 dist[static_cast<std::size_t>(e.to)] = nd;
                 parent[static_cast<std::size_t>(e.to)] = v;
+                reachable[static_cast<std::size_t>(e.to)] = 1;
                 que.push({nd, e.to});
             }
         }
     }
 
-    if(dist[static_cast<std::size_t>(target)] == inf) return empty;
+    if(!reachable[static_cast<std::size_t>(target)]) return empty;
 
     std::vector<int> vertices;
     for(int v = target; v != -1; v = parent[static_cast<std::size_t>(v)]){
@@ -119,7 +123,7 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
     }
     for(const auto& edges: graph){
         for(const auto& e: edges){
-            if(e.to < 0 || n <= e.to)[[unlikely]]{
+            if(e.to < 0 || n <= e.to || e.cost < T(0))[[unlikely]]{
                 throw std::runtime_error("library assertion fault: range violation (kth_shortest_paths).");
             }
         }

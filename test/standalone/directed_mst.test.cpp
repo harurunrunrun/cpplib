@@ -15,7 +15,8 @@ std::pair<long long, bool> brute(
     const std::vector<DirectedMstEdge<long long>>& edges
 ){
     const int m = static_cast<int>(edges.size());
-    long long best = INF;
+    long long best = 0;
+    bool found = false;
     for(int mask = 0; mask < (1 << m); mask++){
         if(__builtin_popcount(static_cast<unsigned>(mask)) != n - 1) continue;
         std::vector<int> indegree(static_cast<std::size_t>(n), 0);
@@ -50,9 +51,12 @@ std::pair<long long, bool> brute(
         for(int v = 0; v < n; v++){
             if(!seen[static_cast<std::size_t>(v)]) ok = false;
         }
-        if(ok) best = std::min(best, cost);
+        if(ok && (!found || cost < best)){
+            best = cost;
+            found = true;
+        }
     }
-    return {best, best != INF};
+    return {best, found};
 }
 
 void self_test(){
@@ -86,6 +90,15 @@ void self_test(){
         auto actual = directed_mst<long long>(3, 0, edges, INF);
         assert(actual.exists == expected.second);
         assert(actual.cost == expected.first);
+    }
+    {
+        std::vector<DirectedMstEdge<long long>> edges = {
+            {0, 1, INF},
+            {0, 2, 3000000000000000000LL},
+        };
+        auto res = directed_mst<long long>(3, 0, edges, INF);
+        assert(res.exists);
+        assert(res.cost == INF + 3000000000000000000LL);
     }
     std::mt19937 rng(20260816);
     for(int n = 1; n <= 7; n++){

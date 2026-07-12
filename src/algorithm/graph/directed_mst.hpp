@@ -38,14 +38,16 @@ DirectedMstResult<T> directed_mst(
         std::vector<T> in(static_cast<std::size_t>(n), inf);
         std::vector<int> parent(static_cast<std::size_t>(n), -1);
         for(const auto& e: edges){
-            if(e.from != e.to && e.cost < in[static_cast<std::size_t>(e.to)]){
+            if(e.from != e.to &&
+               (parent[static_cast<std::size_t>(e.to)] == -1 ||
+                e.cost < in[static_cast<std::size_t>(e.to)])){
                 in[static_cast<std::size_t>(e.to)] = e.cost;
                 parent[static_cast<std::size_t>(e.to)] = e.from;
             }
         }
         in[static_cast<std::size_t>(root)] = T(0);
         for(int v = 0; v < n; v++){
-            if(in[static_cast<std::size_t>(v)] == inf){
+            if(v != root && parent[static_cast<std::size_t>(v)] == -1){
                 result.exists = false;
                 return result;
             }

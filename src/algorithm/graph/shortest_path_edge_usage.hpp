@@ -17,6 +17,7 @@ struct ShortestPathEdgeUsageEdge{
 template<class T>
 struct ShortestPathEdgeUsageResult{
     T shortest;
+    bool reachable;
     std::vector<char> used;
     std::vector<char> unused;
 };
@@ -24,30 +25,41 @@ struct ShortestPathEdgeUsageResult{
 namespace shortest_path_edge_usage_internal{
 
 template<class T>
-std::vector<T> dijkstra(
+struct DijkstraResult{
+    std::vector<T> dist;
+    std::vector<char> reachable;
+};
+
+template<class T>
+DijkstraResult<T> dijkstra(
     const std::vector<std::vector<std::pair<int, T>>>& graph,
     int source,
     T inf
 ){
     const int n = static_cast<int>(graph.size());
-    std::vector<T> dist(static_cast<std::size_t>(n), inf);
+    DijkstraResult<T> result;
+    result.dist.assign(static_cast<std::size_t>(n), inf);
+    result.reachable.assign(static_cast<std::size_t>(n), 0);
     using Pair = std::pair<T, int>;
     std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> que;
-    dist[static_cast<std::size_t>(source)] = T(0);
+    result.dist[static_cast<std::size_t>(source)] = T(0);
+    result.reachable[static_cast<std::size_t>(source)] = 1;
     que.push({T(0), source});
     while(!que.empty()){
         auto [d, v] = que.top();
         que.pop();
-        if(dist[static_cast<std::size_t>(v)] != d) continue;
+        if(result.dist[static_cast<std::size_t>(v)] != d) continue;
         for(auto [to, cost]: graph[static_cast<std::size_t>(v)]){
             T nd = d + cost;
-            if(nd < dist[static_cast<std::size_t>(to)]){
-                dist[static_cast<std::size_t>(to)] = nd;
+            if(!result.reachable[static_cast<std::size_t>(to)] ||
+               nd < result.dist[static_cast<std::size_t>(to)]){
+                result.dist[static_cast<std::size_t>(to)] = nd;
+                result.reachable[static_cast<std::size_t>(to)] = 1;
                 que.push({nd, to});
             }
         }
     }
-    return dist;
+    return result;
 }
 
 } // namespace shortest_path_edge_usage_internal
@@ -66,7 +78,8 @@ ShortestPathEdgeUsageResult<T> shortest_path_edge_usage(
     std::vector<std::vector<std::pair<int, T>>> graph(static_cast<std::size_t>(n));
     std::vector<std::vector<std::pair<int, T>>> reverse_graph(static_cast<std::size_t>(n));
     for(const auto& e: edges){
-        if(e.from < 0 || n <= e.from || e.to < 0 || n <= e.to)[[unlikely]]{
+        if(e.from < 0 || n <= e.from || e.to < 0 || n <= e.to ||
+           e.cost < T(0))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (shortest_path_edge_usage).");
         }
         graph[static_cast<std::size_t>(e.from)].push_back({e.to, e.cost});
@@ -77,19 +90,21 @@ ShortestPathEdgeUsageResult<T> shortest_path_edge_usage(
     auto to_target = shortest_path_edge_usage_internal::dijkstra(reverse_graph, target, inf);
 
     ShortestPathEdgeUsageResult<T> result;
-    result.shortest = from_source[static_cast<std::size_t>(target)];
+    result.shortest = from_source.dist[static_cast<std::size_t>(target)];
+    result.reachable = static_cast<bool>(
+        from_source.reachable[static_cast<std::size_t>(target)]);
     result.used.assign(edges.size(), 0);
     result.unused.assign(edges.size(), 1);
-    if(result.shortest == inf) return result;
+    if(!result.reachable) return result;
 
     for(std::size_t i = 0; i < edges.size(); i++){
         const auto& e = edges[i];
-        if(from_source[static_cast<std::size_t>(e.from)] == inf ||
-           to_target[static_cast<std::size_t>(e.to)] == inf){
+        if(!from_source.reachable[static_cast<std::size_t>(e.from)] ||
+           !to_target.reachable[static_cast<std::size_t>(e.to)]){
             continue;
         }
-        if(from_source[static_cast<std::size_t>(e.from)] + e.cost +
-               to_target[static_cast<std::size_t>(e.to)] ==
+        if(from_source.dist[static_cast<std::size_t>(e.from)] + e.cost +
+               to_target.dist[static_cast<std::size_t>(e.to)] ==
            result.shortest){
             result.used[i] = 1;
             result.unused[i] = 0;
