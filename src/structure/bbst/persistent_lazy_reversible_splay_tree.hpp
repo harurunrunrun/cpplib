@@ -1,7 +1,7 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
-#include <cstdint>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -20,24 +20,22 @@ private:
         int right = -1;
         int size = 0;
         bool reversed = false;
-        std::uint64_t priority = 0;
+        bool has_lazy = false;
         S value{};
         S aggregate{};
         S rev_aggregate{};
         T lazy{};
     };
 
+    struct QueryResult{
+        S value;
+        int length;
+    };
+
     std::array<Node, MAX_NODE> nodes{};
     std::array<int, MAX_VERSION> roots{};
     int used = 0;
     int version_count = 1;
-
-    static std::uint64_t splitmix64(std::uint64_t x){
-        x += 0x9e3779b97f4a7c15ULL;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9ULL;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111ebULL;
-        return x ^ (x >> 31);
-    }
 
     int size_or_zero(int node) const{
         return node == -1 ? 0 : nodes[static_cast<std::size_t>(node)].size;
@@ -77,8 +75,7 @@ private:
         }
         int node = used++;
         nodes[static_cast<std::size_t>(node)] = {
-            -1, -1, 1, false, splitmix64(static_cast<std::uint64_t>(node) + 1),
-            value, value, value, MonoidActLen.id()
+            -1, -1, 1, false, false, value, value, value, MonoidActLen.id()
         };
         return node;
     }
@@ -89,7 +86,12 @@ private:
         current.value = MonoidActLen.mapping(f, current.value, 1);
         current.aggregate = MonoidActLen.mapping(f, current.aggregate, current.size);
         current.rev_aggregate = MonoidActLen.mapping(f, current.rev_aggregate, current.size);
-        current.lazy = MonoidActLen.composition(f, current.lazy);
+        if(current.has_lazy){
+            current.lazy = MonoidActLen.composition(f, current.lazy);
+        }else{
+            current.lazy = f;
+            current.has_lazy = true;
+        }
     }
 
     void toggle(int node){
@@ -100,65 +102,101 @@ private:
         current.reversed = !current.reversed;
     }
 
-    void push(int node){
-        if(node == -1) return;
+    // Returns a writable copy whose reversal and action have been propagated.
+    int expose(int root){
+        int node = copy_node(root);
         auto& current = nodes[static_cast<std::size_t>(node)];
-        if(current.reversed){
-            if(current.left != -1){
-                current.left = copy_node(current.left);
-                toggle(current.left);
-            }
-            if(current.right != -1){
-                current.right = copy_node(current.right);
-                toggle(current.right);
-            }
-            current.reversed = false;
-        }
+        if(!current.reversed && !current.has_lazy) return node;
         if(current.left != -1){
             current.left = copy_node(current.left);
-            all_apply(current.left, current.lazy);
+            if(current.reversed) toggle(current.left);
+            if(current.has_lazy) all_apply(current.left, current.lazy);
         }
         if(current.right != -1){
             current.right = copy_node(current.right);
-            all_apply(current.right, current.lazy);
+            if(current.reversed) toggle(current.right);
+            if(current.has_lazy) all_apply(current.right, current.lazy);
         }
+        current.reversed = false;
+        current.has_lazy = false;
         current.lazy = MonoidActLen.id();
+        return node;
+    }
+
+    int rotate_right(int root){
+        int child = nodes[static_cast<std::size_t>(root)].left;
+        nodes[static_cast<std::size_t>(root)].left = nodes[static_cast<std::size_t>(child)].right;
+        nodes[static_cast<std::size_t>(child)].right = root;
+        pull(root);
+        pull(child);
+        return child;
+    }
+
+    int rotate_left(int root){
+        int child = nodes[static_cast<std::size_t>(root)].right;
+        nodes[static_cast<std::size_t>(root)].right = nodes[static_cast<std::size_t>(child)].left;
+        nodes[static_cast<std::size_t>(child)].left = root;
+        pull(root);
+        pull(child);
+        return child;
+    }
+
+    // Functional bottom-up splay by implicit rank. Every rotated node is a copy.
+    int splay(int root, int k){
+        int node = expose(root);
+        int left_size = size_or_zero(nodes[static_cast<std::size_t>(node)].left);
+        if(k < left_size){
+            int left = expose(nodes[static_cast<std::size_t>(node)].left);
+            nodes[static_cast<std::size_t>(node)].left = left;
+            int left_left_size = size_or_zero(nodes[static_cast<std::size_t>(left)].left);
+            if(k < left_left_size){
+                nodes[static_cast<std::size_t>(left)].left =
+                    splay(nodes[static_cast<std::size_t>(left)].left, k);
+                node = rotate_right(node);
+            }else if(k > left_left_size){
+                nodes[static_cast<std::size_t>(left)].right =
+                    splay(nodes[static_cast<std::size_t>(left)].right, k - left_left_size - 1);
+                nodes[static_cast<std::size_t>(node)].left = rotate_left(left);
+            }
+            return nodes[static_cast<std::size_t>(node)].left == -1 ? node : rotate_right(node);
+        }
+        if(k > left_size){
+            int right = expose(nodes[static_cast<std::size_t>(node)].right);
+            nodes[static_cast<std::size_t>(node)].right = right;
+            int rank = k - left_size - 1;
+            int right_left_size = size_or_zero(nodes[static_cast<std::size_t>(right)].left);
+            if(rank < right_left_size){
+                nodes[static_cast<std::size_t>(right)].left =
+                    splay(nodes[static_cast<std::size_t>(right)].left, rank);
+                nodes[static_cast<std::size_t>(node)].right = rotate_right(right);
+            }else if(rank > right_left_size){
+                nodes[static_cast<std::size_t>(right)].right =
+                    splay(nodes[static_cast<std::size_t>(right)].right, rank - right_left_size - 1);
+                node = rotate_left(node);
+            }
+            return nodes[static_cast<std::size_t>(node)].right == -1 ? node : rotate_left(node);
+        }
+        return node;
     }
 
     std::pair<int, int> split(int root, int k){
         if(root == -1) return {-1, -1};
-        int node = copy_node(root);
-        push(node);
-        int left_size = size_or_zero(nodes[static_cast<std::size_t>(node)].left);
-        if(k <= left_size){
-            auto [left, right] = split(nodes[static_cast<std::size_t>(node)].left, k);
-            nodes[static_cast<std::size_t>(node)].left = right;
-            pull(node);
-            return {left, node};
-        }else{
-            auto [left, right] = split(nodes[static_cast<std::size_t>(node)].right, k - left_size - 1);
-            nodes[static_cast<std::size_t>(node)].right = left;
-            pull(node);
-            return {node, right};
-        }
+        if(k == 0) return {-1, root};
+        if(k == size_or_zero(root)) return {root, -1};
+        int right = splay(root, k);
+        int left = nodes[static_cast<std::size_t>(right)].left;
+        nodes[static_cast<std::size_t>(right)].left = -1;
+        pull(right);
+        return {left, right};
     }
 
     int merge(int left, int right){
         if(left == -1) return right;
         if(right == -1) return left;
-        if(nodes[static_cast<std::size_t>(left)].priority < nodes[static_cast<std::size_t>(right)].priority){
-            int node = copy_node(left);
-            push(node);
-            nodes[static_cast<std::size_t>(node)].right = merge(nodes[static_cast<std::size_t>(node)].right, right);
-            pull(node);
-            return node;
-        }else{
-            int node = copy_node(right);
-            push(node);
-            nodes[static_cast<std::size_t>(node)].left = merge(left, nodes[static_cast<std::size_t>(node)].left);
-            pull(node);
-            return node;
-        }
+        left = splay(left, size_or_zero(left) - 1);
+        nodes[static_cast<std::size_t>(left)].right = right;
+        pull(left);
+        return left;
     }
 
     int build(const std::vector<S>& values, int l, int r){
@@ -171,14 +209,6 @@ private:
         return node;
     }
 
-    int register_root(int root){
-        if(version_count == MAX_VERSION)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: version capacity exceeded (PersistentLazyReversibleSplayTree).");
-        }
-        roots[static_cast<std::size_t>(version_count)] = root;
-        return version_count++;
-    }
-
     void check_version(int version) const{
         if(version < 0 || version_count <= version)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (PersistentLazyReversibleSplayTree).");
@@ -187,59 +217,111 @@ private:
 
     void check_insert_position(int version, int p) const{
         check_version(version);
-        if(p < 0 || size(version) < p)[[unlikely]]{
+        if(p < 0 || size_or_zero(roots[static_cast<std::size_t>(version)]) < p)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (PersistentLazyReversibleSplayTree).");
         }
     }
 
     void check_position(int version, int p) const{
         check_version(version);
-        if(p < 0 || size(version) <= p)[[unlikely]]{
+        if(p < 0 || size_or_zero(roots[static_cast<std::size_t>(version)]) <= p)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (PersistentLazyReversibleSplayTree).");
         }
     }
 
     void check_range(int version, int l, int r) const{
         check_version(version);
-        if(l < 0 || r < l || size(version) < r)[[unlikely]]{
+        if(l < 0 || r < l || size_or_zero(roots[static_cast<std::size_t>(version)]) < r)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (PersistentLazyReversibleSplayTree).");
         }
     }
 
-    S get_rec(int node, int k, bool flip, const T& lazy) const{
-        const auto& current = nodes[static_cast<std::size_t>(node)];
-        int left = flip ? current.right : current.left;
-        int right = flip ? current.left : current.right;
-        bool child_flip = flip ^ current.reversed;
-        T child_lazy = MonoidActLen.composition(lazy, current.lazy);
-        int left_size = size_or_zero(left);
-        if(k < left_size) return get_rec(left, k, child_flip, child_lazy);
-        if(k == left_size) return MonoidActLen.mapping(lazy, current.value, 1);
-        return get_rec(right, k - left_size - 1, child_flip, child_lazy);
+    template<class F>
+    int make_version(F&& operation){
+        if(version_count == MAX_VERSION)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: version capacity exceeded (PersistentLazyReversibleSplayTree).");
+        }
+        int checkpoint = used;
+        try{
+            int root = operation();
+            roots[static_cast<std::size_t>(version_count)] = root;
+            return version_count++;
+        }catch(...){
+            used = checkpoint;
+            throw;
+        }
     }
 
-    S prod_rec(int node, int nl, int nr, int ql, int qr, bool flip, const T& lazy) const{
-        if(node == -1 || qr <= nl || nr <= ql) return MonoidActLen.e();
-        if(ql <= nl && nr <= qr){
-            S value = flip ? nodes[static_cast<std::size_t>(node)].rev_aggregate
-                           : nodes[static_cast<std::size_t>(node)].aggregate;
-            return MonoidActLen.mapping(lazy, value, nr - nl);
+    QueryResult combine(const QueryResult& left, const QueryResult& right) const{
+        if(left.length == 0) return right;
+        if(right.length == 0) return left;
+        return {
+            MonoidActLen.op(left.value, left.length, right.value, right.length),
+            left.length + right.length
+        };
+    }
+
+    T child_action(const T& action, const Node& current) const{
+        return current.has_lazy ? MonoidActLen.composition(action, current.lazy) : action;
+    }
+
+    S get_rec(int node, int k, bool flip, const T& action) const{
+        const auto& current = nodes[static_cast<std::size_t>(node)];
+        int left = flip ? current.right : current.left;
+        int right = flip ? current.left : current.right;
+        bool child_flip = flip ^ current.reversed;
+        T next_action = child_action(action, current);
+        int left_size = size_or_zero(left);
+        if(k < left_size) return get_rec(left, k, child_flip, next_action);
+        if(k == left_size) return MonoidActLen.mapping(action, current.value, 1);
+        return get_rec(right, k - left_size - 1, child_flip, next_action);
+    }
+
+    QueryResult prod_rec(int node, int l, int r, bool flip, const T& action) const{
+        if(l == r) return {MonoidActLen.e(), 0};
+        int node_size = size_or_zero(node);
+        if(l == 0 && r == node_size){
+            S value = flip ? rev_aggregate_or_e(node) : aggregate_or_e(node);
+            return {MonoidActLen.mapping(action, value, node_size), node_size};
         }
         const auto& current = nodes[static_cast<std::size_t>(node)];
         int left = flip ? current.right : current.left;
         int right = flip ? current.left : current.right;
         bool child_flip = flip ^ current.reversed;
-        T child_lazy = MonoidActLen.composition(lazy, current.lazy);
+        T next_action = child_action(action, current);
         int left_size = size_or_zero(left);
-        int mid = nl + left_size;
-        S result = prod_rec(left, nl, mid, ql, qr, child_flip, child_lazy);
-        if(ql <= mid && mid < qr){
-            result = MonoidActLen.op(result, std::max(0, std::min(mid, qr) - std::max(nl, ql)), MonoidActLen.mapping(lazy, current.value, 1), 1);
+        QueryResult result{MonoidActLen.e(), 0};
+        if(l < left_size){
+            result = prod_rec(left, l, std::min(r, left_size), child_flip, next_action);
         }
-        S right_result = prod_rec(right, mid + 1, nr, ql, qr, child_flip, child_lazy);
-        int left_len = std::max(0, std::min(mid + 1, qr) - std::max(nl, ql));
-        int right_len = std::max(0, std::min(nr, qr) - std::max(mid + 1, ql));
-        return MonoidActLen.op(result, left_len, right_result, right_len);
+        if(l <= left_size && left_size < r){
+            result = combine(result, {MonoidActLen.mapping(action, current.value, 1), 1});
+        }
+        if(left_size + 1 < r){
+            result = combine(
+                result,
+                prod_rec(
+                    right,
+                    std::max(0, l - left_size - 1),
+                    r - left_size - 1,
+                    child_flip,
+                    next_action
+                )
+            );
+        }
+        return result;
+    }
+
+    void collect(int node, bool flip, const T& action, std::vector<S>& result) const{
+        if(node == -1) return;
+        const auto& current = nodes[static_cast<std::size_t>(node)];
+        int left = flip ? current.right : current.left;
+        int right = flip ? current.left : current.right;
+        bool child_flip = flip ^ current.reversed;
+        T next_action = child_action(action, current);
+        collect(left, child_flip, next_action, result);
+        result.push_back(MonoidActLen.mapping(action, current.value, 1));
+        collect(right, child_flip, next_action, result);
     }
 
 public:
@@ -248,6 +330,9 @@ public:
     }
 
     explicit PersistentLazyReversibleSplayTree(const std::vector<S>& values) : PersistentLazyReversibleSplayTree(){
+        if(values.size() > static_cast<std::size_t>(MAX_NODE))[[unlikely]]{
+            throw std::runtime_error("library assertion fault: capacity exceeded (PersistentLazyReversibleSplayTree).");
+        }
         roots[0] = build(values, 0, static_cast<int>(values.size()));
     }
 
@@ -266,45 +351,62 @@ public:
 
     int insert(int p, const S& value, int version = 0){
         check_insert_position(version, p);
-        auto [left, right] = split(roots[static_cast<std::size_t>(version)], p);
-        return register_root(merge(merge(left, new_node(value)), right));
+        return make_version([&]{
+            auto [left, right] = split(roots[static_cast<std::size_t>(version)], p);
+            int middle = new_node(value);
+            return merge(merge(left, middle), right);
+        });
     }
 
     int erase(int p, int version = 0){
         check_position(version, p);
-        auto [left, right] = split(roots[static_cast<std::size_t>(version)], p);
-        auto [mid, tail] = split(right, 1);
-        (void)mid;
-        return register_root(merge(left, tail));
+        return make_version([&]{
+            auto [left, right] = split(roots[static_cast<std::size_t>(version)], p);
+            auto [middle, tail] = split(right, 1);
+            (void)middle;
+            return merge(left, tail);
+        });
     }
 
     int set(int p, const S& value, int version = 0){
         check_position(version, p);
-        auto [left, right] = split(roots[static_cast<std::size_t>(version)], p);
-        auto [mid, tail] = split(right, 1);
-        auto& current = nodes[static_cast<std::size_t>(mid)];
-        current.value = value;
-        current.aggregate = value;
-        current.rev_aggregate = value;
-        current.lazy = MonoidActLen.id();
-        current.reversed = false;
-        return register_root(merge(merge(left, mid), tail));
+        return make_version([&]{
+            auto [left, right] = split(roots[static_cast<std::size_t>(version)], p);
+            auto [middle, tail] = split(right, 1);
+            middle = copy_node(middle);
+            auto& current = nodes[static_cast<std::size_t>(middle)];
+            current.value = value;
+            current.aggregate = value;
+            current.rev_aggregate = value;
+            current.reversed = false;
+            current.has_lazy = false;
+            current.lazy = MonoidActLen.id();
+            return merge(merge(left, middle), tail);
+        });
     }
 
     int apply(int l, int r, const T& f, int version = 0){
         check_range(version, l, r);
-        auto [left, right] = split(roots[static_cast<std::size_t>(version)], l);
-        auto [mid, tail] = split(right, r - l);
-        all_apply(mid, f);
-        return register_root(merge(merge(left, mid), tail));
+        return make_version([&]{
+            if(l == r) return roots[static_cast<std::size_t>(version)];
+            auto [left, right] = split(roots[static_cast<std::size_t>(version)], l);
+            auto [middle, tail] = split(right, r - l);
+            middle = copy_node(middle);
+            all_apply(middle, f);
+            return merge(merge(left, middle), tail);
+        });
     }
 
     int reverse(int l, int r, int version = 0){
         check_range(version, l, r);
-        auto [left, right] = split(roots[static_cast<std::size_t>(version)], l);
-        auto [mid, tail] = split(right, r - l);
-        toggle(mid);
-        return register_root(merge(merge(left, mid), tail));
+        return make_version([&]{
+            if(l == r) return roots[static_cast<std::size_t>(version)];
+            auto [left, right] = split(roots[static_cast<std::size_t>(version)], l);
+            auto [middle, tail] = split(right, r - l);
+            middle = copy_node(middle);
+            toggle(middle);
+            return merge(merge(left, middle), tail);
+        });
     }
 
     S get(int p, int version = 0) const{
@@ -314,7 +416,9 @@ public:
 
     S prod(int l, int r, int version = 0) const{
         check_range(version, l, r);
-        return prod_rec(roots[static_cast<std::size_t>(version)], 0, size(version), l, r, false, MonoidActLen.id());
+        return prod_rec(
+            roots[static_cast<std::size_t>(version)], l, r, false, MonoidActLen.id()
+        ).value;
     }
 
     S all_prod(int version = 0) const{
@@ -325,8 +429,8 @@ public:
     std::vector<S> to_vector(int version = 0) const{
         check_version(version);
         std::vector<S> result;
-        result.reserve(static_cast<std::size_t>(size(version)));
-        for(int i = 0; i < size(version); i++) result.push_back(get(i, version));
+        result.reserve(static_cast<std::size_t>(size_or_zero(roots[static_cast<std::size_t>(version)])));
+        collect(roots[static_cast<std::size_t>(version)], false, MonoidActLen.id(), result);
         return result;
     }
 };
