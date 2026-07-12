@@ -1,49 +1,74 @@
+#pragma once
 
+#include <cstdint>
+#include <istream>
+#include <ostream>
+#include <stdexcept>
+#include <utility>
 
 template<int mod>
 struct Modint{
     static_assert(mod >= 1);
+
     private:
-        long long _val;
+        using u32 = std::uint32_t;
+        using u64 = std::uint64_t;
+
+        u32 _val;
+
+        static constexpr u32 umod(){
+            return static_cast<u32>(mod);
+        }
 
         static constexpr bool is_prime_constexpr(int n){
-            if (n <= 1) return false;
-            if (n == 2) return true;
-            if (n % 2 == 0) return false;
-
-            for (long long i = 3; i * i <= n; i += 2) {
-                if (n % i == 0) return false;
+            if(n <= 1) return false;
+            if(n == 2) return true;
+            if(n % 2 == 0) return false;
+            for(long long i = 3; i * i <= n; i += 2){
+                if(n % i == 0) return false;
             }
             return true;
         }
 
         static long long inv_gcd(long long a, long long m){
             a %= m;
-            if (a < 0) a += m;
+            if(a < 0) a += m;
             long long b = m;
             long long u = 1, v = 0;
-            while (b) {
+            while(b){
                 long long t = a / b;
                 a -= t * b;
                 std::swap(a, b);
                 u -= t * v;
                 std::swap(u, v);
             }
-            if(a != 1)[[unlikely]]{
+            if(a != 1) [[unlikely]] {
                 throw std::runtime_error("library assertion fault: gcd is not 1 (inv).");
             }
             u %= m;
-            if (u < 0) u += m;
+            if(u < 0) u += m;
             return u;
         }
 
     public:
+        static constexpr int get_mod(){
+            return mod;
+        }
 
-        Modint(long long v = 0){
-            _val = v % mod;
-            if(_val < 0){
-                _val += mod;
+        Modint() : _val(0) {}
+
+        Modint(long long v){
+            long long x = v % mod;
+            if(x < 0){
+                x += mod;
             }
+            _val = static_cast<u32>(x);
+        }
+
+        static Modint raw(int v){
+            Modint x;
+            x._val = static_cast<u32>(v);
+            return x;
         }
 
         Modint pow(long long n)const{
@@ -51,7 +76,7 @@ struct Modint{
                 throw std::runtime_error("library assertion fault: negative exponent (pow).");
             }
             Modint res(1);
-            Modint a(_val);
+            Modint a = *this;
             while(n > 0){
                 if(n & 1){
                     res *= a;
@@ -63,8 +88,8 @@ struct Modint{
         }
 
         Modint inv()const{
-            if constexpr (is_prime_constexpr(mod)){
-                if(_val == 0)[[unlikely]]{
+            if constexpr(is_prime_constexpr(mod)){
+                if(_val == 0) [[unlikely]] {
                     throw std::runtime_error("library assertion fault: existence violation (inv).");
                 }
                 return pow(mod - 2);
@@ -73,30 +98,65 @@ struct Modint{
             }
         }
 
-
         Modint& operator+=(const Modint& rhs){
             _val += rhs._val;
-            if(_val >= mod){
-                _val -= mod;
+            if(_val >= umod()){
+                _val -= umod();
             }
             return *this;
         }
 
         Modint& operator-=(const Modint& rhs){
-            _val -= rhs._val;
-            if(_val < 0){
-                _val += mod;
+            if(_val < rhs._val){
+                _val += umod();
             }
+            _val -= rhs._val;
             return *this;
         }
 
         Modint& operator*=(const Modint& rhs){
-            _val = _val * rhs._val % mod;
+            _val = static_cast<u32>(static_cast<u64>(_val) * rhs._val % umod());
             return *this;
         }
 
         Modint& operator/=(const Modint& rhs){
             return *this *= rhs.inv();
+        }
+
+        Modint operator+()const{
+            return *this;
+        }
+
+        Modint operator-()const{
+            return Modint(0) - *this;
+        }
+
+        Modint& operator++(){
+            _val++;
+            if(_val == umod()){
+                _val = 0;
+            }
+            return *this;
+        }
+
+        Modint& operator--(){
+            if(_val == 0){
+                _val = umod();
+            }
+            _val--;
+            return *this;
+        }
+
+        Modint operator++(int){
+            Modint res = *this;
+            ++*this;
+            return res;
+        }
+
+        Modint operator--(int){
+            Modint res = *this;
+            --*this;
+            return res;
         }
 
         friend Modint operator+(Modint lhs, const Modint& rhs){
@@ -115,8 +175,16 @@ struct Modint{
             return lhs /= rhs;
         }
 
+        friend bool operator==(const Modint& lhs, const Modint& rhs){
+            return lhs._val == rhs._val;
+        }
+
+        friend bool operator!=(const Modint& lhs, const Modint& rhs){
+            return !(lhs == rhs);
+        }
+
         int val()const{
-            return _val;
+            return static_cast<int>(_val);
         }
 
         friend std::istream& operator>>(std::istream& is, Modint& x){
