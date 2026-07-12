@@ -2,7 +2,9 @@
 
 #include <array>
 #include <cassert>
+#include <iostream>
 #include <random>
+#include <string>
 #include <vector>
 #include "../../src/structure/dsu/dsu.hpp"
 #include "../../src/structure/dsu/rollback_dsu.hpp"
@@ -53,6 +55,35 @@ void compare_all(const RollbackDSU<20, 2000>& dsu, const NaiveDSU& naive){
 }
 
 int main(){
+    int n, q;
+    if(std::cin >> n >> q){
+        DSU<128> dsu(n);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "MERGE"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << dsu.merge(u, v) << '\n';
+            }else if(type == "SAME"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << dsu.same(u, v) << '\n';
+            }else if(type == "SIZE"){
+                int v;
+                std::cin >> v;
+                std::cout << dsu.component_size(v) << '\n';
+            }else if(type == "GROUPS"){
+                std::cout << dsu.groups() << '\n';
+            }else if(type == "LEADER"){
+                int v;
+                std::cin >> v;
+                std::cout << dsu.leader(v) << '\n';
+            }
+        }
+        return 0;
+    }
+
     {
         DSU<10> dsu(6);
         assert(dsu.groups() == 6);

@@ -1,7 +1,9 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "../../src/structure/other/fenwick_tree_2d.hpp"
@@ -76,6 +78,46 @@ void test_exceptions(){
 }
 
 int main(){
+    int h, w, q;
+    if(std::cin >> h >> w >> q){
+        std::vector<std::vector<long long>> a(
+            static_cast<std::size_t>(h),
+            std::vector<long long>(static_cast<std::size_t>(w))
+        );
+        for(auto& row: a){
+            for(auto& x: row) std::cin >> x;
+        }
+        FenwickTree2D<long long, 32, 32> fw(a);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "ADD"){
+                int y, x;
+                long long value;
+                std::cin >> y >> x >> value;
+                fw.add(y, x, value);
+            }else if(type == "SET"){
+                int y, x;
+                long long value;
+                std::cin >> y >> x >> value;
+                fw.set(y, x, value);
+            }else if(type == "GET"){
+                int y, x;
+                std::cin >> y >> x;
+                std::cout << fw.get(y, x) << '\n';
+            }else if(type == "SUM"){
+                int y1, x1, y2, x2;
+                std::cin >> y1 >> x1 >> y2 >> x2;
+                std::cout << fw.sum(y1, x1, y2, x2) << '\n';
+            }else if(type == "PREFIX"){
+                int y, x;
+                std::cin >> y >> x;
+                std::cout << fw.prefix_sum(y, x) << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_basic();
     test_empty();
     test_exceptions();

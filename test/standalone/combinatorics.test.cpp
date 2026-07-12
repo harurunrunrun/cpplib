@@ -1,7 +1,9 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 
 #include "../../src/algorithm/math/combinatorics.hpp"
 #include "../../src/structure/modint/modint.hpp"
@@ -68,6 +70,27 @@ void test_exceptions(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        Combinatorics<mint, 1000> comb;
+        while(q--){
+            std::string type;
+            int n, k;
+            std::cin >> type >> n;
+            if(type == "FACT") std::cout << comb.factorial(n) << '\n';
+            if(type == "IFACT") std::cout << comb.inverse_factorial(n) << '\n';
+            if(type == "INV") std::cout << comb.inverse(n) << '\n';
+            if(type == "BELL") std::cout << comb.bell_number(n) << '\n';
+            if(type == "PERM" || type == "COMB" || type == "HOM"){
+                std::cin >> k;
+                if(type == "PERM") std::cout << comb.permutation(n, k) << '\n';
+                if(type == "COMB") std::cout << comb.combination(n, k) << '\n';
+                if(type == "HOM") std::cout << comb.homogeneous(n, k) << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_basic();
     test_comb_perm();
     test_bell();

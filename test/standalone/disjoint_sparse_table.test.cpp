@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -95,6 +96,27 @@ void test_exceptions(){
 }
 
 int main(){
+    int n, q;
+    if(std::cin >> n >> q){
+        std::vector<long long> values(static_cast<std::size_t>(n));
+        for(auto& x: values) std::cin >> x;
+        std::vector<int> xor_values(values.begin(), values.end());
+        std::vector<std::string> words(static_cast<std::size_t>(n));
+        for(auto& word: words) std::cin >> word;
+        DisjointSparseTable<add_monoid, 256> sum(values);
+        DisjointSparseTable<xor_monoid, 256> bit_xor(xor_values);
+        DisjointSparseTable<string_monoid, 256> concat(words);
+        while(q--){
+            std::string type;
+            int l, r;
+            std::cin >> type >> l >> r;
+            if(type == "SUM") std::cout << sum.prod(l, r) << '\n';
+            if(type == "XOR") std::cout << bit_xor.prod(l, r) << '\n';
+            if(type == "CONCAT") std::cout << concat.prod(l, r) << '\n';
+        }
+        return 0;
+    }
+
     test_add();
     test_non_commutative();
     test_xor();

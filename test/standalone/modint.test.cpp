@@ -1,8 +1,10 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 #include "../../src/structure/modint/modint.hpp"
 
@@ -76,6 +78,36 @@ void test_stream(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            std::string type;
+            long long a, b;
+            std::cin >> type >> a;
+            if(type == "POW"){
+                std::cin >> b;
+                std::cout << mint(a).pow(b) << '\n';
+            }else if(type == "INV"){
+                std::cout << mint(a).inv() << '\n';
+            }else if(type == "INV12"){
+                std::cout << Modint<12>(a).inv() << '\n';
+            }else if(type == "INC"){
+                mint x(a);
+                std::cout << ++x << '\n';
+            }else if(type == "DEC"){
+                mint x(a);
+                std::cout << --x << '\n';
+            }else{
+                std::cin >> b;
+                if(type == "ADD") std::cout << mint(a) + mint(b) << '\n';
+                if(type == "SUB") std::cout << mint(a) - mint(b) << '\n';
+                if(type == "MUL") std::cout << mint(a) * mint(b) << '\n';
+                if(type == "DIV") std::cout << mint(a) / mint(b) << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_basic_arithmetic();
     test_pow_inv();
     test_increment_decrement();

@@ -1,7 +1,9 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "../../src/structure/other/fenwick_tree.hpp"
@@ -59,6 +61,41 @@ void test_exceptions(){
 }
 
 int main(){
+    int n, q;
+    if(std::cin >> n >> q){
+        std::vector<long long> a(static_cast<std::size_t>(n));
+        for(auto& x: a) std::cin >> x;
+        FenwickTree<long long, 256> fw(a);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "ADD"){
+                int k;
+                long long x;
+                std::cin >> k >> x;
+                fw.add(k, x);
+            }else if(type == "SET"){
+                int k;
+                long long x;
+                std::cin >> k >> x;
+                fw.set(k, x);
+            }else if(type == "GET"){
+                int k;
+                std::cin >> k;
+                std::cout << fw.get(k) << '\n';
+            }else if(type == "SUM"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << fw.sum(l, r) << '\n';
+            }else if(type == "PREFIX"){
+                int r;
+                std::cin >> r;
+                std::cout << fw.prefix_sum(r) << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_basic();
     test_empty();
     test_exceptions();

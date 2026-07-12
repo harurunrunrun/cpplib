@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <cstdint>
+#include <iostream>
+#include <string>
 
 #include "../../src/structure/modint/exponentiable_modint.hpp"
 
@@ -65,6 +67,32 @@ void test_abc228_e_shape(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        using mint10 = ExponentiableModint<10>;
+        using mint12 = ExponentiableModint<12>;
+        using mint998 = ExponentiableModint<998244353>;
+        while(q--){
+            std::string type;
+            std::uint64_t a, b, c;
+            std::cin >> type >> a >> b;
+            if(type == "POW10") std::cout << mint10(a).pow(mint10(b)).val() << '\n';
+            if(type == "POW12") std::cout << mint12(a).pow(mint12(b)).val() << '\n';
+            if(type == "POW998") std::cout << mint998(a).pow(mint998(b)).val() << '\n';
+            if(type == "ADD10") std::cout << (mint10(a) + mint10(b)).val() << '\n';
+            if(type == "MUL10") std::cout << (mint10(a) * mint10(b)).val() << '\n';
+            if(type == "NEST10"){
+                std::cin >> c;
+                std::cout << mint10(a).pow(mint10(b).pow(mint10(c))).val() << '\n';
+            }
+            if(type == "NEST998"){
+                std::cin >> c;
+                std::cout << mint998(a).pow(mint998(b).pow(mint998(c))).val() << '\n';
+            }
+        }
+        return 0;
+    }
+
     static_assert(exponentiable_modint_totient(1) == 1);
     static_assert(exponentiable_modint_totient(10) == 4);
     static_assert(exponentiable_modint_totient(998244353) == 998244352);

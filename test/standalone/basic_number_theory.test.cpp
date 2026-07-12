@@ -1,7 +1,9 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "../../src/algorithm/math/basic_number_theory.hpp"
@@ -86,6 +88,67 @@ void test_exceptions(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "GCD" || type == "LCM" || type == "EXT"){
+                long long a, b;
+                std::cin >> a >> b;
+                if(type == "GCD") std::cout << math::gcd(a, b) << '\n';
+                if(type == "LCM") std::cout << math::lcm(a, b) << '\n';
+                if(type == "EXT"){
+                    const auto res = math::ext_gcd(a, b);
+                    std::cout << res.g << ' ' << a * res.x + b * res.y << '\n';
+                }
+            }else if(type == "POW"){
+                long long x, n, mod;
+                std::cin >> x >> n >> mod;
+                std::cout << math::pow_mod(x, n, mod) << '\n';
+            }else if(type == "INV"){
+                long long a, mod;
+                std::cin >> a >> mod;
+                std::cout << math::inv_mod(a, mod) << '\n';
+            }else if(type == "ISQRT"){
+                long long n;
+                std::cin >> n;
+                std::cout << math::isqrt(n) << '\n';
+            }else if(type == "DIVISORS"){
+                long long n;
+                std::cin >> n;
+                const auto values = math::divisors(n);
+                std::cout << values.size();
+                for(long long value: values) std::cout << ' ' << value;
+                std::cout << '\n';
+            }else if(type == "QUOTIENT"){
+                long long n;
+                std::cin >> n;
+                const auto ranges = math::quotient_ranges(n);
+                std::cout << ranges.size();
+                for(const auto& range: ranges){
+                    std::cout << ' ' << range.l << ' ' << range.r << ' ' << range.value;
+                }
+                std::cout << '\n';
+            }else if(type == "TODIG"){
+                unsigned long long n;
+                int base;
+                std::cin >> n >> base;
+                const auto digits = math::to_base_digits(n, base);
+                std::cout << digits.size();
+                for(int digit: digits) std::cout << ' ' << digit;
+                std::cout << '\n';
+            }else if(type == "FROM"){
+                int base, count;
+                std::cin >> base >> count;
+                std::vector<int> digits(static_cast<std::size_t>(count));
+                for(int& digit: digits) std::cin >> digit;
+                std::cout << math::from_base_digits(digits, base) << '\n';
+            }
+        }
+        return 0;
+    }
+
     test_base_digits();
     test_divisors_and_quotients();
     test_gcd_lcm_extgcd();

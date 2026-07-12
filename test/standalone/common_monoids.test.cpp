@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
+#include <string>
 #include <vector>
 
 #include "../../src/structure/segtree/segtree.hpp"
@@ -65,6 +67,38 @@ void test_segtree_other(){
 }
 
 int main(){
+    int q;
+    if(std::cin >> q){
+        while(q--){
+            std::string type;
+            long long a, b;
+            std::cin >> type;
+            if(type.size() > 1 && type[0] == 'E'){
+                if(type == "EADD") std::cout << add_monoid.e() << '\n';
+                if(type == "EMUL") std::cout << mul_monoid.e() << '\n';
+                if(type == "EMIN") std::cout << min_monoid.e() << '\n';
+                if(type == "EMAX") std::cout << max_monoid.e() << '\n';
+                if(type == "EGCD") std::cout << gcd_monoid.e() << '\n';
+                if(type == "ELCM") std::cout << lcm_monoid.e() << '\n';
+                if(type == "EXOR") std::cout << xor_monoid.e() << '\n';
+                if(type == "EAND") std::cout << bit_and_monoid.e() << '\n';
+                if(type == "EOR") std::cout << bit_or_monoid.e() << '\n';
+                continue;
+            }
+            std::cin >> a >> b;
+            if(type == "ADD") std::cout << add_monoid.op(a, b) << '\n';
+            if(type == "MUL") std::cout << mul_monoid.op(a, b) << '\n';
+            if(type == "MIN") std::cout << min_monoid.op(static_cast<int>(a), static_cast<int>(b)) << '\n';
+            if(type == "MAX") std::cout << max_monoid.op(static_cast<int>(a), static_cast<int>(b)) << '\n';
+            if(type == "GCD") std::cout << gcd_monoid.op(static_cast<int>(a), static_cast<int>(b)) << '\n';
+            if(type == "LCM") std::cout << lcm_monoid.op(static_cast<int>(a), static_cast<int>(b)) << '\n';
+            if(type == "XOR") std::cout << xor_monoid.op(static_cast<int>(a), static_cast<int>(b)) << '\n';
+            if(type == "AND") std::cout << bit_and_monoid.op(static_cast<int>(a), static_cast<int>(b)) << '\n';
+            if(type == "OR") std::cout << bit_or_monoid.op(static_cast<int>(a), static_cast<int>(b)) << '\n';
+        }
+        return 0;
+    }
+
     test_direct();
     test_segtree_add();
     test_segtree_min_max();
