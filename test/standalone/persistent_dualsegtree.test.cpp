@@ -3,7 +3,10 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
+#include <memory>
 #include <random>
+#include <string>
 #include <vector>
 
 #include "../../src/structure/segtree/partially_persistent_dualsegtree.hpp"
@@ -42,6 +45,37 @@ Affine id(){
 constexpr Monoid_Act<op, e, mapping, composition, id> affine{};
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<std::int64_t> initial(static_cast<std::size_t>(input_n));
+        for(auto& value: initial) std::cin >> value;
+        auto seg = std::make_unique<PersistentDualSegtree<affine, 128, 2048>>(initial);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "APPLY"){
+                int version, l, r;
+                Affine f;
+                std::cin >> version >> l >> r >> f.a >> f.b;
+                std::cout << seg->apply(version, l, r, f) << '\n';
+            }else if(type == "SET"){
+                int version, k;
+                std::int64_t value;
+                std::cin >> version >> k >> value;
+                std::cout << seg->set(version, k, value) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << seg->fork(version) << '\n';
+            }else if(type == "GET"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << seg->get(version, k) << '\n';
+            }
+        }
+        return 0;
+    }
+
     constexpr int n = 41;
     std::mt19937 rng(1618033);
     std::vector<std::int64_t> initial(n);

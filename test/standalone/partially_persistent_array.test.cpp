@@ -3,8 +3,10 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <iostream>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "../../src/structure/array/partially_persistent_array.hpp"
 
@@ -16,6 +18,36 @@ struct Box{
 };
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::vector<std::int64_t> initial(static_cast<std::size_t>(input_n));
+        for(auto& value: initial) std::cin >> value;
+        PartiallyPersistentArray<std::int64_t, 128, 2048> array(initial);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int k;
+                std::int64_t value;
+                std::cin >> k >> value;
+                std::cout << array.set(k, value) << '\n';
+            }else if(type == "GET"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << array.get(version, k) << '\n';
+            }else if(type == "CURRENT"){
+                int k;
+                std::cin >> k;
+                std::cout << array.get(k) << '\n';
+            }else if(type == "VERSIONS"){
+                std::cout << array.versions() << '\n';
+            }else if(type == "LATEST"){
+                std::cout << array.latest_version() << '\n';
+            }
+        }
+        return 0;
+    }
+
     constexpr int N = 37;
     constexpr int MAX_UPDATE = 5000;
 

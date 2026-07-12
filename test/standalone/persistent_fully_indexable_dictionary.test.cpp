@@ -2,13 +2,62 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
+#include <memory>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/partially_persistent_fully_indexable_dictionary.hpp"
 #include "../../src/structure/wavelet_matrix/persistent_fully_indexable_dictionary.hpp"
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        std::string bits;
+        std::cin >> bits;
+        std::vector<bool> initial(static_cast<std::size_t>(input_n));
+        for(int k = 0; k < input_n; k++){
+            initial[static_cast<std::size_t>(k)] = bits[static_cast<std::size_t>(k)] == '1';
+        }
+        auto dictionary =
+            std::make_unique<PersistentFullyIndexableDictionary<512, 2048>>(initial);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "SET"){
+                int version, k, value;
+                std::cin >> version >> k >> value;
+                std::cout << dictionary->set(version, k, value != 0) << '\n';
+            }else if(type == "FLIP"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << dictionary->flip(version, k) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << dictionary->fork(version) << '\n';
+            }else if(type == "GET"){
+                int version, k;
+                std::cin >> version >> k;
+                std::cout << dictionary->get(version, k) << '\n';
+            }else if(type == "RANK"){
+                int version, value, r;
+                std::cin >> version >> value >> r;
+                std::cout << dictionary->rank(version, value != 0, r) << '\n';
+            }else if(type == "RANGE"){
+                int version, value, l, r;
+                std::cin >> version >> value >> l >> r;
+                std::cout << dictionary->rank(version, value != 0, l, r) << '\n';
+            }else if(type == "SELECT"){
+                int version, value, occurrence;
+                std::cin >> version >> value >> occurrence;
+                std::cout << dictionary->select(version, value != 0, occurrence) << '\n';
+            }
+        }
+        return 0;
+    }
+
     constexpr int n = 257;
     constexpr int max_version = 1800;
     std::mt19937 rng(1234567);

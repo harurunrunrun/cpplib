@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <random>
+#include <string>
 #include <vector>
 #include "../../src/structure/trie/persistent_binary_trie.hpp"
 
@@ -26,6 +28,61 @@ int count_naive(const std::vector<int>& values, int x){
 }
 
 int main(){
+    int input_q;
+    if(std::cin >> input_q){
+        PersistentBinaryTrie<int, 20, 50000, 2048> trie;
+        auto print_optional = [](const std::optional<int>& value){
+            if(value) std::cout << *value << '\n';
+            else std::cout << "NONE\n";
+        };
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "INSERT"){
+                int version, value;
+                std::cin >> version >> value;
+                std::cout << trie.insert(version, value) << '\n';
+            }else if(type == "ERASE"){
+                int version, value;
+                std::cin >> version >> value;
+                std::cout << trie.erase(version, value) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << trie.fork(version) << '\n';
+            }else if(type == "SIZE"){
+                int version;
+                std::cin >> version;
+                std::cout << trie.size(version) << '\n';
+            }else if(type == "COUNT"){
+                int version, value;
+                std::cin >> version >> value;
+                std::cout << trie.count(version, value) << '\n';
+            }else if(type == "CONTAINS"){
+                int version, value;
+                std::cin >> version >> value;
+                std::cout << trie.contains(version, value) << '\n';
+            }else if(type == "KTH"){
+                int version, k, xor_value;
+                std::cin >> version >> k >> xor_value;
+                print_optional(trie.kth(version, k, xor_value));
+            }else if(type == "MIN"){
+                int version, xor_value;
+                std::cin >> version >> xor_value;
+                print_optional(trie.min_element(version, xor_value));
+            }else if(type == "MAX"){
+                int version, xor_value;
+                std::cin >> version >> xor_value;
+                print_optional(trie.max_element(version, xor_value));
+            }else if(type == "LESS"){
+                int version, value, xor_value;
+                std::cin >> version >> value >> xor_value;
+                std::cout << trie.count_less(version, value, xor_value) << '\n';
+            }
+        }
+        return 0;
+    }
+
     PersistentBinaryTrie<int, 10, 30000, 1024> trie;
     std::vector<std::vector<int>> versions(1);
     std::mt19937 rng(20260718);

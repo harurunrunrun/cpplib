@@ -4,8 +4,10 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <numeric>
 #include <random>
+#include <string>
 #include <vector>
 #include "../../src/structure/dsu/persistent_dsu.hpp"
 
@@ -44,6 +46,41 @@ struct NaiveDSU{
 };
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        PersistentDSU<128, 2048> dsu(input_n);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "MERGE"){
+                int version, u, v;
+                std::cin >> version >> u >> v;
+                std::cout << dsu.merge(version, u, v) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << dsu.fork(version) << '\n';
+            }else if(type == "SAME"){
+                int version, u, v;
+                std::cin >> version >> u >> v;
+                std::cout << dsu.same(version, u, v) << '\n';
+            }else if(type == "SIZE"){
+                int version, v;
+                std::cin >> version >> v;
+                std::cout << dsu.component_size(version, v) << '\n';
+            }else if(type == "GROUPS"){
+                int version;
+                std::cin >> version;
+                std::cout << dsu.groups(version) << '\n';
+            }else if(type == "LEADER"){
+                int version, v;
+                std::cin >> version >> v;
+                std::cout << dsu.leader(version, v) << '\n';
+            }
+        }
+        return 0;
+    }
+
     constexpr int N = 9;
     PersistentDSU<N, 300> dsu(N);
     std::vector<NaiveDSU> naive(1, NaiveDSU(N));

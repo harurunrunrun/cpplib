@@ -1,10 +1,12 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <map>
 #include <queue>
 #include <random>
 #include <set>
+#include <string>
 #include <utility>
 #include <vector>
 #include "../../src/structure/graph/offline_dynamic_connectivity.hpp"
@@ -42,6 +44,40 @@ bool naive_same(
 }
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        OfflineDynamicConnectivity<128, 2048, 8192> dc(input_n, input_q);
+        struct Query{ int type = 0, u = 0, v = 0; };
+        std::vector<Query> queries(static_cast<std::size_t>(input_q));
+        for(int time = 0; time < input_q; time++){
+            std::string type;
+            int u, v;
+            std::cin >> type;
+            if(type == "ADD"){
+                std::cin >> u >> v;
+                dc.add_edge(time, u, v);
+            }else if(type == "ERASE"){
+                std::cin >> u >> v;
+                dc.erase_edge(time, u, v);
+            }else if(type == "SAME"){
+                std::cin >> u >> v;
+                queries[static_cast<std::size_t>(time)] = {1, u, v};
+            }else if(type == "SIZE"){
+                std::cin >> u;
+                queries[static_cast<std::size_t>(time)] = {2, u, 0};
+            }else if(type == "GROUPS"){
+                queries[static_cast<std::size_t>(time)] = {3, 0, 0};
+            }
+        }
+        dc.run([&](int time, const auto& dsu){
+            const auto& query = queries[static_cast<std::size_t>(time)];
+            if(query.type == 1) std::cout << dsu.same(query.u, query.v) << '\n';
+            else if(query.type == 2) std::cout << dsu.component_size(query.u) << '\n';
+            else if(query.type == 3) std::cout << dsu.groups() << '\n';
+        });
+        return 0;
+    }
+
     {
         OfflineDynamicConnectivity<2, 4, 20> dc(2, 4);
         dc.add_edge(0, 0, 1);

@@ -1,8 +1,10 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <limits>
 #include <random>
+#include <string>
 #include <utility>
 #include <vector>
 #include "../../src/structure/convex_hull_trick/persistent_convex_hull_trick.hpp"
@@ -14,6 +16,35 @@ long long naive_query(const std::vector<std::pair<long long, long long>>& lines,
 }
 
 int main(){
+    int input_q;
+    if(std::cin >> input_q){
+        PersistentConvexHullTrick<512, 2048, 40000> cht;
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "ADD"){
+                int version;
+                long long a, b;
+                std::cin >> version >> a >> b;
+                std::cout << cht.add_line(version, a, b) << '\n';
+            }else if(type == "FORK"){
+                int version;
+                std::cin >> version;
+                std::cout << cht.fork(version) << '\n';
+            }else if(type == "QUERY"){
+                int version;
+                long long x;
+                std::cin >> version >> x;
+                std::cout << cht.query(version, x) << '\n';
+            }else if(type == "EMPTY"){
+                int version;
+                std::cin >> version;
+                std::cout << cht.empty(version) << '\n';
+            }
+        }
+        return 0;
+    }
+
     PersistentConvexHullTrick<256, 512, 6000> cht;
     std::vector<std::vector<std::pair<long long, long long>>> naive(1);
     std::vector<long long> last_slope = {1000};

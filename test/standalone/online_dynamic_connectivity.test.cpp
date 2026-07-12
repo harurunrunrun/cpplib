@@ -1,9 +1,11 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <map>
 #include <queue>
 #include <random>
+#include <string>
 #include <utility>
 #include <vector>
 #include "../../src/structure/graph/online_dynamic_connectivity.hpp"
@@ -72,6 +74,39 @@ int naive_groups(int n, const std::map<std::pair<int, int>, int>& edge_count){
 }
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        OnlineDynamicConnectivity<128> graph(input_n);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "ADD"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << graph.add_edge(u, v) << '\n';
+            }else if(type == "ERASE"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << graph.erase_edge(u, v) << '\n';
+            }else if(type == "SAME"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << graph.same(u, v) << '\n';
+            }else if(type == "SIZE"){
+                int v;
+                std::cin >> v;
+                std::cout << graph.component_size(v) << '\n';
+            }else if(type == "MULT"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << graph.edge_multiplicity(u, v) << '\n';
+            }else if(type == "GROUPS"){
+                std::cout << graph.groups() << '\n';
+            }
+        }
+        return 0;
+    }
+
     {
         OnlineDynamicConnectivity<5> graph(4);
         assert(!graph.same(0, 1));

@@ -2,8 +2,10 @@
 
 #include <array>
 #include <cassert>
+#include <iostream>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "../../src/structure/dsu/partially_persistent_dsu.hpp"
 
@@ -47,6 +49,39 @@ void compare_all(const PartiallyPersistentDSU<30, 300>& dsu, int version, const 
 }
 
 int main(){
+    int input_n, input_q;
+    if(std::cin >> input_n >> input_q){
+        PartiallyPersistentDSU<128, 2048> dsu(input_n);
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "MERGE"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << dsu.merge(u, v) << '\n';
+            }else if(type == "SAME"){
+                int version, u, v;
+                std::cin >> version >> u >> v;
+                std::cout << dsu.same(version, u, v) << '\n';
+            }else if(type == "SIZE"){
+                int version, v;
+                std::cin >> version >> v;
+                std::cout << dsu.component_size(version, v) << '\n';
+            }else if(type == "GROUPS"){
+                int version;
+                std::cin >> version;
+                std::cout << dsu.groups(version) << '\n';
+            }else if(type == "LEADER"){
+                int version, v;
+                std::cin >> version >> v;
+                std::cout << dsu.leader(version, v) << '\n';
+            }else if(type == "LATEST"){
+                std::cout << dsu.latest_version() << '\n';
+            }
+        }
+        return 0;
+    }
+
     {
         PartiallyPersistentDSU<8, 4> dsu(5);
         assert(dsu.latest_version() == 0);
