@@ -258,6 +258,36 @@ public:
         return sum_less_encoded(l, r, encode(upper)) -
             sum_less_encoded(l, r, encode(lower));
     }
+    W sum_k_smallest(int l, int r, int k) const{
+        check_range(l, r, "library assertion fault: range violation (sum_k_smallest).");
+        if(k < 0 || r - l < k)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (sum_k_smallest).");
+        }
+        W result{};
+        for(int level = 0; level < BIT_WIDTH; level++){
+            int left_l = state->matrix[level].rank(false, l);
+            int left_r = state->matrix[level].rank(false, r);
+            int zero = left_r - left_l;
+            if(k <= zero){
+                l = left_l;
+                r = left_r;
+            }else{
+                result += state->prefix[level + 1][left_r] -
+                    state->prefix[level + 1][left_l];
+                k -= zero;
+                l = state->middle[level] + (l - left_l);
+                r = state->middle[level] + (r - left_r);
+            }
+        }
+        return result + state->prefix[BIT_WIDTH][l + k] - state->prefix[BIT_WIDTH][l];
+    }
+    W sum_k_largest(int l, int r, int k) const{
+        check_range(l, r, "library assertion fault: range violation (sum_k_largest).");
+        if(k < 0 || r - l < k)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (sum_k_largest).");
+        }
+        return sum(l, r) - sum_k_smallest(l, r, r - l - k);
+    }
 
     std::optional<T> prev_value(int l, int r, T upper) const{
         int count = range_freq(l, r, upper);

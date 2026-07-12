@@ -75,14 +75,18 @@ int range_freq(int l, int r, T lower, T upper) const
 W sum(int l, int r) const
 W range_sum(int l, int r, T upper) const
 W range_sum(int l, int r, T lower, T upper) const
+W sum_k_smallest(int l, int r, int k) const
+W sum_k_largest(int l, int r, int k) const
 ```
 
 `sum` は区間 $[l,r)$ の全重みの総和を返す。`range_sum` は値が `upper` 未満、または `[lower, upper)` に入る要素の重みの総和を返す。
 
+`sum_k_smallest` は区間 $[l,r)$ の小さい方から `k` 個の重みの総和を返す。`sum_k_largest` は大きい方から `k` 個。
+
 ## 時間計算量
 
 - `sum`: $O(1)$
-- `range_sum`: $O(\mathrm{BIT\_WIDTH})$
+- それ以外: $O(\mathrm{BIT\_WIDTH})$
 
 # 前後の値
 
