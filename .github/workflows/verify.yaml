@@ -7,6 +7,8 @@ on:
     paths:
       - "src/**"
       - "test/**"
+      - "scripts/**"
+      - "Makefile"
       - "docs/**"
       - ".competitive-verifier/**"
       - "config.toml"
@@ -16,6 +18,8 @@ on:
     paths:
       - "src/**"
       - "test/**"
+      - "scripts/**"
+      - "Makefile"
       - "docs/**"
       - ".competitive-verifier/**"
       - "config.toml"
@@ -47,6 +51,9 @@ jobs:
         with:
           python-version: "3.12"
           cache-pip: true
+
+      - name: Verify standalone generated assets
+        run: make standalone-assets
 
       - name: Resolve verify files
         uses: competitive-verifier/actions/oj-resolve@v2
