@@ -1,0 +1,98 @@
+---
+title: Weighted Wavelet Matrix
+documentation_of: ../src/structure/wavelet_matrix/weighted_wavelet_matrix.hpp
+---
+
+各要素に重みを持つ静的wavelet matrix。値で絞り込んだ重みの総和を求める。
+
+# テンプレート引数
+
+```cpp
+WeightedWaveletMatrix<T, W, MAX_SIZE, BIT_WIDTH>
+```
+
+- 整数型 `T`
+- 重みの型 `W`
+- 配列長の上限 `MAX_SIZE`
+- 使用するbit数 `BIT_WIDTH`。省略時は `T` のbit数
+
+符号付き整数では `BIT_WIDTH` を省略する。
+
+# コンストラクタ
+
+```cpp
+WeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
+```
+
+`values[k]` に重み `weights[k]` を対応させて構築する。
+
+## 時間計算量
+
+- $O(N\mathrm{BIT\_WIDTH})$
+
+# 要素取得
+
+```cpp
+T access(int k) const
+T operator[](int k) const
+```
+
+## 時間計算量
+
+- $O(\mathrm{BIT\_WIDTH})$
+
+# rank / k番目
+
+```cpp
+int rank(T value, int r) const
+int rank(T value, int l, int r) const
+T kth_smallest(int l, int r, int k) const
+T kth_largest(int l, int r, int k) const
+```
+
+`k` は0-indexed。
+
+## 時間計算量
+
+- $O(\mathrm{BIT\_WIDTH})$
+
+# 頻度
+
+```cpp
+int range_freq(int l, int r, T upper) const
+int range_freq(int l, int r, T lower, T upper) const
+```
+
+区間 $[l,r)$ にある `upper` 未満、または `[lower, upper)` の値の個数を返す。
+
+## 時間計算量
+
+- $O(\mathrm{BIT\_WIDTH})$
+
+# 重みの総和
+
+```cpp
+W sum(int l, int r) const
+W range_sum(int l, int r, T upper) const
+W range_sum(int l, int r, T lower, T upper) const
+```
+
+`sum` は区間 $[l,r)$ の全重みの総和を返す。`range_sum` は値が `upper` 未満、または `[lower, upper)` に入る要素の重みの総和を返す。
+
+## 時間計算量
+
+- `sum`: $O(1)$
+- `range_sum`: $O(\mathrm{BIT\_WIDTH})$
+
+# 前後の値
+
+```cpp
+optional<T> prev_value(int l, int r, T upper) const
+optional<T> next_value(int l, int r, T lower) const
+```
+
+区間内の `upper` 未満の最大値、または `lower` 以上の最小値を返す。存在しない場合は `nullopt`。
+
+## 時間計算量
+
+- $O(\mathrm{BIT\_WIDTH})$

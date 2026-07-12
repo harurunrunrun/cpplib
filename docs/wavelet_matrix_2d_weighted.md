@@ -1,0 +1,61 @@
+---
+title: Weighted Wavelet Matrix 2D
+documentation_of: ../src/structure/wavelet_matrix/wavelet_matrix_2d_weighted.hpp
+---
+
+重み付き点集合に対する静的2次元wavelet matrix。矩形内の点数と重みの総和を求める。
+
+# テンプレート引数
+
+```cpp
+WaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH>
+```
+
+- x座標の整数型 `X`
+- y座標の整数型 `Y`
+- 重みの型 `W`
+- 点数の上限 `MAX_SIZE`
+- y座標に使用するbit数 `Y_BIT_WIDTH`。省略時は `Y` のbit数
+
+# コンストラクタ
+
+```cpp
+WaveletMatrix2DWeighted(
+    const vector<X>& xs,
+    const vector<Y>& ys,
+    const vector<W>& weights
+)
+WaveletMatrix2DWeighted(const vector<tuple<X, Y, W>>& points)
+```
+
+点をx座標でソートして構築する。
+
+## 時間計算量
+
+- $O(N\log N + N\mathrm{Y\_BIT\_WIDTH})$
+
+# 矩形内の点数
+
+```cpp
+int rectangle_count(X xl, X xr, Y yl, Y yr) const
+int range_freq(X xl, X xr, Y yl, Y yr) const
+```
+
+半開矩形 $[xl,xr)\times[yl,yr)$ に含まれる点数を返す。
+
+## 時間計算量
+
+- $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
+
+# 矩形内の重みの総和
+
+```cpp
+W rectangle_sum(X xl, X xr, Y yl, Y yr) const
+W range_sum(X xl, X xr, Y yl, Y yr) const
+```
+
+半開矩形 $[xl,xr)\times[yl,yr)$ に含まれる点の重みの総和を返す。
+
+## 時間計算量
+
+- $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
