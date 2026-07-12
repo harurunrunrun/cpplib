@@ -47,6 +47,12 @@ def main() -> None:
                     edges.append((u, v))
         cases.append((l, r, edges))
 
+    active = 64
+    sparse_edges = [
+        (rng.randrange(active), rng.randrange(active)) for _ in range(2000)
+    ]
+    cases.append((50_000, 50_000, sparse_edges))
+
     for i, case in enumerate(cases):
         write_case(out_dir, i, *case)
 

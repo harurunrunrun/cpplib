@@ -74,9 +74,6 @@ BipartiteEdgeColoringResult bipartite_edge_coloring(
         right_color[static_cast<std::size_t>(e.right)][static_cast<std::size_t>(color)] = -1;
     };
 
-    std::vector<char> seen_left(static_cast<std::size_t>(left_size));
-    std::vector<char> seen_right(static_cast<std::size_t>(right_size));
-    std::vector<std::pair<int, int>> stack;
     std::vector<int> component_edges;
 
     for(int id = 0; id < static_cast<int>(edges.size()); id++){
@@ -88,42 +85,27 @@ BipartiteEdgeColoringResult bipartite_edge_coloring(
             continue;
         }
 
-        std::fill(seen_left.begin(), seen_left.end(), 0);
-        std::fill(seen_right.begin(), seen_right.end(), 0);
-        stack.clear();
         component_edges.clear();
-        seen_left[static_cast<std::size_t>(e.left)] = 1;
-        stack.push_back({0, e.left});
-
-        while(!stack.empty()){
-            auto [side, v] = stack.back();
-            stack.pop_back();
-            for(int c: {a, b}){
-                int edge_id;
-                if(side == 0){
-                    edge_id = left_color[static_cast<std::size_t>(v)][static_cast<std::size_t>(c)];
-                }else{
-                    edge_id = right_color[static_cast<std::size_t>(v)][static_cast<std::size_t>(c)];
-                }
-                if(edge_id == -1) continue;
-                component_edges.push_back(edge_id);
-                const auto& edge = edges[static_cast<std::size_t>(edge_id)];
-                if(side == 0){
-                    if(!seen_right[static_cast<std::size_t>(edge.right)]){
-                        seen_right[static_cast<std::size_t>(edge.right)] = 1;
-                        stack.push_back({1, edge.right});
-                    }
-                }else{
-                    if(!seen_left[static_cast<std::size_t>(edge.left)]){
-                        seen_left[static_cast<std::size_t>(edge.left)] = 1;
-                        stack.push_back({0, edge.left});
-                    }
-                }
+        int side = 0;
+        int vertex = e.left;
+        int color = b;
+        while(true){
+            const int edge_id = side == 0
+                ? left_color[static_cast<std::size_t>(vertex)][static_cast<std::size_t>(color)]
+                : right_color[static_cast<std::size_t>(vertex)][static_cast<std::size_t>(color)];
+            if(edge_id == -1) break;
+            component_edges.push_back(edge_id);
+            const auto& edge = edges[static_cast<std::size_t>(edge_id)];
+            if(side == 0){
+                vertex = edge.right;
+                side = 1;
+            }else{
+                vertex = edge.left;
+                side = 0;
             }
+            color = color == a ? b : a;
         }
 
-        std::sort(component_edges.begin(), component_edges.end());
-        component_edges.erase(std::unique(component_edges.begin(), component_edges.end()), component_edges.end());
         for(int edge_id: component_edges){
             erase_color(edge_id, result.color[static_cast<std::size_t>(edge_id)]);
         }
