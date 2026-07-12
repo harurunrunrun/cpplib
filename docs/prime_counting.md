@@ -40,3 +40,20 @@ int count_primes_less(int n)
 ## 時間計算量
 
 - $O(1)$
+
+# 大きな範囲の素数計数
+
+```cpp
+long long prime_count(long long n)
+long long count_primes(long long n)
+```
+
+`n` 以下の素数の個数を返す。`count_primes` は `prime_count` の別名。
+`floor(n / i)` の異なる値だけを保持し、エラトステネスの篩と同じ更新を行う。
+
+## 計算量
+
+- 時間: $O(n^{3/4} / \log n)$
+- 空間: $O(\sqrt n)$
+
+`n < 0` の場合は `std::runtime_error` を送出する。
