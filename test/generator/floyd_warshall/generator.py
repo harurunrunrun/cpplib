@@ -7,28 +7,32 @@ import argparse
 import random
 from pathlib import Path
 
-INF = 1 << 60
 
-
-def solve(n: int, edges: list[tuple[int, int, int]]) -> list[list[int]]:
-    dist = [[INF] * n for _ in range(n)]
+def solve(n: int, edges: list[tuple[int, int, int]]) -> list[list[int | None]]:
+    dist: list[list[int | None]] = [[None] * n for _ in range(n)]
     for i in range(n):
         dist[i][i] = 0
     for u, v, w in edges:
-        dist[u][v] = min(dist[u][v], w)
+        if dist[u][v] is None or w < dist[u][v]:
+            dist[u][v] = w
     for k in range(n):
         for i in range(n):
-            if dist[i][k] == INF:
+            if dist[i][k] is None:
                 continue
             for j in range(n):
-                if dist[k][j] == INF:
+                if dist[k][j] is None:
                     continue
-                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
+                candidate = dist[i][k] + dist[k][j]
+                if dist[i][j] is None or candidate < dist[i][j]:
+                    dist[i][j] = candidate
     return dist
 
 
-def format_dist(dist: list[list[int]]) -> str:
-    return "\n".join(" ".join("INF" if x == INF else str(x) for x in row) for row in dist) + "\n"
+def format_dist(dist: list[list[int | None]]) -> str:
+    return "\n".join(
+        " ".join("INF" if value is None else str(value) for value in row)
+        for row in dist
+    ) + "\n"
 
 
 def write_case(out_dir: Path, idx: int, n: int, edges: list[tuple[int, int, int]]) -> None:
@@ -52,6 +56,8 @@ def main() -> None:
         (1, []),
         (4, [(0, 1, 3), (0, 2, 10), (1, 2, -2), (2, 3, 4)]),
         (4, [(0, 1, 5), (2, 3, 7)]),
+        (4, [(0, 1, 2_000_000_000_000_000_000),
+             (1, 2, 2_000_000_000_000_000_000)]),
     ]
     rng = random.Random(20260731)
     for n in [2, 5, 9, 20]:

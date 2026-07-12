@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <tuple>
 #include <vector>
 #include "../../src/algorithm/graph/floyd_warshall.hpp"
 
@@ -41,6 +42,17 @@ void self_test(){
         assert((res.path(0, 3) == std::vector<int>{0, 1, 2, 3}));
         assert(!res.has_negative_cycle);
     }
+    {
+        std::vector<std::vector<long long>> dist(4, std::vector<long long>(4, INF));
+        dist[0][1] = 2000000000000000000LL;
+        dist[1][2] = 2000000000000000000LL;
+        auto res = floyd_warshall(dist, INF);
+        assert(res.reachable[0][2]);
+        assert(res.dist[0][2] == 4000000000000000000LL);
+        assert((res.path(0, 2) == std::vector<int>{0, 1, 2}));
+        assert(!res.reachable[0][3]);
+        assert(res.dist[0][3] == INF);
+    }
     for(int n = 1; n <= 11; n++){
         std::vector<std::tuple<int, int, long long>> edges;
         std::vector<std::vector<long long>> dist(static_cast<std::size_t>(n), std::vector<long long>(static_cast<std::size_t>(n), INF));
@@ -64,6 +76,7 @@ void self_test(){
         auto res = floyd_warshall(dist, INF);
         assert(res.has_negative_cycle);
         assert(res.negative[0] && res.negative[1]);
+        assert(res.path(0, 1).empty());
     }
 }
 
@@ -78,17 +91,18 @@ int main(){
         int u, v;
         long long w;
         std::cin >> u >> v >> w;
-        if(w < dist[static_cast<std::size_t>(u)][static_cast<std::size_t>(v)]){
-            dist[static_cast<std::size_t>(u)][static_cast<std::size_t>(v)] = w;
-        }
+        auto& current = dist[static_cast<std::size_t>(u)][static_cast<std::size_t>(v)];
+        if(current == INF || w < current) current = w;
     }
     auto res = floyd_warshall(dist, INF);
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
             if(j) std::cout << ' ';
-            long long d = res.dist[static_cast<std::size_t>(i)][static_cast<std::size_t>(j)];
-            if(d == INF) std::cout << "INF";
-            else std::cout << d;
+            if(!res.reachable[static_cast<std::size_t>(i)][static_cast<std::size_t>(j)]){
+                std::cout << "INF";
+            }else{
+                std::cout << res.dist[static_cast<std::size_t>(i)][static_cast<std::size_t>(j)];
+            }
         }
         std::cout << '\n';
     }
