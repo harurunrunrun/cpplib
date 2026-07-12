@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <optional>
 #include <random>
+#include <string>
 #include <tuple>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/wavelet_matrix_2d.hpp"
@@ -11,6 +13,51 @@
 #include "../../src/structure/wavelet_matrix/rectangle_sum.hpp"
 
 int main(){
+    int input_n, q;
+    if(std::cin >> input_n >> q){
+        std::vector<int> input_x(static_cast<std::size_t>(input_n));
+        std::vector<int> input_y(static_cast<std::size_t>(input_n));
+        std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
+        for(int k = 0; k < input_n; k++){
+            std::cin >> input_x[static_cast<std::size_t>(k)]
+                >> input_y[static_cast<std::size_t>(k)]
+                >> input_weight[static_cast<std::size_t>(k)];
+        }
+        WaveletMatrix2D<int, int, 512> plain(input_x, input_y);
+        WaveletMatrix2DWeighted<int, int, long long, 512> weighted(
+            input_x, input_y, input_weight
+        );
+        auto print_optional = [](const std::optional<int>& value){
+            if(value) std::cout << *value << '\n';
+            else std::cout << "NONE\n";
+        };
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "COUNT" || type == "SUM"){
+                int xl, xr, yl, yr;
+                std::cin >> xl >> xr >> yl >> yr;
+                if(type == "COUNT"){
+                    const int count = plain.rectangle_count(xl, xr, yl, yr);
+                    assert(weighted.rectangle_count(xl, xr, yl, yr) == count);
+                    std::cout << count << '\n';
+                }else{
+                    std::cout << weighted.rectangle_sum(xl, xr, yl, yr) << '\n';
+                }
+            }else if(type == "KTH"){
+                int xl, xr, k;
+                std::cin >> xl >> xr >> k;
+                std::cout << plain.kth_smallest_y(xl, xr, k) << '\n';
+            }else if(type == "PREV" || type == "NEXT"){
+                int xl, xr, value;
+                std::cin >> xl >> xr >> value;
+                if(type == "PREV") print_optional(plain.prev_y(xl, xr, value));
+                else print_optional(plain.next_y(xl, xr, value));
+            }
+        }
+        return 0;
+    }
+
     constexpr int n = 137;
     std::mt19937 rng(271828);
     std::vector<int> xs(n), ys(n);

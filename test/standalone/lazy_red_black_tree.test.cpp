@@ -1,10 +1,12 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <iostream>
 #include <map>
 #include <numeric>
 #include <optional>
 #include <random>
+#include <string>
 #include <vector>
 #include "../../src/structure/bbst/lazy_red_black_tree.hpp"
 #include "../../src/structure/types/monoid_act_len.hpp"
@@ -54,6 +56,68 @@ void check_all(LazyRedBlackTree<int, range_add_sum, 512>& tree, const std::map<i
 }
 
 int main(){
+    int input_q;
+    if(std::cin >> input_q){
+        LazyRedBlackTree<int, range_add_sum, 512> tree;
+        auto print_optional = [](const std::optional<long long>& value){
+            if(value) std::cout << *value << '\n';
+            else std::cout << "NONE\n";
+        };
+        auto print_optional_key = [](const std::optional<int>& value){
+            if(value) std::cout << *value << '\n';
+            else std::cout << "NONE\n";
+        };
+        while(input_q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "INSERT"){
+                int key;
+                long long value;
+                std::cin >> key >> value;
+                std::cout << tree.insert(key, value) << '\n';
+            }else if(type == "ERASE"){
+                int key;
+                std::cin >> key;
+                std::cout << tree.erase(key) << '\n';
+            }else if(type == "SET"){
+                int key;
+                long long value;
+                std::cin >> key >> value;
+                std::cout << tree.set(key, value) << '\n';
+            }else if(type == "APPLY"){
+                int l, r;
+                long long value;
+                std::cin >> l >> r >> value;
+                tree.apply(l, r, value);
+            }else if(type == "GET"){
+                int key;
+                std::cin >> key;
+                print_optional(tree.get(key));
+            }else if(type == "CONTAINS"){
+                int key;
+                std::cin >> key;
+                std::cout << tree.contains(key) << '\n';
+            }else if(type == "PROD"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << tree.prod(l, r) << '\n';
+            }else if(type == "KTH"){
+                int k;
+                std::cin >> k;
+                print_optional_key(tree.kth_key(k));
+            }else if(type == "ORDER"){
+                int key;
+                std::cin >> key;
+                std::cout << tree.order_of_key(key) << '\n';
+            }else if(type == "SIZE"){
+                std::cout << tree.size() << '\n';
+            }else if(type == "ALL"){
+                std::cout << tree.all_prod() << '\n';
+            }
+        }
+        return 0;
+    }
+
     LazyRedBlackTree<int, range_add_sum, 512> tree;
     std::map<int, long long> naive;
     std::mt19937 rng(42424242);

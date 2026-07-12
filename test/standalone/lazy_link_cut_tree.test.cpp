@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <queue>
 #include <random>
+#include <string>
 #include <utility>
 #include <vector>
 #include "../../src/structure/tree/lazy_link_cut_tree.hpp"
@@ -75,6 +77,52 @@ std::vector<int> component(int s, const std::vector<std::vector<int>>& graph){
 }
 
 int main(){
+    int input_n, input_m, q;
+    if(std::cin >> input_n >> input_m >> q){
+        std::vector<long long> input(static_cast<std::size_t>(input_n));
+        for(long long& value: input) std::cin >> value;
+        LazyLinkCutTree<range_add_sum, 128> tree(input);
+        for(int i = 0; i < input_m; i++){
+            int u, v;
+            std::cin >> u >> v;
+            assert(tree.link(u, v));
+        }
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "LINK" || type == "CUT"){
+                int u, v;
+                std::cin >> u >> v;
+                if(type == "LINK") std::cout << tree.link(u, v) << '\n';
+                else std::cout << tree.cut(u, v) << '\n';
+            }else if(type == "CONNECTED"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << tree.connected(u, v) << '\n';
+            }else if(type == "SET"){
+                int v;
+                long long value;
+                std::cin >> v >> value;
+                tree.set(v, value);
+            }else if(type == "APPLY"){
+                int u, v;
+                long long value;
+                std::cin >> u >> v >> value;
+                tree.path_apply(u, v, value);
+            }else if(type == "GET"){
+                int v;
+                std::cin >> v;
+                std::cout << tree.get(v) << '\n';
+            }else if(type == "PROD"){
+                int u, v;
+                std::cin >> u >> v;
+                std::cout << tree.path_prod(u, v) << '\n';
+            }
+        }
+        return 0;
+    }
+
+
     {
         std::vector<long long> value = {1, 2, 3};
         LazyLinkCutTree<range_add_sum, 10> tree(value);

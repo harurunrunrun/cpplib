@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <numeric>
 #include <random>
 #include <string>
@@ -36,6 +37,49 @@ void check_all(ImplicitTreap<sum_monoid, 512>& tree, const std::vector<long long
 }
 
 int main(){
+    int input_n, q;
+    if(std::cin >> input_n >> q){
+        std::vector<long long> input(static_cast<std::size_t>(input_n));
+        for(long long& value: input) std::cin >> value;
+        ImplicitTreap<sum_monoid, 1024> tree(input);
+        while(q--){
+            std::string type;
+            std::cin >> type;
+            if(type == "INSERT"){
+                int p;
+                long long value;
+                std::cin >> p >> value;
+                tree.insert(p, value);
+            }else if(type == "ERASE"){
+                int p;
+                std::cin >> p;
+                tree.erase(p);
+            }else if(type == "SET"){
+                int p;
+                long long value;
+                std::cin >> p >> value;
+                tree.set(p, value);
+            }else if(type == "REVERSE"){
+                int l, r;
+                std::cin >> l >> r;
+                tree.reverse(l, r);
+            }else if(type == "PROD"){
+                int l, r;
+                std::cin >> l >> r;
+                std::cout << tree.prod(l, r) << '\n';
+            }else if(type == "GET"){
+                int p;
+                std::cin >> p;
+                std::cout << tree.get(p) << '\n';
+            }else if(type == "SIZE"){
+                std::cout << tree.size() << '\n';
+            }else if(type == "ALL"){
+                std::cout << tree.all_prod() << '\n';
+            }
+        }
+        return 0;
+    }
+
     {
         std::vector<std::string> value = {"a", "b", "c", "d"};
         ImplicitTreap<concat_monoid, 16> tree(value);
