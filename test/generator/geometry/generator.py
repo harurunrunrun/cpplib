@@ -65,6 +65,49 @@ def contains(poly: list[Point], p: Point) -> int:
     return 2 if inside else 0
 
 
+def circle_relation(x1: int, y1: int, r1: int, x2: int, y2: int, r2: int) -> int:
+    d2 = (x1 - x2) ** 2 + (y1 - y2) ** 2
+    rsum = r1 + r2
+    rdiff = abs(r1 - r2)
+    if d2 > rsum * rsum:
+        return 4
+    if d2 == rsum * rsum:
+        return 3
+    if d2 == rdiff * rdiff:
+        return 1
+    if d2 < rdiff * rdiff:
+        return 0
+    return 2
+
+
+def circle_line_count(nums: list[int]) -> int:
+    cx, cy, r, ax, ay, bx, by = nums
+    dx, dy = bx - ax, by - ay
+    num = abs(cross((dx, dy), (cx - ax, cy - ay)))
+    den2 = dx * dx + dy * dy
+    lhs = num * num
+    rhs = r * r * den2
+    if lhs > rhs:
+        return 0
+    if lhs == rhs:
+        return 1
+    return 2
+
+
+def circle_circle_count(nums: list[int]) -> int:
+    relation = circle_relation(*nums)
+    if relation == 2:
+        return 2
+    if relation in (1, 3):
+        return 1
+    return 0
+
+
+def common_tangent_count(nums: list[int]) -> int:
+    relation = circle_relation(*nums)
+    return [0, 1, 2, 3, 4][relation]
+
+
 def solve(queries: list[str]) -> str:
     out: list[str] = []
     for query in queries:
@@ -77,12 +120,20 @@ def solve(queries: list[str]) -> str:
         elif xs[0] == "INTERSECT":
             nums = list(map(int, xs[1:]))
             out.append(str(intersect(((nums[0], nums[1]), (nums[2], nums[3])), ((nums[4], nums[5]), (nums[6], nums[7])))))
-        elif xs[0] == "CONTAINS":
+        elif xs[0] in {"CONTAINS", "CONTAINS_CONVEX"}:
             n = int(xs[1])
             nums = list(map(int, xs[2:]))
             poly = [(nums[2 * i], nums[2 * i + 1]) for i in range(n)]
             p = (nums[2 * n], nums[2 * n + 1])
             out.append(str(contains(poly, p)))
+        elif xs[0] == "CIRCLE_RELATION":
+            out.append(str(circle_relation(*map(int, xs[1:]))))
+        elif xs[0] == "CIRCLE_LINE_COUNT":
+            out.append(str(circle_line_count(list(map(int, xs[1:])))))
+        elif xs[0] == "CIRCLE_CIRCLE_COUNT":
+            out.append(str(circle_circle_count(list(map(int, xs[1:])))))
+        elif xs[0] == "COMMON_TANGENT_COUNT":
+            out.append(str(common_tangent_count(list(map(int, xs[1:])))))
     return "\n".join(out) + "\n"
 
 
@@ -109,6 +160,16 @@ def main() -> None:
         "CONTAINS 4 0 0 4 0 4 4 0 4 2 2",
         "CONTAINS 4 0 0 4 0 4 4 0 4 4 2",
         "CONTAINS 4 0 0 4 0 4 4 0 4 5 2",
+        "CONTAINS_CONVEX 4 0 0 4 0 4 4 0 4 2 2",
+        "CIRCLE_RELATION 0 0 2 5 0 1",
+        "CIRCLE_RELATION 0 0 2 3 0 1",
+        "CIRCLE_RELATION 0 0 2 2 0 2",
+        "CIRCLE_RELATION 0 0 3 2 0 1",
+        "CIRCLE_RELATION 0 0 4 1 0 1",
+        "CIRCLE_LINE_COUNT 0 0 5 -10 0 10 0",
+        "CIRCLE_LINE_COUNT 0 0 5 -10 5 10 5",
+        "CIRCLE_CIRCLE_COUNT 0 0 5 8 0 5",
+        "COMMON_TANGENT_COUNT 0 0 1 4 0 1",
     ]
     write_case(out_dir, 0, fixed)
 
