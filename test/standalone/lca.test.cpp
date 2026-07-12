@@ -1,0 +1,132 @@
+// competitive-verifier: STANDALONE
+
+#include <cassert>
+#include <stdexcept>
+#include <utility>
+#include <vector>
+
+#include "../../src/algorithm/tree/lca.hpp"
+#include "../../src/algorithm/tree/offline_lca.hpp"
+
+int naive_lca(int u, int v, const std::vector<int>& parent, const std::vector<int>& depth){
+    while(depth[u] > depth[v]){
+        u = parent[u];
+    }
+    while(depth[v] > depth[u]){
+        v = parent[v];
+    }
+    while(u != v){
+        u = parent[u];
+        v = parent[v];
+    }
+    return u;
+}
+
+void add_edge(std::vector<std::vector<int>>& graph, int u, int v){
+    graph[u].push_back(v);
+    graph[v].push_back(u);
+}
+
+void test_binary_lifting(){
+    const int n = 17;
+    std::vector<int> parent(n, -1), depth(n, 0);
+    std::vector<std::vector<int>> graph(n);
+    LowestCommonAncestor lca(n);
+    for(int v = 1; v < n; v++){
+        int p = (v - 1) / 2;
+        parent[v] = p;
+        depth[v] = depth[p] + 1;
+        lca.add_edge(p, v);
+        add_edge(graph, p, v);
+    }
+    lca.build();
+
+    assert(lca.size() == n);
+    assert(lca.parent(0) == -1);
+    assert(lca.parent(16) == 7);
+    assert(lca.depth(16) == 4);
+    assert(lca.jump(16, 2) == 3);
+    assert(lca.jump(16, 4) == 0);
+
+    std::vector<std::pair<int, int>> queries;
+    for(int u = 0; u < n; u++){
+        for(int v = 0; v < n; v++){
+            int expected = naive_lca(u, v, parent, depth);
+            assert(lca.lca(u, v) == expected);
+            assert(lca.dist(u, v) == depth[u] + depth[v] - 2 * depth[expected]);
+            queries.push_back({u, v});
+        }
+    }
+    auto answers = offline_lca(graph, queries);
+    for(int i = 0; i < (int)queries.size(); i++){
+        auto [u, v] = queries[i];
+        assert(answers[i] == naive_lca(u, v, parent, depth));
+    }
+}
+
+void test_root_change(){
+    std::vector<std::vector<int>> graph(7);
+    add_edge(graph, 0, 1);
+    add_edge(graph, 1, 2);
+    add_edge(graph, 1, 3);
+    add_edge(graph, 3, 4);
+    add_edge(graph, 3, 5);
+    add_edge(graph, 5, 6);
+
+    LowestCommonAncestor lca(7);
+    for(int v = 0; v < 7; v++){
+        for(int to: graph[v]){
+            if(v < to){
+                lca.add_edge(v, to);
+            }
+        }
+    }
+    lca.build(3);
+    assert(lca.parent(3) == -1);
+    assert(lca.lca(0, 2) == 1);
+    assert(lca.lca(0, 6) == 3);
+    assert(lca.lca(4, 6) == 3);
+    assert(lca.dist(2, 6) == 4);
+
+    std::vector<std::pair<int, int>> queries = {{0, 2}, {0, 6}, {4, 6}, {3, 3}};
+    auto answers = offline_lca(graph, queries, 3);
+    std::vector<int> expected = {1, 3, 3, 3};
+    assert(answers == expected);
+}
+
+void test_exceptions(){
+    bool thrown = false;
+    try{
+        LowestCommonAncestor bad(3);
+        bad.add_edge(0, 1);
+        bad.build();
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        std::vector<std::vector<int>> graph(3);
+        add_edge(graph, 0, 1);
+        (void)offline_lca(graph, {{0, 1}});
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        LowestCommonAncestor lca(2);
+        lca.add_edge(0, 2);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+}
+
+int main(){
+    test_binary_lifting();
+    test_root_change();
+    test_exceptions();
+}
