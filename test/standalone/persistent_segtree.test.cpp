@@ -11,8 +11,8 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "../src/structure/segtree/partially_persistent_segtree.hpp"
-#include "../src/structure/segtree/rollback_segtree.hpp"
+#include "../../src/structure/segtree/partially_persistent_segtree.hpp"
+#include "../../src/structure/segtree/rollback_segtree.hpp"
 
 using ll = long long;
 

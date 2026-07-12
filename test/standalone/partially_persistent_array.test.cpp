@@ -6,7 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../src/structure/array/partially_persistent_array.hpp"
+#include "../../src/structure/array/partially_persistent_array.hpp"
 
 struct Box{
     int value;

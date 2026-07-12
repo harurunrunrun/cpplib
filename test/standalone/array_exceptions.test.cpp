@@ -5,8 +5,8 @@
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
-#include "../src/structure/array/partially_persistent_array.hpp"
-#include "../src/structure/array/rollback_array.hpp"
+#include "../../src/structure/array/partially_persistent_array.hpp"
+#include "../../src/structure/array/rollback_array.hpp"
 
 using Persistent = PersistentArray<int, 2, 2>;
 using Partial = PartiallyPersistentArray<int, 2, 2>;

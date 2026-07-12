@@ -2,8 +2,8 @@
 
 #include <cassert>
 #include <stdexcept>
-#include "../src/structure/array/partially_persistent_array.hpp"
-#include "../src/structure/array/rollback_array.hpp"
+#include "../../src/structure/array/partially_persistent_array.hpp"
+#include "../../src/structure/array/rollback_array.hpp"
 
 int main(){
     PersistentArray<int, 1, 0> persistent(1);

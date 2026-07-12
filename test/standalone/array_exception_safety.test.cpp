@@ -2,8 +2,8 @@
 
 #include <cassert>
 #include <stdexcept>
-#include "../src/structure/array/persistent_array.hpp"
-#include "../src/structure/array/rollback_array.hpp"
+#include "../../src/structure/array/persistent_array.hpp"
+#include "../../src/structure/array/rollback_array.hpp"
 
 struct ThrowingCopy{
     static inline int copies_before_throw = -1;

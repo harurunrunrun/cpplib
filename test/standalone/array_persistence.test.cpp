@@ -7,8 +7,8 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
-#include "../src/structure/array/persistent_array.hpp"
-#include "../src/structure/array/rollback_array.hpp"
+#include "../../src/structure/array/persistent_array.hpp"
+#include "../../src/structure/array/rollback_array.hpp"
 
 struct NonDefaultValue{
     int value;

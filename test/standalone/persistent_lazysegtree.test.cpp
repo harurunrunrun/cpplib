@@ -6,8 +6,8 @@
 #include <random>
 #include <vector>
 
-#include "../src/structure/segtree/partially_persistent_lazysegtree.hpp"
-#include "../src/structure/segtree/persistent_lazysegtree.hpp"
+#include "../../src/structure/segtree/partially_persistent_lazysegtree.hpp"
+#include "../../src/structure/segtree/persistent_lazysegtree.hpp"
 
 constexpr std::int64_t mod = 998244353;
 
