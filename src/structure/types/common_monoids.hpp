@@ -149,6 +149,25 @@ struct MonoidAffine{
     ) = default;
 };
 
+template<class T>
+struct MaxSubarrayAggregate{
+    T sum{};
+    T prefix{};
+    T suffix{};
+    T best{};
+
+    friend constexpr bool operator==(
+        const MaxSubarrayAggregate&,
+        const MaxSubarrayAggregate&
+    ) = default;
+};
+
+template<class T>
+constexpr MaxSubarrayAggregate<T> max_subarray_singleton(T value){
+    const T nonnegative = std::max(T(0), value);
+    return {value, nonnegative, nonnegative, nonnegative};
+}
+
 namespace common_monoid_internal{
 
 template<class T, T Identity>
@@ -252,6 +271,39 @@ constexpr T multiply_sum_mapping(T f, T x, long long){
 template<class T>
 constexpr T flip_count_mapping(bool f, T x, long long length){
     return f ? T(length) - x : x;
+}
+
+template<class T>
+constexpr MaxSubarrayAggregate<T> max_subarray_op(
+    MaxSubarrayAggregate<T> left,
+    long long,
+    MaxSubarrayAggregate<T> right,
+    long long
+){
+    return {
+        left.sum + right.sum,
+        std::max(left.prefix, left.sum + right.prefix),
+        std::max(right.suffix, right.sum + left.suffix),
+        std::max({left.best, right.best, left.suffix + right.prefix})
+    };
+}
+
+template<class T>
+constexpr MaxSubarrayAggregate<T> max_subarray_identity(){
+    return {};
+}
+
+template<class T>
+constexpr MaxSubarrayAggregate<T> assign_max_subarray_mapping(
+    MonoidAssignment<T> f,
+    MaxSubarrayAggregate<T> x,
+    long long length
+){
+    if(!f.assigned) return x;
+    if(length == 0) return {};
+    const T sum = f.value * T(length);
+    const T nonnegative = std::max(T(0), sum);
+    return {sum, nonnegative, nonnegative, nonnegative};
 }
 
 constexpr bool bool_xor(bool f, bool g){ return f != g; }
@@ -366,4 +418,13 @@ using XorXorMonoidAct = Monoid_Act_Len<
     common_monoid_internal::xor_xor_mapping<T>,
     common_monoid_internal::xor_op<T>,
     common_monoid_internal::zero<T>
+>;
+
+template<class T>
+using AssignMaxSubarrayMonoidAct = Monoid_Act_Len<
+    common_monoid_internal::max_subarray_op<T>,
+    common_monoid_internal::max_subarray_identity<T>,
+    common_monoid_internal::assign_max_subarray_mapping<T>,
+    common_monoid_internal::assignment_composition<T>,
+    common_monoid_internal::assignment_id<T>
 >;

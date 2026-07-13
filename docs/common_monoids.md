@@ -54,11 +54,33 @@ MonoidAssignment<long long> set_five{true, 5};
 | `AffineSumMonoidAct<T>` | sum | 各要素を `a*x+b` | `MonoidAffine<T>{1, 0}` | $O(1)$ |
 | `FlipCountMonoidAct<T>` | 1 の個数 | 0/1 を反転 | `false` | $O(1)$ |
 | `XorXorMonoidAct<T>` | xor | 各要素へ xor | `T(0)` | $O(1)$ |
+| `AssignMaxSubarrayMonoidAct<T>` | 和・最大prefix/suffix・最大部分配列和 | 各要素を代入 | `MonoidAssignment<T>{}` | $O(1)$ |
 
 `MonoidAffine<T>` は `multiplier` と `addend` を持つ。
 
 ```cpp
 MonoidAffine<long long> f{2, 3}; // x -> 2*x+3
+```
+
+`MaxSubarrayAggregate<T>` は、列について次の4値を保持する公開aggregate型である。
+
+| field | 意味 | 参照の計算量 |
+| --- | --- | --- |
+| `sum` | 全要素の和 | $O(1)$ |
+| `prefix` | 空列を許す最大prefix和 | $O(1)$ |
+| `suffix` | 空列を許す最大suffix和 | $O(1)$ |
+| `best` | 空列を許す最大部分配列和 | $O(1)$ |
+
+`max_subarray_singleton(value)` は要素1個のaggregateを $O(1)$ 時間・空間で作る。
+負の1要素に対する `prefix`、`suffix`、`best` はすべて0になる。
+`AssignMaxSubarrayMonoidAct<T>` の `op` は列の順序を保存する非可換な結合であり、
+`mapping` は区間全体への一様代入を反映する。逆向きaggregateも保持する
+`LazyLinkCutTree` のpath query/updateにもそのまま利用できる。
+
+```cpp
+constexpr AssignMaxSubarrayMonoidAct<long long> max_subarray_assign{};
+auto value = max_subarray_singleton(-3LL);
+auto assigned = MonoidAssignment<long long>{true, 5};
 ```
 
 すべての作用で
@@ -100,11 +122,20 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 - 長さ付き作用へ渡す長さは 0 以上であり、値はその長さの区間集約値である必要がある。
 - 加算、乗算、lcm、affine などの結果が `T` で表現できる範囲に収まるようにする。
 - `FlipCountMonoidAct` の区間値は `0 <= count <= length` を満たす。
+- `MaxSubarrayAggregate<T>` は `T(0)`、加算、乗算、`std::max` に対応する
+  `T` を要求する。各fieldは `max_subarray_singleton`、作用の `e` / `op` /
+  `mapping` で作り、不変条件を満たさないfield値を直接渡さない。
+- `AssignMaxSubarrayMonoidAct<T>` では、すべての部分和および
+  `assigned.value * T(length)` が `T` で表現できる必要がある。
+  符号付き整数のoverflowは未定義動作になる。
+- 最大部分配列和は空部分配列を許すため常に0以上であり、全要素が負なら
+  `best == 0` となる。非空部分配列を要求する用途とは契約が異なる。
+- 長さ0への代入mappingは単位元 `{0,0,0,0}` を返す。
 - 作用付き alias の「各操作」は `op`、`e`、`mapping`、`composition`、`id`
-  を指す。補助型 `MonoidAssignment`、`MonoidAffine` の構築と比較も $O(1)$。
+  を指す。補助型の構築と比較も $O(1)$。
 - 表の $O(1)$ は `T` の対応する算術・比較・構築を $O(1)$ としたもの。
   一般の `T` では、各aliasが呼ぶ `T` の操作コストに従う。
-- `MonoidAssignment` と `MonoidAffine` の各公開field参照は $O(1)$。
+- 各補助型の公開field参照は $O(1)$。
 
 ## helper API
 
@@ -142,6 +173,9 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 | `chmax_mapping<T,Identity>(f,x)` | 番兵を保って `max(f,x)` | $O(1)$ |
 | `multiply_sum_mapping(f,x,length)` | 区間和へ一様乗算を反映 | $O(1)$ |
 | `flip_count_mapping(f,x,length)` | 0/1反転後の1の個数 | $O(1)$ |
+| `max_subarray_op(left,llen,right,rlen)` | 2列のaggregateを順に結合 | $O(1)$ |
+| `max_subarray_identity<T>()` | 空列aggregate `{0,0,0,0}` | $O(1)$ |
+| `assign_max_subarray_mapping(f,x,length)` | 一様代入後のaggregate | $O(1)$ |
 | `bool_xor(f,g)` | bool作用のxor合成 | $O(1)$ |
 | `false_value()` | bool作用の単位元 `false` | $O(1)$ |
 
@@ -157,6 +191,12 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 - `MonoidAffine<T>::multiplier` / `addend`：`x -> multiplier*x+addend` を表し、既定値は
   `1` / `0`。
 - `operator==(MonoidAffine, MonoidAffine)`：2つのfieldを比較する。
+- `MaxSubarrayAggregate<T>::sum` / `prefix` / `suffix` / `best`：
+  列全体の和、空列を許す最大prefix和、最大suffix和、最大部分配列和を表す。
+- `operator==(MaxSubarrayAggregate, MaxSubarrayAggregate)`：4つのfieldを比較する。
+- `max_subarray_singleton(value)`：1要素列のaggregateを返す。
+- `AssignMaxSubarrayMonoidAct<T>`：`MaxSubarrayAggregate<T>` に
+  `MonoidAssignment<T>` を作用させる `Monoid_Act_Len` alias。
 
 各field参照、aggregate構築、比較の時間・追加空間計算量は $O(1)$。各objectの保存領域は
-`T` 1個または2個とflagに対して $O(1)$。
+`T` 1個、2個、または4個とflagに対して $O(1)$。
