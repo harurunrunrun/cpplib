@@ -64,6 +64,8 @@ jobs:
         continue-on-error: true
 
       - name: Resolve verify files
+        id: resolve
+        if: ${{ !cancelled() }}
         uses: competitive-verifier/actions/oj-resolve@v2
         with:
           output-path: verify-files.json
@@ -73,10 +75,15 @@ jobs:
             test
 
       - name: Prepare cache directory
+        id: cache_dir
+        if: ${{ !cancelled() && steps.resolve.outcome == 'success' }}
         run: mkdir -p .competitive-verifier/cache
 
       - name: Restore previous verify result
+        id: verify_cache
+        if: ${{ !cancelled() && steps.cache_dir.outcome == 'success' }}
         uses: actions/cache@v4
+        continue-on-error: true
         with:
           path: .competitive-verifier/cache/result.json
           key: competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-${{ github.run_id }}
@@ -85,6 +92,7 @@ jobs:
 
       - name: Detect previous verify result
         id: prev-result
+        if: ${{ !cancelled() && steps.resolve.outcome == 'success' && steps.cache_dir.outcome == 'success' }}
         shell: bash
         run: |
           if [ -f .competitive-verifier/cache/result.json ]; then
@@ -96,6 +104,7 @@ jobs:
       - name: Verify
         id: verifier
         uses: competitive-verifier/actions/verify@v2
+        if: ${{ !cancelled() && steps.resolve.outcome == 'success' && steps.cache_dir.outcome == 'success' && steps.prev-result.outcome == 'success' }}
         continue-on-error: true
         with:
           verify-files: verify-files.json
@@ -223,13 +232,13 @@ jobs:
 
     steps:
       - name: Report standalone verification failure
-        if: ${{ needs.verify-and-docs.outputs.standalone-outcome != 'success' }}
+        if: ${{ !cancelled() && needs.verify-and-docs.outputs.standalone-outcome != 'success' }}
         run: |
           echo "::error::Standalone generated assets failed"
           exit 1
 
       - name: Report competitive-verifier failure
-        if: ${{ needs.verify-and-docs.outputs.verifier-outcome != 'success' }}
+        if: ${{ !cancelled() && needs.verify-and-docs.outputs.verifier-outcome != 'success' }}
         run: |
           echo "::error::competitive-verifier failed"
           exit 1
