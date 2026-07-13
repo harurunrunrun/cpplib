@@ -94,8 +94,10 @@ jobs:
           verify-result: .competitive-verifier/cache/docs-result.json
           destination: _jekyll
 
-      - name: Order library sections
-        run: python3 scripts/reorder_competitive_verifier_index.py _jekyll/index.md
+      - name: Normalize documentation index
+        run: |
+          python3 scripts/test_reorder_competitive_verifier_index.py
+          python3 scripts/reorder_competitive_verifier_index.py _jekyll/index.md
 
       - name: Setup Pages
         if: ${{ github.ref == 'refs/heads/main' }}
