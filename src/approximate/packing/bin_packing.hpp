@@ -1,11 +1,13 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <iterator>
 #include <numeric>
 #include <set>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -24,12 +26,18 @@ struct BinPackingResult{
 namespace internal {
 
 template<class Size>
+[[nodiscard]] bool is_finite_size(const Size& value){
+    if constexpr(std::is_floating_point_v<Size>) return std::isfinite(value);
+    return true;
+}
+
+template<class Size>
 void validate_items(const std::vector<Size>& item_size, const Size& capacity){
-    if(!(Size{} < capacity))[[unlikely]]{
+    if(!is_finite_size(capacity) || !(Size{} < capacity))[[unlikely]]{
         throw std::invalid_argument("bin capacity must be positive");
     }
     for(const Size& size: item_size){
-        if(size < Size{} || capacity < size)[[unlikely]]{
+        if(!is_finite_size(size) || size < Size{} || capacity < size)[[unlikely]]{
             throw std::invalid_argument("item does not fit an empty bin");
         }
     }

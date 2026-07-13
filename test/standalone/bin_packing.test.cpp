@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -59,6 +60,15 @@ int main(){
         rejected = true;
     }
     if(!rejected) return 4;
+    rejected = false;
+    try{
+        (void)first_fit_bin_packing(
+            std::vector<double>{std::numeric_limits<double>::quiet_NaN()}, 1.0
+        );
+    }catch(const std::invalid_argument&){
+        rejected = true;
+    }
+    if(!rejected) return 5;
 
     std::size_t test_count = 0;
     if(!(std::cin >> test_count)) return 1;
