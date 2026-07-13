@@ -14,6 +14,7 @@ struct PalindromicTree{
 
     struct Node{
         std::array<int, ALPHABET> next;
+        int parent = 0;
         int link = 0;
         int length = 0;
         int diff = 0;
@@ -83,6 +84,7 @@ public:
         return nodes[v];
     }
     int length(int v) const{ return (*this)[v].length; }
+    int parent(int v) const{ return (*this)[v].parent; }
     int link(int v) const{ return (*this)[v].link; }
     int diff(int v) const{ return (*this)[v].diff; }
     int series_link(int v) const{ return (*this)[v].series_link; }
@@ -102,6 +104,7 @@ public:
         }
 
         int created = new_node();
+        nodes[created].parent = cur;
         nodes[created].length = nodes[cur].length + 2;
         nodes[created].terminal_occurrence = 1;
         nodes[created].occurrence = 1;

@@ -39,6 +39,7 @@ vector<int> suffix_palindrome_nodes()
 vector<int> suffix_palindrome_lengths()
 int count_suffix_palindromes()
 int length(int v)
+int parent(int v)
 int link(int v)
 int diff(int v)
 int series_link(int v)
@@ -65,7 +66,7 @@ $N$ を現在長、$V$ を使用node数、$L$ をquery回文長、$D=V-2$、$K$ 
 | `PalindromicTree(s)` | $O(MAX_NODES\cdot ALPHABET+|s|)$ 償却 |
 | `add(c)` | 1回の最悪 $O(N)$、一連の末尾追加全体で償却 $O(1)$ / 文字 |
 | `size()` / `node_count()` / `distinct_palindromes()` / `last()` | $O(1)$ |
-| `operator[]` / `length` / `link` / `diff` / `series_link` / `str()` | $O(1)$（参照・metadata） |
+| `operator[]` / `length` / `parent` / `link` / `diff` / `series_link` / `str()` | $O(1)$（参照・metadata） |
 | `build_occurrences()` | 更新後の初回 $O(V)$、再更新までの再呼出し $O(1)$ |
 | `count_palindromic_substrings()` | $O(V)$（必要なら同時に前処理） |
 | `longest_suffix_palindrome_length()` | $O(1)$ |
@@ -84,6 +85,7 @@ $N$ を現在長、$V$ を使用node数、$L$ をquery回文長、$D=V-2$、$K$ 
 ### `Node`
 
 - `next[c]`: 文字index `c` を両端へ加えて得る回文node。存在しなければ-1。
+- `parent`: 対応回文の先頭・末尾を1文字ずつ除いた回文node。
 - `link`: 最長の真の回文suffix、`length`: 回文長。
 - `diff`, `series_link`: series-link DP用の長さ差と遷移先。
 - `terminal_occurrence`: 追加処理中にそのnodeが最長suffixになった回数。
@@ -98,7 +100,7 @@ $N$ を現在長、$V$ を使用node数、$L$ をquery回文長、$D=V-2$、$K$ 
   `c` はalphabet内、node数は `MAX_NODES` 以下が必要。
 - `size()` は文字列長、`node_count()` はroot込みnode数、
   `distinct_palindromes()` は非root node数、`last()` は最長回文suffix node。
-- `operator[](v)` はnodeへのconst参照。`length/link/diff/series_link` は
+- `operator[](v)` はnodeへのconst参照。`length/parent/link/diff/series_link` は
   対応fieldを返し、無効nodeでは例外。`str()` は構築文字列へのconst参照。
 
 ### 出現・検索

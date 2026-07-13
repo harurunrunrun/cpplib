@@ -79,6 +79,15 @@ std::string random_string(std::mt19937& rng, int n){
 
 void check_series_links(const PalindromicTree<4, 128>& tree){
     for(int v = 2; v < tree.node_count(); v++){
+        const int parent = tree.parent(v);
+        if(tree.length(v) == 1){
+            assert(parent == 0);
+        }else if(tree.length(v) == 2){
+            assert(parent == 1);
+        }else{
+            const std::string palindrome = tree.palindrome(v);
+            assert(tree.palindrome(parent) == palindrome.substr(1, palindrome.size() - 2));
+        }
         int link = tree.link(v);
         assert(tree.diff(v) == tree.length(v) - tree.length(link));
         if(tree.diff(v) == tree.diff(link)){
