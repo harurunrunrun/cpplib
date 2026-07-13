@@ -1,85 +1,154 @@
 #pragma once
 
 #include <algorithm>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-std::vector<int> directed_cycle(const std::vector<std::vector<int>>& graph){
-    const int n = static_cast<int>(graph.size());
-    for(const auto& edges: graph){
-        for(int to: edges){
-            if(to < 0 || n <= to)[[unlikely]]{
-                throw std::runtime_error("library assertion fault: range violation (directed_cycle).");
-            }
+struct CycleDetectionResult{
+    std::vector<int> vertices;
+    std::vector<int> edges;
+};
+
+inline CycleDetectionResult directed_cycle_with_edges(
+    int n,
+    const std::vector<std::pair<int, int>>& edges
+){
+    if(n < 0 || edges.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
+        throw std::runtime_error("library assertion fault: range violation (directed_cycle_with_edges).");
+    }
+    std::vector<std::vector<int>> graph(static_cast<std::size_t>(n));
+    for(int id = 0; id < static_cast<int>(edges.size()); ++id){
+        const auto [from, to] = edges[static_cast<std::size_t>(id)];
+        if(from < 0 || n <= from || to < 0 || n <= to)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (directed_cycle_with_edges).");
         }
+        graph[static_cast<std::size_t>(from)].push_back(id);
     }
 
     std::vector<char> color(static_cast<std::size_t>(n), 0);
     std::vector<int> parent(static_cast<std::size_t>(n), -1);
-    std::vector<int> result;
-    auto dfs = [&](auto&& self, int v) -> bool {
-        color[static_cast<std::size_t>(v)] = 1;
-        for(int to: graph[static_cast<std::size_t>(v)]){
+    std::vector<int> parent_edge(static_cast<std::size_t>(n), -1);
+    std::vector<std::size_t> next_edge(static_cast<std::size_t>(n), 0);
+    std::vector<int> stack;
+    CycleDetectionResult result;
+    for(int root = 0; root < n && result.edges.empty(); ++root){
+        if(color[static_cast<std::size_t>(root)] != 0) continue;
+        color[static_cast<std::size_t>(root)] = 1;
+        stack.push_back(root);
+        while(!stack.empty() && result.edges.empty()){
+            const int vertex = stack.back();
+            auto& index = next_edge[static_cast<std::size_t>(vertex)];
+            if(index == graph[static_cast<std::size_t>(vertex)].size()){
+                color[static_cast<std::size_t>(vertex)] = 2;
+                stack.pop_back();
+                continue;
+            }
+            const int id = graph[static_cast<std::size_t>(vertex)][index++];
+            const int to = edges[static_cast<std::size_t>(id)].second;
             if(color[static_cast<std::size_t>(to)] == 0){
-                parent[static_cast<std::size_t>(to)] = v;
-                if(self(self, to)) return true;
+                parent[static_cast<std::size_t>(to)] = vertex;
+                parent_edge[static_cast<std::size_t>(to)] = id;
+                color[static_cast<std::size_t>(to)] = 1;
+                stack.push_back(to);
             }else if(color[static_cast<std::size_t>(to)] == 1){
-                result.push_back(to);
-                for(int x = v; x != to; x = parent[static_cast<std::size_t>(x)]){
-                    result.push_back(x);
+                for(int x = vertex; x != to; x = parent[static_cast<std::size_t>(x)]){
+                    result.vertices.push_back(x);
+                    result.edges.push_back(parent_edge[static_cast<std::size_t>(x)]);
                 }
-                std::reverse(result.begin(), result.end());
-                return true;
+                result.vertices.push_back(to);
+                std::reverse(result.vertices.begin(), result.vertices.end());
+                std::reverse(result.edges.begin(), result.edges.end());
+                result.edges.push_back(id);
             }
         }
-        color[static_cast<std::size_t>(v)] = 2;
-        return false;
-    };
-    for(int v = 0; v < n; v++){
-        if(color[static_cast<std::size_t>(v)] == 0 && dfs(dfs, v)) break;
     }
     return result;
 }
 
-std::vector<int> undirected_cycle(int n, const std::vector<std::pair<int, int>>& edges){
-    if(n < 0)[[unlikely]]{
-        throw std::runtime_error("library assertion fault: range violation (undirected_cycle).");
+inline std::vector<int> directed_cycle(const std::vector<std::vector<int>>& graph){
+    if(graph.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
+        throw std::runtime_error("library assertion fault: too many vertices (directed_cycle).");
+    }
+    const int n = static_cast<int>(graph.size());
+    std::vector<std::pair<int, int>> edges;
+    for(int from = 0; from < n; ++from){
+        const auto& adjacent = graph[static_cast<std::size_t>(from)];
+        if(adjacent.size() >
+           static_cast<std::size_t>(std::numeric_limits<int>::max()) - edges.size())[[unlikely]]{
+            throw std::runtime_error("library assertion fault: too many edges (directed_cycle).");
+        }
+        for(int to: adjacent){
+            if(to < 0 || n <= to)[[unlikely]]{
+                throw std::runtime_error("library assertion fault: range violation (directed_cycle).");
+            }
+            edges.push_back({from, to});
+        }
+    }
+    return directed_cycle_with_edges(n, edges).vertices;
+}
+
+inline CycleDetectionResult undirected_cycle_with_edges(
+    int n,
+    const std::vector<std::pair<int, int>>& edges
+){
+    if(n < 0 || edges.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
+        throw std::runtime_error("library assertion fault: range violation (undirected_cycle_with_edges).");
     }
     std::vector<std::vector<std::pair<int, int>>> graph(static_cast<std::size_t>(n));
-    for(int id = 0; id < static_cast<int>(edges.size()); id++){
-        auto [u, v] = edges[static_cast<std::size_t>(id)];
-        if(u < 0 || n <= u || v < 0 || n <= v)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (undirected_cycle).");
+    for(int id = 0; id < static_cast<int>(edges.size()); ++id){
+        const auto [from, to] = edges[static_cast<std::size_t>(id)];
+        if(from < 0 || n <= from || to < 0 || n <= to)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (undirected_cycle_with_edges).");
         }
-        graph[static_cast<std::size_t>(u)].push_back({v, id});
-        graph[static_cast<std::size_t>(v)].push_back({u, id});
+        graph[static_cast<std::size_t>(from)].push_back({to, id});
+        graph[static_cast<std::size_t>(to)].push_back({from, id});
     }
 
     std::vector<char> color(static_cast<std::size_t>(n), 0);
     std::vector<int> parent(static_cast<std::size_t>(n), -1);
-    std::vector<int> result;
-    auto dfs = [&](auto&& self, int v, int parent_edge) -> bool {
-        color[static_cast<std::size_t>(v)] = 1;
-        for(auto [to, id]: graph[static_cast<std::size_t>(v)]){
-            if(id == parent_edge) continue;
+    std::vector<int> parent_edge(static_cast<std::size_t>(n), -1);
+    std::vector<std::size_t> next_edge(static_cast<std::size_t>(n), 0);
+    std::vector<int> stack;
+    CycleDetectionResult result;
+    for(int root = 0; root < n && result.edges.empty(); ++root){
+        if(color[static_cast<std::size_t>(root)] != 0) continue;
+        color[static_cast<std::size_t>(root)] = 1;
+        stack.push_back(root);
+        while(!stack.empty() && result.edges.empty()){
+            const int vertex = stack.back();
+            auto& index = next_edge[static_cast<std::size_t>(vertex)];
+            if(index == graph[static_cast<std::size_t>(vertex)].size()){
+                color[static_cast<std::size_t>(vertex)] = 2;
+                stack.pop_back();
+                continue;
+            }
+            const auto [to, id] = graph[static_cast<std::size_t>(vertex)][index++];
+            if(id == parent_edge[static_cast<std::size_t>(vertex)]) continue;
             if(color[static_cast<std::size_t>(to)] == 0){
-                parent[static_cast<std::size_t>(to)] = v;
-                if(self(self, to, id)) return true;
+                parent[static_cast<std::size_t>(to)] = vertex;
+                parent_edge[static_cast<std::size_t>(to)] = id;
+                color[static_cast<std::size_t>(to)] = 1;
+                stack.push_back(to);
             }else if(color[static_cast<std::size_t>(to)] == 1){
-                result.push_back(to);
-                for(int x = v; x != to; x = parent[static_cast<std::size_t>(x)]){
-                    result.push_back(x);
+                for(int x = vertex; x != to; x = parent[static_cast<std::size_t>(x)]){
+                    result.vertices.push_back(x);
+                    result.edges.push_back(parent_edge[static_cast<std::size_t>(x)]);
                 }
-                std::reverse(result.begin(), result.end());
-                return true;
+                result.vertices.push_back(to);
+                std::reverse(result.vertices.begin(), result.vertices.end());
+                std::reverse(result.edges.begin(), result.edges.end());
+                result.edges.push_back(id);
             }
         }
-        color[static_cast<std::size_t>(v)] = 2;
-        return false;
-    };
-    for(int v = 0; v < n; v++){
-        if(color[static_cast<std::size_t>(v)] == 0 && dfs(dfs, v, -1)) break;
     }
     return result;
+}
+
+inline std::vector<int> undirected_cycle(
+    int n,
+    const std::vector<std::pair<int, int>>& edges
+){
+    return undirected_cycle_with_edges(n, edges).vertices;
 }

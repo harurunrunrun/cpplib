@@ -3,33 +3,74 @@ title: Cycle Detection (閉路検出)
 documentation_of: ../src/algorithm/graph/cycle_detection.hpp
 ---
 
-閉路検出。
+有向・無向グラフから閉路を1つ検出する。探索は反復DFSで行うため、長い一本道でも再帰スタックを消費しない。
+
+# 型
+
+```cpp
+struct CycleDetectionResult {
+    vector<int> vertices;
+    vector<int> edges;
+};
+```
+
+`vertices[i]` から `vertices[(i + 1) % L]` へ進む辺の入力番号が `edges[i]` である。閉路がない場合は両方とも空になる。
 
 # 関数
 
+## `directed_cycle_with_edges`
+
 ```cpp
-directed_cycle(graph)
-undirected_cycle(n, edges)
+CycleDetectionResult directed_cycle_with_edges(
+    int n,
+    const vector<pair<int, int>>& edges
+);
 ```
 
-`directed_cycle` は有向グラフの閉路を1つ返す。
+`edges[id] = {from, to}` で表した有向グラフの閉路を1つ返す。多重辺と自己ループを扱える。
 
-`undirected_cycle` は無向グラフの閉路を1つ返す。多重辺を扱える。
+- 時間計算量: $O(N+M)$
+- 空間計算量: 戻り値を含めて $O(N+M)$
 
-閉路がない場合は空配列を返す。
+## `directed_cycle`
 
-## 時間計算量
+```cpp
+vector<int> directed_cycle(const vector<vector<int>>& graph);
+```
 
-$L$ を返す閉路の頂点数とする。
+有向隣接リストから閉路の頂点列を1つ返す。辺番号も必要な場合は `directed_cycle_with_edges` を使う。
 
-- `directed_cycle`: $O(N+M)$、閉路列の構築 $O(L)$ を含む
-- `undirected_cycle`: $O(N+M)$、無向隣接リストと閉路列の構築を含む
+- 時間計算量: $O(N+M)$
+- 空間計算量: 戻り値と内部の辺番号付き隣接リストを含めて $O(N+M)$
 
-## 空間計算量
+## `undirected_cycle_with_edges`
 
-- `directed_cycle`: 戻り値を含めて $O(N)$
-- `undirected_cycle`: 戻り値と無向隣接リストを含めて $O(N+M)$
+```cpp
+CycleDetectionResult undirected_cycle_with_edges(
+    int n,
+    const vector<pair<int, int>>& edges
+);
+```
 
-## 注意点
+`edges[id] = {u, v}` で表した無向グラフの閉路を1つ返す。多重辺と自己ループを扱える。
 
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+- 時間計算量: $O(N+M)$
+- 空間計算量: 戻り値を含めて $O(N+M)$
+
+## `undirected_cycle`
+
+```cpp
+vector<int> undirected_cycle(
+    int n,
+    const vector<pair<int, int>>& edges
+);
+```
+
+無向グラフの閉路の頂点列を1つ返す。辺番号も必要な場合は `undirected_cycle_with_edges` を使う。
+
+- 時間計算量: $O(N+M)$
+- 空間計算量: 戻り値を含めて $O(N+M)$
+
+# 注意点
+
+頂点数は非負で、すべての辺端点・隣接先は $[0,N)$ に含まれなければならない。違反時や辺数を `int` で表せない場合は `runtime_error` を送出する。返る閉路の開始位置と向きは未規定である。
