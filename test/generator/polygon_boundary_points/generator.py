@@ -58,6 +58,29 @@ def write_case(out_dir: Path, idx: int, poly: list[Point], points: list[Point]) 
     (out_dir / f"{name}.out").write_text(" ".join([str(len(result)), *map(str, result)]) + "\n", encoding="utf-8")
 
 
+def write_large_convex_case(out_dir: Path) -> None:
+    radius = 15_000
+    top = radius * radius + 4 * radius
+    polygon = [(x, x * x) for x in range(-radius, radius + 1)]
+    polygon.extend([(radius, top), (-radius, top)])
+
+    boundary = [(x, x * x) for x in range(-radius, radius + 1)]
+    inside = [(x, x * x + 1) for x in range(-radius + 1, radius)]
+    points = boundary + inside
+    input_lines = [f"FAST {len(polygon)} {len(points)} 1"]
+    input_lines.extend(f"{x} {y}" for x, y in polygon)
+    input_lines.extend(f"{x} {y}" for x, y in points)
+    (out_dir / "case_04.in").write_text(
+        "\n".join(input_lines) + "\n",
+        encoding="utf-8",
+    )
+    expected = list(range(len(boundary)))
+    (out_dir / "case_04.out").write_text(
+        " ".join(map(str, [len(expected), *expected])) + "\n",
+        encoding="utf-8",
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True)
@@ -90,6 +113,7 @@ def main() -> None:
         [(0, 0), (0, 0), (2, 0), (2, 2), (0, 2)],
         [(0, 0), (1, 0), (1, 1), (2, 1), (0, 2), (9, 9)],
     )
+    write_large_convex_case(out_dir)
 
 
 if __name__ == "__main__":
