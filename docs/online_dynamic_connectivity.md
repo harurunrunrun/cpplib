@@ -13,7 +13,7 @@ documentation_of: ../src/structure/graph/online_dynamic_connectivity.hpp
 OnlineDynamicConnectivity<MAX_SIZE>
 ```
 
-`MAX_SIZE` は頂点数の上限。Euler Tour Treeは各レベルにつき最大 `3 * MAX_SIZE` nodeを持ち、レベルは必要になった時点で確保される。レベル数の上限は $\lceil\log_2(\mathtt{MAX\_SIZE})\rceil+1$。
+`MAX_SIZE` は頂点数の上限。Euler Tour Treeは各レベルにつき最大 `3 * MAX_SIZE` nodeを持ち、レベルは必要になった時点で確保される。各レベルの頂点nodeも、辺または操作で初めて使われた時点で遅延構築される。レベル数の上限は $\lceil\log_2(\mathtt{MAX\_SIZE})\rceil+1$。
 
 単純辺の情報は `std::map` に保持するため、辺数の上限は固定しない。
 
@@ -23,7 +23,7 @@ OnlineDynamicConnectivity<MAX_SIZE>
 OnlineDynamicConnectivity(int n = MAX_SIZE)
 ```
 
-`n` 頂点の空グラフを作る。
+`n` 頂点の空グラフを作る。未構築の頂点nodeは孤立頂点として扱うため、全頂点を初期化しない。
 
 # 辺の追加削除
 
@@ -45,6 +45,8 @@ bool cut(int u, int v)
 - amortized $O(\log^2 N + \log M)$
 
 ここで $M$ は異なる端点対の数。
+
+新しいHDLTレベルの作成は全頂点を走査せず、そのレベルで必要になった頂点だけを実体化する。このため、レベルの初回作成による単一操作中の追加 $O(N)$ は発生しない。
 
 # 連結判定
 

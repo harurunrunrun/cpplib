@@ -30,8 +30,12 @@ private:
     int _n = 0;
     std::vector<Node> nodes;
     std::vector<int> free_nodes;
+    std::map<int, int> vertex_node;
     std::map<std::pair<int, int>, std::pair<int, int>> tree_edge;
     std::map<int, std::set<int>> non_tree_adjacent;
+
+    static constexpr std::size_t NODE_CAPACITY =
+        static_cast<std::size_t>(MAX_SIZE) * 3;
 
     static std::pair<int, int> normalize(int left, int right){
         if(right < left) std::swap(left, right);
@@ -141,20 +145,49 @@ private:
         return join(root, prefix);
     }
 
-    int allocate_edge_node(int from, int to, bool exact){
-        int index;
+    int allocate_node(){
         if(!free_nodes.empty()){
-            index = free_nodes.back();
+            int index = free_nodes.back();
             free_nodes.pop_back();
-        }else{
-            if(nodes.size() >= static_cast<std::size_t>(MAX_SIZE) * 3)[[unlikely]]{
-                throw std::runtime_error(
-                    "library assertion fault: Euler Tour Tree node capacity exceeded."
-                );
-            }
-            index = static_cast<int>(nodes.size());
-            nodes.emplace_back();
+            return index;
         }
+        if(nodes.size() >= NODE_CAPACITY)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: Euler Tour Tree node capacity exceeded."
+            );
+        }
+        int index = static_cast<int>(nodes.size());
+        nodes.emplace_back();
+        return index;
+    }
+
+    int find_vertex_node(int vertex) const{
+        auto iterator = vertex_node.find(vertex);
+        return iterator == vertex_node.end() ? -1 : iterator->second;
+    }
+
+    int materialize_vertex(int vertex){
+        auto iterator = vertex_node.find(vertex);
+        if(iterator != vertex_node.end()) return iterator->second;
+
+        int index = allocate_node();
+        Node& node = nodes[static_cast<std::size_t>(index)];
+        node = Node{};
+        node.from = vertex;
+        node.to = vertex;
+        pull(index);
+        try{
+            vertex_node.emplace(vertex, index);
+        }catch(...){
+            node = Node{};
+            free_nodes.push_back(index);
+            throw;
+        }
+        return index;
+    }
+
+    int allocate_edge_node(int from, int to, bool exact){
+        int index = allocate_node();
         Node& node = nodes[static_cast<std::size_t>(index)];
         node = Node{};
         node.from = from;
@@ -170,25 +203,18 @@ private:
     }
 
     void refresh_non_tree_flag(int vertex){
-        splay(vertex);
+        int node = materialize_vertex(vertex);
+        splay(node);
         auto iterator = non_tree_adjacent.find(vertex);
-        nodes[static_cast<std::size_t>(vertex)].own_non_tree =
+        nodes[static_cast<std::size_t>(node)].own_non_tree =
             iterator != non_tree_adjacent.end() && !iterator->second.empty();
-        pull(vertex);
+        pull(node);
     }
 
 public:
     explicit EulerTourForest(int n): _n(n){
         if(n < 0 || MAX_SIZE < n)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (Euler Tour Tree).");
-        }
-        nodes.reserve(static_cast<std::size_t>(MAX_SIZE) * 3);
-        nodes.resize(static_cast<std::size_t>(_n));
-        for(int vertex = 0; vertex < _n; ++vertex){
-            Node& node = nodes[static_cast<std::size_t>(vertex)];
-            node.from = vertex;
-            node.to = vertex;
-            pull(vertex);
         }
     }
 
@@ -199,14 +225,19 @@ public:
 
     bool same(int left, int right){
         if(left == right) return true;
-        splay(left);
-        splay(right);
-        return nodes[static_cast<std::size_t>(left)].parent != -1;
+        int left_node = find_vertex_node(left);
+        int right_node = find_vertex_node(right);
+        if(left_node == -1 || right_node == -1) return false;
+        splay(left_node);
+        splay(right_node);
+        return nodes[static_cast<std::size_t>(left_node)].parent != -1;
     }
 
     int component_size(int vertex){
-        splay(vertex);
-        return nodes[static_cast<std::size_t>(vertex)].vertex_count;
+        int node = find_vertex_node(vertex);
+        if(node == -1) return 1;
+        splay(node);
+        return nodes[static_cast<std::size_t>(node)].vertex_count;
     }
 
     void link(int left, int right, bool exact){
@@ -214,14 +245,16 @@ public:
         if(tree_edge.find(edge) != tree_edge.end())[[unlikely]]{
             throw std::runtime_error("library assertion fault: duplicate Euler Tour Tree edge.");
         }
+        int left_node = materialize_vertex(left);
+        int right_node = materialize_vertex(right);
         int forward = allocate_edge_node(left, right, exact && left < right);
         int backward = allocate_edge_node(right, left, exact && right < left);
         tree_edge.emplace(edge, std::pair<int, int>{
             left < right ? forward : backward,
             left < right ? backward : forward
         });
-        int left_root = reroot(left);
-        int right_root = reroot(right);
+        int left_root = reroot(left_node);
+        int right_root = reroot(right_node);
         join(join(left_root, forward), join(right_root, backward));
     }
 
@@ -235,8 +268,12 @@ public:
         int normalized_backward = iterator->second.second;
         int forward = left < right ? normalized_forward : normalized_backward;
         int backward = left < right ? normalized_backward : normalized_forward;
+        int left_node = find_vertex_node(left);
+        if(left_node == -1)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: missing Euler Tour Tree vertex.");
+        }
 
-        reroot(left);
+        reroot(left_node);
         splay(forward);
         int first = nodes[static_cast<std::size_t>(forward)].left;
         int remaining = nodes[static_cast<std::size_t>(forward)].right;
@@ -284,7 +321,9 @@ public:
     }
 
     std::pair<int, int> pop_exact_tree(int component_vertex){
-        int root = splay(component_vertex);
+        int node = find_vertex_node(component_vertex);
+        if(node == -1) return {-1, -1};
+        int root = splay(node);
         if(!nodes[static_cast<std::size_t>(root)].subtree_exact_tree) return {-1, -1};
         int current = root;
         while(true){
@@ -306,7 +345,9 @@ public:
     }
 
     std::pair<int, int> any_non_tree(int component_vertex){
-        int root = splay(component_vertex);
+        int node = find_vertex_node(component_vertex);
+        if(node == -1) return {-1, -1};
+        int root = splay(node);
         if(!nodes[static_cast<std::size_t>(root)].subtree_non_tree) return {-1, -1};
         int current = root;
         while(true){
