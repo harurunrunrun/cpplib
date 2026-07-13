@@ -16,6 +16,12 @@ BUNDLE_PATH := $(VERIFIER_ROOT)/vendor/bundle
 STANDALONE_ASSET_CACHE := $(VERIFIER_CACHE)/standalone-assets
 CXX ?= g++
 CXXFLAGS ?= -std=c++20 -O2 -Wall -Wextra
+STANDALONE_SPLIT_SIZE ?= 1
+STANDALONE_SPLIT_INDEX ?= 0
+LOCAL_VERIFY_JOBS ?= 4
+VERIFIER_GXX_WRAPPER_DIR := $(CURDIR)/scripts/competitive_verifier_gcc15
+VERIFIER_REAL_GXX := $(shell command -v g++ 2>/dev/null)
+VERIFIER_COMMAND_ENV := COMPETITIVE_VERIFIER_REAL_GXX="$(VERIFIER_REAL_GXX)" PATH="$(VERIFIER_GXX_WRAPPER_DIR):$(PATH)"
 
 COMMA := ,
 JEKYLL_URL_CONFIG := $(VERIFIER_CACHE)/jekyll-url.yml
@@ -25,10 +31,11 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-resolve standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-wrapper-test verifier-resolve standalone-assets-test standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
+	@echo "make verify LOCAL_VERIFY_JOBS=N  local verifyの並列数を指定 (default: $(LOCAL_VERIFY_JOBS))"
 	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
 	@echo "make docs-title-check  docsの英日併記タイトルを検査"
 	@echo "make docs-coverage-check  全headerのdocsと注意点見出しを検査"
@@ -42,32 +49,67 @@ $(VERIFIER):
 
 verifier-setup: $(VERIFIER)
 
-verifier-resolve: verifier-setup
+verifier-wrapper-test:
+	$(PYTHON) scripts/test_competitive_verifier_gcc15_wrapper.py
+
+verifier-resolve: verifier-setup verifier-wrapper-test
 	@mkdir -p $(VERIFIER_CACHE)
-	$(VERIFIER) oj-resolve --include src test/onlinejudge --config config.toml > $(VERIFY_FILES).tmp
+	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge --config config.toml > $(VERIFY_FILES).tmp
+	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
+	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
-standalone-assets:
+standalone-assets-test:
+	$(PYTHON) scripts/test_run_standalone_assets.py
+
+standalone-assets: standalone-assets-test
 	$(PYTHON) scripts/run_standalone_assets.py \
 		--cache-dir $(STANDALONE_ASSET_CACHE) \
 		--cxx "$(CXX)" \
-		--cxxflags "$(CXXFLAGS)"
+		--cxxflags "$(CXXFLAGS)" \
+		--split-size "$(STANDALONE_SPLIT_SIZE)" \
+		--split-index "$(STANDALONE_SPLIT_INDEX)"
 
 verify:
-	@standalone_status=0; \
+	@jobs="$(LOCAL_VERIFY_JOBS)"; \
+	if ! [[ "$$jobs" =~ ^[1-9][0-9]*$$ ]]; then \
+		echo "[verify] LOCAL_VERIFY_JOBS must be a positive integer" >&2; \
+		exit 2; \
+	fi; \
+	resolve_status=0; \
+	$(MAKE) --no-print-directory verifier-resolve || resolve_status=$$?; \
+	standalone_status=0; \
+	if $(PYTHON) scripts/test_run_standalone_assets.py; then \
+		standalone_pids=(); \
+		for ((index = 0; index < jobs; ++index)); do \
+			$(PYTHON) scripts/run_standalone_assets.py \
+				--cache-dir $(STANDALONE_ASSET_CACHE) \
+				--cxx "$(CXX)" \
+				--cxxflags "$(CXXFLAGS)" \
+				--split-size "$$jobs" \
+				--split-index "$$index" & \
+			standalone_pids+=("$$!"); \
+		done; \
+		for pid in "$${standalone_pids[@]}"; do \
+			wait "$$pid" || standalone_status=1; \
+		done; \
+	else \
+		standalone_status=$$?; \
+	fi; \
 	verifier_status=0; \
-	$(PYTHON) scripts/run_standalone_assets.py \
-		--cache-dir $(STANDALONE_ASSET_CACHE) \
-		--cxx "$(CXX)" \
-		--cxxflags "$(CXXFLAGS)" || standalone_status=$$?; \
-	if $(MAKE) --no-print-directory verifier-resolve; then \
-		$(VERIFIER) verify \
+	if [ $$resolve_status -ne 0 ]; then \
+		verifier_status=$$resolve_status; \
+		echo "[verify] competitive-verifier was not run because verifier-resolve failed" >&2; \
+	elif $(VERIFIER_VENV)/bin/python scripts/test_run_competitive_verifier_shards.py; then \
+		$(VERIFIER_COMMAND_ENV) $(VERIFIER_VENV)/bin/python scripts/run_competitive_verifier_shards.py \
+			--verifier $(VERIFIER) \
 			--verify-json $(VERIFY_FILES) \
-			--check-error \
-			--output $(VERIFY_RESULT) || verifier_status=$$?; \
+			--output $(VERIFY_RESULT) \
+			--prev-result $(VERIFY_RESULT) \
+			--shard-dir $(VERIFIER_CACHE)/local-shards \
+			--jobs "$$jobs" || verifier_status=$$?; \
 	else \
 		verifier_status=$$?; \
-		echo "[verify] competitive-verifier was not run because verifier-resolve failed" >&2; \
 	fi; \
 	if [ $$standalone_status -ne 0 ]; then \
 		echo "[verify] standalone assets failed (exit $$standalone_status)" >&2; \

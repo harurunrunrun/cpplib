@@ -39,20 +39,35 @@ def asset_command(
     return [str(native_executable)]
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cache-dir", default=".competitive-verifier/cache/standalone-assets")
     parser.add_argument("--cxx", default="g++")
     parser.add_argument("--cxxflags", default="-std=c++20 -O2 -Wall -Wextra")
-    args = parser.parse_args()
+    parser.add_argument("--split-size", type=int, default=1)
+    parser.add_argument("--split-index", type=int, default=0)
+    args = parser.parse_args(argv)
+
+    if args.split_size <= 0:
+        parser.error("--split-size must be positive")
+    if not 0 <= args.split_index < args.split_size:
+        parser.error("--split-index must be in [0, --split-size)")
 
     root = Path(".")
     cache_dir = Path(args.cache_dir)
-    tests = sorted((root / "test" / "standalone").glob("*.test.cpp"))
+    all_tests = sorted((root / "test" / "standalone").glob("*.test.cpp"))
+    tests = all_tests[args.split_index :: args.split_size]
     failures: list[tuple[str, str]] = []
 
-    if not tests:
+    if not all_tests:
         failures.append(("discovery", "no standalone tests found"))
+
+    print(
+        "[standalone-assets] "
+        f"shard {args.split_index}/{args.split_size}: "
+        f"{len(tests)}/{len(all_tests)} test(s)",
+        file=sys.stderr,
+    )
 
     for test in tests:
         name = test.name[: -len(".test.cpp")]

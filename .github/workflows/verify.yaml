@@ -37,6 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0, 1, 2, 3]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -49,7 +54,10 @@ jobs:
           python-version: "3.12"
 
       - name: Verify standalone generated assets
-        run: make standalone-assets
+        run: |
+          make standalone-assets \
+            STANDALONE_SPLIT_SIZE=4 \
+            STANDALONE_SPLIT_INDEX=${{ matrix.index }}
 
   resolve:
     runs-on: ubuntu-latest
@@ -73,6 +81,16 @@ jobs:
           python-version: "3.12"
           cache-pip: true
 
+      - name: Configure competitive-verifier compiler wrapper
+        shell: bash
+        run: |
+          echo "COMPETITIVE_VERIFIER_REAL_GXX=$(command -v g++)" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/scripts/competitive_verifier_gcc15" >> "$GITHUB_PATH"
+
+      - name: Test competitive-verifier compiler wrapper
+        run: |
+          python3 scripts/test_competitive_verifier_gcc15_wrapper.py
+
       - name: Resolve online judge verification files
         uses: competitive-verifier/actions/oj-resolve@v2
         with:
@@ -82,11 +100,17 @@ jobs:
             src
             test/onlinejudge
 
+      - name: Normalize verification plan
+        run: |
+          python3 scripts/test_normalize_competitive_verifier_plan.py
+          python3 scripts/normalize_competitive_verifier_plan.py verify-files.json
+          python3 scripts/test_run_competitive_verifier_shards.py
+
       - name: Plan verification shards
         id: plan
         shell: bash
         env:
-          TARGET_FILES_PER_SHARD: "48"
+          TARGET_FILES_PER_SHARD: "24"
         run: |
           python3 - <<'PY'
           import json
@@ -162,6 +186,16 @@ jobs:
           python-version: "3.12"
           cache-pip: true
 
+      - name: Configure competitive-verifier compiler wrapper
+        shell: bash
+        run: |
+          echo "COMPETITIVE_VERIFIER_REAL_GXX=$(command -v g++)" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/scripts/competitive_verifier_gcc15" >> "$GITHUB_PATH"
+
+      - name: Test competitive-verifier compiler wrapper
+        run: |
+          python3 scripts/test_competitive_verifier_gcc15_wrapper.py
+
       - name: Download resolved verification files
         uses: actions/download-artifact@v4
         with:
@@ -188,17 +222,17 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
-          import json
           import os
           from pathlib import Path
+          from competitive_verifier.models import VerifyCommandResult
 
           path = Path(".competitive-verifier/cache/result.json")
           valid = False
           if path.is_file():
               try:
-                  data = json.loads(path.read_text(encoding="utf-8"))
-                  valid = isinstance(data, dict) and isinstance(data.get("files"), dict)
-              except (OSError, UnicodeError, json.JSONDecodeError):
+                  VerifyCommandResult.model_validate_json(path.read_bytes())
+                  valid = True
+              except (OSError, UnicodeError, ValueError):
                   pass
 
           with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as file:
@@ -231,6 +265,7 @@ jobs:
           import json
           import os
           from pathlib import Path
+          from competitive_verifier.models import VerifyCommandResult
 
           index = int(os.environ["SHARD_INDEX"])
           outcome = os.environ.get("VERIFY_OUTCOME", "")
@@ -240,9 +275,9 @@ jobs:
           result_valid = False
           if result_path.is_file():
               try:
-                  data = json.loads(result_path.read_text(encoding="utf-8"))
-                  result_valid = isinstance(data, dict) and isinstance(data.get("files"), dict)
-              except (OSError, UnicodeError, json.JSONDecodeError):
+                  VerifyCommandResult.model_validate_json(result_path.read_bytes())
+                  result_valid = True
+              except (OSError, UnicodeError, ValueError):
                   pass
 
           status = {
@@ -290,6 +325,15 @@ jobs:
           python-version: "3.12"
           cache-pip: true
 
+      - name: Download resolved verification files
+        id: download_verify_files
+        if: ${{ always() }}
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: verify-files-${{ github.run_attempt }}
+          path: .
+
       - name: Download shard artifacts
         id: download_shards
         if: ${{ always() }}
@@ -311,6 +355,7 @@ jobs:
           import json
           import os
           from pathlib import Path
+          from competitive_verifier.models import VerifyCommandResult
 
           root = Path("shard-artifacts")
           cache = Path(".competitive-verifier/cache")
@@ -347,11 +392,9 @@ jobs:
                       invalid.append(index)
 
               try:
-                  result = json.loads(result_path.read_text(encoding="utf-8"))
-                  if not isinstance(result, dict) or not isinstance(result.get("files"), dict):
-                      raise ValueError
+                  VerifyCommandResult.model_validate_json(result_path.read_bytes())
                   valid_results.append(str(result_path))
-              except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+              except (OSError, UnicodeError, ValueError):
                   if index not in invalid:
                       invalid.append(index)
 
@@ -390,6 +433,16 @@ jobs:
           result-files: ${{ steps.inventory.outputs.result_files }}
           output-path: .competitive-verifier/cache/result.json
 
+      - name: Filter stale verification results
+        id: filter_result
+        if: ${{ always() }}
+        shell: bash
+        continue-on-error: true
+        run: |
+          python3 scripts/filter_competitive_verifier_result.py \
+            --verify-json verify-files.json \
+            --result .competitive-verifier/cache/result.json
+
       - name: Ensure a valid merged result
         id: merged_result
         if: ${{ always() }}
@@ -399,16 +452,15 @@ jobs:
           import json
           import os
           from pathlib import Path
+          from competitive_verifier.models import VerifyCommandResult
 
           path = Path(".competitive-verifier/cache/result.json")
           fallback = True
           if path.is_file():
               try:
-                  data = json.loads(path.read_text(encoding="utf-8"))
-                  fallback = not (
-                      isinstance(data, dict) and isinstance(data.get("files"), dict)
-                  )
-              except (OSError, UnicodeError, json.JSONDecodeError):
+                  VerifyCommandResult.model_validate_json(path.read_bytes())
+                  fallback = False
+              except (OSError, UnicodeError, ValueError):
                   pass
 
           if fallback:
@@ -423,7 +475,8 @@ jobs:
           PY
 
       - name: Save merged verification cache
-        if: ${{ always() && steps.merge.outcome == 'success' && steps.merged_result.outputs.fallback == 'false' }}
+        id: save_cache
+        if: ${{ always() && steps.filter_result.outcome == 'success' && steps.merged_result.outputs.fallback == 'false' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
@@ -432,7 +485,7 @@ jobs:
 
       - name: Upload merged verification result
         id: upload_merged
-        if: ${{ always() && steps.merged_result.outcome == 'success' }}
+        if: ${{ always() && steps.filter_result.outcome == 'success' && steps.merged_result.outcome == 'success' && steps.merged_result.outputs.fallback == 'false' }}
         uses: actions/upload-artifact@v4
         with:
           name: competitive-verifier-result-${{ github.run_attempt }}
@@ -443,7 +496,7 @@ jobs:
 
       - name: Check merged verification result
         id: check
-        if: ${{ always() && steps.merged_result.outcome == 'success' }}
+        if: ${{ always() && steps.filter_result.outcome == 'success' && steps.merged_result.outcome == 'success' && steps.merged_result.outputs.fallback == 'false' }}
         uses: competitive-verifier/actions/check@v2
         continue-on-error: true
         with:
@@ -462,7 +515,9 @@ jobs:
           FALSE_SHARDS: ${{ steps.inventory.outputs.false_indices }}
           INVALID_SHARDS: ${{ steps.inventory.outputs.invalid }}
           MERGE_OUTCOME: ${{ steps.merge.outcome }}
+          FILTER_OUTCOME: ${{ steps.filter_result.outcome }}
           USED_FALLBACK: ${{ steps.merged_result.outputs.fallback }}
+          CACHE_SAVE_OUTCOME: ${{ steps.save_cache.outcome }}
           CHECK_OUTCOME: ${{ steps.check.outcome }}
           CHECK_COUNT: ${{ steps.check.outputs.result-count }}
           CHECK_FAILURE: ${{ steps.check.outputs.result-count-failure }}
@@ -499,8 +554,14 @@ jobs:
           if [ "$MERGE_OUTCOME" != "success" ]; then
             report_error "Shard result merge did not succeed: $MERGE_OUTCOME"
           fi
+          if [ "$FILTER_OUTCOME" != "success" ]; then
+            report_error "Stale verification result filtering did not succeed: $FILTER_OUTCOME"
+          fi
           if [ "$USED_FALLBACK" != "false" ]; then
             report_error "The merged result required an empty JSON fallback"
+          fi
+          if [ "$FILTER_OUTCOME" = "success" ] && [ "$USED_FALLBACK" = "false" ] && [ "$CACHE_SAVE_OUTCOME" != "success" ]; then
+            report_error "The valid merged result was not saved to cache: ${CACHE_SAVE_OUTCOME:-unknown}"
           fi
           if [ "$CHECK_OUTCOME" != "success" ]; then
             report_error "competitive-verifier check failed or was skipped: $CHECK_OUTCOME"

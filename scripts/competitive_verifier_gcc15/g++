@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""Narrow GCC 15 compatibility wrapper for Library Checker references.
+
+Put this directory at the front of PATH and set
+COMPETITIVE_VERIFIER_REAL_GXX to the real C++ compiler.  The wrapper only
+suppresses -Wignored-attributes while compiling a C/C++ source stored below a
+library-checker-problems directory; all other invocations are passed through
+unchanged.
+"""
+
+from __future__ import annotations
+
+import os
+from pathlib import Path
+import shutil
+import sys
+
+
+_SOURCE_SUFFIXES = {
+    ".c",
+    ".cc",
+    ".cp",
+    ".cpp",
+    ".cxx",
+    ".c++",
+    ".C",
+    ".i",
+    ".ii",
+}
+_SUPPRESSION = "-Wno-ignored-attributes"
+
+
+def _is_library_checker_source(argument: str) -> bool:
+    """Return whether argument names a source below library-checker-problems."""
+
+    if not argument or argument.startswith("-"):
+        return False
+
+    # Compiler invocations run in WSL, but accepting either separator keeps the
+    # component check lexical and avoids matching similarly named directories.
+    components = argument.replace("\\", "/").split("/")
+    try:
+        marker = components.index("library-checker-problems")
+    except ValueError:
+        return False
+    if marker + 1 >= len(components):
+        return False
+    return Path(argument).suffix in _SOURCE_SUFFIXES
+
+
+def _resolve_real_compiler() -> Path:
+    value = os.environ.get("COMPETITIVE_VERIFIER_REAL_GXX")
+    if not value:
+        raise FileNotFoundError(
+            "COMPETITIVE_VERIFIER_REAL_GXX is not set; refusing to recurse"
+        )
+
+    has_separator = os.sep in value or (os.altsep is not None and os.altsep in value)
+    candidate = (
+        os.path.abspath(os.path.expanduser(value))
+        if has_separator
+        else shutil.which(value)
+    )
+    if candidate is None:
+        raise FileNotFoundError(f"real compiler was not found: {value}")
+
+    compiler = Path(candidate)
+    try:
+        compiler = compiler.resolve(strict=True)
+    except (OSError, RuntimeError) as error:
+        raise FileNotFoundError(f"real compiler was not found: {value}") from error
+
+    wrapper = Path(__file__).resolve()
+    try:
+        is_wrapper = os.path.samefile(compiler, wrapper)
+    except OSError:
+        is_wrapper = compiler == wrapper
+    if is_wrapper:
+        raise RuntimeError("COMPETITIVE_VERIFIER_REAL_GXX resolves to this wrapper")
+    if not compiler.is_file() or not os.access(compiler, os.X_OK):
+        raise PermissionError(f"real compiler is not executable: {compiler}")
+    return compiler
+
+
+def main() -> int:
+    try:
+        compiler = _resolve_real_compiler()
+    except FileNotFoundError as error:
+        print(f"competitive-verifier g++ wrapper: {error}", file=sys.stderr)
+        return 127
+    except (PermissionError, RuntimeError) as error:
+        print(f"competitive-verifier g++ wrapper: {error}", file=sys.stderr)
+        return 126
+
+    arguments = sys.argv[1:]
+    if (
+        _SUPPRESSION not in arguments
+        and any(_is_library_checker_source(argument) for argument in arguments)
+    ):
+        arguments = [*arguments, _SUPPRESSION]
+
+    try:
+        os.execv(compiler, [str(compiler), *arguments])
+    except OSError as error:
+        print(
+            f"competitive-verifier g++ wrapper: could not execute {compiler}: {error}",
+            file=sys.stderr,
+        )
+        return 126
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
