@@ -60,6 +60,11 @@ void self_test(){
     assert(!fallback_query.uses_convex_fast_path());
     assert(fallback_query.enumerate(weak_points) ==
            enumerate_points_on_polygon_boundary(nonconvex, weak_points));
+    std::vector<Point> collinear = {{0, 0}, {1, 0}, {2, 0}};
+    PolygonBoundaryPointQuery collinear_query(collinear);
+    assert(!collinear_query.uses_convex_fast_path());
+    assert(collinear_query.enumerate(candidates, false) ==
+           enumerate_points_on_polygon_boundary(collinear, candidates, false));
     assert(on_segment({{3, 4}, {3, 4}}, {3, 4}));
     assert(!on_segment({{3, 4}, {3, 4}}, {3, 5}));
 }

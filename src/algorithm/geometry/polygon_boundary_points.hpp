@@ -136,6 +136,16 @@ PolygonBoundaryPointQuery::locate_boundary_sides(const Point& point) const{
     SideCandidates result;
     const int n = static_cast<int>(convex_vertices_.size());
     if(n < 3) return result;
+    const auto add_if_on_side = [&](int side){
+        side = (side + n) % n;
+        if(on_segment(
+            {
+                convex_vertices_[static_cast<std::size_t>(side)],
+                convex_vertices_[static_cast<std::size_t>((side + 1) % n)]
+            },
+            point
+        )) result.add(side);
+    };
 
     const Point& origin = convex_vertices_[0];
     const int first_side = geometry_sign(cross(convex_vertices_[1] - origin, point - origin));
@@ -146,18 +156,14 @@ PolygonBoundaryPointQuery::locate_boundary_sides(const Point& point) const{
     if(first_side < 0 || last_side > 0) return result;
     if(first_side == 0){
         if(!on_segment({origin, convex_vertices_[1]}, point)) return result;
-        result.add(0);
-        if(point == origin) result.add(n - 1);
-        else if(point == convex_vertices_[1]) result.add(1);
+        for(int side: {n - 1, 0, 1}) add_if_on_side(side);
         return result;
     }
     if(last_side == 0){
         if(!on_segment({origin, convex_vertices_[static_cast<std::size_t>(n - 1)]}, point)){
             return result;
         }
-        result.add(n - 1);
-        if(point == origin) result.add(0);
-        else if(point == convex_vertices_[static_cast<std::size_t>(n - 1)]) result.add(n - 2);
+        for(int side: {n - 2, n - 1, 0}) add_if_on_side(side);
         return result;
     }
 
@@ -179,9 +185,7 @@ PolygonBoundaryPointQuery::locate_boundary_sides(const Point& point) const{
         convex_vertices_[static_cast<std::size_t>(low + 1)]
     };
     if(!on_segment(side, point)) return result;
-    result.add(low);
-    if(point == side.a) result.add((low + n - 1) % n);
-    if(point == side.b) result.add((low + 1) % n);
+    for(int candidate: {low - 1, low, low + 1}) add_if_on_side(candidate);
     return result;
 }
 
@@ -205,6 +209,7 @@ inline bool PolygonBoundaryPointQuery::build_convex_fast_path(){
         const Point middle = point_edge ? first : (first + second) / 2.0L;
         const SideCandidates candidates = locate_boundary_sides(middle);
         int selected_side = -1;
+        if(candidates.overflow) return false;
         for(int i = 0; i < candidates.size; ++i){
             const int side = candidates.side[static_cast<std::size_t>(i)];
             const Segment support{
@@ -252,6 +257,7 @@ inline bool PolygonBoundaryPointQuery::build_convex_fast_path(){
             if(geometry_sign(side.intervals[i].left - side.intervals[i - 1].right) != 0){
                 return false;
             }
+            if(side.intervals[i].right < side.intervals[i - 1].right) return false;
         }
     }
     return true;

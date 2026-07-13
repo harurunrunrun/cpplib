@@ -21,7 +21,7 @@ If `unique = true`, each point index occurs only at its first position. If `uniq
 
 `PolygonBoundaryPointQuery` preserves the same edge order, order within each edge, and `unique` behavior. For a nondegenerate convex polygon it normalizes clockwise or counterclockwise weakly convex boundaries, associates every normalized side with the original edges, and uses the convex fast path. Consecutive duplicate vertices are supported.
 
-If convexity, nondegeneracy, or the original-edge association cannot be verified, `uses_convex_fast_path()` is false and `enumerate` calls the general function. This fallback also covers nonconvex and all-collinear polygons.
+If convexity, nondegeneracy, or the original-edge association cannot be verified, `uses_convex_fast_path()` is false and `enumerate` calls the general function. This fallback also covers nonconvex and all-collinear polygons. Enumeration also falls back when tolerance makes the candidate-side set ambiguous.
 
 # Complexity
 
