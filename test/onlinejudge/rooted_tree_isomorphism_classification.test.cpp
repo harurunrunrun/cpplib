@@ -1,0 +1,28 @@
+// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/rooted_tree_isomorphism_classification
+
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include "../../src/algorithm/tree/tree_isomorphism.hpp"
+
+int main(){
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    int n;
+    std::cin >> n;
+    std::vector<std::vector<int>> graph(static_cast<std::size_t>(n));
+    for(int vertex = 1; vertex < n; ++vertex){
+        int parent;
+        std::cin >> parent;
+        graph[static_cast<std::size_t>(parent)].push_back(vertex);
+        graph[static_cast<std::size_t>(vertex)].push_back(parent);
+    }
+    auto label = rooted_tree_isomorphism_labels(graph, 0);
+    const int count = *std::max_element(label.begin(), label.end());
+    std::cout << count << '\n';
+    for(int vertex = 0; vertex < n; ++vertex){
+        if(vertex != 0) std::cout << ' ';
+        std::cout << label[static_cast<std::size_t>(vertex)] - 1;
+    }
+    std::cout << '\n';
+}
