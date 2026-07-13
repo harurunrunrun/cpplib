@@ -27,18 +27,13 @@ on:
 
   workflow_dispatch:
 
-concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  verify-and-docs:
+  verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     permissions:
       contents: read
-      pages: write
-      id-token: write
 
     steps:
       - name: Checkout
@@ -46,76 +41,77 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up competitive-verifier
-        uses: competitive-verifier/actions/setup@v2
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-          cache-pip: true
 
-      - name: Verify standalone generated assets
-        run: make standalone-assets
-
-      - name: Resolve verify files
-        uses: competitive-verifier/actions/oj-resolve@v2
-        with:
-          output-path: verify-files.json
-          config: config.toml
-          include: |
-            src
-            test
-
-      - name: Prepare cache directory
-        run: mkdir -p .competitive-verifier/cache
-
-      - name: Restore previous verify result
+      - name: Restore competitive-verifier environment
         uses: actions/cache@v4
         with:
-          path: .competitive-verifier/cache/result.json
-          key: competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-${{ github.run_id }}
-          restore-keys: |
-            competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-
+          path: .competitive-verifier/venv
+          key: competitive-verifier-${{ runner.os }}-${{ runner.arch }}-python-3.12-${{ hashFiles('Makefile') }}
 
-      - name: Detect previous verify result
-        id: prev-result
-        shell: bash
-        run: |
-          if [ -f .competitive-verifier/cache/result.json ]; then
-            echo "path=.competitive-verifier/cache/result.json" >> "$GITHUB_OUTPUT"
-          else
-            echo "path=" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Set up competitive-verifier
+        run: make verifier-setup
 
       - name: Verify
-        uses: competitive-verifier/actions/verify@v2
-        with:
-          verify-files: verify-files.json
-          destination: .competitive-verifier/cache/result.json
-          prev-result: ${{ steps.prev-result.outputs.path }}
-          check: true
+        run: make verify CXXFLAGS="-std=c++20 -O2 -Wall -Wextra -Werror"
 
-      - name: Generate docs
-        uses: competitive-verifier/actions/docs@v2
+      - name: Upload verification result
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          verify-files: verify-files.json
-          verify-result: .competitive-verifier/cache/result.json
-          destination: _jekyll
+          name: competitive-verifier-result
+          path: .competitive-verifier/cache/result.json
+          if-no-files-found: warn
+          retention-days: 7
+          include-hidden-files: true
 
-      - name: Setup Pages
-        if: github.ref == 'refs/heads/main'
-        uses: actions/configure-pages@v5
+  docs:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
 
-      - name: Build with Jekyll
-        if: github.ref == 'refs/heads/main'
-        uses: actions/jekyll-build-pages@v1
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
-          source: _jekyll
-          destination: _site
-      
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Restore competitive-verifier environment
+        uses: actions/cache@v4
+        with:
+          path: .competitive-verifier/venv
+          key: competitive-verifier-${{ runner.os }}-${{ runner.arch }}-python-3.12-${{ hashFiles('Makefile') }}
+
+      - name: Set up competitive-verifier
+        run: make verifier-setup
+
+      - name: Restore verification result
+        uses: actions/download-artifact@v5
+        with:
+          name: competitive-verifier-result
+          path: .competitive-verifier/cache
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Build HTML documentation
+        run: make docs
+
       - name: Remove unsafe polyfill.io reference
-        if: github.ref == 'refs/heads/main'
         run: |
-          sudo chown -R "$USER":"$USER" _site
-
           python3 - <<'PY'
           from pathlib import Path
           import re
@@ -125,7 +121,7 @@ jobs:
               re.IGNORECASE,
           )
 
-          for path in Path("_site").rglob("*.html"):
+          for path in Path(".competitive-verifier/site").rglob("*.html"):
               text = path.read_text(encoding="utf-8", errors="ignore")
               new_text = pattern.sub("\n", text)
               if new_text != text:
@@ -134,23 +130,40 @@ jobs:
           PY
 
       - name: Check generated site for unsafe CDN references
-        if: github.ref == 'refs/heads/main'
         run: |
-          if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' _site; then
+          if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' .competitive-verifier/site; then
             echo "::error::Unsafe CDN reference remains in generated site"
             exit 1
           fi
+
+      - name: Upload HTML artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-html
+          path: .competitive-verifier/site
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: true
+
+      - name: Setup Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v4
         with:
-          path: _site
+          path: .competitive-verifier/site
 
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: verify-and-docs
+    needs: docs
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    concurrency:
+      group: pages
+      cancel-in-progress: true
 
     permissions:
       pages: write
