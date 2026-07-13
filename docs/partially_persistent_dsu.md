@@ -73,3 +73,10 @@ int latest_version()
 - $O(1)$
 
 `size` も $O(1)$。
+
+# 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`、頂点は`[0,n)`、versionは`[0,versions())`。違反時は例外。
+- version 0が初期状態。`merge`は同一成分の場合も最新状態からversionを1個追加する。
+- 更新は高々`MAX_UPDATE`回。超過した`merge`は例外で既存versionを変えない。
+- `leader`は代表、`component_size`は成分頂点数、`groups`は成分数を返す。

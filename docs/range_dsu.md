@@ -48,3 +48,14 @@ $I$ を現在の区間数、$K$ を対象範囲と交差して走査・削除す
 | `same_range(l,r)` | $O((K+1)\log n+\log I)$ |
 
 構築後の保持領域は $O(n+I)=O(n)$。`unite_range` と `same_range` の $K$ は、その呼出しで実際に走査する区間数である。
+## API詳細と範囲
+
+- `RangeDSU(n)` は $0,\ldots,n-1$ を別成分で初期化する。`n<0` は例外。
+- 非const `leader(x)` は経路圧縮し、const overloadは変更せず代表を返す。
+- `same(x,y)` は同一成分か、`unite(x,y)` は新しく併合したかを返す。
+- `size(x)` は `x` の連結成分の要素数。
+- `unite_range(l,r,x)` は $[l,r)$ の各点と `x` を同じ成分にする。
+  空区間では何もしない。
+- `same_range(l,r)` は区間内の全点が同じ成分かを返し、空区間では `true`。
+- 点は $0\le x<n$、区間は $0\le l\le r\le n$ が必要。
+  違反時は `runtime_error` を送出する。

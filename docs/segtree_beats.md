@@ -181,3 +181,11 @@ int size() const
 ## 時間計算量
 
 - $O(1)$
+
+# 引数・容量・例外
+
+実際の列長を (n) とする。点は `0 <= k < n`、全range操作は
+`0 <= l <= r <= n` の半開区間 `[l,r)` で指定する。`range_chmin/chmax/add` は
+区間更新、`range_sum/min/max` は値を返す。`all_sum/min/max` は `[0,n)` を返す。
+列長が `MAX_SIZE` を超える場合、点・区間が不正な場合は `runtime_error`。
+各APIの計算量は上記の通り。

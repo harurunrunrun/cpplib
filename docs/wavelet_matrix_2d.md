@@ -63,3 +63,13 @@ $H=\mathtt{Y\_BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 - 2種類のconstructor: $O(N\log N+\mathtt{MAX\_SIZE}+H(N+W))$
 - `size`: $O(1)$
 - `rectangle_count`, `range_freq`, `kth_smallest_y`, `prev_y`, `next_y`: $O(\log N+H)$
+
+# 共通API契約
+
+constructorは `xs,ys` またはpoint列を受け、内部でx順に並べる。入力点の順序はquery結果に影響しない。
+`size` は点数。`rectangle_count/range_freq` は半開矩形
+`[xl,xr) x [yl,yr)` の点数を返す。`kth_smallest_y(xl,xr,k)` の `k` は0-indexed。
+`prev_y` はupper未満の最大y、`next_y` はlower以上の最小yで、存在しなければ `nullopt`。
+
+vector長不一致、点数容量、yのbit幅、逆転した座標範囲、無効な `k` では
+`runtime_error`。copyは禁止、moveは可能。各APIの計算量は上記表の通り。

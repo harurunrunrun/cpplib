@@ -100,3 +100,9 @@ tour.euler_tour()
 | `euler_tour()` | $O(n)$、出力 $O(n)$ |
 
 object本体と構築用bufferは $O(MAX_SIZE)$。`build` 中も動的確保はない。
+
+## API契約・前提・例外
+
+constructorは `0 <= n <= MAX_SIZE`、`add_edge` は固定の `MAX_SIZE-1` 辺容量を検査する。metadata・preorder・event queryは直近の辺追加後のbuild成功と有効indexを必要とし、違反時は `runtime_error`。
+
+頂点とrootは範囲内でなければならない。空木を明記した場合を除き、入力は無向の連結木とする。端点範囲、閉路、辺数、連結性の違反時は `runtime_error` を送出する。記載した計算量には木の検査とResultの構築を含む。

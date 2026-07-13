@@ -56,3 +56,11 @@ $B=\mathrm{BIT}$ とする。
 
 - 固定node array: $O(\mathrm{MAX\_NODES})$
 - 各操作の追加領域: $O(1)$
+
+## 前提・例外・容量
+
+- `T`は整数型、`BIT > 0`、`MAX_NODES > 0`。
+- `insert`で必要node数が`MAX_NODES`を超える場合は例外。erase後もnodeは回収しない。
+- `kth`は`0 <= k < size()`なら値、それ以外は`nullopt`。
+- `min_element`, `max_element`は空なら`nullopt`。
+- 順序queryは保存値そのものではなく`value xor xor_value`を比較するが、戻り値は保存値。

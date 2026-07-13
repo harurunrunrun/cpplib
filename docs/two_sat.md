@@ -37,3 +37,9 @@ $N$ を変数数、$M$ を現在の含意辺数とする。
 ## 空間計算量
 
 - 含意グラフと割当を含めて $O(N+M)$
+
+## API契約・前提・例外
+
+`id(variable,value)` はliteralに対応する含意graph頂点を返す。`add_implication(i,f,j,g)` は `(x_i==f) => (x_j==g)` を追加する。`satisfiable()` がtrueならpublic `answer[v]` が0/1の充足割当。変数範囲違反で `runtime_error`。
+
+頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。

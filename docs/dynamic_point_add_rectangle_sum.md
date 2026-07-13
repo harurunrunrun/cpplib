@@ -45,3 +45,15 @@ $N$ を `reserve_point` した点数とする。
 | `sum(x1,y1,x2,y2)` | $O(\log^2 N)$ |
 
 `sum` は4回のprefix queryを行う。`build` 後の保持領域は $O(N\log N)$。
+## API詳細と構築順序
+
+- `reserve_point(x,y)` は将来 `add` する座標を登録する。重複登録してよい。
+- `build()` は登録座標を圧縮して更新可能状態にする。
+  build後の再予約・再build、build前のquery/updateは例外。
+- `add(x,y,value)` は予約済みの点へ `value` を加える。
+  xまたはyが未予約なら例外。
+- `prefix_sum_less(x,y)` は $p_x<x,p_y<y$、
+  `prefix_sum_leq(x,y)` は $p_x\le x,p_y\le y$ の重み和。
+  query座標自体は予約不要。
+- `sum(x1,y1,x2,y2)` は半開矩形の和。端点順序は検査せず、
+  $x1\le x2,y1\le y2$ を前提とする。

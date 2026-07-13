@@ -108,3 +108,14 @@ $D=\mathtt{BIT\_WIDTH}$ とする。重み用固定長配列も各levelに保持
 - vector/array constructor: $O(D\mathtt{MAX\_SIZE})$
 - `size`, `sum`: $O(1)$
 - `access`, `operator[]`, `rank`, `kth_smallest`, `kth_largest`, `range_freq`, `range_sum`, `sum_k_smallest`, `sum_k_largest`, `prev_value`, `next_value`: $O(D)$
+
+# 構築・共通契約
+
+constructorは上記の値列と重み列を構築し、両vectorの長さは一致する必要がある。
+`size` は列長、`access/operator[]` は値、`weight(k)` は1点の重みを返す。
+点・出現番号・順序統計は0-indexed、列区間は `[l,r)`、値域は `[lower,upper)`。
+`sum/range_sum` は全値域・指定値域の重み、`sum_k_smallest/sum_k_largest` は
+順序先頭 `k` 個の重みを返す。前後値は該当なしなら `nullopt`。
+
+vector長不一致、列長容量、値のbit幅、点・区間・順序・値域では `runtime_error`。
+copyは禁止、moveは可能。各APIの計算量は上記表の通り。

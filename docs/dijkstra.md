@@ -34,3 +34,7 @@ vector<char> reachable;
 ## 空間計算量
 
 - 戻り値とpriority queueを含めて $O(N+M)$
+
+## API契約・前提・例外
+
+頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。

@@ -122,3 +122,12 @@ A.transposed()
 | `transposed()` | $O(C+n^2)=O(C)$ |
 
 上表は `T` の構築・コピー・四則演算・比較を $O(1)$ とした計算量である。一般の `T` では、各項に実行する `T` の操作コストを掛ける。
+
+# 前提・例外・戻り値
+
+- constructor、`zero`, `identity`は`0 <= n <= MAX_SIZE`を要求する。
+- vector入力は$n x n$でなければならない。size/index違反は例外。
+- 行列同士の加減乗算は同じ実行時sizeを要求し、違反時は例外。
+- `pow(exponent)`は非負指数を要求し、負なら例外。指数0では同sizeの単位行列を返す。
+- scalar除算の可否と0除算の扱いは`T::operator/`に従う。
+- 値返却演算は新しい固定容量`SquareMatrix`、compound演算は`*this`への参照を返す。

@@ -56,3 +56,25 @@ $Q(L)=B+\lceil L/B\rceil\log B$、$S(L)=B+\lceil L/B\rceil$ とする。
 - `sum`: $O(S(L))$
 - `select`: $O(Q(N)\log N)$
 - `kth_smallest`, `kth_largest`, `sum_k_smallest`, `sum_k_largest`, `prev_value`, `next_value`: $O(DQ(L))$
+
+# 構築・共通契約
+
+default constructorは空列、vector/array constructorは入力列を構築する。`size` は列長、
+`access/operator[]` は1点を返す。`set(k,value)` は1点を置換する。
+点・出現番号・順序統計の `k` は0-indexed、列区間は半開区間 `[l,r)`、
+値域は `[lower,upper)`。`select` は該当なしなら `size()`、
+`prev_value/next_value` は `nullopt`。
+
+列長容量、bit幅、点・区間・順序・値域の違反では `runtime_error`。
+各公開APIの計算量は上記表の通り。
+
+`weight(k)` は重みを返す。`set` は値と重み、`set_value/set_weight` は片方だけを更新する。
+`sum/range_sum` は区間・値域の重み、`sum_k_smallest/sum_k_largest` は順序先頭の重みを返す。
+
+# Constructor signature
+
+```cpp
+DynamicWeightedWaveletMatrix()
+DynamicWeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
+DynamicWeightedWaveletMatrix(const array<T, N>& values, const array<W, N>& weights)
+```

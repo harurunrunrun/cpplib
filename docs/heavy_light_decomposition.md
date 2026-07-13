@@ -36,3 +36,9 @@ $R$ を `path_query` が返す区間数（$R=O(\log N)$）とする。
 ## 空間計算量
 
 - graph、分解table、出力区間列を含めて $O(N+R)$
+
+## API契約・前提・例外
+
+`parent/depth/subtree/head/in/out` は根付き木metadata、`operator[]` はEuler indexから頂点への写像。`path_query` は半開区間列、`subtree_query(v,false)` はv自身を除く。query前にbuildする。jump範囲や非木入力の違反で `runtime_error`。
+
+頂点とrootは範囲内でなければならない。空木を明記した場合を除き、入力は無向の連結木とする。端点範囲、閉路、辺数、連結性の違反時は `runtime_error` を送出する。記載した計算量には木の検査とResultの構築を含む。

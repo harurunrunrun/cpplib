@@ -118,3 +118,11 @@ int min_left(int r, auto f, auto&&... args)
 
 ## 時間計算量
 - $O(\log n)$
+
+# 引数・前提・例外
+
+実際の列長を (n) とする。コンストラクタの `n` と `v.size()` は
+`MAX_SIZE` 以下でなければならない。点 `k` は `0 <= k < n`、
+区間は `0 <= l <= r <= n` の半開区間 `[l,r)` で指定する。
+境界探索のpredicateは単調で、`f(Monoid.e(), args...) == true` が必要である。
+容量、添字、区間またはpredicateの前提違反では `runtime_error` を送出する。

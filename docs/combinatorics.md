@@ -53,3 +53,17 @@ mint x = comb.combination(n, k);
 | 公開配列 `fact` / `inv_fact` / `inv` の1要素参照 | $O(1)$ |
 
 保持領域は $O(MAX_N)$。`bell_number` の呼出しごとの一時領域は $O(MAX_N)$。
+## APIの前提と戻り値
+
+- `fact[n]`, `inv_fact[n]`, `inv[n]` はそれぞれ $n!$、$(n!)^{-1}$、
+  $n^{-1}$ の公開前計算表。`inv[0]` は0。
+- constructorは `fact[MAX_N].inv()` を呼ぶため、$MAX_N!$ が `Mint` 上で
+  逆元を持つ必要がある。
+- `factorial(n)`, `inverse_factorial(n)` は $0\le n\le MAX_N$、
+  `inverse(n)` は $1\le n\le MAX_N$ を要求し、範囲外では例外を送出する。
+- `permutation(n,k)`, `combination(n,k)` は $n$ の範囲外では例外、
+  $k<0$ または $k>n$ では0を返す。
+- `homogeneous(n,k)` は重複組合せを返す。`n,k` は非負で、
+  $n+k-1\le MAX_N$ が必要。`homogeneous(0,0)=1`、`homogeneous(0,k)=0\ (k>0)`。
+- `bell_number(n)` は要素数 $n$ の集合の分割数を返す。
+  $0\le n\le MAX_N$ が必要。

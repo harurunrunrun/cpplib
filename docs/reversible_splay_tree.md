@@ -69,3 +69,11 @@ $N$ を操作前の列長とし、モノイド演算を $O(1)$ とする。
 - objectとtemplate実体ごとの固定長祖先stack: $O(\mathrm{MAX\_SIZE})$
 - splayが使用する祖先stack要素数: $O(N)$ worst-case
 - vector constructorの再帰stack: $O(\log(N+1))$
+
+# 前提・例外・容量
+
+- `insert(p,x)`は`0 <= p <= size()`、点操作は`0 <= p < size()`を要求する。
+- 区間操作は`0 <= l <= r <= size()`。範囲違反は例外。
+- `insert`で要素数が`MAX_SIZE`を超える場合は例外。
+- `prod(l,r)`は左から右の順で非可換monoidを合成し、空区間では単位元を返す。
+- `clear`は$O(1)$で固定arenaを再利用し、copyは禁止、moveは可能。

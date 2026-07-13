@@ -45,3 +45,10 @@ $H=\mathtt{Y\_BIT\_WIDTH}$ とする。
 - 2種類のconstructor: $O(N\log N+H\mathtt{MAX\_SIZE})$
 - `size`: $O(1)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+H)$
+
+# API契約
+
+`RectangleSum` は `WaveletMatrix2DWeighted` の矩形和用別名である。constructorは
+`xs,ys,weights` または `(x,y,weight)` 列を受ける。`size`、`rectangle_count/range_freq`、
+`rectangle_sum/range_sum` を利用でき、矩形は `[xl,xr) x [yl,yr)`。
+vector長・点数容量・bit幅・矩形の違反では `runtime_error`。各APIの計算量は上記表の通り。

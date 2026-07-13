@@ -69,3 +69,15 @@ $W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 - `set`, `operator[]`, `rank`, `size`: $O(1)$
 - `build`: $O(W)$
 - `select`: $O(\log(\lceil N/64\rceil+1)+64)$
+
+# 補助API・前提
+
+```cpp
+int size() const
+bool operator[](int k) const
+```
+
+`size` はbit列長、`operator[]` は `k` 番目を返す。`rank/select` の前に
+`build()` が必要で、`set` 後は再度buildする。長さは `MAX_SIZE` 以下、
+点と区間は列内、`select` の `k` は非負でなければならない。
+違反時は `runtime_error`。各APIの計算量は上記表の通り。

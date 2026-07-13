@@ -19,3 +19,22 @@ $S_0(L)=B+C$、$S_V(L)=B+C\log(V+1)$ とおく。
 - `sum`: 最新versionは $O(S_0(L))$、過去versionは $O(S_V(L))$
 - `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: 最新versionは $O(\mathtt{BIT\_WIDTH}\,Q_0(L))$、過去versionは $O(\mathtt{BIT\_WIDTH}\,Q_V(L))$
 - `sum_k_smallest`, `sum_k_largest`: 上記の順序統計時間に $O(L)$ を加えた時間
+
+# API契約
+
+```cpp
+int set(int k, T value)
+```
+
+最新版の値と重みを同時更新した新versionを返す。queryは任意versionを参照できる。
+他の公開APIは `PartiallyPersistentWeightedWaveletMatrix` から継承する。
+`set_value/set_weight` の単独使用では「重み=値」は保たれない。
+version・点・半開区間・bit幅・容量・例外契約は基底型と同じ。
+
+# Constructor signature
+
+```cpp
+PartiallyPersistentFunctionalWaveletMatrix()
+PartiallyPersistentFunctionalWaveletMatrix(const vector<T>& values)
+PartiallyPersistentFunctionalWaveletMatrix(const array<T, N>& values)
+```

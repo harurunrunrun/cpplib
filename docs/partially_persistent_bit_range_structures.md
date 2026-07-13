@@ -24,3 +24,24 @@ PartiallyPersistentBitOverwriteRangeSum<...>
 - `fork`, `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`: $O(1)$
 
 空間計算量は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$。
+
+# API契約
+
+```cpp
+int assign(int version, long long l, long long r, bool value)
+int flip(int version, long long l, long long r)
+int set_one(int version, long long l, long long r)
+long long sum(int version, long long l, long long r) const
+bool get(int version, long long k) const
+int fork(int version)
+long long size() const
+int versions() const
+int latest_version() const
+int nodes_used() const
+int changes_used() const
+```
+
+version省略updateは最新版を使う。更新元は `latest_version()` に限り、新version番号を返す。
+queryは任意の有効versionを参照する。BitOverwrite型の `set` は `set_one` と同じ。
+区間は半開区間。有効version・範囲・最新版条件・各容量の違反では `runtime_error`。
+失敗した更新は使用量を元へ戻す。各APIの計算量は下表の通り。

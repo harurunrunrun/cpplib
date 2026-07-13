@@ -20,3 +20,20 @@ $Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
 - `set_y`: 償却 $O(B\log B)$。履歴vector再確保時の1回の最悪は $O(B\log B+V)$
 - `rectangle_count`, `range_freq`: 最新versionは $O(\log N+Q_0(L))$、過去versionは $O(\log N+Q_V(L))$
 - `kth_smallest_y`, `prev_y`, `next_y`: 最新versionは $O(\log N+\mathtt{Y\_BIT\_WIDTH}\,Q_0(L))$、過去versionは $O(\log N+\mathtt{Y\_BIT\_WIDTH}\,Q_V(L))$
+
+# Version・座標・例外
+
+点idは入力順、x座標は固定。`x(k)` はx、`y(version,k)` は指定versionのy。
+`set_y(k,y)` は最新版から新versionを作り、queryは任意の有効versionを読む。
+矩形は `[xl,xr) x [yl,yr)`、順序統計は0-indexed、前後値は該当なしなら `nullopt`。
+
+不正なversion・点・矩形・順序、vector長不一致、容量、yのbit幅では `runtime_error`。
+copyは禁止、moveは可能。各APIの計算量は上記表の通り。
+
+# Constructor signature
+
+```cpp
+PartiallyPersistentWaveletMatrix2D()
+PartiallyPersistentWaveletMatrix2D(const vector<X>& xs, const vector<Y>& ys)
+PartiallyPersistentWaveletMatrix2D(const vector<pair<X,Y>>& points)
+```

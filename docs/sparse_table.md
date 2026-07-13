@@ -39,3 +39,10 @@ int x = st.prod(l, r);
 - `get`: $O(1)$
 - `prod`, `all_prod`: $O(1)$
 - `size`, `empty`: $O(1)$
+
+## 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`。vector長超過を含むconstructor違反は例外。
+- `get(k)`は`0 <= k < n`、`prod(l,r)`は`0 <= l <= r <= n`。違反時は例外。
+- 空区間の`prod`と空列の`all_prod`は単位元を返す。
+- `Semilattice.op`は結合的かつ冪等で、`e`は単位元である必要がある。

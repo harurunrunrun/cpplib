@@ -90,3 +90,9 @@ $M$ を現在の制約数とする。
 
 - `cow_game`: 戻り値を含めて $O(N)$
 - 単一目的・範囲関数も内部結果を含めて $O(N)$
+
+## API契約・前提・例外
+
+`CowGameMaximumResult` は `feasible`, `bounded`, `value` を持ち、両flagがtrueのときだけvalueが有効。`CowGameRangeResult` は `feasible`, `has_minimum`, `has_maximum`, `minimum`, `maximum` を持ち、各端点は対応flagがtrueのときだけ有効。`cow_game_has_maximum` は実行不能ならfalseを返し、targetを範囲検査する。
+
+頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。

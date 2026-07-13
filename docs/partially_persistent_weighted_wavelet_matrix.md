@@ -81,3 +81,25 @@ $S_0(L)=B+C$、$S_V(L)=B+C\log(V+1)$ とおく。
 - `sum`: 最新versionは $O(S_0(L))$、過去versionは $O(S_V(L))$
 - `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: 最新versionは $O(\mathtt{BIT\_WIDTH}\,Q_0(L))$、過去versionは $O(\mathtt{BIT\_WIDTH}\,Q_V(L))$
 - `sum_k_smallest`, `sum_k_largest`: 上記の順序統計時間に境界値走査の $O(L)$ を加えた時間
+
+# Version・引数・例外
+
+version 0が初期列。更新は `latest_version()` からだけ新versionを作り、その番号を返す。
+queryは先頭のversion引数で任意の有効versionを参照する。version省略queryは最新版を読む。
+`size/versions/latest_version` は列長・version数・最新番号を返す。
+
+点・順序は0-indexed、列区間は半開区間 `[l,r)`、値域は `[lower,upper)`。
+`select` は該当なしなら `size()`、前後値は `nullopt`。
+不正なversion・点・区間・順序・値域、bit幅、容量超過では `runtime_error`。
+各APIの計算量は上記表の通り。
+
+`set` は値と重み、`set_value/set_weight` は片方を更新する。`weight` は1点の重み、
+重みqueryの区間と値域も半開区間である。
+
+# Constructor signature
+
+```cpp
+PartiallyPersistentWeightedWaveletMatrix()
+PartiallyPersistentWeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
+PartiallyPersistentWeightedWaveletMatrix(const array<T, N>& values, const array<W, N>& weights)
+```

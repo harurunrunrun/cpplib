@@ -89,3 +89,13 @@ $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$、$W=\lceil\mathtt{MA
 - `access`, `operator[]`, `kth_smallest`, `kth_largest`, `quantile`, `range_min`, `range_max`, `median_floor`, `median_ceil`: $O(H)$
 - `rank`, `range_freq`, `prev_value`, `next_value`: $O(\log D+H)$
 - `select`: $O(\log D+H\log N)$
+
+# 構築・共通契約
+
+constructorは上記の値列を座標圧縮して構築する。`size` は列長、`value_count` は異なる値数、
+`value(id)` は圧縮idの元の値を返す。`access/operator[]`、出現番号、順序統計は0-indexed。
+列区間は `[l,r)`、値域は `[lower,upper)`。`quantile` は `kth_smallest` の別名。
+`range_min/max` と `median_floor/ceil` は空でない区間が前提。前後値は該当なしなら `nullopt`。
+
+列長容量、異なる値数に対するID bit幅、点・区間・圧縮id・順序・値域の違反では
+`runtime_error`。copyは禁止、moveは可能。各APIの計算量は上記表の通り。

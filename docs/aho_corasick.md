@@ -57,3 +57,16 @@ $V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHAB
 | `count_matches(text)` | $O(T)$ |
 
 `add` で新規nodeを作ると長さ $\Sigma$ の遷移表を初期化する。保持領域は $O(MAX_NODES\cdot\Sigma)$。`count_matches` は一致位置を列挙せず総数だけを返す。
+## API詳細と状態遷移
+
+- constructorはroot node 0だけを作る。`node_count()` は使用node数、
+  `is_built()` はfailure link構築済みかを返す。
+- `add(pattern)` はpatternの終端node番号を返し、同じpatternの重複追加も数える。
+  文字はalphabet内、node数は `MAX_NODES` 以下が必要。
+  `build()` 後の追加は例外。
+- `build()` はfailure linkと未定義遷移を構築する。pattern追加後に呼ぶ。
+- `next_state(state,c)` は1文字読んだ次状態。
+  `terminal_count(state)` はそのnodeで直接終わる登録pattern数、
+  `output_count(state)` はfailure link上を含めて現在位置で終わるpattern数。
+- `count_matches(text)` は重複pattern・重なる出現・空patternを含む総出現数。
+  遷移・output・検索はbuild前、またはstate範囲外なら例外。

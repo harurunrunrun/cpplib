@@ -42,3 +42,11 @@ long long s = fw.sum(1, 2, 5, 6);
 - `FenwickTree2D(vector)`: $O(\mathtt{MAX\_H}\mathtt{MAX\_W}+HW\log H\log W)$
 - `add`, `prefix_sum`, `sum`, `get`, `set`: $O(\log H \log W)$
 - `height`, `width`, `empty`: $O(1)$
+
+## 前提・例外・容量
+
+- `0 <= h <= MAX_H`, `0 <= w <= MAX_W`。範囲外または非矩形vectorは例外。
+- 点indexは`[0,h) x [0,w)`、prefix端点は`[0,h] x [0,w]`。
+- 矩形は`0 <= y1 <= y2 <= h`, `0 <= x1 <= x2 <= w`。違反時は例外。
+- `T`はdefault構築、加算、減算を使える必要がある。
+- 保存領域は固定$O(MAX\_H MAX\_W)$、各操作の追加領域は$O(1)$。

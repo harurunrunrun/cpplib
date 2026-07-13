@@ -55,3 +55,11 @@ $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$ とする。
 - `size`, `value_count`, `value`, `sum`: $O(1)$
 - `access`, `operator[]`, `kth_smallest`, `kth_largest`, `quantile`, `sum_k_smallest`, `sum_k_largest`, `range_min`, `range_max`, `median_floor`, `median_ceil`: $O(H)$
 - `rank`, `range_freq`, `range_sum`, `prev_value`, `next_value`: $O(\log D+H)$
+
+# API契約
+
+値自身を重みとした `CompressedWeightedWaveletMatrix` である。
+`size/value_count/value/access/operator[]/rank/kth_smallest/kth_largest/quantile/range_freq/sum/`
+`range_sum/sum_k_smallest/sum_k_largest/range_min/range_max/median_floor/median_ceil/prev_value/next_value`
+を継承する。各signature、半開区間、戻り値、例外はCompressed Weighted Wavelet Matrixと同じ。
+constructorはvector/arrayを受け、列長またはID bit幅の容量違反では `runtime_error`。

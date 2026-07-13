@@ -81,3 +81,12 @@ vector<S> to_vector(int version = 0) const
 
 - 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
 - `to_vector` の戻り値と再帰stack: $O(N)$
+
+# 前提・例外
+
+- version、insert位置、点index、半開区間は対象versionのsize内でなければならない。
+- 範囲違反、version/node容量超過は例外で、既存versionを変えない。
+- updateは内容が変わらない場合もversionを1個作り、queryは容量を消費しない。
+- `prod`は左から右の順で合成し、空区間では単位元を返す。
+- `composition(f,g)`は先に`g`、後に`f`。
+- copyは禁止、moveは可能。

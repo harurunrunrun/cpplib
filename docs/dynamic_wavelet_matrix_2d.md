@@ -45,3 +45,13 @@ $Q(L)=B+\lceil L/B\rceil\log B$ とする。
 - `set_y`: $O(B\log B)$
 - `rectangle_count`, `range_freq`: $O(\log N+Q(L))$
 - `kth_smallest_y`, `prev_y`, `next_y`: $O(\log N+DQ(L))$
+
+# 共通API契約
+
+点id `k` は入力順を保つ。`size` は点数、`x(k)` と `y(k)` は現在座標を返す。
+x座標は構築後固定、`set_y(k,y)` はyだけを更新する。`rectangle_count/range_freq` は
+半開矩形 `[xl,xr) x [yl,yr)` の点数。`kth_smallest_y` は0-indexed、
+`prev_y/next_y` は該当なしなら `nullopt`。
+
+vector長不一致、点数容量、yのbit幅、無効な点・矩形・順序では `runtime_error`。
+copyは禁止、moveは可能。各APIの計算量は上記表の通り。

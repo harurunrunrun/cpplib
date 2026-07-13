@@ -36,3 +36,20 @@ $Q(L)=B+\lceil L/B\rceil\log B$ とする。
 - `size`, `x`, `y`, `weight`: $O(1)$
 - `set`, `set_y`, `set_weight`: $O(B\log B)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+Q(L))$
+
+# 共通API契約
+
+点idは入力順を保つ。`size` は点数、`x/y/weight` は1点を返し、xは構築後固定。
+`set(k,y,w)` はyと重み、`set_y/set_weight` は片方を更新する。
+`rectangle_count/range_freq` は半開矩形の点数、`rectangle_sum/range_sum` は重み総和。
+
+vector長不一致、点数容量、yのbit幅、無効な点・矩形では `runtime_error`。
+copyは禁止、moveは可能。各APIの計算量は上記表の通り。
+
+# Constructor signature
+
+```cpp
+DynamicWaveletMatrix2DWeighted()
+DynamicWaveletMatrix2DWeighted(const vector<X>& xs, const vector<Y>& ys, const vector<W>& weights)
+DynamicWaveletMatrix2DWeighted(const vector<tuple<X,Y,W>>& points)
+```

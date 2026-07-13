@@ -20,3 +20,21 @@ $Q(L)=B+C(\log B+\log(M+1))$、$S(L)=B+C\log(M+1)$ とする。
 - `rank`, `range_freq`, `range_sum`: $O(Q(L))$、`sum`: $O(S(L))$
 - `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(DQ(L))$
 - `sum_k_smallest`, `sum_k_largest`: $O(DQ(L)+L)$
+
+# API契約
+
+```cpp
+int set(int version, int k, T value)
+```
+
+指定versionの値と重みを同時に更新した新versionを返す。他のqueryと `fork` は
+`PersistentWeightedWaveletMatrix` から継承する。`set_value/set_weight` を単独使用すると
+「重み=値」は保たれない。version・点・半開区間・bit幅・容量・例外契約は基底型と同じ。
+
+# Constructor signature
+
+```cpp
+PersistentFunctionalWaveletMatrix()
+PersistentFunctionalWaveletMatrix(const vector<T>& values)
+PersistentFunctionalWaveletMatrix(const array<T, N>& values)
+```

@@ -72,3 +72,18 @@ long long graph.steps_to(from, to)
 
 - `jump`: $O(64)$
 - `steps_to`: $O(64)$
+## 構築・queryの例外
+
+- default constructorは頂点数0の空graph。`build(successor)` は以前の内容を破棄して
+  再構築する。頂点数超過、または行き先が $[0,N)$ 外なら例外。
+- 頂点を受け取る全queryは $0\le v<size()$、component queryは
+  $0\le id<component_count()$ が必要で、違反時は例外。
+- `component_size(id)` はcycleへ流入する木も含む弱連結成分の頂点数。
+  `cycle_size(id)` はそのうちcycle上の頂点数。
+- `cycle(id)` が返すspanはobject内部配列を参照し、次の `build` まで有効。
+
+## API契約・前提・例外
+
+default constructorは空graphを作り、`build` は以前の状態を置換する。入力sizeは `MAX_SIZE` 以下。頂点・component queryはindexを検査する。`cycle` のspanは次のbuildまたはobject破棄まで有効。構築は $O(64N)$、`jump/steps_to` は $O(64)$。
+
+頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。

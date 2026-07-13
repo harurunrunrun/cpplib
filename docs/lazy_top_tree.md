@@ -119,3 +119,13 @@ ClusterStatistics cluster_statistics(int v)
 # 空間計算量
 
 - $O(\mathtt{MAX\_SIZE})$
+
+# size / 前提・例外
+
+`int size() const`は頂点数を$O(1)$で返す。
+
+- `0 <= n <= MAX_SIZE`、vector長も`MAX_SIZE`以下。違反時は例外。
+- 全頂点引数は`[0,size())`。範囲外なら例外。
+- `path_apply`と`path_prod`は両端点が連結であることを要求し、非連結なら例外。
+- `link`は既に連結なら`false`、`cut`は直接辺がなければ`false`。
+- `composition(f,g)`は先に`g`、後に`f`を表す。

@@ -15,3 +15,10 @@ $Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
 - `y`, `weight`: 最新versionは $O(1)$、過去versionは $O(\log(V+1))$
 - `set`, `set_y`, `set_weight`: 償却 $O(B\log B)$。履歴vector再確保時の1回の最悪は $O(B\log B+V)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: 最新versionは $O(\log N+Q_0(L))$、過去versionは $O(\log N+Q_V(L))$
+
+# API契約
+
+基底型の `size/versions/latest_version/x/y/weight/set/set_y/set_weight/`
+`rectangle_count/range_freq/rectangle_sum/range_sum` を利用できる。更新は最新版から新versionを作り、
+queryは任意versionを読む。矩形は `[xl,xr) x [yl,yr)`。不正version・点・容量・bit幅・矩形では
+`runtime_error`。各APIの計算量は上記表の通り。

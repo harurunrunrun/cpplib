@@ -90,3 +90,18 @@ $N$ を列長、$D=\mathtt{BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ 
 - `size`: $O(1)$
 - `access`, `operator[]`, `rank`, `kth_smallest`, `kth_largest`, `range_freq`, `prev_value`, `next_value`: $O(D)$
 - `select`: $O(D\log N)$
+
+# 構築・共通契約
+
+```cpp
+WaveletMatrix(const vector<T>& values)
+WaveletMatrix(const array<T, N>& values)
+int size() const
+```
+
+入力列を構築し、`size` は列長を返す。`access/operator[]` の点、`rank/select` の出現番号、
+順序統計の `k` は0-indexed。列区間は半開区間 `[l,r)`、値域は
+`[lower,upper)`。`select` は該当なしなら `size()`、前後値は `nullopt`。
+
+列長容量、値のbit幅、点・区間・順序・値域の違反では `runtime_error`。
+copyは禁止、moveは可能。各APIの計算量は上記表の通り。

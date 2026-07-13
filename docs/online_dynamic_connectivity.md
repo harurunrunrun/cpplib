@@ -78,3 +78,10 @@ int edge_multiplicity(int u, int v)
 # 空間計算量
 
 - $O(N\log N + M)$
+
+# 前提・例外・戻り値
+
+- `0 <= n <= MAX_SIZE`、全頂点引数は`[0,n)`。違反時は例外。
+- `add_edge`は新しい端点対なら`true`、既存辺の多重度増加なら`false`。
+- `erase_edge`は1本削除できた場合`true`、存在しなければ`false`。
+- 自己loopと多重辺は記録するが、`groups`, `same`, `component_size`には影響しない。

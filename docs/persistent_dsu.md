@@ -76,3 +76,11 @@ int nodes_used()
 - $O(1)$
 
 `size`, `nodes_used` も $O(1)$。
+
+# 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`、頂点は`[0,n)`、versionは`[0,versions())`。違反時は例外。
+- `fork`と`merge`はversionを1個追加し、追加version数が`MAX_VERSION`を超えると例外。
+- 異なる成分の`merge`は永続配列nodeを$O(\log MAX\_SIZE)$個生成する。
+- 同じ成分の`merge`と`fork`はnodeを生成しない。
+- node容量超過時はnode数とversion数を操作前へ戻す。

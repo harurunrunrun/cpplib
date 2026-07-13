@@ -85,3 +85,10 @@ int latest_version() const
 # 空間計算量
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE})$
+
+# 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`、indexは`[0,n)`、versionは`[0,versions())`。違反時は例外。
+- `set`は最新versionだけを更新して新しいversion番号を返す。更新数が`MAX_UPDATE`に達すると例外。
+- 容量超過や値のcopyで失敗した更新はversionを追加せず、既存状態を変えない。
+- `MAX_SIZE`個の初期値と`MAX_UPDATE`個の変更値を固定確保する。

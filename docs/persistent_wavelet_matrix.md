@@ -65,3 +65,22 @@ $Q(L)=B+C(\log B+\log(M+1))$ とおく。
 - `rank`, `range_freq`: $O(Q(L))$
 - `select`: $O(Q(N)\log N)$
 - `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(DQ(L))$
+
+# Version・引数・例外
+
+version 0が初期列。`set` は指定versionから1点を置換した新version、`fork` は同内容の
+新versionを返す。`access` と全queryは先頭にversionを受け取る。`size/versions/latest_version`
+は列長・version数・最新番号を返す。
+
+点・出現番号・順序統計は0-indexed。列区間は半開区間 `[l,r)`、値域は
+`[lower,upper)`。`select` は該当なしなら `size()`、前後値は `nullopt`。
+不正なversion・点・区間・順序・値域、bit幅、列長/version/block node容量超過では
+`runtime_error`。失敗した更新は使用量を戻す。各APIの計算量は上記表の通り。
+
+# Constructor signature
+
+```cpp
+PersistentWaveletMatrix()
+PersistentWaveletMatrix(const vector<T>& values)
+PersistentWaveletMatrix(const array<T, N>& values)
+```

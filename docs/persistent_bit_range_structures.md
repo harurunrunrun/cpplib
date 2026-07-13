@@ -16,7 +16,7 @@ PersistentBitOverwriteRangeSum<MAX_SIZE, MAX_NODES, MAX_VERSIONS>
 ```cpp
 int assign(int version, long long l, long long r, bool value)
 int flip(int version, long long l, long long r)
-int set(int version, long long l, long long r)
+int set_one(int version, long long l, long long r)
 int fork(int version)
 long long sum(int version, long long l, long long r)
 bool get(int version, long long position)
@@ -27,6 +27,29 @@ bool get(int version, long long position)
 ## 計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
-- `assign`, `flip`, `set`: $O(\log \mathtt{MAX\_SIZE})$
+- `assign`, `flip`, `set_one`（BitOverwrite型では`set`も利用可能）: $O(\log \mathtt{MAX\_SIZE})$
 - `sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
 - `fork`, `size`, `versions`, `latest_version`, `nodes_used`: $O(1)$
+
+# API契約
+
+```cpp
+long long size() const
+int versions() const
+int latest_version() const
+int nodes_used() const
+int fork(int version)
+int assign(int version, long long l, long long r, bool value)
+int flip(int version, long long l, long long r)
+int set_one(int version, long long l, long long r)
+long long sum(int version, long long l, long long r) const
+bool get(int version, long long k) const
+```
+
+`assign/flip/set_one` は指定versionの半開区間 `[l,r)` を更新した新versionを返す。
+BitOverwrite型の `set` は `set_one` と同じ。`fork` は内容を変えずに分岐する。
+`sum/get` は指定versionの1の個数・1点を返す。
+
+`0 < n <= MAX_SIZE`、有効version、`0 <= l <= r <= n`、`0 <= k < n` が必要。
+範囲・version・node/version容量違反は `runtime_error`。失敗時に使用量は増えない。
+各APIの計算量は下表の通り。

@@ -30,3 +30,7 @@ documentation_of: ../src/algorithm/tree/centroid_decomposition.hpp
 ## 空間計算量
 
 - 元の木と重心木、作業領域を含めて $O(N)$
+
+## API契約・前提・例外
+
+頂点とrootは範囲内でなければならない。空木を明記した場合を除き、入力は無向の連結木とする。端点範囲、閉路、辺数、連結性の違反時は `runtime_error` を送出する。記載した計算量には木の検査とResultの構築を含む。

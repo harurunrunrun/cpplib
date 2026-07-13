@@ -69,3 +69,28 @@ $H_V=\log MAX_VERSIONS$、$H_N=\log MAX_NODES$、`append` がたどるsuffix lin
 | `suffix_palindrome_nodes(version)` / `suffix_palindrome_lengths(version)` | $O(K)$ |
 
 constructorはbinary-lifting表と永続set領域も初期化する。`append` はbranch間で償却せず、その呼出しでたどる $K$ を明示する。保持領域は $O(MAX_NODES\cdot ALPHABET+MAX_VERSIONS(H_N+H_V))$。
+## API詳細とversion規則
+
+- version 0は空文字列。`versions()` は存在version数、
+  `latest_version()` は最後に作成したversion番号、`node_count()` はroot込みnode数。
+- `append(version,c)` / `add(version,c)` は指定versionの末尾へ追加した新versionを返す。
+  引数なしversion overloadは最新版へ追加する。元versionは変更しない。
+- versionは $0\le version<versions()$、文字はalphabet内である必要がある。
+  `MAX_VERSIONS`、`MAX_NODES` または内部永続set容量を超える追加は例外。
+- `size(version)`, `str(version)`, `last(version)` はそれぞれ文字列長、復元文字列、
+  最長回文suffix node。`size()` は最新版を対象にする。
+- `operator[](node)` と `length/link/diff/series_link(node)` は全versionで共有される
+  node情報を返す。無効nodeでは例外。
+- `Node::next/link/length/diff/series_link` は通常版と同じ意味。
+  `suffix_count` はその回文の回文suffix数、`first_version` は初出version。
+- `distinct_palindromes(version)`、`count_palindromic_substrings(version)` は
+  指定versionの異なる回文数・出現を位置別に数えた総数。
+- longest系queryは指定versionに存在する最長回文または最長回文suffixを返す。
+- `node_present(version,node)` はnodeの回文がそのversionに出現するかを返す。
+  2つのrootは常に存在するとみなす。
+- `find_node(value,version)` は回文が指定versionに存在すればnode、なければ-1。
+  `contains` はそのbool版。
+- `first_occurrence_range(node)`, `palindrome(node)` はnodeが初めて作られた枝での
+  最初の出現位置・文字列を返す。長さ-1のrootでは例外。
+- `palindrome_nodes/palindromes(version)` は指定versionに存在する全非空回文、
+  `suffix_palindrome_nodes/lengths(version)` は回文suffixを長い順に返す。

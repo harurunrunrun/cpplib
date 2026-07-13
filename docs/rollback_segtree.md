@@ -182,3 +182,12 @@ int size() const
 ## 時間計算量
 
 - $O(1)$
+
+# 共通API契約
+
+点は列内、区間は半開区間 `[l,r)`。`snapshot()` は現在状態を表すtokenを返し、
+`rollback(snapshot)` はそれ以後の更新を破棄する。`undo()` を持つ型では直前の更新を1つ戻し、
+`can_undo()` はその可否を返す。境界探索のpredicateは単調かつ単位元に対してtrueが必要。
+
+不正な点・区間・snapshot・predicate、空状態での `undo`、node/change/history容量超過では
+`runtime_error`。失敗した更新は本体と履歴を更新前へ戻す。各APIの計算量は上記表の通り。

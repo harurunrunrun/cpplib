@@ -50,3 +50,16 @@ $N$ を構築文字列長、$L$ を比較可能なsuffix長の小さい方とす
 | static metadata `mod` / `default_base` の参照 | $O(1)$ |
 
 構築後の保持領域は $O(N)$。hash比較には衝突可能性があるが、計算量は入力内容に依存しない。
+## API詳細と前提
+
+- default constructorは空文字列を表し、`size()==0`、`all()==0`。
+- `build(s,base)` は同じobjectを文字列 `s` で再構築する。
+  `1 <= base < mod` が必要で、違反時は例外。
+- `size()` は構築文字列長、`base_value()` は使用中の底を返す。
+- `get(l,r)` は半開区間 $[l,r)$ のhash。`0<=l<=r<=size()` が必要。
+  `all()` は `get(0,size())` と同じ。
+- `lcp(other,l1,l2)` は2つのsuffixの最長共通接頭辞長を返す。
+  両objectの底が一致し、開始位置が各 `[0,size()]` に入る必要がある。
+  違反時は例外。
+- `u64`, `u128`, `mod`, `default_base` は公開alias・定数。
+  hash一致は文字列一致を確率的に示すもので、衝突の可能性がある。

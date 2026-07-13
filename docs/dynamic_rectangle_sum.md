@@ -20,3 +20,9 @@ $Q(L)=B+\lceil L/B\rceil\log B$ とする。
 - `size`, `x`, `y`, `weight`: $O(1)$
 - `set`, `set_y`, `set_weight`: $O(B\log B)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+Q(L))$
+
+# API契約
+
+基底型の `size/x/y/weight/set/set_y/set_weight/rectangle_count/range_freq/rectangle_sum/range_sum`
+を利用できる。点idは入力順、xは固定、矩形は `[xl,xr) x [yl,yr)`。
+vector長・点・容量・bit幅・矩形違反では `runtime_error`。各APIの計算量は上記表の通り。

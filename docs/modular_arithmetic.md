@@ -38,3 +38,25 @@ auto generator = math::primitive_root(prime);
 | `primitive_root(prime)` | Pollard--Rho素因数分解 + $O(GF\log prime)$ | 素因数分解に依存 |
 
 Miller--Rabinによる素数判定とPollard--Rhoによる素因数分解を内部で行う。
+## API詳細
+
+### `ChineseRemainderResult`
+
+`remainder` は $[0,modulus)$ に正規化された最小非負解、`modulus` は
+統合後の正の法。field参照は $O(1)$。
+
+### `chinese_remainder(r0, m0, r1, m1)`
+
+$x\equiv r_0\pmod {m_0}$ かつ $x\equiv r_1\pmod {m_1}$ を統合する。
+両方の法は正でなければならず、違反時は例外。解がなければ `nullopt`、
+法の最小公倍数が `long long` を超える場合も例外を送出する。
+
+### `chinese_remainder(remainders, moduli)`
+
+同じ添字の剰余と法を左から統合する。長さが異なる場合は例外。
+空列では `{remainder=0, modulus=1}` を返す。
+
+### `primitive_root(prime)`
+
+素数 `prime` の最小の原始根を返す。`prime == 2` では1。
+Miller--Rabinで合成数と判定した場合は例外を送出する。

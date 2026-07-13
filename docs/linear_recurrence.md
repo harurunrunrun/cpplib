@@ -9,7 +9,7 @@ $$
 a_n=\sum_{i=0}^{d-1}c_i a_{n-1-i}
 $$
 
-を扱う。係数は可換体上の値とする。
+を扱う。既知の漸化式から項を求める操作は可換環上で動作する。
 
 ## LinearRecurrence
 
@@ -55,3 +55,16 @@ $M(d)$ を次数 $d$ の多項式乗算時間とする。
 | `bostan_mori(initial, coefficient, k)` | $O(M(d)\log(k+1))$ | $O(d)$ |
 
 次数0は零列を表す。`k` は0-indexed。
+## API詳細と例外
+
+- default constructorは次数0の零列。`degree()` は次数 $d$ を返す。
+- pointer constructorは `initial[0..d)` と `coefficient[0..d)` をコピーする。
+  $0\le d\le MAX_DEGREE$ が必要で、$d>0$ のnull pointerは例外。
+- vector constructorは両vectorの長さ一致と容量内であることを検査する。
+- `initial_value(i)` は $a_i$、`coefficient(i)` は
+  $a_n$ に掛ける $c_i$ を返す。$0\le i<d$ が必要。
+- `kth_term(k)` は0-indexedの $a_k$。$k<d$ では初期値をそのまま返す。
+- pointer版 `berlekamp_massey(sequence,n)` はnull、負の長さ、必要次数の
+  容量超過を検査する。Berlekamp--Masseyだけは除算を使うため値型が体である必要がある。
+- 高速 `bostan_mori(initial,coefficient,k)` は2vectorの長さが異なると例外。
+  次数0では0を返す。

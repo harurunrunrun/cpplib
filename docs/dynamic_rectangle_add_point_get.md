@@ -42,3 +42,12 @@ $R$ を `reserve_rectangle` した非退化長方形数とする。
 | `get(x,y)` | $O(\log^2 R)$ |
 
 `build` 後の保持領域は $O(R\log R)$。空の長方形の予約・更新は $O(1)$。
+## API詳細と構築順序
+
+- `reserve_rectangle(x1,y1,x2,y2)` は将来更新する半開矩形を登録する。
+  空矩形は無視し、重複登録してよい。
+- `build()` は登録矩形の4隅を圧縮する。build後の再予約・再build、
+  build前のupdate/queryは例外。
+- `add(x1,y1,x2,y2,value)` は予約済み矩形へ `value` を加える。
+  空矩形では何もしない。未予約の非空矩形は例外。
+- `get(x,y)` は点を含む全更新値の和。query点は事前予約不要。

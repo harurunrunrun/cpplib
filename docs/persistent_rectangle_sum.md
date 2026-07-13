@@ -18,3 +18,10 @@ $Q(L)=B+C(\log B+\log(M+1))$ とおく。
 - `y`, `weight`: $O(\log(M+1))$
 - `set`, `set_y`, `set_weight`: $O(B\log B+\log(M+1))$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+Q(L))$
+
+# API契約
+
+基底型の `size/versions/latest_version/x/y/weight/set/set_y/set_weight/fork/`
+`rectangle_count/range_freq/rectangle_sum/range_sum` を利用できる。更新は指定versionから
+新versionを返し、矩形は `[xl,xr) x [yl,yr)`。不正version・点・容量・bit幅・矩形では
+`runtime_error`。各APIの計算量は上記表の通り。

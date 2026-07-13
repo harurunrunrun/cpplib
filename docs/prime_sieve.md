@@ -61,3 +61,16 @@ $P=\pi(n)$、素因数の種類数を $K$ とする。
 | `factorize(n)` | $O(\log n+K)$（出力サイズ $K$） |
 
 `build` は線形篩部分が $O(n)$ だが、固定長 `min_factor_data` の初期化に $O(MAX_N)$ かかる。保持領域は $O(MAX_N)$。
+## APIの範囲と例外
+
+- `is_prime_sqrt(n)` は $n\le1$ で `false`。例外は送出しない。
+- constructorと `build(n)` は $0\le n\le MAX_N$ を要求する。
+  `size()` は判定可能な最大値 `n` を返す。
+- `prime_count()` は $[2,n]$ の素数数、`prime(k)` は0-indexedの
+  $k$ 番目の素数。`k` が範囲外なら例外を送出する。
+- `primes()` は構築範囲の素数を昇順でコピーして返す。
+- `min_factor(x)` は $0\le x\le n$ を要求し、0では0、1では1を返す。
+- `is_prime(x)` は $0\le x\le n$ を要求する。
+- `factorize(x)` は $1\le x\le n$ を要求し、素因数と指数を昇順で返す。
+- `min_factor_data`, `prime_data`, `_n`, `_prime_count` は公開storage。
+  通常は対応するaccessorを使用する。

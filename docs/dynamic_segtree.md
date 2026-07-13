@@ -115,3 +115,10 @@ long long min_left(long long r, auto f, auto&&... args)
 
 ## 時間計算量
 - $O(\log {MAX}\_{SIZE})$
+
+# 共通API契約
+
+領域は `[0,MAX_SIZE)`、未生成点は `Monoid.e()`。`set/get` は1点、
+`prod` は半開区間、`all_prod` は全域積を返す。境界探索のpredicateは単調かつ
+単位元に対してtrueが必要である。点・区間・predicate違反は `runtime_error`、
+node確保失敗は `bad_alloc`。copyは禁止、moveは可能。各APIの計算量は上記の通り。

@@ -47,3 +47,9 @@ for(int i = 0; i < m; ++i){
 ## 参考
 
 - [ABC340 G公式解説](https://atcoder.jp/contests/abc340/editorial/9256)
+
+## API契約・前提・例外
+
+`VirtualTree<MAX_SIZE>` はalias。`compress` は圧縮後sizeを返す。`vertex`, `parent_index`, `edge_length`, `selected` は元頂点、圧縮上の親、元木上距離、指定頂点flagを返す。size・辺・圧縮容量を検査し、違反時は `runtime_error`。
+
+頂点とrootは範囲内でなければならない。空木を明記した場合を除き、入力は無向の連結木とする。端点範囲、閉路、辺数、連結性の違反時は `runtime_error` を送出する。記載した計算量には木の検査とResultの構築を含む。

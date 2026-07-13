@@ -69,3 +69,10 @@ int groups()
 ## 時間計算量
 
 - amortized $O(\alpha(N))$
+
+# 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`、頂点は`[0,n)`。違反時は例外。
+- `add_edge`は多重辺と自己loopも1辺として数え、成分が併合された場合だけ`true`。
+- `edges(v)`は成分内辺数、`excess_edges(v)`は辺数-頂点数+1を返す。
+- 固定配列は$O(MAX\_SIZE)$で、辺追加による追加領域消費はない。

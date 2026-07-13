@@ -23,3 +23,22 @@ $Q(L)=B+\lceil L/B\rceil\log B$、$S(L)=B+\lceil L/B\rceil$ とする。
 - `sum`: $O(S(L))$
 - `select`: $O(Q(N)\log N)$
 - `kth_smallest`, `kth_largest`, `sum_k_smallest`, `sum_k_largest`, `prev_value`, `next_value`: $O(DQ(L))$
+
+# API契約
+
+```cpp
+void set(int k, T value)
+```
+
+`set` は値と重みを同じ `value` へ更新する。他のqueryは
+`DynamicWeightedWaveletMatrix` の全公開APIを継承する。継承した `set_value/set_weight` を
+単独使用すると「重み=値」の不変条件は保たれない。点・半開区間・bit幅・容量・例外契約は
+基底型と同じで、各APIの計算量は上記表の通り。
+
+# Constructor signature
+
+```cpp
+DynamicFunctionalWaveletMatrix()
+DynamicFunctionalWaveletMatrix(const vector<T>& values)
+DynamicFunctionalWaveletMatrix(const array<T, N>& values)
+```

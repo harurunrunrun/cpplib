@@ -30,3 +30,12 @@ $S=|a|+|b|$ とする。
 | `LongestCommonSubstringResult` の各field参照 | $O(1)$ | - |
 
 suffix array構築が支配的で、LCP構築と隣接suffix走査は各 $O(S)$。戻り値は位置と長さだけなので $O(1)$。
+## API詳細
+
+- `first_pos`: 第1文字列 `a` における開始位置。
+- `second_pos`: 第2文字列 `b` における開始位置。
+- `length`: 共通部分文字列の長さ。
+- `longest_common_substring(a,b)` は
+  `a.substr(first_pos,length) == b.substr(second_pos,length)` を満たす最長結果を返す。
+  共通する非空文字列がなければ `{0,0,0}`。同じ最大長の候補が複数ある場合の
+  位置は規定しない。

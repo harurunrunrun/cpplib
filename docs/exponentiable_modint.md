@@ -74,3 +74,11 @@ runtimeで呼ぶ場合は $O(\sqrt{x})$、追加領域は $O(1)$。
 `L=O(\log P)` なので、`pow` は $O(L\log P)=O(\log^2 P)$ とも書ける。
 
 `MOD=1` specializationでは、すべてのconstructor・operator・methodが $O(1)$。
+
+## 前提・戻り値
+
+- template引数は`MOD >= 1`。`val()`は現在段を`MOD`で割った代表値を返す。
+- 整数constructorは各totient段へ同じ非負整数を伝播し、周期到達情報も保持する。
+- 2引数constructorは内部表現を直接指定する低level APIで、整合性は呼出側が保証する。
+- `pow(rhs)`はEulerのtotient列を使い、指数が周期へ達したかを区別して剰余累乗する。
+- 算術結果が内部の`uint64_t`乗算と正規化で表せる設計で、例外を送出するAPIはない。

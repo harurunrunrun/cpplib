@@ -40,3 +40,11 @@ Mint prefix_sum(int n, int k)
 | 公開表 `comb` / `prefix` の1要素参照 | $O(1)$ |
 
 保持領域は $O(MAX_N^2)$。
+## API詳細と範囲
+
+- `comb[n][k]` は $\binom nk$、`prefix[n][k]` は
+  $\sum_{i=0}^{k}\binom ni$ の公開前計算表。
+- `combination(n,k)` は $0\le n\le MAX_N$ を要求する。
+  $k<0$ または $k>n$ では0を返す。
+- `prefix_sum(n,k)` は $n$ が範囲外なら例外、$k<0$ なら0。
+  $k>MAX_N$ は `MAX_N` に丸めるため、$k\ge n$ では $2^n$ に一致する。

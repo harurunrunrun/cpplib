@@ -72,3 +72,11 @@ int groups()
 ## 時間計算量
 
 - $O(\log N)$
+
+# 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`、頂点は`[0,n)`。違反時は例外。
+- `merge`は同一成分の場合も履歴を1個保存し、`MAX_HISTORY`到達後は例外。
+- `snapshot()`は履歴数。`rollback(s)`は`0 <= s <= snapshot()`を要求する。
+- 履歴が空の`undo()`と範囲外rollbackは例外。
+- 経路圧縮を行わずunion by sizeで木の高さを$O(\log N)$に保つ。

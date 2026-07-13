@@ -41,6 +41,23 @@ LazyLinkCutTree(const vector<S>& values)
 
 固定容量のnode配列全体を初期化する。
 
+# size / evert
+
+```cpp
+int size() const
+void evert(int v)
+```
+
+`size`は頂点数を返す。`evert`は`v`をその表現木の根にする。
+
+## 時間計算量
+
+- `size`: $O(1)$
+- `evert`: amortized $O(\log N)$
+
+頂点引数は`[0,size())`でなければならず、範囲外は例外。
+構築時の`n`または`values.size()`が`MAX_SIZE`を超える場合も例外。
+
 # link / cut
 
 ```cpp
@@ -97,6 +114,11 @@ S path_prod(int u, int v)
 ```
 
 `u` から `v` へのパス上の頂点値のモノイド積を返す。
+
+`path_apply`と`path_prod`は`u`と`v`が連結であることを前提とし、
+実装はこの前提を検査しない。
+`link`は既に連結なら`false`、`cut`は指定した直接辺がなければ`false`。
+その他の頂点引数の範囲違反は例外。
 
 ## 時間計算量
 

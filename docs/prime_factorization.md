@@ -41,3 +41,21 @@ documentation_of: ../src/algorithm/math/prime_factorization.hpp
 | `math::euler_phi(n)` | 素因数分解と同じ期待計算量 |
 
 `pollard_rho` は再試行を行うため決定的な反復回数上界を置かない。`is_prime_miller_rabin_random` の誤判定確率は `rounds` に依存する。
+## API詳細と前提
+
+- `u64`, `u128` は内部計算にも使う64/128 bit符号なし整数alias。
+- `mul_mod_u64(a,b,mod)` は $ab\bmod mod$、`pow_mod_u64(x,n,mod)` は
+  $x^n\bmod mod$ を返す。`mod > 0` が必要で、実装は0を検査しない。
+- `miller_rabin_test(n,a,d,s)` は $n-1=d2^s$（$d$ は奇数）に分解済みの
+  1つの底 `a` に対するtest。低水準APIであり、この前提を検査しない。
+- `is_prime_miller_rabin(n)` は全64 bit整数で決定的な結果を返す。
+- `is_prime_miller_rabin_random(n,rounds,rng)` は `rng` から底を選ぶ。
+  `rounds < 0` は例外。合成数に `true` を返す確率がある。
+- `pollard_rho(n)` は $n>1$ を要求し、素数なら `n`、合成数なら
+  非自明な約数を返す。
+- `factorize_pollard_rho_rec(n,factors)` は素因数を重複込みで末尾へ追加する
+  低水準API。`n >= 1` が必要。
+- `factorize_pollard_rho(n)` は素数と指数を昇順で返す。`n==1` は空、
+  `n==0` は例外。
+- `euler_phi(n)` は $1\le x\le n$ かつ $\gcd(x,n)=1$ の整数数を返す。
+  `euler_phi(1)=1`、0では例外。

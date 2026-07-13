@@ -71,3 +71,11 @@ int groups()
 - $O(\log N)$
 
 `size`, `groups` は $O(1)$。
+
+# 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`、頂点は`[0,n)`。違反時は例外。
+- `diff(u,v)`は同一成分であることを前提とし、実装は連結性を検査しない。
+- `merge`は併合・既存制約との一致・矛盾のいずれでも履歴を1個進める。
+- 履歴が`MAX_HISTORY`に達したmerge、空履歴のundo、範囲外rollbackは例外。
+- 経路圧縮を行わずunion by sizeを使うため、各DSU操作はworst-case $O(\log N)$。

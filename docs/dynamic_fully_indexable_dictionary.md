@@ -48,3 +48,16 @@ $W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 - `size`, `operator[]`: $O(1)$
 - `set`, `flip`, `rank`: $O(\log(W+1))$
 - `select`: $O(\log N\log(W+1))$
+
+# 構築・補助API・前提
+
+```cpp
+DynamicFullyIndexableDictionary(int n = 0)
+DynamicFullyIndexableDictionary(const vector<bool>& values)
+int size() const
+bool operator[](int k) const
+```
+
+`set/flip` は直ちにrank/selectへ反映される。`rank` は半開区間、`select` の出現番号は
+0-indexedで、存在しなければ `size()`。長さ容量、点・区間、負の出現番号の違反では
+`runtime_error`。各APIの計算量は上記表の通り。

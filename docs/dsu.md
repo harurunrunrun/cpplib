@@ -51,3 +51,10 @@ int groups()
 ## 時間計算量
 
 - amortized $O(\alpha(N))$
+
+# 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`。constructorで範囲外なら例外。
+- 頂点引数はすべて`[0,n)`。範囲外なら例外。
+- `leader`は代表、`component_size`は成分頂点数、`groups`は成分数を返す。
+- 固定配列は$O(MAX\_SIZE)$で、`merge`は追加領域を消費しない。

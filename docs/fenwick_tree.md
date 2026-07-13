@@ -40,3 +40,10 @@ long long s = fw.sum(2, 5);
 - `FenwickTree(vector)`: $O(\mathtt{MAX\_SIZE}+n\log n)$
 - `add`, `prefix_sum`, `sum`, `get`, `set`: $O(\log n)$
 - `size`, `empty`: $O(1)$
+
+## 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`。vector長超過を含め、constructorの範囲違反は例外。
+- indexは`[0,n)`、prefix終端は`[0,n]`、区間は`0 <= l <= r <= n`。違反時は例外。
+- `T`はdefault構築、加算、減算を使える必要がある。
+- 保存領域は固定$O(MAX\_SIZE)$、各更新・queryの追加領域は$O(1)$。

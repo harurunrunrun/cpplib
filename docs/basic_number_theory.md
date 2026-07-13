@@ -29,6 +29,73 @@ documentation_of: ../src/algorithm/math/basic_number_theory.hpp
     - `mod` が素数でなくてもよい場合の逆元を返す。
 - `math::inv_mod_prime(a, mod)`
     - `mod` が素数の場合の逆元を返す。
+## 戻り値型
+
+### `ExtGcdResult`
+
+- `g`: 非負の $\gcd(a,b)$。
+- `x`, `y`: 元の符号を含めて $ax+by=g$ を満たす係数。
+- `ext_gcd(0,0)` では3fieldとも0。
+
+### `QuotientRange`
+
+- `l`, `r`: 半開区間 $[l,r)$。
+- `value`: 区間内のすべての $i$ に対する $\lfloor n/i\rfloor$。
+
+## API詳細
+
+### `abs_ll(x)`
+
+`x` の絶対値を返す。
+
+### `gcd(a, b)` / `lcm(a, b)`
+
+符号を無視した最大公約数・最小公倍数を返す。`gcd(0,0)` と、
+どちらかが0の `lcm` は0。`lcm` の乗算overflowは検査しない。
+
+### `ext_gcd(a, b)`
+
+`ExtGcdResult` を返す。`g` は非負で、$ax+by=g$ を満たす。
+
+### `pow_mod(x, n, mod)`
+
+$x^n\bmod mod$ を $[0,mod)$ で返す。`n >= 0`、`mod > 0` が必要。
+条件を満たさない場合は `runtime_error` を送出する。
+
+### `inv_mod(a, mod)`
+
+$a$ の `mod` における乗法逆元を $[0,mod)$ で返す。`mod > 0` かつ
+$\gcd(a,mod)=1$ が必要。逆元が存在しない場合は `runtime_error` を送出する。
+
+### `inv_mod_prime(a, mod)`
+
+Fermatの小定理で逆元を返す。`mod` は素数、`mod > 1`、
+`a % mod != 0` が必要。素数性自体は検査しない。
+
+### `isqrt(n)`
+
+$\lfloor\sqrt n\rfloor$ を誤差なく返す。`n < 0` では
+`runtime_error` を送出する。
+
+### `divisors(n)`
+
+`n` の正の約数を昇順で返す。負数では絶対値を使い、`n == 0` では
+`runtime_error` を送出する。
+
+### `quotient_ranges(n)`
+
+$\lfloor n/i\rfloor$ が等しい最大の半開区間 $[l,r)$ を `l` の昇順で返す。
+対象は $1\le i\le n$。`n == 0` では空、`n < 0` では例外を送出する。
+
+### `to_base_digits(n, base)`
+
+非負整数 `n` を `base` 進数の桁列へ変換し、最上位桁から返す。
+0は `{0}`。`base < 2` では例外を送出する。
+
+### `from_base_digits(digits, base)`
+
+最上位桁から並んだ桁列を非負整数へ戻す。空列は0。範囲外の桁、
+`base < 2`、`unsigned long long` を超える結果では例外を送出する。
 
 ## 計算量
 

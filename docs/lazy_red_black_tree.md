@@ -101,3 +101,11 @@ $N$ を現在の要素数とし、比較・モノイド演算・作用を $O(1)$
 - setの固定長祖先array: $O(\mathrm{MAX\_SIZE})$（使用要素数は $O(\log(N+1))$）
 - insert / erase / apply / prodの再帰stack: $O(\log(N+1))$
 - その他の操作の追加領域: $O(1)$
+
+# 前提・例外・容量
+
+- `Compare`はstrict weak ordering。同値キーは1個だけ保持する。
+- 新規insertで要素数が`MAX_SIZE`を超える場合は例外。
+- `apply(l,r,f)`と`prod(l,r)`は`Compare(r,l)==false`を要求し、逆転時は例外。
+- `get`は不存在なら`nullopt`、`set`と`erase`は不存在なら`false`。
+- `kth_key`は範囲外なら`nullopt`。`clear`は固定arenaを再利用する。

@@ -67,3 +67,12 @@ $H=\mathtt{Y\_BIT\_WIDTH}$ とする。
 - 2種類のconstructor: $O(N\log N+H\mathtt{MAX\_SIZE})$
 - `size`: $O(1)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+H)$
+
+# 共通API契約
+
+constructorは `xs,ys,weights` またはtuple列を受け、内部でx順に並べる。3vectorの長さは一致が必要。
+`size` は点数。`rectangle_count/range_freq` は半開矩形
+`[xl,xr) x [yl,yr)` の点数、`rectangle_sum/range_sum` は重み総和を返す。
+
+vector長不一致、点数容量、yのbit幅、逆転した座標範囲では `runtime_error`。
+copyは禁止、moveは可能。各APIの計算量は上記表の通り。

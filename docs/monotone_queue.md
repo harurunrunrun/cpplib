@@ -52,3 +52,12 @@ $N$ を入力列長、$K$ をwindow幅とする。比較を $O(1)$ とする。
 
 - queue: $O(\mathrm{MAX\_SIZE})$
 - sliding window関数: queueと戻り値を含めて $O(\mathrm{MAX\_WINDOW}+N-K+1)$
+
+# 前提・例外・容量
+
+- `push(index,value)`のindexは追加列全体で狭義単調増加。違反時は例外。
+- 候補数が`MAX_SIZE`に達した状態で支配されない値を追加すると容量例外。
+- 空queueへの`pop_front`, `best`, `best_index`は例外。`expire`は空でも有効。
+- sliding-window関数は`1 <= window <= MAX_WINDOW`かつ`window <= values.size()`を要求し、違反時は例外。
+- `best`は`Compare`で最良の値への参照、`best_index`はその入力indexを返す。
+- copyは禁止、moveは可能。

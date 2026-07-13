@@ -110,3 +110,11 @@ int latest_version() const
 ## 時間計算量
 
 - $O(1)$
+
+# 前提・例外・容量
+
+- `MAX_SIZE > 0`、`0 <= n <= MAX_SIZE`。vector/array入力も`MAX_SIZE`以下。
+- indexは`[0,n)`、versionは`[0,versions())`。範囲外なら例外。
+- `set`と`fork`はversionを1個追加し、追加version数が`MAX_VERSION`を超えると例外。
+- `set`はpath-copy nodeを$O(\log MAX\_SIZE)$個生成し、`fork`はnodeを生成しない。
+- node/version容量超過または値のcopy例外時は、version数とnode数を操作前へ戻す。

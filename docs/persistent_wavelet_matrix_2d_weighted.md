@@ -31,3 +31,21 @@ $Q(L)=B+C(\log B+\log(M+1))$ とおく。
 - `y`, `weight`: $O(\log(M+1))$
 - `set`, `set_y`, `set_weight`: $O(B\log B+\log(M+1))$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+Q(L))$
+
+# Version・座標・例外
+
+点idは入力順、xは全versionで固定。`x(k)`、`y(version,k)`、`weight(version,k)` は1点を返す。
+`set` は指定versionのyと重み、`set_y/set_weight` は片方を更新した新versionを返し、
+`fork` は同内容で分岐する。count/freqは半開矩形の点数、sumは重み総和。
+
+不正なversion・点・矩形、vector長不一致、点数/version/block容量、yのbit幅では
+`runtime_error`。失敗時にversionと使用量は増えない。copyは禁止、moveは可能。
+各APIの計算量は上記表の通り。
+
+# Constructor signature
+
+```cpp
+PersistentWaveletMatrix2DWeighted()
+PersistentWaveletMatrix2DWeighted(const vector<X>& xs, const vector<Y>& ys, const vector<W>& weights)
+PersistentWaveletMatrix2DWeighted(const vector<tuple<X,Y,W>>& points)
+```

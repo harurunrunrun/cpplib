@@ -100,3 +100,11 @@ $N$ を対象versionの要素数とし、比較・モノイド演算・作用を
 
 - 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
 - `to_vector` の戻り値と再帰stack: $O(N)$
+
+# 前提・例外
+
+- `Compare`はstrict weak ordering、versionは`[0,versions())`。違反時は例外。
+- キー区間は`Compare(r,l)==false`を要求し、逆転時は例外。
+- updateでversion/node容量を超える場合は例外で、既存versionとnode数を変えない。
+- updateは内容が変わらない場合もversionを1個作り、queryは容量を消費しない。
+- `get`, `kth_key`は該当なしなら`nullopt`。

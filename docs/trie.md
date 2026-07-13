@@ -53,3 +53,11 @@ $L$ を入力文字列長とする。
 
 - 固定node array: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES})$
 - 各操作の追加領域: $O(1)$
+
+## 前提・例外・容量
+
+- 各文字は`[OFFSET, OFFSET + ALPHABET)`に含まれる必要があり、範囲外なら例外。
+- `insert`で必要node数が`MAX_NODES`を超える場合は例外。
+- `node(s)`は対応node番号、不存在なら`-1`。`prefix_count(s)`は接頭辞`s`を持つ文字列数。
+- `erase`は不存在なら`false`、成功時`true`。nodeは回収しない。
+- 空文字列も通常の文字列としてroot nodeに登録できる。

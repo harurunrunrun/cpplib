@@ -66,3 +66,11 @@ dc.run([&](int time, const auto& dsu){
 # 状態情報
 
 `size`, `time_size` は $O(1)$。
+
+# 前提・例外・容量
+
+- `0 <= n <= MAX_SIZE`, `0 <= time_size <= MAX_TIME`。違反時は例外。
+- event時刻は`[0,time_size)`、頂点は`[0,n)`。違反時は例外。
+- 存在しない辺の`erase_edge`、および初回`run`後のevent追加・削除は例外。
+- 未削除の辺は`time_size`まで有効として初回`run`で確定する。`run`自体は再実行できる。
+- DFS中の同時merge履歴数が`MAX_HISTORY`を超えるとrollback DSU由来の例外。

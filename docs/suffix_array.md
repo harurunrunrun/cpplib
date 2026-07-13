@@ -30,3 +30,12 @@ $N=|s|$ とする。
 | `lcp_array(s)` | $O(N\log N)$ | $O(N)$ |
 
 `lcp_array(s)` は内部でsuffix arrayも構築する。各関数は長さ $N$（LCPのみ最大 $N-1$）の列を列挙して返す。
+## API詳細
+
+- `suffix_array(s)` は `s[sa[i]:]` が辞書順になる開始位置の置換を返す。
+  `string` 版はbyteを符号なしとして比較し、`vector<T>` 版は `T::operator<`
+  と等値関係で座標圧縮する。空列では空を返す。
+- `lcp_array(s,sa)` は長さ `max(0,N-1)` の列を返し、
+  `lcp[i]` はsuffix `sa[i]` と `sa[i+1]` のLCP長。
+  `sa` が長さ `N` の置換でなければ例外を送出する。
+- `lcp_array(s)` はsuffix arrayを内部構築して同じLCP列を返す。

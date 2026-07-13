@@ -36,3 +36,12 @@ $H=MAX\_HEIGHT$, $W=MAX\_WIDTH$ とし、Monoid操作1回を $O(1)$ とする。
 $R,C$ はそれまでに生成したrow node数・column node数。
 1回の `set` が新しく生成するnode数は $O(\log H\log W)$、保存領域は $O(R+C)$。
 コピー構築・コピー代入は禁止している。
+
+# API契約
+
+`get` は1点、`set` は置換、`apply` は現在値との `Monoid.op` による1点更新、
+`prod` は半開矩形、`all_prod` は全領域を返す。`row_node_count/column_node_count` は
+確保済みnode数。`clear` 後は全点が単位元でnode数も0になる。
+
+点・矩形の範囲違反と逆区間は `runtime_error`、確保失敗は `bad_alloc`。
+copyは禁止される。各APIの計算量は表の通り。

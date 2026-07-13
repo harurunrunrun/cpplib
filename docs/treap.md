@@ -83,3 +83,11 @@ optional<Key> max_less(const Key& x)
 # 状態情報
 
 `size`, `empty`, `clear` は $O(1)$。
+
+# 前提・例外・容量
+
+- `Compare`はstrict weak ordering。同値キーは1個だけ保持する。
+- `insert`は既存キーなら`false`、要素数が`MAX_SIZE`の新規キーなら例外。
+- `erase`は不存在なら`false`。`kth`と各境界探索は該当なしなら`nullopt`。
+- seedはpriority生成だけに使い、同じseedと操作列なら同じ木を構築する。
+- `clear`は$O(1)$で固定node arenaを再利用する。

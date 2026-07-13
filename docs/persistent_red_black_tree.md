@@ -66,3 +66,10 @@ $N$ を対象versionの要素数とし、比較と `Key` のコピーを $O(1)$ 
 
 - 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
 - `to_vector` の戻り値とstack: $O(N)$
+
+# 前提・例外
+
+- `Compare`はstrict weak ordering、versionは`[0,versions())`。違反時は例外。
+- updateでversion/node容量を超える場合は例外で、既存versionとnode数を変えない。
+- 同値キーは1個だけ保持し、内容が変わらないupdateもversionを1個作る。
+- `kth`と境界探索は該当なしなら`nullopt`。

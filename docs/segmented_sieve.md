@@ -29,3 +29,12 @@ $L=r-l$、区間内の素数個数を $K$ とする。
 | `math::primes_in_range(l,r)` | $O(\sqrt r\log\log r+L\log\log r+K)$ | $O(\sqrt r+L+K)$ |
 
 `primes_in_range` は全 $L$ 個のフラグを走査し、さらに $K$ 個を出力する。
+## API詳細と範囲
+
+- `segmented_sieve_isqrt(n)` は内部でも使う整数平方根を返す低水準API。
+  $n\ge0$ を前提とし、負数は検査しない。
+- `segmented_sieve(l,r)` は長さ $r-l$ のflag列を返し、
+  index $i$ は整数 $l+i$ が素数かを表す。
+- `primes_in_range(l,r)` は同じ範囲の素数を昇順で返す。
+- 公開範囲APIは $0\le l\le r$ を要求し、違反時は例外。
+  空区間では空vectorを返す。

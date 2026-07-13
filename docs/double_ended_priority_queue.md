@@ -52,3 +52,11 @@ $N$ を現在の要素数とし、比較・swapを $O(1)$ とする。
 
 - object全体: $O(\mathrm{MAX\_SIZE})$
 - 各操作の追加領域: $O(1)$
+
+# 前提・例外・容量
+
+- vector constructorは要素数が`MAX_SIZE`を超えると例外。
+- `push`はsizeが`MAX_SIZE`に達している場合に例外。
+- 空queueへの`min`, `max`, `pop_min`, `pop_max`は例外。
+- `min`と`max`は保存要素へのconst参照、pop系は削除した値を返す。
+- `clear`は$O(1)$で論理的に空にし、固定$O(MAX\_SIZE)$storageを再利用する。

@@ -29,3 +29,9 @@ documentation_of: ../src/algorithm/tree/rerooting_dp.hpp
 ## 空間計算量
 
 - 保存graph、前後prefix、戻り値を含めて $O(N)$
+
+## API契約・前提・例外
+
+`add_edge(u,v)` は0-indexedの辺idを返す。`solve(root)[v]` は `v` を根とした木全体のDP値。callbackの型は前節の `S` に従う。非連結木・閉路・辺数不一致で `runtime_error`。
+
+頂点とrootは範囲内でなければならない。空木を明記した場合を除き、入力は無向の連結木とする。端点範囲、閉路、辺数、連結性の違反時は `runtime_error` を送出する。記載した計算量には木の検査とResultの構築を含む。

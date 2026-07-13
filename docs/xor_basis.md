@@ -36,3 +36,10 @@ template引数のbit数を $B$、現在のrankを $R$ とする。
 | `kth_smallest(k)` | $O(B)$ | $O(1)$ |
 | `vectors()` | $O(B)$ | 出力 $O(R)$ |
 | `merge(other)` | $O(B^2)$ | $O(1)$ |
+
+## 前提・例外
+
+- `UInt`は符号なし整数、`1 <= BITS <= numeric_limits<UInt>::digits`。
+- 入力値とseedは下位`BITS` bitに収まる必要があり、違反時は例外。
+- `kth_smallest(k)`は`k < 2^rank`を要求し、範囲外は例外。
+- `insert`はrankが増えた場合だけ`true`、`merge`は戻り値を持たない。

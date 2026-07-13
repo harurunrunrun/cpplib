@@ -39,3 +39,9 @@ $V$ を頂点数、$E$ を追加済み辺数とする。
 ## 空間計算量
 
 - 残余グラフ、level/iterator、戻り値を含めて $O(V+E)$
+
+## API契約・前提・例外
+
+`DinicEdge` は `from`, `to`, 初期 `cap`, 現在の `flow` を持つ。public `edges` は正辺直後に逆辺を格納し、`add_edge` は正辺idを返す。public `bfs/dfs` はblocking-flow helperで、通常は `max_flow` を使う。`min_cut` は残余到達flag列を返す。
+
+頂点数は非負、各端点は対応する頂点範囲内でなければならず、違反時は `runtime_error`。容量・cost・総和の演算結果が `T` に収まることを前提とする。記載した計算量には引数検査とResultの構築を含む。
