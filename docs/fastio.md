@@ -34,7 +34,11 @@ io.write('\n');
 | `writeint(int x)` | `x`を10進表記で追加する | $O(D)$ |
 | `writell(long long x)` | `x`を10進表記で追加する | $O(D)$ |
 
-## 前提・容量
+## 空間計算量（API別の追加領域）
+
+constructor、destructor、`readint`、`readll`、`readstr`、2種類の`write`、`writeint`、`writell`はいずれも $O(1)$ の追加空間を使う。`readstr`の出力文字列は呼び出し側の領域であり、入出力bufferはobject本体の固定保存領域 $O(\mathtt{read\_size}+\mathtt{write\_size})$ である。
+
+## 注意点
 
 - `readstr`の出力先には文字列長+1以上の領域を用意する。
 - 数値入力は対象型で表現できる10進整数とする。入力失敗を通知する戻り値や例外はない。

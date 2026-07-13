@@ -28,3 +28,7 @@ MatchingResult greedy_weighted_matching(
 - 追加空間計算量: $O(N+E)$
 
 `MatchingResult::edge_indices` は選択した入力辺添字、`mate[v]` は相手、未matchingなら `vertex_count` である。浮動小数点重みは有限でなければならない。範囲外の端点・非有限重みには例外を送出する。
+
+## 注意点
+
+頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。

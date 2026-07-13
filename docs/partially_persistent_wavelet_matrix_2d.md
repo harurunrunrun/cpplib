@@ -9,7 +9,7 @@ x座標を固定し、y座標を部分永続に更新できる2次元wavelet mat
 wm.set_y(k, y)
 ```
 
-# 計算量（公開操作別）
+# 時間計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$V$ を現在のversion数、x範囲に入る点数を $L$、触れるblock数を $C$ とし、
 $Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
@@ -21,7 +21,7 @@ $Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
 - `rectangle_count`, `range_freq`: 最新versionは $O(\log N+Q_0(L))$、過去versionは $O(\log N+Q_V(L))$
 - `kth_smallest_y`, `prev_y`, `next_y`: 最新versionは $O(\log N+\mathtt{Y\_BIT\_WIDTH}\,Q_0(L))$、過去versionは $O(\log N+\mathtt{Y\_BIT\_WIDTH}\,Q_V(L))$
 
-# Version・座標・例外
+## 注意点
 
 点idは入力順、x座標は固定。`x(k)` はx、`y(version,k)` は指定versionのy。
 `set_y(k,y)` は最新版から新versionを作り、queryは任意の有効versionを読む。

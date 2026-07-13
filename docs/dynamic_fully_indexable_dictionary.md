@@ -49,7 +49,7 @@ $W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 - `set`, `flip`, `rank`: $O(\log(W+1))$
 - `select`: $O(\log N\log(W+1))$
 
-# 構築・補助API・前提
+## 注意点
 
 ```cpp
 DynamicFullyIndexableDictionary(int n = 0)

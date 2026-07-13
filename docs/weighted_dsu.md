@@ -63,7 +63,14 @@ int groups()
 
 - amortized $O(\alpha(N))$
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- constructor、`size`、`groups`: $O(1)$
+- `leader`、`same`、`weight`、`diff`、`component_size`、`merge`: 再帰する代表探索のstackを含めworst-case $O(\log N)$
+
+本体の固定保存領域は $O(\mathtt{MAX\_SIZE})$ であり、上記はそれを除く各呼び出しの追加領域である。
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`、頂点は`[0,n)`。違反時は例外。
 - `diff(u,v)`は同一成分であることを前提とし、実装は連結性を検査しない。

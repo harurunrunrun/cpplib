@@ -114,3 +114,11 @@ void clear()
 # 空間計算量
 
 $O(\mathrm{MAX\_SIZE})$。各操作の追加領域は $O(1)$。
+
+## 注意点
+
+表現できるのは区分線形凸関数。`add_abs`, `add_a_minus_x`, `add_x_minus_a`, `shift`,
+`clear_left`, `clear_right` は凸性を保つ。`eval(x)` は内部heapをcopyして評価するため
+$O(N\log N)$ 時間・$O(N)$ 追加領域、それ以外のheap操作は $O(\log N)$ 時間・$O(1)$
+追加領域。保存領域は追加した折点数に対して $O(N)$。
+`T` の加減算・比較と傾きによる積が表現範囲を超えないことを呼出側が保証する。

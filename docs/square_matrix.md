@@ -123,7 +123,7 @@ A.transposed()
 
 上表は `T` の構築・コピー・四則演算・比較を $O(1)$ とした計算量である。一般の `T` では、各項に実行する `T` の操作コストを掛ける。
 
-# 前提・例外・戻り値
+## 注意点
 
 - constructor、`zero`, `identity`は`0 <= n <= MAX_SIZE`を要求する。
 - vector入力は$n x n$でなければならない。size/index違反は例外。
@@ -131,3 +131,15 @@ A.transposed()
 - `pow(exponent)`は非負指数を要求し、負なら例外。指数0では同sizeの単位行列を返す。
 - scalar除算の可否と0除算の扱いは`T::operator/`に従う。
 - 値返却演算は新しい固定容量`SquareMatrix`、compound演算は`*this`への参照を返す。
+
+## 空間計算量
+
+$C=\mathtt{MAX\_SIZE}^2$ とする。
+
+| API | 空間計算量（保存領域・追加領域） |
+| --- | --- |
+| 各constructor、copy / move | 戻り値またはobjectに $O(C)$ |
+| `size`, `empty`, `operator()`、比較 | 返却値以外 $O(1)$ |
+| `+=`, `-=`, scalar `*=`, `/=` | 返却値以外 $O(1)$ |
+| 値を返す演算、行列 `*=`, `zero`, `identity`, `transposed` | 一時または戻り値に $O(C)$ |
+| `pow(k)` | accumulatorとbaseに $O(C)$ |

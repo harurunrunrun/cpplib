@@ -102,7 +102,7 @@ $N$ を現在の要素数とし、比較・モノイド演算・作用を $O(1)$
 - insert / erase / apply / prodの再帰stack: $O(\log(N+1))$
 - その他の操作の追加領域: $O(1)$
 
-# 前提・例外・容量
+## 注意点
 
 - `Compare`はstrict weak ordering。同値キーは1個だけ保持する。
 - 新規insertで要素数が`MAX_SIZE`を超える場合は例外。

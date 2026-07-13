@@ -39,7 +39,7 @@ int node(string_view s)
 
 `node` は対応するノード番号を返す。存在しない場合 `-1` を返す。
 
-## API別計算量
+## API別の時間計算量
 
 $L$ を入力文字列長とする。
 
@@ -54,7 +54,7 @@ $L$ を入力文字列長とする。
 - 固定node array: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES})$
 - 各操作の追加領域: $O(1)$
 
-## 前提・例外・容量
+## 注意点
 
 - 各文字は`[OFFSET, OFFSET + ALPHABET)`に含まれる必要があり、範囲外なら例外。
 - `insert`で必要node数が`MAX_NODES`を超える場合は例外。

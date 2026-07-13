@@ -14,7 +14,7 @@ auto result = greedy_facility_location(F, C, opening_cost, distance);
 ```
 
 最良単一facilityから始め、目的値を厳密に改善する最良の1-addを反復する。
-時間$O(F^3C)$、追加領域$O(FC)$。
+時間計算量は $O(F^3C)$、追加空間計算量は $O(FC)$。
 
 ## `facility_add_drop_local_search`
 
@@ -24,10 +24,13 @@ auto result = facility_add_drop_local_search(
 );
 ```
 
-貪欲解から最良の1-addまたは1-dropを反復する。採用反復数$I$に対し時間
-$O(F^3C+IF^2C)$、追加領域$O(FC)$。同値候補ではfacility添字列の辞書順を使う。
+貪欲解から最良の1-addまたは1-dropを反復する。採用反復数$I$に対し時間計算量は $O(F^3C+IF^2C)$、追加空間計算量は $O(FC)$。同値候補ではfacility添字列の辞書順を使う。
 
 両APIとも`opening_cost[f] + distance(f,c)`を目的値に用いる。費用は有限かつ
 非負でなければならない。`F==0`や配列長不一致では`std::invalid_argument`、
 `C==0`ではfacilityを開かない費用0の空解を返す。
 目的値の加算が`long double`の範囲を超える場合は`std::overflow_error`を送出する。
+
+## 注意点
+
+座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。

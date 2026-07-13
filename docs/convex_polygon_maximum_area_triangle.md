@@ -45,10 +45,14 @@ convex_polygon_maximum_area_triangle(std::vector<Point> polygon);
 0点、1点、2点、全点 collinear では `valid() == false`、面積0、各添字は
 `CONVEX_POLYGON_NPOS` になる。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | 正規化済み overload | $O(N^2)$ | $O(1)$ |
 | `vector<Point>` overload | $O(N^2)$ | 正規化に $O(N)$ |
 | `valid`, `area` | $O(1)$ | $O(1)$ |
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

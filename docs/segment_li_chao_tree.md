@@ -82,3 +82,12 @@ const vector<long long>& coordinates() const
 # 空間計算量
 
 - $O(K)$
+
+## 注意点
+
+query座標はconstructorで与えた離散座標のいずれかでなければならない。線分の有効範囲は
+座標値の半開区間 `[xl,xr)`。無効な座標・区間、node容量超過、直線がない点へのqueryでは
+`runtime_error`。`MIN_QUERY=true` は最小値、falseは最大値を扱う。
+`T` の `a*x+b` が表現範囲を超えないことを呼出側が保証する。
+保存領域は $O(\mathtt{MAX\_NODES}+N)$、追加1回のnodeと再帰stackは $O(\log N)$、
+queryの追加領域は $O(1)$。

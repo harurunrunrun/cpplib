@@ -40,6 +40,6 @@ optional<STNumberingResult> st_numbering(
 
 - `O(N+M)`
 
-# 例外
+## 注意点
 
 `vertex_count`、端点、`source`、`sink` が範囲外、または自己loopを含む場合は `runtime_error` を送出する。

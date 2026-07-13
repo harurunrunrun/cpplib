@@ -7,7 +7,19 @@ documentation_of: ../src/approximate/constraint/cnf.hpp
 変数 `i-1`、`-i` はその否定で、代入は `vector<unsigned char>` の0/1列で
 ある。節0個は真、空節を含む式は偽とする。重複リテラルと恒真節も保持する。
 
-# `CnfFormula(variable_count, clauses)`
+## API
+
+### `CnfLiteral`, `BooleanAssignment`, `CnfFormula::Clause`
+
+`CnfLiteral` は `std::int64_t`、`BooleanAssignment` は
+`std::vector<unsigned char>`、`Clause` は `std::vector<CnfLiteral>` のaliasである。
+alias自体に実行時計算量はない。
+
+### `CnfFormula()`
+
+変数も節もない真の論理式を作る。時間・追加空間計算量は $O(1)$。
+
+### `CnfFormula(variable_count, clauses)`
 
 変数数と節列を保持する。リテラル0、範囲外（`INT64_MIN` を含む）には
 `std::invalid_argument` を送出する。$V,C,L$ を変数・節・全リテラル数とする。
@@ -15,37 +27,42 @@ documentation_of: ../src/approximate/constraint/cnf.hpp
 - 時間計算量: $O(L)$
 - 追加空間計算量: $O(L+C)$（保持する節列を含む）
 
-# `variable_count()` / `clause_count()` / `clauses()`
+### `variable_count()` / `clause_count()` / `clauses()`
 
 変数数、節数、節列へのconst参照を返す。
 
 - 時間計算量: $O(1)$
 - 追加空間計算量: $O(1)$
 
-# `clause_satisfied(clause_index, assignment)`
+### `clause_satisfied(clause_index, assignment)`
 
 指定節が満たされるか判定し、代入と節番号を検査する。
 
 - 時間計算量: $O(V+|C_i|)$
 - 追加空間計算量: $O(1)$
 
-# `satisfied_clause_count(assignment)`
+### `satisfied_clause_count(assignment)`
 
 満たされた節数を返し、代入の長さ・値を検査する。
 
 - 時間計算量: $O(V+L)$
 - 追加空間計算量: $O(1)$
 
-# `satisfied(assignment)`
+### `satisfied(assignment)`
 
 全節が満たされるか判定する。
 
 - 時間計算量: $O(V+L)$
 - 追加空間計算量: $O(1)$
 
-# `unsatisfied_clause_indices(assignment)`
+### `unsatisfied_clause_indices(assignment)`
 
 未充足節番号を昇順で返す。
 
 - 時間計算量: $O(V+L)$
 - 追加空間計算量: $O(C)$
+
+## 注意点
+
+assignmentは長さ $V$ の0/1列でなければならない。リテラル0と変数範囲外の
+リテラルは `std::invalid_argument`、範囲外の節番号は `std::out_of_range` となる。

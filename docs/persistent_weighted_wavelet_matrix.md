@@ -49,14 +49,14 @@ $Q(L)=B+C(\log B+\log(M+1))$、$S(L)=B+C\log(M+1)$ とする。
 - `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(DQ(L))$
 - `sum_k_smallest`, `sum_k_largest`: $O(DQ(L)+L)$。境界値と等しい要素を元の添字順に拾う走査が $O(L)$
 
-# Version・引数・例外
+## 注意点
 
 version 0が初期列。`set` は指定versionから1点を置換した新version、`fork` は同内容の
 新versionを返す。`access` と全queryは先頭にversionを受け取る。`size/versions/latest_version`
 は列長・version数・最新番号を返す。
 
-点・出現番号・順序統計は0-indexed。列区間は半開区間 `[l,r)`、値域は
-`[lower,upper)`。`select` は該当なしなら `size()`、前後値は `nullopt`。
+点・順序統計は0-indexed。列区間は半開区間 `[l,r)`、値域は
+`[lower,upper)`。前後値は該当なしなら `nullopt`。
 不正なversion・点・区間・順序・値域、bit幅、列長/version/block node容量超過では
 `runtime_error`。失敗した更新は使用量を戻す。各APIの計算量は上記表の通り。
 

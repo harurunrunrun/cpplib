@@ -36,3 +36,7 @@ vector<unsigned char> balanced_bipartition(size_t vertex_count)
 - 追加空間計算量: $O(N)$
 
 `side` の長さ・値を検査し、不正値には `std::invalid_argument` を送出する。辺の入力条件は Weighted Undirected Graph Input に従う。
+
+## 注意点
+
+頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。

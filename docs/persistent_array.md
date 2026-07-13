@@ -111,7 +111,11 @@ int latest_version() const
 
 - $O(1)$
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+constructor、fork、size、versions、latest_versionの一時領域は O(1)。getは永続木を辿る再帰stack O(log MAX_SIZE)、setはpath-copy nodeと再帰stackをそれぞれ O(log MAX_SIZE) 使用する。固定arrayの保存領域は別に数える。
+
+## 注意点
 
 - `MAX_SIZE > 0`、`0 <= n <= MAX_SIZE`。vector/array入力も`MAX_SIZE`以下。
 - indexは`[0,n)`、versionは`[0,versions())`。範囲外なら例外。

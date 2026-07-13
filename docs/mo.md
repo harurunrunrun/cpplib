@@ -27,7 +27,7 @@ mo.solve(add, erase, answer)
 
 - $O(Q \log Q + (N + Q)\sqrt Q)$ 回程度の add/erase
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N$ を列長、$Q$ をquery数、$B$ をblock sizeとする。
 
@@ -50,3 +50,7 @@ $N$ を列長、$Q$ をquery数、$B$ をblock sizeとする。
 - 3-callback版は左右で同じ `add(i)`, `erase(i)` を使う。
 - `block_size > 0` ならその幅を使用し、それ以外はquery数から自動決定する。
   `solve` は登録query自体を変更せず、繰り返し呼べる。
+
+## 注意点
+
+空入力、退化入力、範囲外のindexと容量超過の扱いは各APIの説明に従う。参照・iterator・callbackを受け渡すAPIでは、変更可否とobjectの寿命を守る。

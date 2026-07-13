@@ -58,6 +58,6 @@ BipartiteEdgeColoringResult bipartite_edge_coloring(
 
 - `O(left_size + right_size + M)`
 
-# 前提・例外
+## 注意点
 
 `left_size`、`right_size` は非負でなければならない。全辺について `0 <= left < left_size` および `0 <= right < right_size` を要求する。違反時は `runtime_error` を送出する。

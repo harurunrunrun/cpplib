@@ -25,7 +25,7 @@ auto result = approximate::optimization::hooke_jeeves(
 
 次元を $D$、反復数を $I$、目的関数1回を $F$ とする。候補は1反復最大`2D+1`個で、
 目的関数呼び出しは最大 $1+I(2D+1)$ 回。現在の実装は各座標候補の点をcopyするため、
-時間は $O(F+I(D^2+DF))$、追加領域は $O(D)$。結果member参照は $O(1)$、点の列挙は
+時間計算量は $O(F+I(D^2+DF))$、追加空間計算量は $O(D)$。結果member参照は $O(1)$、点の列挙は
 $O(D)$。
 
 初期点は空でない有限値で、0次元は`std::invalid_argument`。`max_evaluations`、
@@ -34,3 +34,7 @@ $O(D)$。
 初期点を含む必要がある。不正parameterは`std::invalid_argument`、目的関数の非有限値は
 `std::domain_error`、候補計算のoverflowは`std::overflow_error`。stepが丸めで縮小不能なら
 `std::runtime_error`を送出する。
+
+## 注意点
+
+目的関数・勾配・座標微分は各APIで示した次元と有限値の条件を満たす必要がある。非凸関数に対する大域最適解や、反復上限内での収束は保証しない。

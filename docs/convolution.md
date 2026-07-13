@@ -16,11 +16,11 @@ NTT による畳み込み。
 - `arbitrary_mod_convolution<MOD>(a, b)`
     - 任意の `Modint<MOD>` に対する畳み込み。
 
-## 計算量
+## 計算量の概要
 
 - $O(n \log n)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $A=|a|$, $B=|b|$、$Z$ を $A+B-1$ 以上の最小の2冪とする。
 
@@ -33,7 +33,7 @@ $A=|a|$, $B=|b|$、$Z$ を $A+B-1$ 以上の最小の2冪とする。
 畳み込みは $A+B-1$ 要素を列挙して返す。既知のNTT-friendly法以外では3回のNTTとCRTを行うが、漸近計算量は同じ。
 
 `MOD` の原始根が既知でない場合、最初の変換時だけ `MOD-1` の試し割りと原始根探索を行う。一度得た根はtemplate実体ごとのstatic値として再利用され、2回目以降の前処理は不要。
-## API詳細と前提
+## 注意点
 
 - `number_theoretic_transform<MOD>(a,inverse)` はvectorをin-placeで変換する。
   長さは正の2冪で、その長さが `MOD-1` を割り切る必要がある。

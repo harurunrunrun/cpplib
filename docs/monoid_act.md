@@ -43,7 +43,7 @@ constexpr Monoid_Act<
 
 ## メンバ
 
-| メンバ | 内容 | 計算量 |
+| メンバ | 内容 | 時間計算量 |
 | --- | --- | --- |
 | `using S` | 区間値の型 | - |
 | `using T` | 作用の型 | - |
@@ -63,3 +63,11 @@ constexpr AddMinMonoidAct<long long> add_min{};
 LazySegtree<add_min, 200000> seg(n);
 ```
 
+
+## 注意点
+
+`op` は結合的、`e` は単位元。`composition(f,g)` は `g` の後に `f` を適用する作用を
+返し、`mapping` と分配則を満たす必要がある。`id` は作用の単位元。これらの代数則は
+実行時に検査しない。
+各member呼出しの時間・追加空間計算量は指定した関数のコストであり、通常の定数時間演算なら
+ともに $O(1)$。

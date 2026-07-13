@@ -25,7 +25,7 @@ long long min_left(int version, long long r, F f)
 
 更新は指定versionから分岐し、新しいversion番号を返す。
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `set`, 1点`apply`, 区間`apply`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
@@ -34,7 +34,7 @@ long long min_left(int version, long long r, F f)
 
 各更新が複製するノード数は $O(\log \mathtt{MAX\_SIZE})$。
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、`0 <= version < versions()` のversionだけを参照できる。
 更新と `fork` は指定versionを変更せず、新しいversion番号を返す。`latest_version()` は

@@ -43,7 +43,7 @@ RangeMajorityQuery<T, Hash> query(sequence);
 
 時間計算量は期待 $O(\log N)$。
 
-## 例外と前提
+## 注意点
 
 添字または区間が範囲外なら `runtime_error` を送出する。
 Treapのpriorityは添字からSplitMix64で決定し、計算量はその平衡性に対する期待値。

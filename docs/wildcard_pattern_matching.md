@@ -30,12 +30,16 @@ std::vector<bool> result = wildcard_pattern_matching(text, pattern, wildcard);
 受理する入力では非負整数である不一致量の総和が2法の積より小さいことを検査するため、
 両方の剰余が0なら整数としても0である。乱択や衝突確率は用いない。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $N=|text|$、$M=|pattern|$とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `wildcard_pattern_matching` | $O((N+M)\log(N+M))$ | $O(N+M)$ |
 
 全wildcardの早期終了時は$O(N+M)$時間である。
+
+## 注意点
+
+文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。

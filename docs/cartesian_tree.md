@@ -37,7 +37,7 @@ CartesianTreeResult cartesian_tree(
 
 各要素は単調スタックへ一度追加され、一度以下だけ取り除かれる。
 比較一回の計算量を $C$ とすると時間計算量は $O(NC + N)$、
-比較が $O(1)$ なら $O(N)$、返り値と作業領域はともに $O(N)$。
+比較が $O(1)$ なら $O(N)$、返り値を含む空間計算量は $O(N)$。
 
 ## `build_cartesian_tree(values, compare)`
 
@@ -49,3 +49,7 @@ CartesianTreeResult cartesian_tree(
 auto min_tree = cartesian_tree(a);
 auto max_tree = cartesian_tree(a, std::greater<int>());
 ```
+
+## 注意点
+
+`Compare` はstrict weak orderingを満たす必要がある。比較上同値な要素では左側のindexを優先し、空列のrootは-1となる。

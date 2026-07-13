@@ -30,3 +30,7 @@ level `l` の頂点数・辺数を $N_l,E_l$、spectral反復回数を $I$、ref
 - 追加空間計算量: $O(\sum_l(N_l+E_l))$
 
 `coarsest_vertex_count < 2`、実現不能なimbalance制約には `std::invalid_argument` を送出する。`maximum_levels == 0` ではcoarseningを省略する。空グラフを許す。
+
+## 注意点
+
+頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。

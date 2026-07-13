@@ -34,14 +34,20 @@ long long s = fw.sum(2, 5);
 - `void set(int k, T x)`
     - `a[k] = x`。
 
-## 計算量
+## 時間計算量
 
 - `FenwickTree(int)`: $O(\mathtt{MAX\_SIZE})$
 - `FenwickTree(vector)`: $O(\mathtt{MAX\_SIZE}+n\log n)$
 - `add`, `prefix_sum`, `sum`, `get`, `set`: $O(\log n)$
 - `size`, `empty`: $O(1)$
 
-## 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- 2種類のconstructor、`size`、`empty`、`add`、`prefix_sum`、`sum`、`get`、`set`: $O(1)$
+
+本体の固定保存領域は $O(\mathtt{MAX\_SIZE})$ である。
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`。vector長超過を含め、constructorの範囲違反は例外。
 - indexは`[0,n)`、prefix終端は`[0,n]`、区間は`0 <= l <= r <= n`。違反時は例外。

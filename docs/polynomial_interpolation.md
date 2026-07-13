@@ -103,12 +103,12 @@ math::Polynomial<MOD> math::polynomial_interpolation(
 という処理を行う。`points.size() != values.size()`、または評価点に重複がある場合は
 `std::invalid_argument` を送出する。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 `Mint` の四則演算と `inv()` を $O(1)$ とする。`n = sample_count`、
 `d = coefficient_count` とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `PolynomialInterpolation()` | $O(MAX\_DEGREE)$ | オブジェクトに $O(MAX\_DEGREE)$ |
 | `polynomial_evaluate` | $O(d)$ | $O(1)$ |
@@ -121,7 +121,7 @@ math::Polynomial<MOD> math::polynomial_interpolation(
 作業配列にも `std::array` を使うため、追加領域は実際の `n` ではなくテンプレートの
 固定容量で決まる。非常に大きい `MAX_DEGREE` のインスタンスは静的領域へ置くとよい。
 
-## 前提
+## 注意点
 
 - `Mint` は加減乗除、単項マイナス、比較、`inv()`、整数からの構築を持つ体要素型。
 - constructor は `MAX_DEGREE!` の逆元を1回求める。通常の素数 modint では

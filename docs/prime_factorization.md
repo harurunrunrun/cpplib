@@ -18,13 +18,13 @@ documentation_of: ../src/algorithm/math/prime_factorization.hpp
 - `math::euler_phi(n)`
     - Euler の $\varphi(n)$ を返す。
 
-## 計算量
+## 計算量の概要
 
 - `is_prime_miller_rabin`: $O(\log n)$
 - `pollard_rho`, `factorize_pollard_rho`: 期待 $O(n^{1/4})$
 - `euler_phi`: 素因数分解に依存
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 以下で「期待」は Pollard's rho の反復回数に関する期待計算量である。
 
@@ -41,7 +41,7 @@ documentation_of: ../src/algorithm/math/prime_factorization.hpp
 | `math::euler_phi(n)` | 素因数分解と同じ期待計算量 |
 
 `pollard_rho` は再試行を行うため決定的な反復回数上界を置かない。`is_prime_miller_rabin_random` の誤判定確率は `rounds` に依存する。
-## API詳細と前提
+## 注意点
 
 - `u64`, `u128` は内部計算にも使う64/128 bit符号なし整数alias。
 - `mul_mod_u64(a,b,mod)` は $ab\bmod mod$、`pow_mod_u64(x,n,mod)` は

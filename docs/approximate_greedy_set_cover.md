@@ -36,8 +36,8 @@ SetCoverResult greedy_weighted_set_cover(
 
 # SetCoverResult
 
-`selected_sets` は選択順、`uncovered_elements` は被覆不能だった要素の昇順列である。`covers_universe()` は後者が空かを返し、時間計算量 $O(1)$、追加空間計算量 $O(1)$。
+`selected_sets` は選択順、`uncovered_elements` は被覆不能だった要素の昇順列である。`covers_universe()` は後者が空かを返し、時間計算量 $O(1)$、追加空間計算量は $O(1)$。
 
-# 前提・例外
+## 注意点
 
 `Weight` は `bool` 以外の算術型とする。重みは非負、浮動小数点数では有限でなければならない。重み数の不一致・不正な重みには `std::invalid_argument`、宇宙外の要素には `std::out_of_range` を送出する。

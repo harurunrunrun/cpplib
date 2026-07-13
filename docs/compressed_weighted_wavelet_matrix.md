@@ -66,7 +66,7 @@ $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$ とする。
 - `access`, `operator[]`, `kth_smallest`, `kth_largest`, `quantile`, `sum_k_smallest`, `sum_k_largest`, `range_min`, `range_max`, `median_floor`, `median_ceil`: $O(H)$
 - `rank`, `range_freq`, `range_sum`, `prev_value`, `next_value`: $O(\log D+H)$
 
-# 構築・共通契約
+## 注意点
 
 constructorは値列を座標圧縮し、対応する重み列を構築する。両vectorの長さは一致する必要がある。
 `size/value_count/value/access/operator[]`、rank・順序統計・中央値・前後値の契約は

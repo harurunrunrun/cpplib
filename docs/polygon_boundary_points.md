@@ -23,7 +23,7 @@ If `unique = true`, each point index occurs only at its first position. If `uniq
 
 If convexity, nondegeneracy, or the original-edge association cannot be verified, `uses_convex_fast_path()` is false and `enumerate` calls the general function. This fallback also covers nonconvex and all-collinear polygons. Enumeration also falls back when tolerance makes the candidate-side set ambiguous.
 
-# Complexity
+## 計算量の概要
 
 $O(NM \log M)$ for $N$ polygon vertices and $M$ given points.
 
@@ -33,7 +33,7 @@ For the query class, let $K$ be the number of returned point-edge incidences.
 - convex fast-path `enumerate`: $O(M \log N + K \log K)$ time and $O(N + M + K)$ memory
 - fallback `enumerate`: $O(NM \log M)$ time
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N$ をpolygon辺数、$M$ を与えるpoint数、$K$ を返すpoint-edge incidence数とする。
 
@@ -47,3 +47,7 @@ $N$ をpolygon辺数、$M$ を与えるpoint数、$K$ を返すpoint-edge incide
 | `enumerate(points,unique)`（fallback） | $O(NM\log M+K)$ | $O(M+K)$ |
 
 constructorはfallbackを選ぶ場合もfast pathの検証を試みる。`polygon()` の戻り値を全列挙する場合は別途 $O(N)$。両enumerateは長さ $K$ のindex列を返す。
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

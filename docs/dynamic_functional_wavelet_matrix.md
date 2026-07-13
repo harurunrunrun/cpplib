@@ -24,7 +24,7 @@ $Q(L)=B+\lceil L/B\rceil\log B$、$S(L)=B+\lceil L/B\rceil$ とする。
 - `select`: $O(Q(N)\log N)$
 - `kth_smallest`, `kth_largest`, `sum_k_smallest`, `sum_k_largest`, `prev_value`, `next_value`: $O(DQ(L))$
 
-# API契約
+## 注意点
 
 ```cpp
 void set(int k, T value)

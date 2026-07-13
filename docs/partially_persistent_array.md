@@ -86,7 +86,7 @@ int latest_version() const
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE})$
 
-# 前提・例外・容量
+## 注意点
 
 - `0 <= n <= MAX_SIZE`、indexは`[0,n)`、versionは`[0,versions())`。違反時は例外。
 - `set`は最新versionだけを更新して新しいversion番号を返す。更新数が`MAX_UPDATE`に達すると例外。

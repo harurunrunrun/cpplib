@@ -9,6 +9,7 @@ x座標を固定し、y座標を点更新できる2次元wavelet matrix。
 
 ```cpp
 DynamicWaveletMatrix2D(xs, ys)
+DynamicWaveletMatrix2D()
 DynamicWaveletMatrix2D(points)
 ```
 
@@ -46,7 +47,9 @@ $Q(L)=B+\lceil L/B\rceil\log B$ とする。
 - `rectangle_count`, `range_freq`: $O(\log N+Q(L))$
 - `kth_smallest_y`, `prev_y`, `next_y`: $O(\log N+DQ(L))$
 
-# 共通API契約
+## 注意点
+
+default constructor直後は未構築状態であり、`size()` 以外を呼ばない。vector/points constructorで構築するか、構築済みobjectをmove代入してから利用する。
 
 点id `k` は入力順を保つ。`size` は点数、`x(k)` と `y(k)` は現在座標を返す。
 x座標は構築後固定、`set_y(k,y)` はyだけを更新する。`rectangle_count/range_freq` は

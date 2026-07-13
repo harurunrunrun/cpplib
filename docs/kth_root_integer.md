@@ -19,9 +19,13 @@ $\lfloor value^{1/exponent}\rfloor$を返す。
 
 `B = bit_width(value)`とする。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | 1回の累乗比較 | $O(\log(exponent+1))$ | $O(1)$ |
 | `kth_root_integer` | $O(\lceil B/exponent\rceil\log(exponent+1))$ | $O(1)$ |
 
 `exponent == 1`および`exponent >= 64`は定数時間で処理する。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

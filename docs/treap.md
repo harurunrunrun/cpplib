@@ -84,7 +84,15 @@ optional<Key> max_less(const Key& x)
 
 `size`, `empty`, `clear` は $O(1)$。
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- constructor、`size`、`empty`、`clear`: $O(1)$
+- `insert`、`erase`、`contains`、`order_of_key`、`order_of_key_upper`、`kth`、`lower_bound`、`upper_bound`、`max_leq`、`max_less`: expected $O(\log N)$ の再帰stack
+- move constructor / move assignment: $O(1)$
+
+nodeは固定arena $O(\mathtt{MAX\_SIZE})$ に保存し、`insert`が消費するslotは1個である。
+
+## 注意点
 
 - `Compare`はstrict weak ordering。同値キーは1個だけ保持する。
 - `insert`は既存キーなら`false`、要素数が`MAX_SIZE`の新規キーなら例外。

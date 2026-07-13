@@ -13,7 +13,7 @@ math::GaussianInteger{real, imag}
 
 `real + imag * i`を表す。両成分は`long long`である。等値比較を使用できる。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | 構築、`real` / `imag`参照、等値比較 | $O(1)$ | $O(1)$ |
 
@@ -37,9 +37,13 @@ math::GaussianInteger math::gaussian_gcd(
 
 $N=|left|^2+|right|^2$とする。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | Euclid法の1反復 | $O(1)$ | $O(1)$ |
 | `gaussian_gcd` | $O(\log(N+1))$ | $O(1)$ |
 
 積、ノルム、商の丸めには符号付き128bit整数を使用する。
+
+## 注意点
+
+成分は `long long` であり、積とnormは `__int128` で計算する。Euclid反復の余り成分を `long long` に戻せない場合は `overflow_error` を送出する。

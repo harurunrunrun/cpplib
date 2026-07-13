@@ -35,7 +35,7 @@ int lcp(const RollingHash& other, int l1, int l2)
 - get: $O(1)$
 - lcp: $O(\log N)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N$ を構築文字列長、$L$ を比較可能なsuffix長の小さい方とする。
 
@@ -50,7 +50,7 @@ $N$ を構築文字列長、$L$ を比較可能なsuffix長の小さい方とす
 | static metadata `mod` / `default_base` の参照 | $O(1)$ |
 
 構築後の保持領域は $O(N)$。hash比較には衝突可能性があるが、計算量は入力内容に依存しない。
-## API詳細と前提
+## 注意点
 
 - default constructorは空文字列を表し、`size()==0`、`all()==0`。
 - `build(s,base)` は同じobjectを文字列 `s` で再構築する。

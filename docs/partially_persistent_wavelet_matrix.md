@@ -47,7 +47,7 @@ std::optional<T> value = wm.next_value(version, l, r, lower)
 区間は半開区間 `[l, r)`。
 `select` は `value` の `k` 番目の位置を返し、存在しなければ `size()` を返す。
 
-# 計算量
+# 時間計算量と追加メモリ
 
 `B = BLOCK_SIZE`、区間が触れるブロック数を `C`、バージョン数を `V` とする。
 
@@ -72,10 +72,10 @@ $Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
 - `select`: 最新versionは $O(Q_0(N)\log N)$、過去versionは $O(Q_V(N)\log N)$
 - `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: 最新versionは $O(\mathtt{BIT\_WIDTH}\,Q_0(L))$、過去versionは $O(\mathtt{BIT\_WIDTH}\,Q_V(L))$
 
-# Version・引数・例外
+## 注意点
 
 version 0が初期列。更新は `latest_version()` からだけ新versionを作り、その番号を返す。
-queryは先頭のversion引数で任意の有効versionを参照する。version省略queryは最新版を読む。
+queryは先頭のversion引数で任意の有効versionを参照する。
 `size/versions/latest_version` は列長・version数・最新番号を返す。
 
 点・順序は0-indexed、列区間は半開区間 `[l,r)`、値域は `[lower,upper)`。

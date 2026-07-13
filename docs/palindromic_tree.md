@@ -56,7 +56,7 @@ int series_link(int v)
 - contains / occurrence_count / find_node: $O(L)$
 - palindromes: 返す文字列長の合計に線形
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N$ を現在長、$V$ を使用node数、$L$ をquery回文長、$D=V-2$、$K$ をsuffix回文数、列挙する回文文字列の総長を $C$ とする。
 
@@ -122,3 +122,7 @@ $N$ を現在長、$V$ を使用node数、$L$ をquery回文長、$D=V-2$、$K$ 
   回文suffixを長い順に返す。`count_suffix_palindromes()` はその個数。
 - `longest_suffix_palindrome_length()` は現在末尾の最長回文長。
   `longest_palindrome_node/length` は文字列全体の最長回文を返す。
+
+## 注意点
+
+文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。

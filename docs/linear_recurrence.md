@@ -21,7 +21,7 @@ auto value = recurrence.kth_term(k);
 `initial[i]` は $a_i$、`coefficient[i]` は $c_i$ であり、両者の長さは一致させる。
 内部配列の容量は `MAX_DEGREE` で固定される。次数0は零列を表す。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | コンストラクタ | $O(d)$ | $O(1)$ |
 | `degree()` | $O(1)$ | $O(1)$ |
@@ -37,7 +37,7 @@ auto recurrence = berlekamp_massey<T, MAX_DEGREE>(sequence);
 
 与えられた列のprefixを生成する最小次数の線形漸化式を求める。除算を使うため、値型は体を成す必要がある。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `berlekamp_massey(sequence)` | $O(Nd)$、最悪 $O(N^2)$ | $O(\mathrm{MAX\_DEGREE})$ |
 
@@ -50,12 +50,12 @@ auto value = bostan_mori(initial, coefficient, k);
 `Modint<MOD>` のvectorに対する高速版。`MOD = 998244353` などNTT可能な法では既存のNTT畳み込みを使う。
 $M(d)$ を次数 $d$ の多項式乗算時間とする。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `bostan_mori(initial, coefficient, k)` | $O(M(d)\log(k+1))$ | $O(d)$ |
 
 次数0は零列を表す。`k` は0-indexed。
-## API詳細と例外
+## 注意点
 
 - default constructorは次数0の零列。`degree()` は次数 $d$ を返す。
 - pointer constructorは `initial[0..d)` と `coefficient[0..d)` をコピーする。

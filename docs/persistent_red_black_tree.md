@@ -50,7 +50,7 @@ optional<Key> set.max_leq(x, version)
 optional<Key> set.max_less(x, version)
 ```
 
-# API別計算量
+# API別の時間計算量
 
 $N$ を対象versionの要素数とし、比較と `Key` のコピーを $O(1)$ とする。
 
@@ -67,7 +67,7 @@ $N$ を対象versionの要素数とし、比較と `Key` のコピーを $O(1)$ 
 - 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
 - `to_vector` の戻り値とstack: $O(N)$
 
-# 前提・例外
+## 注意点
 
 - `Compare`はstrict weak ordering、versionは`[0,versions())`。違反時は例外。
 - updateでversion/node容量を超える場合は例外で、既存versionとnode数を変えない。

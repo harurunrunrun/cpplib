@@ -26,8 +26,7 @@ auto result = approximate::optimization::bfgs(
 `gradient_evaluations`は初期勾配と受理された更新後の勾配の回数である。
 
 次元を $D$、受理更新数を $I$、目的関数1回を $F$、勾配1回を $G$、line searchの
-目的関数評価総数を $L$ とする。時間は
-$O(D^2+I(D^2+G)+L(D+F))$、追加領域は $O(D^2)$。
+目的関数評価総数を $L$ とする。時間計算量は $O(D^2+I(D^2+G)+L(D+F))$、追加空間計算量は $O(D^2)$。
 点・目的関数・勾配・結果memberの参照はそれぞれ $O(1)$、結果点の列挙は $O(D)$。
 
 ## `lbfgs`
@@ -44,11 +43,10 @@ auto result = approximate::optimization::lbfgs(
 L-BFGS。十分な正曲率を持たない対は保存せず、降下方向でなくなれば履歴を破棄する。
 同じ入力の目的関数・勾配に対して乱数を使わず決定的に動作する。
 
-履歴上限を $M$ とすると、時間は
-$O(D+I(MD+G)+L(D+F))$、追加領域は $O(MD)$。
+履歴上限を $M$ とすると、時間計算量は $O(D+I(MD+G)+L(D+F))$、追加空間計算量は $O(MD)$。
 目的関数・勾配の計数規則は`bfgs`と同じである。
 
-## parameter・例外・停止
+## 注意点
 
 `Real`は浮動小数点型で、初期点は空でない有限値でなければならない。したがって0次元は
 `std::invalid_argument`。`max_evaluations`と`history_size`は正、`initial_step`と

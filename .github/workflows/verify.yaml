@@ -118,6 +118,11 @@ jobs:
         if: ${{ !cancelled() }}
         run: python3 scripts/check_docs_bilingual_titles.py docs
 
+      - name: Check documentation coverage
+        id: docs_coverage
+        if: ${{ !cancelled() }}
+        run: python3 scripts/check_docs_coverage.py src docs
+
       - name: Prepare documentation result
         id: docs_result
         if: ${{ !cancelled() }}
@@ -132,7 +137,7 @@ jobs:
 
       - name: Generate docs
         id: docs
-        if: ${{ !cancelled() && steps.docs_title.outcome == 'success' && steps.docs_result.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.docs_title.outcome == 'success' && steps.docs_coverage.outcome == 'success' && steps.docs_result.outcome == 'success' }}
         uses: competitive-verifier/actions/docs@v2
         with:
           verify-files: verify-files.json

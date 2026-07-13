@@ -26,7 +26,7 @@ constexpr uint32_t exponentiable_modint_totient(uint32_t x)
 ```
 
 `x >= 1` に対するEulerのtotientを試し割りで求める。
-runtimeで呼ぶ場合は $O(\sqrt{x})$、追加領域は $O(1)$。
+runtimeで呼ぶ場合は $O(\sqrt{x})$、追加空間計算量は $O(1)$。
 `next_type` の形成に使う場合はcompile timeに評価される。
 
 ## メンバ関数
@@ -55,7 +55,7 @@ runtimeで呼ぶ場合は $O(\sqrt{x})$、追加領域は $O(1)$。
 
 引き算はない。値が 0 か、正か、十分大きいかの情報を保つため。
 
-## 計算量
+## 時間計算量
 
 `P_0=P`, `P_{i+1}=phi(P_i)` とし、`P_L=1` になるまでの段数を
 `L` とする。
@@ -75,7 +75,11 @@ runtimeで呼ぶ場合は $O(\sqrt{x})$、追加領域は $O(1)$。
 
 `MOD=1` specializationでは、すべてのconstructor・operator・methodが $O(1)$。
 
-## 前提・戻り値
+## 空間計算量（API別の追加領域）
+
+get_mod、val、比較は O(1)。一般templateのconstructor、copy/move、加算、乗算、powはtotient chainの再帰stackと返却objectを含め O(L)。MOD=1 specializationの全APIは O(1)。
+
+## 注意点
 
 - template引数は`MOD >= 1`。`val()`は現在段を`MOD`で割った代表値を返す。
 - 整数constructorは各totient段へ同じ非負整数を伝播し、周期到達情報も保持する。

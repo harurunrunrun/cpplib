@@ -23,7 +23,14 @@ void apply(int l, int r, const F& action)
 `0 <= n <= MAX_SIZE`、`0 <= k < n`、`0 <= l <= r <= n` が必要である。
 範囲外または容量超過では `runtime_error` を送出する。
 
-# 計算量
+# 時間計算量
 
 - `DualSegtree(int)`, `DualSegtree(vector)`: $O(\mathtt{MAX\_SIZE})$
 - `set`, `get`, `apply`: $O(\log \mathtt{MAX\_SIZE})$
+
+## 注意点
+
+`0 <= n <= MAX_SIZE`、点は `[0,n)`、区間は `[l,r)` で `0 <= l <= r <= n`。
+範囲・容量違反では `runtime_error`。`Monoid` は作用の合成順と `mapping` の契約を
+満たす必要がある。保存領域は $O(\mathtt{MAX\_SIZE})$、各更新・queryの追加空間計算量は
+$O(1)$。

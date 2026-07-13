@@ -22,7 +22,7 @@ long long min_left(int version, long long r, F f)
 
 `MAX_NODES`は疎ノード数、`MAX_CHANGES`は値と遅延作用をまとめた変更履歴数の上限。
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
 - `set`, 1点`apply`, 区間`apply`: $O(\log \mathtt{MAX\_SIZE})$
@@ -33,7 +33,7 @@ long long min_left(int version, long long r, F f)
 
 空間計算量は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$。
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、queryは `0 <= version < versions()` の任意versionを参照できる。
 更新は `latest_version()` だけを元に行い、新しいversion番号を返す。過去versionを更新元に

@@ -63,3 +63,11 @@ int size() const
 - $O(N\log N)$
 
 区間は半開区間で指定する。範囲外の頂点、区間、長さの異なる区間を渡すと例外を送出する。
+
+## 注意点
+
+`0 <= n <= MAX_SIZE`、頂点は `[0,n)`、区間は半開区間で同じ長さを要求する。違反では
+`runtime_error`。callbackは実際に異なる頂点成分を併合した場合だけ呼ばれ、呼出し中は
+第1引数が新leader、第2引数が吸収されたleaderである。
+保存領域は $O(N\log N)$。通常のDSU queryの追加領域は $O(1)$、`merge_ranges` の
+再帰stackは $O(\log N)$。

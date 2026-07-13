@@ -48,7 +48,7 @@ long long all_prod()
 
 $B$ は実行環境で選ばれる分岐数、$U$ は確保済みnode数。各point updateが新規確保するnode数は $O(\log_B \mathtt{MAX\_SIZE})$。
 
-# API契約
+## 注意点
 
 `set(idx,x)` は1点を置換し、`add(idx,x)` は加算する。`get` は1点、
 `prod(l,r)` は半開区間 `[l,r)`、`all_prod` は全域の和を返す。

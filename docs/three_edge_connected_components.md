@@ -38,6 +38,6 @@ ThreeEdgeConnectedComponentsResult three_edge_connected_components(
 
 - `O(N+M)`
 
-# 例外
+## 注意点
 
 `vertex_count`または辺端点が範囲外の場合は `runtime_error` を送出する。

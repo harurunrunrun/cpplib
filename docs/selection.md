@@ -21,7 +21,7 @@ Iterator median_of_medians_select(
 
 要素型はcopy constructible、`compare` はstrict weak orderingでなければならない。空範囲または範囲外の `rank` は `out_of_range`、反転したiterator範囲は `invalid_argument`。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `median_of_medians_select` | worst-case $O(N)$ | 再帰stack $O(\log N)$ |
 
@@ -39,6 +39,10 @@ optional<iter_value_t<Iterator>> boyer_moore_majority(
 
 1回目の走査でBoyer--Moore majority voteにより候補を絞り、2回目で出現数を検証する。要素型はcopy constructibleかつ等値比較可能で、範囲は複数回走査できる必要がある。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `boyer_moore_majority` | $O(N)$ | $O(1)$ |
+
+## 注意点
+
+空入力、退化入力、範囲外のindexと容量超過の扱いは各APIの説明に従う。参照・iterator・callbackを受け渡すAPIでは、変更可否とobjectの寿命を守る。

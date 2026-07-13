@@ -34,13 +34,13 @@ mint x = comb.combination(n, k);
 - `Mint bell_number(n) const`
     - Bell 数を返す。
 
-## 計算量
+## 計算量の概要
 
 - 構築: $O(MAX_N)$
 - `factorial`, `inverse_factorial`, `inverse`, `permutation`, `combination`, `homogeneous`: $O(1)$
 - `bell_number`: $O(n^2)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 `Mint` の四則演算と `inv()` を $O(1)$ とした場合。
 
@@ -53,7 +53,7 @@ mint x = comb.combination(n, k);
 | 公開配列 `fact` / `inv_fact` / `inv` の1要素参照 | $O(1)$ |
 
 保持領域は $O(MAX_N)$。`bell_number` の呼出しごとの一時領域は $O(MAX_N)$。
-## APIの前提と戻り値
+## 注意点
 
 - `fact[n]`, `inv_fact[n]`, `inv[n]` はそれぞれ $n!$、$(n!)^{-1}$、
   $n^{-1}$ の公開前計算表。`inv[0]` は0。

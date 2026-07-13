@@ -58,8 +58,8 @@ vector<int> farthest_insertion_tour(
 
 nearest/farthestの頂点選択には `distance[tour_vertex][candidate]` を使う。tieは頂点番号、次に挿入位置が小さいものを優先する。
 
-- `nearest_insertion_tour`, `farthest_insertion_tour`: 時間 $O(N^2)$、追加空間 $O(N)$
-- `cheapest_insertion_tour`: 時間 $O(N^3)$、追加空間 $O(N)$
+- `nearest_insertion_tour`, `farthest_insertion_tour`: 時間計算量は $O(N^2)$、追加空間 $O(N)$
+- `cheapest_insertion_tour`: 時間計算量は $O(N^3)$、追加空間 $O(N)$
 
 # regret insertion
 
@@ -77,7 +77,7 @@ vector<int> regret_insertion_tour(
 - 時間計算量: $O(N^3\log N)$
 - 追加空間計算量: $O(N)$
 
-# 前提・例外
+## 注意点
 
 `distance` は正方行列でなければならず、違反時は `std::invalid_argument`。非空行列で `start >= N` の場合は `std::out_of_range`。`regret_k=0` は `std::invalid_argument`。
 距離の和・差は行列要素型に収まらなければならない。近似保証には対称性・三角不等式など別の仮定が必要であり、これらのheuristic自体は保証を持たない。

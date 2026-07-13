@@ -78,7 +78,7 @@ $W=X\_MAX-X\_MIN+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間treeの最大lev
 - root tableと全update用固定arena: $O((\mathrm{MAX\_VERSION}+1)D)$
 - 各操作の再帰stack: `add_line` は $O(D)$、その他は $O(1)$
 
-# 前提・例外・戻り値
+## 注意点
 
 - compile時に`X_MIN <= X_MAX`, `MAX_VERSION >= 0`が必要。
 - versionは`[0,versions())`、query座標は`[X_MIN,X_MAX]`。違反時は例外。

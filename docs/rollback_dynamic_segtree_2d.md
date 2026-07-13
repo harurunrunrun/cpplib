@@ -63,7 +63,7 @@ void rollback(Snapshot target)
 $O(RC)$ で取り消す。`rollback(target)` は `snapshot()==target` になるまで取り消し、
 時間は取り消した各更新の変更記録数と解放した疎node数の合計に比例する。
 
-## 容量・例外
+## 注意点
 
 構築時間と保存領域は
 $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_CHANGES)$。
@@ -71,3 +71,18 @@ $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_CHANGES)$。
 `runtime_error`。失敗した更新の値変更と新規nodeは更新前へ戻る。
 rollback後に新しい更新を行えるが、取り消した先の履歴へ分岐して戻ることはできない。
 コピー構築・コピー代入は禁止している。
+
+## API別の時間計算量
+
+| API | 時間 | 履歴・一時領域 |
+| --- | --- | --- |
+| constructor | $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_CHANGES)$ | 同量の固定領域 |
+| `history_size`, `row_nodes_used`, `column_nodes_used`, `changes_used`, `can_undo` | $O(1)$ | $O(1)$ |
+| `set`, `apply` | $O(\log H\log W)$ | 変更履歴 $O(\log H\log W)$、stack $O(\log H+\log W)$ |
+| `get` | $O(\log H+\log W)$ | stack $O(\log H+\log W)$ |
+| `prod` | $O(\log H\log W)$ | stack $O(\log H+\log W)$ |
+| `all_prod`, `snapshot` | $O(1)$ | $O(1)$ |
+| `undo` | $O(\log H\log W)$ | $O(1)$ |
+| `rollback(target)` | 取り消す変更履歴数に線形 | $O(1)$ |
+
+$H=\mathtt{MAX\_HEIGHT}$、$W=\mathtt{MAX\_WIDTH}$。

@@ -73,7 +73,7 @@ Tetrahedron3{a, b, c, d}
 
 `Line3` は `a`, `b` を通る直線、`Ray3` は `origin` から `through` 方向への半直線、`Plane3` は `point` を通り `normal` を法線とする平面である。`Circle3` は `normal` に垂直な平面上の円を表す。
 
-`Point3` は単項符号、加減算、scalar倍・除算、複合代入、誤差付き等値比較、辞書順比較を持つ。各演算は `O(1)` 時間・空間。
+`Point3` は単項符号、加減算、scalar倍・除算、複合代入、誤差付き等値比較、辞書順比較を持つ。各演算は `O(1)` 時間計算量・空間計算量。
 
 # ベクトル
 
@@ -93,7 +93,7 @@ Tetrahedron3{a, b, c, d}
 | `angle(a,b)` | 2ベクトル間の角を `[0,pi]` で返す。零ベクトルでは例外。 |
 | `rotate_around_axis(p,axis,theta)` | 原点を通る `axis` の周りにRodriguesの公式で回転する。 |
 
-すべて `O(1)` 時間・空間。
+すべて `O(1)` 時間計算量・空間計算量。
 
 # 所属、射影、鏡映
 
@@ -114,7 +114,7 @@ Tetrahedron3{a, b, c, d}
 | `reflection(plane,p)` | 点の平面に関する鏡映。 |
 | `plane_orthonormal_basis(plane)` | 平面上の右手系正規直交基底2本を返す。 |
 
-すべて `O(1)` 時間・空間。
+すべて `O(1)` 時間計算量・空間計算量。
 
 # 距離と最近点対
 
@@ -132,7 +132,7 @@ distance(Segment3, Segment3)
 distance(Triangle3, Point3)
 ~~~
 
-`closest_points` は2つの図形上で距離を最小にする点のpairを返す。平行直線では一意でない最近点対のうち1組を返す。退化線分にも対応する。各APIは `O(1)` 時間・空間。
+`closest_points` は2つの図形上で距離を最小にする点のpairを返す。平行直線では一意でない最近点対のうち1組を返す。退化線分にも対応する。各APIは `O(1)` 時間計算量・空間計算量。
 
 # 平面との交差
 
@@ -143,7 +143,7 @@ distance(Triangle3, Point3)
 | `segment_plane_intersection(segment,plane)` | 閉線分上の一意な交点。存在しない、または非退化線分全体が平面上なら `nullopt`。平面上の退化線分はその点を返す。 |
 | `plane_plane_intersection(a,b)` | 一意な交線。平行・一致平面では `domain_error`。 |
 
-すべて `O(1)` 時間・空間。
+すべて `O(1)` 時間計算量・空間計算量。
 
 # 球との交差
 
@@ -155,7 +155,7 @@ distance(Triangle3, Point3)
 | `plane_sphere_intersection(plane,sphere)` | 交円。交わらなければ `nullopt`、接する場合は半径0。 | 1 |
 | `sphere_sphere_intersection(a,b)` | 交円。交わらなければ `nullopt`、接する場合は半径0。一致球では交円が一意でないため `domain_error`。 | 1 |
 
-各APIは返す `vector` の確保を含めて `O(1)` 時間・空間。負の半径では `invalid_argument`。
+各APIは返す `vector` の確保を含めて `O(1)` 時間計算量・空間計算量。負の半径では `invalid_argument`。
 
 # 三角形
 
@@ -170,7 +170,7 @@ distance(Triangle3, Point3)
 | `distance(triangle,p)` | 点と閉三角形の距離。 |
 | `circumcircle(triangle)` | 3頂点を通る平面上の外接円。退化時は例外。 |
 
-すべて `O(1)` 時間・空間。
+すべて `O(1)` 時間計算量・空間計算量。
 
 # 四面体
 
@@ -183,7 +183,7 @@ distance(Triangle3, Point3)
 | `contains(tetrahedron,p)` | 点が閉四面体内にあるか判定する。退化時は例外。 |
 | `circumsphere(tetrahedron)` | 4頂点を通る外接球。退化時は例外。 |
 
-すべて `O(1)` 時間・空間。
+すべて `O(1)` 時間計算量・空間計算量。
 
 # 球と円
 
@@ -197,9 +197,9 @@ distance(Triangle3, Point3)
 | `sphere_cap_volume(sphere,height)` | 高さ `height` の球冠の体積。 |
 | `sphere_intersection_volume(a,b)` | 2つの閉球の共通部分体積。離隔・内包・一致にも対応する。 |
 
-すべて `O(1)` 時間・空間。半径は非負、球冠の高さは `[0,2*radius]` でなければならず、違反時は `invalid_argument`。
+すべて `O(1)` 時間計算量・空間計算量。半径は非負、球冠の高さは `[0,2*radius]` でなければならず、違反時は `invalid_argument`。
 
-# 数値上の前提
+## 注意点
 
 - 入力と中間値が有限な `long double` の範囲に収まる必要がある。
 - EPS判定は絶対誤差である。巨大座標や厳密な整数述語が必要な問題では、整数専用の `__int128` 判定を使う。

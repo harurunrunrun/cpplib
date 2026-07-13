@@ -21,7 +21,7 @@ rectangle_xor_area<T>(rectangles)
 
 - $O(N \log N)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N$ を入力長方形数とする。
 
@@ -31,3 +31,7 @@ $N$ を入力長方形数とする。
 | `RectangleXorRectangle` の各座標field参照 | $O(1)$ |
 
 座標圧縮と $2N$ 個以下のevent整列を前処理として行い、各eventを $O(\log N)$ で処理する。
+
+## 注意点
+
+空入力、退化入力、範囲外のindexと容量超過の扱いは各APIの説明に従う。参照・iterator・callbackを受け渡すAPIでは、変更可否とobjectの寿命を守る。

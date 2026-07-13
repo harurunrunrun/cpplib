@@ -83,7 +83,7 @@ $K=O(N\log(N+1))$ を全頂点の重心祖先entry数とする。
 固定容量の重心距離索引とmarked頂点のentryを含めて
 $O(\mathtt{MAX\_SIZE}\log(\mathtt{MAX\_SIZE}+1))$。
 
-# API契約・例外
+## 注意点
 
 - `build` 前に更新・query・`index` は呼べない。
 - `build` 後に辺は追加できない。

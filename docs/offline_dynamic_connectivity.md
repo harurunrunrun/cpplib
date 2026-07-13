@@ -67,7 +67,17 @@ dc.run([&](int time, const auto& dsu){
 
 `size`, `time_size` は $O(1)$。
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- constructor、`size`、`time_size`: $O(1)$（segment-tree container自体は本体へ保存）
+- `add_edge`、`erase_edge`: 有効辺instanceごとに本体へ $O(1)$、一時領域は $O(1)$
+- 初回`run`: 有効区間をsegment treeへ展開する保存領域 $O(M\log Q)$、DFS stack $O(\log Q)$、rollback履歴は同時に有効な辺数に比例
+- 2回目以降の`run`: 追加の辺保存領域は $O(1)$、DFS stackとrollback履歴は初回と同じ
+
+run 中はこのほかheap上に rollback DSU の固定領域 O(MAX_SIZE + MAX_HISTORY) を保持する。
+callback自身が使う領域は含めない。
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`, `0 <= time_size <= MAX_TIME`。違反時は例外。
 - event時刻は`[0,time_size)`、頂点は`[0,n)`。違反時は例外。

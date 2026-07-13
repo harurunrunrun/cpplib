@@ -22,3 +22,7 @@ BipartitionResult spectral_bisection(
 - 追加空間計算量: $O(N+E)$
 
 辺がない場合と `maximum_iterations == 0` では番号順の平衡分割を返す。`tolerance` は有限な非負値でなければならない。
+
+## 注意点
+
+頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。

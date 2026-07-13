@@ -56,7 +56,7 @@ $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$ とする。
 - `access`, `operator[]`, `kth_smallest`, `kth_largest`, `quantile`, `sum_k_smallest`, `sum_k_largest`, `range_min`, `range_max`, `median_floor`, `median_ceil`: $O(H)$
 - `rank`, `range_freq`, `range_sum`, `prev_value`, `next_value`: $O(\log D+H)$
 
-# API契約
+## 注意点
 
 値自身を重みとした `CompressedWeightedWaveletMatrix` である。
 `size/value_count/value/access/operator[]/rank/kth_smallest/kth_largest/quantile/range_freq/sum/`

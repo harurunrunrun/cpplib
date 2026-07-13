@@ -30,6 +30,6 @@ vector<int> incremental_scc(
 
 SCC探索は再帰を使わない。
 
-# 例外
+## 注意点
 
 `vertex_count`または辺端点が範囲外の場合は `runtime_error` を送出する。

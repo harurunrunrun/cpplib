@@ -182,7 +182,7 @@ int size() const
 
 - $O(1)$
 
-# 引数・容量・例外
+## 注意点
 
 実際の列長を (n) とする。点は `0 <= k < n`、全range操作は
 `0 <= l <= r <= n` の半開区間 `[l,r)` で指定する。`range_chmin/chmax/add` は

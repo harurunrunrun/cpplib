@@ -91,7 +91,7 @@ $N$ を列長、$D=\mathtt{BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ 
 - `access`, `operator[]`, `rank`, `kth_smallest`, `kth_largest`, `range_freq`, `prev_value`, `next_value`: $O(D)$
 - `select`: $O(D\log N)$
 
-# 構築・共通契約
+## 注意点
 
 ```cpp
 WaveletMatrix(const vector<T>& values)

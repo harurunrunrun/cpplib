@@ -89,7 +89,15 @@ S all_prod()
 
 `all_prod`, `size`, `empty`, `clear` は $O(1)$。
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- constructor、`size`、`empty`、`clear`、`all_prod`: $O(1)$
+- `insert`、`push_front`、`push_back`、`erase`、`set`、`get`、`reverse`、`prod`: expected $O(\log N)$ の再帰stack
+- move constructor / move assignment: $O(1)$
+
+nodeは固定arena $O(\mathtt{MAX\_SIZE})$ に保存し、1回の挿入が消費するslotは1個である。
+
+## 注意点
 
 - `insert(p,x)`は`0 <= p <= size()`、点操作は`0 <= p < size()`を要求する。
 - 区間操作は`0 <= l <= r <= size()`。範囲違反は例外。

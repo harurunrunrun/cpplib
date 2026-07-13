@@ -72,7 +72,7 @@ long long graph.steps_to(from, to)
 
 - `jump`: $O(64)$
 - `steps_to`: $O(64)$
-## 構築・queryの例外
+## 注意点
 
 - default constructorは頂点数0の空graph。`build(successor)` は以前の内容を破棄して
   再構築する。頂点数超過、または行き先が $[0,N)$ 外なら例外。
@@ -82,8 +82,18 @@ long long graph.steps_to(from, to)
   `cycle_size(id)` はそのうちcycle上の頂点数。
 - `cycle(id)` が返すspanはobject内部配列を参照し、次の `build` まで有効。
 
-## 注意点
+### 補足
 
 default constructorは空graphを作り、`build` は以前の状態を置換する。入力sizeは `MAX_SIZE` 以下。頂点・component queryはindexを検査する。`cycle` のspanは次のbuildまたはobject破棄まで有効。構築は $O(64N)$、`jump/steps_to` は $O(64)$。
 
 頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+
+## API別の時間計算量・空間計算量
+
+| API | 時間計算量 | 空間計算量 |
+| --- | --- | --- |
+| constructor / `build(successor)` | $O(64N)$ | object内に $O(64\,MAX\_SIZE)$ |
+| `size`, `empty`, `component_count`, `successor` | $O(1)$ | $O(1)$ |
+| 頂点ごとの分解結果query | $O(1)$ | $O(1)$ |
+| `component_size`, `cycle_size`, `cycle` | $O(1)$ | $O(1)$（`cycle` はview） |
+| `jump`, `steps_to` | $O(64)$ | $O(1)$ |

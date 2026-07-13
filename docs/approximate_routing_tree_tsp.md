@@ -55,6 +55,6 @@ MSTの奇数次数頂点上で最小重み完全matchingを厳密な部分集合
 
 競プロで扱える小規模matching向けであり、`M > maximum_odd_vertices` なら `std::length_error`。`maximum_odd_vertices` は24以下で指定する。既定値22ではDP本体がおよそ $2^{22}$ stateになる。
 
-# 前提・例外
+## 注意点
 
 距離行列は正方で、無向利用時は対称でなければならない。2倍・3/2倍保証には非負、対称、三角不等式をすべて仮定する。非正方行列・不正な上限には `std::invalid_argument`、不正なrootには `std::out_of_range` を送出する。コスト演算結果は要素型に収まらなければならない。

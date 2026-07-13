@@ -37,7 +37,7 @@ $0\leq n\leq$ `maximum_n` のクエリを前計算する。
 `maximum_n < prime_modulus` でなければならない。条件を満たさない場合は
 `std::invalid_argument` を投げる。
 
-`maximum_n` を $L$ とする。構築時間は $O(\sqrt p+L)$、領域計算量は
+`maximum_n` を $L$ とする。構築時間は $O(\sqrt p+L)$、空間計算量は
 $O(L)$ である。実際には $D$ が範囲内にある場合、階乗表の要素数は
 $O(D+L/D)$ となる。
 
@@ -47,7 +47,7 @@ $O(D+L/D)$ となる。
 std::uint32_t modulus() const noexcept
 ```
 
-法 $p$ を返す。時間計算量・追加領域は $O(1)$。
+法 $p$ を返す。時間計算量・空間計算量（追加領域）は $O(1)$。
 
 ### `base`
 
@@ -55,7 +55,7 @@ std::uint32_t modulus() const noexcept
 std::uint32_t base() const noexcept
 ```
 
-$q$ を返す。時間計算量・追加領域は $O(1)$。
+$q$ を返す。時間計算量・空間計算量（追加領域）は $O(1)$。
 
 ### `maximum_n`
 
@@ -63,7 +63,7 @@ $q$ を返す。時間計算量・追加領域は $O(1)$。
 std::size_t maximum_n() const noexcept
 ```
 
-構築時に指定した `maximum_n` を返す。時間計算量・追加領域は $O(1)$。
+構築時に指定した `maximum_n` を返す。時間計算量・空間計算量（追加領域）は $O(1)$。
 
 ### `period`
 
@@ -72,7 +72,7 @@ std::size_t period() const noexcept
 ```
 
 $[D]_q=0$ となる最小の正整数 $D$ が `maximum_n` 以下なら $D$、
-存在しなければ $0$ を返す。時間計算量・追加領域は $O(1)$。
+存在しなければ $0$ を返す。時間計算量・空間計算量（追加領域）は $O(1)$。
 
 ### `binomial`
 
@@ -83,4 +83,8 @@ std::uint32_t binomial(std::size_t n, std::size_t k) const
 $\binom{n}{k}_q\bmod p$ を返す。$k>n$ なら $0$ を返す。
 `n > maximum_n` なら `std::out_of_range` を投げる。
 
-時間計算量・追加領域は $O(1)$。
+時間計算量・空間計算量（追加領域）は $O(1)$。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

@@ -57,10 +57,10 @@ $Q(L)=B+\lceil L/B\rceil\log B$、$S(L)=B+\lceil L/B\rceil$ とする。
 - `select`: $O(Q(N)\log N)$
 - `kth_smallest`, `kth_largest`, `sum_k_smallest`, `sum_k_largest`, `prev_value`, `next_value`: $O(DQ(L))$
 
-# 構築・共通契約
+## 注意点
 
 default constructorは空列、vector/array constructorは入力列を構築する。`size` は列長、
-`access/operator[]` は1点を返す。`set(k,value)` は1点を置換する。
+`access/operator[]` は1点を返す。`set(k,value,weight)` は値と重みを置換する。
 点・出現番号・順序統計の `k` は0-indexed、列区間は半開区間 `[l,r)`、
 値域は `[lower,upper)`。`select` は該当なしなら `size()`、
 `prev_value/next_value` は `nullopt`。

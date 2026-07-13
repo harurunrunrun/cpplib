@@ -26,3 +26,18 @@ const T& old = storage.get(index, old_version);
 | `rollback(snapshot)` | 変更数を`snapshot`まで戻す | `0 <= snapshot <= changes()`。範囲外は例外 | 取り消す変更数に対して$O(R)$ |
 
 `C_k`はindex `k`の変更回数。値は`std::optional<T>`に保持され、初期値と変更値を合わせて固定容量$O(SIZE+MAX_CHANGE)$を使う。index別履歴のvector領域は変更総数$O(MAX_CHANGE)$。
+
+## 空間計算量（API別の追加空間計算量）
+
+- constructor、`initialize`、`changes`、`current`、`get`、`rollback`: $O(1)$
+- `write`: $O(1)$ の履歴entryを本体へ追加し、一時領域も $O(1)$
+
+本体の保存領域は $O(\mathtt{SIZE}+\mathtt{MAX\_CHANGE})$ である。
+
+## 注意点
+
+内部実装向け。各indexは `initialize` 後に使用し、同じindexへの `write` のversionは
+単調非減少でなければならない。これら2条件は実装が検査しない。
+`initialize` / `current` / `write` の追加空間計算量は $O(1)$、`get` は反復二分探索で
+$O(1)$、`rollback` も戻り値以外は $O(1)$ の一時領域を使う。保存領域は
+$O(\mathtt{SIZE}+\mathtt{MAX\_CHANGE})$。

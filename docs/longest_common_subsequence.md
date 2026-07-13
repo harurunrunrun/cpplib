@@ -19,7 +19,7 @@ Sequence longest_common_subsequence(a, b)
 - length: $O(NM)$
 - 復元: $O(NM)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N=|a|$, $M=|b|$、復元するLCS長を $L$ とする。
 
@@ -29,3 +29,7 @@ $N=|a|$, $M=|b|$、復元するLCS長を $L$ とする。
 | `longest_common_subsequence(a,b)` | $O(NM+L)$ | $O(NM+L)$ |
 
 復元版はDP表を前処理した後、$L$ 要素の結果列を構築する。
+
+## 注意点
+
+文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。

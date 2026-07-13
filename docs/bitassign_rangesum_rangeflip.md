@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/bitassign_rangesum_rangeflip.hpp
 
 $0,1$ のみの列に対して、区間更新 と 区間和取得、区間反転を SIMDとbitset高速化で定数倍を削ったデータ構造。
 
-# 計算量
+# 時間計算量
 
 - `Bit01WST(n)`, `Bit01WST(vector)`, `init`, `build`: $O(N)$
 - `assign`, `flip`, `sum`, `get`: $O(\log N)$
@@ -28,3 +28,9 @@ bool get(size_t k)
 `assign/flip` は半開区間 `[l,r)` を代入・反転する。`sum` は1の個数、
 `get` は1点を返す。vectorの非零要素は1。`init` は0列、`build` は集約値を再構築する。
 範囲違反はassertion failure。各APIの計算量は上表の通り。
+
+## 注意点
+
+indexは0-indexed、区間は `[l,r)`。`0 <= l <= r <= size()` と `k < size()` を要求し、
+違反はassertion failureになる。vectorの非零値は1として構築する。
+保存領域は $O(N)$、構築以外の各APIの追加空間計算量は $O(1)$。

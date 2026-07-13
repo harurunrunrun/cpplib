@@ -46,7 +46,7 @@ $H=\mathtt{Y\_BIT\_WIDTH}$ とする。
 - `size`: $O(1)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+H)$
 
-# API契約
+## 注意点
 
 `RectangleSum` は `WaveletMatrix2DWeighted` の矩形和用別名である。constructorは
 `xs,ys,weights` または `(x,y,weight)` 列を受ける。`size`、`rectangle_count/range_freq`、

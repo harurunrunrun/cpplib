@@ -17,8 +17,9 @@ struct BinPackingResult {
 };
 ```
 
-各itemのbin番号と各binの残容量を持つ。`bin_count`とmember参照は$O(1)$、
-全結果の列挙は$O(N+B)$。
+各itemのbin番号と各binの残容量を持つ。`bin_count()`とmember参照の時間計算量・
+追加空間計算量は $O(1)$。全結果を列挙する時間計算量は $O(N+B)$、
+返値を除く追加空間計算量は $O(1)$。
 
 ## packing API
 
@@ -40,12 +41,14 @@ Best/Worst Fitは平衡二分木でbinを選ぶ。
 
 ## 計算量
 
-| API | `decreasing=false` | `decreasing=true` | 追加領域 |
+| API | 時間計算量 (`decreasing=false`) | 時間計算量 (`decreasing=true`) | 追加空間計算量 |
 | --- | --- | --- | --- |
 | Next Fit | $O(N)$ | $O(N\log N)$ | $O(N)$ |
 | First Fit | $O(N\log N)$ | $O(N\log N)$ | $O(N)$ |
 | Best Fit | $O(N\log N)$ | $O(N\log N)$ | $O(N)$ |
 | Worst Fit | $O(N\log N)$ | $O(N\log N)$ | $O(N)$ |
+
+## 注意点
 
 容量が非正、itemが負、itemが容量を超える場合は`std::invalid_argument`。
 `Size`は有限な全順序付き加減算型で、減算結果を表現できなければならない。

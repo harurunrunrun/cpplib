@@ -61,7 +61,7 @@ $O(\log H+\log W+L)$、半開矩形を返す `prod` は
 $O(\log H\log W L)$、`all_prod` は $O(L)$。最新versionの履歴参照は先頭記録から
 直接返せるが、表では任意versionの上界を示している。
 
-## 容量・例外
+## 注意点
 
 構築時間と保存領域は
 $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_CHANGES\,L)$。

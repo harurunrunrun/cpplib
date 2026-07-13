@@ -65,7 +65,7 @@ bool can_undo() const
 
 - $O(1)$
 
-# 共通API契約
+## 注意点
 
 点は列内、区間は半開区間 `[l,r)`。`snapshot()` は現在状態を表すtokenを返し、
 `rollback(snapshot)` はそれ以後の更新を破棄する。`undo()` を持つ型では直前の更新を1つ戻し、

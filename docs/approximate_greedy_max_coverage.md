@@ -21,3 +21,7 @@ MaxCoverageResult greedy_max_coverage(
 - 追加空間計算量: $O(U+M+L)$
 
 `selected_sets` は選択順、`covered_elements` と `uncovered_elements` は要素の昇順列である。宇宙外の要素には `std::out_of_range` を送出する。
+
+## 注意点
+
+要素番号は宇宙の範囲内で、重みは各APIの型・有限性・符号条件を満たす必要がある。返却結果に未被覆要素が残る場合、指定された集合族だけでは全被覆できない。

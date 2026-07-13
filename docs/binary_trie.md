@@ -43,7 +43,7 @@ int count_less(T x, T xor_value = 0)
 
 `xor_value` を指定した場合、値 `y` は `y xor xor_value` の順で比較される。
 
-## API別計算量
+## API別の時間計算量
 
 $B=\mathrm{BIT}$ とする。
 
@@ -57,7 +57,7 @@ $B=\mathrm{BIT}$ とする。
 - 固定node array: $O(\mathrm{MAX\_NODES})$
 - 各操作の追加領域: $O(1)$
 
-## 前提・例外・容量
+## 注意点
 
 - `T`は整数型、`BIT > 0`、`MAX_NODES > 0`。
 - `insert`で必要node数が`MAX_NODES`を超える場合は例外。erase後もnodeは回収しない。

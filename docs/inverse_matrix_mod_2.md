@@ -19,12 +19,16 @@ auto inverse = inverse_matrix_mod_2<MAX_SIZE>(matrix, size);
 `size > MAX_SIZE`または`matrix.size() != size`なら`std::invalid_argument`を送出する。
 各行の`size`以降のbitは結果に影響しない。入力は値渡しであり、呼び出し元の行列は変更しない。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $N=\texttt{size}$、$L=\texttt{MAX_SIZE}$、$w$を機械語長とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `inverse_matrix_mod_2` | $O(N^2+N^2\lceil L/w\rceil)$ | $O(N\lceil L/w\rceil)$ |
 
 $L=N$なら時間計算量は$O(N^3/w)$、追加領域は$O(N^2/w)$である。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

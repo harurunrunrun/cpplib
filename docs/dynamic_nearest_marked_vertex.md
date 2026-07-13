@@ -82,7 +82,11 @@ auto distance = nearest.nearest_distance(u);
 
 - 時間計算量: $O(\log(n+1))$
 
-## 例外・前提
+## API別の追加空間計算量
+
+constructorはobject本体へ O(MAX_SIZE log MAX_SIZE) を確保する。size、marked_count、is_marked、nearest_distanceは O(1)。add_edgeは本体へ O(1) の辺領域を追加する。buildは作業vector O(n) を使い、initially_markedならmultiset nodeを合計 O(n log n) 保存する。set_marked、mark、unmark、toggleは状態が変わる場合に本体のmultiset nodeを O(log n) 個増減し、一時領域は O(1)。
+
+## 注意点
 
 `n` が $[0,\mathrm{MAX\_SIZE}]$ の外、端点が範囲外、辺重みが負、入力が木でない、`build` 前にクエリまたは更新を行った場合は `runtime_error` を送出する。
 距離の加算が `Distance` の表現範囲を超えると `overflow_error` を送出する。

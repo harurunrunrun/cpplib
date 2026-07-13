@@ -41,3 +41,7 @@ vector<T> column_potential;
 ## 空間計算量
 
 - 入力を除いて $O(R+C)$
+
+## 注意点
+
+辺端点は $[0,N)$ に収める。多重辺、自己loop、完全matchingが存在しない場合の扱いは各APIの説明に従う。

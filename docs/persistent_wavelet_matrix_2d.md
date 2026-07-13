@@ -42,7 +42,7 @@ $Q(L)=B+C(\log B+\log(M+1))$ とおく。
 - `rectangle_count`, `range_freq`: $O(\log N+Q(L))$
 - `kth_smallest_y`, `prev_y`, `next_y`: $O(\log N+DQ(L))$
 
-# Version・座標・例外
+## 注意点
 
 点idは入力順、x座標は全versionで固定。`x(k)` はx、`y(version,k)` は指定versionのy。
 `set_y` は指定versionから新versionを返し、`fork` は同内容で分岐する。

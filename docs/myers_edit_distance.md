@@ -26,7 +26,7 @@ size_t myers_bit_parallel_edit_distance(
 文字は `unsigned char` に変換して扱うため、値が128以上の byte や
 文字列中の null byte も使用できる。文字コード単位ではなく byte 単位の距離である。
 
-# 計算量
+## API別の時間計算量・空間計算量
 
 短い方の長さを $M$、長い方の長さを $N$、
 $B=\lceil M/64\rceil$、短い方に現れる異なる byte 数を $D$ とする。
@@ -42,3 +42,7 @@ $D\leq 256$ である。
 byte alphabet の大きさ256を定数とみなせば、全体の時間計算量は
 $O(N\lceil M/64\rceil+M)$、空間計算量は $O(M)$ である。
 各 word 間では加算 carry と左 shift carry を伝播する。
+
+## 注意点
+
+文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。

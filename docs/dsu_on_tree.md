@@ -75,7 +75,7 @@ sack.preorder_vertex(index);
 
 `parent(root) == -1`、葉の `heavy_child(v) == -1`。頂点 $v$ の部分木はpreorder上の $[tin(v),tout(v))$ である。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $A,R,S,Q$ をそれぞれ `add`, `remove`, `reset`, `answer` 1回の時間計算量とする。
 

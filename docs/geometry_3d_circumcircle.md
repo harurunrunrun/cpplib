@@ -1,0 +1,16 @@
+---
+title: 3D Triangle Circumcircle (三次元三角形の外接円)
+documentation_of: ../src/algorithm/geometry/geometry_3d/circumcircle.hpp
+---
+
+## API
+
+- `circumcircle(triangle)`: 3頂点を通り三角形の平面上にある外接円を返す。
+
+## API別の時間計算量・空間計算量
+
+- 時間・追加領域 $O(1)$。
+
+## 注意点
+
+退化三角形には `std::invalid_argument` を送出する。円の法線は頂点順に従う。

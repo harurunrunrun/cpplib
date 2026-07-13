@@ -14,11 +14,11 @@ documentation_of: ../src/algorithm/math/segmented_sieve.hpp
 - `math::primes_in_range(l, r)`
     - 区間 `[l, r)` に含まれる素数を昇順で返す。
 
-## 計算量
+## 計算量の概要
 
 - $O((r-l)\log\log r + \sqrt r \log\log r)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $L=r-l$、区間内の素数個数を $K$ とする。
 
@@ -29,7 +29,7 @@ $L=r-l$、区間内の素数個数を $K$ とする。
 | `math::primes_in_range(l,r)` | $O(\sqrt r\log\log r+L\log\log r+K)$ | $O(\sqrt r+L+K)$ |
 
 `primes_in_range` は全 $L$ 個のフラグを走査し、さらに $K$ 個を出力する。
-## API詳細と範囲
+## 注意点
 
 - `segmented_sieve_isqrt(n)` は内部でも使う整数平方根を返す低水準API。
   $n\ge0$ を前提とし、負数は検査しない。

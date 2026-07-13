@@ -58,19 +58,19 @@ math::Polynomial<MOD> math::polynomial_derivative(
 
 多項式の形式微分を返す。定数多項式と0多項式には空を返す。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 `n = left.size()`, `m = right.size()` とし、長さ `k` の多項式積の計算量を
 `M(k)` と書く。この実装では NTT を使う範囲で
 $M(k)=O(k\log k)$ である。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `polynomial_multiply` | $O(M(n+m))$ | $O(n+m)$ |
 | `polynomial_add` | $O(\max(n,m))$ | $O(\max(n,m))$ |
 | `polynomial_derivative` | $O(n)$ | $O(n)$ |
 
-## 前提
+## 注意点
 
 - NTT を使う大きさでは、必要な2冪変換長が `MOD - 1` を割り切る必要がある。
 - 除算を伴う上位アルゴリズムでは `Modint<MOD>` の必要な非零要素が逆元を持つ必要がある。

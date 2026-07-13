@@ -70,7 +70,7 @@ $W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 - `build`: $O(W)$
 - `select`: $O(\log(\lceil N/64\rceil+1)+64)$
 
-# 補助API・前提
+## 注意点
 
 ```cpp
 int size() const

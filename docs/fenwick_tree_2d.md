@@ -36,14 +36,20 @@ long long s = fw.sum(1, 2, 5, 6);
 - `void set(int y, int x, T value)`
     - `a[y][x] = value`。
 
-## 計算量
+## 時間計算量
 
 - `FenwickTree2D(int, int)`: $O(\mathtt{MAX\_H}\mathtt{MAX\_W})$
 - `FenwickTree2D(vector)`: $O(\mathtt{MAX\_H}\mathtt{MAX\_W}+HW\log H\log W)$
 - `add`, `prefix_sum`, `sum`, `get`, `set`: $O(\log H \log W)$
 - `height`, `width`, `empty`: $O(1)$
 
-## 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- 2種類のconstructor、`height`、`width`、`empty`、`add`、`prefix_sum`、`sum`、`get`、`set`: $O(1)$
+
+本体の固定保存領域は $O(\mathtt{MAX\_H}\mathtt{MAX\_W})$ である。
+
+## 注意点
 
 - `0 <= h <= MAX_H`, `0 <= w <= MAX_W`。範囲外または非矩形vectorは例外。
 - 点indexは`[0,h) x [0,w)`、prefix端点は`[0,h] x [0,w]`。

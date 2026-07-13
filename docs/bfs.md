@@ -28,7 +28,7 @@ vector<int> path(int target) const;
 
 `path(target)` は対応する始点から `target` までの頂点列を返す。到達不能なら空列を返す。
 
-# 計算量
+## API別の時間計算量・空間計算量
 
 $N$ を頂点数、$M$ を辺数、$S$ を入力した始点数、$P$ を復元するpathの頂点数とする。
 

@@ -44,12 +44,16 @@ ConvexPolygonDiameterResult convex_polygon_diameter(
 - 1点: `(first, second) == (0, 0)`、距離0。
 - 2点または全点 collinear: 正規化後の両端を返す。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | 正規化済み overload | $O(N)$ | $O(N)$ |
 | `vector<Point>` overload | $O(N)$ | $O(N)$ |
 | `ConvexPolygonDiameterResult::distance` | $O(1)$ | $O(1)$ |
 
 最遠頂点列を暗黙 totally monotone matrix と SMAWK で求め、その最大を選ぶ。
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

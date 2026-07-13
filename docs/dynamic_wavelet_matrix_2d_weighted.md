@@ -37,7 +37,9 @@ $Q(L)=B+\lceil L/B\rceil\log B$ とする。
 - `set`, `set_y`, `set_weight`: $O(B\log B)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+Q(L))$
 
-# 共通API契約
+## 注意点
+
+default constructor直後は未構築状態であり、`size()` 以外を呼ばない。vector/points constructorで構築するか、構築済みobjectをmove代入してから利用する。
 
 点idは入力順を保つ。`size` は点数、`x/y/weight` は1点を返し、xは構築後固定。
 `set(k,y,w)` はyと重み、`set_y/set_weight` は片方を更新する。

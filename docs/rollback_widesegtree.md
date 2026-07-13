@@ -20,7 +20,7 @@ void undo()
 void rollback(Snapshot snapshot)
 ```
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES})$
 - `set`, `add`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
@@ -28,7 +28,7 @@ void rollback(Snapshot snapshot)
 - `undo`: 直前の更新が作ったノード・変更数に線形。$O(\log \mathtt{MAX\_SIZE})$
 - `rollback`: 取り消す更新が作ったノード・変更数の合計に線形
 
-# 共通API契約
+## 注意点
 
 点は列内、区間は半開区間 `[l,r)`。`snapshot()` は現在状態を表すtokenを返し、
 `rollback(snapshot)` はそれ以後の更新を破棄する。`undo()` を持つ型では直前の更新を1つ戻し、

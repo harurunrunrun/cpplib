@@ -29,13 +29,17 @@ T answer = hafnian(fixed_capacity_matrix);
 
 `Matrix<T, MAX_ROW, MAX_COL>` 用のオーバーロード。実際の行数と列数が一致しない場合は `std::invalid_argument` を送出する。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $N$ を行列の次数とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `hafnian(vector)` | $O(N^2 2^{N/2})$ | $O(N2^{N/2})$ |
 | `hafnian(Matrix)` | $O(N^2 2^{N/2})$ | $O(N2^{N/2}+N^2)$ |
 
 固定した頂点対を含む一閉路の重みを bit DP で求め、集合べき級数の exponential を subset convolution で計算する。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

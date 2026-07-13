@@ -88,3 +88,11 @@ Line line_at(int version, int index) const
 versionは`[0,versions())`、`line_at`のindexは`[0,size(version))`。
 範囲外、傾き単調性違反、line/node/version容量超過は例外。
 空versionへの`query`も例外。失敗したupdateは既存versionとnode数を変えない。
+
+## 注意点
+
+傾きは `add_line` の呼出し順に単調でなければならない。`MIN_QUERY=true` は最小値、
+falseは最大値を返す。空versionへのquery、無効version、version・node容量超過では
+`runtime_error`。演算中の `T` の加算・乗算が表現範囲を超えないことを呼出側が保証する。
+保存領域は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$。追加・分岐は固定arenaへ
+記録する以外の追加領域 $O(1)$、queryも $O(1)$。

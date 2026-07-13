@@ -50,14 +50,18 @@ T value = polynomial_discriminant(coefficients, coefficient_count);
 `std::invalid_argument`を返す。係数数が`CAPACITY`を超える場合は
 `std::runtime_error`を送出する。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 有効な被除数次数を$M$、除数次数を$N$、判別式の入力次数を$D$とする。
 
-| API・操作 | 時間計算量 | 追加領域 |
+| API・操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `PolynomialRemainderResult`の初期化 | $O(\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
 | `polynomial_remainder` | $O((M-N+1)N+\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
 | `polynomial_resultant` | $O(MN+\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
 | `polynomial_discriminant` | $O(D^2+\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
 | member参照 | $O(1)$ | $O(1)$ |
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

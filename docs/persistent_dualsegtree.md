@@ -68,7 +68,7 @@ int latest_version() const
 
 - $O(1)$
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、`0 <= version < versions()` のversionだけを参照できる。
 更新と `fork` は指定versionを変更せず、新しいversion番号を返す。`latest_version()` は

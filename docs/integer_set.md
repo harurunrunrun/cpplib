@@ -142,3 +142,21 @@ void clear()
 # copy / move
 
 コピー後の集合は元の集合と独立です。copy constructorは $O(コピー元のノード数)$、copy assignmentは $O(コピー元と代入先のノード数の合計)$ です。move constructorは $O(1)$、move assignmentは代入先の旧ノード数に線形で、移動元は空集合になります。
+
+## 時間計算量・空間計算量（公開API別）
+
+各APIの時間計算量は直前の各節に示した通り。追加空間計算量は次の通りである。
+
+- constructor、copy constructor、copy assignment、`clear`: 処理対象node数に比例（node本体または解放時の再帰stack）
+- move constructor: $O(1)$、move assignment: 旧node解放の再帰stack $O(h)$
+- `insert`、`erase`、`contains`、`count`、`range_sum`、`least`、`more`、`most`、`less`、`kth_ge`、`kth_gt`、`kth_le`、`kth_lt`、`min`、`max`: $O(h)$ の再帰stack
+- `size`、`empty`: $O(1)$
+- `list`: $O(h)$ のstackと、戻り値として $O(\mathtt{size()})$
+
+## 注意点
+
+`L` は `unsigned int` または `unsigned long long`、`0 < MAX_SIZE <= INT_MAX`。
+`insert` / `erase` は `[0,MAX_SIZE)` の値を要求し、違反では `runtime_error`。
+探索の範囲外は「存在しない」として扱い、`range_sum` は有効範囲へ切り詰める。
+保存領域は生成node数を $K$ として $O(K)$。通常の更新・探索の再帰stackは $O(h)$、
+`list` は戻り値の $O(size())$ に加えて $O(h)$ stackを使う。

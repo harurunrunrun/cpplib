@@ -97,7 +97,7 @@ int latest_version() const
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、queryは `0 <= version < versions()` の任意versionを参照できる。
 更新は `latest_version()` だけを元に行い、新しいversion番号を返す。過去versionを更新元に

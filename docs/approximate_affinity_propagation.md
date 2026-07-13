@@ -32,3 +32,7 @@ AffinityPropagationResult affinity_propagation(
 - 追加空間計算量: $O(N^2)$
 
 `preference` は指定時に有限、`0 <= damping < 1`、`convergence_iterations > 0` を要求する。空入力を許す。similarityまたはmessageを表せない場合は `std::overflow_error` を送出する。
+
+## 注意点
+
+座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。

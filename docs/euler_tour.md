@@ -82,7 +82,7 @@ tour.euler_tour()
 非空木ではentryとexitを各頂点1回ずつ含むため長さは $2n$。
 `euler_event(i)` は1event、`euler_tour()` は全列をコピーして返す。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 | API | 時間計算量 |
 | --- | --- |

@@ -76,10 +76,14 @@ int edge_multiplicity(int u, int v)
 - `size`: $O(1)$
 
 # 空間計算量
+n- constructor: level pointer列 O(log MAX_SIZE) を本体へ保存し、一時領域は O(1)
+- add_edge / link: 辺entryと必要なlevel・Euler Tour nodeを本体へ保存する。全操作列を通した総量は下記 O(N log N + M) の範囲内で、一時領域は O(1)
+- erase_edge / cut: 置換探索・昇格後も総保存量は同じ上界内で、一時領域は O(1)
+- same、component_size、groups、active_levels、edge_multiplicity、size: 追加領域 O(1)
 
 - $O(N\log N + M)$
 
-# 前提・例外・戻り値
+## 注意点
 
 - `0 <= n <= MAX_SIZE`、全頂点引数は`[0,n)`。違反時は例外。
 - `add_edge`は新しい端点対なら`true`、既存辺の多重度増加なら`false`。

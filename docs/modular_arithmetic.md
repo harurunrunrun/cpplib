@@ -16,7 +16,7 @@ auto result = math::chinese_remainder(remainders, moduli);
 `remainder + k * modulus` で表される。法は互いに素でなくてもよい。
 解がなければ `nullopt` を返す。統合後の法が `long long` に収まる必要がある。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | 2合同式の `chinese_remainder` | $O(\log\min(m_0,m_1))$ | $O(1)$ |
 | $K$合同式の `chinese_remainder` | $O(\sum_{i=0}^{K-1}\log\min(M_i,m_i))$ | $O(1)$ |
@@ -33,7 +33,7 @@ auto generator = math::primitive_root(prime);
 
 `prime-1` の異なる素因数数を $F$、見つかった原始根を $G$ とする。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `primitive_root(prime)` | Pollard--Rho素因数分解 + $O(GF\log prime)$ | 素因数分解に依存 |
 
@@ -60,3 +60,7 @@ $x\equiv r_0\pmod {m_0}$ かつ $x\equiv r_1\pmod {m_1}$ を統合する。
 
 素数 `prime` の最小の原始根を返す。`prime == 2` では1。
 Miller--Rabinで合成数と判定した場合は例外を送出する。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

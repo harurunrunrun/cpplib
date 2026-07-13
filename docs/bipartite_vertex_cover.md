@@ -48,11 +48,15 @@ optional<vector<pair<int, int>>> minimum_bipartite_edge_cover(
 
 最大マッチングの辺を入れ、まだmatchされていない各頂点へ接続辺を1本ずつ加える。辺被覆が存在する場合、その大きさは $|L|+|R|-|M|$。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $V=|L|+|R|$、$E$ を辺数とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `bipartite_konig_decomposition` | $O(V+E)$ | $O(V)$ |
 | `minimum_bipartite_edge_cover` | $O(V+E)$ | $O(V+E)$（戻り値を含む） |
+
+## 注意点
+
+辺端点は $[0,N)$ に収める。多重辺、自己loop、完全matchingが存在しない場合の扱いは各APIの説明に従う。

@@ -37,7 +37,7 @@ $R,C$ はそれまでに生成したrow node数・column node数。
 1回の `set` が新しく生成するnode数は $O(\log H\log W)$、保存領域は $O(R+C)$。
 コピー構築・コピー代入は禁止している。
 
-# API契約
+## 注意点
 
 `get` は1点、`set` は置換、`apply` は現在値との `Monoid.op` による1点更新、
 `prod` は半開矩形、`all_prod` は全領域を返す。`row_node_count/column_node_count` は

@@ -21,3 +21,7 @@ CommunityResult label_propagation(
 - 追加空間計算量: $O(N+E)$
 
 `I <= maximum_iterations` である。`maximum_iterations == 0` では各頂点を別communityとして返す。空グラフを許す。
+
+## 注意点
+
+頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。

@@ -139,7 +139,11 @@ int size() const
 
 - $O(1)$
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+constructor、get、snapshot、undo、rollback、can_undo、history_size、sizeの追加領域は O(1)。setは本体の履歴slotを O(1) 個消費し、一時領域も O(1)。本体の固定保存領域は O(MAX_SIZE + MAX_UPDATE)。
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`、indexは`[0,n)`。範囲外なら例外。
 - `set`は履歴を1個追加し、履歴数が`MAX_UPDATE`に達すると例外。

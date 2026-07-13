@@ -52,7 +52,7 @@ void rollback(Snapshot snapshot);
 
 `snapshot()` は現在の未rollback更新数を返す。`undo()` は直前の更新1個、`rollback(s)` は更新数が `s` になるまで取り消す。rollback後に別の更新を追加できる。未来側の状態は保持しない。
 
-## 容量と計算量
+## 計算量と保存領域
 
 `R`, `C` をtemplate上限以上の最小の2冪とする。1更新で `(log2(R)+1)(log2(C)+1)` 個のnode変更履歴を使う。
 
@@ -69,7 +69,7 @@ void rollback(Snapshot snapshot);
 
 保存領域は $O(RC+MAX\_UPDATE\log R\log C)$。
 
-## API契約・例外
+## 注意点
 
 `Monoid.op` は結合的かつ可換で、`Monoid.e()` を単位元としなければならない。
 

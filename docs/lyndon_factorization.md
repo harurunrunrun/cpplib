@@ -30,13 +30,17 @@ std::vector<std::size_t> boundaries = lyndon_factorization(
 
 文字の通常の昇順を使う文字列用overload。返す境界の意味はiterator版と同じ。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 `N = last - first`または`text.size()`とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | iterator版 | $O(N)$ | 返り値 $O(K)$ |
 | `string_view`版 | $O(N)$ | 返り値 $O(K)$ |
 
 `K`はfactor数。Duval法では各要素を定数回だけ比較する。
+
+## 注意点
+
+文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。

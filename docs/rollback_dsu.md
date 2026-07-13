@@ -73,7 +73,14 @@ int groups()
 
 - $O(\log N)$
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- constructor、`size`、`groups`、`snapshot`、`undo`、`rollback`: $O(1)$
+- `leader`、`same`、`component_size`、`merge`: 再帰する代表探索のstackを含め $O(\log N)$
+
+履歴は本体の固定領域 $O(\mathtt{MAX\_HISTORY})$ に保存され、各`merge`が消費する履歴slotは $O(1)$ である。
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`、頂点は`[0,n)`。違反時は例外。
 - `merge`は同一成分の場合も履歴を1個保存し、`MAX_HISTORY`到達後は例外。

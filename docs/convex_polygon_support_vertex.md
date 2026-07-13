@@ -37,9 +37,13 @@ std::size_t convex_polygon_support_vertex(
 - 2点または全点 collinear: 内積が大きい端点。同値なら0。
 - `direction == Point{0, 0}`: 全頂点が同値なので、空でなければ0。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | 正規化済み overload | $O(\log N)$ | $O(1)$ |
 | `vector<Point>` overload | $O(N)$ | $O(N)$ |
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

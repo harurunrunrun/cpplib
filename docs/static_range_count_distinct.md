@@ -51,3 +51,7 @@ int size() const
 # 空間計算量
 
 - $O(NW)$ bit
+
+## 注意点
+
+空入力、退化入力、範囲外のindexと容量超過の扱いは各APIの説明に従う。参照・iterator・callbackを受け渡すAPIでは、変更可否とobjectの寿命を守る。

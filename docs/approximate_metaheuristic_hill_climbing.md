@@ -59,10 +59,14 @@ auto result = random_restart_hill_climbing(
 $I$を実行反復数、反復$i$の近傍数を$D_i$、目的関数1回を$E$、
 候補生成1回を$G$とする（状態コピーの費用を除く）。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
 | `best_improvement_hill_climbing` | $O(E(1+\sum_iD_i))$ | $O(\max_iD_i)$ |
 | `first_improvement_hill_climbing` | $O(E(1+\sum_iD_i))$（上限） | $O(\max_iD_i)$ |
 | `stochastic_hill_climbing` | $O(E+I(E+G))$ | $O(1)$ |
 | `random_search` | $O(\mathrm{samples}(E+G))$ | $O(1)$ |
 | `random_restart_hill_climbing` | 各restartの最良改善探索の合計 | $O(\max_iD_i)$ |
+
+## 注意点
+
+目的関数・近傍生成器が返す値とrangeは、その呼び出し中に有効でなければならない。探索はheuristicであり、明記した停止条件を除いて大域最適性や収束を保証しない。

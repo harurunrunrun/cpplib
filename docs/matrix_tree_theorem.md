@@ -81,7 +81,7 @@ L_{from,to} \mathrel{-}= w
 
 `N=n`、`M=edges.size()`、`C=MAX_VERTEX^2` とする。`T` の各演算を `O(1)` とした計算量である。
 
-| API | 時間計算量 | 追加空間 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `matrix_tree_determinant<T, MAX_SIZE>(matrix, n)` | `O(MAX_SIZE^2 + N^3)` | `O(MAX_SIZE^2)` |
 | `count_weighted_undirected_spanning_trees` | `O(C + M + N^3)` | `O(C)` |
@@ -90,7 +90,7 @@ L_{from,to} \mathrel{-}= w
 
 固定容量を `MAX_VERTEX = Theta(N)` と取る通常の利用では、各count APIは `O(M+N^3)` 時間、`O(N^2)` 空間である。
 
-# 前提・例外
+## 注意点
 
 - `T()` が0、`T(1)` が1を表し、加減乗除、単項minus、等値比較ができる体を要求する。
 - eliminationで非0pivotの逆元が存在しなければならない。典型例は素数modのmodintや有理数である。

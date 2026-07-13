@@ -49,19 +49,19 @@ math::Polynomial<MOD> math::polynomial_remainder(
 
 `polynomial_divmod` の余りだけを返す。例外条件は同じである。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 `n = dividend.size()`, `m = divisor.size()` とし、NTT による長さ `k` の
 多項式積を $M(k)=O(k\log k)$ とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `polynomial_divmod` | $O(M(n))$ | $O(n)$ |
 | `polynomial_remainder` | $O(M(n))$ | $O(n)$ |
 
 小さい入力では定数を抑えるため $O(nm)$ の筆算へ切り替える。
 
-## 前提
+## 注意点
 
 - `divisor` の最高次係数が逆元を持つ必要がある。
 - NTT に必要な2冪変換長が `MOD - 1` を割り切る必要がある。

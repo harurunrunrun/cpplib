@@ -42,7 +42,7 @@ int nodes_used() const
 
 区間は0-indexed半開区間。
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `range_chmin`, `range_chmax`: amortized $O(\log^2 N)$
@@ -51,7 +51,7 @@ int nodes_used() const
 
 空間計算量は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$。
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、`0 <= version < versions()` のversionだけを参照できる。
 更新と `fork` は指定versionを変更せず、新しいversion番号を返す。`latest_version()` は

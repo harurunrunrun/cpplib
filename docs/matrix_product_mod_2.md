@@ -23,12 +23,16 @@ auto product = matrix_product_mod_2<MAX_INNER, MAX_COLUMNS>(
 `rhs.size() == inner_size`でなければ`std::invalid_argument`を送出する。
 `lhs`の`inner_size`以降のbitは参照しない。右辺の有効範囲外のbitは戻り値から除かれる。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $Z$を`lhs`の有効範囲にある1の個数、$w$を機械語長、$L=\texttt{MAX_COLUMNS}$とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `matrix_product_mod_2` | $O(K+NM+(Z+N)\lceil L/w\rceil)$ | $O(N\lceil L/w\rceil)$ |
 
 `MAX_COLUMNS`を$K$に合わせたとき、最悪時間計算量は$O(NMK/w)$となる。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

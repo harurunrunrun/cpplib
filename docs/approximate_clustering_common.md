@@ -16,8 +16,8 @@ documentation_of: ../src/approximate/clustering/common.hpp
 long double d2 = squared_euclidean_distance(left, right);
 ```
 
-2点のEuclid距離の二乗を`long double`で返す。次元を$d$とすると時間$O(d)$、
-追加領域$O(1)$。次元が異なると`std::invalid_argument`、結果がoverflowすると
+2点のEuclid距離の二乗を`long double`で返す。次元を$d$とすると時間計算量は $O(d)$、
+追加空間計算量は $O(1)$。次元が異なると`std::invalid_argument`、結果がoverflowすると
 `std::overflow_error`を送出する。
 
 ## `euclidean_distance`
@@ -26,5 +26,9 @@ long double d2 = squared_euclidean_distance(left, right);
 long double d = euclidean_distance(left, right);
 ```
 
-`squared_euclidean_distance`の平方根を返す。時間$O(d)$、追加領域$O(1)$で、
+`squared_euclidean_distance`の平方根を返す。時間計算量は $O(d)$、追加空間計算量は $O(1)$で、
 例外条件も同じである。
+
+## 注意点
+
+座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。

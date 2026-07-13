@@ -39,7 +39,7 @@ int latest_version() const
 int changes_used() const
 ```
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
 - `range_chmin`, `range_chmax`: amortized $O(\log^2 N)$
@@ -51,7 +51,7 @@ int changes_used() const
 
 空間計算量は $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$。
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、queryは `0 <= version < versions()` の任意versionを参照できる。
 更新は `latest_version()` だけを元に行い、新しいversion番号を返す。過去versionを更新元に

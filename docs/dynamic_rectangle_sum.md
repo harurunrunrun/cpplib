@@ -21,7 +21,7 @@ $Q(L)=B+\lceil L/B\rceil\log B$ とする。
 - `set`, `set_y`, `set_weight`: $O(B\log B)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+Q(L))$
 
-# API契約
+## 注意点
 
 基底型の `size/x/y/weight/set/set_y/set_weight/rectangle_count/range_freq/rectangle_sum/range_sum`
 を利用できる。点idは入力順、xは固定、矩形は `[xl,xr) x [yl,yr)`。

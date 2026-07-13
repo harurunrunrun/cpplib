@@ -76,7 +76,7 @@ Fraction simplest_in_open_interval(Fraction lower, Fraction upper);
 端点自身や区間外の祖先を返さず、RLE pathの分岐から最小depthの内部頂点を構成する。
 例えば `(1/1, 3/2)` では `4/3` を返す。
 
-両APIの時間計算量は $O(R_l+R_u)$、追加領域は固定長の `Path` 数個である。
+両APIの時間計算量は $O(R_l+R_u)$、空間計算量（追加領域）は固定長の `Path` 数個である。
 
 ## 有界な分数の探索
 
@@ -89,11 +89,11 @@ predicateは任意の正の分数 `v` に対して `v < x` のときだけ `true
 predicateにはoverflowを避けるため `WideFraction` が渡される。
 
 RLE runごとに移動量を指数探索・二分探索する。`x` のrun数を $R$ とすると、
-predicate呼出し回数は $O(R\log(max\_component+1))$、固定長path以外の追加領域は $O(1)$。
+predicate呼出し回数は $O(R\log(max\_component+1))$、固定長path以外の空間計算量（追加領域）は $O(1)$。
 `max_component <= 0`、predicateが単調でない場合、または範囲内に境界となる頂点がない場合の
 利用は契約外である。
 
-## 容量・例外
+## 注意点
 
 - `Int` は64bit以下の符号付き整数型。
 - 計算途中は `__int128_t` を使い、返却する分子・分母が `Int` に収まらなければ

@@ -81,7 +81,7 @@ $$
 は有効範囲が階段状のMonge行列であり、最左の行最小indexは単調増加する。
 この単調性を用いたdivide-and-conquer monotone minimaで各行の最小値を求める。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `is_discrete_convex` | $O(N)$ | $O(1)$ |
 | `min_plus_convolution_convex_arbitrary` | $O((N+M)\log(N+M))$ | $O(N+M)$ |
@@ -96,3 +96,7 @@ $$
 unsignedの2word表現で数学的に正確に比較するため、C++の符号付きoverflowを起こさない。
 最小値そのものが `T` の表現範囲外なら `overflow_error` を投げ、飽和やwrapは行わない。
 出力長を `ptrdiff_t` で表せない場合は `length_error`。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

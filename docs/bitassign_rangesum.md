@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/bitassign_rangesum.hpp
 
 $0,1$ のみの列に対して、区間更新 と 区間和取得を SIMDとbitset高速化で定数倍を削ったデータ構造。
 
-# 計算量
+# 時間計算量
 
 - `Bit01WST(n)`, `Bit01WST(vector)`, `init`, `build`: $O(N)$
 - `assign`, `sum`, `get`: $O(\log N)$
@@ -28,3 +28,10 @@ bool get(size_t k)
 `assign` は半開区間 `[l,r)` を代入し、`sum` は1の個数、`get` は1点を返す。
 `0 <= l <= r <= size()`、`k < size()` が前提で、違反はassertion failure。
 各APIの計算量は上表の通り。
+
+## 注意点
+
+indexは0-indexed、区間は `[l,r)`。`0 <= l <= r <= size()` と `k < size()` を要求し、
+違反はassertion failureになる。vectorの非零値は1として構築する。
+保存領域は $O(N)$、構築以外の各APIの追加空間計算量は $O(1)$。
+`build` は内部値を直接変更した場合に集約を再構築するための操作である。

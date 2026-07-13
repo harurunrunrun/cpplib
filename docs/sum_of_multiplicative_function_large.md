@@ -157,9 +157,9 @@ $\lfloor N/i\rfloor$ の相異なる $O(\sqrt N)$ 個だけを保持し、
 DFS で素数冪を列挙する。$p^3$ が残り上限を超える枝は
 素数累積和を使って一括処理するため、全整数や全合成数は列挙しない。
 
-## API 別計算量
+## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `sum_multiplicative_function_large_max_n` | $O(1)$ | $O(1)$ |
 | `LinearPrimePowerMultiplicativeFunction::operator()` | $O(1)$ | $O(1)$ |
@@ -170,7 +170,7 @@ DFS で素数冪を列挙する。$p^3$ が残り上限を超える枝は
 | `sum` | $O(n^{3/4}/\log n)$ | 再帰スタック $O(\log n)$、入力表 $O(\sqrt n)$ |
 | `sum_of_multiplicative_function_large` | $O(n^{3/4}/\log n)$ | $O(\sqrt n)$ |
 
-## 前提
+## 注意点
 
 - `MOD >= 1`。
 - `function(p,e)` は `Modint<MOD>` に変換できる値を返す。

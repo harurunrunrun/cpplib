@@ -62,10 +62,14 @@ auto result = late_acceptance_hill_climbing(
 
 $I$を反復数、候補生成1回を$G$、評価1回を$E$とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
 | `simulated_annealing` | $O(I(G+E))$ | $O(1)$ |
 | `fast_simulated_annealing` | $O(I(G+E))$ | $O(1)$ |
 | `threshold_accepting` | $O(I(G+E))$ | $O(1)$ |
 | `great_deluge` | $O(I(G+E))$ | $O(1)$ |
 | `late_acceptance_hill_climbing` | $O(I(G+E))$ | $O(\mathrm{history\_length})$ |
+
+## 注意点
+
+目的関数・近傍生成器が返す値とrangeは、その呼び出し中に有効でなければならない。探索はheuristicであり、明記した停止条件を除いて大域最適性や収束を保証しない。

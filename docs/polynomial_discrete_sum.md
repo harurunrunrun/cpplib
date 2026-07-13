@@ -71,12 +71,12 @@ mint answer = summation.polynomial_prefix_sum(
 `discrete_antiderivative` を1回だけ呼び、返り値を
 `math::polynomial_evaluate` で評価する。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 `Mint` の四則演算を $O(1)$、`Mint::pow(k)` を $O(\log(k+1))$ とする。
 `k = exponent`、`d = coefficient_count` とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `PolynomialDiscreteSum()` | $O(MAX\_DEGREE)$ | オブジェクトに $O(MAX\_DEGREE)$ |
 | `faulhaber` | $O(k\log(k+1))$ | $O(MAX\_DEGREE)$ |
@@ -87,7 +87,7 @@ mint answer = summation.polynomial_prefix_sum(
 
 `exponent == 0` の `faulhaber` と `power_sum` は $O(1)$。
 
-## 前提
+## 注意点
 
 - `Mint` は多項式補間で要求される演算に加えて `pow(long long)` を持つ。
 - constructor は `(MAX_DEGREE + 1)!` の逆元を求める。通常の素数 modint では

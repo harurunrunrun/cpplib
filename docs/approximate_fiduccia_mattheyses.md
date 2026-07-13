@@ -30,3 +30,7 @@ BipartitionResult fiduccia_mattheyses(
 - 追加空間計算量: $O(N+E)$
 
 初期分割を省略した場合は平衡分割を使う。指定した初期分割が制約を破る場合、または奇数頂点で `maximum_imbalance == 0` の場合は `std::invalid_argument` を送出する。空グラフを許す。
+
+## 注意点
+
+頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。

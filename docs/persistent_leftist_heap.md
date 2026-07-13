@@ -71,7 +71,11 @@ heap.meld(left_version, right_version)
 
 2つのversionの全要素を合わせた新しいversionを返す。入力versionは変化しない。同じversionを2回指定した場合も、その要素を2回含むheapを作る。各要素数を `N`, `M` とすると `O(log(N+1) + log(M+1))` 時間、同量のnodeを消費する。
 
-# 前提・例外
+# 時間計算量と空間計算量（公開API別）
+
+各APIの時間計算量と追加空間計算量は各節に記載した通り。`versions`、`nodes_used`、`size`、`empty`、`top`、`fork` はいずれも時間・追加空間 $O(1)$ である。`push`、`pop`、`meld` は各節に示した対数時間と同数の永続nodeに加え、同じorderの再帰stackを使う。constructorは固定arrayをvalue-initializeする時間が $O(\mathtt{MAX\_VERSION}+\mathtt{MAX\_NODE})$、呼び出し中の追加領域は $O(1)$ である。
+
+## 注意点
 
 - `T` は既定構築、copy代入ができ、`Compare` でstrict weak orderingを定める必要がある。
 - `top` が返した参照はheap objectが破棄されるまで有効である。

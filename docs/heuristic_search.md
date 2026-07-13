@@ -69,7 +69,7 @@ bidirectional_a_star_search(start, goal,
 
 両探索の生成辺数合計を $A$、展開回数を $X$、発見状態数合計を $V_d$ とすると、時間計算量は $O((A+X)\log V_d)$、空間計算量は $O(V_d)$。
 
-# 例外・数値条件
+## 注意点
 
 - 負辺を生成すると `std::invalid_argument`。
 - Weighted A* の負の重みは `std::invalid_argument`。

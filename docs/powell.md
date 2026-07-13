@@ -25,7 +25,7 @@ auto result = approximate::optimization::powell(
 収束する。
 
 次元を $D$、sweep数を $I$、目的関数1回を $F$、構築したline-search候補総数を $Q$、
-実際の目的関数評価総数を $L$ とする。時間は $O(D^2+ID^2+QD+LF)$、追加領域は
+実際の目的関数評価総数を $L$ とする。時間計算量は $O(D^2+ID^2+QD+LF)$、追加空間計算量は
 方向集合を含め $O(D^2)$。各結果member参照は $O(1)$、結果点の列挙は $O(D)$。
 
 初期点は空でない有限値で、0次元は`std::invalid_argument`。`max_evaluations`、
@@ -36,3 +36,7 @@ auto result = approximate::optimization::powell(
 目的関数のNaN/無限大は`std::domain_error`、候補・変位のoverflowは
 `std::overflow_error`。浮動小数点の丸めにより`tolerance`より大きいstepをこれ以上縮小
 できない場合はline search失敗として`std::runtime_error`を送出する。
+
+## 注意点
+
+目的関数・勾配・座標微分は各APIで示した次元と有限値の条件を満たす必要がある。非凸関数に対する大域最適解や、反復上限内での収束は保証しない。

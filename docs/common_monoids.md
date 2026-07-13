@@ -93,7 +93,7 @@ constexpr MinMonoid<long long, (1LL << 60)> min_monoid{};
 constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 ```
 
-## 制約と注意
+## 注意点
 
 - min/max の加算・代入・chmin/chmax 作用は `Identity` を空区間の番兵として保存する。
   元の列の実値および更新結果に `Identity` が現れないようにする。
@@ -105,3 +105,58 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 - 表の $O(1)$ は `T` の対応する算術・比較・構築を $O(1)$ としたもの。
   一般の `T` では、各aliasが呼ぶ `T` の操作コストに従う。
 - `MonoidAssignment` と `MonoidAffine` の各公開field参照は $O(1)$。
+
+## helper API
+
+`common_monoid_internal` にある次の関数が各aliasを構成する。通常はalias経由で使う。
+
+| 関数 | 操作 | 時間計算量 |
+| --- | --- | --- |
+| `add_op(left,right)` | 加算 | $O(1)$ |
+| `multiply_op(left,right)` | 乗算 | $O(1)$ |
+| `minimum_op(left,right)` | 小さい方 | $O(1)$ |
+| `maximum_op(left,right)` | 大きい方 | $O(1)$ |
+| `gcd_op(left,right)` | 最大公約数 | $O(\log\max(|left|,|right|))$ |
+| `lcm_op(left,right)` | 最小公倍数 | $O(\log\max(|left|,|right|))$ |
+| `xor_op(left,right)` | bitwise xor | $O(1)$ |
+| `bit_and_op(left,right)` | bitwise and | $O(1)$ |
+| `bit_or_op(left,right)` | bitwise or | $O(1)$ |
+| `zero<T>()` | `T(0)` | $O(1)$ |
+| `one<T>()` | `T(1)` | $O(1)$ |
+| `all_bits<T>()` | `~T(0)` | $O(1)$ |
+| `constant<T,Value>()` | template値 `Value` | $O(1)$ |
+| `add_extremum_mapping<T,Identity>(f,x)` | 番兵を保ったmin/max値への加算 | $O(1)$ |
+| `add_composition(f,g)` | 加算作用の合成 | $O(1)$ |
+| `assign_extremum_mapping<T,Identity>(f,x)` | 番兵を保ったmin/max値への代入 | $O(1)$ |
+| `assignment_composition(f,g)` | 新しい代入を優先して合成 | $O(1)$ |
+| `assignment_id<T>()` | 代入なし作用 | $O(1)$ |
+| `sum_op(left,llen,right,rlen)` | 長さ付き区間和の結合 | $O(1)$ |
+| `add_sum_mapping(f,x,length)` | 区間和へ一様加算を反映 | $O(1)$ |
+| `assign_sum_mapping(f,x,length)` | 区間和へ一様代入を反映 | $O(1)$ |
+| `affine_sum_mapping(f,x,length)` | 区間和へaffine作用を反映 | $O(1)$ |
+| `affine_composition(f,g)` | `f(g(x))` のaffine作用 | $O(1)$ |
+| `affine_id<T>()` | 恒等affine作用 | $O(1)$ |
+| `xor_len_op(left,llen,right,rlen)` | 長さ付きxorの結合 | $O(1)$ |
+| `xor_xor_mapping(f,x,length)` | 区間xorへ一様xorを反映 | $O(1)$ |
+| `chmin_mapping<T,Identity>(f,x)` | 番兵を保って `min(f,x)` | $O(1)$ |
+| `chmax_mapping<T,Identity>(f,x)` | 番兵を保って `max(f,x)` | $O(1)$ |
+| `multiply_sum_mapping(f,x,length)` | 区間和へ一様乗算を反映 | $O(1)$ |
+| `flip_count_mapping(f,x,length)` | 0/1反転後の1の個数 | $O(1)$ |
+| `bool_xor(f,g)` | bool作用のxor合成 | $O(1)$ |
+| `false_value()` | bool作用の単位元 `false` | $O(1)$ |
+
+全helperの追加空間計算量は $O(1)$。表の計算量は `T` の各演算を $O(1)$ とした値である。
+`gcd_op`, `lcm_op`, bitwise helper、xor作用は整数型だけに使用できる。
+
+## 補助型API
+
+- `MonoidAssignment<T>::assigned`：代入作用を持つかを表す。既定値は `false`。
+- `MonoidAssignment<T>::value`：`assigned == true` のときの代入値。
+- `operator==(MonoidAssignment, MonoidAssignment)`：両方が未代入なら `value` によらず
+  等しい。代入ありならflagと値を比較する。
+- `MonoidAffine<T>::multiplier` / `addend`：`x -> multiplier*x+addend` を表し、既定値は
+  `1` / `0`。
+- `operator==(MonoidAffine, MonoidAffine)`：2つのfieldを比較する。
+
+各field参照、aggregate構築、比較の時間・追加空間計算量は $O(1)$。各objectの保存領域は
+`T` 1個または2個とflagに対して $O(1)$。

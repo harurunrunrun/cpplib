@@ -30,7 +30,7 @@ op_func(a, e_func()) == a
 
 ## メンバ
 
-| メンバ | 内容 | 計算量 |
+| メンバ | 内容 | 時間計算量 |
 | --- | --- | --- |
 | `using S` | 値の型 | - |
 | `op(a, b)` | `op_func(a, b)` を呼ぶ | `O(op_func の計算量)` |
@@ -45,3 +45,10 @@ op_func(a, e_func()) == a
 constexpr Monoid<add, zero> add_monoid{};
 Segtree<add_monoid, 200000> seg(n);
 ```
+
+## 注意点
+
+`op` は結合的、`e` は左右の単位元でなければならない。ライブラリはこれらの代数則を
+実行時に検査しない。`Monoid` の構築、`op`、`e`、型alias取得の追加空間計算量は $O(1)$。
+時間計算量は指定した `Op` / `E` の呼出し時間であり、通常の定数時間演算なら $O(1)$。
+`Op` と `E` は非型template引数として使用できる必要がある。

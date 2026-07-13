@@ -52,7 +52,7 @@ optional<T> kth_shortest_walk_1indexed<T>(graph, source, target, k)
 
 を追加コストとして永続leftist heapへ格納する。Eppsteinのsidetrack列を優先度付きキューで展開するため、順位ごとに全辺や全頂点を再展開しない。重み0の閉路、多重辺、最短距離が等しい辺も、それぞれ独立したsidetrackとして列挙する。
 
-# 計算量
+## API別の時間計算量・空間計算量
 
 $N$ を頂点数、$M$ を辺数、$K$ を実際に要求する順位数とする。
 
@@ -70,7 +70,7 @@ O(N+M+S\log(S+1)+K)
 
 である。従来の頂点ごとのrank回展開に必要だった $O(KM)$ の候補領域は使用しない。`kth_shortest_walks` はこれに戻り値の $O(K)$ を含み、指定順位版は距離列を保存しない。
 
-# API契約・前提・例外
+## 注意点
 
 列挙版と0-indexed版は `k >= 0`、1-indexed版は `k > 0` とする。順位、端点、辺の行き先、非負costの違反時は `runtime_error`。walk不足は短い列または `nullopt` で表す。
 

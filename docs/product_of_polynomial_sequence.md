@@ -21,15 +21,15 @@ math::Polynomial<MOD> math::product_of_polynomial_sequence(
 各段で隣り合う多項式を掛けるため、先頭から逐次掛ける場合に生じる
 不必要な計算量増加を避けられる。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 多項式数を `k`、次数の総和を `D`、長さ `n` の多項式積を
 $M(n)=O(n\log n)$ とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `product_of_polynomial_sequence` | $O(M(D+1)\log(k+1))$ | $O(D+k)$ |
 
-## 前提
+## 注意点
 
 NTT に必要な2冪変換長が `MOD - 1` を割り切る必要がある。

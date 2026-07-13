@@ -66,7 +66,7 @@ $Q(L)=B+C(\log B+\log(M+1))$ とおく。
 - `select`: $O(Q(N)\log N)$
 - `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(DQ(L))$
 
-# Version・引数・例外
+## 注意点
 
 version 0が初期列。`set` は指定versionから1点を置換した新version、`fork` は同内容の
 新versionを返す。`access` と全queryは先頭にversionを受け取る。`size/versions/latest_version`

@@ -38,7 +38,7 @@ vector<T> sliding_window_max<T, MAX_WINDOW>(values, window)
 
 長さ `window` の各連続部分列に対する最小値または最大値を、左から順に返す。
 
-# 計算量
+# 時間計算量
 
 $N$ を入力列長、$K$ をwindow幅とする。比較を $O(1)$ とする。
 
@@ -53,7 +53,7 @@ $N$ を入力列長、$K$ をwindow幅とする。比較を $O(1)$ とする。
 - queue: $O(\mathrm{MAX\_SIZE})$
 - sliding window関数: queueと戻り値を含めて $O(\mathrm{MAX\_WINDOW}+N-K+1)$
 
-# 前提・例外・容量
+## 注意点
 
 - `push(index,value)`のindexは追加列全体で狭義単調増加。違反時は例外。
 - 候補数が`MAX_SIZE`に達した状態で支配されない値を追加すると容量例外。

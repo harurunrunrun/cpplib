@@ -35,7 +35,7 @@ S all_prod() const
 
 `prod` は非空半開区間 `[l,r)` を扱う。空列の `all_prod` は例外を送出する。
 
-# 計算量
+# 時間計算量
 
 $N$ を列長、$L=O(\log\log(N+2))$ をlayer数とし、semigroup演算を $O(1)$ とする。
 
@@ -50,3 +50,11 @@ $N$ を列長、$L=O(\log\log(N+2))$ をlayer数とし、semigroup演算を $O(1
 
 - 固定arena: $O(\mathrm{MAX\_SIZE}\log\log(\mathrm{MAX\_SIZE}+2))$
 - queryの追加領域: $O(1)$
+
+## 注意点
+
+`Semigroup.op` は結合的でなければならない。単位元と可換性は不要で、代数則は実行時に
+検査しない。`0 <= size() <= MAX_SIZE`、点は `[0,size())`、`prod` は非空半開区間を
+要求する。空列の `all_prod` を含む範囲違反では `runtime_error`。
+固定保存領域は $O(\mathtt{MAX\_SIZE}\log\log(\mathtt{MAX\_SIZE}+2))$。
+`get`, `prod`, `all_prod` の追加領域は $O(1)$。

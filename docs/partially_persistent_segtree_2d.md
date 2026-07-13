@@ -52,7 +52,7 @@ int latest_version() const;
 
 versionを省略したoverloadは最新versionを参照する。`prod` は半開矩形 `[top,bottom) x [left,right)` の積。version 0が初期状態。
 
-## 容量
+## 実装と保存領域
 
 `R`, `C` をtemplate上限以上の最小の2冪とする。1更新は `(log2(R)+1)(log2(C)+1)` 個のdense node履歴を追加する。履歴総容量は
 
@@ -78,7 +78,7 @@ MAX_UPDATE * (log2(R)+1) * (log2(C)+1)
 
 保存領域は $O(RC+MAX\_UPDATE\log R\log C)$。
 
-## API契約・例外
+## 注意点
 
 `Monoid.op` は結合的かつ可換で、`Monoid.e()` を単位元としなければならない。
 

@@ -35,12 +35,16 @@ struct FurthestPairResult {
 `first`と`second`は昇順である。`exists()`がfalseなら両添字は
 `std::numeric_limits<std::size_t>::max()`である。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $N$を点数とする。
 
-| API・操作 | 時間計算量 | 追加領域 |
+| API・操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `furthest_pair` | $O(N\log N)$ | $O(N)$ |
 | `FurthestPairResult::exists` | $O(1)$ | $O(1)$ |
 | 各memberの参照 | $O(1)$ | $O(1)$ |
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

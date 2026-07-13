@@ -64,7 +64,7 @@ vector<S> to_vector(int version = 0) const
 
 取得では splay せず、新しい version も作らない。
 
-# 計算量
+# 時間計算量
 
 対象versionの木の高さを $H$、列長を $N$ とする。$H$ は worst-case $N$。モノイド演算・作用は $O(1)$ とする。
 
@@ -82,7 +82,7 @@ vector<S> to_vector(int version = 0) const
 - 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
 - `to_vector` の戻り値と再帰stack: $O(N)$
 
-# 前提・例外
+## 注意点
 
 - version、insert位置、点index、半開区間は対象versionのsize内でなければならない。
 - 範囲違反、version/node容量超過は例外で、既存versionを変えない。

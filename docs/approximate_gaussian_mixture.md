@@ -37,3 +37,7 @@ GaussianMixtureResult gaussian_mixture_em(
 - 追加空間計算量: $O(ND+NK+KD)$
 
 入力は非空で、`1 <= component_count <= N` を要求する。`tolerance` は有限な非負値、`minimum_variance` は有限な正値でなければならない。分散・likelihoodを `long double` で表せない場合、または全componentの確率が数値的にunderflowした場合は `std::overflow_error` を送出する。
+
+## 注意点
+
+座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。

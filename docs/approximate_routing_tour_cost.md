@@ -31,7 +31,7 @@ Cost path_cost(const DistanceMatrix& distance, const vector<int>& path)
 - 時間計算量: 行列検査を含めて $O(N+K)$
 - 追加空間計算量: $O(1)$
 
-# 前提・例外
+## 注意点
 
 `N=distance.size()`, `K=tour.size()` または `path.size()` とする。
 非正方行列には `std::invalid_argument`、範囲外頂点には `std::out_of_range` を送出する。

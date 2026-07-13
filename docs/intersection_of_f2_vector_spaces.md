@@ -19,11 +19,15 @@ std::vector<UInt> basis = intersection_of_f2_vector_spaces(first, second);
 同じ部分空間に対する戻り値は、入力した生成系の選び方や順序によらない。
 両空間の共通部分が零空間なら空vectorを返す。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $n=\texttt{first.size()}$、$m=\texttt{second.size()}$、
 $W=\texttt{numeric_limits<UInt>::digits}$とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `intersection_of_f2_vector_spaces` | $O((n+m)W+W^2)$ | $O(W)$ |
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

@@ -16,7 +16,7 @@ auto result = gonzalez_k_center(n, k, distance, first_center);
 Gonzalezのfarthest-first traversalを行う。`centers`は選択順、`labels[i]`は
 選択列内の割当位置、`radius`は最大割当距離。同距離の次中心は小さい点添字、
 割当は小さい中心添字を選ぶ。距離がmetricなら最適k-center半径の2倍以下になる。
-時間$O(nk)$、追加領域$O(n+k)$（距離callableを$O(1)$とする）。
+時間計算量は $O(nk)$、追加空間計算量は $O(n+k)$（距離callableを$O(1)$とする）。
 
 ## `Linkage` / `HierarchicalMerge`
 
@@ -32,7 +32,7 @@ auto result = agglomerative_clustering(n, distance, linkage);
 
 最小linkage距離の2 clusterを反復結合する。同距離ではcluster IDの辞書順を使う。
 `HierarchicalClusteringResult::merges`に$n-1$回の結合を格納する。距離表と
-Lance--Williams更新を用い、時間$O(n^3)$、追加領域$O(n^2)$。
+Lance--Williams更新を用い、時間計算量は $O(n^3)$、追加空間計算量は $O(n^2)$。
 
 ## `FacilityLocationResult`
 
@@ -49,7 +49,7 @@ auto result = greedy_facility_location(facility_count, client_count,
 ```
 
 最良の単一facilityから始め、目的値を改善するfacilityを1個ずつ追加する。
-facility数$F$、client数$C$に対し、時間$O(F^3C)$、追加領域$O(FC)$。
+facility数$F$、client数$C$に対し、時間計算量は $O(F^3C)$、追加空間計算量は $O(FC)$。
 
 ## `facility_add_drop_local_search`
 
@@ -59,8 +59,11 @@ auto result = facility_add_drop_local_search(
 );
 ```
 
-貪欲解から最良の1-addまたは1-dropを反復する。採用反復数を$I$とすると時間
-$O(F^3C+IF^2C)$、追加領域$O(FC)$。clientが0なら空解（費用0）を返す。
+貪欲解から最良の1-addまたは1-dropを反復する。採用反復数を$I$とすると時間計算量は $O(F^3C+IF^2C)$、追加空間計算量は $O(FC)$。clientが0なら空解（費用0）を返す。
 
 `k==0`、`k>n`、範囲外の`first_center`、開設費配列長の不一致などは
 `std::invalid_argument`または`std::out_of_range`を送出する。
+
+## 注意点
+
+座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。

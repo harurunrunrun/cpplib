@@ -57,7 +57,7 @@ int count_less(int version, T x, T xor_value = 0)
 
 `xor_value` を指定した場合、値 `y` は `y xor xor_value` の順で比較される。
 
-## API別計算量
+## API別の時間計算量
 
 $B=\mathrm{BIT}$ とする。
 
@@ -72,7 +72,7 @@ $B=\mathrm{BIT}$ とする。
 - 固定node/version array: $O(\mathrm{MAX\_NODES}+\mathrm{MAX\_VERSIONS})$
 - 各操作の追加領域: $O(1)$
 
-## 前提・例外・容量
+## 注意点
 
 - `T`は整数型、`0 < BIT <= T`のbit数。versionは`[0,versions())`。
 - updateでnode/version容量を超える場合は例外で、既存versionとnode数を変えない。

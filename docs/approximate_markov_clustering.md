@@ -47,7 +47,7 @@ MarkovClusteringResult markov_clustering(
 - 時間計算量: `O(E log E + N^2 + I ((P - 1) N^3 + N^2))`
 - 追加空間計算量: `O(N^2 + E)`
 
-### 入力規則
+## 注意点
 
 - 辺重みは有限な非負値でなければならない
 - zero-weight辺とself-loop入力は無視する。同じ無向辺の重みは加算する

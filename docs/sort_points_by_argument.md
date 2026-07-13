@@ -19,12 +19,22 @@ std::vector<Point> sorted = sort_points_by_argument(points);
 比較は座標の`<`, `==`, 乗算、減算を直接使う。整数を`Point`の
 `long double`へ変換する場合、計算途中の外積を正確に表現できる範囲で使用する。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 `N = points.size()`とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `sort_points_by_argument(points)` | $O(N\log N)$ | $O(\log N)$ |
 
 表の追加領域とは別に、返り値自体が$O(N)$の領域を持つ。
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。
+
+## 内部API
+
+- `sort_points_by_argument_internal::sector(point)`: 偏角順比較用の半平面番号を返す。時間計算量・空間計算量は $O(1)$。
+
+上位sort関数の実装用であり、内部sector番号の互換性は保証しない。

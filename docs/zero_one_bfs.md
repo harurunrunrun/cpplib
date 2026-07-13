@@ -18,7 +18,7 @@ ZeroOneBFSResult zero_one_bfs(graph, sources)
 
 `ZeroOneBFSResult` は `BFSResult` と同じ `dist`, `source`, `parent`, `reachable` および `path(target)` を持つ。`dist[v]` は到達不能なら `-1`。
 
-# 計算量
+## API別の時間計算量・空間計算量
 
 $N$ を頂点数、$M$ を辺数、$S$ を入力した始点数、$P$ を復元するpathの頂点数とする。
 

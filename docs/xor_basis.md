@@ -21,11 +21,11 @@ basis.kth_smallest(k);
 rankが64なら `unsigned long long` で表せるすべての `k` が有効である。
 `vectors()` はpivot bitの昇順で基底vectorを返す。
 
-## 計算量
+## 時間計算量
 
 template引数のbit数を $B$、現在のrankを $R$ とする。
 
-| 操作 | 時間計算量 | 追加領域 |
+| 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `XorBasis()` | $O(B)$ | $O(B)$ |
 | `clear()` | $O(B)$ | $O(1)$ |
@@ -37,7 +37,7 @@ template引数のbit数を $B$、現在のrankを $R$ とする。
 | `vectors()` | $O(B)$ | 出力 $O(R)$ |
 | `merge(other)` | $O(B^2)$ | $O(1)$ |
 
-## 前提・例外
+## 注意点
 
 - `UInt`は符号なし整数、`1 <= BITS <= numeric_limits<UInt>::digits`。
 - 入力値とseedは下位`BITS` bitに収まる必要があり、違反時は例外。

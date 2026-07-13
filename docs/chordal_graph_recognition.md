@@ -39,6 +39,6 @@ certificateとなる最短路探索は高々1回だけ行う。
 
 - `O(N+M)`
 
-# 例外
+## 注意点
 
 `vertex_count`または辺端点が範囲外、あるいは自己loopを含む場合は `runtime_error` を送出する。

@@ -183,3 +183,11 @@ $O(\log(N+1))$ である。重複要素もそれぞれ 1 node を使う。
 
 動的 node を一意所有するため copy constructor と copy assignment は削除されている。
 move constructor と move assignment は使用できる。
+
+## 注意点
+
+`0 <= n <= MAX_SIZE`、`0 <= k <= size()`。index・容量・`k` の違反では
+`runtime_error`。`erase(index)` は現在存在するindexを要求する。比較関数はstrict weak
+orderingを満たし、同値要素はindexで区別する。
+保存領域は $O(\mathtt{MAX\_SIZE})$。constructor以外の各更新・queryの追加領域は
+再帰stack $O(\log \mathtt{MAX\_SIZE})$、返却値以外は $O(1)$。

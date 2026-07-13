@@ -43,9 +43,9 @@ std::uint64_t math::count_squarefree(std::uint64_t n);
 
 `count_squarefree_numbers(n)` と同じ値を返す。例外条件も同じである。
 
-## API 別計算量
+## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `counting_squarefrees_max_n` | $O(1)$ | $O(1)$ |
 | `count_squarefree_numbers(n)` | $O(n^{2/5}\log\log n)$ | $O(n^{2/5})$ |
@@ -53,3 +53,7 @@ std::uint64_t math::count_squarefree(std::uint64_t n);
 
 時間計算量の対数因子は Möbius 篩による。Mertens 関数部分は
 商区間をまとめることで $O(n^{2/5})$ になる。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

@@ -39,9 +39,9 @@ const std::vector<Point>& vertices() const;
 
 `CONVEX_POLYGON_NPOS` は、空集合に対して頂点を返せない API の番兵値である。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | constructor | $O(N)$ | $O(N)$ |
 | `size`, `empty`, `vertices` | $O(1)$ | $O(1)$ |
@@ -50,3 +50,7 @@ const std::vector<Point>& vertices() const;
 
 判定誤差は `advanced_convex_geometry.hpp` と同じ `GEOMETRY_EPS` および
 scale-aware predicate に従う。
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

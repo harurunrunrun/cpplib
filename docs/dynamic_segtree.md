@@ -116,7 +116,7 @@ long long min_left(long long r, auto f, auto&&... args)
 ## 時間計算量
 - $O(\log {MAX}\_{SIZE})$
 
-# 共通API契約
+## 注意点
 
 領域は `[0,MAX_SIZE)`、未生成点は `Monoid.e()`。`set/get` は1点、
 `prod` は半開区間、`all_prod` は全域積を返す。境界探索のpredicateは単調かつ

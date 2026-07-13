@@ -21,17 +21,21 @@ long double signed_circle_polygon_intersection_area(
 )
 ```
 
-## 計算量
+## 計算量の概要
 
 $O(N)$。
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N$ をpolygon頂点数とする。
 
-| API | 時間計算量 | 追加空間 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `signed_circle_polygon_intersection_area(circle,polygon)` | $O(N)$ | $O(1)$ |
 | `circle_polygon_intersection_area(circle,polygon)` | $O(N)$ | $O(1)$ |
 
 各辺と円の交点候補は高々2個であり、辺ごとの処理は $O(1)$。
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

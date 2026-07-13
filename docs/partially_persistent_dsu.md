@@ -74,7 +74,14 @@ int latest_version()
 
 `size` も $O(1)$。
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- constructor、`size`、`versions`、`latest_version`、`leader`、`same`、`component_size`、`groups`: $O(1)$
+- `merge`: $O(1)$ の履歴slotを本体へ追加し、呼び出し中の一時領域も $O(1)$
+
+本体の保存領域は $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_UPDATE})$ である。
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`、頂点は`[0,n)`、versionは`[0,versions())`。違反時は例外。
 - version 0が初期状態。`merge`は同一成分の場合も最新状態からversionを1個追加する。

@@ -12,15 +12,19 @@ documentation_of: ../src/approximate/nearest_neighbor/random_projection_forest.h
 
 ## API
 
+### `Point`
+
+`RandomProjectionForest<Real, Dimension>::Point` は `std::array<Real, Dimension>` の公開型別名である。
+
 ### `RandomProjectionForest()`
 
-点と木を持たないforestを作る。`size()=0`, `tree_count()=0`, `leaf_size()=0` となる。時間・空間計算量は `O(1)`。
+点と木を持たないforestを作る。`size()=0`, `tree_count()=0`, `leaf_size()=0` となる。時間計算量・追加空間計算量は `O(1)`。
 
 ### `RandomProjectionForest(points, tree_count, leaf_size, random)` / `reset(...)`
 
 forestを構築する。`tree_count` と `leaf_size` は正でなければならない。非有限座標を拒否する。空集合は構築できる。構築中に例外が発生した場合、既存forestは変更しない。
 
-時間計算量は平均 `O(ND+T+TN(D+log(N+1))log(N+1))`、空間計算量は `O(ND+T+TN(D+1))`。ここで `T=tree_count`、`D=Dimension`。`N=0` でも木の配列を作るため `O(T)` を要する。
+時間計算量は平均 `O(ND+T+TN(D+log(N+1))log(N+1))`、構築後のforestを含む追加空間計算量は `O(ND+T+TN(D+1))`。ここで `T=tree_count`、`D=Dimension`。`N=0` でも木の配列を作るため `O(T)` を要する。
 
 ### `size()`, `empty()`, `tree_count()`, `leaf_size()`
 
@@ -38,4 +42,8 @@ forestを構築する。`tree_count` と `leaf_size` は正でなければなら
 
 ### `neighbors_of(index, k, exact_fallback=false)`
 
-登録点自身を除外して検索する。不正添字、`k=0`、`k>=N` を拒否する。計算量は `nearest` と同じ。
+登録点自身を除外して検索する。不正添字、`k=0`、`k>=N` を拒否する。時間計算量・追加空間計算量は `nearest` と同じ。
+
+## 注意点
+
+登録点とqueryの座標は有限で、平方距離を `long double` で表現できなければならない。厳密探索を明示した場合を除き、探索budgetに対するrecallや近似比は保証しない。

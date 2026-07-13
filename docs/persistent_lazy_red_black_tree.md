@@ -83,7 +83,7 @@ vector<pair<Key, S>> to_vector(int version = 0)
 
 `to_vector` は `(key, value)` をキー昇順で返す。
 
-# API別計算量
+# API別の時間計算量
 
 $N$ を対象versionの要素数とし、比較・モノイド演算・作用を $O(1)$ とする。
 
@@ -101,7 +101,7 @@ $N$ を対象versionの要素数とし、比較・モノイド演算・作用を
 - 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
 - `to_vector` の戻り値と再帰stack: $O(N)$
 
-# 前提・例外
+## 注意点
 
 - `Compare`はstrict weak ordering、versionは`[0,versions())`。違反時は例外。
 - キー区間は`Compare(r,l)==false`を要求し、逆転時は例外。

@@ -34,12 +34,16 @@ optional<ChinesePostmanResult<T>> undirected_chinese_postman(
 
 頂点数、端点、負の辺重みが不正なら `invalid_argument`。最短路または答えが `T` に収まらない場合は `overflow_error`。`T` はbool以外の符号付き整数型とする。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $V$ を頂点数、$E$ を辺数、$K$ を奇数次数頂点数とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `undirected_chinese_postman` | $O(V^3+K^3+E)$ | $O(V^2+K^2+E)$ |
 
 返すpair数は $K/2$。実際に重複する辺列が必要な場合は、各pair間の最短路を別途復元する。
+
+## 注意点
+
+辺端点は $[0,N)$ に収める。多重辺、自己loop、完全matchingが存在しない場合の扱いは各APIの説明に従う。

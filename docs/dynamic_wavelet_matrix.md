@@ -110,7 +110,7 @@ $Q(L)=B+\lceil L/B\rceil\log B$ とおく。
 - `select`: $O(Q(N)\log N)$
 - `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(DQ(L))$
 
-# 構築・共通契約
+## 注意点
 
 default constructorは空列、vector/array constructorは入力列を構築する。`size` は列長、
 `access/operator[]` は1点を返す。`set(k,value)` は1点を置換する。

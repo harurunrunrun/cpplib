@@ -44,7 +44,7 @@ int failure_link(int state)
 - build: $O(\Sigma V)$
 - query: $O(|S|)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHABET$ とする。
 
@@ -60,7 +60,7 @@ $V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHAB
 | `count_matches(text)` | $O(T)$ |
 
 `add` で新規nodeを作ると長さ $\Sigma$ の遷移表を初期化する。保持領域は $O(MAX_NODES\cdot\Sigma)$。`count_matches` は一致位置を列挙せず総数だけを返す。
-## API詳細と状態遷移
+## 注意点
 
 - constructorはroot node 0だけを作る。`node_count()` は使用node数、
   `is_built()` はfailure link構築済みかを返す。

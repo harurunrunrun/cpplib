@@ -17,7 +17,7 @@ int edit_distance(a, b, insert_cost = 1, erase_cost = 1, replace_cost = 1)
 
 - $O(NM)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N=|a|$, $M=|b|$ とする。
 
@@ -33,3 +33,7 @@ $N=|a|$, $M=|b|$ とする。
 1つ除き、置換は異なる要素1つを置き換える。同じ要素の対応コストは0。
 要素は `operator==` で比較する。コストの非負性や結果の `int` overflowは
 検査しない。
+
+## 注意点
+
+文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。

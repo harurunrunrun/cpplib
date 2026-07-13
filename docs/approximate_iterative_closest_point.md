@@ -17,3 +17,7 @@ documentation_of: ../src/approximate/geometry/iterative_closest_point.hpp
 - 近似・収束: ICPは局所法であり大域最適解を保証しない。更新量の二乗が `tolerance^2` 以下、または目的値の改善が `tolerance` 以下なら停止する。最近傍対応が切り替わるため、初期平行移動に依存する。
 
 空の `source` は収束済みの空結果を返す。空の `target` は空でない `source` に対して使用できない。非有限座標、次元のoverflow、0回反復は例外とする。
+
+## 注意点
+
+入力座標と許容誤差は各APIの有限性・次元条件を満たし、距離・面積の中間値も表現可能でなければならない。乱択手法の結果は乱数器状態に依存する。

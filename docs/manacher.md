@@ -14,16 +14,20 @@ documentation_of: ../src/algorithm/string/manacher.hpp
 - `longest_palindrome(s)`
     - 最長回文部分文字列の `(開始位置, 長さ)`。
 
-## 計算量
+## 計算量の概要
 
 - $O(n)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 出力・追加領域 |
+| API | 時間計算量 | 空間計算量（出力・追加領域） |
 | --- | --- | --- |
 | `manacher_odd(s)` | $O(N)$ | $O(N)$ |
 | `manacher_even(s)` | $O(N)$ | $O(N)$ |
 | `longest_palindrome(s)` | $O(N)$ | 補助 $O(N)$、戻り値 $O(1)$ |
 
 前2関数は全 $N$ 中心の半径を列挙する。
+
+## 注意点
+
+文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。

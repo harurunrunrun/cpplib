@@ -27,3 +27,7 @@ BirchFeatureResult birch_clustering_features(
 - 追加空間計算量: $O(MD+N)$
 
 `threshold` は有限な非負値、`maximum_features` は正でなければならない。空入力を許す。平均・分散・距離を `long double` で表せない場合は `std::overflow_error` を送出する。
+
+## 注意点
+
+座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。

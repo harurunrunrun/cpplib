@@ -24,12 +24,16 @@ $$
 
 `row_count == 0` なら空列を返す。行が存在するのに `column_count == 0` の場合、または負の次元を渡した場合は `invalid_argument`。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $R=$ `row_count`、$C=$ `column_count` とする。
 
-| API | 時間計算量 | `value` の呼び出し回数 | 追加領域 |
+| API | 時間計算量 | `value` の呼び出し回数 | 空間計算量（追加領域） |
 | --- | --- | --- | --- |
 | `smawk_row_minima` | $O(R+C)$ | $O(R+C)$ | $O(R+C)$ |
 
 再帰の深さは $O(\log R)$。同値な最小値が複数ある場合も、strict comparisonで既存の小さい列を残すため最左を返す。
+
+## 注意点
+
+空入力、退化入力、範囲外のindexと容量超過の扱いは各APIの説明に従う。参照・iterator・callbackを受け渡すAPIでは、変更可否とobjectの寿命を守る。

@@ -18,13 +18,13 @@ long long prod(int version, long long l, long long r)
 long long all_prod(int version)
 ```
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `set`, `add`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
 - `fork`, `all_prod`, `versions`, `latest_version`, `nodes_used`: $O(1)$
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、`0 <= version < versions()` のversionだけを参照できる。
 更新と `fork` は指定versionを変更せず、新しいversion番号を返す。`latest_version()` は

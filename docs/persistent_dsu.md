@@ -77,7 +77,14 @@ int nodes_used()
 
 `size`, `nodes_used` も $O(1)$。
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- constructor、`size`、`versions`、`latest_version`、`nodes_used`、`groups`、`fork`: $O(1)$
+- `leader`、`same`、`component_size`: 永続配列探索のstack $O(\log \mathtt{MAX\_SIZE})$
+- 異なる成分の`merge`: 新規永続node $O(\log \mathtt{MAX\_SIZE})$ と同量の再帰stack
+- 同一成分の`merge`: 代表探索のstack $O(\log \mathtt{MAX\_SIZE})$、新規nodeは $O(1)$（0個）
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`、頂点は`[0,n)`、versionは`[0,versions())`。違反時は例外。
 - `fork`と`merge`はversionを1個追加し、追加version数が`MAX_VERSION`を超えると例外。

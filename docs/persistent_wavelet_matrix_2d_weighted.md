@@ -32,7 +32,7 @@ $Q(L)=B+C(\log B+\log(M+1))$ とおく。
 - `set`, `set_y`, `set_weight`: $O(B\log B+\log(M+1))$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+Q(L))$
 
-# Version・座標・例外
+## 注意点
 
 点idは入力順、xは全versionで固定。`x(k)`、`y(version,k)`、`weight(version,k)` は1点を返す。
 `set` は指定versionのyと重み、`set_y/set_weight` は片方を更新した新versionを返し、

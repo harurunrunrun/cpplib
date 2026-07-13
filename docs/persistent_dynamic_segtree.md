@@ -32,7 +32,7 @@ long long max_right(int version, long long l, F f)
 long long min_left(int version, long long r, F f)
 ```
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `set`, `get`, `prod`, `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$
@@ -40,7 +40,7 @@ long long min_left(int version, long long r, F f)
 
 `set`が複製するノード数は $O(\log \mathtt{MAX\_SIZE})$。
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、`0 <= version < versions()` のversionだけを参照できる。
 更新と `fork` は指定versionを変更せず、新しいversion番号を返す。`latest_version()` は

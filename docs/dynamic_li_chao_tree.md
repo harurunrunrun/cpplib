@@ -73,7 +73,7 @@ $W=X\_MAX-X\_MIN+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間treeの最大lev
 - 固定arena: $O(\mathrm{MAX\_NODE})$
 - 各操作の再帰stack: $O(D)$
 
-# 前提・例外・戻り値
+## 注意点
 
 - compile時に`X_MIN <= X_MAX`, `MAX_NODE > 0`が必要。
 - `query(x)`は`X_MIN <= x <= X_MAX`を要求し、範囲外なら例外。

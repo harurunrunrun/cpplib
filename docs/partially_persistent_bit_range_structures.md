@@ -13,7 +13,7 @@ PartiallyPersistentBitAssignRangeSumRangeFlip<MAX_SIZE, MAX_NODES, MAX_VERSIONS,
 
 `PartiallyPersistentDynamicBitAssignRangeSumRangeFlip` という同じAPIの別名も定義される。
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
 - `assign`, `flip`, `set_one`, `set`: $O(\log \mathtt{MAX\_SIZE})$
@@ -23,7 +23,7 @@ PartiallyPersistentBitAssignRangeSumRangeFlip<MAX_SIZE, MAX_NODES, MAX_VERSIONS,
 
 空間計算量は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$。
 
-# API契約
+## 注意点
 
 ```cpp
 int assign(int version, long long l, long long r, bool value)

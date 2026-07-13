@@ -52,9 +52,9 @@ Modint<MOD> math::sum_totient(std::uint64_t n);
 
 `sum_of_totient_function<MOD>(n)` と同じ値を返す。例外条件も同じである。
 
-## API 別計算量
+## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `sum_totient_function_max_n` | $O(1)$ | $O(1)$ |
 | `sum_of_totient_function<MOD>(n)` | 期待 $O(n^{2/3})$ | $O(n^{2/3})$ |
@@ -63,3 +63,7 @@ Modint<MOD> math::sum_totient(std::uint64_t n);
 メモ化に `std::unordered_map` を使うため、時間計算量は期待計算量である。
 `MOD >= 1` が必要であり、三角数は2で割ってから剰余を取るので
 2の逆元を仮定しない。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

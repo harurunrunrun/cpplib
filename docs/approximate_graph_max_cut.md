@@ -5,6 +5,13 @@ documentation_of: ../src/approximate/graph/max_cut.hpp
 
 無向多重グラフのcutを `approximate::graph` 名前空間で構築する。自己ループはcutに数えず、平行辺は個別に数える。
 
+## `MaxCutResult`
+
+- `side[v]`: 頂点 $v$ のside（0または1）。
+- `cut_edges`: `side` が切る入力辺数。
+
+各member参照の時間計算量・追加空間計算量は $O(1)$、`side` 全体の列挙は時間計算量 $O(N)$、追加空間計算量 $O(1)$ である。
+
 # cut_edge_count
 
 指定した0/1割当てが切る辺数を数える。
@@ -37,3 +44,7 @@ MaxCutResult random_cut(
 - 追加空間計算量: $O(N+E)$
 
 端点範囲、sideの長さ・値、確率を検査する。不正値には `std::out_of_range` または `std::invalid_argument` を送出する。
+
+## 注意点
+
+頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。

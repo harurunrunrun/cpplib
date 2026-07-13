@@ -44,7 +44,11 @@ auto result = island_model_genetic_algorithm(
 最大島サイズを$N_{max}$とする。評価・選択・交叉・変異・局所改善1回の時間を
 $E,S,C,M,L$、個体1個の領域を$P$とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
 | `memetic_genetic_algorithm` | $O(NE+G(N\log N+N(S+C+M+L+E)))$ | $O(NP+N)$ |
 | `island_model_genetic_algorithm` | $O(NE+G(KN_{max}\log N_{max}+N(S+C+M+E))+\mathrm{epochs}\,K(N_{max}\log N_{max}+R))$ | $O(NP+N)$ |
+
+## 注意点
+
+目的関数と遺伝的操作は呼び出し中に有効で、比較関数は一貫した順序を与える必要がある。乱数結果の再現性には同じ乱数器状態・入力・標準ライブラリ実装が必要で、大域最適性は保証しない。

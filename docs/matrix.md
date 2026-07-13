@@ -148,7 +148,7 @@ $n=rows=cols$、得られた線形漸化式の次数を $d\le n$ とすると、
 
 上表は `T` の構築・コピー・四則演算・比較を $O(1)$ とした計算量である。一般の `T` では、各項に実行する `T` の操作コストを掛ける。
 
-# 前提・例外・戻り値
+## 注意点
 
 - constructorと`zero`は`0 <= rows <= MAX_ROW`, `0 <= cols <= MAX_COL`を要求する。
 - vector入力は矩形でなければならない。shape/index違反は例外。
@@ -157,3 +157,16 @@ $n=rows=cols$、得られた線形漸化式の次数を $d\le n$ とすると、
 - `pow_entry_bmbm`は非負指数・正方行列・有効な成分indexを要求し、違反時は例外。
 - BMBMで使う除算が定義され、生成列上で必要な逆元が存在する必要がある。
 - 各値返却演算は新しい固定容量`Matrix`を返し、compound演算は`*this`への参照を返す。
+
+## 空間計算量
+
+$C=\mathtt{MAX\_ROW}\cdot\mathtt{MAX\_COL}$ とする。
+
+| API | 空間計算量（保存領域・追加領域） |
+| --- | --- |
+| 各constructor、copy / move | 戻り値またはobjectに $O(C)$ |
+| `rows`, `cols`, `empty`, `operator()` | $O(1)$ |
+| 比較、`+=`, `-=`, scalar `*=`, `/=` | 返却値以外 $O(1)$ |
+| 値を返す加減算・scalar演算・単項演算・`zero`・`transposed` | 戻り値に $O(C)$ |
+| 行列積 | 戻り値に $O(\mathtt{MAX\_ROW}\cdot RHS\_MAX\_COL)$ |
+| `pow_entry_bmbm` | $O(n+d)$。$d$ は漸化式次数 |

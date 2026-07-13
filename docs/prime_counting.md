@@ -51,14 +51,14 @@ long long count_primes(long long n)
 `n` 以下の素数の個数を返す。`count_primes` は `prime_count` の別名。
 `floor(n / i)` の異なる値だけを保持し、エラトステネスの篩と同じ更新を行う。
 
-## 計算量
+## 計算量の概要
 
 - 時間: $O(n^{3/4} / \log n)$
 - 空間: $O(\sqrt n)$
 
 `n < 0` の場合は `std::runtime_error` を送出する。
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 | API | 時間計算量 | 補足 |
 | --- | --- | --- |
@@ -70,3 +70,7 @@ long long count_primes(long long n)
 | `is_prime(n)` / `count_primes(n)` / `count_primes_less(n)` | $O(1)$ | 前処理後のquery。 |
 
 `PrimeCounting` の保持領域は $O(MAX_N)$。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。

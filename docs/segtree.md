@@ -119,7 +119,7 @@ int min_left(int r, auto f, auto&&... args)
 ## 時間計算量
 - $O(\log n)$
 
-# 引数・前提・例外
+## 注意点
 
 実際の列長を (n) とする。コンストラクタの `n` と `v.size()` は
 `MAX_SIZE` 以下でなければならない。点 `k` は `0 <= k < n`、

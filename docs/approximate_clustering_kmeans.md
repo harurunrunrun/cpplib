@@ -24,8 +24,8 @@ auto result = lloyd_k_means(points, initial_centers,
 
 Lloyd法を実行する。空になったクラスタの中心は直前の位置に保持する。割当が変化
 しないか、全中心の移動距離が`tolerance`以下になると終了する。初期中心数を
-$k$、点数を$n$、次元を$d$、実行反復数を$I$とすると、時間$O((I+1)nd)$、
-追加領域$O(nd+kd)$。
+$k$、点数を$n$、次元を$d$、実行反復数を$I$とすると、時間計算量は $O((I+1)nd)$、
+追加空間計算量は $O(nd+kd)$。
 
 ## `k_means_plus_plus_centers`
 
@@ -35,7 +35,7 @@ auto centers = k_means_plus_plus_centers(points, k, rng);
 
 D² samplingで`k`個の相異なる入力点を初期中心に選ぶ。`URBG&`を外から渡すため
 seedを固定できる。残りのD²重みがすべて0なら、未選択の最小添字を選ぶ。
-時間$O(nkd)$、追加領域$O(n+kd)$。
+時間計算量は $O(nkd)$、追加空間計算量は $O(n+kd)$。
 
 ## `k_means`
 
@@ -43,8 +43,7 @@ seedを固定できる。残りのD²重みがすべて0なら、未選択の最
 auto result = k_means(points, k, rng, maximum_iterations, tolerance);
 ```
 
-k-means++で初期化してLloyd法を行う。時間$O(nkd+(I+1)nd)$、追加領域
-$O(nd+kd)$。
+k-means++で初期化してLloyd法を行う。時間計算量は $O(nkd+(I+1)nd)$、追加空間計算量は $O(nd+kd)$。
 
 ## `mini_batch_k_means`
 
@@ -53,10 +52,13 @@ auto result = mini_batch_k_means(points, k, batch_size, iterations, rng);
 ```
 
 k-means++で初期化し、各反復で復元抽出した`batch_size`点をオンライン平均で
-更新する。最後に全点を割り当て直す。時間
-$O(nkd+\mathrm{iterations}\,\mathrm{batch\_size}\,kd+nkd)$、
-追加領域$O(n+kd)$。
+更新する。最後に全点を割り当て直す。時間計算量は $O(nkd+\mathrm{iterations}\,\mathrm{batch\_size}\,kd+nkd)$、
+追加空間計算量は $O(n+kd)$。
 
 全APIで`k`は$1\le k\le n$。不正な次元、非有限座標、負のtolerance、
 `batch_size == 0`などでは`std::invalid_argument`を送出する。
 距離またはSSEが`long double`の範囲を超える場合は`std::overflow_error`を送出する。
+
+## 注意点
+
+座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。

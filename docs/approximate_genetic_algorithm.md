@@ -48,9 +48,13 @@ auto result = steady_state_genetic_algorithm(
 $N$を集団サイズ、$G$を世代数、$L$を生成する子の総数、評価・選択・
 交叉・変異1回の時間をそれぞれ$E,S,C,M$、個体1個の領域を$P$とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
 | `generational_genetic_algorithm` | $O(NE+G(N\log N+N(S+C+M+E)))$ | $O(NP+N)$ |
 | `steady_state_genetic_algorithm` | $O(NE+L(S+C+M+E+N))$ | $O(NP+N)$ |
 
 返却値の構築には個体と目的値のコピー費用が加わる。
+
+## 注意点
+
+目的関数と遺伝的操作は呼び出し中に有効で、比較関数は一貫した順序を与える必要がある。乱数結果の再現性には同じ乱数器状態・入力・標準ライブラリ実装が必要で、大域最適性は保証しない。

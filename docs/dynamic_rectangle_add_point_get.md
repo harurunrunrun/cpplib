@@ -29,7 +29,7 @@ seg.get(x, y)
 - `build`: $O(N \log^2 N)$
 - `add`, `get`: $O(\log^2 N)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $R$ を `reserve_rectangle` した非退化長方形数とする。
 
@@ -42,7 +42,7 @@ $R$ を `reserve_rectangle` した非退化長方形数とする。
 | `get(x,y)` | $O(\log^2 R)$ |
 
 `build` 後の保持領域は $O(R\log R)$。空の長方形の予約・更新は $O(1)$。
-## API詳細と構築順序
+## 注意点
 
 - `reserve_rectangle(x1,y1,x2,y2)` は将来更新する半開矩形を登録する。
   空矩形は無視し、重複登録してよい。

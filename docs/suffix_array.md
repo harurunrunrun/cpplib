@@ -13,18 +13,18 @@ Suffix Array と LCP Array。
 - `lcp_array(s)`
 - `number_of_distinct_substrings(s)`
 
-## 計算量
+## 計算量の概要
 
 - `suffix_array`: $O(n \log n)$
 - `lcp_array(s, sa)`: $O(n)$
 - `lcp_array(s)`: $O(n\log n)$（suffix array構築を含む）
 - `number_of_distinct_substrings(s)`: $O(n\log n)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N=|s|$ とする。
 
-| API | 時間計算量 | 出力・追加領域 |
+| API | 時間計算量 | 空間計算量（出力・追加領域） |
 | --- | --- | --- |
 | `suffix_array(const string& s)` | $O(N\log N)$ | $O(N)$ |
 | `suffix_array(const vector<T>& s)` | $O(N\log N)$ | $O(N)$ |
@@ -44,3 +44,7 @@ $N=|s|$ とする。
 - `lcp_array(s)` はsuffix arrayを内部構築して同じLCP列を返す。
 - `number_of_distinct_substrings(s)` は空でない相異なる連続部分列の個数を返す。
   全suffixの長さの総和から隣接suffixのLCP長の総和を引いて求める。空列では0。
+
+## 注意点
+
+文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。

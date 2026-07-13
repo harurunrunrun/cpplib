@@ -32,12 +32,16 @@ struct ClosestPairResult {
 
 `exists()`がfalseなら有効な組はない。組が存在するとき`first < second`である。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $N$を点数とする。
 
-| API・操作 | 時間計算量 | 追加領域 |
+| API・操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `closest_pair_indices` | $O(N\log N)$ | $O(N)$ |
 | `ClosestPairResult::exists` | $O(1)$ | $O(1)$ |
 | 各memberの参照 | $O(1)$ | $O(1)$ |
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

@@ -23,14 +23,14 @@ bool get(int version, long long position)
 
 更新は新しいversionを返す。`MAX_VERSIONS` はversion 0を含む総version数。
 
-## 計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `assign`, `flip`, `set_one`: $O(\log \mathtt{MAX\_SIZE})$
 - `sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
 - `fork`, `size`, `versions`, `latest_version`, `nodes_used`: $O(1)$
 
-# API契約
+## 注意点
 
 ```cpp
 long long size() const

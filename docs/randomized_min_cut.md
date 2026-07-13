@@ -27,8 +27,8 @@ auto result = karger_min_cut(vertex_count, edges, trials, random);
 Karger法を`trials`回独立に実行し、最小の結果を返す。1回の成功確率は
 少なくとも $2/(n(n-1))$ なので、失敗確率は高々
 $(1-2/(n(n-1)))^{trials}$ である。頂点数を$n$、辺数を$m$とすると、
-この実装は各縮約前に有効辺を走査するため時間$O(trials\,nm)$、
-追加領域$O(n+m)$。`trials==0`は、cutが自明でない連結グラフでは
+この実装は各縮約前に有効辺を走査するため時間計算量は $O(trials\,nm)$、
+追加空間計算量は $O(n+m)$。`trials==0`は、cutが自明でない連結グラフでは
 `std::invalid_argument`となる。
 
 ## `karger_stein_min_cut`
@@ -41,10 +41,13 @@ auto result = karger_stein_min_cut(vertex_count, edges, repetitions, random);
 Karger--Stein法を`repetitions`回実行する。成分数6以下では残った成分のcutを
 全列挙する。1回の成功確率は $\Omega(1/\log n)$、反復により失敗確率は指数的に
 減少する。この実装では各縮約と6成分以下の全列挙で元の全辺を走査するため、
-1 repetitionあたりの保守的な上界は時間$O(n^2m)$、再帰stackを含む追加領域
-$O(n\log n+m)$である。API全体では時間に`repetitions`を掛ける。
+1 repetitionあたりの保守的な上界は時間計算量は $O(n^2m)$、再帰stackを含む追加空間計算量は $O(n\log n+m)$である。API全体では時間に`repetitions`を掛ける。
 `repetitions==0`の扱いは`karger_min_cut`と同じ。
 
 乱数生成器は`std::uniform_int_distribution`で利用可能でなければならない。
 辺数と頂点数は`std::size_t`に収まる必要がある。同じseedと同じ標準ライブラリ実装では
 同じ結果になるが、確率的保証はseedを独立に選ぶ場合のものである。
+
+## 注意点
+
+確率的保証は各APIで示した独立性と入力条件の下で成り立つ。同じ結果の再現には同じ乱数器状態・入力・標準ライブラリ実装が必要で、中間演算は使用型の表現範囲内でなければならない。

@@ -7,18 +7,32 @@ documentation_of: ../src/approximate/nearest_neighbor/best_bin_first_kd_tree.hpp
 
 部分木の軸平行包囲箱と問い合わせ点の距離が小さい順に探索する静的KD-tree。調べる点数を制限すると近似最近傍探索、制限しなければ厳密最近傍探索になる。
 
+## 公開型
+
+- `BestBinFirstKdTree<T, Dimension>::Point`: `std::array<T, Dimension>` の別名。
+- `KdTreeNeighbor::index`: 最近傍として選んだ登録点の添字。
+- `KdTreeNeighbor::squared_distance`: queryとの二乗距離。
+- `KdTreeNeighbor::checked_points`: 実際に距離を評価した点数。
+
+各member参照の時間計算量・追加空間計算量は $O(1)$ である。
+
+## `BestBinFirstKdTree()`
+
+点を持たない木を構築する。時間計算量・追加空間計算量は $O(1)$。
+
 ## `BestBinFirstKdTree(points)` / `reset(points)`
 
 `std::array<T, Dimension>` の点群から平衡木を構築する。同一座標の点も保持する。
 
 - 時間計算量: 平均・実装上の構築 $O(N\log N)$
-- 空間計算量: $O(ND)$
+- 追加空間計算量: 構築後の木と点群を含め $O(ND)$
 
 ## `size()` / `empty()` / `point(index)`
 
 点数、空判定、元の添字に対応する点を返す。
 
 - 時間計算量: $O(1)$
+- 追加空間計算量: $O(1)$
 
 ## `nearest(query, max_checks)`
 
@@ -29,3 +43,7 @@ documentation_of: ../src/approximate/nearest_neighbor/best_bin_first_kd_tree.hpp
 - 近似: `max_checks >= N` なら厳密。小さい値では近似比の保証はない。包囲箱下界が現在値を超えた部分木は安全に除く。
 
 非有限座標と距離二乗のoverflowは例外とする。距離が等しい場合は元の添字が小さい点を返す。
+
+## 注意点
+
+登録点とqueryの座標は有限で、平方距離を `long double` で表現できなければならない。厳密探索を明示した場合を除き、探索budgetに対するrecallや近似比は保証しない。

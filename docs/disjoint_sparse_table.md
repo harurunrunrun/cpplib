@@ -32,7 +32,7 @@ long long x = dst.prod(l, r);
 - `S all_prod() const`
     - 区間 `[0, n)` の演算結果を返す。
 
-## 計算量
+## 時間計算量
 
 - `DisjointSparseTable(int)`: $O(\mathtt{MAX\_SIZE}\log \mathtt{MAX\_SIZE})$
 - `DisjointSparseTable(vector)`: $O(\mathtt{MAX\_SIZE}\log \mathtt{MAX\_SIZE}+n\log n)$
@@ -40,7 +40,13 @@ long long x = dst.prod(l, r);
 - `prod`, `all_prod`: $O(1)$
 - `size`, `empty`: $O(1)$
 
-## 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- 2種類のconstructor、`size`、`empty`、`get`、`prod`、`all_prod`: $O(1)$
+
+構築済みtableの保存領域は $O(\mathtt{MAX\_SIZE}\log\mathtt{MAX\_SIZE})$ であり、constructorはそのobject内領域へ直接構築する。
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`。vector長超過を含むconstructor違反は例外。
 - `get(k)`は`0 <= k < n`、`prod(l,r)`は`0 <= l <= r <= n`。違反時は例外。

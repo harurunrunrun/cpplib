@@ -95,3 +95,12 @@ static constexpr std::size_t capacity()
 - $O(\mathtt{MAX\_SIZE})$
 
 copyは無効で、moveに対応する。
+
+## 注意点
+nconstructor、clear、find、contains、at、insert_or_assign、operator[]、erase、size、empty、max_size、capacityはいずれも追加空間計算量 O(1)。新規要素のkey/valueは本体保存領域として別に数える。
+
+`MAX_SIZE > 0` が必要。`Hash` と `KeyEqual` は、等しいkeyに同じhash値を与える必要がある。
+存在しないkeyへの `at` は `out_of_range`、満杯のtableへの新規挿入は `runtime_error`。
+`find` が返すpointerと `at` / `operator[]` が返す参照は、erase、clear、moveまたは破棄後に使えない。
+構築・`clear` 以外の各APIの追加領域は $O(1)$。挿入したkey・valueを含む保存領域は
+$O(\mathtt{MAX\_SIZE})$。

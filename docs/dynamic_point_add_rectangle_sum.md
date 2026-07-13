@@ -31,7 +31,7 @@ seg.sum(x1, y1, x2, y2)
 - `build`: $O(N \log^2 N)$
 - `add`, `sum`: $O(\log^2 N)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N$ を `reserve_point` した点数とする。
 
@@ -45,7 +45,7 @@ $N$ を `reserve_point` した点数とする。
 | `sum(x1,y1,x2,y2)` | $O(\log^2 N)$ |
 
 `sum` は4回のprefix queryを行う。`build` 後の保持領域は $O(N\log N)$。
-## API詳細と構築順序
+## 注意点
 
 - `reserve_point(x,y)` は将来 `add` する座標を登録する。重複登録してよい。
 - `build()` は登録座標を圧縮して更新可能状態にする。

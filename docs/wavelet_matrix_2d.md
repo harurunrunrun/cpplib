@@ -64,7 +64,7 @@ $H=\mathtt{Y\_BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 - `size`: $O(1)$
 - `rectangle_count`, `range_freq`, `kth_smallest_y`, `prev_y`, `next_y`: $O(\log N+H)$
 
-# 共通API契約
+## 注意点
 
 constructorは `xs,ys` またはpoint列を受け、内部でx順に並べる。入力点の順序はquery結果に影響しない。
 `size` は点数。`rectangle_count/range_freq` は半開矩形

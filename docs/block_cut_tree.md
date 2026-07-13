@@ -34,4 +34,8 @@ auto result = block_cut_tree(n, edges);
 
 `block_node`と`block_id`は範囲外で`runtime_error`を送出する。
 入力辺の端点は`[0,n)`でなければならない。並列辺は扱えるが、自己loopは例外。
-返り値を含む保存領域は $O(N+M)$。
+返り値を含む空間計算量は $O(N+M)$。
+
+## 注意点
+
+頂点番号は $[0,N)$ に収め、辺の向き、多重辺、自己loop、連結性は各APIで記した入力条件に従う。戻り値の頂点番号も同じ0-indexedである。

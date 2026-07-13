@@ -90,7 +90,7 @@ $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$、$W=\lceil\mathtt{MA
 - `rank`, `range_freq`, `prev_value`, `next_value`: $O(\log D+H)$
 - `select`: $O(\log D+H\log N)$
 
-# 構築・共通契約
+## 注意点
 
 constructorは上記の値列を座標圧縮して構築する。`size` は列長、`value_count` は異なる値数、
 `value(id)` は圧縮idの元の値を返す。`access/operator[]`、出現番号、順序統計は0-indexed。

@@ -52,7 +52,14 @@ int groups()
 
 - amortized $O(\alpha(N))$
 
-# 前提・例外・容量
+## 空間計算量（API別の追加領域）
+
+- constructor、`size`、`groups`: $O(1)$
+- `leader`、`same`、`component_size`、`merge`: 再帰する代表探索のstackを含めworst-case $O(\log N)$
+
+本体の固定保存領域は $O(\mathtt{MAX\_SIZE})$ であり、上記はそれを除く各呼び出しの追加領域である。
+
+## 注意点
 
 - `0 <= n <= MAX_SIZE`。constructorで範囲外なら例外。
 - 頂点引数はすべて`[0,n)`。範囲外なら例外。

@@ -28,3 +28,7 @@ vector<size_t> maximal_independent_set(
 - 追加空間計算量: $O(N+E)$
 
 平行辺は1辺として扱う。不正な順列には `std::invalid_argument`、範囲外の端点には `std::out_of_range` を送出する。
+
+## 注意点
+
+頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。

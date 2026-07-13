@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/dynamic_lazysegtree.hpp
 
 巨大な添字範囲を疎に確保する遅延セグメント木。
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(1)$
 - `set`, `get`, 1点`apply`, 区間`apply`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
@@ -32,3 +32,11 @@ long long min_left(long long r, auto predicate, auto&&... args) const
 半開区間を扱う。境界探索のpredicateは単調かつ単位元に対してtrueが必要。
 範囲・predicate違反は `runtime_error`、確保失敗は `bad_alloc`。copyは禁止。
 各APIの計算量は上表の通り。
+
+## 注意点
+
+領域は `[0,MAX_SIZE)`、未生成点は `Monoid.e()`。点・区間違反では `runtime_error`、
+node確保失敗では `bad_alloc`。境界探索のpredicateは単調で単位元に対してtrueが必要。
+`Monoid` は作用付きモノイドの契約を満たす。保存領域は生成node数を $K$ として $O(K)$。
+更新1回の追加nodeと各操作の再帰stackは $O(\log \mathtt{MAX\_SIZE})$、それ以外の
+追加空間計算量は $O(1)$。

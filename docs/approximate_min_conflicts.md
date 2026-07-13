@@ -50,3 +50,7 @@ random move確率を必須にした `min_conflicts` の同値wrapperである。
 
 $Q$ はcallback 1回、$R,S$ はrestart・step数、$D_{max}$ は最大値域である。
 `found == false` は制約系が不能であることを証明しない。
+
+## 注意点
+
+callback・CNF・有限値域は各APIの整合性条件を満たす必要がある。探索失敗は指定した上限内で解を発見できなかったことだけを表し、充足不能の証明にはならない。

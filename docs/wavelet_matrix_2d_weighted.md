@@ -68,7 +68,7 @@ $H=\mathtt{Y\_BIT\_WIDTH}$ とする。
 - `size`: $O(1)$
 - `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+H)$
 
-# 共通API契約
+## 注意点
 
 constructorは `xs,ys,weights` またはtuple列を受け、内部でx順に並べる。3vectorの長さは一致が必要。
 `size` は点数。`rectangle_count/range_freq` は半開矩形

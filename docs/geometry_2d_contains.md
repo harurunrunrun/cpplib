@@ -1,0 +1,16 @@
+---
+title: 2D Point in Polygon (二次元多角形包含判定)
+documentation_of: ../src/algorithm/geometry/2d/contains.hpp
+---
+
+## API
+
+- `contains(polygon, point)`: 外部なら0、境界上なら1、内部なら2を返す。
+
+## API別の時間計算量・空間計算量
+
+- 頂点数を $N$ として、時間 $O(N)$、追加領域 $O(1)$。
+
+## 注意点
+
+単純多角形を頂点順に与える。時計回り・反時計回りのどちらでもよく、境界判定には許容誤差を用いる。

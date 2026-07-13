@@ -39,14 +39,14 @@ math::PrimeSieve<1000000> sieve(n);
 - `vector<pair<int,int>> factorize(int n) const`
     - `n` を素因数分解して `(素数, 指数)` の列を返す。
 
-## 計算量
+## 計算量の概要
 
 - `is_prime_sqrt`: $O(\sqrt n)$
 - 篩本体は $O(n)$、固定長配列の初期化を含む `build` 全体は $O(MAX_N+n)$
 - `is_prime`, `min_factor`, `prime`: $O(1)$
 - `factorize`: $O(\log n)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $P=\pi(n)$、素因数の種類数を $K$ とする。
 
@@ -61,7 +61,7 @@ $P=\pi(n)$、素因数の種類数を $K$ とする。
 | `factorize(n)` | $O(\log n+K)$（出力サイズ $K$） |
 
 `build` は線形篩部分が $O(n)$ だが、固定長 `min_factor_data` の初期化に $O(MAX_N)$ かかる。保持領域は $O(MAX_N)$。
-## APIの範囲と例外
+## 注意点
 
 - `is_prime_sqrt(n)` は $n\le1$ で `false`。例外は送出しない。
 - constructorと `build(n)` は $0\le n\le MAX_N$ を要求する。

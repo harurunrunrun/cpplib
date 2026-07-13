@@ -29,15 +29,15 @@ MinimumSteinerTreeResult<T> minimum_steiner_tree(
 部分集合二つの併合後、各 `mask` についてmulti-source Dijkstraを行う。
 各更新元を保存し、最終状態から部分集合併合と最短路を逆にたどって辺IDを復元する。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 頂点数を $N$、有向隣接辺数を $M$、端点数を $K$ とする。
 
-| API | 時間計算量 | 追加領域 |
+| API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `minimum_steiner_tree` | $O(3^K N+2^K M\log(N+1))$ | $O(2^K N+M)$ |
 
-## 例外と前提
+## 注意点
 
 頂点番号、辺ID、辺の行き先が範囲外、辺重みが負、または `K` が
 `int` のbit数以上なら `runtime_error` を送出する。

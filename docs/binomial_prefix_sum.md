@@ -28,7 +28,7 @@ Mint prefix_sum(int n, int k)
 - 前計算: $O(N^2)$
 - query: $O(1)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 `Mint` の演算を $O(1)$ とする。
 
@@ -40,7 +40,7 @@ Mint prefix_sum(int n, int k)
 | 公開表 `comb` / `prefix` の1要素参照 | $O(1)$ |
 
 保持領域は $O(MAX_N^2)$。
-## API詳細と範囲
+## 注意点
 
 - `comb[n][k]` は $\binom nk$、`prefix[n][k]` は
   $\sum_{i=0}^{k}\binom ni$ の公開前計算表。

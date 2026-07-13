@@ -34,12 +34,16 @@ std::size_t n = counter.vertex_count();
 
 構築時に渡した`vertices`の要素数を返す。
 
-## 計算量
+## API別の時間計算量・空間計算量
 
 $N=\lvert\mathrm{vertices}\rvert$、$M=\lvert\mathrm{query\_points}\rvert$とする。
 
-| API・操作 | 時間計算量 | 追加領域 |
+| API・操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | constructor | $O(N^2M)$ | $O(N^2)$ |
 | `count` | $O(1)$ | $O(1)$ |
 | `vertex_count` | $O(1)$ | $O(1)$ |
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

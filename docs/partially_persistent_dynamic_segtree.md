@@ -22,7 +22,7 @@ long long max_right(int version, long long l, F f)
 long long min_left(int version, long long r, F f)
 ```
 
-# 計算量
+# 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES}\log \mathtt{MAX\_CHANGES})$
 - `set`: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
@@ -32,7 +32,7 @@ long long min_left(int version, long long r, F f)
 - 最新versionの`all_prod`: $O(1)$、過去versionの`all_prod`: $O(\log \mathtt{MAX\_CHANGES})$
 - version・node・change情報: $O(1)$
 
-# 共通API契約
+## 注意点
 
 version 0が初期状態で、queryは `0 <= version < versions()` の任意versionを参照できる。
 更新は `latest_version()` だけを元に行い、新しいversion番号を返す。過去versionを更新元に

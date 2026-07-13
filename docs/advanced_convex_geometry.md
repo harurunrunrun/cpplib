@@ -23,7 +23,7 @@ geometry.hpp の Point と Line を用いる高度な凸幾何である。
 std::invalid_argument を送出する。任意順の点集合から凸包を作る用途には
 geometry.hpp の convex_hull を使う。
 
-時間・追加領域はともに $O(N)$。
+時間計算量・空間計算量（追加領域）はともに $O(N)$。
 
 ## 半平面
 
@@ -67,7 +67,7 @@ polygon.size() はそれぞれ1または2となる。
 決めた十分大きい一時 bounding box を使い、最終境界に一時辺が残るかを調べる。
 中間値を有限に保てない極端な座標には std::overflow_error を送出する。
 
-$K$ 本に対して時間 $O(Klog K)$、追加領域 $O(K)$。
+$K$ 本に対して時間 $O(Klog K)$、空間計算量（追加領域） $O(K)$。
 half_plane_contains は時間・領域ともに $O(1)$。
 
 ## Minkowski 和
@@ -86,7 +86,7 @@ half_plane_contains は時間・領域ともに $O(1)$。
 いずれかになる。返り値は反時計回りで辞書順最小頂点から始まり、重複頂点と
 中間 collinear 頂点を持たない。
 
-正規化を含めて時間 $O(N+M)$、追加領域 $O(N+M)$。
+正規化を含めて時間 $O(N+M)$、空間計算量（追加領域） $O(N+M)$。
 
 ## 凸多角形の共通部分
 
@@ -106,7 +106,7 @@ normalize_convex_polygon と同じである。
 点・線分入力は専用の包含判定・parametric clipping で処理する。面積を持つ2多角形は、
 両者の辺を左側半平面として half_plane_intersection に渡す。
 
-時間 $O((N+M)log(N+M))$、追加領域 $O(N+M)$。どちらかが点または線分なら
+時間 $O((N+M)log(N+M))$、空間計算量（追加領域） $O(N+M)$。どちらかが点または線分なら
 時間 $O(N+M)$。
 
 ## EPS と大座標
@@ -140,3 +140,7 @@ advanced_convex_geometry.test.cpp は独立 generator/checker の実 input/outpu
 - 冗長な同方向半平面を含む random bounded 半平面交差
 - random な反対向き平行境界による feasible strip と contradiction
 - 2万頂点級の large convex polygon と $10^{12}$ 座標
+
+## 注意点
+
+座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。

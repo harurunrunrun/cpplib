@@ -57,7 +57,7 @@ int prefix_count(int version, string_view s)
 int size(int version)
 ```
 
-## API別計算量
+## API別の時間計算量
 
 $L$ を入力文字列長とする。
 
@@ -76,3 +76,12 @@ nodeを生成せず、同じ内容のversionだけを作る。
 
 - 固定node/version array: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES}+\mathrm{MAX\_VERSIONS})$
 - 各操作の追加stack: $O(1)$
+
+## 注意点
+
+文字は `[OFFSET, OFFSET + ALPHABET)`、versionは `[0,versions())`。文字範囲、version、
+node・version容量の違反では `runtime_error`。`erase` 対象が存在しない場合も同内容の
+新versionを1個作る。
+固定保存領域は $O(\mathtt{ALPHABET}\cdot\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$。
+`insert` / 存在する文字列の `erase` は $O(L)$ nodeを追加し、その他の各APIの追加領域は
+$O(1)$。

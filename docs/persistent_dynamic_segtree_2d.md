@@ -62,9 +62,23 @@ version引数なしのoverloadは最新versionを参照する。`get` は1点を
 $O(\log H+\log W)$、`prod` は半開矩形 `[rb,re) x [cb,ce)` の積を
 $O(\log H\log W)$、`all_prod` は全領域の積を $O(1)$ で返す。
 
-## 容量・例外
+## 注意点
 
 構築は $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_VERSIONS)$、
 保存領域も同量。点・矩形・versionの範囲違反、逆区間、各固定容量の超過は
 `runtime_error`。容量不足や値のコピーで更新が失敗した場合、version数とpool使用量は
 更新前へ戻る。コピー構築・コピー代入は禁止している。
+
+## API別の時間計算量
+
+| API | 時間 | 永続保存領域 / 一時領域 |
+| --- | --- | --- |
+| constructor | $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_VERSIONS)$ | 同量の固定領域 |
+| `versions`, `latest_version`, `row_nodes_used`, `column_nodes_used` | $O(1)$ | $O(1)$ |
+| `set`, `apply` | $O(\log H\log W)$ | row node $O(\log H)$、column node $O(\log H\log W)$、stack $O(\log H+\log W)$ |
+| `fork` | $O(1)$ | node追加なし、一時 $O(1)$ |
+| `get` | $O(\log H+\log W)$ | stack $O(\log H+\log W)$ |
+| `prod` | $O(\log H\log W)$ | stack $O(\log H+\log W)$ |
+| `all_prod` | $O(1)$ | $O(1)$ |
+
+$H=\mathtt{MAX\_HEIGHT}$、$W=\mathtt{MAX\_WIDTH}$。version省略overloadも同じ。

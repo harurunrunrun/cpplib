@@ -18,7 +18,7 @@ run_length_unzip(data)
 
 - $O(N)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $N$ を展開後の要素数、$R$ をrun数とする。
 
@@ -28,3 +28,7 @@ $N$ を展開後の要素数、$R$ をrun数とする。
 | `run_length_unzip(data)` | $O(R+N)$ | $O(N)$ |
 
 `run_length_unzip` は最初に全 $R$ runの長さを検査し、その後 $N$ 要素を列挙する。
+
+## 注意点
+
+空入力、退化入力、範囲外のindexと容量超過の扱いは各APIの説明に従う。参照・iterator・callbackを受け渡すAPIでは、変更可否とobjectの寿命を守る。

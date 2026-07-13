@@ -54,7 +54,7 @@ int latest_version() const;
 
 `prod` は半開矩形 `[row_begin,row_end) x [col_begin,col_end)` の積。version 0が初期状態で、有効versionは `[0,versions())`。
 
-## 実装と容量
+## 実装と保存領域
 
 初期状態は密な二次元segment treeに保持する。更新ではouter row pathをcopyし、各row nodeに属するcolumn pathだけをcopyする。1更新あたりrow nodeを `log2(R)+1` 個、column nodeを `(log2(R)+1)(log2(C)+1)` 個使う。`fork` はnodeを使わない。
 
@@ -78,7 +78,7 @@ int latest_version() const;
 
 保存領域は $O(RC+MAX\_VERSION\log R\log C)$。
 
-## API契約・例外
+## 注意点
 
 二次元分割の結合順に依存しないよう、`Monoid.op` は結合的かつ可換で、`Monoid.e()` を単位元としなければならない。
 

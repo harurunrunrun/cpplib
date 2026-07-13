@@ -120,7 +120,7 @@ ClusterStatistics cluster_statistics(int v)
 
 - $O(\mathtt{MAX\_SIZE})$
 
-# size / 前提・例外
+## 注意点
 
 `int size() const`は頂点数を$O(1)$で返す。
 

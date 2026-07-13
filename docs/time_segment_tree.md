@@ -31,7 +31,7 @@ explicit TimeSegmentTree(int time_count = MAX_TIME)
 
 $O(\mathtt{MAX\_TIME}+\mathtt{MAX\_EVENTS})$。
 
-範囲外の `time_count` は固定長保存領域を確保する前に検査する。
+範囲外の `time_count` は固定長空間計算量を確保する前に検査する。
 
 # 区間イベントの追加
 
@@ -44,7 +44,7 @@ void emplace_interval(int left, int right, Args&&... args)
 ```
 
 イベントを時刻区間 $[\mathtt{left},\mathtt{right})$ で有効にする。
-`emplace_interval` は保存領域上で `Event` を直接構築する。空区間は何も保存しない。
+`emplace_interval` は空間計算量上で `Event` を直接構築する。空区間は何も保存しない。
 
 ## 時間計算量
 
@@ -104,7 +104,7 @@ void clear()
 
 $O(\mathtt{MAX\_TIME}+M)$。
 
-# 状態・容量
+## API
 
 ```cpp
 int size() const
@@ -122,7 +122,7 @@ static constexpr std::size_t reference_capacity()
 
 すべて $O(1)$。
 
-# 前提・例外・容量
+## 注意点
 
 - `0 <= time_count <= MAX_TIME`。違反時は例外。
 - 追加区間は `0 <= left <= right <= time_count`。違反時は例外。

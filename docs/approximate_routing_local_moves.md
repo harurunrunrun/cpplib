@@ -129,10 +129,10 @@ void exchange_segments(
 
 `swap_vertices` は2頂点を交換する。`exchange_segments` は重ならない2区間を、長さが異なっていても交換する。
 
-- `swap_vertices`: 時間 $O(1)$、追加空間 $O(1)$
-- `exchange_segments`: 時間 $O(L)$、追加空間 $O(L)$
+- `swap_vertices`: 時間計算量は $O(1)$、追加空間 $O(1)$
+- `exchange_segments`: 時間計算量は $O(L)$、追加空間 $O(L)$
 
-# 例外・前提
+## 注意点
 
 不正な位置・重なる交換区間には `std::out_of_range`、Or-optの不正な長さには `std::invalid_argument` を送出する。
 `two_opt_symmetric_delta` は正方な対称距離行列、有効なtour頂点、差分が `Cost` に収まることを前提とする。

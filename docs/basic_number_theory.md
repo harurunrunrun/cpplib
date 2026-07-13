@@ -97,7 +97,7 @@ $\lfloor n/i\rfloor$ が等しい最大の半開区間 $[l,r)$ を `l` の昇順
 最上位桁から並んだ桁列を非負整数へ戻す。空列は0。範囲外の桁、
 `base < 2`、`unsigned long long` を超える結果では例外を送出する。
 
-## 計算量
+## 計算量の概要
 
 - `to_base_digits`: $O(\log n)$
 - `from_base_digits`: $O(|digits|)$
@@ -107,7 +107,7 @@ $\lfloor n/i\rfloor$ が等しい最大の半開区間 $[l,r)$ を `l` の昇順
 - `isqrt`: $O(1)$
 - `pow_mod`, `inv_mod_prime`: $O(\log n)$
 
-## API別計算量
+## API別の時間計算量・空間計算量
 
 $D$ を桁数、$K$ を返す要素数とする。固定幅整数の算術を $O(1)$ と数える。
 
@@ -125,3 +125,7 @@ $D$ を桁数、$K$ を返す要素数とする。固定幅整数の算術を $O
 | `math::from_base_digits(digits,base)` | $O(D)$ |
 
 `ExtGcdResult` と `QuotientRange` の各field参照は $O(1)$。
+
+## 注意点
+
+法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
