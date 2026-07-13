@@ -11,8 +11,8 @@ from pathlib import Path
 
 
 PARTS = [
-    "polygon_boundary_points_odr_part_a.cpp",
-    "polygon_boundary_points_odr_part_b.cpp",
+    "circle_polygon_intersection_area_headers_part_a.cpp",
+    "circle_polygon_intersection_area_headers_part_b.cpp",
 ]
 
 

@@ -6,7 +6,20 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "../../src/algorithm/geometry/polygon_boundary_points/enumerate_points_on_polygon_boundary.hpp"
 #include "../../src/algorithm/geometry/polygon_boundary_points.hpp"
+#include "../../src/algorithm/geometry/polygon_boundary_points/polygon_boundary_point_query.hpp"
+
+std::vector<int> polygon_boundary_points_odr_part_a(
+    const std::vector<Point>& polygon,
+    const std::vector<Point>& points,
+    bool unique
+);
+std::vector<int> polygon_boundary_points_odr_part_b(
+    const std::vector<Point>& polygon,
+    const std::vector<Point>& points,
+    bool unique
+);
 
 void self_test(){
     std::vector<Point> polygon = {{0, 0}, {4, 0}, {4, 4}, {0, 4}};
@@ -93,12 +106,14 @@ int main(){
     for(auto& p: points) std::cin >> p.x >> p.y;
     std::vector<int> result;
     if(fast){
-        PolygonBoundaryPointQuery query(std::move(polygon));
+        PolygonBoundaryPointQuery query(polygon);
         if(!query.uses_convex_fast_path()) return 1;
         result = query.enumerate(points, unique);
     }else{
         result = enumerate_points_on_polygon_boundary(polygon, points);
     }
+    if(polygon_boundary_points_odr_part_a(polygon, points, unique) != result) return 2;
+    if(polygon_boundary_points_odr_part_b(polygon, points, unique) != result) return 3;
     std::cout << result.size();
     for(int index: result) std::cout << ' ' << index;
     std::cout << '\n';

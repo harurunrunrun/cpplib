@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/circle_polygon_intersection_area/circle_polygon_intersection_area.hpp"
+#include "../../src/algorithm/geometry/circle_polygon_intersection_area/signed_circle_polygon_intersection_area.hpp"
 
 int main(){
     int n;
@@ -13,5 +13,5 @@ int main(){
     std::vector<Point> polygon(static_cast<std::size_t>(n));
     for(Point& point: polygon) std::cin >> point.x >> point.y;
     std::cout << std::fixed << std::setprecision(8)
-              << circle_polygon_intersection_area(circle, polygon) << '\n';
+              << signed_circle_polygon_intersection_area(circle, polygon) << '\n';
 }

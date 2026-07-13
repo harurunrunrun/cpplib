@@ -1,0 +1,12 @@
+#include <vector>
+
+#include "../../src/algorithm/geometry/polygon_boundary_points/polygon_boundary_point_query.hpp"
+#include "../../src/algorithm/geometry/polygon_boundary_points.hpp"
+
+std::vector<int> polygon_boundary_points_odr_part_b(
+    const std::vector<Point>& polygon,
+    const std::vector<Point>& points,
+    bool unique
+){
+    return PolygonBoundaryPointQuery(polygon).enumerate(points, unique);
+}
