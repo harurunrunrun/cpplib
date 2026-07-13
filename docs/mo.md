@@ -1,5 +1,5 @@
 ---
-title: Mo
+title: Mo (Moのアルゴリズム)
 documentation_of: ../src/algorithm/other/mo.hpp
 ---
 

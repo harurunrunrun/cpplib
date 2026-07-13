@@ -1,5 +1,5 @@
 ---
-title: Dynamic Rectangle Sum
+title: Dynamic Rectangle Sum (動的長方形和)
 documentation_of: ../src/structure/wavelet_matrix/dynamic_rectangle_sum.hpp
 ---
 

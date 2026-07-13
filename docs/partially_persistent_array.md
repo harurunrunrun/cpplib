@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Array
+title: Partially Persistent Array (部分永続配列)
 documentation_of: ../src/structure/array/partially_persistent_array.hpp
 ---
 

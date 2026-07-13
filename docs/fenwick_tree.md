@@ -1,5 +1,5 @@
 ---
-title: Fenwick Tree
+title: Fenwick Tree (フェンウィック木)
 documentation_of: ../src/structure/other/fenwick_tree.hpp
 ---
 

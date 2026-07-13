@@ -1,5 +1,5 @@
 ---
-title: Lazy Red Black Tree
+title: Lazy Red Black Tree (遅延赤黒木)
 documentation_of: ../src/structure/bbst/lazy_red_black_tree.hpp
 ---
 

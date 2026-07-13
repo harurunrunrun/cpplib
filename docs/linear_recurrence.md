@@ -1,5 +1,5 @@
 ---
-title: Linear Recurrence
+title: Linear Recurrence (線形漸化式)
 documentation_of: ../src/algorithm/math/linear_recurrence.hpp
 ---
 

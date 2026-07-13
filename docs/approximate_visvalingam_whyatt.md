@@ -1,5 +1,5 @@
 ---
-title: Visvalingam–Whyatt法
+title: Visvalingam–Whyatt Algorithm (Visvalingam–Whyatt法)
 documentation_of: ../src/approximate/geometry/visvalingam_whyatt.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Tree Centroid
+title: Tree Centroid (木の重心)
 documentation_of: ../src/algorithm/tree/tree_centroid.hpp
 ---
 

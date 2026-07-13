@@ -1,5 +1,5 @@
 ---
-title: Iterative Closest Point（平行移動モデル）
+title: Translation-Only Iterative Closest Point (平行移動限定の反復最近点法)
 documentation_of: ../src/approximate/geometry/iterative_closest_point.hpp
 ---
 

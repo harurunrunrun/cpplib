@@ -1,20 +1,18 @@
 ---
-title: Rollback Bit Range Structures
+title: Rollback BitAssign RangeSum RangeFlip (ロールバック可能ビット代入・区間和・区間反転)
 documentation_of: ../src/structure/segtree/rollback_bitassign_rangesum_rangeflip.hpp
 ---
 
 $0,1$ 列の区間更新と区間和をrollback可能にする。変更前nodeを履歴へ保存し、指定snapshot以後の更新を破棄する。
 
 ```cpp
-RollbackBitAssignRangeSum<MAX_SIZE, MAX_NODES, MAX_VERSIONS, MAX_CHANGES>
-RollbackBitAssignRangeSumRangeFlip<...>
-RollbackBitOverwriteRangeSum<...>
+RollbackBitAssignRangeSumRangeFlip<MAX_SIZE, MAX_NODES, MAX_VERSIONS, MAX_CHANGES>
 
 int snapshot()
 void rollback(int version)
 ```
 
-`RollbackDynamic...` という同じAPIの別名も定義される。
+`RollbackDynamicBitAssignRangeSumRangeFlip` という同じAPIの別名も定義される。
 
 # 計算量
 

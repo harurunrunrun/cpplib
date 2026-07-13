@@ -1,5 +1,5 @@
 ---
-title: Adam
+title: Adam (適応モーメント推定)
 documentation_of: ../src/approximate/optimization/adam.hpp
 ---
 

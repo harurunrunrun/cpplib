@@ -1,5 +1,5 @@
 ---
-title: Rollback Lazy Segment Tree
+title: Rollback Lazy Segment Tree (ロールバック可能遅延セグメント木)
 documentation_of: ../src/structure/segtree/rollback_lazysegtree.hpp
 ---
 

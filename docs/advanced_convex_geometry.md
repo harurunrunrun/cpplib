@@ -1,5 +1,5 @@
 ---
-title: Advanced Convex Geometry
+title: Advanced Convex Geometry (高度な凸幾何)
 documentation_of: ../src/algorithm/geometry/advanced_convex_geometry.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Prefix Function / KMP
+title: Prefix Function / KMP (接頭辞関数・KMP法)
 documentation_of: ../src/algorithm/string/prefix_function.hpp
 ---
 

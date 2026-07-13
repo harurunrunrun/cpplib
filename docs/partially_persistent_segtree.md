@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Segment Tree
+title: Partially Persistent Segment Tree (部分永続セグメント木)
 documentation_of: ../src/structure/segtree/partially_persistent_segtree.hpp
 ---
 

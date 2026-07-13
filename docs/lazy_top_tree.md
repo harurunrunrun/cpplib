@@ -1,5 +1,5 @@
 ---
-title: Lazy Top Tree
+title: Lazy Top Tree (遅延トップ木)
 documentation_of: ../src/structure/tree/lazy_top_tree.hpp
 ---
 

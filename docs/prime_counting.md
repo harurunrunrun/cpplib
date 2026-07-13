@@ -1,5 +1,5 @@
 ---
-title: Prime Counting
+title: Prime Counting (素数計数)
 documentation_of: ../src/algorithm/math/prime_counting.hpp
 ---
 

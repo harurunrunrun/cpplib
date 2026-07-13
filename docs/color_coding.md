@@ -1,5 +1,5 @@
 ---
-title: Color Coding
+title: Color Coding (色分け法)
 documentation_of: ../src/approximate/randomized/color_coding.hpp
 ---
 

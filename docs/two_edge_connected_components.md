@@ -1,5 +1,5 @@
 ---
-title: Two Edge Connected Components
+title: Two Edge Connected Components (二重辺連結成分分解)
 documentation_of: ../src/algorithm/graph/two_edge_connected_components.hpp
 ---
 

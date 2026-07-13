@@ -1,5 +1,5 @@
 ---
-title: Agglomerative hierarchical clustering
+title: Agglomerative Hierarchical Clustering (凝集型階層クラスタリング)
 documentation_of: ../src/approximate/clustering/hierarchical_clustering.hpp
 ---
 

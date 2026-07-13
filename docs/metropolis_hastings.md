@@ -1,5 +1,5 @@
 ---
-title: Metropolis-Hastings Sampler
+title: Metropolis–Hastings Sampler (Metropolis–Hastingsサンプラー)
 documentation_of: ../src/approximate/randomized/metropolis_hastings.hpp
 ---
 

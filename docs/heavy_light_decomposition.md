@@ -1,5 +1,5 @@
 ---
-title: Heavy Light Decomposition
+title: Heavy Light Decomposition (HL分解)
 documentation_of: ../src/algorithm/tree/heavy_light_decomposition.hpp
 ---
 

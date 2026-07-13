@@ -1,5 +1,5 @@
 ---
-title: Factorial Mod
+title: Factorial Mod (階乗の剰余)
 documentation_of: ../src/algorithm/math/factorial_mod.hpp
 ---
 

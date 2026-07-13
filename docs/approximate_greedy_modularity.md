@@ -1,5 +1,5 @@
 ---
-title: Greedy Modularity Community Detection
+title: Greedy Modularity Community Detection (貪欲モジュラリティコミュニティ検出)
 documentation_of: ../src/approximate/graph/greedy_modularity.hpp
 ---
 

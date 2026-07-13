@@ -1,5 +1,5 @@
 ---
-title: Rectangle Xor
+title: Rectangle XOR Area (長方形集合の排他的論理和面積)
 documentation_of: ../src/algorithm/other/rectangle_xor.hpp
 ---
 

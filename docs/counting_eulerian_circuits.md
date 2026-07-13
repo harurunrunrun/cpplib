@@ -1,5 +1,5 @@
 ---
-title: Counting Eulerian Circuits
+title: Counting Eulerian Circuits (オイラー閉路数え上げ)
 documentation_of: ../src/algorithm/graph/counting_eulerian_circuits.hpp
 ---
 

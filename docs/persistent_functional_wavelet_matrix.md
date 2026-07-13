@@ -1,5 +1,5 @@
 ---
-title: Persistent Functional Wavelet Matrix
+title: Persistent Functional Wavelet Matrix (完全永続多機能ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/persistent_functional_wavelet_matrix.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Nesterov Accelerated Gradient
+title: Nesterov Accelerated Gradient (Nesterov加速勾配法)
 documentation_of: ../src/approximate/optimization/nesterov.hpp
 ---
 

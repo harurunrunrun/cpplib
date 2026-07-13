@@ -1,5 +1,5 @@
 ---
-title: Greedy Maximum Coverage
+title: Greedy Maximum Coverage (貪欲最大被覆)
 documentation_of: ../src/approximate/set_cover/greedy_max_coverage.hpp
 ---
 

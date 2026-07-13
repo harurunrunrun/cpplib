@@ -1,5 +1,5 @@
 ---
-title: SMAWK
+title: SMAWK (SMAWK法)
 documentation_of: ../src/algorithm/other/smawk.hpp
 ---
 

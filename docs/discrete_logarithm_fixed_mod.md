@@ -1,5 +1,5 @@
 ---
-title: Discrete Logarithm (Fixed Mod)
+title: Discrete Logarithm (Fixed Mod) (法固定の離散対数)
 documentation_of: ../src/algorithm/math/discrete_logarithm_fixed_mod.hpp
 ---
 

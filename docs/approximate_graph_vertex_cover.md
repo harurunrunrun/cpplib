@@ -1,5 +1,5 @@
 ---
-title: Maximal Matching Vertex Cover
+title: Maximal Matching Vertex Cover (極大マッチングによる頂点被覆)
 documentation_of: ../src/approximate/graph/vertex_cover.hpp
 ---
 

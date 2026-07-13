@@ -1,5 +1,5 @@
 ---
-title: Louvain Community Detection
+title: Louvain Community Detection (Louvainコミュニティ検出)
 documentation_of: ../src/approximate/graph/louvain.hpp
 ---
 

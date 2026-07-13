@@ -1,5 +1,5 @@
 ---
-title: Segmented Sieve
+title: Segmented Sieve (区間篩)
 documentation_of: ../src/algorithm/math/segmented_sieve.hpp
 ---
 

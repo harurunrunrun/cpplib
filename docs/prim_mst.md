@@ -1,5 +1,5 @@
 ---
-title: Prim MST
+title: Prim MST (プリム法)
 documentation_of: ../src/algorithm/graph/prim_mst.hpp
 ---
 

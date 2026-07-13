@@ -1,5 +1,5 @@
 ---
-title: Markov Clustering
+title: Markov Clustering (マルコフクラスタリング)
 documentation_of: ../src/approximate/graph/markov_clustering.hpp
 ---
 

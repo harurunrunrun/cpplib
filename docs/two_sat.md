@@ -1,5 +1,5 @@
 ---
-title: Two Sat
+title: 2-SAT (2充足可能性問題)
 documentation_of: ../src/algorithm/graph/two_sat.hpp
 ---
 

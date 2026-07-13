@@ -1,5 +1,5 @@
 ---
-title: Greedy and add-drop facility location
+title: Greedy and Add-Drop Facility Location (貪欲法と追加削除法による施設配置)
 documentation_of: ../src/approximate/clustering/facility_location.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Persistent Binary Trie
+title: Persistent Binary Trie (完全永続二進トライ)
 documentation_of: ../src/structure/trie/persistent_binary_trie.hpp
 ---
 

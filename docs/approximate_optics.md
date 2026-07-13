@@ -1,5 +1,5 @@
 ---
-title: OPTICS
+title: OPTICS (密度ベースクラスタリング順序付け)
 documentation_of: ../src/approximate/clustering/optics.hpp
 ---
 

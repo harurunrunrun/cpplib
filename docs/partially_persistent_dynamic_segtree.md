@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Dynamic Segment Tree
+title: Partially Persistent Dynamic Segment Tree (部分永続動的セグメント木)
 documentation_of: ../src/structure/segtree/partially_persistent_dynamic_segtree.hpp
 ---
 

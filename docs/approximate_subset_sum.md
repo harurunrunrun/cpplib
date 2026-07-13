@@ -1,5 +1,5 @@
 ---
-title: Subset Sum Approximation
+title: Exact and Approximate Subset Sum (部分和の厳密解法と近似解法)
 documentation_of: ../src/approximate/dp/subset_sum.hpp
 ---
 

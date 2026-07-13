@@ -1,5 +1,5 @@
 ---
-title: Formal Power Series
+title: Formal Power Series (形式的冪級数)
 documentation_of: ../src/algorithm/fft/formal_power_series.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: BitOverwrite RangeSum
+title: BitOverwrite RangeSum (ビット上書き・区間和)
 documentation_of: ../src/structure/segtree/bitoverwrite_rangesum.hpp
 ---
 

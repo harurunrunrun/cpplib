@@ -1,5 +1,5 @@
 ---
-title: Evolution Strategy
+title: Evolution Strategy (進化戦略)
 documentation_of: ../src/approximate/evolutionary/evolution_strategy.hpp
 ---
 

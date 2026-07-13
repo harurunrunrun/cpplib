@@ -1,5 +1,5 @@
 ---
-title: Persistent Dynamic BitOverwrite RangeSum
+title: Persistent Dynamic BitOverwrite RangeSum (完全永続動的ビット上書き・区間和)
 documentation_of: ../src/structure/segtree/persistent_dynamic_bitoverwrite_rangesum.hpp
 ---
 

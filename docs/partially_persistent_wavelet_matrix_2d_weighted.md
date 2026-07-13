@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Weighted Wavelet Matrix 2D
+title: Partially Persistent Weighted Wavelet Matrix 2D (部分永続二次元重み付きウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/partially_persistent_wavelet_matrix_2d_weighted.hpp
 ---
 

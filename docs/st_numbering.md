@@ -1,5 +1,5 @@
 ---
-title: st-numbering
+title: st-numbering (st番号付け)
 documentation_of: ../src/algorithm/graph/st_numbering.hpp
 ---
 

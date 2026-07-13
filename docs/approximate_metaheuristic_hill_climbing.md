@@ -1,5 +1,5 @@
 ---
-title: Hill Climbing and Random Search
+title: Hill Climbing and Random Search (山登り法とランダム探索)
 documentation_of: ../src/approximate/metaheuristic/hill_climbing.hpp
 ---
 

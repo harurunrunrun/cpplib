@@ -1,5 +1,5 @@
 ---
-title: Morris Counter
+title: Morris Counter (Morris確率カウンタ)
 documentation_of: ../src/approximate/streaming/morris_counter.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Prime Sieve
+title: Prime Sieve (素数篩)
 documentation_of: ../src/algorithm/math/prime_sieve.hpp
 ---
 

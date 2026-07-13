@@ -1,5 +1,5 @@
 ---
-title: Reservoir Sampling
+title: Reservoir Sampling (リザーバサンプリング)
 documentation_of: ../src/approximate/streaming/reservoir_sampling.hpp
 ---
 

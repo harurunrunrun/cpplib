@@ -1,5 +1,5 @@
 ---
-title: Cartesian Tree
+title: Cartesian Tree (カーテシアン木)
 documentation_of: ../src/algorithm/tree/cartesian_tree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Static 2D KD Tree
+title: Static 2D KD Tree (静的二次元KD木)
 documentation_of: ../src/structure/other/kd_tree_2d.hpp
 ---
 

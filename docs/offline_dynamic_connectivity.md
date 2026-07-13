@@ -1,5 +1,5 @@
 ---
-title: Offline Dynamic Connectivity
+title: Offline Dynamic Connectivity (オフライン動的連結性)
 documentation_of: ../src/structure/graph/offline_dynamic_connectivity.hpp
 ---
 

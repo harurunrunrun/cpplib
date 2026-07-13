@@ -1,5 +1,5 @@
 ---
-title: Persistent Dual Segment Tree
+title: Persistent Dual Segment Tree (完全永続双対セグメント木)
 documentation_of: ../src/structure/segtree/persistent_dualsegtree.hpp
 ---
 

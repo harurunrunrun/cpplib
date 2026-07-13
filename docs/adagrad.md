@@ -1,5 +1,5 @@
 ---
-title: AdaGrad
+title: AdaGrad (適応勾配法)
 documentation_of: ../src/approximate/optimization/adagrad.hpp
 ---
 

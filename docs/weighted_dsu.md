@@ -1,5 +1,5 @@
 ---
-title: Weighted DSU
+title: Weighted DSU (重み付き素集合データ構造)
 documentation_of: ../src/structure/dsu/weighted_dsu.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Basic Number Theory
+title: Basic Number Theory (初等整数論)
 documentation_of: ../src/algorithm/math/basic_number_theory.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 勾配降下法
+title: Gradient Descent (勾配降下法)
 documentation_of: ../src/approximate/optimization/gradient_descent.hpp
 ---
 

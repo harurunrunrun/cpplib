@@ -1,5 +1,5 @@
 ---
-title: Lowest Common Ancestor
+title: Lowest Common Ancestor (最小共通祖先)
 documentation_of: ../src/algorithm/tree/lca.hpp
 ---
 

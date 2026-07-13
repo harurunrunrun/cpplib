@@ -1,5 +1,5 @@
 ---
-title: Slope Trick
+title: Slope Trick (傾きトリック)
 documentation_of: ../src/structure/convex_hull_trick/slope_trick.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Segment Tree Beats
+title: Segment Tree Beats (セグメント木Beats)
 documentation_of: ../src/structure/segtree/segtree_beats.hpp
 ---
 

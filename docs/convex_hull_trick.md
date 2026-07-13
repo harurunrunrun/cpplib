@@ -1,5 +1,5 @@
 ---
-title: Convex Hull Trick
+title: Convex Hull Trick (凸包トリック)
 documentation_of: ../src/structure/convex_hull_trick/convex_hull_trick.hpp
 ---
 

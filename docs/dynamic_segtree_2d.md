@@ -1,5 +1,5 @@
 ---
-title: Dynamic 2D Segment Tree
+title: Dynamic 2D Segment Tree (動的二次元セグメント木)
 documentation_of: ../src/structure/segtree/dynamic_segtree_2d.hpp
 ---
 

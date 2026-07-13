@@ -1,5 +1,5 @@
 ---
-title: Persistent Convex Hull Trick
+title: Persistent Convex Hull Trick (完全永続凸包トリック)
 documentation_of: ../src/structure/convex_hull_trick/persistent_convex_hull_trick.hpp
 ---
 

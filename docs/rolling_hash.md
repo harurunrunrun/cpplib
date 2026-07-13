@@ -1,5 +1,5 @@
 ---
-title: Rolling Hash
+title: Rolling Hash (ローリングハッシュ)
 documentation_of: ../src/algorithm/string/rolling_hash.hpp
 ---
 

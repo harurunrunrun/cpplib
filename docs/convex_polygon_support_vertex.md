@@ -1,5 +1,5 @@
 ---
-title: Convex Polygon Support Vertex
+title: Convex Polygon Support Vertex (凸多角形の支持点)
 documentation_of: ../src/algorithm/geometry/convex_polygon_support_vertex.hpp
 ---
 

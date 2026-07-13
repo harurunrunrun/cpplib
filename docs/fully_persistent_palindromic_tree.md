@@ -1,5 +1,5 @@
 ---
-title: Fully Persistent Palindromic Tree
+title: Fully Persistent Palindromic Tree (完全永続回文木)
 documentation_of: ../src/algorithm/string/fully_persistent_palindromic_tree.hpp
 ---
 

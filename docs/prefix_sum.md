@@ -1,5 +1,5 @@
 ---
-title: Prefix Sum
+title: Prefix Sum (累積和)
 documentation_of: ../src/structure/other/prefix_sum.hpp
 ---
 

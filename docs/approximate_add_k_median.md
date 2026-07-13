@@ -1,5 +1,5 @@
 ---
-title: ADD法によるk-median
+title: ADD k-Median (ADD法によるk-メディアン)
 documentation_of: ../src/approximate/facility/add_k_median.hpp
 ---
 

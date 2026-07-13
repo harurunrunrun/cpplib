@@ -1,5 +1,5 @@
 ---
-title: k-means / k-means++ / Mini-batch k-means
+title: k-Means / k-Means++ / Mini-Batch k-Means (k平均法)
 documentation_of: ../src/approximate/clustering/kmeans.hpp
 ---
 

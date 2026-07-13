@@ -1,5 +1,5 @@
 ---
-title: Greedy Matching
+title: Greedy Matching (貪欲マッチング)
 documentation_of: ../src/approximate/graph/matching.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Offline LCA
+title: Offline LCA (オフライン最小共通祖先)
 documentation_of: ../src/algorithm/tree/offline_lca.hpp
 ---
 

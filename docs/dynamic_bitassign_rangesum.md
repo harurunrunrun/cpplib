@@ -1,5 +1,5 @@
 ---
-title: Dynamic BitAssign RangeSum
+title: Dynamic BitAssign RangeSum (動的ビット代入・区間和)
 documentation_of: ../src/structure/segtree/dynamic_bitassign_rangesum.hpp
 ---
 

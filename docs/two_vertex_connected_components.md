@@ -1,5 +1,5 @@
 ---
-title: Two Vertex Connected Components
+title: Two Vertex Connected Components (二重頂点連結成分分解)
 documentation_of: ../src/algorithm/graph/two_vertex_connected_components.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Affinity Propagation
+title: Affinity Propagation (アフィニティ伝播法)
 documentation_of: ../src/approximate/clustering/affinity_propagation.hpp
 ---
 

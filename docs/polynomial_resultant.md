@@ -1,5 +1,5 @@
 ---
-title: Polynomial Resultant
+title: Polynomial Resultant (多項式終結式)
 documentation_of: ../src/algorithm/math/polynomial_resultant.hpp
 ---
 

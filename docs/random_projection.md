@@ -1,5 +1,5 @@
 ---
-title: Random Projection / Johnson-Lindenstrauss Transform
+title: Random Projection / Johnson–Lindenstrauss Transform (ランダム射影・ジョンソン–リンデンシュトラウス変換)
 documentation_of: ../src/approximate/randomized/random_projection.hpp
 ---
 

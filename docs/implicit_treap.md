@@ -1,5 +1,5 @@
 ---
-title: Implicit Treap
+title: Implicit Treap (暗黙トレープ)
 documentation_of: ../src/structure/tree/implicit_treap.hpp
 ---
 

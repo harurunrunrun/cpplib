@@ -1,5 +1,5 @@
 ---
-title: Compass Search
+title: Compass Search (コンパス探索)
 documentation_of: ../src/approximate/optimization/compass_search.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Floyd Warshall
+title: Floyd Warshall (ワーシャル・フロイド法)
 documentation_of: ../src/algorithm/graph/floyd_warshall.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Weighted Wavelet Matrix 2D
+title: Weighted Wavelet Matrix 2D (二次元重み付きウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/wavelet_matrix_2d_weighted.hpp
 ---
 

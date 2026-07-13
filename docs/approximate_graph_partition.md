@@ -1,5 +1,5 @@
 ---
-title: Weighted Graph Bipartition
+title: Weighted Graph Bipartition Utilities (重み付きグラフ二分割補助)
 documentation_of: ../src/approximate/graph/graph_partition.hpp
 ---
 

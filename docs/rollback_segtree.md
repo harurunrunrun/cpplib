@@ -1,5 +1,5 @@
 ---
-title: Rollback Segment Tree
+title: Rollback Segment Tree (ロールバック可能セグメント木)
 documentation_of: ../src/structure/segtree/rollback_segtree.hpp
 ---
 

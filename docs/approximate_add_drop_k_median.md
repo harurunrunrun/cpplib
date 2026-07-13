@@ -1,5 +1,5 @@
 ---
-title: ADD-DROP法によるk-median
+title: ADD-DROP k-Median (ADD-DROP法によるk-メディアン)
 documentation_of: ../src/approximate/facility/add_drop_k_median.hpp
 ---
 

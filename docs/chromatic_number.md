@@ -1,5 +1,5 @@
 ---
-title: Chromatic Number
+title: Chromatic Number (彩色数)
 documentation_of: ../src/algorithm/graph/chromatic_number.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Freivalds' Algorithm
+title: Freivalds' Algorithm (Freivaldsのアルゴリズム)
 documentation_of: ../src/approximate/randomized/freivalds.hpp
 ---
 

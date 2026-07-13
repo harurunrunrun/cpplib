@@ -1,5 +1,5 @@
 ---
-title: Dynamic Weighted Wavelet Matrix 2D
+title: Dynamic Weighted Wavelet Matrix 2D (動的二次元重み付きウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix_2d_weighted.hpp
 ---
 

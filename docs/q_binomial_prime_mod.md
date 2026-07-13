@@ -1,5 +1,5 @@
 ---
-title: q-Binomial Coefficient (Prime Mod)
+title: q-Binomial Coefficient Modulo a Prime (素数を法とするq二項係数)
 documentation_of: ../src/algorithm/math/q_binomial_prime_mod.hpp
 ---
 

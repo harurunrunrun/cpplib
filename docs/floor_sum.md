@@ -1,5 +1,5 @@
 ---
-title: Floor Sum
+title: Floor Sum (床関数和)
 documentation_of: ../src/algorithm/math/floor_sum.hpp
 ---
 

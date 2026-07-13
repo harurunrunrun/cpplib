@@ -1,5 +1,5 @@
 ---
-title: Auxiliary Tree
+title: Auxiliary Tree (補助木)
 documentation_of: ../src/algorithm/tree/auxiliary_tree.hpp
 ---
 

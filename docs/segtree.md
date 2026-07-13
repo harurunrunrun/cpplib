@@ -1,5 +1,5 @@
 ---
-title: Segment Tree
+title: Segment Tree (セグメント木)
 documentation_of: ../src/structure/segtree/segtree.hpp
 ---
 

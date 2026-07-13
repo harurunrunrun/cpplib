@@ -1,5 +1,5 @@
 ---
-title: Bitwise Convolution
+title: Bitwise Convolution (ビット演算畳み込み)
 documentation_of: ../src/algorithm/fft/bitwise_convolution.hpp
 ---
 

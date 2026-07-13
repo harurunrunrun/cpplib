@@ -1,5 +1,5 @@
 ---
-title: Multilevel Graph Partitioning
+title: Multilevel Graph Bipartitioning (多段階グラフ二分割)
 documentation_of: ../src/approximate/graph/multilevel_partitioning.hpp
 ---
 

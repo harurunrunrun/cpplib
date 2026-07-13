@@ -1,5 +1,5 @@
 ---
-title: Rollback Array
+title: Rollback Array (ロールバック可能配列)
 documentation_of: ../src/structure/array/rollback_array.hpp
 ---
 

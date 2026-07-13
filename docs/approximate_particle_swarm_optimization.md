@@ -1,5 +1,5 @@
 ---
-title: Particle Swarm Optimization
+title: Particle Swarm Optimization (粒子群最適化)
 documentation_of: ../src/approximate/evolutionary/particle_swarm_optimization.hpp
 ---
 

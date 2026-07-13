@@ -1,5 +1,5 @@
 ---
-title: SPSA
+title: SPSA (同時摂動確率近似)
 documentation_of: ../src/approximate/optimization/spsa.hpp
 ---
 

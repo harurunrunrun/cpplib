@@ -1,5 +1,5 @@
 ---
-title: Spectral Bisection
+title: Spectral Bisection (スペクトル二分割)
 documentation_of: ../src/approximate/graph/spectral_bisection.hpp
 ---
 

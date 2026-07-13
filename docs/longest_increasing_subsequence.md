@@ -1,5 +1,5 @@
 ---
-title: Longest Increasing Subsequence
+title: Longest Increasing Subsequence (最長増加部分列)
 documentation_of: ../src/algorithm/other/longest_increasing_subsequence.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Metaheuristic Acceptance Search
+title: Acceptance-Based Metaheuristics (受理基準型メタヒューリスティクス)
 documentation_of: ../src/approximate/metaheuristic/acceptance_search.hpp
 ---
 

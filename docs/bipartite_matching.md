@@ -1,5 +1,5 @@
 ---
-title: Bipartite Matching
+title: Bipartite Matching (二部マッチング)
 documentation_of: ../src/algorithm/matching/bipartite_matching.hpp
 ---
 

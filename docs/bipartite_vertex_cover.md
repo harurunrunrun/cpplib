@@ -1,5 +1,5 @@
 ---
-title: Bipartite Vertex / Independent / Edge Cover
+title: Bipartite Vertex Cover / Independent Set / Edge Cover (二部グラフの頂点被覆・独立集合・辺被覆)
 documentation_of: ../src/algorithm/matching/bipartite_vertex_cover.hpp
 ---
 

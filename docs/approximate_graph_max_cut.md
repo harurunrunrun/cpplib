@@ -1,5 +1,5 @@
 ---
-title: Random and Greedy Max-Cut
+title: Random and Greedy Max-Cut (ランダム法と貪欲法による最大カット)
 documentation_of: ../src/approximate/graph/max_cut.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Diff
+title: Diff (差分)
 documentation_of: ../src/algorithm/string/diff.hpp
 ---
 

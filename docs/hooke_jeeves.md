@@ -1,5 +1,5 @@
 ---
-title: Hooke–Jeeves法
+title: Hooke–Jeeves Method (Hooke–Jeeves法)
 documentation_of: ../src/approximate/optimization/hooke_jeeves.hpp
 ---
 

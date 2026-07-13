@@ -1,5 +1,5 @@
 ---
-title: Complement Shortest Path
+title: Complement Shortest Path (補グラフ最短路)
 documentation_of: ../src/algorithm/graph/complement_shortest_path.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Zip Unzip
+title: Zip Unzip (圧縮・展開)
 documentation_of: ../src/algorithm/other/zip_unzip.hpp
 ---
 

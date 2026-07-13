@@ -1,5 +1,5 @@
 ---
-title: Persistent Array
+title: Persistent Array (完全永続配列)
 documentation_of: ../src/structure/array/persistent_array.hpp
 ---
 

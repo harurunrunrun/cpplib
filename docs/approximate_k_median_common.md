@@ -1,5 +1,5 @@
 ---
-title: k-median共通API
+title: k-Median Common API (k-メディアン共通API)
 documentation_of: ../src/approximate/facility/common.hpp
 ---
 

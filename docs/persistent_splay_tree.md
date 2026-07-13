@@ -1,5 +1,5 @@
 ---
-title: Persistent Splay Tree
+title: Persistent Splay Tree (完全永続スプレー木)
 documentation_of: ../src/structure/bbst/persistent_splay_tree.hpp
 ---
 

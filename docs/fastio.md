@@ -1,5 +1,5 @@
 ---
-title: Fast IO
+title: Fast IO (高速入出力)
 documentation_of: ../src/structure/other/fastio.hpp
 ---
 

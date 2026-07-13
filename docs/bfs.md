@@ -1,5 +1,5 @@
 ---
-title: Breadth First Search
+title: Breadth First Search (幅優先探索)
 documentation_of: ../src/algorithm/graph/bfs.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Compact Genetic Algorithm
+title: Compact Genetic Algorithm (コンパクト遺伝的アルゴリズム)
 documentation_of: ../src/approximate/evolutionary/compact_genetic_algorithm.hpp
 ---
 

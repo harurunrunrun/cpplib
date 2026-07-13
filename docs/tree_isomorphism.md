@@ -1,5 +1,5 @@
 ---
-title: Tree Isomorphism
+title: Tree Isomorphism (木の同型判定)
 documentation_of: ../src/algorithm/tree/tree_isomorphism.hpp
 ---
 

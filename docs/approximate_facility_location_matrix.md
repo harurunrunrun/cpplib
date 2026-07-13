@@ -1,5 +1,5 @@
 ---
-title: 施設配置ヒューリスティック（距離行列API）
+title: Distance-Matrix Facility Location Heuristics (距離行列による施設配置ヒューリスティック)
 documentation_of: ../src/approximate/facility/facility_location.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Wildcard Pattern Matching
+title: Wildcard Pattern Matching (ワイルドカードパターンマッチング)
 documentation_of: ../src/algorithm/string/wildcard_pattern_matching.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Normalized Convex Polygon
+title: Normalized Convex Polygon (正規化凸多角形)
 documentation_of: ../src/algorithm/geometry/convex_calipers_common.hpp
 ---
 

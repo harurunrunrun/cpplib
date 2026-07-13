@@ -1,5 +1,5 @@
 ---
-title: Momentum法
+title: Momentum Method (モーメンタム法)
 documentation_of: ../src/approximate/optimization/momentum.hpp
 ---
 

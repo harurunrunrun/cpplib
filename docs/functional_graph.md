@@ -1,5 +1,5 @@
 ---
-title: Functional Graph
+title: Functional Graph (関数グラフ)
 documentation_of: ../src/algorithm/graph/functional_graph.hpp
 ---
 

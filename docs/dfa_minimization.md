@@ -1,5 +1,5 @@
 ---
-title: DFA Minimization (Hopcroft)
+title: DFA Minimization (Hopcroft) (DFA最小化)
 documentation_of: ../src/algorithm/string/dfa_minimization.hpp
 ---
 

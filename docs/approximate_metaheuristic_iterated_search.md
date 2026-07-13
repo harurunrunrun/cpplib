@@ -1,5 +1,5 @@
 ---
-title: Iterated and Variable Neighborhood Search
+title: Iterated Metaheuristic Search (反復型メタヒューリスティック探索)
 documentation_of: ../src/approximate/metaheuristic/iterated_search.hpp
 ---
 

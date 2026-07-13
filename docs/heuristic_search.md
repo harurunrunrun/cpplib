@@ -1,5 +1,5 @@
 ---
-title: Heuristic Search
+title: Heuristic Search (ヒューリスティック探索)
 documentation_of: ../src/approximate/search/heuristic_search.hpp
 ---
 

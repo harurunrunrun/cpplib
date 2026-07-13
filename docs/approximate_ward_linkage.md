@@ -1,5 +1,5 @@
 ---
-title: Ward Linkage Hierarchical Clustering
+title: Ward Linkage Hierarchical Clustering (Ward法階層クラスタリング)
 documentation_of: ../src/approximate/clustering/ward_linkage.hpp
 ---
 

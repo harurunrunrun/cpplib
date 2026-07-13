@@ -1,5 +1,5 @@
 ---
-title: Square Root Modulo a Prime
+title: Square Root Modulo a Prime (素数を法とする平方根)
 documentation_of: ../src/algorithm/math/sqrt_mod.hpp
 ---
 

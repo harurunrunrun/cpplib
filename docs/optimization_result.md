@@ -1,5 +1,5 @@
 ---
-title: 連続最適化の返却値
+title: Optimization Result (連続最適化の返却値)
 documentation_of: ../src/approximate/optimization/optimization_result.hpp
 ---
 

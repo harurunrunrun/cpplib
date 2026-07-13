@@ -1,5 +1,5 @@
 ---
-title: Persistent Trie
+title: Persistent Trie (完全永続トライ)
 documentation_of: ../src/structure/trie/persistent_trie.hpp
 ---
 

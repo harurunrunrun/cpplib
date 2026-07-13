@@ -1,5 +1,5 @@
 ---
-title: Manacher
+title: Manacher (Manacher法)
 documentation_of: ../src/algorithm/string/manacher.hpp
 ---
 

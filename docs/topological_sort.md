@@ -1,5 +1,5 @@
 ---
-title: Topological Sort
+title: Topological Sort (トポロジカルソート)
 documentation_of: ../src/algorithm/graph/topological_sort.hpp
 ---
 

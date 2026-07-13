@@ -1,5 +1,5 @@
 ---
-title: Random Hyperplane LSH
+title: Random Hyperplane LSH (ランダム超平面LSH)
 documentation_of: ../src/approximate/nearest_neighbor/random_hyperplane_lsh.hpp
 ---
 

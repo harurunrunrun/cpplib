@@ -1,5 +1,5 @@
 ---
-title: Binary Trie
+title: Binary Trie (二進トライ)
 documentation_of: ../src/structure/trie/binary_trie.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Deterministic Selection / Majority Vote
+title: Deterministic Selection / Majority Vote (決定的選択・多数決法)
 documentation_of: ../src/algorithm/other/selection.hpp
 ---
 

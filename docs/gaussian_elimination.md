@@ -1,5 +1,5 @@
 ---
-title: Gaussian Elimination
+title: Gaussian Elimination (ガウスの消去法)
 documentation_of: ../src/algorithm/math/gaussian_elimination.hpp
 ---
 

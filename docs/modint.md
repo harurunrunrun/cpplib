@@ -1,5 +1,5 @@
 ---
-title: Modint
+title: Modint (剰余整数)
 documentation_of: ../src/structure/modint/modint.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Rollback Segment Tree Beats
+title: Rollback Segment Tree Beats (ロールバック可能セグメント木Beats)
 documentation_of: ../src/structure/segtree/rollback_segtree_beats.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Convex Polygon Tangents from Point
+title: Convex Polygon Tangents from Point (点から凸多角形への接線)
 documentation_of: ../src/algorithm/geometry/convex_polygon_tangents.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Block-cut Tree
+title: Block-cut Tree (ブロックカット木)
 documentation_of: ../src/algorithm/graph/block_cut_tree.hpp
 ---
 

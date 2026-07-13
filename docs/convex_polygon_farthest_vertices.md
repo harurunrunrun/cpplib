@@ -1,5 +1,5 @@
 ---
-title: Convex Polygon Farthest Vertices
+title: Convex Polygon Farthest Vertices (凸多角形の最遠頂点)
 documentation_of: ../src/algorithm/geometry/convex_polygon_farthest_vertices.hpp
 ---
 

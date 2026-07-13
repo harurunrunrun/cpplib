@@ -1,5 +1,5 @@
 ---
-title: Geometry
+title: Geometry (二次元幾何)
 documentation_of: ../src/algorithm/geometry/geometry.hpp
 ---
 

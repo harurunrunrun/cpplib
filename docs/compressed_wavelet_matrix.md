@@ -1,5 +1,5 @@
 ---
-title: Compressed Wavelet Matrix
+title: Compressed Wavelet Matrix (座標圧縮ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/compressed_wavelet_matrix.hpp
 ---
 

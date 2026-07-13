@@ -1,5 +1,5 @@
 ---
-title: Disjoint Sparse Table
+title: Disjoint Sparse Table (分割スパーステーブル)
 documentation_of: ../src/structure/other/disjoint_sparse_table.hpp
 ---
 

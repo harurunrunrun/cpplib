@@ -1,5 +1,5 @@
 ---
-title: Cow Game
+title: Difference Constraints (牛ゲー・差分制約)
 documentation_of: ../src/algorithm/graph/cow_game.hpp
 ---
 

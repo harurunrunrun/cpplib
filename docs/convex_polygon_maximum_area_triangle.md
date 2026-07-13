@@ -1,5 +1,5 @@
 ---
-title: Convex Polygon Maximum Area Triangle
+title: Convex Polygon Maximum Area Triangle (凸多角形内の最大面積三角形)
 documentation_of: ../src/algorithm/geometry/convex_polygon_maximum_area_triangle.hpp
 ---
 

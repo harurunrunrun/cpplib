@@ -1,5 +1,5 @@
 ---
-title: Ford Fulkerson
+title: Ford Fulkerson (フォード・ファルカーソン法)
 documentation_of: ../src/algorithm/matching/ford_fulkerson.hpp
 ---
 

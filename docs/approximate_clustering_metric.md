@@ -1,5 +1,5 @@
 ---
-title: Metric k-center / Hierarchical clustering / Facility location
+title: Metric k-Center / Hierarchical Clustering / Facility Location (距離空間クラスタリング)
 documentation_of: ../src/approximate/clustering/metric_k_center.hpp
 ---
 

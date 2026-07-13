@@ -1,5 +1,5 @@
 ---
-title: Circle Polygon Intersection Area
+title: Circle Polygon Intersection Area (円と多角形の共通部分面積)
 documentation_of: ../src/algorithm/geometry/circle_polygon_intersection_area.hpp
 ---
 

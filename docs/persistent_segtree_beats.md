@@ -1,5 +1,5 @@
 ---
-title: Persistent Segment Tree Beats
+title: Persistent Segment Tree Beats (完全永続セグメント木Beats)
 documentation_of: ../src/structure/segtree/persistent_segtree_beats.hpp
 ---
 

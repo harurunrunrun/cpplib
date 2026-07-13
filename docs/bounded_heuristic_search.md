@@ -1,5 +1,5 @@
 ---
-title: Bounded Heuristic Search
+title: Bounded Heuristic Search (制限付きヒューリスティック探索)
 documentation_of: ../src/approximate/search/bounded_heuristic_search.hpp
 ---
 

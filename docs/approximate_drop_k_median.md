@@ -1,5 +1,5 @@
 ---
-title: DROP法によるk-median
+title: DROP k-Median (DROP法によるk-メディアン)
 documentation_of: ../src/approximate/facility/drop_k_median.hpp
 ---
 

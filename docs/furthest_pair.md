@@ -1,5 +1,5 @@
 ---
-title: Furthest Pair of Points
+title: Furthest Pair of Points (最遠点対)
 documentation_of: ../src/algorithm/geometry/furthest_pair.hpp
 ---
 

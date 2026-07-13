@@ -1,5 +1,5 @@
 ---
-title: Interval Set
+title: Interval Set (区間集合)
 documentation_of: ../src/algorithm/range/interval_set.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Fully Persistent 2D Segment Tree
+title: Fully Persistent 2D Segment Tree (完全永続二次元セグメント木)
 documentation_of: ../src/structure/segtree/persistent_segtree_2d.hpp
 ---
 

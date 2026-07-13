@@ -1,5 +1,5 @@
 ---
-title: Minimum Weight Unicyclic Matching
+title: Minimum-Weight Maximum Unicyclic Matching (単一閉路グラフの最小重み最大マッチング)
 documentation_of: ../src/algorithm/matching/minimum_weight_unicyclic_matching.hpp
 ---
 

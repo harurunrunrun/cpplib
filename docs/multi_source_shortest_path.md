@@ -1,5 +1,5 @@
 ---
-title: Multi Source Shortest Path
+title: Multi Source Shortest Path (多始点最短路)
 documentation_of: ../src/algorithm/graph/multi_source_shortest_path.hpp
 ---
 

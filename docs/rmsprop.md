@@ -1,5 +1,5 @@
 ---
-title: RMSProp
+title: RMSProp (RMSProp最適化)
 documentation_of: ../src/approximate/optimization/rmsprop.hpp
 ---
 

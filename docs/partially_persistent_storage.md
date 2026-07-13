@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Storage
+title: Partially Persistent Storage (部分永続ストレージ)
 documentation_of: ../src/structure/other/partially_persistent_storage.hpp
 ---
 

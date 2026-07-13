@@ -1,5 +1,5 @@
 ---
-title: Steiner Tree
+title: Steiner Tree (シュタイナー木)
 documentation_of: ../src/algorithm/graph/steiner_tree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Weighted Undirected Graph Input
+title: Weighted Undirected Edge Type and Input Rules (重み付き無向辺型と入力規則)
 documentation_of: ../src/approximate/graph/weighted_undirected_graph.hpp
 ---
 

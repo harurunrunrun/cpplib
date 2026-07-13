@@ -1,5 +1,5 @@
 ---
-title: Cuckoo Filter
+title: Cuckoo Filter (カッコウフィルタ)
 documentation_of: ../src/approximate/streaming/cuckoo_filter.hpp
 ---
 

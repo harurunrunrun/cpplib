@@ -1,5 +1,5 @@
 ---
-title: BIRCH-style Clustering Features
+title: BIRCH-Style Clustering Features (BIRCH型クラスタリング特徴量)
 documentation_of: ../src/approximate/clustering/birch_features.hpp
 ---
 

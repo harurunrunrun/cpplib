@@ -1,5 +1,5 @@
 ---
-title: Combinatorics
+title: Combinatorics (組合せ論)
 documentation_of: ../src/algorithm/math/combinatorics.hpp
 ---
 

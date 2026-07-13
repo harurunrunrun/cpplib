@@ -1,5 +1,5 @@
 ---
-title: Routing Insertion Heuristics
+title: Routing Construction and Insertion Heuristics (巡回路構築・挿入ヒューリスティック)
 documentation_of: ../src/approximate/routing/insertion_heuristics.hpp
 ---
 

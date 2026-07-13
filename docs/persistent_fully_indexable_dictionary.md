@@ -1,5 +1,5 @@
 ---
-title: Persistent Fully Indexable Dictionary
+title: Persistent Fully Indexable Dictionary (完全永続完備辞書)
 documentation_of: ../src/structure/wavelet_matrix/persistent_fully_indexable_dictionary.hpp
 ---
 

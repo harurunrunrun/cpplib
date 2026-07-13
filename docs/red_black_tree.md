@@ -1,5 +1,5 @@
 ---
-title: Red Black Tree
+title: Red Black Tree (赤黒木)
 documentation_of: ../src/structure/bbst/red_black_tree.hpp
 ---
 

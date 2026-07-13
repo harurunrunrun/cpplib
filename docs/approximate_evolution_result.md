@@ -1,5 +1,5 @@
 ---
-title: Evolution Result
+title: Evolution Result (進化計算の結果)
 documentation_of: ../src/approximate/evolutionary/evolution_result.hpp
 ---
 

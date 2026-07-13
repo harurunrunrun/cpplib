@@ -1,5 +1,5 @@
 ---
-title: Persistent Wavelet Matrix
+title: Persistent Wavelet Matrix (完全永続ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/persistent_wavelet_matrix.hpp
 ---
 

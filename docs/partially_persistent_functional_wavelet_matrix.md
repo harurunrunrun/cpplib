@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Functional Wavelet Matrix
+title: Partially Persistent Functional Wavelet Matrix (部分永続多機能ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/partially_persistent_functional_wavelet_matrix.hpp
 ---
 

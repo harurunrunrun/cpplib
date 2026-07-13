@@ -1,5 +1,5 @@
 ---
-title: Number Partitioning Heuristics
+title: Number Partitioning Heuristics (数分割ヒューリスティック)
 documentation_of: ../src/approximate/packing/number_partitioning.hpp
 ---
 

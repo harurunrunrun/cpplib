@@ -1,5 +1,5 @@
 ---
-title: Best-Bin-First KD-tree
+title: Best-Bin-First KD-Tree (最良ビン優先KD木)
 documentation_of: ../src/approximate/nearest_neighbor/best_bin_first_kd_tree.hpp
 ---
 

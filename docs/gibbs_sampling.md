@@ -1,5 +1,5 @@
 ---
-title: Gibbs Sampling
+title: Gibbs Sampling (ギブスサンプリング)
 documentation_of: ../src/approximate/randomized/gibbs_sampling.hpp
 ---
 

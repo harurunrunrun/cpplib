@@ -1,5 +1,5 @@
 ---
-title: Adversarial Game-Tree Search
+title: Adversarial Game-Tree Search (敵対ゲーム木探索)
 documentation_of: ../src/approximate/search/adversarial_search.hpp
 ---
 

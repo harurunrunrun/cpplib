@@ -1,5 +1,5 @@
 ---
-title: Rollback Weighted DSU
+title: Rollback Weighted DSU (ロールバック可能重み付き素集合データ構造)
 documentation_of: ../src/structure/dsu/rollback_weighted_dsu.hpp
 ---
 

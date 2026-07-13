@@ -1,5 +1,5 @@
 ---
-title: Douglas–Peucker法
+title: Douglas–Peucker Algorithm (Douglas–Peucker法)
 documentation_of: ../src/approximate/geometry/douglas_peucker.hpp
 ---
 

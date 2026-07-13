@@ -1,5 +1,5 @@
 ---
-title: Rollback Dynamic BitAssign RangeSum
+title: Rollback Dynamic BitAssign RangeSum (ロールバック可能動的ビット代入・区間和)
 documentation_of: ../src/structure/segtree/rollback_dynamic_bitassign_rangesum.hpp
 ---
 

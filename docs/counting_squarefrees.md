@@ -1,5 +1,5 @@
 ---
-title: Counting Square-free Integers
+title: Counting Square-free Integers (平方因子を持たない整数の数え上げ)
 documentation_of: ../src/algorithm/math/counting_squarefrees.hpp
 ---
 

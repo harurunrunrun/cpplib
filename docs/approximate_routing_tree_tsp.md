@@ -1,5 +1,5 @@
 ---
-title: Tree Based TSP Approximations
+title: Tree-Based TSP Approximations (木に基づく巡回セールスマン問題近似)
 documentation_of: ../src/approximate/routing/tree_tsp.hpp
 ---
 

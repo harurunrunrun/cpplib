@@ -1,5 +1,5 @@
 ---
-title: Unicyclic Matching
+title: Unicyclic Matching (単一閉路グラフのマッチング)
 documentation_of: ../src/algorithm/matching/unicyclic_matching.hpp
 ---
 

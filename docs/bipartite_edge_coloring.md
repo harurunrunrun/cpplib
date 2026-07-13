@@ -1,5 +1,5 @@
 ---
-title: Bipartite Edge Coloring
+title: Bipartite Edge Coloring (二部グラフの辺彩色)
 documentation_of: ../src/algorithm/graph/bipartite_edge_coloring.hpp
 ---
 

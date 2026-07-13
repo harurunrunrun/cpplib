@@ -1,5 +1,5 @@
 ---
-title: Persistent Leftist Heap
+title: Persistent Leftist Heap (完全永続左偏ヒープ)
 documentation_of: ../src/structure/heap/persistent_leftist_heap.hpp
 ---
 

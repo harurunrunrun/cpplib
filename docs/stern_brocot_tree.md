@@ -1,5 +1,5 @@
 ---
-title: Stern--Brocot Tree
+title: Stern–Brocot Tree (スターン・ブロコット木)
 documentation_of: ../src/algorithm/math/stern_brocot_tree.hpp
 ---
 

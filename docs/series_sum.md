@@ -1,5 +1,5 @@
 ---
-title: Series Sum
+title: Series Sum (数列和)
 documentation_of: ../src/algorithm/math/series_sum.hpp
 ---
 

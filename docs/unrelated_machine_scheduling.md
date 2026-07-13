@@ -1,5 +1,5 @@
 ---
-title: Unrelated-Machine Scheduling Heuristics
+title: Unrelated-Machine Scheduling Heuristics (無関連機械スケジューリングヒューリスティック)
 documentation_of: ../src/approximate/scheduling/unrelated_machine.hpp
 ---
 

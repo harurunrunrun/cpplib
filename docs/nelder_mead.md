@@ -1,5 +1,5 @@
 ---
-title: Nelder–Mead法
+title: Nelder–Mead Method (Nelder–Mead法)
 documentation_of: ../src/approximate/optimization/nelder_mead.hpp
 ---
 

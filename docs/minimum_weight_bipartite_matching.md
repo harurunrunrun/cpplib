@@ -1,5 +1,5 @@
 ---
-title: Minimum Weight Bipartite Matching
+title: Minimum-Weight Maximum-Cardinality Bipartite Matching (二部グラフの最小重み最大マッチング)
 documentation_of: ../src/algorithm/matching/minimum_weight_bipartite_matching.hpp
 ---
 

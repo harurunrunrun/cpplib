@@ -1,5 +1,5 @@
 ---
-title: Dynamic Wavelet Matrix
+title: Dynamic Wavelet Matrix (動的ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix.hpp
 ---
 

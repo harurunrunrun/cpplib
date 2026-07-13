@@ -1,5 +1,5 @@
 ---
-title: Kernighan-Lin Graph Partitioning
+title: Kernighan–Lin Graph Partitioning (Kernighan–Linグラフ分割)
 documentation_of: ../src/approximate/graph/kernighan_lin.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Minimum Steiner Tree with Edge Reconstruction
+title: Minimum Steiner Tree with Edge Reconstruction (辺復元付き最小シュタイナー木)
 documentation_of: ../src/algorithm/graph/minimum_steiner_tree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: KLL Sketch
+title: KLL Sketch (KLLスケッチ)
 documentation_of: ../src/approximate/streaming/kll_sketch.hpp
 ---
 

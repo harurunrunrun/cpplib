@@ -1,5 +1,5 @@
 ---
-title: Maximum Clique
+title: Maximum Clique (最大クリーク)
 documentation_of: ../src/algorithm/graph/maximum_clique.hpp
 ---
 

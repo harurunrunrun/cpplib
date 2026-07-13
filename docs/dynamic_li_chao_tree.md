@@ -1,5 +1,5 @@
 ---
-title: Dynamic Li Chao Tree
+title: Dynamic Li Chao Tree (動的Li Chao木)
 documentation_of: ../src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp
 ---
 

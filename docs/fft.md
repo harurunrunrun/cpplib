@@ -1,5 +1,5 @@
 ---
-title: FFT
+title: FFT (高速フーリエ変換)
 documentation_of: ../src/algorithm/fft/fft.hpp
 ---
 

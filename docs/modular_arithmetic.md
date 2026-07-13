@@ -1,5 +1,5 @@
 ---
-title: Modular Arithmetic
+title: Modular Arithmetic (剰余演算)
 documentation_of: ../src/algorithm/math/modular_arithmetic.hpp
 ---
 

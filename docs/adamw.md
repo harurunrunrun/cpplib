@@ -1,5 +1,5 @@
 ---
-title: AdamW
+title: AdamW (重み減衰付き適応モーメント推定)
 documentation_of: ../src/approximate/optimization/adamw.hpp
 ---
 

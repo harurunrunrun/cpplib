@@ -1,5 +1,5 @@
 ---
-title: Largest Rectangle in a Histogram
+title: Largest Rectangle in a Histogram (ヒストグラム最大長方形)
 documentation_of: ../src/algorithm/other/largest_rectangle_histogram.hpp
 ---
 

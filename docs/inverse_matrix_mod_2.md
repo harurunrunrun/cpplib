@@ -1,5 +1,5 @@
 ---
-title: Inverse Matrix (Mod 2)
+title: Inverse Matrix (Mod 2) (二元体上の逆行列)
 documentation_of: ../src/algorithm/math/inverse_matrix_mod_2.hpp
 ---
 

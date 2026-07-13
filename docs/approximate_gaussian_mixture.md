@@ -1,5 +1,5 @@
 ---
-title: Diagonal Gaussian Mixture EM
+title: Diagonal Gaussian Mixture EM (対角共分散ガウス混合モデルEM法)
 documentation_of: ../src/approximate/clustering/gaussian_mixture.hpp
 ---
 

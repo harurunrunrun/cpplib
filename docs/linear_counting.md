@@ -1,5 +1,5 @@
 ---
-title: Linear Counting
+title: Linear Counting (線形カウンティング)
 documentation_of: ../src/approximate/streaming/linear_counting.hpp
 ---
 

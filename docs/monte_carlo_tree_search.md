@@ -1,5 +1,5 @@
 ---
-title: Monte Carlo Tree Search
+title: Monte Carlo Tree Search (モンテカルロ木探索)
 documentation_of: ../src/approximate/search/monte_carlo_tree_search.hpp
 ---
 

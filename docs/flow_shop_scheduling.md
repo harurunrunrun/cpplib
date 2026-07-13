@@ -1,5 +1,5 @@
 ---
-title: Flow Shop Scheduling
+title: Flow-Shop Scheduling (フローショップスケジューリング)
 documentation_of: ../src/approximate/scheduling/flow_shop.hpp
 ---
 

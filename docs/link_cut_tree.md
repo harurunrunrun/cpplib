@@ -1,5 +1,5 @@
 ---
-title: Link Cut Tree
+title: Link Cut Tree (リンクカット木)
 documentation_of: ../src/structure/tree/link_cut_tree.hpp
 ---
 

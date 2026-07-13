@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Dynamic 2D Segment Tree
+title: Partially Persistent Dynamic 2D Segment Tree (部分永続動的二次元セグメント木)
 documentation_of: ../src/structure/segtree/partially_persistent_dynamic_segtree_2d.hpp
 ---
 

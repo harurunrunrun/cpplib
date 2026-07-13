@@ -1,5 +1,5 @@
 ---
-title: Linear Programming (Two-phase Simplex)
+title: Linear Programming (Two-phase Simplex) (線形計画法)
 documentation_of: ../src/algorithm/math/linear_programming.hpp
 ---
 

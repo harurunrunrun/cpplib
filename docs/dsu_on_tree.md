@@ -1,5 +1,5 @@
 ---
-title: DSU on Tree (Sack)
+title: DSU on Tree (Sack) (木上のDSU)
 documentation_of: ../src/algorithm/tree/dsu_on_tree.hpp
 ---
 

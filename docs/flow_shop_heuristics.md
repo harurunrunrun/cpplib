@@ -1,5 +1,5 @@
 ---
-title: Constructive Flow-Shop Heuristics
+title: Constructive Flow-Shop Heuristics (構築型フローショップヒューリスティック)
 documentation_of: ../src/approximate/scheduling/flow_shop_heuristics.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Source Zip
+title: Integer Array Encoding for Source Code (ソースコード埋め込み用整数配列圧縮)
 documentation_of: ../src/algorithm/other/source_zip.hpp
 ---
 

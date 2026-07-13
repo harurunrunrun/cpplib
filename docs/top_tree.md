@@ -1,5 +1,5 @@
 ---
-title: Top Tree
+title: Top Tree (トップ木)
 documentation_of: ../src/structure/tree/top_tree.hpp
 ---
 

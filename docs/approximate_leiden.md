@@ -1,5 +1,5 @@
 ---
-title: Leiden Community Detection
+title: Leiden Community Detection (Leidenコミュニティ検出)
 documentation_of: ../src/approximate/graph/leiden.hpp
 ---
 

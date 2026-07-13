@@ -1,5 +1,5 @@
 ---
-title: Island Model and Memetic Genetic Algorithm
+title: Island Model and Memetic Genetic Algorithm (島モデルとミーム型遺伝的アルゴリズム)
 documentation_of: ../src/approximate/evolutionary/hybrid_genetic_algorithm.hpp
 ---
 

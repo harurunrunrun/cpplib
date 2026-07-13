@@ -1,5 +1,5 @@
 ---
-title: Fully Indexable Dictionary
+title: Fully Indexable Dictionary (完備辞書)
 documentation_of: ../src/structure/wavelet_matrix/fully_indexable_dictionary.hpp
 ---
 

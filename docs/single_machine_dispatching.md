@@ -1,5 +1,5 @@
 ---
-title: Dynamic Single-Machine Dispatching Rules
+title: Dynamic Single-Machine Dispatching Rules (動的単一機械ディスパッチ規則)
 documentation_of: ../src/approximate/scheduling/single_machine_dispatching.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Randomized Minimum Cut
+title: Randomized Minimum Cut (乱択最小カット)
 documentation_of: ../src/approximate/randomized/randomized_min_cut.hpp
 ---
 

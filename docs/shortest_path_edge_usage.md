@@ -1,5 +1,5 @@
 ---
-title: Shortest Path Edge Usage
+title: Shortest Path Edge Usage (最短路での辺利用判定)
 documentation_of: ../src/algorithm/graph/shortest_path_edge_usage.hpp
 ---
 

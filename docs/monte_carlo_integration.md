@@ -1,5 +1,5 @@
 ---
-title: Monte Carlo Integration
+title: Monte Carlo Integration (モンテカルロ積分)
 documentation_of: ../src/approximate/randomized/monte_carlo_integration.hpp
 ---
 

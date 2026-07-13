@@ -1,5 +1,5 @@
 ---
-title: t-digest
+title: t-digest (tダイジェストによる分位点スケッチ)
 documentation_of: ../src/approximate/streaming/tdigest.hpp
 ---
 

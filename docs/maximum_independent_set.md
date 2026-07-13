@@ -1,5 +1,5 @@
 ---
-title: Maximum Independent Set
+title: Maximum Independent Set (最大独立集合)
 documentation_of: ../src/algorithm/graph/maximum_independent_set.hpp
 ---
 

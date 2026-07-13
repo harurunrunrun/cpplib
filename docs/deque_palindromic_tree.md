@@ -1,5 +1,5 @@
 ---
-title: Deque Palindromic Tree
+title: Deque Palindromic Tree (両端回文木)
 documentation_of: ../src/algorithm/string/deque_palindromic_tree.hpp
 ---
 

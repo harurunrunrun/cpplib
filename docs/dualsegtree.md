@@ -1,5 +1,5 @@
 ---
-title: Dual Segment Tree
+title: Dual Segment Tree (双対セグメント木)
 documentation_of: ../src/structure/segtree/dualsegtree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Hafnian
+title: Hafnian (ハフニアン)
 documentation_of: ../src/algorithm/math/hafnian.hpp
 ---
 

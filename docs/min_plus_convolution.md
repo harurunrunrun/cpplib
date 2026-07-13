@@ -1,5 +1,5 @@
 ---
-title: Min-Plus Convolution
+title: Min-Plus Convolution (最小加算畳み込み)
 documentation_of: ../src/algorithm/fft/min_plus_convolution.hpp
 ---
 

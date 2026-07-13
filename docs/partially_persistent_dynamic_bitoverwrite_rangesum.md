@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Dynamic BitOverwrite RangeSum
+title: Partially Persistent Dynamic BitOverwrite RangeSum (部分永続動的ビット上書き・区間和)
 documentation_of: ../src/structure/segtree/partially_persistent_dynamic_bitoverwrite_rangesum.hpp
 ---
 

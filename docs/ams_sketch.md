@@ -1,5 +1,5 @@
 ---
-title: AMS Sketch
+title: AMS Sketch (AMSスケッチ)
 documentation_of: ../src/approximate/streaming/ams_sketch.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Partition Function
+title: Partition Function (分割数)
 documentation_of: ../src/algorithm/math/partition_function.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Clustering common types and Euclidean distances
+title: Clustering Common Types and Euclidean Distances (クラスタリング共通型とユークリッド距離)
 documentation_of: ../src/approximate/clustering/common.hpp
 ---
 

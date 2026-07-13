@@ -1,5 +1,5 @@
 ---
-title: Persistent Reversible Splay Tree
+title: Persistent Reversible Splay Tree (完全永続反転可能スプレー木)
 documentation_of: ../src/structure/bbst/persistent_reversible_splay_tree.hpp
 ---
 

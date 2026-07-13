@@ -1,5 +1,5 @@
 ---
-title: Persistent Dynamic Lazy Segment Tree
+title: Persistent Dynamic Lazy Segment Tree (完全永続動的遅延セグメント木)
 documentation_of: ../src/structure/segtree/persistent_dynamic_lazysegtree.hpp
 ---
 

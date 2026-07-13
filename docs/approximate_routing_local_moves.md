@@ -1,5 +1,5 @@
 ---
-title: Routing Local Search Moves
+title: Routing Local Search Moves (巡回路局所探索近傍)
 documentation_of: ../src/approximate/routing/local_moves.hpp
 ---
 

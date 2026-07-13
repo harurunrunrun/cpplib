@@ -1,5 +1,5 @@
 ---
-title: 座標降下法
+title: Coordinate Descent (座標降下法)
 documentation_of: ../src/approximate/optimization/coordinate_descent.hpp
 ---
 

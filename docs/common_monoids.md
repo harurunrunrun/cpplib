@@ -1,5 +1,5 @@
 ---
-title: Common Monoids
+title: Common Monoids (代表的なモノイド)
 documentation_of: ../src/structure/types/common_monoids.hpp
 ---
 

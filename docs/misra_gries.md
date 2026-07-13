@@ -1,5 +1,5 @@
 ---
-title: Misra-Gries
+title: Misra–Gries Algorithm (Misra–Griesアルゴリズム)
 documentation_of: ../src/approximate/streaming/misra_gries.hpp
 ---
 

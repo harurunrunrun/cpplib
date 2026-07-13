@@ -1,5 +1,5 @@
 ---
-title: Three-Edge-Connected Components
+title: Three-Edge-Connected Components (三辺連結成分分解)
 documentation_of: ../src/algorithm/graph/three_edge_connected_components.hpp
 ---
 

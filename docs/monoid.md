@@ -1,5 +1,5 @@
 ---
-title: Monoid
+title: Monoid (モノイド)
 documentation_of: ../src/structure/types/monoid.hpp
 ---
 

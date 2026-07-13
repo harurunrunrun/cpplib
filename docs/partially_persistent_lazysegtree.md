@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent Lazy Segment Tree
+title: Partially Persistent Lazy Segment Tree (部分永続遅延セグメント木)
 documentation_of: ../src/structure/segtree/partially_persistent_lazysegtree.hpp
 ---
 

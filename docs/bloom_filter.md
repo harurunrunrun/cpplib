@@ -1,5 +1,5 @@
 ---
-title: Bloom Filter
+title: Bloom Filter (ブルームフィルタ)
 documentation_of: ../src/approximate/streaming/bloom_filter.hpp
 ---
 

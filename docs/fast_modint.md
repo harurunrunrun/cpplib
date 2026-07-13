@@ -1,5 +1,5 @@
 ---
-title: Fast Modint
+title: Fast Modint (高速剰余整数)
 documentation_of: ../src/structure/modint/fast_modint.hpp
 ---
 

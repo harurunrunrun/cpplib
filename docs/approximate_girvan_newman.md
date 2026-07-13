@@ -1,5 +1,5 @@
 ---
-title: Girvan-Newman Community Detection
+title: Girvan–Newman Community Detection (Girvan–Newmanコミュニティ検出)
 documentation_of: ../src/approximate/graph/girvan_newman.hpp
 ---
 

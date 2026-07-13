@@ -1,5 +1,5 @@
 ---
-title: Integer Set
+title: Integer Set (整数集合)
 documentation_of: ../src/structure/tree/integer_set.hpp
 ---
 

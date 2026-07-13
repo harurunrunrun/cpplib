@@ -1,5 +1,5 @@
 ---
-title: DBSCAN / Mean Shift
+title: DBSCAN / Mean Shift (密度ベースクラスタリング)
 documentation_of: ../src/approximate/clustering/density_clustering.hpp
 ---
 

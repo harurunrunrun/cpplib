@@ -1,5 +1,5 @@
 ---
-title: Edge Count Disjoint Set Union
+title: Edge Count Disjoint Set Union (辺数付き素集合データ構造)
 documentation_of: ../src/structure/dsu/edge_count_dsu.hpp
 ---
 

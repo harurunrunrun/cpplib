@@ -1,5 +1,5 @@
 ---
-title: Polynomial Discrete Sum
+title: Polynomial Discrete Sum (多項式の離散和)
 documentation_of: ../src/algorithm/math/polynomial_discrete_sum.hpp
 ---
 

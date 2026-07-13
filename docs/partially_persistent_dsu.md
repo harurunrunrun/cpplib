@@ -1,5 +1,5 @@
 ---
-title: Partially Persistent DSU
+title: Partially Persistent DSU (部分永続素集合データ構造)
 documentation_of: ../src/structure/dsu/partially_persistent_dsu.hpp
 ---
 

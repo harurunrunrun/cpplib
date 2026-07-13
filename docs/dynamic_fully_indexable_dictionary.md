@@ -1,5 +1,5 @@
 ---
-title: Dynamic Fully Indexable Dictionary
+title: Dynamic Fully Indexable Dictionary (動的完備辞書)
 documentation_of: ../src/structure/wavelet_matrix/dynamic_fully_indexable_dictionary.hpp
 ---
 

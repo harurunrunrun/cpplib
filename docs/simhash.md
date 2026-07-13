@@ -1,5 +1,5 @@
 ---
-title: SimHash
+title: SimHash (類似度ハッシュ)
 documentation_of: ../src/approximate/streaming/simhash.hpp
 ---
 

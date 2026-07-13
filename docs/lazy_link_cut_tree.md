@@ -1,5 +1,5 @@
 ---
-title: Lazy Link Cut Tree
+title: Lazy Link Cut Tree (遅延リンクカット木)
 documentation_of: ../src/structure/tree/lazy_link_cut_tree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 0/1 Knapsack Approximation
+title: 0/1 Knapsack Heuristics and FPTAS (0/1ナップサックのヒューリスティックとFPTAS)
 documentation_of: ../src/approximate/dp/knapsack.hpp
 ---
 

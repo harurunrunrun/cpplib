@@ -1,5 +1,5 @@
 ---
-title: Sqrt Tree
+title: Sqrt Tree (平方根木)
 documentation_of: ../src/structure/other/sqrt_tree.hpp
 ---
 

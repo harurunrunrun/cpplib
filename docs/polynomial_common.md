@@ -1,5 +1,5 @@
 ---
-title: Polynomial Common Operations
+title: Polynomial Common Operations (多項式の基本演算)
 documentation_of: ../src/algorithm/math/polynomial_common.hpp
 ---
 

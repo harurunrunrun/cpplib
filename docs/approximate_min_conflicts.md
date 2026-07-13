@@ -1,5 +1,5 @@
 ---
-title: Min-Conflicts for Finite-Domain CSP
+title: Min-Conflicts for Finite-Domain CSP (有限領域制約充足の最小衝突法)
 documentation_of: ../src/approximate/constraint/min_conflicts.hpp
 ---
 

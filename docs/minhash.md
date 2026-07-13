@@ -1,5 +1,5 @@
 ---
-title: MinHash
+title: MinHash (最小ハッシュ)
 documentation_of: ../src/approximate/streaming/minhash.hpp
 ---
 

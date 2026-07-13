@@ -1,5 +1,5 @@
 ---
-title: Intersection of F2 Vector Spaces
+title: Intersection of F2 Vector Spaces (二元体ベクトル空間の共通部分)
 documentation_of: ../src/algorithm/math/intersection_of_f2_vector_spaces.hpp
 ---
 

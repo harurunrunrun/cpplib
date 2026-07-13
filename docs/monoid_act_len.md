@@ -1,5 +1,5 @@
 ---
-title: Monoid (作用素・長さ付き)
+title: Monoid (作用素付き・長さ付き)
 documentation_of: ../src/structure/types/monoid_act_len.hpp
 ---
 

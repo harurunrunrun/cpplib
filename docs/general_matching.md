@@ -1,5 +1,5 @@
 ---
-title: General Matching
+title: General Matching (一般グラフのマッチング)
 documentation_of: ../src/algorithm/matching/general_matching.hpp
 ---
 

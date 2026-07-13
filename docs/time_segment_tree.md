@@ -1,5 +1,5 @@
 ---
-title: Time Segment Tree (Offline Interval Events)
+title: Time Segment Tree (Offline Interval Events) (時間セグメント木)
 documentation_of: ../src/algorithm/other/time_segment_tree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: ExponentiableModint
+title: Exponent-Tower Modint (累乗塔対応剰余整数)
 documentation_of: ../src/structure/modint/exponentiable_modint.hpp
 ---
 

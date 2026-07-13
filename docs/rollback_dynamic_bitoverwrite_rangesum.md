@@ -1,5 +1,5 @@
 ---
-title: Rollback Dynamic BitOverwrite RangeSum
+title: Rollback Dynamic BitOverwrite RangeSum (ロールバック可能動的ビット上書き・区間和)
 documentation_of: ../src/structure/segtree/rollback_dynamic_bitoverwrite_rangesum.hpp
 ---
 

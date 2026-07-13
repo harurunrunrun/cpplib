@@ -1,5 +1,5 @@
 ---
-title: Bernoulli Number
+title: Bernoulli Number (ベルヌーイ数)
 documentation_of: ../src/algorithm/math/bernoulli_number.hpp
 ---
 

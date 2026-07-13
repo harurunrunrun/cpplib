@@ -1,5 +1,5 @@
 ---
-title: Chinese Whispers Community Detection
+title: Chinese Whispers Community Detection (Chinese Whispersコミュニティ検出)
 documentation_of: ../src/approximate/graph/chinese_whispers.hpp
 ---
 

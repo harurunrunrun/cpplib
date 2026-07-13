@@ -1,5 +1,5 @@
 ---
-title: Persistent Rectangle Sum
+title: Persistent Rectangle Sum (完全永続長方形和)
 documentation_of: ../src/structure/wavelet_matrix/persistent_rectangle_sum.hpp
 ---
 

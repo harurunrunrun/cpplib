@@ -1,5 +1,5 @@
 ---
-title: Dominator Tree
+title: Dominator Tree (支配木)
 documentation_of: ../src/algorithm/graph/dominator_tree.hpp
 ---
 

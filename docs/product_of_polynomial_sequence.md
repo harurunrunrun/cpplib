@@ -1,5 +1,5 @@
 ---
-title: Product of Polynomial Sequence
+title: Product of Polynomial Sequence (多項式列の積)
 documentation_of: ../src/algorithm/math/polynomial_product.hpp
 ---
 

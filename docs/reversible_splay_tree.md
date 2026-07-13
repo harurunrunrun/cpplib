@@ -1,5 +1,5 @@
 ---
-title: Reversible Splay Tree
+title: Reversible Splay Tree (反転可能スプレー木)
 documentation_of: ../src/structure/bbst/reversible_splay_tree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Fiduccia-Mattheyses Graph Partitioning
+title: Fiduccia–Mattheyses Graph Partitioning (Fiduccia–Mattheysesグラフ分割)
 documentation_of: ../src/approximate/graph/fiduccia_mattheyses.hpp
 ---
 

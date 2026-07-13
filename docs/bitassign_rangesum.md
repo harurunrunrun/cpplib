@@ -1,5 +1,5 @@
 ---
-title: BitAssign RangeSum
+title: BitAssign RangeSum (ビット代入・区間和)
 documentation_of: ../src/structure/segtree/bitassign_rangesum.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Matrix Product (Mod 2)
+title: Matrix Product (Mod 2) (二元体上の行列積)
 documentation_of: ../src/algorithm/math/matrix_product_mod_2.hpp
 ---
 

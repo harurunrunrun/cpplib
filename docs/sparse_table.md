@@ -1,5 +1,5 @@
 ---
-title: Sparse Table
+title: Sparse Table (スパーステーブル)
 documentation_of: ../src/structure/other/sparse_table.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Monotone Queue
+title: Monotone Queue (単調キュー)
 documentation_of: ../src/structure/other/monotone_queue.hpp
 ---
 

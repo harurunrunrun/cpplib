@@ -1,5 +1,5 @@
 ---
-title: Teitz–Bart法
+title: Teitz–Bart k-Median (Teitz–Bart法によるk-メディアン)
 documentation_of: ../src/approximate/facility/teitz_bart.hpp
 ---
 

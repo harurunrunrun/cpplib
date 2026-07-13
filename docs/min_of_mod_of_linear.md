@@ -1,5 +1,5 @@
 ---
-title: Min of Mod of Linear
+title: Minimum of a Linear Function Modulo m (一次式の剰余の最小値)
 documentation_of: ../src/algorithm/math/min_of_mod_of_linear.hpp
 ---
 

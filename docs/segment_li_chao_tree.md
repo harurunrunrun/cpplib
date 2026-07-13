@@ -1,5 +1,5 @@
 ---
-title: Segment Li Chao Tree
+title: Segment Li Chao Tree (線分Li Chao木)
 documentation_of: ../src/structure/convex_hull_trick/segment_li_chao_tree.hpp
 ---
 

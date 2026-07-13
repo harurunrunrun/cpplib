@@ -1,5 +1,5 @@
 ---
-title: Three Sat
+title: 3-SAT (3充足可能性問題)
 documentation_of: ../src/algorithm/graph/three_sat.hpp
 ---
 

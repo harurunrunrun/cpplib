@@ -1,5 +1,5 @@
 ---
-title: Trie
+title: Trie (トライ)
 documentation_of: ../src/structure/trie/trie.hpp
 ---
 

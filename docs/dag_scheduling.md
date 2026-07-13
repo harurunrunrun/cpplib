@@ -1,5 +1,5 @@
 ---
-title: DAG・異種プロセッサスケジューリング
+title: DAG Heterogeneous-Processor Scheduling (DAG異種プロセッサスケジューリング)
 documentation_of: ../src/approximate/scheduling/dag_scheduling.hpp
 ---
 

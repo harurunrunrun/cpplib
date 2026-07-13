@@ -1,5 +1,5 @@
 ---
-title: Lowlink
+title: Lowlink (Lowlink法)
 documentation_of: ../src/algorithm/graph/lowlink.hpp
 ---
 

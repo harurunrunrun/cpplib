@@ -1,5 +1,5 @@
 ---
-title: Rollback DSU
+title: Rollback DSU (ロールバック可能素集合データ構造)
 documentation_of: ../src/structure/dsu/rollback_dsu.hpp
 ---
 

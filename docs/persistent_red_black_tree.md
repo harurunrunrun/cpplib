@@ -1,5 +1,5 @@
 ---
-title: Persistent Red Black Tree
+title: Persistent Red Black Tree (完全永続赤黒木)
 documentation_of: ../src/structure/bbst/persistent_red_black_tree.hpp
 ---
 

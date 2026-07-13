@@ -1,5 +1,5 @@
 ---
-title: Approximate Graph Coloring
+title: Graph Coloring Heuristics (グラフ彩色ヒューリスティック)
 documentation_of: ../src/approximate/graph/coloring.hpp
 ---
 

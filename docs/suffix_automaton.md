@@ -1,5 +1,5 @@
 ---
-title: Suffix Automaton
+title: Suffix Automaton (接尾辞オートマトン)
 documentation_of: ../src/algorithm/string/suffix_automaton.hpp
 ---
 

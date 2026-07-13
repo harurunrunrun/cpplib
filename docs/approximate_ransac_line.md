@@ -1,5 +1,5 @@
 ---
-title: RANSACによる直線推定
+title: 2D RANSAC Line Fitting (2次元RANSAC直線推定)
 documentation_of: ../src/approximate/geometry/ransac_line.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Strongly Connected Components
+title: Strongly Connected Components (強連結成分分解)
 documentation_of: ../src/algorithm/graph/strongly_connected_components.hpp
 ---
 

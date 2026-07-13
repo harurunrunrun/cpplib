@@ -1,5 +1,5 @@
 ---
-title: Assignment Problem
+title: Assignment Problem (割当問題)
 documentation_of: ../src/algorithm/matching/assignment.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Weighted Community Detection Common API
+title: Weighted Community Detection Common API (重み付きコミュニティ検出共通API)
 documentation_of: ../src/approximate/graph/community_detection.hpp
 ---
 

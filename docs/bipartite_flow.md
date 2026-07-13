@@ -1,5 +1,5 @@
 ---
-title: Bipartite Flow
+title: Bipartite Flow (二部グラフフロー)
 documentation_of: ../src/algorithm/matching/bipartite_flow.hpp
 ---
 

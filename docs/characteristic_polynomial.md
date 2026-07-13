@@ -1,5 +1,5 @@
 ---
-title: Characteristic Polynomial
+title: Characteristic Polynomial (特性多項式)
 documentation_of: ../src/algorithm/math/characteristic_polynomial.hpp
 ---
 

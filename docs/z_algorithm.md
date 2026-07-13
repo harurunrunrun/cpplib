@@ -1,5 +1,5 @@
 ---
-title: Z Algorithm
+title: Z Algorithm (Zアルゴリズム)
 documentation_of: ../src/algorithm/string/z_algorithm.hpp
 ---
 

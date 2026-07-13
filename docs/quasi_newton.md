@@ -1,5 +1,5 @@
 ---
-title: BFGS・L-BFGS
+title: BFGS / L-BFGS (準ニュートン法)
 documentation_of: ../src/approximate/optimization/quasi_newton.hpp
 ---
 

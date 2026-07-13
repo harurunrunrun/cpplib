@@ -1,5 +1,5 @@
 ---
-title: Count Points in Triangles
+title: Count Points in Triangles (三角形内の点数え上げ)
 documentation_of: ../src/algorithm/geometry/count_points_in_triangles.hpp
 ---
 

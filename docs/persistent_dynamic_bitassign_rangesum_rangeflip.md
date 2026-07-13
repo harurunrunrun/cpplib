@@ -1,5 +1,5 @@
 ---
-title: Persistent Dynamic BitAssign RangeSum RangeFlip
+title: Persistent Dynamic BitAssign RangeSum RangeFlip (完全永続動的ビット代入・区間和・区間反転)
 documentation_of: ../src/structure/segtree/persistent_dynamic_bitassign_rangesum_rangeflip.hpp
 ---
 

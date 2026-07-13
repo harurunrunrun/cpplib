@@ -1,5 +1,5 @@
 ---
-title: Count Sketch
+title: Count Sketch (Countスケッチ)
 documentation_of: ../src/approximate/streaming/count_sketch.hpp
 ---
 

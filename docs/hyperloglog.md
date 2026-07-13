@@ -1,5 +1,5 @@
 ---
-title: HyperLogLog
+title: HyperLogLog (基数推定)
 documentation_of: ../src/approximate/streaming/hyperloglog.hpp
 ---
 

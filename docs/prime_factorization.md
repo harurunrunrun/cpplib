@@ -1,5 +1,5 @@
 ---
-title: Prime Factorization
+title: Prime Factorization (素因数分解)
 documentation_of: ../src/algorithm/math/prime_factorization.hpp
 ---
 

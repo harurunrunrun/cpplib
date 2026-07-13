@@ -1,5 +1,5 @@
 ---
-title: Rollback Dynamic 2D Segment Tree
+title: Rollback Dynamic 2D Segment Tree (ロールバック可能動的二次元セグメント木)
 documentation_of: ../src/structure/segtree/rollback_dynamic_segtree_2d.hpp
 ---
 

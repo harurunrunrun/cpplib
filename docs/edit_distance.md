@@ -1,5 +1,5 @@
 ---
-title: Edit Distance
+title: Edit Distance (編集距離)
 documentation_of: ../src/algorithm/string/edit_distance.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Rollback 2D Segment Tree
+title: Rollback 2D Segment Tree (ロールバック可能二次元セグメント木)
 documentation_of: ../src/structure/segtree/rollback_segtree_2d.hpp
 ---
 

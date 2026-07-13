@@ -1,5 +1,5 @@
 ---
-title: Greedy Set Cover
+title: Greedy Set Cover (貪欲集合被覆)
 documentation_of: ../src/approximate/set_cover/greedy_set_cover.hpp
 ---
 

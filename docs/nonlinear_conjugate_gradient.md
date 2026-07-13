@@ -1,5 +1,5 @@
 ---
-title: 非線形共役勾配法（Polak–Ribiere+）
+title: Nonlinear Conjugate Gradient (Polak–Ribiere+) (非線形共役勾配法)
 documentation_of: ../src/approximate/optimization/nonlinear_conjugate_gradient.hpp
 ---
 

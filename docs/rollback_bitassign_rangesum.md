@@ -1,5 +1,5 @@
 ---
-title: Rollback BitAssign RangeSum
+title: Rollback BitAssign RangeSum (ロールバック可能ビット代入・区間和)
 documentation_of: ../src/structure/segtree/rollback_bitassign_rangesum.hpp
 ---
 

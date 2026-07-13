@@ -1,5 +1,5 @@
 ---
-title: Persistent Wide Segtree
+title: Persistent Wide Segtree (完全永続ワイドセグメント木)
 documentation_of: ../src/structure/segtree/persistent_widesegtree.hpp
 ---
 

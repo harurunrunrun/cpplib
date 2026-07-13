@@ -1,5 +1,5 @@
 ---
-title: Convex Polygon Diameter
+title: Convex Polygon Diameter (凸多角形の直径)
 documentation_of: ../src/algorithm/geometry/convex_polygon_diameter.hpp
 ---
 

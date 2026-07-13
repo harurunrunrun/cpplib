@@ -1,5 +1,5 @@
 ---
-title: Discrete Log
+title: Discrete Log (離散対数)
 documentation_of: ../src/algorithm/math/discrete_log.hpp
 ---
 

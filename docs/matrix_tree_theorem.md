@@ -1,5 +1,5 @@
 ---
-title: Matrix-Tree Theorem
+title: Matrix-Tree Theorem (行列木定理)
 documentation_of: ../src/algorithm/graph/matrix_tree_theorem.hpp
 ---
 

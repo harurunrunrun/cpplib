@@ -1,5 +1,5 @@
 ---
-title: Cycle Detection
+title: Cycle Detection (閉路検出)
 documentation_of: ../src/algorithm/graph/cycle_detection.hpp
 ---
 

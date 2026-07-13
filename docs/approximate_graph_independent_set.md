@@ -1,5 +1,5 @@
 ---
-title: Greedy Independent Set
+title: Greedy Independent Set (貪欲独立集合)
 documentation_of: ../src/approximate/graph/independent_set.hpp
 ---
 

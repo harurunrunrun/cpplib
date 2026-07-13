@@ -1,5 +1,5 @@
 ---
-title: Sparse Formal Power Series
+title: Sparse Formal Power Series (疎な形式的冪級数)
 documentation_of: ../src/algorithm/fft/sparse_formal_power_series.hpp
 ---
 

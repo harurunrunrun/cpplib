@@ -1,5 +1,5 @@
 ---
-title: GSAT, WalkSAT, and ProbSAT
+title: GSAT / WalkSAT / ProbSAT (SAT局所探索)
 documentation_of: ../src/approximate/constraint/sat_local_search.hpp
 ---
 

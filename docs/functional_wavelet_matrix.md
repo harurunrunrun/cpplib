@@ -1,5 +1,5 @@
 ---
-title: Functional Wavelet Matrix
+title: Functional Wavelet Matrix (多機能ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/functional_wavelet_matrix.hpp
 ---
 

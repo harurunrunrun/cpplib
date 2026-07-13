@@ -1,5 +1,5 @@
 ---
-title: Differential Evolution
+title: Differential Evolution (差分進化法)
 documentation_of: ../src/approximate/evolutionary/differential_evolution.hpp
 ---
 

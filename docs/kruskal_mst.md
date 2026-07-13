@@ -1,5 +1,5 @@
 ---
-title: Kruskal MST
+title: Kruskal MST (クラスカル法)
 documentation_of: ../src/algorithm/graph/kruskal_mst.hpp
 ---
 

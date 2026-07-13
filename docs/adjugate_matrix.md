@@ -1,5 +1,5 @@
 ---
-title: Adjugate Matrix
+title: Adjugate Matrix (余因子行列)
 documentation_of: ../src/algorithm/math/adjugate_matrix.hpp
 ---
 

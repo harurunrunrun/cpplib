@@ -1,5 +1,5 @@
 ---
-title: Genetic Algorithm
+title: Genetic Algorithm (遺伝的アルゴリズム)
 documentation_of: ../src/approximate/evolutionary/genetic_algorithm.hpp
 ---
 

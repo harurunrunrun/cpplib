@@ -1,5 +1,5 @@
 ---
-title: Subset Convolution
+title: Subset Convolution (部分集合畳み込み)
 documentation_of: ../src/algorithm/math/subset_convolution.hpp
 ---
 

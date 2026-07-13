@@ -1,5 +1,5 @@
 ---
-title: Powell方向集合法
+title: Powell's Direction Set Method (Powell方向集合法)
 documentation_of: ../src/approximate/optimization/powell.hpp
 ---
 

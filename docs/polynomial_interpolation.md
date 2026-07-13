@@ -1,5 +1,5 @@
 ---
-title: Polynomial Interpolation
+title: Polynomial Interpolation (多項式補間)
 documentation_of: ../src/algorithm/math/polynomial_interpolation.hpp
 ---
 

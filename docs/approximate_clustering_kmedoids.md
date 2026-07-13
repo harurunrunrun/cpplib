@@ -1,5 +1,5 @@
 ---
-title: PAM / CLARA / CLARANS k-medoids
+title: PAM / CLARA / CLARANS k-Medoids (kメドイド法)
 documentation_of: ../src/approximate/clustering/kmedoids.hpp
 ---
 

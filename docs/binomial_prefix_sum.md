@@ -1,5 +1,5 @@
 ---
-title: Binomial Prefix Sum
+title: Binomial Prefix Sum (二項係数累積和)
 documentation_of: ../src/algorithm/math/binomial_prefix_sum.hpp
 ---
 

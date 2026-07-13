@@ -1,5 +1,5 @@
 ---
-title: Two-Dimensional Rectangle Packing Heuristics
+title: Two-Dimensional Rectangle Packing Heuristics (二次元長方形詰め込みヒューリスティック)
 documentation_of: ../src/approximate/packing/rectangle_packing.hpp
 ---
 

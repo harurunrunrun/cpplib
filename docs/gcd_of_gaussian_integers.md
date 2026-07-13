@@ -1,5 +1,5 @@
 ---
-title: GCD of Gaussian Integers
+title: GCD of Gaussian Integers (ガウス整数の最大公約数)
 documentation_of: ../src/algorithm/math/gaussian_integer.hpp
 ---
 

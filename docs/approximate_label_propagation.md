@@ -1,5 +1,5 @@
 ---
-title: Label Propagation Community Detection
+title: Label Propagation Community Detection (ラベル伝播コミュニティ検出)
 documentation_of: ../src/approximate/graph/label_propagation.hpp
 ---
 

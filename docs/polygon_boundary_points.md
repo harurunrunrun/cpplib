@@ -1,5 +1,5 @@
 ---
-title: Polygon Boundary Points
+title: Polygon Boundary Points (多角形の辺上の点列挙)
 documentation_of: ../src/algorithm/geometry/polygon_boundary_points.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: CNF Formula
+title: CNF Formula (連言標準形論理式)
 documentation_of: ../src/approximate/constraint/cnf.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Greedy Dominating Set
+title: Greedy Dominating Set (貪欲支配集合)
 documentation_of: ../src/approximate/graph/dominating_set.hpp
 ---
 

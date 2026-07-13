@@ -1,5 +1,5 @@
 ---
-title: K-th Shortest Path
+title: K-th Shortest Path (K番目最短路)
 documentation_of: ../src/algorithm/graph/kth_shortest_path.hpp
 ---
 

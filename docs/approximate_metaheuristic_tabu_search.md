@@ -1,5 +1,5 @@
 ---
-title: Tabu Search
+title: Tabu Search (タブー探索)
 documentation_of: ../src/approximate/metaheuristic/tabu_search.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Routing Tour Cost
+title: Routing Tour and Path Cost (巡回路・経路コスト)
 documentation_of: ../src/approximate/routing/tour_cost.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Local Search k-Median
+title: Local Search k-Median (局所探索k-メディアン)
 documentation_of: ../src/approximate/facility/local_search_k_median.hpp
 ---
 

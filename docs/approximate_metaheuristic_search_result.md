@@ -1,5 +1,5 @@
 ---
-title: Metaheuristic Search Result
+title: Metaheuristic Search Result (メタヒューリスティック探索結果)
 documentation_of: ../src/approximate/metaheuristic/search_result.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Undirected Chinese Postman
+title: Undirected Chinese Postman (無向中国人郵便配達問題)
 documentation_of: ../src/algorithm/graph/chinese_postman.hpp
 ---
 

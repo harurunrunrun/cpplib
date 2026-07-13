@@ -1,5 +1,5 @@
 ---
-title: Parallel Machine List Scheduling
+title: Parallel Machine List Scheduling (並列機械リストスケジューリング)
 documentation_of: ../src/approximate/scheduling/parallel_machine.hpp
 ---
 

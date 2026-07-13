@@ -1,5 +1,5 @@
 ---
-title: Splay Tree
+title: Splay Tree (スプレー木)
 documentation_of: ../src/structure/bbst/splay_tree.hpp
 ---
 

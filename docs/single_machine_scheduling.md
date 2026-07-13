@@ -1,5 +1,5 @@
 ---
-title: Single Machine Scheduling Orders
+title: Single-Machine Scheduling Orders (単一機械スケジューリング順序)
 documentation_of: ../src/approximate/scheduling/single_machine.hpp
 ---
 

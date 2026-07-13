@@ -1,5 +1,5 @@
 ---
-title: Vertex Substitution法
+title: Vertex Substitution k-Median (頂点置換法によるk-メディアン)
 documentation_of: ../src/approximate/facility/vertex_substitution.hpp
 ---
 

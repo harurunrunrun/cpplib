@@ -1,5 +1,5 @@
 ---
-title: Dynamic Functional Wavelet Matrix
+title: Dynamic Functional Wavelet Matrix (動的多機能ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/dynamic_functional_wavelet_matrix.hpp
 ---
 

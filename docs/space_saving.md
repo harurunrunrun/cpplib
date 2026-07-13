@@ -1,5 +1,5 @@
 ---
-title: Space-Saving
+title: Space-Saving (頻出要素推定)
 documentation_of: ../src/approximate/streaming/space_saving.hpp
 ---
 

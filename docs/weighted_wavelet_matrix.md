@@ -1,5 +1,5 @@
 ---
-title: Weighted Wavelet Matrix
+title: Weighted Wavelet Matrix (重み付きウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/weighted_wavelet_matrix.hpp
 ---
 

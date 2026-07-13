@@ -1,5 +1,5 @@
 ---
-title: Persistent Weighted Wavelet Matrix
+title: Persistent Weighted Wavelet Matrix (完全永続重み付きウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/persistent_weighted_wavelet_matrix.hpp
 ---
 

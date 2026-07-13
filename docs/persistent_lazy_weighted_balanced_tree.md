@@ -1,5 +1,5 @@
 ---
-title: Persistent Lazy Weighted Balanced Tree
+title: Persistent Lazy Weighted Balanced Tree (完全永続遅延重み平衡木)
 documentation_of: ../src/structure/bbst/persistent_lazy_weighted_balanced_tree.hpp
 ---
 

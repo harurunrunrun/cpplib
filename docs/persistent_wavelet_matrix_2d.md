@@ -1,5 +1,5 @@
 ---
-title: Persistent Wavelet Matrix 2D
+title: Persistent Wavelet Matrix 2D (完全永続二次元ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/persistent_wavelet_matrix_2d.hpp
 ---
 

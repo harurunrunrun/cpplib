@@ -1,5 +1,5 @@
 ---
-title: Range DSU
+title: Range DSU (区間DSU)
 documentation_of: ../src/algorithm/range/range_dsu.hpp
 ---
 

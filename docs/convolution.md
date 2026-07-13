@@ -1,5 +1,5 @@
 ---
-title: Convolution
+title: Convolution (畳み込み)
 documentation_of: ../src/algorithm/fft/convolution.hpp
 ---
 
