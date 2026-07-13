@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/geometry_3d/geometry3d_sign.hpp"
+#include "../../src/algorithm/geometry/3d/geometry3d_sign.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

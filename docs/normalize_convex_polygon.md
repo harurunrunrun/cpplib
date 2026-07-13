@@ -1,6 +1,6 @@
 ---
 title: Normalize Convex Polygon (凸多角形の正規化)
-documentation_of: ../src/algorithm/geometry/advanced/normalize_convex_polygon.hpp
+documentation_of: ../src/algorithm/geometry/2d/advanced/normalize_convex_polygon.hpp
 ---
 
 ## API

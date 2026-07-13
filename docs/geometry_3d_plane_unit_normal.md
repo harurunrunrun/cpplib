@@ -1,6 +1,6 @@
 ---
 title: 3D Plane Unit Normal (三次元平面の単位法線)
-documentation_of: ../src/algorithm/geometry/geometry_3d/plane3_unit_normal.hpp
+documentation_of: ../src/algorithm/geometry/3d/plane3_unit_normal.hpp
 ---
 
 ## API

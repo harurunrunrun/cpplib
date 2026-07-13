@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/advanced/normalize_convex_polygon.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/normalize_convex_polygon.hpp"
 #include "advanced_geometry_test_common.hpp"
 
 #include <stdexcept>

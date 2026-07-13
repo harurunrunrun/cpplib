@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/advanced/convex_polygon_minkowski_sum.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/convex_polygon_minkowski_sum.hpp"
 #include "advanced_geometry_test_common.hpp"
 
 #include <stdexcept>

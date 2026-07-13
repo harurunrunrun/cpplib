@@ -1,6 +1,6 @@
 ---
 title: Signed Distance to 3D Plane (三次元平面への符号付き距離)
-documentation_of: ../src/algorithm/geometry/geometry_3d/signed_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/signed_distance.hpp
 ---
 
 ## API

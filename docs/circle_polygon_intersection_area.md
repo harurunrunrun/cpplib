@@ -1,6 +1,6 @@
 ---
 title: Circle Polygon Intersection Area (円と多角形の共通部分面積)
-documentation_of: ../src/algorithm/geometry/circle_polygon_intersection_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/circle_polygon_intersection_area.hpp
 ---
 
 円板と単純多角形の共通部分の面積を求める。多角形は時計回り、反時計回りのどちらでもよい。

@@ -1,6 +1,6 @@
 ---
 title: Convex Layers (凸層)
-documentation_of: ../src/algorithm/geometry/convex_layers.hpp
+documentation_of: ../src/algorithm/geometry/2d/convex_layers.hpp
 ---
 
 点集合の凸包の境界上にある点をすべて取り除く操作を繰り返し、各点が取り除かれる回を求める。

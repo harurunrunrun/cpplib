@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/convex_polygon_diameter.hpp"
+#include "../../src/algorithm/geometry/2d/convex_polygon_diameter.hpp"
 
 int main(){
     int count;

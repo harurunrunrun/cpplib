@@ -1,6 +1,6 @@
 ---
 title: 3D Vector Length (三次元ベクトル長)
-documentation_of: ../src/algorithm/geometry/geometry_3d/abs.hpp
+documentation_of: ../src/algorithm/geometry/3d/abs.hpp
 ---
 
 ## API

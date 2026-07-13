@@ -1,6 +1,6 @@
 ---
 title: Half-Plane Contains (半平面包含判定)
-documentation_of: ../src/algorithm/geometry/advanced/half_plane_contains.hpp
+documentation_of: ../src/algorithm/geometry/2d/advanced/half_plane_contains.hpp
 ---
 
 ## API

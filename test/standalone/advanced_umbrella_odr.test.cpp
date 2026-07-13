@@ -1,14 +1,14 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/advanced_convex_geometry.hpp"
-#include "../../src/algorithm/geometry/advanced_convex_geometry.hpp"
-#include "../../src/algorithm/geometry/advanced/base.hpp"
-#include "../../src/algorithm/geometry/advanced/detail.hpp"
-#include "../../src/algorithm/geometry/advanced/half_plane_contains.hpp"
-#include "../../src/algorithm/geometry/advanced/normalize_convex_polygon.hpp"
-#include "../../src/algorithm/geometry/advanced/convex_polygon_minkowski_sum.hpp"
-#include "../../src/algorithm/geometry/advanced/half_plane_intersection.hpp"
-#include "../../src/algorithm/geometry/advanced/convex_polygon_intersection.hpp"
+#include "../../src/algorithm/geometry/2d/advanced_convex_geometry.hpp"
+#include "../../src/algorithm/geometry/2d/advanced_convex_geometry.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/base.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/detail.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/half_plane_contains.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/normalize_convex_polygon.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/convex_polygon_minkowski_sum.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/half_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/2d/advanced/convex_polygon_intersection.hpp"
 
 #include <cstddef>
 #include <iostream>

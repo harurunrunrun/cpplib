@@ -4,7 +4,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/geometry_3d/base.hpp"
+#include "../../src/algorithm/geometry/3d/base.hpp"
 
 inline bool geometry3d_close_value(
     long double left,

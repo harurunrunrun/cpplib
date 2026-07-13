@@ -1,12 +1,12 @@
 ---
 title: Convex Polygon Farthest Vertices (凸多角形の最遠頂点)
-documentation_of: ../src/algorithm/geometry/convex_polygon_farthest_vertices.hpp
+documentation_of: ../src/algorithm/geometry/2d/convex_polygon_farthest_vertices.hpp
 ---
 
 凸多角形の各頂点に対する最遠頂点を一括して求める。
 
 ```cpp
-#include "src/algorithm/geometry/convex_polygon_farthest_vertices.hpp"
+#include "src/algorithm/geometry/2d/convex_polygon_farthest_vertices.hpp"
 
 std::vector<std::size_t> farthest =
     convex_polygon_farthest_vertices(polygon);

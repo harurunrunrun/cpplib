@@ -1,6 +1,6 @@
 ---
 title: 3D Ray Direction (三次元半直線方向)
-documentation_of: ../src/algorithm/geometry/geometry_3d/ray3_direction.hpp
+documentation_of: ../src/algorithm/geometry/3d/ray3_direction.hpp
 ---
 
 ## API

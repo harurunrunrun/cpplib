@@ -5,8 +5,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/convex_layers.hpp"
-#include "../../src/algorithm/geometry/convex_layers.hpp"
+#include "../../src/algorithm/geometry/2d/convex_layers.hpp"
+#include "../../src/algorithm/geometry/2d/convex_layers.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

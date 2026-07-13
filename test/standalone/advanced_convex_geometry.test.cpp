@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/geometry/advanced_convex_geometry.hpp"
+#include "../../src/algorithm/geometry/2d/advanced_convex_geometry.hpp"
 
 namespace{
 

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/polygon_boundary_points/enumerate_points_on_polygon_boundary.hpp"
+#include "../../src/algorithm/geometry/2d/polygon_boundary_points/enumerate_points_on_polygon_boundary.hpp"
 
 int main(){
     int n;

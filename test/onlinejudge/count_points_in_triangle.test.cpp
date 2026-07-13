@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/count_points_in_triangles.hpp"
+#include "../../src/algorithm/geometry/2d/count_points_in_triangles.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -1,6 +1,6 @@
 ---
 title: 3D Sphere-Sphere Intersection (三次元球面同士の交円)
-documentation_of: ../src/algorithm/geometry/geometry_3d/sphere_sphere_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/sphere_sphere_intersection.hpp
 ---
 
 ## API

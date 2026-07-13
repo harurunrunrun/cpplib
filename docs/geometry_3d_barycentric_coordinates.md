@@ -1,6 +1,6 @@
 ---
 title: 3D Barycentric Coordinates (三次元重心座標)
-documentation_of: ../src/algorithm/geometry/geometry_3d/barycentric_coordinates.hpp
+documentation_of: ../src/algorithm/geometry/3d/barycentric_coordinates.hpp
 ---
 
 ## API

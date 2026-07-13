@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/polygon_boundary_points/polygon_boundary_point_query.hpp"
+#include "../../src/algorithm/geometry/2d/polygon_boundary_points/polygon_boundary_point_query.hpp"
 
 int main(){
     int n;

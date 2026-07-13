@@ -1,6 +1,6 @@
 ---
 title: Point on 3D Plane (三次元平面上判定)
-documentation_of: ../src/algorithm/geometry/geometry_3d/on_plane.hpp
+documentation_of: ../src/algorithm/geometry/3d/on_plane.hpp
 ---
 
 ## API

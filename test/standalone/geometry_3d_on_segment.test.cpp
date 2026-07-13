@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/geometry_3d/on_segment.hpp"
+#include "../../src/algorithm/geometry/3d/on_segment.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

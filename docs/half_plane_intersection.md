@@ -1,6 +1,6 @@
 ---
 title: Half-Plane Intersection (半平面交差)
-documentation_of: ../src/algorithm/geometry/advanced/half_plane_intersection.hpp
+documentation_of: ../src/algorithm/geometry/2d/advanced/half_plane_intersection.hpp
 ---
 
 ## API

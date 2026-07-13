@@ -1,6 +1,6 @@
 ---
 title: 3D Distance (三次元距離)
-documentation_of: ../src/algorithm/geometry/geometry_3d/distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/distance.hpp
 ---
 
 ## API

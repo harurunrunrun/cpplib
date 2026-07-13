@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/geometry_3d/plane3_unit_normal.hpp"
+#include "../../src/algorithm/geometry/3d/plane3_unit_normal.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

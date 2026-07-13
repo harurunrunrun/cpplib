@@ -1,6 +1,6 @@
 ---
 title: 3D Segment-Plane Intersection (三次元線分と平面の交点)
-documentation_of: ../src/algorithm/geometry/geometry_3d/segment_plane_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/segment_plane_intersection.hpp
 ---
 
 ## API

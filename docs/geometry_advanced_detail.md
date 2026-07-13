@@ -1,6 +1,6 @@
 ---
 title: Advanced Geometry Internals (高度幾何の内部関数)
-documentation_of: ../src/algorithm/geometry/advanced/detail.hpp
+documentation_of: ../src/algorithm/geometry/2d/advanced/detail.hpp
 ---
 
 高度凸幾何で用いる誤差制御と退化処理の内部関数群。

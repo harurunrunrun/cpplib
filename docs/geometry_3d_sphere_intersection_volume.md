@@ -1,6 +1,6 @@
 ---
 title: Sphere Intersection Volume (球の共通部分体積)
-documentation_of: ../src/algorithm/geometry/geometry_3d/sphere_intersection_volume.hpp
+documentation_of: ../src/algorithm/geometry/3d/sphere_intersection_volume.hpp
 ---
 
 ## API

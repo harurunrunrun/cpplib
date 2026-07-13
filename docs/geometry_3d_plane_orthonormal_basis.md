@@ -1,6 +1,6 @@
 ---
 title: 3D Plane Orthonormal Basis (三次元平面の正規直交基底)
-documentation_of: ../src/algorithm/geometry/geometry_3d/plane_orthonormal_basis.hpp
+documentation_of: ../src/algorithm/geometry/3d/plane_orthonormal_basis.hpp
 ---
 
 ## API

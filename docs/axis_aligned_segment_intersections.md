@@ -1,6 +1,6 @@
 ---
 title: Axis Aligned Segment Intersections (軸平行線分交差)
-documentation_of: ../src/algorithm/geometry/axis_aligned_segment_intersections.hpp
+documentation_of: ../src/algorithm/geometry/2d/axis_aligned_segment_intersections.hpp
 ---
 
 軸平行線分について、水平線分と垂直線分の交差対数を数える。

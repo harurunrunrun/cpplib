@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Circumcircle (三次元三角形の外接円)
-documentation_of: ../src/algorithm/geometry/geometry_3d/circumcircle.hpp
+documentation_of: ../src/algorithm/geometry/3d/circumcircle.hpp
 ---
 
 ## API

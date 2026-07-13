@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/geometry.hpp"
-#include "../../src/algorithm/geometry/geometry.hpp"
+#include "../../src/algorithm/geometry/2d/geometry.hpp"
+#include "../../src/algorithm/geometry/2d/geometry.hpp"
 #include "../../src/algorithm/geometry/2d/minimum_enclosing_circle.hpp"
 #include "../../src/algorithm/geometry/2d/sort_points_by_argument.hpp"
 #include "../../src/algorithm/geometry/2d/constants.hpp"

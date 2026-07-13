@@ -1,6 +1,6 @@
 ---
 title: 3D Vector Angle (三次元ベクトル角)
-documentation_of: ../src/algorithm/geometry/geometry_3d/angle.hpp
+documentation_of: ../src/algorithm/geometry/3d/angle.hpp
 ---
 
 ## API

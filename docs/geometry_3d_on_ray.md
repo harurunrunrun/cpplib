@@ -1,6 +1,6 @@
 ---
 title: Point on 3D Ray (三次元半直線上判定)
-documentation_of: ../src/algorithm/geometry/geometry_3d/on_ray.hpp
+documentation_of: ../src/algorithm/geometry/3d/on_ray.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Count Points in Triangles (三角形内の点数え上げ)
-documentation_of: ../src/algorithm/geometry/count_points_in_triangles.hpp
+documentation_of: ../src/algorithm/geometry/2d/count_points_in_triangles.hpp
 ---
 
 固定された点集合に対し、3頂点が作る三角形の内部にある点数を定数時間で答える。

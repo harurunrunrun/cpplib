@@ -1,6 +1,6 @@
 ---
 title: 3D Collinearity (三次元共線判定)
-documentation_of: ../src/algorithm/geometry/geometry_3d/collinear.hpp
+documentation_of: ../src/algorithm/geometry/3d/collinear.hpp
 ---
 
 ## API

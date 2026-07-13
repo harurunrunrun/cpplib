@@ -1,12 +1,12 @@
 ---
 title: Convex Polygon Maximum Area Triangle (凸多角形内の最大面積三角形)
-documentation_of: ../src/algorithm/geometry/convex_polygon_maximum_area_triangle.hpp
+documentation_of: ../src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle.hpp
 ---
 
 凸多角形の頂点から選べる最大面積三角形。
 
 ```cpp
-#include "src/algorithm/geometry/convex_polygon_maximum_area_triangle.hpp"
+#include "src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle.hpp"
 
 auto result = convex_polygon_maximum_area_triangle(polygon);
 ```

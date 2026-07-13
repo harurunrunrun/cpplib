@@ -1,6 +1,6 @@
 ---
 title: Sphere Volume (球の体積)
-documentation_of: ../src/algorithm/geometry/geometry_3d/sphere_volume.hpp
+documentation_of: ../src/algorithm/geometry/3d/sphere_volume.hpp
 ---
 
 ## API

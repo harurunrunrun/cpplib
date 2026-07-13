@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/geometry.hpp"
+#include "../../src/algorithm/geometry/2d/geometry.hpp"
 
 int main(){
     Circle a, b;

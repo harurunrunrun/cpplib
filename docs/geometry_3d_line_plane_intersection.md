@@ -1,6 +1,6 @@
 ---
 title: 3D Line-Plane Intersection (三次元直線と平面の交点)
-documentation_of: ../src/algorithm/geometry/geometry_3d/line_plane_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/line_plane_intersection.hpp
 ---
 
 ## API

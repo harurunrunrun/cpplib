@@ -1,6 +1,6 @@
 ---
 title: Rotating Calipers Header (回転キャリパ法ヘッダ)
-documentation_of: ../src/algorithm/geometry/rotating_calipers.hpp
+documentation_of: ../src/algorithm/geometry/2d/rotating_calipers.hpp
 ---
 
 凸多角形向け回転キャリパ法APIをまとめてincludeするheader。

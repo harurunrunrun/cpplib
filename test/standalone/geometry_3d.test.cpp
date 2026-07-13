@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/geometry_3d.hpp"
+#include "../../src/algorithm/geometry/3d/geometry_3d.hpp"
 
 bool close_value(long double left, long double right, long double eps = 1e-9L){
     return std::abs(left - right) <= eps * std::max({1.0L, std::abs(left), std::abs(right)});

@@ -1,6 +1,6 @@
 ---
 title: Convex Polygon Intersection (凸多角形の共通部分)
-documentation_of: ../src/algorithm/geometry/advanced/convex_polygon_intersection.hpp
+documentation_of: ../src/algorithm/geometry/2d/advanced/convex_polygon_intersection.hpp
 ---
 
 ## API

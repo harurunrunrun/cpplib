@@ -9,8 +9,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/euclidean_mst.hpp"
-#include "../../src/algorithm/geometry/euclidean_mst.hpp"
+#include "../../src/algorithm/geometry/2d/euclidean_mst.hpp"
+#include "../../src/algorithm/geometry/2d/euclidean_mst.hpp"
 
 namespace{
 

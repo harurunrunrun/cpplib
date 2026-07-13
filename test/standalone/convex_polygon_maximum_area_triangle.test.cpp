@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/convex_polygon_maximum_area_triangle.hpp"
+#include "../../src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle.hpp"
 #include "convex_calipers_test_common.hpp"
 
 int main(){

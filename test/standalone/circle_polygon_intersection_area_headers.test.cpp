@@ -5,9 +5,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/circle_polygon_intersection_area/signed_circle_polygon_intersection_area.hpp"
-#include "../../src/algorithm/geometry/circle_polygon_intersection_area.hpp"
-#include "../../src/algorithm/geometry/circle_polygon_intersection_area/circle_polygon_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area/signed_circle_polygon_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area/circle_polygon_intersection_area.hpp"
 
 long double circle_polygon_intersection_area_odr_signed(
     const Circle& circle,

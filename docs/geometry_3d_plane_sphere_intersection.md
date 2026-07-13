@@ -1,6 +1,6 @@
 ---
 title: 3D Plane-Sphere Intersection (三次元平面と球面の交円)
-documentation_of: ../src/algorithm/geometry/geometry_3d/plane_sphere_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/plane_sphere_intersection.hpp
 ---
 
 ## API

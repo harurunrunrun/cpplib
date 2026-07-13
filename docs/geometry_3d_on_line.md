@@ -1,6 +1,6 @@
 ---
 title: Point on 3D Line (三次元直線上判定)
-documentation_of: ../src/algorithm/geometry/geometry_3d/on_line.hpp
+documentation_of: ../src/algorithm/geometry/3d/on_line.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 3D Line-Sphere Intersections (三次元直線と球面の交点)
-documentation_of: ../src/algorithm/geometry/geometry_3d/line_sphere_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/line_sphere_intersections.hpp
 ---
 
 ## API

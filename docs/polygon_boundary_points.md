@@ -1,6 +1,6 @@
 ---
 title: Polygon Boundary Points (多角形の辺上の点列挙)
-documentation_of: ../src/algorithm/geometry/polygon_boundary_points.hpp
+documentation_of: ../src/algorithm/geometry/2d/polygon_boundary_points.hpp
 ---
 
 Enumerates the given points that lie on the boundary of a polygon.

@@ -1,6 +1,6 @@
 ---
 title: 3D Segment-Sphere Intersections (三次元線分と球面の交点)
-documentation_of: ../src/algorithm/geometry/geometry_3d/segment_sphere_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/segment_sphere_intersections.hpp
 ---
 
 ## API

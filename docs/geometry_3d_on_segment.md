@@ -1,6 +1,6 @@
 ---
 title: Point on 3D Segment (三次元線分上判定)
-documentation_of: ../src/algorithm/geometry/geometry_3d/on_segment.hpp
+documentation_of: ../src/algorithm/geometry/3d/on_segment.hpp
 ---
 
 ## API

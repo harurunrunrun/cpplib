@@ -1,6 +1,6 @@
 ---
 title: 3D Projection (三次元射影)
-documentation_of: ../src/algorithm/geometry/geometry_3d/projection.hpp
+documentation_of: ../src/algorithm/geometry/3d/projection.hpp
 ---
 
 ## API

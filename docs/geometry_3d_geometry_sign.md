@@ -1,6 +1,6 @@
 ---
 title: 3D Geometry Sign (三次元幾何の符号判定)
-documentation_of: ../src/algorithm/geometry/geometry_3d/geometry3d_sign.hpp
+documentation_of: ../src/algorithm/geometry/3d/geometry3d_sign.hpp
 ---
 
 ## API

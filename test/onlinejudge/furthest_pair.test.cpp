@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/furthest_pair.hpp"
+#include "../../src/algorithm/geometry/2d/furthest_pair.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

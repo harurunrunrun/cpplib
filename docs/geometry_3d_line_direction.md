@@ -1,6 +1,6 @@
 ---
 title: 3D Line Direction (三次元直線方向)
-documentation_of: ../src/algorithm/geometry/geometry_3d/line3_direction.hpp
+documentation_of: ../src/algorithm/geometry/3d/line3_direction.hpp
 ---
 
 ## API

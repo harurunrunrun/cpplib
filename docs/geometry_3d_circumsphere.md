@@ -1,6 +1,6 @@
 ---
 title: 3D Tetrahedron Circumsphere (三次元四面体の外接球)
-documentation_of: ../src/algorithm/geometry/geometry_3d/circumsphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/circumsphere.hpp
 ---
 
 ## API

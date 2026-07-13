@@ -1,6 +1,6 @@
 ---
 title: 3D Geometry (三次元幾何)
-documentation_of: ../src/algorithm/geometry/geometry_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/geometry_3d.hpp
 ---
 
 `long double` を用いる3次元幾何の基本型、距離、交差、三角形、四面体、球をまとめる。判定には `GEOMETRY3D_EPS = 1e-10L` を使う。
@@ -9,7 +9,7 @@ documentation_of: ../src/algorithm/geometry/geometry_3d.hpp
 
 `geometry_3d.hpp` は後方互換用の umbrella header であり、下記の個別 header を
 include するだけである。必要な API だけを使う場合は
-`geometry_3d/<name>.hpp` を直接 include できる。
+`3d/<name>.hpp` を直接 include できる。
 
 `base.hpp` は定数、`Point3` の member/operator と基本型だけを定義する。
 公開関数は同名 overload 群ごとに次の header に分かれる。

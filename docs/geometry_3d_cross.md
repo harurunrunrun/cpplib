@@ -1,6 +1,6 @@
 ---
 title: 3D Cross Product (三次元外積)
-documentation_of: ../src/algorithm/geometry/geometry_3d/cross.hpp
+documentation_of: ../src/algorithm/geometry/3d/cross.hpp
 ---
 
 ## API

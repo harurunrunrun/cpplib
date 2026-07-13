@@ -1,6 +1,6 @@
 ---
 title: Polygon Boundary Point Query (多角形境界点クエリ)
-documentation_of: ../src/algorithm/geometry/polygon_boundary_points/polygon_boundary_point_query.hpp
+documentation_of: ../src/algorithm/geometry/2d/polygon_boundary_points/polygon_boundary_point_query.hpp
 ---
 
 同じ多角形に対する境界点列挙を前処理する。
