@@ -27,13 +27,24 @@ on:
 
   workflow_dispatch:
 
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  verify:
+  verify-and-docs:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     permissions:
       contents: read
+      pages: write
+      id-token: write
+
+    outputs:
+      standalone-outcome: ${{ steps.standalone.outcome }}
+      verifier-outcome: ${{ steps.verifier.outcome }}
+      pages-artifact-outcome: ${{ steps.pages-artifact.outcome }}
 
     steps:
       - name: Checkout
@@ -41,88 +52,86 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Set up competitive-verifier
+        uses: competitive-verifier/actions/setup@v2
         with:
           python-version: "3.12"
+          cache-pip: true
 
-      - name: Restore competitive-verifier environment
+      - name: Verify standalone generated assets
+        id: standalone
+        run: make standalone-assets
+        continue-on-error: true
+
+      - name: Resolve verify files
+        uses: competitive-verifier/actions/oj-resolve@v2
+        with:
+          output-path: verify-files.json
+          config: config.toml
+          include: |
+            src
+            test
+
+      - name: Prepare cache directory
+        run: mkdir -p .competitive-verifier/cache
+
+      - name: Restore previous verify result
         uses: actions/cache@v4
         with:
-          path: .competitive-verifier/venv
-          key: competitive-verifier-${{ runner.os }}-${{ runner.arch }}-python-3.12-${{ hashFiles('Makefile') }}
+          path: .competitive-verifier/cache/result.json
+          key: competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-${{ github.run_id }}
+          restore-keys: |
+            competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-
 
-      - name: Set up competitive-verifier
-        run: make verifier-setup
+      - name: Detect previous verify result
+        id: prev-result
+        shell: bash
+        run: |
+          if [ -f .competitive-verifier/cache/result.json ]; then
+            echo "path=.competitive-verifier/cache/result.json" >> "$GITHUB_OUTPUT"
+          else
+            echo "path=" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Verify
-        run: make verify CXXFLAGS="-std=c++20 -O2 -Wall -Wextra -Werror"
-
-      - name: Upload verification result
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: competitive-verifier-result
-          path: .competitive-verifier/cache/result.json
-          if-no-files-found: warn
-          retention-days: 7
-          include-hidden-files: true
-
-  docs:
-    if: ${{ !cancelled() }}
-    needs: verify
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    permissions:
-      contents: read
-      pages: read
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Restore competitive-verifier environment
-        uses: actions/cache@v4
-        with:
-          path: .competitive-verifier/venv
-          key: competitive-verifier-${{ runner.os }}-${{ runner.arch }}-python-3.12-${{ hashFiles('Makefile') }}
-
-      - name: Set up competitive-verifier
-        run: make verifier-setup
-
-      - name: Restore verification result
-        uses: actions/download-artifact@v5
+        id: verifier
+        uses: competitive-verifier/actions/verify@v2
         continue-on-error: true
         with:
-          name: competitive-verifier-result
-          path: .competitive-verifier/cache
+          verify-files: verify-files.json
+          destination: .competitive-verifier/cache/result.json
+          prev-result: ${{ steps.prev-result.outputs.path }}
+          check: true
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Check documentation titles
+        run: python3 scripts/check_docs_bilingual_titles.py docs
+
+      - name: Generate docs
+        uses: competitive-verifier/actions/docs@v2
         with:
-          ruby-version: "3.3"
+          verify-files: verify-files.json
+          verify-result: .competitive-verifier/cache/result.json
+          destination: _jekyll
 
-      - name: Configure GitHub Pages
-        id: pages
+      - name: Order library sections
+        run: python3 scripts/reorder_competitive_verifier_index.py _jekyll/index.md
+
+      - name: Setup Pages
+        if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
-      - name: Build HTML documentation
-        run: make docs
-        env:
-          JEKYLL_URL: ${{ steps.pages.outputs.origin }}
-          JEKYLL_BASEURL: ${{ steps.pages.outputs.base_path }}
-          JEKYLL_GITHUB_TOKEN: ${{ github.token }}
+      - name: Build with Jekyll
+        if: github.ref == 'refs/heads/main'
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: _jekyll
+          destination: _site
 
       - name: Remove unsafe polyfill.io reference
+        if: github.ref == 'refs/heads/main'
         run: |
+          sudo chown -R "$USER":"$USER" _site
+
           python3 - <<'PY'
           from pathlib import Path
           import re
@@ -132,7 +141,7 @@ jobs:
               re.IGNORECASE,
           )
 
-          for path in Path(".competitive-verifier/site").rglob("*.html"):
+          for path in Path("_site").rglob("*.html"):
               text = path.read_text(encoding="utf-8", errors="ignore")
               new_text = pattern.sub("\n", text)
               if new_text != text:
@@ -141,36 +150,34 @@ jobs:
           PY
 
       - name: Check generated site for unsafe CDN references
+        if: github.ref == 'refs/heads/main'
         run: |
-          if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' .competitive-verifier/site; then
+          if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' _site; then
             echo "::error::Unsafe CDN reference remains in generated site"
             exit 1
           fi
 
       - name: Upload HTML artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: documentation-html
-          path: .competitive-verifier/site
+          path: _site
           if-no-files-found: error
           retention-days: 7
-          include-hidden-files: true
 
       - name: Upload Pages artifact
+        id: pages-artifact
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .competitive-verifier/site
+          path: _site
 
   deploy:
-    if: ${{ !cancelled() && needs.docs.result == 'success' && github.ref == 'refs/heads/main' }}
-    needs: docs
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && needs.verify-and-docs.outputs.pages-artifact-outcome == 'success' }}
+    needs: verify-and-docs
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
-    concurrency:
-      group: pages
-      cancel-in-progress: true
 
     permissions:
       pages: write
@@ -184,3 +191,22 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  report-verification:
+    if: ${{ !cancelled() }}
+    needs: verify-and-docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Report standalone verification failure
+        if: ${{ needs.verify-and-docs.outputs.standalone-outcome != 'success' }}
+        run: |
+          echo "::error::Standalone generated assets failed"
+          exit 1
+
+      - name: Report competitive-verifier failure
+        if: ${{ needs.verify-and-docs.outputs.verifier-outcome != 'success' }}
+        run: |
+          echo "::error::competitive-verifier failed"
+          exit 1
