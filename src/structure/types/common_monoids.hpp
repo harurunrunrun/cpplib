@@ -5,133 +5,365 @@
 #include <numeric>
 #include <type_traits>
 
-template<class T>
-struct AddMonoid{
-    using S = T;
+#include "monoid.hpp"
+#include "monoid_act.hpp"
+#include "monoid_act_len.hpp"
 
-    constexpr S op(S a, S b)const{
-        return a + b;
-    }
-
-    constexpr S e()const{
-        return S(0);
-    }
-};
+namespace common_monoid_internal{
 
 template<class T>
-struct MulMonoid{
-    using S = T;
-
-    constexpr S op(S a, S b)const{
-        return a * b;
-    }
-
-    constexpr S e()const{
-        return S(1);
-    }
-};
+constexpr T add_op(T left, T right){ return left + right; }
 
 template<class T>
-struct MinMonoid{
-    using S = T;
-
-    T identity = std::numeric_limits<T>::max();
-
-    constexpr S op(S a, S b)const{
-        return std::min(a, b);
-    }
-
-    constexpr S e()const{
-        return identity;
-    }
-};
+constexpr T multiply_op(T left, T right){ return left * right; }
 
 template<class T>
-struct MaxMonoid{
-    using S = T;
-
-    T identity = std::numeric_limits<T>::lowest();
-
-    constexpr S op(S a, S b)const{
-        return std::max(a, b);
-    }
-
-    constexpr S e()const{
-        return identity;
-    }
-};
+constexpr T minimum_op(T left, T right){ return std::min(left, right); }
 
 template<class T>
-struct GcdMonoid{
+constexpr T maximum_op(T left, T right){ return std::max(left, right); }
+
+template<class T>
+constexpr T gcd_op(T left, T right){
     static_assert(std::is_integral_v<T>);
+    return std::gcd(left, right);
+}
 
-    using S = T;
+template<class T>
+constexpr T lcm_op(T left, T right){
+    static_assert(std::is_integral_v<T>);
+    return std::lcm(left, right);
+}
 
-    constexpr S op(S a, S b)const{
-        return std::gcd(a, b);
-    }
+template<class T>
+constexpr T xor_op(T left, T right){
+    static_assert(std::is_integral_v<T>);
+    return left ^ right;
+}
 
-    constexpr S e()const{
-        return S(0);
+template<class T>
+constexpr T bit_and_op(T left, T right){
+    static_assert(std::is_integral_v<T>);
+    return left & right;
+}
+
+template<class T>
+constexpr T bit_or_op(T left, T right){
+    static_assert(std::is_integral_v<T>);
+    return left | right;
+}
+
+template<class T>
+constexpr T zero(){ return T(0); }
+
+template<class T>
+constexpr T one(){ return T(1); }
+
+template<class T>
+constexpr T all_bits(){
+    static_assert(std::is_integral_v<T>);
+    return ~T(0);
+}
+
+template<class T, T Value>
+constexpr T constant(){ return Value; }
+
+} // namespace common_monoid_internal
+
+template<class T>
+using AddMonoid = Monoid<
+    common_monoid_internal::add_op<T>,
+    common_monoid_internal::zero<T>
+>;
+
+template<class T>
+using MulMonoid = Monoid<
+    common_monoid_internal::multiply_op<T>,
+    common_monoid_internal::one<T>
+>;
+
+template<class T, T Identity = std::numeric_limits<T>::max()>
+using MinMonoid = Monoid<
+    common_monoid_internal::minimum_op<T>,
+    common_monoid_internal::constant<T, Identity>
+>;
+
+template<class T, T Identity = std::numeric_limits<T>::lowest()>
+using MaxMonoid = Monoid<
+    common_monoid_internal::maximum_op<T>,
+    common_monoid_internal::constant<T, Identity>
+>;
+
+template<class T>
+using GcdMonoid = Monoid<
+    common_monoid_internal::gcd_op<T>,
+    common_monoid_internal::zero<T>
+>;
+
+template<class T>
+using LcmMonoid = Monoid<
+    common_monoid_internal::lcm_op<T>,
+    common_monoid_internal::one<T>
+>;
+
+template<class T>
+using XorMonoid = Monoid<
+    common_monoid_internal::xor_op<T>,
+    common_monoid_internal::zero<T>
+>;
+
+template<class T>
+using BitAndMonoid = Monoid<
+    common_monoid_internal::bit_and_op<T>,
+    common_monoid_internal::all_bits<T>
+>;
+
+template<class T>
+using BitOrMonoid = Monoid<
+    common_monoid_internal::bit_or_op<T>,
+    common_monoid_internal::zero<T>
+>;
+
+template<class T>
+struct MonoidAssignment{
+    bool assigned = false;
+    T value{};
+
+    friend constexpr bool operator==(
+        const MonoidAssignment& left,
+        const MonoidAssignment& right
+    ){
+        return left.assigned == right.assigned
+            && (!left.assigned || left.value == right.value);
     }
 };
 
 template<class T>
-struct LcmMonoid{
-    static_assert(std::is_integral_v<T>);
+struct MonoidAffine{
+    T multiplier = T(1);
+    T addend = T(0);
 
-    using S = T;
-
-    constexpr S op(S a, S b)const{
-        return std::lcm(a, b);
-    }
-
-    constexpr S e()const{
-        return S(1);
-    }
+    friend constexpr bool operator==(
+        const MonoidAffine&,
+        const MonoidAffine&
+    ) = default;
 };
+
+namespace common_monoid_internal{
+
+template<class T, T Identity>
+constexpr T add_extremum_mapping(T f, T x){
+    return x == Identity ? Identity : x + f;
+}
 
 template<class T>
-struct XorMonoid{
-    static_assert(std::is_integral_v<T>);
+constexpr T add_composition(T f, T g){ return f + g; }
 
-    using S = T;
-
-    constexpr S op(S a, S b)const{
-        return a ^ b;
-    }
-
-    constexpr S e()const{
-        return S(0);
-    }
-};
+template<class T, T Identity>
+constexpr T assign_extremum_mapping(MonoidAssignment<T> f, T x){
+    if(x == Identity || !f.assigned) return x;
+    return f.value;
+}
 
 template<class T>
-struct BitAndMonoid{
-    static_assert(std::is_integral_v<T>);
-
-    using S = T;
-
-    constexpr S op(S a, S b)const{
-        return a & b;
-    }
-
-    constexpr S e()const{
-        return ~S(0);
-    }
-};
+constexpr MonoidAssignment<T> assignment_composition(
+    MonoidAssignment<T> f,
+    MonoidAssignment<T> g
+){
+    return f.assigned ? f : g;
+}
 
 template<class T>
-struct BitOrMonoid{
+constexpr MonoidAssignment<T> assignment_id(){
+    return {};
+}
+
+template<class T>
+constexpr T sum_op(T left, long long, T right, long long){
+    return left + right;
+}
+
+template<class T>
+constexpr T add_sum_mapping(T f, T x, long long length){
+    return x + f * T(length);
+}
+
+template<class T>
+constexpr T assign_sum_mapping(
+    MonoidAssignment<T> f,
+    T x,
+    long long length
+){
+    return f.assigned ? f.value * T(length) : x;
+}
+
+template<class T>
+constexpr T affine_sum_mapping(
+    MonoidAffine<T> f,
+    T x,
+    long long length
+){
+    return f.multiplier * x + f.addend * T(length);
+}
+
+template<class T>
+constexpr MonoidAffine<T> affine_composition(
+    MonoidAffine<T> f,
+    MonoidAffine<T> g
+){
+    return {
+        f.multiplier * g.multiplier,
+        f.multiplier * g.addend + f.addend
+    };
+}
+
+template<class T>
+constexpr MonoidAffine<T> affine_id(){
+    return {};
+}
+
+template<class T>
+constexpr T xor_len_op(T left, long long, T right, long long){
     static_assert(std::is_integral_v<T>);
+    return left ^ right;
+}
 
-    using S = T;
+template<class T>
+constexpr T xor_xor_mapping(T f, T x, long long length){
+    static_assert(std::is_integral_v<T>);
+    return (length & 1LL) ? (x ^ f) : x;
+}
 
-    constexpr S op(S a, S b)const{
-        return a | b;
-    }
+template<class T, T Identity>
+constexpr T chmin_mapping(T f, T x){
+    return x == Identity ? Identity : std::min(f, x);
+}
 
-    constexpr S e()const{
-        return S(0);
-    }
-};
+template<class T, T Identity>
+constexpr T chmax_mapping(T f, T x){
+    return x == Identity ? Identity : std::max(f, x);
+}
+
+template<class T>
+constexpr T multiply_sum_mapping(T f, T x, long long){
+    return f * x;
+}
+
+template<class T>
+constexpr T flip_count_mapping(bool f, T x, long long length){
+    return f ? T(length) - x : x;
+}
+
+constexpr bool bool_xor(bool f, bool g){ return f != g; }
+
+constexpr bool false_value(){ return false; }
+
+} // namespace common_monoid_internal
+
+template<class T, T Identity = std::numeric_limits<T>::max()>
+using AddMinMonoidAct = Monoid_Act<
+    common_monoid_internal::minimum_op<T>,
+    common_monoid_internal::constant<T, Identity>,
+    common_monoid_internal::add_extremum_mapping<T, Identity>,
+    common_monoid_internal::add_composition<T>,
+    common_monoid_internal::zero<T>
+>;
+
+template<class T, T Identity = std::numeric_limits<T>::lowest()>
+using AddMaxMonoidAct = Monoid_Act<
+    common_monoid_internal::maximum_op<T>,
+    common_monoid_internal::constant<T, Identity>,
+    common_monoid_internal::add_extremum_mapping<T, Identity>,
+    common_monoid_internal::add_composition<T>,
+    common_monoid_internal::zero<T>
+>;
+
+template<class T, T Identity = std::numeric_limits<T>::max()>
+using AssignMinMonoidAct = Monoid_Act<
+    common_monoid_internal::minimum_op<T>,
+    common_monoid_internal::constant<T, Identity>,
+    common_monoid_internal::assign_extremum_mapping<T, Identity>,
+    common_monoid_internal::assignment_composition<T>,
+    common_monoid_internal::assignment_id<T>
+>;
+
+template<class T, T Identity = std::numeric_limits<T>::lowest()>
+using AssignMaxMonoidAct = Monoid_Act<
+    common_monoid_internal::maximum_op<T>,
+    common_monoid_internal::constant<T, Identity>,
+    common_monoid_internal::assign_extremum_mapping<T, Identity>,
+    common_monoid_internal::assignment_composition<T>,
+    common_monoid_internal::assignment_id<T>
+>;
+
+template<class T, T Identity = std::numeric_limits<T>::max()>
+using ChminMinMonoidAct = Monoid_Act<
+    common_monoid_internal::minimum_op<T>,
+    common_monoid_internal::constant<T, Identity>,
+    common_monoid_internal::chmin_mapping<T, Identity>,
+    common_monoid_internal::minimum_op<T>,
+    common_monoid_internal::constant<T, Identity>
+>;
+
+template<class T, T Identity = std::numeric_limits<T>::lowest()>
+using ChmaxMaxMonoidAct = Monoid_Act<
+    common_monoid_internal::maximum_op<T>,
+    common_monoid_internal::constant<T, Identity>,
+    common_monoid_internal::chmax_mapping<T, Identity>,
+    common_monoid_internal::maximum_op<T>,
+    common_monoid_internal::constant<T, Identity>
+>;
+
+template<class T>
+using AddSumMonoidAct = Monoid_Act_Len<
+    common_monoid_internal::sum_op<T>,
+    common_monoid_internal::zero<T>,
+    common_monoid_internal::add_sum_mapping<T>,
+    common_monoid_internal::add_composition<T>,
+    common_monoid_internal::zero<T>
+>;
+
+template<class T>
+using MulSumMonoidAct = Monoid_Act_Len<
+    common_monoid_internal::sum_op<T>,
+    common_monoid_internal::zero<T>,
+    common_monoid_internal::multiply_sum_mapping<T>,
+    common_monoid_internal::multiply_op<T>,
+    common_monoid_internal::one<T>
+>;
+
+template<class T>
+using FlipCountMonoidAct = Monoid_Act_Len<
+    common_monoid_internal::sum_op<T>,
+    common_monoid_internal::zero<T>,
+    common_monoid_internal::flip_count_mapping<T>,
+    common_monoid_internal::bool_xor,
+    common_monoid_internal::false_value
+>;
+
+template<class T>
+using AssignSumMonoidAct = Monoid_Act_Len<
+    common_monoid_internal::sum_op<T>,
+    common_monoid_internal::zero<T>,
+    common_monoid_internal::assign_sum_mapping<T>,
+    common_monoid_internal::assignment_composition<T>,
+    common_monoid_internal::assignment_id<T>
+>;
+
+template<class T>
+using AffineSumMonoidAct = Monoid_Act_Len<
+    common_monoid_internal::sum_op<T>,
+    common_monoid_internal::zero<T>,
+    common_monoid_internal::affine_sum_mapping<T>,
+    common_monoid_internal::affine_composition<T>,
+    common_monoid_internal::affine_id<T>
+>;
+
+template<class T>
+using XorXorMonoidAct = Monoid_Act_Len<
+    common_monoid_internal::xor_len_op<T>,
+    common_monoid_internal::zero<T>,
+    common_monoid_internal::xor_xor_mapping<T>,
+    common_monoid_internal::xor_op<T>,
+    common_monoid_internal::zero<T>
+>;
