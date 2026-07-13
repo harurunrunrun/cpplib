@@ -44,7 +44,7 @@ verifier-setup: $(VERIFIER)
 
 verifier-resolve: verifier-setup
 	@mkdir -p $(VERIFIER_CACHE)
-	$(VERIFIER) oj-resolve --include src test --config config.toml > $(VERIFY_FILES).tmp
+	$(VERIFIER) oj-resolve --include src test/onlinejudge --config config.toml > $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
 standalone-assets:

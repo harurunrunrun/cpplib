@@ -9,7 +9,6 @@ on:
       - "test/**"
       - "scripts/**"
       - "Makefile"
-      - "docs/**"
       - ".competitive-verifier/**"
       - "config.toml"
       - ".github/workflows/verify.yaml"
@@ -20,31 +19,47 @@ on:
       - "test/**"
       - "scripts/**"
       - "Makefile"
-      - "docs/**"
       - ".competitive-verifier/**"
       - "config.toml"
       - ".github/workflows/verify.yaml"
 
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
-  group: pages-${{ github.ref }}
+  group: verify-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  verify-and-docs:
+  standalone-assets:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
 
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Verify standalone generated assets
+        run: make standalone-assets
+
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     outputs:
-      standalone-outcome: ${{ steps.standalone.outcome }}
-      verifier-outcome: ${{ steps.verifier.outcome }}
-      pages-artifact-outcome: ${{ steps.pages-artifact.outcome }}
+      indices: ${{ steps.plan.outputs.indices }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      verification_file_count: ${{ steps.plan.outputs.verification_file_count }}
+      verification_count: ${{ steps.plan.outputs.verification_count }}
 
     steps:
       - name: Checkout
@@ -58,192 +73,449 @@ jobs:
           python-version: "3.12"
           cache-pip: true
 
-      - name: Verify standalone generated assets
-        id: standalone
-        run: make standalone-assets
-        continue-on-error: true
-
-      - name: Resolve verify files
-        id: resolve
-        if: ${{ !cancelled() }}
+      - name: Resolve online judge verification files
         uses: competitive-verifier/actions/oj-resolve@v2
         with:
           output-path: verify-files.json
           config: config.toml
           include: |
             src
-            test
+            test/onlinejudge
 
-      - name: Prepare cache directory
-        id: cache_dir
-        if: ${{ !cancelled() && steps.resolve.outcome == 'success' }}
-        run: mkdir -p .competitive-verifier/cache
-
-      - name: Restore previous verify result
-        id: verify_cache
-        if: ${{ !cancelled() && steps.cache_dir.outcome == 'success' }}
-        uses: actions/cache@v4
-        continue-on-error: true
-        with:
-          path: .competitive-verifier/cache/result.json
-          key: competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-${{ github.run_id }}
-          restore-keys: |
-            competitive-verifier-result-${{ hashFiles('config.toml', '.github/workflows/verify.yaml') }}-
-
-      - name: Detect previous verify result
-        id: prev-result
-        if: ${{ !cancelled() && steps.resolve.outcome == 'success' && steps.cache_dir.outcome == 'success' }}
+      - name: Plan verification shards
+        id: plan
         shell: bash
+        env:
+          TARGET_FILES_PER_SHARD: "48"
         run: |
-          if [ -f .competitive-verifier/cache/result.json ]; then
-            echo "path=.competitive-verifier/cache/result.json" >> "$GITHUB_OUTPUT"
-          else
-            echo "path=" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Verify
-        id: verifier
-        uses: competitive-verifier/actions/verify@v2
-        if: ${{ !cancelled() && steps.resolve.outcome == 'success' && steps.cache_dir.outcome == 'success' && steps.prev-result.outcome == 'success' }}
-        continue-on-error: true
-        with:
-          verify-files: verify-files.json
-          destination: .competitive-verifier/cache/result.json
-          prev-result: ${{ steps.prev-result.outputs.path }}
-          check: true
-
-      # Override the implicit success() guard after a failed verification step.
-      - name: Check documentation titles
-        id: docs_title
-        if: ${{ !cancelled() }}
-        run: python3 scripts/check_docs_bilingual_titles.py docs
-
-      - name: Check documentation coverage
-        id: docs_coverage
-        if: ${{ !cancelled() }}
-        run: python3 scripts/check_docs_coverage.py src docs
-
-      - name: Prepare documentation result
-        id: docs_result
-        if: ${{ !cancelled() }}
-        run: |
-          python3 scripts/competitive_verifier_docs_result.py \
-            verify-files.json \
-            .competitive-verifier/cache/result.json \
-            > .competitive-verifier/cache/docs-result.json.tmp
-          mv \
-            .competitive-verifier/cache/docs-result.json.tmp \
-            .competitive-verifier/cache/docs-result.json
-
-      - name: Generate docs
-        id: docs
-        if: ${{ !cancelled() && steps.docs_title.outcome == 'success' && steps.docs_coverage.outcome == 'success' && steps.docs_result.outcome == 'success' }}
-        uses: competitive-verifier/actions/docs@v2
-        with:
-          verify-files: verify-files.json
-          verify-result: .competitive-verifier/cache/docs-result.json
-          destination: _jekyll
-
-      - name: Order library sections
-        id: docs_index
-        if: ${{ !cancelled() && steps.docs.outcome == 'success' }}
-        run: python3 scripts/reorder_competitive_verifier_index.py _jekyll/index.md
-
-      - name: Setup Pages
-        id: pages_setup
-        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.docs_index.outcome == 'success' }}
-        uses: actions/configure-pages@v5
-
-      - name: Build with Jekyll
-        id: pages_build
-        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.pages_setup.outcome == 'success' }}
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: _jekyll
-          destination: _site
-
-      - name: Remove unsafe polyfill.io reference
-        id: site_sanitize
-        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.pages_build.outcome == 'success' }}
-        run: |
-          sudo chown -R "$USER":"$USER" _site
-
           python3 - <<'PY'
+          import json
+          import os
           from pathlib import Path
-          import re
 
-          pattern = re.compile(
-              r'\s*<script\s+src="https://polyfill\.io/v3/polyfill\.min\.js\?features=es6"></script>\s*',
-              re.IGNORECASE,
+          target_files_per_shard = int(os.environ["TARGET_FILES_PER_SHARD"])
+          with Path("verify-files.json").open(encoding="utf-8") as file:
+              verify_files = json.load(file)
+
+          files = verify_files.get("files")
+          if not isinstance(files, dict):
+              raise SystemExit("verify-files.json does not contain a files object")
+
+          verification_file_count = 0
+          verification_count = 0
+          for path, data in files.items():
+              if not isinstance(data, dict):
+                  raise SystemExit(f"invalid verify file entry: {path}")
+              verification = data.get("verification", [])
+              if not isinstance(verification, list):
+                  raise SystemExit(f"invalid verification list: {path}")
+              verification_file_count += bool(verification)
+              verification_count += len(verification)
+
+          shard_count = (
+              verification_file_count + target_files_per_shard - 1
+          ) // target_files_per_shard
+          indices = list(range(shard_count))
+          output = Path(os.environ["GITHUB_OUTPUT"])
+          with output.open("a", encoding="utf-8") as file:
+              file.write(f"indices={json.dumps(indices, separators=(',', ':'))}\n")
+              file.write(f"shard_count={shard_count}\n")
+              file.write(f"verification_file_count={verification_file_count}\n")
+              file.write(f"verification_count={verification_count}\n")
+
+          print(
+              f"verification_file_count={verification_file_count}, "
+              f"verification_count={verification_count}, "
+              f"target_files_per_shard={target_files_per_shard}, "
+              f"shard_count={shard_count}"
           )
-
-          for path in Path("_site").rglob("*.html"):
-              text = path.read_text(encoding="utf-8", errors="ignore")
-              new_text = pattern.sub("\n", text)
-              if new_text != text:
-                  path.write_text(new_text, encoding="utf-8")
-                  print(f"removed from {path}")
           PY
 
-      - name: Check generated site for unsafe CDN references
-        id: site_check
-        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.site_sanitize.outcome == 'success' }}
-        run: |
-          if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' _site; then
-            echo "::error::Unsafe CDN reference remains in generated site"
-            exit 1
-          fi
-
-      - name: Upload HTML artifact
-        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.site_check.outcome == 'success' }}
+      - name: Upload resolved verification files
         uses: actions/upload-artifact@v4
         with:
-          name: documentation-html
-          path: _site
+          name: verify-files-${{ github.run_attempt }}
+          path: verify-files.json
           if-no-files-found: error
           retention-days: 7
 
-      - name: Upload Pages artifact
-        id: pages-artifact
-        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.site_check.outcome == 'success' }}
-        uses: actions/upload-pages-artifact@v4
+  verify:
+    if: ${{ needs.resolve.result == 'success' && needs.resolve.outputs.shard_count != '0' }}
+    needs: resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    strategy:
+      fail-fast: false
+      matrix:
+        index: ${{ fromJSON(needs.resolve.outputs.indices) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
-          path: _site
+          fetch-depth: 0
 
-  deploy:
-    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && needs.verify-and-docs.outputs.pages-artifact-outcome == 'success' }}
-    needs: verify-and-docs
+      - name: Set up competitive-verifier
+        uses: competitive-verifier/actions/setup@v2
+        with:
+          python-version: "3.12"
+          cache-pip: true
+
+      - name: Download resolved verification files
+        uses: actions/download-artifact@v4
+        with:
+          name: verify-files-${{ github.run_attempt }}
+          path: .
+
+      - name: Prepare verification directories
+        shell: bash
+        run: mkdir -p .competitive-verifier/cache .competitive-verifier/shards
+
+      - name: Restore previous verification result
+        id: result_cache
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: .competitive-verifier/cache/result.json
+          key: competitive-verifier-result-${{ hashFiles('config.toml') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            competitive-verifier-result-${{ hashFiles('config.toml') }}-
+            competitive-verifier-result-
+
+      - name: Detect valid previous verification result
+        id: previous
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(".competitive-verifier/cache/result.json")
+          valid = False
+          if path.is_file():
+              try:
+                  data = json.loads(path.read_text(encoding="utf-8"))
+                  valid = isinstance(data, dict) and isinstance(data.get("files"), dict)
+              except (OSError, UnicodeError, json.JSONDecodeError):
+                  pass
+
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as file:
+              file.write(f"path={path if valid else ''}\n")
+          PY
+
+      - name: Verify shard ${{ matrix.index }}
+        id: verifier
+        uses: competitive-verifier/actions/verify@v2
+        timeout-minutes: 18
+        with:
+          verify-files: verify-files.json
+          destination: .competitive-verifier/shards/result-${{ matrix.index }}.json
+          prev-result: ${{ steps.previous.outputs.path }}
+          split-size: ${{ needs.resolve.outputs.shard_count }}
+          split-index: ${{ matrix.index }}
+          timeout: "900"
+          check: false
+
+      - name: Record shard status
+        id: shard_status
+        if: ${{ always() }}
+        shell: bash
+        env:
+          SHARD_INDEX: ${{ matrix.index }}
+          VERIFY_OUTCOME: ${{ steps.verifier.outcome }}
+          VERIFY_SUCCESS: ${{ steps.verifier.outputs.is-success }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          index = int(os.environ["SHARD_INDEX"])
+          outcome = os.environ.get("VERIFY_OUTCOME", "")
+          reported_success = os.environ.get("VERIFY_SUCCESS", "").lower() == "true"
+          result_path = Path(f".competitive-verifier/shards/result-{index}.json")
+
+          result_valid = False
+          if result_path.is_file():
+              try:
+                  data = json.loads(result_path.read_text(encoding="utf-8"))
+                  result_valid = isinstance(data, dict) and isinstance(data.get("files"), dict)
+              except (OSError, UnicodeError, json.JSONDecodeError):
+                  pass
+
+          status = {
+              "index": index,
+              "outcome": outcome,
+              "is_success": outcome == "success" and reported_success,
+              "result_exists": result_path.is_file(),
+              "result_valid": result_valid,
+          }
+          status_path = Path(f".competitive-verifier/shards/status-{index}.json")
+          status_path.parent.mkdir(parents=True, exist_ok=True)
+          status_path.write_text(json.dumps(status, sort_keys=True) + "\n", encoding="utf-8")
+          print(json.dumps(status, sort_keys=True))
+          PY
+
+      - name: Upload shard result and status
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-shard-${{ github.run_attempt }}-${{ matrix.index }}
+          path: |
+            .competitive-verifier/shards/result-${{ matrix.index }}.json
+            .competitive-verifier/shards/status-${{ matrix.index }}.json
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: true
+
+  merge-and-check:
+    if: ${{ always() }}
+    needs:
+      - resolve
+      - verify
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 20
 
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-  report-verification:
-    if: ${{ !cancelled() }}
-    needs: verify-and-docs
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+      - name: Set up competitive-verifier
+        uses: competitive-verifier/actions/setup@v2
+        with:
+          python-version: "3.12"
+          cache-pip: true
 
-    steps:
-      - name: Report standalone verification failure
-        if: ${{ !cancelled() && needs.verify-and-docs.outputs.standalone-outcome != 'success' }}
+      - name: Download shard artifacts
+        id: download_shards
+        if: ${{ always() }}
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: verify-shard-${{ github.run_attempt }}-*
+          path: shard-artifacts
+          merge-multiple: true
+
+      - name: Inventory shard artifacts
+        id: inventory
+        if: ${{ always() }}
+        shell: bash
+        env:
+          EXPECTED_SHARDS: ${{ needs.resolve.outputs.shard_count }}
         run: |
-          echo "::error::Standalone generated assets failed"
-          exit 1
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
 
-      - name: Report competitive-verifier failure
-        if: ${{ !cancelled() && needs.verify-and-docs.outputs.verifier-outcome != 'success' }}
+          root = Path("shard-artifacts")
+          cache = Path(".competitive-verifier/cache")
+          cache.mkdir(parents=True, exist_ok=True)
+
+          try:
+              expected = int(os.environ.get("EXPECTED_SHARDS", ""))
+              if expected < 0:
+                  raise ValueError
+              plan_valid = True
+          except ValueError:
+              expected = 0
+              plan_valid = False
+
+          missing = []
+          false_indices = []
+          invalid = []
+          valid_results = []
+
+          for index in range(expected):
+              status_path = root / f"status-{index}.json"
+              result_path = root / f"result-{index}.json"
+
+              if not status_path.is_file():
+                  missing.append(index)
+              else:
+                  try:
+                      status = json.loads(status_path.read_text(encoding="utf-8"))
+                      if not isinstance(status, dict) or status.get("index") != index:
+                          raise ValueError
+                      if status.get("is_success") is not True:
+                          false_indices.append(index)
+                  except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+                      invalid.append(index)
+
+              try:
+                  result = json.loads(result_path.read_text(encoding="utf-8"))
+                  if not isinstance(result, dict) or not isinstance(result.get("files"), dict):
+                      raise ValueError
+                  valid_results.append(str(result_path))
+              except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+                  if index not in invalid:
+                      invalid.append(index)
+
+          inventory = {
+              "plan_valid": plan_valid,
+              "expected_shards": expected,
+              "missing": missing,
+              "false": false_indices,
+              "invalid": invalid,
+              "valid_results": valid_results,
+          }
+          (cache / "shard-inventory.json").write_text(
+              json.dumps(inventory, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+
+          def emit(name, value):
+              with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as file:
+                  file.write(f"{name}={value}\n")
+
+          emit("plan_valid", str(plan_valid).lower())
+          emit("valid_count", len(valid_results))
+          emit("result_files", " ".join(valid_results))
+          emit("missing", json.dumps(missing, separators=(",", ":")))
+          emit("false_indices", json.dumps(false_indices, separators=(",", ":")))
+          emit("invalid", json.dumps(invalid, separators=(",", ":")))
+          print(json.dumps(inventory, sort_keys=True))
+          PY
+
+      - name: Merge shard results
+        id: merge
+        if: ${{ always() && steps.inventory.outputs.valid_count != '0' }}
+        uses: competitive-verifier/actions/merge-result@v2
+        continue-on-error: true
+        with:
+          result-files: ${{ steps.inventory.outputs.result_files }}
+          output-path: .competitive-verifier/cache/result.json
+
+      - name: Ensure a valid merged result
+        id: merged_result
+        if: ${{ always() }}
+        shell: bash
         run: |
-          echo "::error::competitive-verifier failed"
-          exit 1
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(".competitive-verifier/cache/result.json")
+          fallback = True
+          if path.is_file():
+              try:
+                  data = json.loads(path.read_text(encoding="utf-8"))
+                  fallback = not (
+                      isinstance(data, dict) and isinstance(data.get("files"), dict)
+                  )
+              except (OSError, UnicodeError, json.JSONDecodeError):
+                  pass
+
+          if fallback:
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(
+                  json.dumps({"total_seconds": 0, "files": {}}, sort_keys=True) + "\n",
+                  encoding="utf-8",
+              )
+
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as file:
+              file.write(f"fallback={str(fallback).lower()}\n")
+          PY
+
+      - name: Save merged verification cache
+        if: ${{ always() && steps.merge.outcome == 'success' && steps.merged_result.outputs.fallback == 'false' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: .competitive-verifier/cache/result.json
+          key: competitive-verifier-result-${{ hashFiles('config.toml') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Upload merged verification result
+        id: upload_merged
+        if: ${{ always() && steps.merged_result.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: competitive-verifier-result-${{ github.run_attempt }}
+          path: .competitive-verifier/cache/result.json
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: true
+
+      - name: Check merged verification result
+        id: check
+        if: ${{ always() && steps.merged_result.outcome == 'success' }}
+        uses: competitive-verifier/actions/check@v2
+        continue-on-error: true
+        with:
+          verify-result: .competitive-verifier/cache/result.json
+
+      - name: Report verification failures
+        if: ${{ always() }}
+        shell: bash
+        env:
+          RESOLVE_RESULT: ${{ needs.resolve.result }}
+          VERIFY_RESULT: ${{ needs.verify.result }}
+          EXPECTED_SHARDS: ${{ needs.resolve.outputs.shard_count }}
+          EXPECTED_VERIFICATIONS: ${{ needs.resolve.outputs.verification_count }}
+          PLAN_VALID: ${{ steps.inventory.outputs.plan_valid }}
+          MISSING_SHARDS: ${{ steps.inventory.outputs.missing }}
+          FALSE_SHARDS: ${{ steps.inventory.outputs.false_indices }}
+          INVALID_SHARDS: ${{ steps.inventory.outputs.invalid }}
+          MERGE_OUTCOME: ${{ steps.merge.outcome }}
+          USED_FALLBACK: ${{ steps.merged_result.outputs.fallback }}
+          CHECK_OUTCOME: ${{ steps.check.outcome }}
+          CHECK_COUNT: ${{ steps.check.outputs.result-count }}
+          CHECK_FAILURE: ${{ steps.check.outputs.result-count-failure }}
+          CHECK_SKIPPED: ${{ steps.check.outputs.result-count-skipped }}
+        run: |
+          status=0
+
+          report_error() {
+            echo "::error::$1"
+            status=1
+          }
+
+          if [ "$RESOLVE_RESULT" != "success" ]; then
+            report_error "Verification file resolution did not succeed: $RESOLVE_RESULT"
+          fi
+          if [ "$PLAN_VALID" != "true" ]; then
+            report_error "The verification shard plan is missing or invalid"
+          fi
+          if ! [[ "$EXPECTED_SHARDS" =~ ^[0-9]+$ ]] || [ "$EXPECTED_SHARDS" -eq 0 ]; then
+            report_error "No verification shards were planned"
+          fi
+          if [ "$VERIFY_RESULT" != "success" ]; then
+            report_error "One or more verification shard jobs did not succeed: $VERIFY_RESULT"
+          fi
+          if [ -z "$MISSING_SHARDS" ] || [ "$MISSING_SHARDS" != "[]" ]; then
+            report_error "Missing shard status artifacts: ${MISSING_SHARDS:-unknown}"
+          fi
+          if [ -z "$FALSE_SHARDS" ] || [ "$FALSE_SHARDS" != "[]" ]; then
+            report_error "Verification reported false for shards: ${FALSE_SHARDS:-unknown}"
+          fi
+          if [ -z "$INVALID_SHARDS" ] || [ "$INVALID_SHARDS" != "[]" ]; then
+            report_error "Invalid or missing shard results: ${INVALID_SHARDS:-unknown}"
+          fi
+          if [ "$MERGE_OUTCOME" != "success" ]; then
+            report_error "Shard result merge did not succeed: $MERGE_OUTCOME"
+          fi
+          if [ "$USED_FALLBACK" != "false" ]; then
+            report_error "The merged result required an empty JSON fallback"
+          fi
+          if [ "$CHECK_OUTCOME" != "success" ]; then
+            report_error "competitive-verifier check failed or was skipped: $CHECK_OUTCOME"
+          fi
+          if ! [[ "$CHECK_FAILURE" =~ ^[0-9]+$ ]] || [ "$CHECK_FAILURE" -ne 0 ]; then
+            report_error "competitive-verifier check failures: ${CHECK_FAILURE:-unknown}"
+          fi
+          if ! [[ "$CHECK_SKIPPED" =~ ^[0-9]+$ ]] || [ "$CHECK_SKIPPED" -ne 0 ]; then
+            report_error "competitive-verifier check skipped results: ${CHECK_SKIPPED:-unknown}"
+          fi
+          if ! [[ "$EXPECTED_VERIFICATIONS" =~ ^[0-9]+$ ]] || \
+             ! [[ "$CHECK_COUNT" =~ ^[0-9]+$ ]] || \
+             [ "$CHECK_COUNT" -ne "$EXPECTED_VERIFICATIONS" ]; then
+            report_error \
+              "Merged result count ${CHECK_COUNT:-unknown} does not match expected ${EXPECTED_VERIFICATIONS:-unknown}"
+          fi
+
+          exit "$status"

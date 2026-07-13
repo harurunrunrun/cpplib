@@ -1,0 +1,177 @@
+name: docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "test/**"
+      - "docs/**"
+      - "scripts/**"
+      - "Makefile"
+      - ".competitive-verifier/**"
+      - "config.toml"
+      - ".github/workflows/docs.yaml"
+
+  pull_request:
+    paths:
+      - "src/**"
+      - "test/**"
+      - "docs/**"
+      - "scripts/**"
+      - "Makefile"
+      - ".competitive-verifier/**"
+      - "config.toml"
+      - ".github/workflows/docs.yaml"
+
+  workflow_dispatch:
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up competitive-verifier
+        uses: competitive-verifier/actions/setup@v2
+        with:
+          python-version: "3.12"
+          cache-pip: true
+
+      - name: Resolve documentation files
+        uses: competitive-verifier/actions/oj-resolve@v2
+        with:
+          output-path: verify-files.json
+          config: config.toml
+          include: |
+            src
+            test/onlinejudge
+
+      - name: Check documentation titles
+        run: python3 scripts/check_docs_bilingual_titles.py docs
+
+      - name: Check documentation coverage
+        run: python3 scripts/check_docs_coverage.py src docs
+
+      - name: Prepare cache directory
+        run: mkdir -p .competitive-verifier/cache
+
+      - name: Restore latest verify result
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: .competitive-verifier/cache/result.json
+          key: competitive-verifier-result-${{ hashFiles('config.toml') }}
+          restore-keys: |
+            competitive-verifier-result-${{ hashFiles('config.toml') }}-
+            competitive-verifier-result-
+
+      - name: Prepare documentation result
+        run: |
+          python3 scripts/competitive_verifier_docs_result.py \
+            verify-files.json \
+            .competitive-verifier/cache/result.json \
+            > .competitive-verifier/cache/docs-result.json.tmp
+          mv \
+            .competitive-verifier/cache/docs-result.json.tmp \
+            .competitive-verifier/cache/docs-result.json
+
+      - name: Generate docs
+        uses: competitive-verifier/actions/docs@v2
+        with:
+          verify-files: verify-files.json
+          verify-result: .competitive-verifier/cache/docs-result.json
+          destination: _jekyll
+
+      - name: Order library sections
+        run: python3 scripts/reorder_competitive_verifier_index.py _jekyll/index.md
+
+      - name: Setup Pages
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/configure-pages@v5
+
+      - name: Build with Jekyll
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: _jekyll
+          destination: _site
+
+      - name: Remove unsafe polyfill.io reference
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          sudo chown -R "$USER":"$USER" _site
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          pattern = re.compile(
+              r'\s*<script\s+src="https://polyfill\.io/v3/polyfill\.min\.js\?features=es6"></script>\s*',
+              re.IGNORECASE,
+          )
+
+          for path in Path("_site").rglob("*.html"):
+              text = path.read_text(encoding="utf-8", errors="ignore")
+              new_text = pattern.sub("\n", text)
+              if new_text != text:
+                  path.write_text(new_text, encoding="utf-8")
+                  print(f"removed from {path}")
+          PY
+
+      - name: Check generated site for unsafe CDN references
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' _site; then
+            echo "::error::Unsafe CDN reference remains in generated site"
+            exit 1
+          fi
+
+      - name: Upload HTML artifact
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-html
+          path: _site
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload Pages artifact
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs: docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
