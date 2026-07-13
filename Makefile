@@ -84,6 +84,8 @@ docs-source: verifier-resolve
 		--verify-json $(VERIFY_FILES) \
 		--destination $(DOCS_SOURCE) \
 		$(DOCS_RESULT)
+	$(VERIFIER_VENV)/bin/python scripts/reorder_competitive_verifier_index.py \
+		$(DOCS_SOURCE)/index.md
 
 
 docs-prerequisites:
