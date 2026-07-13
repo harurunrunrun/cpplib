@@ -26,9 +26,13 @@ def solve(n: int, edges: list[tuple[int, int, int]], s: int, t: int, k: int) -> 
         return []
     result: list[int] = []
     que: list[tuple[int, int]] = [(0, s)]
+    popped = [0] * n
     guard = 0
     while que and len(result) < k:
         d, v = heapq.heappop(que)
+        if popped[v] == k:
+            continue
+        popped[v] += 1
         if v == t:
             result.append(d)
         for to, w in graph[v]:
@@ -46,7 +50,11 @@ def write_case(out_dir: Path, idx: int, n: int, edges: list[tuple[int, int, int]
         "\n".join([f"{n} {len(edges)} {s} {t} {k}", *[f"{u} {v} {w}" for u, v, w in edges]]) + "\n",
         encoding="utf-8",
     )
-    (out_dir / f"{name}.out").write_text(f"{len(costs)}\n" + " ".join(map(str, costs)) + "\n", encoding="utf-8")
+    kth_value = str(costs[k - 1]) if k > 0 and len(costs) == k else "NONE"
+    (out_dir / f"{name}.out").write_text(
+        f"{len(costs)}\n" + " ".join(map(str, costs)) + f"\n{kth_value}\n",
+        encoding="utf-8",
+    )
 
 
 def main() -> None:
@@ -61,6 +69,10 @@ def main() -> None:
         (1, [], 0, 0, 3),
         (3, [(0, 1, 1), (0, 2, 2), (1, 2, 1), (1, 1, 2)], 0, 2, 4),
         (4, [(0, 1, 1), (2, 3, 1)], 0, 3, 5),
+        (2, [(0, 0, 0), (0, 1, 7), (0, 1, 7)], 0, 1, 201),
+        (2, [(0, 1, 0), (1, 0, 0), (0, 1, 0)], 0, 1, 80),
+        (1, [(0, 0, 0)], 0, 0, 100),
+        (3, [(0, 1, 5), (0, 1, 5), (1, 2, 0)], 0, 2, 3),
     ]
     rng = random.Random(20260730)
     for n in [2, 4, 6, 8]:
@@ -71,6 +83,10 @@ def main() -> None:
                     if u < v and rng.randrange(4) == 0:
                         edges.append((u, v, 1 + rng.randrange(5)))
             cases.append((n, edges, rng.randrange(n), rng.randrange(n), 6))
+
+    large_n = 20000
+    large_edges = [(vertex, vertex + 1, 1) for vertex in range(large_n - 1)]
+    cases.append((large_n, large_edges, 0, large_n - 1, 1))
 
     for i, case in enumerate(cases):
         write_case(out_dir, i, *case)

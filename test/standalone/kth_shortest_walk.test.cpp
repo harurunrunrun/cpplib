@@ -58,13 +58,40 @@ void self_test(){
         graph[1].push_back({1, 2});
         auto res = kth_shortest_walks<long long>(graph, 0, 2, 4);
         assert((res == std::vector<long long>{2, 2, 4, 6}));
+        for(int k = 0; k < 4; k++){
+            assert(kth_shortest_walk<long long>(graph, 0, 2, k) == res[k]);
+            assert(kth_shortest_walk_1indexed<long long>(graph, 0, 2, k + 1) == res[k]);
+        }
+    }
+    {
+        std::vector<std::vector<KthShortestWalkEdge<long long>>> graph(2);
+        graph[0].push_back({0, 0});
+        graph[0].push_back({1, 7});
+        graph[0].push_back({1, 7});
+        assert(kth_shortest_walk<long long>(graph, 0, 1, 200) == 7);
+        assert(kth_shortest_walk_1indexed<long long>(graph, 0, 1, 201) == 7);
+        graph[1].push_back({1, 0});
+        assert(kth_shortest_walk<long long>(graph, 1, 1, 100) == 0);
+    }
+    {
+        std::vector<std::vector<KthShortestWalkEdge<long long>>> graph(3);
+        graph[0].push_back({1, 1});
+        assert(!kth_shortest_walk<long long>(graph, 0, 2, 0));
+        assert(!kth_shortest_walk_1indexed<long long>(graph, 0, 2, 1));
     }
     {
         std::vector<std::vector<KthShortestWalkEdge<long long>>> graph(2);
         graph[1].push_back({1, -1});
         bool thrown = false;
         try{
-            (void)kth_shortest_walks<long long>(graph, 0, 0, 1);
+            (void)kth_shortest_walk<long long>(graph, 0, 0, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            (void)kth_shortest_walk_1indexed<long long>(graph, 0, 0, 0);
         }catch(const std::runtime_error&){
             thrown = true;
         }
@@ -87,6 +114,15 @@ void self_test(){
             auto actual = kth_shortest_walks<long long>(graph, s, t, k);
             auto expected = brute_walks(graph, s, t, k);
             assert(actual == expected);
+            for(int rank = 0; rank < static_cast<int>(expected.size()); rank++){
+                assert(kth_shortest_walk<long long>(graph, s, t, rank) == expected[rank]);
+                assert(kth_shortest_walk_1indexed<long long>(graph, s, t, rank + 1) == expected[rank]);
+            }
+            if(static_cast<int>(expected.size()) < k){
+                assert(!kth_shortest_walk<long long>(
+                    graph, s, t, static_cast<int>(expected.size())
+                ));
+            }
         }
     }
 }
@@ -111,4 +147,13 @@ int main(){
         std::cout << res[i];
     }
     std::cout << '\n';
+    if(k == 0){
+        std::cout << "NONE\n";
+    }else{
+        auto zero_indexed = kth_shortest_walk<long long>(graph, s, t, k - 1);
+        auto one_indexed = kth_shortest_walk_1indexed<long long>(graph, s, t, k);
+        assert(zero_indexed == one_indexed);
+        if(zero_indexed) std::cout << *zero_indexed << '\n';
+        else std::cout << "NONE\n";
+    }
 }
