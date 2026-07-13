@@ -26,7 +26,9 @@ def split_front_matter(text: str) -> tuple[dict[str, Any], str]:
     raise ValueError("front matter closing delimiter is missing")
 
 
-def section_name(category: dict[str, Any]) -> str | None:
+def section_name(category: Any) -> str | None:
+    if not isinstance(category, dict):
+        return None
     name = category.get("name")
     if not isinstance(name, str):
         return None

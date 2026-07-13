@@ -25,11 +25,12 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-resolve standalone-assets verify docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-resolve standalone-assets verify docs-title-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
 	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
+	@echo "make docs-title-check  docsの英日併記タイトルを検査"
 	@echo "make docs    testを実行せずHTMLを$(DOCS_OUTPUT)へ生成"
 	@echo "make docs-serve  HTMLを生成してlocalhost:4000で配信"
 	@echo "make verifier-clean  ローカル生成物とvenvを削除"
@@ -77,7 +78,10 @@ verify:
 		exit 1; \
 	fi
 
-docs-source: verifier-resolve
+docs-title-check:
+	$(PYTHON) scripts/check_docs_bilingual_titles.py docs
+
+docs-source: docs-title-check verifier-resolve
 	$(PYTHON) scripts/competitive_verifier_docs_result.py \
 		$(VERIFY_FILES) $(VERIFY_RESULT) > $(DOCS_RESULT)
 	$(VERIFIER) docs \
