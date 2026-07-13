@@ -1,0 +1,53 @@
+// competitive-verifier: STANDALONE
+
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+
+#include "../../src/approximate/streaming/bloom_filter.hpp"
+#include "../../src/approximate/streaming/cuckoo_filter.hpp"
+#include "../../src/approximate/streaming/count_min_sketch.hpp"
+#include "../../src/approximate/streaming/count_sketch.hpp"
+
+int main(){
+    int count;
+    if(!(std::cin >> count)) return 0;
+    std::vector<std::uint64_t> values(static_cast<std::size_t>(count));
+    BloomFilter<65536, 7> bloom(12345);
+    CountingBloomFilter<65536, 7> counting(12345);
+    CuckooFilter<2048, 4, 16> cuckoo(54321);
+    CountMinSketch<4096, 7> count_min(67890);
+    CountSketch<4096, 9> count_sketch(24680);
+    std::unordered_map<std::uint64_t, std::int64_t> exact;
+    for(auto& value: values){
+        std::cin >> value;
+        bloom.add(value);
+        counting.add(value);
+        assert(cuckoo.add(value));
+        count_min.add(value);
+        count_sketch.add(value);
+        ++exact[value];
+    }
+    for(const auto& entry: exact){
+        assert(bloom.contains(entry.first));
+        assert(counting.contains(entry.first));
+        assert(cuckoo.contains(entry.first));
+        assert(counting.estimate_multiplicity(entry.first)
+               >= static_cast<std::uint16_t>(entry.second));
+        assert(count_min.estimate(entry.first) >= static_cast<std::uint64_t>(entry.second));
+        assert(std::llabs(count_sketch.estimate(entry.first) - entry.second) <= count / 8 + 2);
+    }
+    for(const auto& entry: exact){
+        assert(counting.remove(entry.first));
+        assert(cuckoo.erase(entry.first));
+        if(entry.second > 1) assert(counting.contains(entry.first));
+    }
+    assert(bloom.insertions() == static_cast<std::uint64_t>(count));
+    assert(count_min.total() == static_cast<std::uint64_t>(count));
+    assert((BloomFilter<65536, 7>::bit_count() == 65536U));
+    assert((CountMinSketch<4096, 7>::failure_probability_bound() < 0.001L));
+    std::cout << "OK\n";
+}
