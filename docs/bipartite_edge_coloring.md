@@ -3,41 +3,61 @@ title: Bipartite Edge Coloring
 documentation_of: ../src/algorithm/graph/bipartite_edge_coloring.hpp
 ---
 
-二部グラフの辺彩色。多重辺を扱える。
+無向二部多重グラフを、辺彩色数と等しい最小色数でproper edge coloringする。Kőnigのline coloring theoremにより、必要な色数は最大次数 `Delta` である。
 
-最大次数を $\Delta$ として、$\Delta$ 色で塗る。
-
-# 関数
+# 辺
 
 ```cpp
-bipartite_edge_coloring(left_size, right_size, edges)
+struct BipartiteEdgeColoringEdge {
+    int left;
+    int right;
+};
 ```
 
-`edges` は `BipartiteEdgeColoringEdge{left, right}` の列。
+`left` は左側頂点番号、`right` は右側頂点番号。異なる入力要素は、端点が同じでも別の辺として扱う。
 
-`BipartiteEdgeColoringResult` は次を持つ。
+# 結果
 
 ```cpp
-int color_count;
-vector<int> color;
+struct BipartiteEdgeColoringResult {
+    int color_count;
+    vector<int> color;
+};
 ```
 
-各辺の色は `0 <= color[i] < color_count`。
+- `color_count` は最大次数 `Delta`。辺が空なら0。
+- `color[i]` は入力の `edges[i]` に対応する色。入力順を保ち、辺が存在すれば `0 <= color[i] < color_count`。
+- 同じ頂点に接続する2辺の色は常に異なる。
+
+# 二部グラフの辺彩色
+
+```cpp
+BipartiteEdgeColoringResult bipartite_edge_coloring(
+    int left_size,
+    int right_size,
+    const vector<BipartiteEdgeColoringEdge>& edges
+)
+```
+
+孤立頂点を含めてよく、`left_size == 0` または `right_size == 0` も辺が空なら許す。自己loopという概念は二部グラフにはなく、左右の同じ整数番号は別の頂点である。多重辺を許す。
+
+次数の和が `Delta` 以下になるよう同じ側の頂点を縮約し、左右の不足次数をdummy edgeで補って `Delta`-regular bipartite multigraphを作る。偶数次数はEuler circuitを交互に分割し、奇数次数はHopcroft--Karpでperfect matchingを1つ取り除く。dummy edgeの色は結果から捨てる。
 
 ## 時間計算量
 
-$M$ を辺数、$\Delta$ を最大次数とする。
+`M = edges.size()`、`Delta` を最大次数、縮約後の片側頂点数を `S` とする。`S = O(M / Delta + 1)` であり、regularization後の辺数も `O(M)`。
 
-- 端点の座標圧縮: $O(M\log(M+1))$
-- 交互パスによる彩色と長さ $M$ の出力構築: $O(M^2)$
-- `bipartite_edge_coloring` 全体: $O(M^2+M\log(M+1))$
+- 頂点縮約とregularization: `O(left_size + right_size + M)`
+- Euler分割全体: `O(M log(Delta + 1))`
+- perfect matching全体: `O(M sqrt(S) log(Delta + 1))`
+- API全体: `O(left_size + right_size + M sqrt(M / Delta + 1) log(Delta + 1))`
 
-色の入れ替えは2色からなる交互パスだけを直接たどり、孤立頂点数には依存しない。
+`M == 0` の場合は `O(left_size + right_size)`。
 
 ## 空間計算量
 
-- 圧縮後の色表と戻り値を含めて $O(M\Delta+M)$
+- `O(left_size + right_size + M)`
 
-## API契約・前提・例外
+# 前提・例外
 
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+`left_size`、`right_size` は非負でなければならない。全辺について `0 <= left < left_size` および `0 <= right < right_size` を要求する。違反時は `runtime_error` を送出する。
