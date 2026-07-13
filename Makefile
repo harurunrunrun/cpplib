@@ -17,6 +17,14 @@ STANDALONE_ASSET_CACHE := $(VERIFIER_CACHE)/standalone-assets
 CXX ?= g++
 CXXFLAGS ?= -std=c++20 -O2 -Wall -Wextra
 
+COMMA := ,
+JEKYLL_URL_CONFIG := $(VERIFIER_CACHE)/jekyll-url.yml
+JEKYLL_URL_CONFIG_COMMAND := $(if $(strip $(JEKYLL_URL)),$(PYTHON) scripts/write_jekyll_url_config.py --output "$(JEKYLL_URL_CONFIG)")
+JEKYLL_BUILD_ARGS := $(strip \
+	$(if $(strip $(JEKYLL_URL)),--config "$(abspath $(DOCS_SOURCE)/_config.yml)$(COMMA)$(abspath $(JEKYLL_URL_CONFIG))") \
+	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
+)
+
 .PHONY: help verifier-setup verifier-resolve standalone-assets verify docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
@@ -93,10 +101,11 @@ docs: docs-prerequisites docs-source
 	BUNDLE_PATH=$(abspath $(BUNDLE_PATH)) bundle check || \
 	BUNDLE_GEMFILE=$(abspath $(DOCS_SOURCE)/Gemfile) \
 	BUNDLE_PATH=$(abspath $(BUNDLE_PATH)) bundle install
+	$(JEKYLL_URL_CONFIG_COMMAND)
 	BUNDLE_GEMFILE=$(abspath $(DOCS_SOURCE)/Gemfile) \
 	BUNDLE_PATH=$(abspath $(BUNDLE_PATH)) bundle exec jekyll build \
 		--source $(abspath $(DOCS_SOURCE)) \
-		--destination $(abspath $(DOCS_OUTPUT))
+		--destination $(abspath $(DOCS_OUTPUT)) $(JEKYLL_BUILD_ARGS)
 	@echo "Generated HTML: $(DOCS_OUTPUT)/index.html"
 
 docs-serve: docs
@@ -104,7 +113,7 @@ docs-serve: docs
 	BUNDLE_PATH=$(abspath $(BUNDLE_PATH)) bundle exec jekyll serve \
 		--source $(abspath $(DOCS_SOURCE)) \
 		--destination $(abspath $(DOCS_OUTPUT)) \
-		--host 127.0.0.1 --port 4000
+		--host 127.0.0.1 --port 4000 $(JEKYLL_BUILD_ARGS)
 
 verifier-clean:
 	rm -rf $(VERIFIER_VENV) $(VERIFIER_CACHE) $(VERIFIER_ROOT)/bundled \

@@ -1,0 +1,7 @@
+workflow_name: verify.yaml
+repository: harurunrunrun/cpplib
+plugins:
+  - jemoji
+  - jekyll-redirect-from
+  - jekyll-remote-theme
+  - jekyll-github-metadata
