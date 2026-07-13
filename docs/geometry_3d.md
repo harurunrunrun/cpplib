@@ -5,6 +5,58 @@ documentation_of: ../src/algorithm/geometry/geometry_3d.hpp
 
 `long double` を用いる3次元幾何の基本型、距離、交差、三角形、四面体、球をまとめる。判定には `GEOMETRY3D_EPS = 1e-10L` を使う。
 
+# header
+
+`geometry_3d.hpp` は後方互換用の umbrella header であり、下記の個別 header を
+include するだけである。必要な API だけを使う場合は
+`geometry_3d/<name>.hpp` を直接 include できる。
+
+`base.hpp` は定数、`Point3` の member/operator と基本型だけを定義する。
+公開関数は同名 overload 群ごとに次の header に分かれる。
+
+| header | 公開 API |
+| --- | --- |
+| `geometry3d_sign.hpp` | `geometry3d_sign` |
+| `dot.hpp` / `cross.hpp` | `dot` / `cross` |
+| `norm.hpp` / `abs.hpp` / `unit.hpp` | `norm` / `abs` / `unit` |
+| `scalar_triple.hpp` | `scalar_triple` |
+| `parallel.hpp` / `orthogonal.hpp` | `parallel` / `orthogonal` |
+| `collinear.hpp` / `coplanar.hpp` | `collinear` / `coplanar` |
+| `line3_direction.hpp` / `ray3_direction.hpp` | 対応する direction |
+| `plane3_unit_normal.hpp` | `plane3_unit_normal` |
+| `on_line.hpp` / `on_ray.hpp` / `on_segment.hpp` / `on_plane.hpp` | 対応する `on_*` |
+| `projection.hpp` | `projection` の2 overload |
+| `closest_point.hpp` | `closest_point` の3 overload |
+| `reflection.hpp` | `reflection` の2 overload |
+| `distance.hpp` | `distance` の8 overload |
+| `signed_distance.hpp` | `signed_distance` |
+| `closest_points.hpp` | `closest_points` の2 overload |
+| `line_plane_intersection.hpp` | `line_plane_intersection` |
+| `ray_plane_intersection.hpp` | `ray_plane_intersection` |
+| `segment_plane_intersection.hpp` | `segment_plane_intersection` |
+| `plane_plane_intersection.hpp` | `plane_plane_intersection` |
+| `line_sphere_intersections.hpp` | `line_sphere_intersections` |
+| `ray_sphere_intersections.hpp` | `ray_sphere_intersections` |
+| `segment_sphere_intersections.hpp` | `segment_sphere_intersections` |
+| `plane_sphere_intersection.hpp` | `plane_sphere_intersection` |
+| `sphere_sphere_intersection.hpp` | `sphere_sphere_intersection` |
+| `triangle_normal.hpp` / `area.hpp` | `triangle_normal` / `area` |
+| `centroid.hpp` | `centroid` の2 overload |
+| `barycentric_coordinates.hpp` | `barycentric_coordinates` の2 overload |
+| `contains.hpp` | `contains` の3 overload |
+| `signed_volume.hpp` / `volume.hpp` | `signed_volume` / `volume` |
+| `circumcircle.hpp` / `circumsphere.hpp` | `circumcircle` / `circumsphere` |
+| `on_circle.hpp` | `on_circle` |
+| `sphere_surface_area.hpp` / `sphere_volume.hpp` | 球の表面積 / 体積 |
+| `sphere_cap_surface_area.hpp` / `sphere_cap_volume.hpp` | 球冠の曲面積 / 体積 |
+| `sphere_intersection_volume.hpp` | `sphere_intersection_volume` |
+| `angle.hpp` / `rotate_around_axis.hpp` | `angle` / `rotate_around_axis` |
+| `plane_orthonormal_basis.hpp` | `plane_orthonormal_basis` |
+
+全公開定義は `inline` であり、個別 header と umbrella header を同じ翻訳単位で
+重複して include しても定義は一度だけ読み込まれる。
+
+
 # 基本型
 
 ~~~cpp

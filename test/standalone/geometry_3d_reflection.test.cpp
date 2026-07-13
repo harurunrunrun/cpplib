@@ -1,0 +1,16 @@
+// competitive-verifier: STANDALONE
+
+#include "../../src/algorithm/geometry/geometry_3d/reflection.hpp"
+#include "geometry_3d_test_common.hpp"
+
+int main(){
+    return geometry3d_test_main([](){
+        return geometry3d_close_point(
+            reflection(Line3{{0, 0, 0}, {2, 0, 0}}, {1, 3, 4}),
+            {1, -3, -4}
+        ) && geometry3d_close_point(
+            reflection(Plane3{{0, 0, 0}, {0, 0, 2}}, {1, 2, 3}),
+            {1, 2, -3}
+        );
+    });
+}
