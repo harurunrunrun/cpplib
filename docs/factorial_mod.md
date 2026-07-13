@@ -27,3 +27,11 @@ auto res = fac.factorial(n);
 
 - 構築: $O(p)$
 - `factorial`: $O(\log_p n)$
+
+## API別計算量
+
+| API | 時間計算量 | 補足 |
+| --- | --- | --- |
+| `FactorialModPrime(prime)` | $O(p)$ | $p=prime$。前処理と保持領域はいずれも $O(p)$。 |
+| `mod()` | $O(1)$ | 構築時の法を返す metadata query。 |
+| `factorial(n)` | $O(\log_p(n+1))$ | 戻り値の `value` / `exponent` 参照は各 $O(1)$。 |

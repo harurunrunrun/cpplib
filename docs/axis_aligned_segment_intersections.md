@@ -16,3 +16,11 @@ long long count_axis_aligned_segment_intersections(const vector<Segment>& segmen
 ## 計算量
 
 $N$ を線分数として $O(N\log N)$。
+
+## API別計算量
+
+| API | 時間計算量 | 空間計算量 |
+| --- | --- | --- |
+| `count_axis_aligned_segment_intersections(segments)` | $O(N\log N)$ | $O(N)$ |
+
+event生成・座標圧縮が前処理 $O(N\log N)$、各eventのFenwick tree更新/queryが $O(\log N)$。交点自体は列挙せず総数だけを返すため、交点数への出力依存項はない。

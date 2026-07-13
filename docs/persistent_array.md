@@ -35,8 +35,9 @@ PersistentArray<T, MAX_SIZE, MAX_VERSION>
 
 ## 時間計算量
 
-- (1), (2): $O(n)$
-- (3), (4): $O(|v|)$
+- $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSION})$
+
+固定長の初期値・更新値・version管理領域を構築した後、使用する $n$ 要素を初期化する。
 
 # set
 

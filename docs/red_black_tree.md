@@ -25,7 +25,7 @@ RedBlackSet(const Compare& compare = Compare())
 
 ## 時間計算量
 
-- $O(1)$
+- $O(\mathrm{MAX\_SIZE})$
 
 # insert / erase / contains
 
@@ -75,3 +75,18 @@ optional<Key> max_less(const Key& x)
 ## 時間計算量
 
 - $O(\log N)$
+
+# API別計算量
+
+$N$ を現在の要素数とする。比較と `Key` のコピーは $O(1)$ とする。
+
+- `RedBlackSet(compare)`: $O(\mathrm{MAX\_SIZE})$。固定長storageを確保・初期化する
+- `size`, `empty`, `clear`: $O(1)$
+- `contains`, `insert`, `erase`: worst-case $O(\log(N+1))$
+- `order_of_key`, `order_of_key_upper`, `kth`: worst-case $O(\log(N+1))$
+- `lower_bound`, `upper_bound`, `max_leq`, `max_less`: worst-case $O(\log(N+1))$
+
+## 空間計算量
+
+- object全体: $O(\mathrm{MAX\_SIZE})$
+- 各操作の追加領域: 再帰stackを含めて $O(\log(N+1))$

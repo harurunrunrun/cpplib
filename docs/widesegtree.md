@@ -23,6 +23,10 @@ void add(idx, x)
 long long get(idx)
 ```
 
+## 時間計算量
+
+- `set`, `add`, `get`: $O(\log_B \mathtt{MAX\_SIZE})$
+
 # range product
 
 ```cpp
@@ -34,4 +38,12 @@ long long all_prod()
 
 ## 時間計算量
 
-- $O(\log MAX\_SIZE)$
+- `prod`: $O(\log_B \mathtt{MAX\_SIZE})$
+- `all_prod`: $O(1)$
+
+# 構築とcopy
+
+- default constructor: $O(1)$
+- copy constructor, copy assignment: $O(U)$
+
+$B$ は実行環境で選ばれる分岐数、$U$ は確保済みnode数。各point updateが新規確保するnode数は $O(\log_B \mathtt{MAX\_SIZE})$。

@@ -16,4 +16,9 @@ void rollback(int version)
 
 `RollbackDynamic...` という同じAPIの別名も定義される。
 
-更新と問い合わせは $O(\log MAX\_SIZE)$。rollbackは破棄する変更数に線形。
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
+- `assign`, `flip`, `set`, `sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
+- `fork`, `snapshot`, `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`: $O(1)$
+- `rollback`: 巻き戻す変更記録数を $K$ として $O(K)$

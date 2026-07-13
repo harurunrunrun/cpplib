@@ -24,4 +24,16 @@ ts.satisfiable()
 
 ## 時間計算量
 
-- $O(N+M)$
+$N$ を変数数、$M$ を現在の含意辺数とする。
+
+- `TwoSat(n)`: $O(N)$
+- `id`: $O(1)$
+- `add_implication`: 償却 $O(1)$
+- `add_clause`: 償却 $O(1)$（含意辺を2本追加）
+- `satisfiable`: $O(N+M)$
+
+`satisfiable` はSCC分解と長さ $N$ の `answer` 更新を含む。
+
+## 空間計算量
+
+- 含意グラフと割当を含めて $O(N+M)$

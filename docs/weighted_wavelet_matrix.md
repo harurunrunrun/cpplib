@@ -28,7 +28,7 @@ WeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
 
 ## 時間計算量
 
-- $O(N\mathrm{BIT\_WIDTH})$
+- $O(\mathrm{BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
 
 # 要素取得
 
@@ -100,3 +100,11 @@ optional<T> next_value(int l, int r, T lower) const
 ## 時間計算量
 
 - $O(\mathrm{BIT\_WIDTH})$
+
+# 計算量（公開操作別）
+
+$D=\mathtt{BIT\_WIDTH}$ とする。重み用固定長配列も各levelに保持する。
+
+- vector/array constructor: $O(D\mathtt{MAX\_SIZE})$
+- `size`, `sum`: $O(1)$
+- `access`, `operator[]`, `rank`, `kth_smallest`, `kth_largest`, `range_freq`, `range_sum`, `sum_k_smallest`, `sum_k_largest`, `prev_value`, `next_value`: $O(D)$

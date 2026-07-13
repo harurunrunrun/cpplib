@@ -42,6 +42,17 @@ int count_less(int version, T x, T xor_value = 0)
 
 `xor_value` を指定した場合、値 `y` は `y xor xor_value` の順で比較される。
 
-## 時間計算量
+## API別計算量
 
-- $O(BIT)$
+$B=\mathrm{BIT}$ とする。
+
+- `PersistentBinaryTrie()`: $O(\mathrm{MAX\_NODES}+\mathrm{MAX\_VERSIONS})$
+- `versions`, `node_count`, `root`, `size`, `fork`: $O(1)$。`fork` はnodeを増やさずversionだけを生成する
+- `count`, `contains`, `kth`, `min_element`, `max_element`, `count_less`: $O(B)$
+- `insert`: $O(B)$、path-copy node $B+1$ 個と1 versionを生成する
+- `erase`: $O(B)$。存在すればpath-copy node $B+1$ 個、存在しなければ0個。どちらも1 versionを生成する
+
+## 空間計算量
+
+- 固定node/version array: $O(\mathrm{MAX\_NODES}+\mathrm{MAX\_VERSIONS})$
+- 各操作の追加領域: $O(1)$

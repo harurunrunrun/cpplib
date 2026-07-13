@@ -41,3 +41,19 @@ int output_count(int state)
 
 - build: $O(\Sigma V)$
 - query: $O(|S|)$
+
+## API別計算量
+
+$V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHABET$ とする。
+
+| API | 時間計算量 |
+| --- | --- |
+| `AhoCorasick()` | $O(MAX_NODES\cdot\Sigma)$（固定配列初期化） |
+| `node_count()` / `is_built()` | $O(1)$（metadata query） |
+| `add(pattern)` | $O(P\Sigma)$ 最悪、既存経路だけなら $O(P)$ |
+| `build()` | $O(V\Sigma)$（failure link前処理） |
+| `next_state(state,c)` | $O(1)$ |
+| `terminal_count(state)` / `output_count(state)` | $O(1)$ |
+| `count_matches(text)` | $O(T)$ |
+
+`add` で新規nodeを作ると長さ $\Sigma$ の遷移表を初期化する。保持領域は $O(MAX_NODES\cdot\Sigma)$。`count_matches` は一致位置を列挙せず総数だけを返す。

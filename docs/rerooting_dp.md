@@ -17,6 +17,15 @@ documentation_of: ../src/algorithm/tree/rerooting_dp.hpp
 
 `add_edge(S value, int from, int to, int edge_id) -> S` は、`from` 側の値を辺 `edge_id` 越しに `to` への寄与へ変換する。
 
-## 計算量
+## 時間計算量
 
-- $O(n)$ 回の monoid 演算と変換
+- `RerootingDP(n, add_vertex, add_edge)`: $O(N)$
+- `size`: $O(1)$
+- `add_edge`: 償却 $O(1)$
+- `solve`: $O(N)$ 回のmonoid演算、`add_vertex`、`add_edge` 呼出しと、長さ $N$ の出力構築
+
+上記はmonoid演算と各callbackを $O(1)$ とした計算量。callbackが重い場合はその呼出しコストを掛ける。
+
+## 空間計算量
+
+- 保存graph、前後prefix、戻り値を含めて $O(N)$

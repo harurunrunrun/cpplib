@@ -83,8 +83,20 @@ vector<pair<Key, S>> to_vector(int version = 0)
 
 `to_vector` は `(key, value)` をキー昇順で返す。
 
-## 時間計算量
+# API別計算量
 
-- insert, erase, set, apply, prod, search: worst-case $O(\log N)$
-- all_apply, all_prod: $O(1)$
-- to_vector: $O(N)$
+$N$ を対象versionの要素数とし、比較・モノイド演算・作用を $O(1)$ とする。
+
+- `PersistentLazyRedBlackTree(compare)`: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- `versions`, `size`, `empty`, `all_prod`: $O(1)$
+- `contains`, `get`, `prod`, `order_of_key`, `kth_key`: worst-case $O(\log(N+1))$
+- `insert`, `erase`, `set`, `apply`: worst-case $O(\log(N+1))$、新規version $O(1)$、path-copy node $O(\log(N+1))$
+- `all_apply`: $O(1)$、新規version $O(1)$、非空なら新規node $O(1)$
+- `to_vector`: 出力要素数 $N$ に対して $O(N)$
+
+内容が変わらない更新も新しいversionを返す。探索だけで終了する場合や空区間ではnodeを複製しないことがある。
+
+## 空間計算量
+
+- 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- `to_vector` の戻り値と再帰stack: $O(N)$

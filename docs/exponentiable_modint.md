@@ -19,6 +19,16 @@ mint m = 2;
 auto ans = m.pow(k.pow(n)).val(); // 2^(3^4) mod 998244353
 ```
 
+## 補助関数
+
+```cpp
+constexpr uint32_t exponentiable_modint_totient(uint32_t x)
+```
+
+`x >= 1` に対するEulerのtotientを試し割りで求める。
+runtimeで呼ぶ場合は $O(\sqrt{x})$、追加領域は $O(1)$。
+`next_type` の形成に使う場合はcompile timeに評価される。
+
 ## メンバ関数
 
 - `ExponentiableModint(uint64_t x)`
@@ -27,6 +37,11 @@ auto ans = m.pow(k.pow(n)).val(); // 2^(3^4) mod 998244353
     - `0` として構築する。
 - `static constexpr uint32_t get_mod()`
     - mod を返す。
+- `ExponentiableModint(value_type value, next_type next)`
+    - 現段と次段の内部表現を直接指定する。`MOD > 1` の一般templateに存在する。
+- `using value_type = uint32_t`
+- `using next_type = ExponentiableModint<phi(MOD)>`
+    - `next_type` は `MOD > 1` の一般templateに存在する。
 - `uint32_t val() const`
     - `mod P` での値を返す。
 - `ExponentiableModint pow(const ExponentiableModint& rhs) const`
@@ -42,11 +57,20 @@ auto ans = m.pow(k.pow(n)).val(); // 2^(3^4) mod 998244353
 
 ## 計算量
 
-`P` に `phi` を繰り返し適用して `1` になるまでの回数を `L` とする。
+`P_0=P`, `P_{i+1}=phi(P_i)` とし、`P_L=1` になるまでの段数を
+`L` とする。
 
-- 構築: $O(L)$
-- `+`: $O(L)$
-- `*`: $O(L)$
-- `pow`: $O(L^2)$
+| 操作 | 時間計算量 |
+| --- | --- |
+| デフォルト構築、`ExponentiableModint(x)`、2引数構築 | $O(L+1)$ |
+| コピー・move構築、コピー・move代入 | $O(L+1)$ |
+| `get_mod()` | $O(1)$ |
+| `val()` | $O(1)$ |
+| `+=`, `+` | $O(L+1)$ |
+| `*=`, `*` | $O(L+1)$ |
+| `==`, `!=` | $O(1)$ |
+| `pow(rhs)` | $O(1+\sum_{i=0}^{L-1}\log(P_i+1))$ |
 
-`L = O(\log P)`。
+`L=O(\log P)` なので、`pow` は $O(L\log P)=O(\log^2 P)$ とも書ける。
+
+`MOD=1` specializationでは、すべてのconstructor・operator・methodが $O(1)$。

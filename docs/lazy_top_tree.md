@@ -36,7 +36,9 @@ LazyTopTree(const vector<S>& values)
 
 ## 時間計算量
 
-- $O(N)$
+- $O(\mathtt{MAX\_SIZE})$
+
+固定容量のcluster領域を構築し、$N$ 個の頂点clusterを初期化する。
 
 # link / cut
 

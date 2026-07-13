@@ -27,7 +27,9 @@ TreapSet(uint64_t seed = ..., const Compare& compare = Compare())
 
 ## 時間計算量
 
-- $O(1)$
+- $O(\mathtt{MAX\_SIZE})$
+
+固定容量のkey・node領域を構築する。
 
 # insert / erase / contains
 
@@ -77,3 +79,7 @@ optional<Key> max_less(const Key& x)
 ## 時間計算量
 
 - expected $O(\log N)$
+
+# 状態情報
+
+`size`, `empty`, `clear` は $O(1)$。

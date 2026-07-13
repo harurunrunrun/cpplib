@@ -39,6 +39,17 @@ int node(string_view s)
 
 `node` は対応するノード番号を返す。存在しない場合 `-1` を返す。
 
-## 時間計算量
+## API別計算量
 
-- 文字列長を $L$ として $O(L)$
+$L$ を入力文字列長とする。
+
+- `Trie()`: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES})$。固定長node arrayを初期化する
+- `size`, `node_count`, `empty`: $O(1)$
+- `node`, `count`, `contains`, `prefix_count`: worst-case $O(L)$
+- `insert`: $O(L)$、新規nodeは高々 $L$ 個
+- `erase`: $O(L)$。nodeは回収しない
+
+## 空間計算量
+
+- 固定node array: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES})$
+- 各操作の追加領域: $O(1)$

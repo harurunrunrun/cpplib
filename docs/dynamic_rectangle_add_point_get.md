@@ -28,3 +28,17 @@ seg.get(x, y)
 
 - `build`: $O(N \log^2 N)$
 - `add`, `get`: $O(\log^2 N)$
+
+## API別計算量
+
+$R$ を `reserve_rectangle` した非退化長方形数とする。
+
+| API | 時間計算量 |
+| --- | --- |
+| `DynamicRectangleAddPointGet()` | $O(1)$ |
+| `reserve_rectangle(...)` | 償却 $O(1)$ |
+| `build()` | $O(R\log^2 R)$（前処理） |
+| `add(...)` | $O(\log^2 R)$ |
+| `get(x,y)` | $O(\log^2 R)$ |
+
+`build` 後の保持領域は $O(R\log R)$。空の長方形の予約・更新は $O(1)$。

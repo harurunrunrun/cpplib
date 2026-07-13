@@ -20,4 +20,12 @@ undirected_cycle(n, edges)
 
 ## 時間計算量
 
-- $O(N+M)$
+$L$ を返す閉路の頂点数とする。
+
+- `directed_cycle`: $O(N+M)$、閉路列の構築 $O(L)$ を含む
+- `undirected_cycle`: $O(N+M)$、無向隣接リストと閉路列の構築を含む
+
+## 空間計算量
+
+- `directed_cycle`: 戻り値を含めて $O(N)$
+- `undirected_cycle`: 戻り値と無向隣接リストを含めて $O(N+M)$

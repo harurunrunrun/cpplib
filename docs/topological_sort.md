@@ -22,4 +22,10 @@ bool is_dag;
 
 ## 時間計算量
 
-- $O(N+M)$
+- `topological_sort`: $O(N+M)$
+
+全辺の入次数計算と走査、最大 $N$ 頂点の `order` 出力を含む。
+
+## 空間計算量
+
+- 戻り値、入次数、queueを含めて $O(N)$

@@ -17,3 +17,13 @@ documentation_of: ../src/algorithm/string/manacher.hpp
 ## 計算量
 
 - $O(n)$
+
+## API別計算量
+
+| API | 時間計算量 | 出力・追加領域 |
+| --- | --- | --- |
+| `manacher_odd(s)` | $O(N)$ | $O(N)$ |
+| `manacher_even(s)` | $O(N)$ | $O(N)$ |
+| `longest_palindrome(s)` | $O(N)$ | 補助 $O(N)$、戻り値 $O(1)$ |
+
+前2関数は全 $N$ 中心の半径を列挙する。

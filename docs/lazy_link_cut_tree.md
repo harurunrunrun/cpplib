@@ -37,7 +37,9 @@ LazyLinkCutTree(const vector<S>& values)
 
 ## 時間計算量
 
-- $O(N)$
+- $O(\mathtt{MAX\_SIZE})$
+
+固定容量のnode配列全体を初期化する。
 
 # link / cut
 

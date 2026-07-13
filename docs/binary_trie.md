@@ -43,6 +43,16 @@ int count_less(T x, T xor_value = 0)
 
 `xor_value` を指定した場合、値 `y` は `y xor xor_value` の順で比較される。
 
-## 時間計算量
+## API別計算量
 
-- $O(BIT)$
+$B=\mathrm{BIT}$ とする。
+
+- `BinaryTrie()`: $O(\mathrm{MAX\_NODES})$
+- `size`, `node_count`, `empty`: $O(1)$
+- `insert`, `count`, `contains`, `erase`: $O(B)$。`insert` の新規nodeは高々 $B$ 個
+- `kth`, `min_element`, `max_element`, `count_less`: $O(B)$
+
+## 空間計算量
+
+- 固定node array: $O(\mathrm{MAX\_NODES})$
+- 各操作の追加領域: $O(1)$

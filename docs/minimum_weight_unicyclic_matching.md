@@ -27,4 +27,10 @@ vector<int> match;
 
 ## 時間計算量
 
-- $O(N + M)$
+- `minimum_weight_unicyclic_matching`: $O(N+M)$
+
+各連結成分の検査、木DP・cycle DP、長さ $N$ の `match` 出力を含む。
+
+## 空間計算量
+
+- 戻り値と作業領域を含めて $O(N+M)$

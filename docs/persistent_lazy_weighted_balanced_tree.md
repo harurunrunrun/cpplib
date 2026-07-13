@@ -66,12 +66,18 @@ vector<S> to_vector(int version = 0) const
 
 # 計算量
 
-列長を N とする。
+$N$ を対象versionの列長とし、モノイド演算・作用を $O(1)$ とする。
 
-- 構築: O(N) 時間、O(N) node
-- insert, erase, set, apply, reverse: O(log N) 時間、O(log N) node
-- get, prod: O(log N) 時間
-- size, empty, all_prod, versions: O(1) 時間
-- to_vector: O(N) 時間
+- default constructor: 固定arena初期化 $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- vector constructor: 上記に加え長さ $N$ の平衡なversion 0構築 $O(N)$
+- `versions`, `size`, `empty`, `all_prod`: $O(1)$
+- `insert`, `erase`, `set`, `apply`, `reverse`: worst-case $O(\log(N+1))$、新規version $O(1)$、path-copy node $O(\log(N+1))$
+- `get`, `prod`: worst-case $O(\log(N+1))$
+- `to_vector`: 出力要素数 $N$ に対して $O(N)$
 
-平衡化は部分木サイズを用い、乱数には依存しない。
+空区間更新と、全区間への `apply` / `reverse` は $O(1)$ nodeでversionを生成する。平衡化は部分木sizeを用い、期待計算量ではない。
+
+## 空間計算量
+
+- 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- `to_vector` の戻り値と再帰stack: $O(N)$

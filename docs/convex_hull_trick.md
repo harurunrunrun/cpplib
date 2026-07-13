@@ -63,3 +63,18 @@ bool empty()
 ## 時間計算量
 
 - $O(1)$
+
+# API別計算量
+
+$N$ を現在のhullの直線数とする。
+
+- implicit default constructor, `size`, `empty`: $O(1)$
+- `Line::eval128`, `Line::eval`: $O(1)$
+- `add_line`: 1回では worst-case $O(N)$、追加列全体では各直線を高々1回除去するため償却 $O(1)$
+- `query`: $O(\log(N+1))$
+- `query_monotone_inc`: 1回では worst-case $O(N)$。`x` が単調非減少なquery列ではpointerが前進するだけなので償却 $O(1)$
+
+## 空間計算量
+
+- 固定長hull: $O(\mathrm{MAX\_LINE})$
+- 各操作の追加領域: $O(1)$

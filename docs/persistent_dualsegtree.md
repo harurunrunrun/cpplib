@@ -27,7 +27,7 @@ PersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 
 ## 時間計算量
 
-- $O(\mathrm{MAX\_SIZE})$
+- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_VERSION}\log \mathrm{MAX\_SIZE})$
 
 # 更新
 

@@ -25,6 +25,12 @@ steiner_tree<T>(graph, terminals, inf)
 
 ## 時間計算量
 
-端点数を $K$ として、
+端点数を $K$ とする。
 
-- $O(3^K N + 2^K M\log N)$
+- `steiner_tree`: $O(3^K N+2^K M\log(N+1))$
+
+subset併合が第1項、各subsetに対するDijkstraが第2項。戻り値の構築は $O(1)$。
+
+## 空間計算量
+
+- DP tableと到達tableを含めて $O(2^K N+N+M)$

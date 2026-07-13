@@ -15,4 +15,12 @@ PartiallyPersistentBitOverwriteRangeSum<...>
 
 `PartiallyPersistentDynamic...` という同じAPIの別名も定義される。
 
-更新は $O(\log MAX\_SIZE)$、過去versionの問い合わせは $O(\log MAX\_SIZE\log MAX\_CHANGES)$。空間計算量は $O(MAX\_NODES+MAX\_CHANGES)$。
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
+- `assign`, `flip`, `set`: $O(\log \mathtt{MAX\_SIZE})$
+- 最新versionの`sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
+- 過去versionの`sum`, `get`: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
+- `fork`, `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`: $O(1)$
+
+空間計算量は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$。

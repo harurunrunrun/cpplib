@@ -27,3 +27,16 @@ Mint prefix_sum(int n, int k)
 
 - 前計算: $O(N^2)$
 - query: $O(1)$
+
+## API別計算量
+
+`Mint` の演算を $O(1)$ とする。
+
+| API | 時間計算量 |
+| --- | --- |
+| `BinomialPrefixSum()` | $O(MAX_N^2)$（前処理） |
+| `combination(n,k)` | $O(1)$ |
+| `prefix_sum(n,k)` | $O(1)$ |
+| 公開表 `comb` / `prefix` の1要素参照 | $O(1)$ |
+
+保持領域は $O(MAX_N^2)$。

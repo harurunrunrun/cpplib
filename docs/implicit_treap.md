@@ -27,8 +27,10 @@ ImplicitTreap(const vector<S>& values, uint64_t seed = ...)
 
 ## 時間計算量
 
-- 空列: $O(1)$
-- `values`: $O(N)$
+- 空列: $O(\mathtt{MAX\_SIZE})$
+- `values`: $O(\mathtt{MAX\_SIZE}+N)$
+
+固定容量の値・集約値・node領域を構築する。
 
 # insert / erase
 
@@ -84,3 +86,5 @@ S all_prod()
 ## 時間計算量
 
 - expected $O(\log N)$
+
+`all_prod`, `size`, `empty`, `clear` は $O(1)$。

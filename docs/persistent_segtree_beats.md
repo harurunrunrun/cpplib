@@ -40,4 +40,13 @@ int latest_version() const
 int nodes_used() const
 ```
 
-区間は0-indexed半開区間。`range_chmin` と `range_chmax` はamortized $O(\log^2 N)$、その他の更新とqueryは $O(\log N)$、`all_*` は $O(1)$。空間計算量は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$。
+区間は0-indexed半開区間。
+
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
+- `range_chmin`, `range_chmax`: amortized $O(\log^2 N)$
+- `range_add`, `set`, `get`, `range_sum`, `range_min`, `range_max`: $O(\log N)$
+- `fork`, `all_sum`, `all_min`, `all_max`, version・node情報: $O(1)$
+
+空間計算量は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$。

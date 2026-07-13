@@ -57,3 +57,16 @@ long long count_primes(long long n)
 - 空間: $O(\sqrt n)$
 
 `n < 0` の場合は `std::runtime_error` を送出する。
+
+## API別計算量
+
+| API | 時間計算量 | 補足 |
+| --- | --- | --- |
+| `math::prime_count(n)` | $O(n^{3/4}/\log n)$ | 保持領域 $O(\sqrt n)$。 |
+| `math::count_primes(n)` | $O(n^{3/4}/\log n)$ | `prime_count` の別名。 |
+| `PrimeCounting(n)` | $O(MAX_N+n\log\log n)$ | `build(n)` を含む前処理。 |
+| `build(n)` | $O(MAX_N+n\log\log n)$ | 固定長配列の初期化を含む。 |
+| `size()` | $O(1)$ | 構築済み上限を返す metadata query。 |
+| `is_prime(n)` / `count_primes(n)` / `count_primes_less(n)` | $O(1)$ | 前処理後のquery。 |
+
+`PrimeCounting` の保持領域は $O(MAX_N)$。

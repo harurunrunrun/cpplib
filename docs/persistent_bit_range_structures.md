@@ -26,5 +26,7 @@ bool get(int version, long long position)
 
 ## 計算量
 
-- update: $O(\log MAX\_SIZE)$
-- query: $O(\log MAX\_SIZE)$
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
+- `assign`, `flip`, `set`: $O(\log \mathtt{MAX\_SIZE})$
+- `sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
+- `fork`, `size`, `versions`, `latest_version`, `nodes_used`: $O(1)$

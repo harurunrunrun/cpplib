@@ -50,7 +50,19 @@ optional<Key> set.max_leq(x, version)
 optional<Key> set.max_less(x, version)
 ```
 
-## 時間計算量
+# API別計算量
 
-- insert, erase, search: worst-case $O(\log N)$
-- to_vector: $O(N)$
+$N$ を対象versionの要素数とし、比較と `Key` のコピーを $O(1)$ とする。
+
+- `PersistentRedBlackSet(compare)`: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- `versions`, `size`, `empty`: $O(1)$
+- `contains`, `order_of_key`, `order_of_key_upper`, `kth`, `lower_bound`, `upper_bound`, `max_leq`, `max_less`: worst-case $O(\log(N+1))$
+- `insert`, `erase`: worst-case $O(\log(N+1))$、新規version $O(1)$、path-copy node $O(\log(N+1))$
+- `to_vector`: 出力要素数 $N$ に対して $O(N)$
+
+重複 `insert` / 存在しない `erase` も探索後に新しいversionを作るが、nodeは複製しない。
+
+## 空間計算量
+
+- 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- `to_vector` の戻り値とstack: $O(N)$

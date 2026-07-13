@@ -25,6 +25,12 @@ OnlineDynamicConnectivity(int n = MAX_SIZE)
 
 `n` 頂点の空グラフを作る。未構築の頂点nodeは孤立頂点として扱うため、全頂点を初期化しない。
 
+## 時間計算量
+
+- $O(\log \mathtt{MAX\_SIZE})$
+
+HDLTレベルへの空pointer列だけを構築し、頂点nodeは遅延構築する。
+
 # 辺の追加削除
 
 ```cpp
@@ -67,6 +73,7 @@ int edge_multiplicity(int u, int v)
 - `groups`: $O(1)$
 - `active_levels`: $O(\log N)$
 - `edge_multiplicity`: $O(\log M)$
+- `size`: $O(1)$
 
 # 空間計算量
 

@@ -31,7 +31,7 @@ RollbackSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
 
 ## 時間計算量
 
-- $O(\mathrm{MAX\_SIZE})$
+- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
 
 # set
 

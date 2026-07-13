@@ -61,3 +61,19 @@ int nodes_used()
 ## 時間計算量
 
 - $O(1)$
+
+# API別計算量
+
+$W=X\_MAX-X\_MIN+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間treeの最大level数とする。
+
+- `PersistentDynamicLiChaoTree()`: root table初期化 $O(\mathrm{MAX\_VERSION})$
+- `Line::eval128`, `Line::eval`: $O(1)$
+- `versions`, `latest_version`, `nodes_used`, `empty`: $O(1)$
+- `fork`: $O(1)$。nodeを増やさずversionだけを生成する
+- 2つの `add_line` overload: $O(D)$、新規node $O(D)$、新規version $O(1)$
+- `query`: $O(D)$
+
+## 空間計算量
+
+- root tableと全update用固定arena: $O((\mathrm{MAX\_VERSION}+1)D)$
+- 各操作の再帰stack: `add_line` は $O(D)$、その他は $O(1)$

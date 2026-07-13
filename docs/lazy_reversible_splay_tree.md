@@ -62,3 +62,21 @@ S all_prod()
 ## 時間計算量
 
 - amortized $O(\log N)$
+
+# API別計算量
+
+$N$ を操作前の列長とし、モノイド演算・作用を $O(1)$ とする。
+
+- default constructor: $O(\mathrm{MAX\_SIZE})$
+- `LazyReversibleSplayTree(values)`: 固定長storage初期化 $O(\mathrm{MAX\_SIZE})$ と長さ $N$ の平衡木構築 $O(N)$
+- `size`, `empty`, `clear`, `all_prod`: $O(1)$
+- `insert`, `push_front`, `push_back`, `erase`, `set`, `get`: worst-case $O(N)$、操作列に対して償却 $O(\log(N+1))$
+- `apply`, `reverse`, `prod`: worst-case $O(N)$、操作列に対して償却 $O(\log(N+1))$
+
+区間操作は内部の定数回のsplit/mergeを含む。
+
+## 空間計算量
+
+- objectとtemplate実体ごとの固定長祖先stack: $O(\mathrm{MAX\_SIZE})$
+- splayが使用する祖先stack要素数: $O(N)$ worst-case
+- vector constructorの再帰stack: $O(\log(N+1))$

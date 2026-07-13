@@ -14,6 +14,15 @@ documentation_of: ../src/algorithm/tree/tree_diameter.hpp
 - `weighted_tree_diameter<T>(graph)`
     - 重み付き木。
 
-## 計算量
+## 時間計算量
 
-- $O(n)$
+$L$ を返す直径pathの頂点数とする。
+
+- `tree_diameter`: $O(N+L)=O(N)$
+- `weighted_tree_diameter`: $O(N+L)=O(N)$
+
+どちらも木の検査、2回の全頂点走査、path復元を含む。
+
+## 空間計算量
+
+- 距離・親・stackと出力pathを含めて $O(N)$

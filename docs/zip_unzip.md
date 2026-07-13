@@ -17,3 +17,14 @@ run_length_unzip(data)
 ## 時間計算量
 
 - $O(N)$
+
+## API別計算量
+
+$N$ を展開後の要素数、$R$ をrun数とする。
+
+| API | 時間計算量 | 出力領域 |
+| --- | --- | --- |
+| `run_length_zip(data)` | $O(N)$ | $O(R)$ |
+| `run_length_unzip(data)` | $O(R+N)$ | $O(N)$ |
+
+`run_length_unzip` は最初に全 $R$ runの長さを検査し、その後 $N$ 要素を列挙する。

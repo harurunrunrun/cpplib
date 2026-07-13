@@ -31,17 +31,18 @@ vector<T> prefix_cost;
 
 ## 時間計算量
 
-Yen法。
-
-受理済みpathは頂点列のprefix trieで管理する。spurのprefix nodeから禁止する次頂点を直接判定するため、各spurで全受理済みpathを比較しない。
+Yen法。受理済みpathは頂点列のprefix trieで管理し、各spurで全受理済みpathを比較しない。
 
 受理したpath長の総和を $P$、生成した候補path数を $Q$ とする。$P,Q\leq KN$。
 
-- shortest path探索: $O(P(M+N)\log N)$
+- `kth_shortest_paths` 内のshortest path探索: $O(P(M+N)\log(N+1))$
 - prefix trieの構築・走査と禁止辺判定: $O((P+KM)\log(P+1))$
 - 候補heapと重複除外集合: $O(QN\log(Q+1))$
+- 全体: $O(P(M+N)\log(N+1)+(P+KM)\log(P+1)+QN\log(Q+1))$
 
-禁止nextのtrie探索はspur頂点から出る辺だけで行う。pathは単純なので、全受理path・全spurにわたる対象辺数は $O(KM)$。
+禁止nextのtrie探索はspur頂点から出る辺だけで行う。pathは単純なので、全受理path・全spurにわたる対象辺数は $O(KM)$。戻り値の出力要素数は $P$。
 
-したがって全体は $O(P(M+N)\log N+(P+KM)\log(P+1)+QN\log(Q+1))$。
-prefix trieの空間計算量は $O(P)$。
+## 空間計算量
+
+- prefix trieは $O(P)$
+- 戻り値、候補path、重複除外集合を含めて $O(P+QN)$

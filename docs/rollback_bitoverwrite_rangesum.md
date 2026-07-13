@@ -4,3 +4,10 @@ documentation_of: ../src/structure/segtree/rollback_bitoverwrite_rangesum.hpp
 ---
 
 rollback可能なbit列の区間1上書き・区間和。詳細は `Rollback Bit Range Structures` を参照。
+
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
+- `assign`, `flip`, `set`, `sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
+- `fork`, `snapshot`, `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`: $O(1)$
+- `rollback`: 巻き戻す変更記録数を $K$ として $O(K)$

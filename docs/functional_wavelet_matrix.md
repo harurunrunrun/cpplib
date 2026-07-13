@@ -44,5 +44,14 @@ T median_ceil(int l, int r) const
 
 ## 時間計算量
 
-- 構築: $O(N\log N + N\mathrm{ID\_BIT\_WIDTH})$
+- 構築: $O(N\log N+\mathrm{ID\_BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
 - クエリ: $O(\log N + \mathrm{ID\_BIT\_WIDTH})$
+
+# 計算量（公開操作別）
+
+$D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$ とする。
+
+- vector/array constructor: $O(N\log N+H\mathtt{MAX\_SIZE})$
+- `size`, `value_count`, `value`, `sum`: $O(1)$
+- `access`, `operator[]`, `kth_smallest`, `kth_largest`, `quantile`, `sum_k_smallest`, `sum_k_largest`, `range_min`, `range_max`, `median_floor`, `median_ceil`: $O(H)$
+- `rank`, `range_freq`, `range_sum`, `prev_value`, `next_value`: $O(\log D+H)$

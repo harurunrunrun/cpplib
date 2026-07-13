@@ -4,3 +4,10 @@ documentation_of: ../src/structure/segtree/partially_persistent_bitassign_ranges
 ---
 
 部分永続なbit列の区間代入・区間和。詳細は `Partially Persistent Bit Range Structures` を参照。
+
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
+- updateと最新versionのquery: $O(\log \mathtt{MAX\_SIZE})$
+- 過去versionのquery: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
+- version・容量情報: $O(1)$

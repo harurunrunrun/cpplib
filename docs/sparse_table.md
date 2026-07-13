@@ -34,6 +34,8 @@ int x = st.prod(l, r);
 
 ## 計算量
 
-- 構築: $O(n \log n)$
+- `SparseTable(int)`: $O(\mathtt{MAX\_SIZE}\log \mathtt{MAX\_SIZE})$
+- `SparseTable(vector)`: $O(\mathtt{MAX\_SIZE}\log \mathtt{MAX\_SIZE}+n\log n)$
 - `get`: $O(1)$
 - `prod`, `all_prod`: $O(1)$
+- `size`, `empty`: $O(1)$

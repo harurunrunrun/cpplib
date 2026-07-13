@@ -23,4 +23,13 @@ long long max_right(int version, long long l, F f)
 long long min_left(int version, long long r, F f)
 ```
 
-更新は指定versionから分岐し、新しいversion番号を返す。更新・区間取得は $O(\log MAX\_SIZE)$。
+更新は指定versionから分岐し、新しいversion番号を返す。
+
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
+- `set`, 1点`apply`, 区間`apply`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
+- `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$
+- `fork`, `all_prod`, `size`, `versions`, `latest_version`, `nodes_used`: $O(1)$
+
+各更新が複製するノード数は $O(\log \mathtt{MAX\_SIZE})$。

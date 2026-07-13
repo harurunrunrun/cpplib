@@ -25,6 +25,12 @@ OfflineDynamicConnectivity(int n = MAX_SIZE, int time_size = MAX_TIME)
 
 `n` 頂点、時刻 `0, ..., time_size - 1` の構造を作る。
 
+## 時間計算量
+
+- $O(\mathtt{MAX\_TIME})$
+
+区間segment treeの各nodeに対応する空の辺列を構築する。
+
 # 辺の追加削除
 
 ```cpp
@@ -38,7 +44,8 @@ void erase_edge(int time, int u, int v)
 
 ## 時間計算量
 
-- $O(\log Q)$
+- `add_edge`: 辺種数を $E$ として amortized $O(\log E)$
+- `erase_edge`: $O(\log E+\log Q)$
 
 # 実行
 
@@ -52,6 +59,10 @@ dc.run([&](int time, const auto& dsu){
 
 ## 時間計算量
 
-- $O((Q + M \log Q) \log N)$
+- $O((Q + M \log Q) \log N+\sum_{t=0}^{Q-1} C_t)$
 
-`M` は辺が有効な区間数。
+`M` は辺が有効な区間数、$C_t$ は時刻 $t$ のcallback実行時間。初回`run`のbuildは $O(M\log Q)$ で、この式に含まれる。
+
+# 状態情報
+
+`size`, `time_size` は $O(1)$。

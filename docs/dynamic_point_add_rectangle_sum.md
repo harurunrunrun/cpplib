@@ -30,3 +30,18 @@ seg.sum(x1, y1, x2, y2)
 
 - `build`: $O(N \log^2 N)$
 - `add`, `sum`: $O(\log^2 N)$
+
+## API別計算量
+
+$N$ を `reserve_point` した点数とする。
+
+| API | 時間計算量 |
+| --- | --- |
+| `DynamicPointAddRectangleSum()` | $O(1)$ |
+| `reserve_point(x,y)` | 償却 $O(1)$ |
+| `build()` | $O(N\log^2 N)$（前処理） |
+| `add(x,y,value)` | $O(\log^2 N)$ |
+| `prefix_sum_less(x,y)` / `prefix_sum_leq(x,y)` | $O(\log^2 N)$ |
+| `sum(x1,y1,x2,y2)` | $O(\log^2 N)$ |
+
+`sum` は4回のprefix queryを行う。`build` 後の保持領域は $O(N\log N)$。

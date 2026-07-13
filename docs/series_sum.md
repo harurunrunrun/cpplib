@@ -20,3 +20,16 @@ documentation_of: ../src/algorithm/math/series_sum.hpp
 
 - `arithmetic_progression_sum`: $O(1)$
 - `geometric_series_pow_sum`, `geometric_series_sum`, `geometric_progression_sum`: $O(\log n)$
+
+## API別計算量
+
+`T` の四則演算を $O(1)$ とする。
+
+| API | 時間計算量 |
+| --- | --- |
+| `math::arithmetic_progression_sum(first,diff,n)` | $O(1)$ |
+| `math::geometric_series_pow_sum(ratio,n)` | $O(\log(n+1))$ |
+| `math::geometric_series_sum(ratio,n)` | $O(\log(n+1))$ |
+| `math::geometric_progression_sum(first,ratio,n)` | $O(\log(n+1))$ |
+
+`geometric_series_pow_sum` の再帰スタックは $O(\log(n+1))$。

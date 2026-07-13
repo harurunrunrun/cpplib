@@ -20,4 +20,10 @@ void undo()
 void rollback(Snapshot snapshot)
 ```
 
-更新と`undo`は $O(\log MAX\_SIZE)$。`rollback`は取り消す更新回数に比例する。
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES})$
+- `set`, `add`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
+- `all_prod`, `snapshot`, `history_size`, `nodes_used`, `changes_used`, `can_undo`: $O(1)$
+- `undo`: 直前の更新が作ったノード・変更数に線形。$O(\log \mathtt{MAX\_SIZE})$
+- `rollback`: 取り消す更新が作ったノード・変更数の合計に線形

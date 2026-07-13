@@ -42,6 +42,22 @@ math::PrimeSieve<1000000> sieve(n);
 ## 計算量
 
 - `is_prime_sqrt`: $O(\sqrt n)$
-- 篩の構築: $O(n)$
+- 篩本体は $O(n)$、固定長配列の初期化を含む `build` 全体は $O(MAX_N+n)$
 - `is_prime`, `min_factor`, `prime`: $O(1)$
 - `factorize`: $O(\log n)$
+
+## API別計算量
+
+$P=\pi(n)$、素因数の種類数を $K$ とする。
+
+| API | 時間計算量 |
+| --- | --- |
+| `math::is_prime_sqrt(n)` | $O(\sqrt n)$ |
+| `PrimeSieve(n)` | $O(MAX_N)$（`build` を含む） |
+| `build(n)` | $O(MAX_N+n)$ |
+| `size()` / `prime_count()` / `prime(k)` | $O(1)$ |
+| `min_factor(n)` / `is_prime(n)` | $O(1)$ |
+| `primes()` | $O(P)$（出力サイズ依存） |
+| `factorize(n)` | $O(\log n+K)$（出力サイズ $K$） |
+
+`build` は線形篩部分が $O(n)$ だが、固定長 `min_factor_data` の初期化に $O(MAX_N)$ かかる。保持領域は $O(MAX_N)$。

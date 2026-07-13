@@ -16,6 +16,17 @@ AHU algorithm による木の同型性判定。
 - `rooted_tree_isomorphic(a, root_a, b, root_b)`
 - `tree_isomorphic(a, b)`
 
-## 計算量
+## 時間計算量
 
-- $O(n \log n)$
+$N$ を各木の頂点数とする。
+
+- `tree_centers`: $O(N)$。返す頂点数は高々2
+- `rooted_tree_isomorphism_labels`: $O(N\log(N+1))$。長さ $N$ のlabel列出力を含む
+- `rooted_tree_isomorphic`: $O(N\log(N+1))$
+- `tree_isomorphic`: center候補を高々2組比較して $O(N\log(N+1))$
+
+子label列の整列と `map<vector<int>, int>` の辞書操作が対数因子を持つ。
+
+## 空間計算量
+
+- rooted tree情報、signature辞書、戻り値を含めて $O(N)$

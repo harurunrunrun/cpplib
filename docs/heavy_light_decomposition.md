@@ -20,8 +20,19 @@ documentation_of: ../src/algorithm/tree/heavy_light_decomposition.hpp
 - `subtree_query(v, vertex = true)`
 - `in(v)`, `out(v)`, `operator[](k)`
 
-## 計算量
+## 時間計算量
 
-- `build`: $O(n)$
-- `lca`, `dist`, `jump`, `path_query`: $O(\log n)$
-- その他: $O(1)$
+$R$ を `path_query` が返す区間数（$R=O(\log N)$）とする。
+
+- `HeavyLightDecomposition(n)`: $O(N)$
+- `size`: $O(1)$
+- `add_edge`: 償却 $O(1)$
+- `build`: $O(N)$
+- `parent`, `depth`, `subtree`, `head`, `in`, `out`, `operator[]`: $O(1)$
+- `lca`, `dist`, `jump`: $O(\log(N+1))$
+- `is_ancestor`, `subtree_query`: $O(1)$
+- `path_query`: $O(\log(N+1)+R)=O(\log(N+1))$。$R$ 区間の出力を含む
+
+## 空間計算量
+
+- graph、分解table、出力区間列を含めて $O(N+R)$

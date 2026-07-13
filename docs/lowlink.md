@@ -26,4 +26,12 @@ vector<int> bridges;
 
 ## 時間計算量
 
-- $O(N+M)$
+$A$ を関節点数、$B$ を橋数とする。
+
+- DFSと隣接リスト構築: $O(N+M)$
+- 出力IDの整列: $O(A\log(A+1)+B\log(B+1))$
+- `lowlink` 全体: $O(N+M+A\log(A+1)+B\log(B+1))$
+
+## 空間計算量
+
+- 戻り値と隣接リストを含めて $O(N+M)$

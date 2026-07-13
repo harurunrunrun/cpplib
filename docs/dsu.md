@@ -23,7 +23,7 @@ DSU(int n = MAX_SIZE)
 
 ## 時間計算量
 
-- $O(N)$
+- $O(\mathtt{MAX\_SIZE})$
 
 # merge / same
 
@@ -37,6 +37,8 @@ bool same(int u, int v)
 ## 時間計算量
 
 - amortized $O(\alpha(N))$
+
+`size`, `groups` は $O(1)$。
 
 # leader / component_size
 

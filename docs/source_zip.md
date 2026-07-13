@@ -17,3 +17,14 @@ vector<T> source_unzip<T>(string_view encoded)
 ## 計算量
 
 配列長と生成データ長に線形。
+
+## API別計算量
+
+$N$ を元の整数列長、$E$ を符号化文字列長、$R$ をrun数とする。整数型のbit幅は固定とする。
+
+| API | 時間計算量 | 出力領域 |
+| --- | --- | --- |
+| `source_zip(values)` | $O(N+E)$ | $O(E)$ |
+| `source_unzip(encoded)` | $O(E+N)$ | $O(N)$ |
+
+`source_zip` は $N$ 要素から $R$ runを作り、varint列とBase64文字列を列挙する。`source_unzip` は全 $E$ 文字を検証してから $N$ 要素を復元する。

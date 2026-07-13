@@ -33,4 +33,14 @@ bool has_negative_cycle;
 
 ## 時間計算量
 
-- $O(N^3)$
+$N$ を頂点数、$L$ を復元して返すpath長とする。
+
+- `floyd_warshall`: $O(N^3)$
+- `FloydWarshallResult::path(from, to)`: $O(N+L)$
+
+`path` は負閉路の影響判定で全頂点を調べた後、高々 $N$ 頂点を列挙する。
+
+## 空間計算量
+
+- `floyd_warshall` の戻り値: $O(N^2)$
+- `path` の追加領域: 出力列の $O(L)$

@@ -14,6 +14,11 @@ documentation_of: ../src/algorithm/tree/tree_centroid.hpp
 - `tree_centroid(graph)`
     - 先頭の重心を返す。空木なら `-1`。
 
-## 計算量
+## 時間計算量
 
-- $O(n)$
+- `tree_centroids`: $O(N)$。木の検査と高々2頂点の出力を含む
+- `tree_centroid`: $O(N)$。内部で `tree_centroids` を実行する
+
+## 空間計算量
+
+- 親、部分木size、走査順を含めて $O(N)$

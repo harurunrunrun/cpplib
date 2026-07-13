@@ -96,3 +96,16 @@ wm.next_value(l, r, lower)
 ## 時間計算量
 
 - `kth_smallest` と同じ
+
+# 計算量（公開操作別）
+
+$B=\mathtt{BLOCK\_SIZE}$、$D=\mathtt{BIT\_WIDTH}$ とし、長さ $L$ の区間について
+$Q(L)=B+\lceil L/B\rceil\log B$ とおく。
+
+- default constructor: 固定長配列の初期化に $O(\mathtt{MAX\_SIZE})$
+- vector/array constructor: $O(\mathtt{MAX\_SIZE}+N\log B)$
+- `size`, `access`, `operator[]`: $O(1)$
+- `set`: $O(B\log B)$
+- `rank`, `range_freq`: $O(Q(L))$
+- `select`: $O(Q(N)\log N)$
+- `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(DQ(L))$

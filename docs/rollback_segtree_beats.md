@@ -46,4 +46,12 @@ int operations() const
 int changes_used() const
 ```
 
-`range_chmin` と `range_chmax` はamortized $O(\log^2 N)$、その他の更新とqueryは $O(\log N)$、`all_*` は $O(1)$。空間計算量は $O(N+\mathtt{MAX\_CHANGES}+\mathtt{MAX\_OPERATIONS})$。
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_CHANGES}+\mathtt{MAX\_OPERATIONS})$
+- `range_chmin`, `range_chmax`: amortized $O(\log^2 N)$
+- `range_add`, `set`, `get`, `range_sum`, `range_min`, `range_max`: $O(\log N)$
+- `all_sum`, `all_min`, `all_max`, `snapshot`, 状態・容量情報: $O(1)$
+- `rollback`: 取り消すnode変更数を $K$ として $O(K)$
+
+空間計算量は $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_CHANGES}+\mathtt{MAX\_OPERATIONS})$。

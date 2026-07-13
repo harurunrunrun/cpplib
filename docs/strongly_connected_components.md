@@ -21,4 +21,10 @@ vector<vector<int>> groups;
 
 ## 時間計算量
 
-- $O(N+M)$
+- `strongly_connected_components`: $O(N+M)$
+
+逆グラフの構築、2回のDFS、全頂点を `groups` へ出力する時間を含む。
+
+## 空間計算量
+
+- 戻り値と逆グラフを含めて $O(N+M)$

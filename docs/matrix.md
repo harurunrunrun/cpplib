@@ -27,9 +27,15 @@ Matrix(vector<vector<T>> values)
 
 ## 時間計算量
 
-- `Matrix()`: $O(MAX\_ROW MAX\_COL)$
-- `Matrix(rows, cols)`: $O(MAX\_ROW MAX\_COL)$
-- `Matrix(values)`: $O(MAX\_ROW MAX\_COL + rows \cdot cols)$
+以降、$C=MAX\_ROW\cdot MAX\_COL$ とする。固定長の保存領域を
+値初期化するため、実際の行列が小さくても構築には $C$ 要素分かかる。
+
+| 操作 | 時間計算量 |
+| --- | --- |
+| `Matrix()` | $O(C)$ |
+| `Matrix(rows, cols)` | $O(C)$ |
+| `Matrix(values)` | $O(C+rows+rows\cdot cols)$ |
+| コピー・move構築、コピー・move代入 | $O(C)$ |
 
 # 要素アクセス
 
@@ -40,7 +46,9 @@ const T& operator()(int i, int j)
 
 ## 時間計算量
 
-- $O(1)$
+| 操作 | 時間計算量 |
+| --- | --- |
+| `operator()(i, j)` | $O(1)$ |
 
 # rows / cols
 
@@ -52,7 +60,24 @@ bool empty()
 
 ## 時間計算量
 
-- $O(1)$
+| 操作 | 時間計算量 |
+| --- | --- |
+| `rows()` | $O(1)$ |
+| `cols()` | $O(1)$ |
+| `empty()` | $O(1)$ |
+
+# zero / comparison
+
+```cpp
+Matrix::zero(rows, cols)
+A == B
+A != B
+```
+
+| 操作 | 時間計算量 |
+| --- | --- |
+| `zero(rows, cols)` | $O(C)$ |
+| `operator==`, `operator!=` | $O(rows\cdot cols)$（不一致時は途中で終了） |
 
 # 演算
 
@@ -68,9 +93,18 @@ A / scalar
 
 ## 時間計算量
 
-- 加減算: $O(rows \cdot cols)$
-- 行列積: $O(rows \cdot inner \cdot cols)$
-- スカラー演算: $O(rows \cdot cols)$
+左辺の実行時サイズを $r\times k$、右辺を $k\times c$ とする。
+値を返す演算では、戻り値の固定長領域の初期化・コピーも含める。
+
+| 操作 | 時間計算量 |
+| --- | --- |
+| `A += B`, `A -= B` | $O(rk)$ |
+| `A + B`, `A - B` | $O(C+rk)$ |
+| `A *= scalar`, `A /= scalar` | $O(rk)$ |
+| `A * scalar`, `scalar * A`, `A / scalar` | $O(C+rk)$ |
+| 単項 `+A` | $O(C)$ |
+| 単項 `-A` | $O(C+rk)$ |
+| `A * B` | $O(MAX\_ROW\cdot RHS\_MAX\_COL+rkc)$ |
 
 # transposed
 
@@ -82,7 +116,9 @@ A.transposed()
 
 ## 時間計算量
 
-- $O(rows \cdot cols)$
+| 操作 | 時間計算量 |
+| --- | --- |
+| `transposed()` | $O(C+rows\cdot cols)=O(C)$ |
 
 # pow_entry_bmbm
 
@@ -98,8 +134,16 @@ BM + Bostan-Mori で、正方行列 `A` の `A^m` の指定成分だけを求め
 
 ## 時間計算量
 
-$n = rows = cols$、線形漸化式の次数を $d$ とすると、
+$n=rows=cols$、得られた線形漸化式の次数を $d\le n$ とすると、
+どちらの overload も次の計算量になる。
 
-- サンプル列の生成: $O(n^3)$
-- Berlekamp-Massey: $O(n^2)$
-- Bostan-Mori: $O(d^2 \log m)$
+| 処理 | 時間計算量 |
+| --- | --- |
+| $2n$ 項のサンプル列生成 | $O(n^3)$ |
+| Berlekamp--Massey | $O(n^2)$ |
+| Bostan--Mori | $O(d^2\log m)$ |
+| `pow_entry_bmbm` 全体 | $O(n^3+d^2\log m)$ |
+
+追加領域は $O(n+d)$。
+
+上表は `T` の構築・コピー・四則演算・比較を $O(1)$ とした計算量である。一般の `T` では、各項に実行する `T` の操作コストを掛ける。

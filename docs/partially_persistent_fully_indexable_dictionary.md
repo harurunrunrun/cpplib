@@ -16,3 +16,15 @@ int nv = fid.flip(k)
 # 時間計算量
 
 `PersistentFullyIndexableDictionary` と同じ。
+
+# 計算量（公開操作別）
+
+$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$、$H=\lceil\log_2\max(1,W)\rceil$ とする。
+
+- int constructor: $O(W+\mathtt{MAX\_VERSION}(H+1))$
+- vector constructor: $O(W+\mathtt{MAX\_VERSION}(H+1)+N)$
+- `size`, `versions`, `latest_version`: $O(1)$
+- `get`, `set`, `flip`, `rank`: $O(H+1)$
+- `select`: $O((H+1)\log N)$
+
+`set`と`flip`は常に最新versionから新versionを作り、根から葉まで $O(H+1)$ 個のnodeを複製する。

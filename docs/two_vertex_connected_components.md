@@ -26,4 +26,12 @@ vector<vector<int>> edge_groups;
 
 ## 時間計算量
 
-- $O(N+M)$
+$N$ を頂点数、$M$ を辺数とする。
+
+- `two_vertex_connected_components`: $O(N+M\log(M+1))$
+
+lowlinkとDFSは $O(N+M)$。各成分の頂点・辺IDを整列する合計時間が $O(M\log(M+1))$。孤立点を含む戻り値の総要素数は $O(N+M)$。
+
+## 空間計算量
+
+- 戻り値を含めて $O(N+M)$

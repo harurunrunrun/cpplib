@@ -59,3 +59,13 @@ int select(bool value, int k) const
 ## 時間計算量
 
 - $O(\log (\lceil N/64 \rceil + 1) + 64)$
+
+# 計算量（公開操作別）
+
+$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
+
+- `FullyIndexableDictionary(int)`: 固定長配列の初期化を含めて $O(W)$
+- `FullyIndexableDictionary(vector<bool>)`: $O(W+N)$
+- `set`, `operator[]`, `rank`, `size`: $O(1)$
+- `build`: $O(W)$
+- `select`: $O(\log(\lceil N/64\rceil+1)+64)$

@@ -25,7 +25,7 @@ EdgeCountDSU(int n = MAX_SIZE)
 
 ## 時間計算量
 
-- $O(N)$
+- $O(\mathtt{MAX\_SIZE})$
 
 # add_edge
 
@@ -39,6 +39,8 @@ bool add_edge(int u, int v)
 ## 時間計算量
 
 - amortized $O(\alpha(N))$
+
+`size`, `groups` は $O(1)$。
 
 # same / leader
 

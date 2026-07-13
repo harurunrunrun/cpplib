@@ -19,3 +19,17 @@ NTT による畳み込み。
 ## 計算量
 
 - $O(n \log n)$
+
+## API別計算量
+
+$A=|a|$, $B=|b|$、$Z$ を $A+B-1$ 以上の最小の2冪とする。
+
+| API | 時間計算量 | 空間計算量 |
+| --- | --- | --- |
+| `number_theoretic_transform(a,inverse)` | $O(N\log N)$ | 追加 $O(1)$ |
+| `convolution_ntt(a,b)` | $O(Z\log Z)$ | $O(Z)$ |
+| `arbitrary_mod_convolution(a,b)` | $O(Z\log Z)$ | $O(Z)$ |
+
+畳み込みは $A+B-1$ 要素を列挙して返す。既知のNTT-friendly法以外では3回のNTTとCRTを行うが、漸近計算量は同じ。
+
+`MOD` の原始根が既知でない場合、最初の変換時だけ `MOD-1` の試し割りと原始根探索を行う。一度得た根はtemplate実体ごとのstatic値として再利用され、2回目以降の前処理は不要。

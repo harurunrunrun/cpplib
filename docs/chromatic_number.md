@@ -17,4 +17,14 @@ chromatic_number(graph)
 
 ## 時間計算量
 
-指数時間。
+$N$ を頂点数、$M$ を隣接リストの総要素数とする。
+
+- 入力検査と独立集合tableの前処理: $O(N^2+M+2^N)$
+- subset DP: $O(3^N)$
+- `chromatic_number` 全体: $O(3^N+N^2+M)$
+
+戻り値の構築は $O(1)$。
+
+## 空間計算量
+
+- $O(2^N+N)$

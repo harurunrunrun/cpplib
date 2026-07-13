@@ -40,6 +40,17 @@ int prefix_count(int version, string_view s)
 int size(int version)
 ```
 
-## 時間計算量
+## API別計算量
 
-- 文字列長を $L$ として $O(L)$
+$L$ を入力文字列長とする。
+
+- `PersistentTrie()`: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES}+\mathrm{MAX\_VERSIONS})$
+- `versions`, `node_count`, `root`, `size`, `fork`: $O(1)$。`fork` はnodeを増やさずversionだけを生成する
+- `node`, `count`, `contains`, `prefix_count`: worst-case $O(L)$
+- `insert`: $O(L)$、path-copy node $L+1$ 個と1 versionを生成する
+- `erase`: $O(L)$。存在すればpath-copy node $L+1$ 個、存在しなければ0個。どちらも1 versionを生成する
+
+## 空間計算量
+
+- 固定node/version array: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES}+\mathrm{MAX\_VERSIONS})$
+- 各操作の追加stack: $O(1)$

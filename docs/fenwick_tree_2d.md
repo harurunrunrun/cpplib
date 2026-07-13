@@ -38,5 +38,7 @@ long long s = fw.sum(1, 2, 5, 6);
 
 ## 計算量
 
-- 構築: $O(HW \log H \log W)$
+- `FenwickTree2D(int, int)`: $O(\mathtt{MAX\_H}\mathtt{MAX\_W})$
+- `FenwickTree2D(vector)`: $O(\mathtt{MAX\_H}\mathtt{MAX\_W}+HW\log H\log W)$
 - `add`, `prefix_sum`, `sum`, `get`, `set`: $O(\log H \log W)$
+- `height`, `width`, `empty`: $O(1)$

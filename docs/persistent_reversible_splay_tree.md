@@ -63,12 +63,18 @@ vector<S> to_vector(int version = 0) const
 
 # 計算量
 
-操作対象の splay tree の高さを `H`、列の長さを `N` とする。
+対象versionの木の高さを $H$、列長を $N$ とする。$H$ は worst-case $N$。モノイド演算は $O(1)$ とする。
 
-- 構築: `O(N)` 時間、初期の高さ `O(log N)`
-- `insert`, `erase`, `set`, `reverse`: 最悪 `O(H)` 時間、`O(H)` node
-- `get`, `prod`: `O(H)` 時間
-- `size`, `empty`, `all_prod`, `versions`: `O(1)` 時間
-- `to_vector`: `O(N)` 時間
+- default constructor: 固定arena初期化 $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- vector constructor: 上記に加え長さ $N$ の平衡なversion 0構築 $O(N)$
+- `versions`, `size`, `empty`, `all_prod`: $O(1)$
+- `insert`, `push_front`, `push_back`, `erase`, `set`, `reverse`: $O(H)$、新規version $O(1)$、path-copy node $O(H)$
+- `get`, `prod`: $O(H)$。木を変形せずversionも生成しない
+- `to_vector`: 出力要素数 $N$ に対して $O(N)$
 
-`H` は最悪 `N` になる。各更新が直前に作った version を更新する一本道では、splay tree の償却解析により更新は償却 `O(log N)` 時間となる。古いversionから任意に分岐する完全永続な更新列全体にはこの償却評価を共有できず、各更新の保証は `O(H)` である。取得は木を変形しないため償却評価には含まれない。
+更新は内部の定数回のsplit/mergeを含む。直前versionだけを更新する一本道では償却 $O(\log(N+1))$。古いversionから分岐する操作列にはこの償却評価を共有できず、各更新の保証は $O(H)$。
+
+## 空間計算量
+
+- 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- `to_vector` の戻り値と再帰stack: $O(N)$

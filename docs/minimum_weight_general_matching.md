@@ -27,5 +27,9 @@ vector<int> match;
 
 ## 時間計算量
 
-- 時間: $O(N^3)$
-- 空間: $O(N^2 + M)$
+- 多重辺圧縮とdense cost table構築: $O(N^2+M)$
+- `minimum_weight_general_matching`: $O(N^3+M)$。長さ $N$ の `match` と重み和の構築を含む
+
+## 空間計算量
+
+- dense table、blossom作業領域、入力辺を含めて $O(N^2+M)$

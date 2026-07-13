@@ -32,3 +32,18 @@ For the query class, let $K$ be the number of returned point-edge incidences.
 - convex fast-path construction: $O(N \log N)$ time and $O(N)$ memory
 - convex fast-path `enumerate`: $O(M \log N + K \log K)$ time and $O(N + M + K)$ memory
 - fallback `enumerate`: $O(NM \log M)$ time
+
+## API別計算量
+
+$N$ をpolygon辺数、$M$ を与えるpoint数、$K$ を返すpoint-edge incidence数とする。
+
+| API | 時間計算量 | 空間計算量 |
+| --- | --- | --- |
+| `enumerate_points_on_polygon_boundary(...)` | $O(NM\log M+K)$ | $O(M+K)$ |
+| `PolygonBoundaryPointQuery(polygon)` | $O(N\log N)$（fast-path検証・前処理） | $O(N)$ |
+| `uses_convex_fast_path()` | $O(1)$（metadata query） | $O(1)$ |
+| `polygon()` | $O(1)$（内部vectorの `const&` を返す） | $O(1)$ |
+| `enumerate(points,unique)`（convex fast path） | $O(M\log N+K\log(K+1))$ | $O(N+M+K)$ |
+| `enumerate(points,unique)`（fallback） | $O(NM\log M+K)$ | $O(M+K)$ |
+
+constructorはfallbackを選ぶ場合もfast pathの検証を試みる。`polygon()` の戻り値を全列挙する場合は別途 $O(N)$。両enumerateは長さ $K$ のindex列を返す。

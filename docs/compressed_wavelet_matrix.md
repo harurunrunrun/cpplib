@@ -27,7 +27,7 @@ CompressedWaveletMatrix(const vector<T>& values)
 
 ## 時間計算量
 
-- $O(N\log N + N\mathrm{ID\_BIT\_WIDTH})$
+- $O(N\log N+\mathtt{MAX\_SIZE}+\mathrm{ID\_BIT\_WIDTH}(N+\lceil\mathtt{MAX\_SIZE}/64\rceil))$
 
 # 要素取得
 
@@ -79,3 +79,13 @@ optional<T> next_value(int l, int r, const T& lower) const
 ## 時間計算量
 
 - 構築以外: $O(\log N + \mathrm{ID\_BIT\_WIDTH})$
+
+# 計算量（公開操作別）
+
+$D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
+
+- vector/array constructor: $O(N\log N+\mathtt{MAX\_SIZE}+H(N+W))$
+- `size`, `value_count`, `value`: $O(1)$
+- `access`, `operator[]`, `kth_smallest`, `kth_largest`, `quantile`, `range_min`, `range_max`, `median_floor`, `median_ceil`: $O(H)$
+- `rank`, `range_freq`, `prev_value`, `next_value`: $O(\log D+H)$
+- `select`: $O(\log D+H\log N)$

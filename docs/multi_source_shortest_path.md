@@ -30,4 +30,12 @@ vector<char> reachable;
 
 ## 時間計算量
 
-- $O((N+M)\log N)$
+$S$ を入力した始点数とする。
+
+- `multi_source_shortest_path`: $O(S+(N+M)\log(N+1))$
+
+始点検査、全辺検査、Dijkstra、長さ $N$ の結果列構築を含む。
+
+## 空間計算量
+
+- 戻り値とpriority queueを含めて $O(N+M)$

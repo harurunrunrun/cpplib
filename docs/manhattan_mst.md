@@ -22,4 +22,10 @@ vector<ManhattanMstEdge<T>> edges;
 
 ## 時間計算量
 
-- $O(N\log N)$
+- `manhattan_mst`: $O(N\log(N+1))$
+
+4方向のsweep、$O(N)$ 本の候補辺整列、DSU処理、最大 $N-1$ 本の辺出力を含む。
+
+## 空間計算量
+
+- 候補辺、DSU、戻り値を含めて $O(N)$

@@ -26,7 +26,7 @@ version 0 として `n` 頂点の集合を作る。
 
 ## 時間計算量
 
-- $O(N)$
+- $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_UPDATE})$
 
 # merge
 
@@ -71,3 +71,5 @@ int latest_version()
 ## 時間計算量
 
 - $O(1)$
+
+`size` も $O(1)$。

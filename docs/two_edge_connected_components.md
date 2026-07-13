@@ -26,4 +26,14 @@ vector<int> bridges;
 
 ## 時間計算量
 
-- $O(N+M)$
+$N$ を頂点数、$M$ を辺数とする。
+
+- lowlinkと成分DFS: $O(N+M)$
+- 橋IDの整列: $O(M\log(M+1))$
+- `two_edge_connected_components` 全体: $O(N+M\log(M+1))$
+
+全頂点を `groups` へ出力する時間を含む。
+
+## 空間計算量
+
+- 戻り値と隣接リストを含めて $O(N+M)$

@@ -19,6 +19,14 @@ documentation_of: ../src/algorithm/tree/centroid_decomposition.hpp
 - `tree()`
     - 重心木の隣接リスト。
 
-## 計算量
+## 時間計算量
 
-- 構築: $O(n \log n)$
+- `CentroidDecomposition(tree)`: `build` を含めて $O(N\log(N+1))$
+- `build`: $O(N\log(N+1))$
+- `size`, `root`, `parent`, `depth`, `tree`: $O(1)$
+
+`tree()` は重心木の隣接リストへのconst referenceを返すため、列全体をコピーしない。
+
+## 空間計算量
+
+- 元の木と重心木、作業領域を含めて $O(N)$

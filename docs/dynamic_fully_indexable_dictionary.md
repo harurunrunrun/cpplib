@@ -38,3 +38,13 @@ int select(bool value, int k) const
 
 - `rank`: $O(\log \mathrm{MAX\_SIZE})$
 - `select`: $O(\log^2 \mathrm{MAX\_SIZE})$
+
+# 計算量（公開操作別）
+
+$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
+
+- int constructor (`DynamicFullyIndexableDictionary(int)`): $O(W)$
+- vector constructor (`DynamicFullyIndexableDictionary(vector<bool>)`): $O(W+N\log(W+1))$
+- `size`, `operator[]`: $O(1)$
+- `set`, `flip`, `rank`: $O(\log(W+1))$
+- `select`: $O(\log N\log(W+1))$

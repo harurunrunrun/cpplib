@@ -12,30 +12,30 @@ documentation_of: ../src/structure/types/common_monoids.hpp
 
 ## 基本 monoid
 
-| 型 | `op` | `e` |
-| --- | --- | --- |
-| `AddMonoid<T>` | 和 | `0` |
-| `MulMonoid<T>` | 積 | `1` |
-| `MinMonoid<T, Identity>` | min | `Identity`（既定値は `numeric_limits<T>::max()`） |
-| `MaxMonoid<T, Identity>` | max | `Identity`（既定値は `numeric_limits<T>::lowest()`） |
-| `GcdMonoid<T>` | gcd | `0` |
-| `LcmMonoid<T>` | lcm | `1` |
-| `XorMonoid<T>` | bitwise xor | `0` |
-| `BitAndMonoid<T>` | bitwise and | `~T(0)` |
-| `BitOrMonoid<T>` | bitwise or | `0` |
+| 型 | `op` | `e` | `op` の計算量 | `e` の計算量 |
+| --- | --- | --- | --- | --- |
+| `AddMonoid<T>` | 和 | `0` | $O(1)$ | $O(1)$ |
+| `MulMonoid<T>` | 積 | `1` | $O(1)$ | $O(1)$ |
+| `MinMonoid<T, Identity>` | min | `Identity`（既定値は `numeric_limits<T>::max()`） | $O(1)$ | $O(1)$ |
+| `MaxMonoid<T, Identity>` | max | `Identity`（既定値は `numeric_limits<T>::lowest()`） | $O(1)$ | $O(1)$ |
+| `GcdMonoid<T>` | gcd | `0` | $O(\log\max(|a|,|b|))$ | $O(1)$ |
+| `LcmMonoid<T>` | lcm | `1` | $O(\log\max(|a|,|b|))$ | $O(1)$ |
+| `XorMonoid<T>` | bitwise xor | `0` | $O(1)$ | $O(1)$ |
+| `BitAndMonoid<T>` | bitwise and | `~T(0)` | $O(1)$ | $O(1)$ |
+| `BitOrMonoid<T>` | bitwise or | `0` | $O(1)$ | $O(1)$ |
 
 `GcdMonoid`、`LcmMonoid`、bitwise 3種は整数型用である。
 
 ## 長さを使わない作用
 
-| 型 | 区間値 | 作用 | 作用の単位元 |
-| --- | --- | --- | --- |
-| `AddMinMonoidAct<T, Identity>` | min | 加算 | `0` |
-| `AddMaxMonoidAct<T, Identity>` | max | 加算 | `0` |
-| `AssignMinMonoidAct<T, Identity>` | min | 代入 | 代入なし |
-| `AssignMaxMonoidAct<T, Identity>` | max | 代入 | 代入なし |
-| `ChminMinMonoidAct<T, Identity>` | min | chmin | `Identity` |
-| `ChmaxMaxMonoidAct<T, Identity>` | max | chmax | `Identity` |
+| 型 | 区間値 | 作用 | 作用の単位元 | 各操作の計算量 |
+| --- | --- | --- | --- | --- |
+| `AddMinMonoidAct<T, Identity>` | min | 加算 | `0` | $O(1)$ |
+| `AddMaxMonoidAct<T, Identity>` | max | 加算 | `0` | $O(1)$ |
+| `AssignMinMonoidAct<T, Identity>` | min | 代入 | 代入なし | $O(1)$ |
+| `AssignMaxMonoidAct<T, Identity>` | max | 代入 | 代入なし | $O(1)$ |
+| `ChminMinMonoidAct<T, Identity>` | min | chmin | `Identity` | $O(1)$ |
+| `ChmaxMaxMonoidAct<T, Identity>` | max | chmax | `Identity` | $O(1)$ |
 
 代入作用の型は `MonoidAssignment<T>` である。
 
@@ -46,14 +46,14 @@ MonoidAssignment<long long> set_five{true, 5};
 
 ## 長さを使う作用
 
-| 型 | 区間値 | 作用 | 作用の型・単位元 |
-| --- | --- | --- | --- |
-| `AddSumMonoidAct<T>` | sum | 各要素へ加算 | `T(0)` |
-| `MulSumMonoidAct<T>` | sum | 各要素へ乗算 | `T(1)` |
-| `AssignSumMonoidAct<T>` | sum | 各要素を代入 | `MonoidAssignment<T>{}` |
-| `AffineSumMonoidAct<T>` | sum | 各要素を `a*x+b` | `MonoidAffine<T>{1, 0}` |
-| `FlipCountMonoidAct<T>` | 1 の個数 | 0/1 を反転 | `false` |
-| `XorXorMonoidAct<T>` | xor | 各要素へ xor | `T(0)` |
+| 型 | 区間値 | 作用 | 作用の型・単位元 | 各操作の計算量 |
+| --- | --- | --- | --- | --- |
+| `AddSumMonoidAct<T>` | sum | 各要素へ加算 | `T(0)` | $O(1)$ |
+| `MulSumMonoidAct<T>` | sum | 各要素へ乗算 | `T(1)` | $O(1)$ |
+| `AssignSumMonoidAct<T>` | sum | 各要素を代入 | `MonoidAssignment<T>{}` | $O(1)$ |
+| `AffineSumMonoidAct<T>` | sum | 各要素を `a*x+b` | `MonoidAffine<T>{1, 0}` | $O(1)$ |
+| `FlipCountMonoidAct<T>` | 1 の個数 | 0/1 を反転 | `false` | $O(1)$ |
+| `XorXorMonoidAct<T>` | xor | 各要素へ xor | `T(0)` | $O(1)$ |
 
 `MonoidAffine<T>` は `multiplier` と `addend` を持つ。
 
@@ -100,5 +100,8 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 - 長さ付き作用へ渡す長さは 0 以上であり、値はその長さの区間集約値である必要がある。
 - 加算、乗算、lcm、affine などの結果が `T` で表現できる範囲に収まるようにする。
 - `FlipCountMonoidAct` の区間値は `0 <= count <= length` を満たす。
-- `op`、`e`、`mapping`、`composition`、`id` は gcd/lcm を除き
-  すべて `O(1)`。gcd/lcm は内部の `std::gcd` 相当の計算量である。
+- 作用付き alias の「各操作」は `op`、`e`、`mapping`、`composition`、`id`
+  を指す。補助型 `MonoidAssignment`、`MonoidAffine` の構築と比較も $O(1)$。
+- 表の $O(1)$ は `T` の対応する算術・比較・構築を $O(1)$ としたもの。
+  一般の `T` では、各aliasが呼ぶ `T` の操作コストに従う。
+- `MonoidAssignment` と `MonoidAffine` の各公開field参照は $O(1)$。

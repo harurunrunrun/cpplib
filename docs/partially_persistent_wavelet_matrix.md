@@ -52,9 +52,22 @@ std::optional<T> value = wm.next_value(version, l, r, lower)
 `B = BLOCK_SIZE`、区間が触れるブロック数を `C`、バージョン数を `V` とする。
 
 - `set`: `O(B log B)`
-- `access`: `O(log V)`
-- `rank`, `range_freq`: `O(B + C(log B + log V))`
-- `kth_smallest`, `kth_largest`: `O(BIT_WIDTH * (B + C(log B + log V)))`
+- `access`: 最新versionは $O(1)$、過去versionは $O(\log V)$
+- `rank`, `range_freq`: 最新versionは $O(B+C\log B)$、過去versionは $O(B+C(\log B+\log V))$
+- `kth_smallest`, `kth_largest`: 上記にそれぞれ $\mathtt{BIT\_WIDTH}$ を掛けた時間
 - 追加メモリ: `O(N + V B)`
 
 更新では変更されたブロックだけを複製する。
+
+## 公開操作別の詳細
+
+$M=\lceil N/B\rceil$、長さ $L$ の区間が触れるblock数を $C$ とし、
+$Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
+
+- default/vector/array constructor: 固定容量block配列を含めて $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSION}B+N\log B)$
+- `size`, `versions`, `latest_version`: $O(1)$
+- `access`: 最新versionは $O(1)$、過去versionは $O(\log(V+1))$
+- `set`: 償却 $O(B\log B)$。block履歴vectorの再確保が起きる1回の最悪は $O(B\log B+V)$
+- `rank`, `range_freq`: 最新versionは $O(Q_0(L))$、過去versionは $O(Q_V(L))$
+- `select`: 最新versionは $O(Q_0(N)\log N)$、過去versionは $O(Q_V(N)\log N)$
+- `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: 最新versionは $O(\mathtt{BIT\_WIDTH}\,Q_0(L))$、過去versionは $O(\mathtt{BIT\_WIDTH}\,Q_V(L))$

@@ -27,4 +27,15 @@ self-loop を追加できるが、最大流量には寄与しない。
 
 ## 時間計算量
 
-- $O(V^2E)$
+$V$ を頂点数、$E$ を追加済み辺数とする。
+
+- `Dinic(n)`: $O(V)$
+- `add_edge`: 償却 $O(1)$
+- `bfs`: $O(V+E)$
+- `dfs`: 1回 worst-case $O(V+E)$。1つのlevel graphでblocking flowを作る全呼出しは worst-case $O(VE)$
+- `max_flow`: 一般容量で $O(V^2E)$
+- `min_cut`: $O(V+E)$。長さ $V$ の到達列出力を含む
+
+## 空間計算量
+
+- 残余グラフ、level/iterator、戻り値を含めて $O(V+E)$

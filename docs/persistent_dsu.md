@@ -26,7 +26,7 @@ PersistentDSU(int n = MAX_SIZE)
 
 ## 時間計算量
 
-- $O(1)$
+- $O(\mathtt{MAX\_VERSION})$
 
 # merge / fork
 
@@ -42,7 +42,7 @@ int fork(int version)
 
 ## 時間計算量
 
-- `merge`: $O(\log^2 N + \log MAX\_SIZE)$
+- `merge`: $O(\log N\log \mathtt{MAX\_SIZE})$
 - `fork`: $O(1)$
 
 # same / leader / component_size
@@ -58,7 +58,7 @@ int groups(int version)
 
 ## 時間計算量
 
-- `same`, `leader`, `component_size`: $O(\log^2 N)$
+- `same`, `leader`, `component_size`: $O(\log N\log \mathtt{MAX\_SIZE})$
 - `groups`: $O(1)$
 
 # versions
@@ -74,3 +74,5 @@ int nodes_used()
 ## 時間計算量
 
 - $O(1)$
+
+`size`, `nodes_used` も $O(1)$。

@@ -25,4 +25,10 @@ bool connected;
 
 ## 時間計算量
 
-- $O(M\log M)$
+- `kruskal_mst`: $O(N+M\log(M+1))$
+
+辺IDのstable sort、DSU処理、最大 $N-1$ 個の辺ID出力を含む。
+
+## 空間計算量
+
+- 戻り値、整列順、DSUを含めて $O(N+M)$

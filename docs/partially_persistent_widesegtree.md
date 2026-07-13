@@ -17,4 +17,12 @@ long long prod(int version, long long l, long long r)
 long long all_prod(int version)
 ```
 
-更新と過去versionの区間和は $O(\log MAX\_SIZE \log MAX\_CHANGES)$。
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES}\log \mathtt{MAX\_CHANGES})$
+- `set`, `add`: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
+- 最新versionの`get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
+- 過去versionの`get`: $O(\log \mathtt{MAX\_SIZE}+\log \mathtt{MAX\_CHANGES})$
+- 過去versionの`prod`: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
+- 最新versionの`all_prod`: $O(1)$、過去versionの`all_prod`: $O(\log \mathtt{MAX\_CHANGES})$
+- version・node・change情報: $O(1)$

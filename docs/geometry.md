@@ -129,4 +129,38 @@ CIRCLE_COINCIDENT = 5
 - `convex_diameter`: $O(N)$
 - `convex_cut`: $O(N)$
 - `closest_pair`: $O(N \log N)$
-- other operations: $O(1)$, excluding output size
+
+## API別計算量
+
+$N$ を入力polygon・point列の要素数、$H$ を返すhull頂点数とする。座標の算術・三角関数・平方根を $O(1)$ と数える。
+
+| API | 時間計算量 | 出力・追加領域 |
+| --- | --- | --- |
+| `geometry_sign(x)` / `GEOMETRY_EPS` 参照 | $O(1)$ | $O(1)$ |
+| `Point` の各constructor、単項・二項・複合代入・比較operator | $O(1)$ | $O(1)$ |
+| `operator*(k,p)`、`Point` / `Line` / `Circle` のfield参照・aggregate構築 | $O(1)$ | $O(1)$ |
+| `dot` / `cross` / `norm` / `abs` / `arg` | $O(1)$ | $O(1)$ |
+| `unit` / `rotate90` / `rotate` / `polar` / `ccw` | $O(1)$ | $O(1)$ |
+| `orthogonal` / `parallel`（Point・Line overload） | $O(1)$ | $O(1)$ |
+| `projection` / `reflection` / `on_segment` | $O(1)$ | $O(1)$ |
+| `intersect` の両overload / `same_line` / `intersect_line_line` / `intersect_line_segment` | $O(1)$ | $O(1)$ |
+| `distance` の全overload / `distance_segment_point` / `distance_line_line` / `distance_line_segment` | $O(1)$ | $O(1)$ |
+| `cross_point` / `line_intersection` / `segment_intersection` | $O(1)$ | $O(1)$ |
+| `area(polygon)` / `contains(polygon,p)` / `is_convex(polygon)` | $O(N)$ | $O(1)$ |
+| `ConvexPolygonQuery(polygon)` | $O(N)$（正規化前処理） | $O(N)$ |
+| `ConvexPolygonQuery::size()` / `vertices()` | $O(1)$（metadata・参照返却） | $O(1)$ |
+| `ConvexPolygonQuery::contains(p)` | $O(\log N)$ | $O(1)$ |
+| `contains_convex(polygon,p)` | $O(N)$ | $O(N)$ |
+| `convex_hull(points)` | $O(N\log N)$ | 出力 $O(H)$、作業領域 $O(N)$ |
+| `convex_diameter(convex_polygon)` | $O(N)$ | $O(N)$ |
+| `convex_cut(polygon,line)` | $O(N)$ | 出力 $O(N)$ |
+| `closest_pair(points)` | $O(N\log N)$ | $O(N)$ |
+| `validate_circle(circle)` / `circle_relation(a,b)` | $O(1)$ | $O(1)$ |
+| `intersect_circle_line` / `intersect_circle_segment` / `intersect_circle_circle` | $O(1)$ | $O(1)$ |
+| `circle_line_cross_points` / `circle_segment_cross_points` / `circle_circle_cross_points` | $O(1)$ | 最大2点 |
+| `tangent_points` / `tangent_lines` | $O(1)$ | 最大2要素 |
+| `common_tangents(a,b)` | $O(1)$ | 最大4本 |
+| `circumcenter` / `circumcircle` / `incenter` / `incircle` | $O(1)$ | $O(1)$ |
+
+`vertices()` は内部vectorへの `const&` を返すだけで、全頂点を列挙する場合は別途 $O(N)$。circle系のvector出力は要素数が定数上限なので $O(1)$ に含める。
+- point・line・circleの各操作: $O(1)$（polygon走査と列挙操作は上のAPI表を参照）

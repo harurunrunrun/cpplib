@@ -47,6 +47,8 @@ void set(long long k, const S& x)
 ## 時間計算量
 - $O(\log {MAX}\_{SIZE})$
 
+新規に確保するnode数も $O(\log {MAX}\_{SIZE})$。
+
 
 # get
 

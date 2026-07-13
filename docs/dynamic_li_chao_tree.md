@@ -58,3 +58,17 @@ int nodes_used()
 ## 時間計算量
 
 - $O(1)$
+
+# API別計算量
+
+$W=X\_MAX-X\_MIN+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間treeの最大level数とする。
+
+- implicit default constructor, `nodes_used`, `empty`: $O(1)$
+- `Line::eval128`, `Line::eval`: $O(1)$
+- 2つの `add_line` overload: $O(D)$。1回の追加で新規nodeは高々1個
+- `query`: $O(D)$
+
+## 空間計算量
+
+- 固定arena: $O(\mathrm{MAX\_NODE})$
+- 各操作の再帰stack: $O(D)$

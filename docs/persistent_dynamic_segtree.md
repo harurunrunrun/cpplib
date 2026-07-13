@@ -32,4 +32,10 @@ long long max_right(int version, long long l, F f)
 long long min_left(int version, long long r, F f)
 ```
 
-更新・取得は $O(\log MAX\_SIZE)$、`all_prod`と`fork`は $O(1)$。
+# 計算量
+
+- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
+- `set`, `get`, `prod`, `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$
+- `fork`, `all_prod`, `versions`, `latest_version`, `nodes_used`: $O(1)$
+
+`set`が複製するノード数は $O(\log \mathtt{MAX\_SIZE})$。

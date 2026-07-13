@@ -36,5 +36,7 @@ long long s = fw.sum(2, 5);
 
 ## 計算量
 
-- 構築: $O(n \log n)$
+- `FenwickTree(int)`: $O(\mathtt{MAX\_SIZE})$
+- `FenwickTree(vector)`: $O(\mathtt{MAX\_SIZE}+n\log n)$
 - `add`, `prefix_sum`, `sum`, `get`, `set`: $O(\log n)$
+- `size`, `empty`: $O(1)$

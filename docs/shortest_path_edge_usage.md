@@ -32,4 +32,12 @@ vector<char> unused;
 
 ## 時間計算量
 
-- $O((N+M)\log N)$
+$N$ を頂点数、$M$ を辺数とする。
+
+- `shortest_path_edge_usage`: $O((N+M)\log(N+1))$
+
+正方向・逆方向のDijkstraを1回ずつ行い、最後に $M$ 辺分の `used` / `unused` を構築する。
+
+## 空間計算量
+
+- 戻り値と2つの隣接リストを含めて $O(N+M)$

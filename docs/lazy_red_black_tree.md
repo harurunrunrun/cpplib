@@ -82,3 +82,22 @@ optional<Key> kth_key(int k)
 ## 時間計算量
 
 - $O(\log N)$
+
+# API別計算量
+
+$N$ を現在の要素数とし、比較・モノイド演算・作用を $O(1)$ とする。
+
+- `LazyRedBlackTree(compare)`: $O(\mathrm{MAX\_SIZE})$。固定長storageを確保・初期化する
+- `size`, `empty`, `clear`, `all_apply`, `all_prod`: $O(1)$
+- `contains`, `insert`, `erase`, `get`, `set`: worst-case $O(\log(N+1))$
+- `apply`, `prod`: worst-case $O(\log(N+1))$
+- `order_of_key`, `kth_key`: worst-case $O(\log(N+1))$
+
+キー区間操作は境界に至るpathだけを展開し、完全に含まれる部分木はlazy tagまたはaggregateでまとめて処理する。
+
+## 空間計算量
+
+- object全体: $O(\mathrm{MAX\_SIZE})$
+- setの固定長祖先array: $O(\mathrm{MAX\_SIZE})$（使用要素数は $O(\log(N+1))$）
+- insert / erase / apply / prodの再帰stack: $O(\log(N+1))$
+- その他の操作の追加領域: $O(1)$

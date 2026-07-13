@@ -37,7 +37,9 @@ constexpr Monoid<op,e> monoid;
 ```
 
 ## 時間計算量
-- $O(n)$
+- $O(\mathtt{MAX\_SIZE})$
+
+固定容量のtree配列全体を単位元で初期化する。
 
 # set
 

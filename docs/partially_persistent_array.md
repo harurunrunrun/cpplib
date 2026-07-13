@@ -35,7 +35,9 @@ PartiallyPersistentArray<T, MAX_SIZE, MAX_UPDATE>
 
 ## 時間計算量
 
-- $O(n)$
+- $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_UPDATE})$
+
+固定長の値領域と各indexの履歴列を構築した後、使用する $n$ 要素を初期化する。
 
 # set
 

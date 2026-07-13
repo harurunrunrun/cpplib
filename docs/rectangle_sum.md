@@ -35,5 +35,13 @@ W range_sum(X xl, X xr, Y yl, Y yr) const
 
 ## 時間計算量
 
-- 構築: $O(N\log N + N\mathrm{Y\_BIT\_WIDTH})$
+- 構築: $O(N\log N+\mathrm{Y\_BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
 - クエリ: $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
+
+# 計算量（公開操作別）
+
+$H=\mathtt{Y\_BIT\_WIDTH}$ とする。
+
+- 2種類のconstructor: $O(N\log N+H\mathtt{MAX\_SIZE})$
+- `size`: $O(1)$
+- `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+H)$

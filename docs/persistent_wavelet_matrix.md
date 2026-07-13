@@ -50,3 +50,18 @@ $B = BLOCK\_SIZE$、$M = \lceil N / B \rceil$ とする。
 
 更新を行ったバージョン数を $U$、全バージョン数を $V$ とした追加メモリは
 $O(N + U(B + \log M) + V)$。
+
+# 計算量（公開操作別）
+
+$D=\mathtt{BIT\_WIDTH}$、$M=\lceil N/B\rceil$、
+$M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$ とする。
+長さ $L$ の区間が触れるblock数を $C$ とし、
+$Q(L)=B+C(\log B+\log(M+1))$ とおく。
+
+- default/vector/array constructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSION}(B+\log(M_{max}+1))+N\log B)$
+- `size`, `versions`, `latest_version`, `fork`: $O(1)$
+- `access`: $O(\log(M+1))$
+- `set`: $O(B\log B+\log(M+1))$
+- `rank`, `range_freq`: $O(Q(L))$
+- `select`: $O(Q(N)\log N)$
+- `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(DQ(L))$

@@ -17,6 +17,8 @@ x86環境では実行時にAVX-512、AVX2の順に利用可能か判定し、ど
 
 以下で $h = O(\log_{16} MAX_SIZE)$ とします。`kth_*` の `k` は0始まりです。戻り値が存在しない操作は `std::nullopt` を返します。
 
+default constructorとmove constructorは $O(1)$ です。
+
 # insert
 
 ```cpp
@@ -139,4 +141,4 @@ void clear()
 
 # copy / move
 
-コピー後の集合は元の集合と独立です。コピーの計算量は $O(ノード数)$ です。move後の移動元は空集合になります。
+コピー後の集合は元の集合と独立です。copy constructorは $O(コピー元のノード数)$、copy assignmentは $O(コピー元と代入先のノード数の合計)$ です。move constructorは $O(1)$、move assignmentは代入先の旧ノード数に線形で、移動元は空集合になります。

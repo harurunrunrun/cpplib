@@ -25,4 +25,16 @@ T value;
 編集距離を $D$ とする。
 
 - 通常: $O((N+M)D)$
-- trace容量の上限を超えた場合: Hirschberg法に切り替え、$O(NM)$ 時間・$O(M)$ 補助領域
+- trace容量の上限を超えた場合: Hirschberg法に切り替え、$O(NM)$ 時間・既存配列を含め $O(N+M)$ 補助領域
+
+## API別計算量
+
+$N=|a|$, $M=|b|$、最短編集距離を $D$、返す操作数を $L$ とする。
+
+| API | 時間計算量 | 空間計算量 |
+| --- | --- | --- |
+| `diff_sequence(a,b)`（Myers trace使用時） | $O((N+M)D+L)$ | $O(N+M+D^2+L)$ |
+| `diff_sequence(a,b)`（trace上限超過後） | $O(NM+L)$ | $O(N+M+L)$ |
+| `DiffOp::tag` / `DiffOp::value` の参照 | $O(1)$ | - |
+
+traceは実装上 8,388,608 entries に制限され、超えるとHirschberg法へ切り替わる。どちらも最大 $N+M$ 個の操作を列挙する。

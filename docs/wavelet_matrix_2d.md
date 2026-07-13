@@ -27,7 +27,7 @@ WaveletMatrix2D(const vector<pair<X, Y>>& points)
 
 ## 時間計算量
 
-- $O(N\log N + N\mathrm{Y\_BIT\_WIDTH})$
+- $O(N\log N+\mathtt{MAX\_SIZE}+\mathrm{Y\_BIT\_WIDTH}(N+\lceil\mathtt{MAX\_SIZE}/64\rceil))$
 
 # 矩形内の点数
 
@@ -55,3 +55,11 @@ optional<Y> next_y(X xl, X xr, Y lower) const
 ## 時間計算量
 
 - $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
+
+# 計算量（公開操作別）
+
+$H=\mathtt{Y\_BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
+
+- 2種類のconstructor: $O(N\log N+\mathtt{MAX\_SIZE}+H(N+W))$
+- `size`: $O(1)$
+- `rectangle_count`, `range_freq`, `kth_smallest_y`, `prev_y`, `next_y`: $O(\log N+H)$

@@ -74,6 +74,19 @@ cow_game_difference_range<T>(n, source, target, constraints, inf)
 
 差分制約の経路和は `T` の表現範囲内である必要がある。
 
-## 計算量
+## 時間計算量
 
-- $O(NM)$
+$M$ を現在の制約数とする。
+
+- `cow_game_add_at_most`: 償却 $O(1)$
+- `cow_game_add_at_least`: 償却 $O(1)$
+- `cow_game_add_equal`: 償却 $O(1)$（制約を2本追加）
+- `cow_game`: $O(NM+N)$。実行可能性判定と `maximum` / `bounded` の長さ $N$ の出力を含む
+- `cow_game_has_maximum`: $O(1)$
+- `cow_game_max_difference`: $O(NM+N)$
+- `cow_game_difference_range`: $O(NM+N)$（`cow_game_max_difference` を2回実行）
+
+## 空間計算量
+
+- `cow_game`: 戻り値を含めて $O(N)$
+- 単一目的・範囲関数も内部結果を含めて $O(N)$

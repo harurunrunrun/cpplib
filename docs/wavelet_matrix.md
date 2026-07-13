@@ -81,3 +81,12 @@ optional<T> next_value(int l, int r, T lower) const
 ## 時間計算量
 
 - $O(\mathrm{BIT\_WIDTH})$
+
+# 計算量（公開操作別）
+
+$N$ を列長、$D=\mathtt{BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
+
+- vector/array constructor: 固定長作業配列とbit辞書の初期化を含めて $O(\mathtt{MAX\_SIZE}+D(N+W))$
+- `size`: $O(1)$
+- `access`, `operator[]`, `rank`, `kth_smallest`, `kth_largest`, `range_freq`, `prev_value`, `next_value`: $O(D)$
+- `select`: $O(D\log N)$

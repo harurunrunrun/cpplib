@@ -39,3 +39,17 @@ mint x = comb.combination(n, k);
 - 構築: $O(MAX_N)$
 - `factorial`, `inverse_factorial`, `inverse`, `permutation`, `combination`, `homogeneous`: $O(1)$
 - `bell_number`: $O(n^2)$
+
+## API別計算量
+
+`Mint` の四則演算と `inv()` を $O(1)$ とした場合。
+
+| API | 時間計算量 |
+| --- | --- |
+| `Combinatorics()` | $O(MAX_N)$（前処理） |
+| `factorial(n)` / `inverse_factorial(n)` / `inverse(n)` | $O(1)$ |
+| `permutation(n,k)` / `combination(n,k)` / `homogeneous(n,k)` | $O(1)$ |
+| `bell_number(n)` | $O(n^2)$ |
+| 公開配列 `fact` / `inv_fact` / `inv` の1要素参照 | $O(1)$ |
+
+保持領域は $O(MAX_N)$。`bell_number` の呼出しごとの一時領域は $O(MAX_N)$。
