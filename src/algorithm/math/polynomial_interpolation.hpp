@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <stdexcept>
 
+#include "polynomial_interpolation_fast.hpp"
+
 namespace math{
 
 template<class T, std::size_t CAPACITY>

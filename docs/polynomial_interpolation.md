@@ -3,7 +3,7 @@ title: Polynomial Interpolation
 documentation_of: ../src/algorithm/math/polynomial_interpolation.hpp
 ---
 
-固定長配列を用いた多項式評価と Lagrange 補間。
+固定長配列による Lagrange 補間と、積木を用いた高速な任意点補間。
 
 ```cpp
 #include "src/algorithm/math/polynomial_interpolation.hpp"
@@ -80,6 +80,29 @@ mint value = interpolation.evaluate(xs, ys, sample_count, x);
 
 `interpolate_coefficients` で係数を復元してから Horner 法で評価する。
 
+## 積木による高速な任意点補間
+
+```cpp
+template<int MOD>
+math::Polynomial<MOD> math::polynomial_interpolation(
+    const std::vector<Modint<MOD>>& points,
+    const std::vector<Modint<MOD>>& values
+);
+```
+
+`points[i]` で値 `values[i]` を取る次数 `points.size() - 1` 以下の多項式を、
+定数項から昇冪順の係数列として返す。末尾の0は省略され、標本が空なら
+0多項式を表す空の係数列を返す。
+
+内部では
+
+1. $\prod_i(X-points_i)$ の積木を作る
+2. その導関数を多点評価して Lagrange 分母を求める
+3. 積木を下から合成して係数列を復元する
+
+という処理を行う。`points.size() != values.size()`、または評価点に重複がある場合は
+`std::invalid_argument` を送出する。
+
 ## 計算量
 
 `Mint` の四則演算と `inv()` を $O(1)$ とする。`n = sample_count`、
@@ -93,6 +116,7 @@ mint value = interpolation.evaluate(xs, ys, sample_count, x);
 | `evaluate_equidistant` | $O(n)$ | $O(MAX\_DEGREE)$ |
 | `interpolate_coefficients` | $O(n^2)$ | $O(MAX\_DEGREE)$ |
 | `evaluate` | $O(n^2)$ | $O(MAX\_DEGREE)$ |
+| `polynomial_interpolation<MOD>` | $O(M(n)\log n)$ | $O(n\log n)$ |
 
 作業配列にも `std::array` を使うため、追加領域は実際の `n` ではなくテンプレートの
 固定容量で決まる。非常に大きい `MAX_DEGREE` のインスタンスは静的領域へ置くとよい。
@@ -104,3 +128,6 @@ mint value = interpolation.evaluate(xs, ys, sample_count, x);
   `MAX_DEGREE < mod` が必要。
 - 任意点補間では各 `xs[i] - xs[j]` が逆元を持つ必要がある。重複点は例外になる。
 - `sample_count == 0` または固定容量を超える指定は例外になる。
+- 高速版の `points` は `Modint<MOD>` 上で相異なる必要がある。
+- 高速版では NTT に必要な2冪変換長が `MOD - 1` を割り切る必要がある。
+- 高速版の $M(n)$ は長さ $n$ の多項式積の計算量で、この実装では $O(n\log n)$ である。
