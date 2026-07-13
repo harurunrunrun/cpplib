@@ -4,10 +4,39 @@
 from __future__ import annotations
 
 import argparse
+import shlex
 import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+
+def asset_command(
+    asset: Path,
+    native_executable: Path,
+    cxx: str,
+    cxxflags: str,
+) -> list[str]:
+    if asset.suffix == ".py":
+        return [sys.executable, str(asset)]
+    native_executable.parent.mkdir(parents=True, exist_ok=True)
+    compile_result = subprocess.run(
+        [
+            cxx,
+            *shlex.split(cxxflags),
+            "-I",
+            ".",
+            str(asset),
+            "-o",
+            str(native_executable),
+        ],
+        check=False,
+    )
+    if compile_result.returncode != 0:
+        raise RuntimeError(
+            f"native asset compilation exited with code {compile_result.returncode}"
+        )
+    return [str(native_executable)]
 
 
 def main() -> int:
@@ -28,10 +57,14 @@ def main() -> int:
     for test in tests:
         name = test.name[: -len(".test.cpp")]
         print(f"[standalone-assets] START {name}", file=sys.stderr)
-        generator = root / "test" / "generator" / name / "generator.py"
-        checker = root / "test" / "checker" / name / "checker.py"
-        generator_exists = generator.exists()
-        checker_exists = checker.exists()
+        generator_python = root / "test" / "generator" / name / "generator.py"
+        generator_cpp = root / "test" / "generator" / name / "generator.cpp"
+        checker_python = root / "test" / "checker" / name / "checker.py"
+        checker_cpp = root / "test" / "checker" / name / "checker.cpp"
+        generator = generator_python if generator_python.exists() else generator_cpp
+        checker = checker_python if checker_python.exists() else checker_cpp
+        generator_exists = generator_python.exists() or generator_cpp.exists()
+        checker_exists = checker_python.exists() or checker_cpp.exists()
         if not generator_exists:
             failures.append((name, f"missing generator: {generator}"))
         if not checker_exists:
@@ -51,7 +84,13 @@ def main() -> int:
         if generator_exists:
             try:
                 generator_result = subprocess.run(
-                    [sys.executable, str(generator), "--out-dir", str(case_dir)],
+                    [
+                        *asset_command(
+                            generator, build_dir / "generator.out", args.cxx, args.cxxflags
+                        ),
+                        "--out-dir",
+                        str(case_dir),
+                    ],
                     check=False,
                 )
             except Exception as error:
@@ -69,8 +108,9 @@ def main() -> int:
             try:
                 checker_result = subprocess.run(
                     [
-                        sys.executable,
-                        str(checker),
+                        *asset_command(
+                            checker, build_dir / "checker.out", args.cxx, args.cxxflags
+                        ),
                         "--test",
                         str(test),
                         "--case-dir",
