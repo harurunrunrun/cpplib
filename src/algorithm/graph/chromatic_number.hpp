@@ -1,13 +1,16 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
+#include <bit>
+#include <cstddef>
 #include <cstdint>
 #include <stdexcept>
 #include <vector>
 
 int chromatic_number(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());
-    if(n > 24)[[unlikely]]{
+    if(n > 20)[[unlikely]]{
         throw std::runtime_error("library assertion fault: n is too large (chromatic_number).");
     }
     std::vector<std::uint32_t> adjacent(static_cast<std::size_t>(n), 0);
@@ -29,27 +32,55 @@ int chromatic_number(const std::vector<std::vector<int>>& graph){
         }
     }
 
-    const int size = 1 << n;
-    std::vector<char> independent(static_cast<std::size_t>(size), 0);
-    independent[0] = 1;
-    for(int mask = 1; mask < size; mask++){
-        int v = __builtin_ctz(static_cast<unsigned>(mask));
-        int rest = mask ^ (1 << v);
-        independent[static_cast<std::size_t>(mask)] =
-            independent[static_cast<std::size_t>(rest)] &&
-            ((adjacent[static_cast<std::size_t>(v)] & static_cast<std::uint32_t>(rest)) == 0);
+    if(n == 0) return 0;
+    const std::size_t subset_count = std::size_t{1} << n;
+    std::vector<std::uint32_t> independent_count(subset_count);
+    independent_count[0] = 1;
+    for(std::size_t subset = 1; subset < subset_count; ++subset){
+        const std::size_t vertex = static_cast<std::size_t>(
+            std::countr_zero(subset)
+        );
+        const std::size_t remaining = subset & (subset - 1);
+        const std::size_t without_neighbors = remaining &
+            ~static_cast<std::size_t>(adjacent[vertex]);
+        independent_count[subset] =
+            independent_count[remaining] +
+            independent_count[without_neighbors];
     }
 
-    std::vector<int> dp(static_cast<std::size_t>(size), n + 1);
-    dp[0] = 0;
-    for(int mask = 1; mask < size; mask++){
-        int bit = mask & -mask;
-        for(int sub = mask; sub; sub = (sub - 1) & mask){
-            if((sub & bit) && independent[static_cast<std::size_t>(sub)]){
-                dp[static_cast<std::size_t>(mask)] =
-                    std::min(dp[static_cast<std::size_t>(mask)], dp[static_cast<std::size_t>(mask ^ sub)] + 1);
+    constexpr std::array<std::uint32_t, 3> moduli{
+        1'000'000'007U,
+        1'000'000'009U,
+        998'244'353U,
+    };
+    std::array<std::vector<std::uint32_t>, moduli.size()> powers;
+    for(auto& values: powers) values.assign(subset_count, 1);
+
+    for(int color_count = 1; color_count <= n; ++color_count){
+        for(std::size_t modulus_index = 0;
+            modulus_index < moduli.size();
+            ++modulus_index){
+            const std::uint32_t modulus = moduli[modulus_index];
+            std::uint32_t sum = 0;
+            auto& values = powers[modulus_index];
+            for(std::size_t subset = 0; subset < subset_count; ++subset){
+                values[subset] = static_cast<std::uint32_t>(
+                    static_cast<std::uint64_t>(values[subset]) *
+                    independent_count[subset] % modulus
+                );
+                const bool negative =
+                    ((n - static_cast<int>(std::popcount(subset))) & 1) != 0;
+                if(negative){
+                    sum = sum >= values[subset]
+                        ? sum - values[subset]
+                        : sum + modulus - values[subset];
+                }else{
+                    sum += values[subset];
+                    if(sum >= modulus) sum -= modulus;
+                }
             }
+            if(sum != 0) return color_count;
         }
     }
-    return dp[static_cast<std::size_t>(size - 1)];
+    return n;
 }
