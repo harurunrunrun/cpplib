@@ -37,7 +37,7 @@ $R$ を `path_query` が返す区間数（$R=O(\log N)$）とする。
 
 - graph、分解table、出力区間列を含めて $O(N+R)$
 
-## API契約・前提・例外
+## 注意点
 
 `parent/depth/subtree/head/in/out` は根付き木metadata、`operator[]` はEuler indexから頂点への写像。`path_query` は半開区間列、`subtree_query(v,false)` はv自身を除く。query前にbuildする。jump範囲や非木入力の違反で `runtime_error`。
 

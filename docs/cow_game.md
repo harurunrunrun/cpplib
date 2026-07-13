@@ -91,7 +91,7 @@ $M$ を現在の制約数とする。
 - `cow_game`: 戻り値を含めて $O(N)$
 - 単一目的・範囲関数も内部結果を含めて $O(N)$
 
-## API契約・前提・例外
+## 注意点
 
 `CowGameMaximumResult` は `feasible`, `bounded`, `value` を持ち、両flagがtrueのときだけvalueが有効。`CowGameRangeResult` は `feasible`, `has_minimum`, `has_maximum`, `minimum`, `maximum` を持ち、各端点は対応flagがtrueのときだけ有効。`cow_game_has_maximum` は実行不能ならfalseを返し、targetを範囲検査する。
 

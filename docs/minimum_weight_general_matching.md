@@ -34,7 +34,7 @@ vector<int> match;
 
 - dense table、blossom作業領域、入力辺を含めて $O(N^2+M)$
 
-## API契約・前提・例外
+## 注意点
 
 `match[v]` は対応頂点、未matchingなら `-1`。`T` はbool以外の64bit以下整数型。self-loopを無視し、多重辺は最小costを使う。範囲・内部辺id超過で `runtime_error`、結果costがT外なら `overflow_error`。`inf` は互換引数。
 

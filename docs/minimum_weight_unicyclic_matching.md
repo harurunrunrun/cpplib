@@ -35,7 +35,7 @@ vector<int> match;
 
 - 戻り値と作業領域を含めて $O(N+M)$
 
-## API契約・前提・例外
+## 注意点
 
 `match[v]` は対応頂点または `-1`。matching数を最大化してからcostを最小化する。成分は木またはunicyclic multigraphとし、多重辺を許すがself-loopや他形状は `runtime_error`。
 

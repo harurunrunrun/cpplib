@@ -48,7 +48,7 @@ for(int i = 0; i < m; ++i){
 
 - [ABC340 G公式解説](https://atcoder.jp/contests/abc340/editorial/9256)
 
-## API契約・前提・例外
+## 注意点
 
 `VirtualTree<MAX_SIZE>` はalias。`compress` は圧縮後sizeを返す。`vertex`, `parent_index`, `edge_length`, `selected` は元頂点、圧縮上の親、元木上距離、指定頂点flagを返す。size・辺・圧縮容量を検査し、違反時は `runtime_error`。
 

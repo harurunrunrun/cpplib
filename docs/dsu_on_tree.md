@@ -95,7 +95,7 @@ $A,R,S,Q$ をそれぞれ `add`, `remove`, `reset`, `answer` 1回の時間計算
 
 object本体は $O(MAX_SIZE)$。各APIの追加領域はcallback側の状態を除いて $O(1)$。
 
-## API契約・前提・例外
+## 注意点
 
 constructorは `0 <= n <= MAX_SIZE`、辺容量は `MAX_SIZE-1`。metadataと実行APIは直近の `add_edge` 後に成功した `build` を必要とする。
 

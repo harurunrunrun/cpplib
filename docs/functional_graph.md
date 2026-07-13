@@ -82,7 +82,7 @@ long long graph.steps_to(from, to)
   `cycle_size(id)` はそのうちcycle上の頂点数。
 - `cycle(id)` が返すspanはobject内部配列を参照し、次の `build` まで有効。
 
-## API契約・前提・例外
+## 注意点
 
 default constructorは空graphを作り、`build` は以前の状態を置換する。入力sizeは `MAX_SIZE` 以下。頂点・component queryはindexを検査する。`cycle` のspanは次のbuildまたはobject破棄まで有効。構築は $O(64N)$、`jump/steps_to` は $O(64)$。
 

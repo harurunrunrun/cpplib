@@ -30,7 +30,7 @@ vector<ManhattanMstEdge<T>> edges;
 
 - 候補辺、DSU、戻り値を含めて $O(N)$
 
-## API契約・前提・例外
+## 注意点
 
 点数が1以下ならcost 0・空辺列、それ以外は入力index間の辺を $N-1$ 本返す。座標変換・距離・総和が `T` に収まることを前提とし、本APIはrange例外を送出しない。
 

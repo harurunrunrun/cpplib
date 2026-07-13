@@ -41,7 +41,7 @@ $N$ を頂点数、$M$ を追加済み無向辺数とする。
 
 - graph、blossom作業領域、戻り値を含めて $O(N+M)$
 
-## API契約・前提・例外
+## 注意点
 
 `match[v]` は対応頂点または `-1`。public `lca`, `mark_path`, `find_path` はblossom探索helperで、`find_path` が作る内部状態を前提とする。通常は `solve` を使う。self-loopは無視し、多重辺を許す。
 

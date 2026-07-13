@@ -30,7 +30,7 @@ documentation_of: ../src/algorithm/tree/rerooting_dp.hpp
 
 - 保存graph、前後prefix、戻り値を含めて $O(N)$
 
-## API契約・前提・例外
+## 注意点
 
 `add_edge(u,v)` は0-indexedの辺idを返す。`solve(root)[v]` は `v` を根とした木全体のDP値。callbackの型は前節の `S` に従う。非連結木・閉路・辺数不一致で `runtime_error`。
 

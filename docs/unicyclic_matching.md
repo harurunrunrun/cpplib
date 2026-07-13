@@ -32,7 +32,7 @@ vector<int> match;
 
 - 戻り値と作業領域を含めて $O(N+M)$
 
-## API契約・前提・例外
+## 注意点
 
 `match[v]` は対応頂点、未matchingなら `-1`。各連結成分は木または閉路を1つだけ持つgraphとする。多重辺を許しself-loopは不可。条件違反で `runtime_error`。
 

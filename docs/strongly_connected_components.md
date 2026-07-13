@@ -29,7 +29,7 @@ vector<vector<int>> groups;
 
 - 戻り値と逆グラフを含めて $O(N+M)$
 
-## API契約・前提・例外
+## 注意点
 
 `id[v]` は成分id、`groups[id]` はその頂点列で `count == groups.size()`。成分idは縮約DAGのトポロジカル順になる。
 

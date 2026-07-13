@@ -40,7 +40,7 @@ $V=L+R$、$E$ を追加済み辺数とする。
 
 - graph、matching、戻り値を含めて $O(V+E)$
 
-## API契約・前提・例外
+## 注意点
 
 match列は対応端点または `-1`。public `bfs()` はlayerを作って増加路候補の有無を返し、`dfs(left)` はそのlayerを使って1回増加する実装helper。通常は全辺追加後に `solve()` を1回呼ぶ。
 

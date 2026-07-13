@@ -42,7 +42,7 @@ $V=L+R+2$、$E'=E+L+R$、$F$ を最終matching数とする。
 
 - 残余グラフ、最短路作業領域、戻り値を含めて $O(V+E')$
 
-## API契約・前提・例外
+## 注意点
 
 `left_match[l]` と `right_match[r]` は対応端点、未matchingなら `-1`。端点範囲を検査する。負costを扱える。
 

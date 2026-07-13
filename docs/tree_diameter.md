@@ -27,7 +27,7 @@ $L$ を返す直径pathの頂点数とする。
 
 - 距離・親・stackと出力pathを含めて $O(N)$
 
-## API契約・前提・例外
+## 注意点
 
 両Resultは `from`, `to`, `length`, `path` を持ち、重み付き版のlengthは `T`。pathは両端を含む。空木では端点 `-1`、長さ0、空path。重みは非負を前提とする。
 

@@ -101,7 +101,7 @@ tour.euler_tour()
 
 object本体と構築用bufferは $O(MAX_SIZE)$。`build` 中も動的確保はない。
 
-## API契約・前提・例外
+## 注意点
 
 constructorは `0 <= n <= MAX_SIZE`、`add_edge` は固定の `MAX_SIZE-1` 辺容量を検査する。metadata・preorder・event queryは直近の辺追加後のbuild成功と有効indexを必要とし、違反時は `runtime_error`。
 
