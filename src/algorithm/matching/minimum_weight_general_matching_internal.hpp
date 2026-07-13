@@ -2,12 +2,13 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <cstdint>
 #include <utility>
 #include <vector>
 
 namespace minimum_weight_general_matching_internal{
 
-using Wide = __int128;
+using Wide = __int128_t;
 
 struct WeightedEdge{
     int from;
@@ -377,7 +378,7 @@ public:
         for(int blossom = n; blossom < 2 * n; ++blossom) unused_blossoms.push_back(blossom);
     }
 
-    std::vector<int> solve(){
+    std::vector<int> solve(bool maximize_cardinality = true){
         if(edge_count == 0) return mate;
         for(int stage = 0; stage < n; ++stage){
             std::fill(label.begin(), label.end(), 0);
@@ -443,6 +444,15 @@ public:
                 Wide delta = 0;
                 int delta_edge = -1;
                 int delta_blossom = -1;
+                if(!maximize_cardinality){
+                    delta_type = 1;
+                    delta = dual[0];
+                    for(int vertex = 1; vertex < n; ++vertex){
+                        if(dual[static_cast<std::size_t>(vertex)] < delta){
+                            delta = dual[static_cast<std::size_t>(vertex)];
+                        }
+                    }
+                }
                 for(int vertex = 0; vertex < n; ++vertex){
                     if(label[static_cast<std::size_t>(in_blossom[static_cast<std::size_t>(vertex)])] == 0 &&
                        best_edge[static_cast<std::size_t>(vertex)] != -1){
