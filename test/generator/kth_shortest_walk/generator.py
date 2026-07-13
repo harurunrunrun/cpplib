@@ -9,45 +9,53 @@ import random
 from pathlib import Path
 
 
-def solve(n: int, edges: list[tuple[int, int, int]], s: int, t: int, k: int) -> list[int]:
+def solve(
+    n: int,
+    edges: list[tuple[int, int, int]],
+    source: int,
+    target: int,
+    k: int,
+) -> list[int]:
     graph: list[list[tuple[int, int]]] = [[] for _ in range(n)]
-    for u, v, w in edges:
-        graph[u].append((v, w))
-    reachable = [False] * n
-    stack = [s]
-    reachable[s] = True
-    while stack:
-        v = stack.pop()
-        for to, _ in graph[v]:
-            if not reachable[to]:
-                reachable[to] = True
-                stack.append(to)
-    if not reachable[t]:
-        return []
+    for from_, to, cost in edges:
+        graph[from_].append((to, cost))
+
     result: list[int] = []
-    que: list[tuple[int, int]] = [(0, s)]
-    popped = [0] * n
-    guard = 0
-    while que and len(result) < k:
-        d, v = heapq.heappop(que)
-        if popped[v] == k:
+    queue: list[tuple[int, int]] = [(0, source)]
+    pop_count = [0] * n
+    while queue and len(result) < k:
+        distance, vertex = heapq.heappop(queue)
+        if pop_count[vertex] == k:
             continue
-        popped[v] += 1
-        if v == t:
-            result.append(d)
-        for to, w in graph[v]:
-            heapq.heappush(que, (d + w, to))
-        guard += 1
-        if guard > 200000:
-            raise RuntimeError("too many generated walks")
+        pop_count[vertex] += 1
+        if vertex == target:
+            result.append(distance)
+        for to, cost in graph[vertex]:
+            heapq.heappush(queue, (distance + cost, to))
     return result
 
 
-def write_case(out_dir: Path, idx: int, n: int, edges: list[tuple[int, int, int]], s: int, t: int, k: int) -> None:
-    costs = solve(n, edges, s, t, k)
-    name = f"case_{idx:02d}"
+def write_case(
+    out_dir: Path,
+    index: int,
+    n: int,
+    edges: list[tuple[int, int, int]],
+    source: int,
+    target: int,
+    k: int,
+    expected: list[int] | None = None,
+) -> None:
+    costs = solve(n, edges, source, target, k) if expected is None else expected
+    assert len(costs) <= k
+    name = f"case_{index:02d}"
     (out_dir / f"{name}.in").write_text(
-        "\n".join([f"{n} {len(edges)} {s} {t} {k}", *[f"{u} {v} {w}" for u, v, w in edges]]) + "\n",
+        "\n".join(
+            [
+                f"{n} {len(edges)} {source} {target} {k}",
+                *[f"{from_} {to} {cost}" for from_, to, cost in edges],
+            ]
+        )
+        + "\n",
         encoding="utf-8",
     )
     kth_value = str(costs[k - 1]) if k > 0 and len(costs) == k else "NONE"
@@ -73,23 +81,71 @@ def main() -> None:
         (2, [(0, 1, 0), (1, 0, 0), (0, 1, 0)], 0, 1, 80),
         (1, [(0, 0, 0)], 0, 0, 100),
         (3, [(0, 1, 5), (0, 1, 5), (1, 2, 0)], 0, 2, 3),
+        (
+            4,
+            [(0, 1, 2), (1, 2, 0), (2, 1, 0), (1, 3, 3), (2, 3, 3), (2, 3, 3)],
+            0,
+            3,
+            250,
+        ),
+        (2, [(0, 1, 2), (1, 0, 3), (0, 0, 7), (0, 0, 7)], 0, 0, 120),
+        (
+            5,
+            [
+                (0, 1, 1),
+                (0, 1, 1),
+                (0, 2, 2),
+                (1, 3, 2),
+                (1, 4, 8),
+                (2, 3, 1),
+                (3, 4, 3),
+            ],
+            0,
+            4,
+            20,
+        ),
     ]
+
     rng = random.Random(20260730)
-    for n in [2, 4, 6, 8]:
-        for _ in range(2):
+    for n in range(1, 9):
+        for _ in range(4):
             edges: list[tuple[int, int, int]] = []
-            for u in range(n):
-                for v in range(n):
-                    if u < v and rng.randrange(4) == 0:
-                        edges.append((u, v, 1 + rng.randrange(5)))
-            cases.append((n, edges, rng.randrange(n), rng.randrange(n), 6))
+            for from_ in range(n):
+                for to in range(n):
+                    if rng.randrange(5) == 0:
+                        cost = rng.randrange(6)
+                        edges.append((from_, to, cost))
+                        if rng.randrange(5) == 0:
+                            edges.append(
+                                (
+                                    from_,
+                                    to,
+                                    cost if rng.randrange(2) == 0 else rng.randrange(6),
+                                )
+                            )
+            cases.append((n, edges, rng.randrange(n), rng.randrange(n), 20))
 
-    large_n = 20000
-    large_edges = [(vertex, vertex + 1, 1) for vertex in range(large_n - 1)]
-    cases.append((large_n, large_edges, 0, large_n - 1, 1))
+    for index, case in enumerate(cases):
+        write_case(out_dir, index, *case)
 
-    for i, case in enumerate(cases):
-        write_case(out_dir, i, *case)
+    # A zero loop before a long chain has K equal answers. Its expected output
+    # is analytic so the generator itself does not perform the old O(NK) search.
+    large_n = 30000
+    large_k = 20000
+    large_edges = [(0, 0, 0)]
+    large_edges.extend(
+        (vertex, vertex + 1, 1) for vertex in range(large_n - 1)
+    )
+    write_case(
+        out_dir,
+        len(cases),
+        large_n,
+        large_edges,
+        0,
+        large_n - 1,
+        large_k,
+        [large_n - 1] * large_k,
+    )
 
 
 if __name__ == "__main__":
