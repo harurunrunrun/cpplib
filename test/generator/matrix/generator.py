@@ -11,11 +11,13 @@ MOD = 998244353
 
 
 def multiply(a: list[list[int]], b: list[list[int]]) -> list[list[int]]:
-    n = len(a)
-    result = [[0] * n for _ in range(n)]
-    for i in range(n):
-        for k in range(n):
-            for j in range(n):
+    rows = len(a)
+    inner = len(b)
+    cols = len(b[0])
+    result = [[0] * cols for _ in range(rows)]
+    for i in range(rows):
+        for k in range(inner):
+            for j in range(cols):
                 result[i][j] = (result[i][j] + a[i][k] * b[k][j]) % MOD
     return result
 
@@ -54,13 +56,42 @@ def main() -> None:
             col = rng.randrange(n)
             cases.append((matrix, exponent, row, col))
 
-    input_lines = [str(len(cases))]
+    multiply_cases: list[tuple[list[list[int]], list[list[int]]]] = []
+    for _ in range(40):
+        rows = rng.randrange(1, 14)
+        inner = rng.randrange(1, 14)
+        cols = rng.randrange(1, 14)
+        lhs = [[rng.randrange(-2 * MOD, 2 * MOD + 1) for _ in range(inner)]
+               for _ in range(rows)]
+        rhs = [[rng.randrange(-2 * MOD, 2 * MOD + 1) for _ in range(cols)]
+               for _ in range(inner)]
+        multiply_cases.append((lhs, rhs))
+    large_n = 128
+    large_lhs = [[rng.randrange(-1000, 1001) for _ in range(large_n)]
+                 for _ in range(large_n)]
+    large_rhs = [[rng.randrange(-1000, 1001) for _ in range(large_n)]
+                 for _ in range(large_n)]
+    multiply_cases.append((large_lhs, large_rhs))
+
+    input_lines = [str(len(cases) + len(multiply_cases))]
     output_lines: list[str] = []
     for matrix, exponent, row, col in cases:
         n = len(matrix)
-        input_lines.append(f"{n} {exponent} {row} {col}")
+        input_lines.append(f"BMBM {n} {exponent} {row} {col}")
         input_lines.extend(" ".join(map(str, values)) for values in matrix)
         output_lines.append(str(power(matrix, exponent)[row][col]))
+
+    for lhs, rhs in multiply_cases:
+        rows = len(lhs)
+        inner = len(rhs)
+        cols = len(rhs[0])
+        input_lines.append(f"MUL {rows} {inner} {cols}")
+        input_lines.extend(" ".join(map(str, values)) for values in lhs)
+        input_lines.extend(" ".join(map(str, values)) for values in rhs)
+        product = multiply(lhs, rhs)
+        output_lines.append(" ".join(map(str, [
+            rows, cols, *(value for values in product for value in values)
+        ])))
 
     (out_dir / "case_00.in").write_text("\n".join(input_lines) + "\n", encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(output_lines) + "\n", encoding="utf-8")

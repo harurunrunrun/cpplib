@@ -179,10 +179,18 @@ public:
         );
 
         SquareMatrix res(lhs._n);
-        for(int i = 0; i < lhs._n; i++){
-            for(int k = 0; k < lhs._n; k++){
-                for(int j = 0; j < lhs._n; j++){
-                    res(i, j) += lhs(i, k) * rhs(k, j);
+        const int n = lhs._n;
+        for(int i = 0; i < n; i++){
+            T* result_row = res.data.data() +
+                static_cast<std::size_t>(i) * MAX_SIZE;
+            const T* left_row = lhs.data.data() +
+                static_cast<std::size_t>(i) * MAX_SIZE;
+            for(int k = 0; k < n; k++){
+                const T& left_value = left_row[k];
+                const T* right_row = rhs.data.data() +
+                    static_cast<std::size_t>(k) * MAX_SIZE;
+                for(int j = 0; j < n; j++){
+                    result_row[j] += left_value * right_row[j];
                 }
             }
         }

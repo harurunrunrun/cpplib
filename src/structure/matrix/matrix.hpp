@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <memory>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -12,6 +13,9 @@ struct Matrix{
     static_assert(MAX_COL >= 0);
 
 private:
+    template<class, int, int>
+    friend struct Matrix;
+
     int _rows = 0;
     int _cols = 0;
     std::array<T, static_cast<std::size_t>(MAX_ROW) * MAX_COL> data{};
@@ -45,28 +49,41 @@ private:
         }
     }
 
-    static std::vector<T> convolution(
+    static void convolution(
         const std::vector<T>& lhs,
-        const std::vector<T>& rhs
+        const std::vector<T>& rhs,
+        std::vector<T>& res
     ){
-        if(lhs.empty() || rhs.empty()) return {};
-        std::vector<T> res(lhs.size() + rhs.size() - 1);
+        if(lhs.empty() || rhs.empty()){
+            res.clear();
+            return;
+        }
+        res.assign(lhs.size() + rhs.size() - 1, T());
         for(std::size_t i = 0; i < lhs.size(); i++){
             for(std::size_t j = 0; j < rhs.size(); j++){
                 res[i + j] += lhs[i] * rhs[j];
             }
         }
-        return res;
     }
 
-    static std::vector<T> berlekamp_massey(const std::vector<T>& sequence){
-        std::vector<T> current{T(1)};
-        std::vector<T> previous{T(1)};
+    static std::vector<T> berlekamp_massey(
+        const T* sequence,
+        int sequence_size
+    ){
+        std::vector<T> current;
+        std::vector<T> previous;
+        std::vector<T> backup;
+        const std::size_t capacity = static_cast<std::size_t>(sequence_size + 1);
+        current.reserve(capacity);
+        previous.reserve(capacity);
+        backup.reserve(capacity);
+        current.push_back(T(1));
+        previous.push_back(T(1));
         int degree = 0;
         int shift = 1;
         T last = T(1);
 
-        for(int i = 0; i < static_cast<int>(sequence.size()); i++){
+        for(int i = 0; i < sequence_size; i++){
             T diff = sequence[static_cast<std::size_t>(i)];
             for(int j = 1; j <= degree; j++){
                 diff += current[static_cast<std::size_t>(j)] *
@@ -77,7 +94,7 @@ private:
                 continue;
             }
 
-            std::vector<T> backup = current;
+            backup.assign(current.begin(), current.end());
             T coeff = diff / last;
             if(current.size() < previous.size() + static_cast<std::size_t>(shift)){
                 current.resize(previous.size() + static_cast<std::size_t>(shift));
@@ -105,13 +122,14 @@ private:
     }
 
     static T bostan_mori(
-        const std::vector<T>& initial,
+        const T* initial,
+        int initial_size,
         const std::vector<T>& recurrence,
         long long k
     ){
         int degree = static_cast<int>(recurrence.size());
         if(degree == 0) return T();
-        if(k < static_cast<long long>(initial.size())){
+        if(k < initial_size){
             return initial[static_cast<std::size_t>(k)];
         }
 
@@ -132,16 +150,27 @@ private:
             p[static_cast<std::size_t>(i)] = value;
         }
 
+        std::vector<T> q_neg;
+        std::vector<T> next_p_full;
+        std::vector<T> next_q_full;
+        std::vector<T> next_p;
+        std::vector<T> next_q;
+        q_neg.reserve(static_cast<std::size_t>(degree + 1));
+        next_p_full.reserve(static_cast<std::size_t>(2 * degree));
+        next_q_full.reserve(static_cast<std::size_t>(2 * degree + 1));
+        next_p.reserve(static_cast<std::size_t>(degree));
+        next_q.reserve(static_cast<std::size_t>(degree + 1));
+
         while(k > 0){
-            std::vector<T> q_neg = q;
+            q_neg.assign(q.begin(), q.end());
             for(std::size_t i = 1; i < q_neg.size(); i += 2){
                 q_neg[i] = -q_neg[i];
             }
 
-            std::vector<T> next_p_full = convolution(p, q_neg);
-            std::vector<T> next_q_full = convolution(q, q_neg);
+            convolution(p, q_neg, next_p_full);
+            convolution(q, q_neg, next_q_full);
 
-            std::vector<T> next_p;
+            next_p.clear();
             for(std::size_t i = static_cast<std::size_t>(k & 1);
                 i < next_p_full.size();
                 i += 2
@@ -149,7 +178,7 @@ private:
                 next_p.push_back(next_p_full[i]);
             }
 
-            std::vector<T> next_q;
+            next_q.clear();
             for(std::size_t i = 0; i < next_q_full.size(); i += 2){
                 next_q.push_back(next_q_full[i]);
             }
@@ -331,10 +360,19 @@ public:
         }
 
         Matrix<T, MAX_ROW, RHS_MAX_COL> res(_rows, rhs.cols());
+        const int rhs_cols = rhs._cols;
+        if(_rows == 0 || _cols == 0 || rhs_cols == 0) return res;
         for(int i = 0; i < _rows; i++){
+            T* result_row = res.data.data() +
+                static_cast<std::size_t>(i) * RHS_MAX_COL;
+            const T* left_row = data.data() +
+                static_cast<std::size_t>(i) * MAX_COL;
             for(int k = 0; k < _cols; k++){
-                for(int j = 0; j < rhs.cols(); j++){
-                    res(i, j) += (*this)(i, k) * rhs(k, j);
+                const T& left_value = left_row[k];
+                const T* right_row = rhs.data.data() +
+                    static_cast<std::size_t>(k) * RHS_MAX_COL;
+                for(int j = 0; j < rhs_cols; j++){
+                    result_row[j] += left_value * right_row[j];
                 }
             }
         }
@@ -351,30 +389,35 @@ public:
         check_index(row, col, "library assertion fault: range violation (pow_entry_bmbm).");
 
         int n = _rows;
-        std::vector<T> samples;
-        samples.reserve(static_cast<std::size_t>(2 * n));
-
-        std::vector<T> vec(static_cast<std::size_t>(n));
-        vec[static_cast<std::size_t>(col)] = T(1);
-        std::vector<T> next(static_cast<std::size_t>(n));
+        const int sample_size = 2 * n;
+        auto workspace = std::make_unique_for_overwrite<T[]>(
+            static_cast<std::size_t>(n) * 4
+        );
+        T* samples = workspace.get();
+        T* vec = samples + sample_size;
+        T* next = vec + n;
+        for(int i = 0; i < n; i++) vec[i] = T();
+        vec[col] = T(1);
         for(int step = 0; step < 2 * n; step++){
-            samples.push_back(vec[static_cast<std::size_t>(row)]);
+            samples[step] = vec[row];
             for(int i = 0; i < n; i++){
                 T value{};
+                const T* matrix_row = data.data() +
+                    static_cast<std::size_t>(i) * MAX_COL;
                 for(int j = 0; j < n; j++){
-                    value += data[index(i, j)] * vec[static_cast<std::size_t>(j)];
+                    value += matrix_row[j] * vec[j];
                 }
-                next[static_cast<std::size_t>(i)] = value;
+                next[i] = value;
             }
-            vec.swap(next);
+            std::swap(vec, next);
         }
 
-        if(exponent < static_cast<long long>(samples.size())){
-            return samples[static_cast<std::size_t>(exponent)];
+        if(exponent < sample_size){
+            return samples[exponent];
         }
 
-        std::vector<T> recurrence = berlekamp_massey(samples);
-        return bostan_mori(samples, recurrence, exponent);
+        std::vector<T> recurrence = berlekamp_massey(samples, sample_size);
+        return bostan_mori(samples, sample_size, recurrence, exponent);
     }
 
     T pow_entry_bmbm(long long exponent, int k) const{

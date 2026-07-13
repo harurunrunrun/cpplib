@@ -50,10 +50,14 @@ def main() -> None:
         ([[1, -3], [2, -6]], 1_000_000_000_000_000_003),
     ]
     for _ in range(90):
-        n = rng.randrange(1, 6)
+        n = rng.randrange(1, 13)
         exponent = rng.randrange(31) if rng.randrange(3) else rng.randrange(10**18 + 1)
         matrix = [[rng.randrange(-2 * MOD, 2 * MOD + 1) for _ in range(n)] for _ in range(n)]
         cases.append((matrix, exponent))
+    large_n = 96
+    large = [[rng.randrange(-1000, 1001) for _ in range(large_n)]
+             for _ in range(large_n)]
+    cases.append((large, 11))
 
     input_lines = [str(len(cases))]
     output_lines: list[str] = []

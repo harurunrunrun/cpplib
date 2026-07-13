@@ -16,7 +16,7 @@ int main(){
             int n;
             long long exponent;
             std::cin >> n >> exponent;
-            SquareMatrix<external_mint, 8> matrix(n);
+            SquareMatrix<external_mint, 128> matrix(n);
             for(int i = 0; i < n; i++){
                 for(int j = 0; j < n; j++){
                     long long value;

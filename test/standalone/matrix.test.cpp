@@ -5,6 +5,7 @@
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "../../src/structure/matrix/matrix.hpp"
 #include "../../src/structure/modint/modint.hpp"
@@ -35,14 +36,37 @@ int main(){
     if(std::cin >> q){
         using input_mint = Modint998244353;
         while(q--){
-            int n, row, col;
-            long long exponent;
-            std::cin >> n >> exponent >> row >> col;
-            Matrix<input_mint, 8, 8> matrix(n, n);
-            for(int i = 0; i < n; i++){
-                for(int j = 0; j < n; j++) std::cin >> matrix(i, j);
+            std::string operation;
+            std::cin >> operation;
+            if(operation == "BMBM"){
+                int n, row, col;
+                long long exponent;
+                std::cin >> n >> exponent >> row >> col;
+                Matrix<input_mint, 8, 8> matrix(n, n);
+                for(int i = 0; i < n; i++){
+                    for(int j = 0; j < n; j++) std::cin >> matrix(i, j);
+                }
+                std::cout << matrix.pow_entry_bmbm(exponent, row, col) << '\n';
+            }else{
+                int rows, inner, cols;
+                std::cin >> rows >> inner >> cols;
+                Matrix<input_mint, 128, 128> lhs(rows, inner);
+                Matrix<input_mint, 128, 128> rhs(inner, cols);
+                for(int i = 0; i < rows; i++){
+                    for(int j = 0; j < inner; j++) std::cin >> lhs(i, j);
+                }
+                for(int i = 0; i < inner; i++){
+                    for(int j = 0; j < cols; j++) std::cin >> rhs(i, j);
+                }
+                const auto product = lhs * rhs;
+                std::cout << rows << ' ' << cols;
+                for(int i = 0; i < rows; i++){
+                    for(int j = 0; j < cols; j++){
+                        std::cout << ' ' << product(i, j).val();
+                    }
+                }
+                std::cout << '\n';
             }
-            std::cout << matrix.pow_entry_bmbm(exponent, row, col) << '\n';
         }
         return 0;
     }
