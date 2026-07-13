@@ -18,6 +18,7 @@ private:
         std::array<int, MAX_SIZE> left{};
         std::array<int, MAX_SIZE> right{};
         std::array<int, MAX_SIZE> parent{};
+        std::array<int, MAX_SIZE> size{};
         std::array<bool, MAX_SIZE> reversed{};
         std::array<S, MAX_SIZE> value;
         std::array<S, MAX_SIZE> aggregate;
@@ -30,6 +31,9 @@ private:
     void check_vertex(int v, const char* message) const{
         if(v < 0 || _n <= v)[[unlikely]] throw std::runtime_error(message);
     }
+    int size_or_zero(int v) const{
+        return v == -1 ? 0 : state->size[v];
+    }
     S aggregate_or_e(int v) const{
         return v == -1 ? Monoid.e() : state->aggregate[v];
     }
@@ -41,6 +45,7 @@ private:
         return p == -1 || (state->left[p] != v && state->right[p] != v);
     }
     void pull(int v){
+        state->size[v] = size_or_zero(state->left[v]) + 1 + size_or_zero(state->right[v]);
         state->aggregate[v] = Monoid.op(
             aggregate_or_e(state->left[v]),
             Monoid.op(state->value[v], aggregate_or_e(state->right[v]))
@@ -129,6 +134,27 @@ private:
         splay(v);
         return v;
     }
+    bool expose_path_unchecked(int u, int v){
+        make_root_unchecked(u);
+        if(find_root_unchecked(v) != u) return false;
+        access(v);
+        return true;
+    }
+    int kth_in_auxiliary_tree(int v, int k){
+        while(true){
+            push(v);
+            const int left_size = size_or_zero(state->left[v]);
+            if(k < left_size){
+                v = state->left[v];
+            }else if(k == left_size){
+                splay(v);
+                return v;
+            }else{
+                k -= left_size + 1;
+                v = state->right[v];
+            }
+        }
+    }
 
 public:
     explicit LinkCutTree(int n = MAX_SIZE): _n(n), state(nullptr){
@@ -138,6 +164,7 @@ public:
         state = std::make_unique<State>();
         for(int k = 0; k < MAX_SIZE; k++){
             state->left[k] = state->right[k] = state->parent[k] = -1;
+            state->size[k] = 1;
             state->reversed[k] = false;
             state->value[k] = Monoid.e();
             state->aggregate[k] = Monoid.e();
@@ -215,5 +242,20 @@ public:
         make_root_unchecked(u);
         access(v);
         return state->aggregate[v];
+    }
+    int path_size(int u, int v){
+        check_vertex(u, "library assertion fault: range violation (path_size).");
+        check_vertex(v, "library assertion fault: range violation (path_size).");
+        if(!expose_path_unchecked(u, v)) return -1;
+        return state->size[v];
+    }
+    int kth_on_path(int u, int v, int k){
+        check_vertex(u, "library assertion fault: range violation (kth_on_path).");
+        check_vertex(v, "library assertion fault: range violation (kth_on_path).");
+        if(k < 0 || !expose_path_unchecked(u, v) || state->size[v] <= k) return -1;
+        return kth_in_auxiliary_tree(v, k);
+    }
+    int jump(int u, int v, int k){
+        return kth_on_path(u, v, k);
     }
 };

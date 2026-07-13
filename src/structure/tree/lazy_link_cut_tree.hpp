@@ -147,6 +147,27 @@ private:
         splay(v);
         return v;
     }
+    bool expose_path_unchecked(int u, int v){
+        make_root_unchecked(u);
+        if(find_root_unchecked(v) != u) return false;
+        access(v);
+        return true;
+    }
+    int kth_in_auxiliary_tree(int v, int k){
+        while(true){
+            push(v);
+            const int left_size = size_or_zero(state->left[v]);
+            if(k < left_size){
+                v = state->left[v];
+            }else if(k == left_size){
+                splay(v);
+                return v;
+            }else{
+                k -= left_size + 1;
+                v = state->right[v];
+            }
+        }
+    }
 
 public:
     explicit LazyLinkCutTree(int n = MAX_SIZE): _n(n), state(nullptr){
@@ -242,5 +263,20 @@ public:
         make_root_unchecked(u);
         access(v);
         return state->aggregate[v];
+    }
+    int path_size(int u, int v){
+        check_vertex(u, "library assertion fault: range violation (path_size).");
+        check_vertex(v, "library assertion fault: range violation (path_size).");
+        if(!expose_path_unchecked(u, v)) return -1;
+        return state->size[v];
+    }
+    int kth_on_path(int u, int v, int k){
+        check_vertex(u, "library assertion fault: range violation (kth_on_path).");
+        check_vertex(v, "library assertion fault: range violation (kth_on_path).");
+        if(k < 0 || !expose_path_unchecked(u, v) || state->size[v] <= k) return -1;
+        return kth_in_auxiliary_tree(v, k);
+    }
+    int jump(int u, int v, int k){
+        return kth_on_path(u, v, k);
     }
 };
