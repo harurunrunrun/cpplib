@@ -163,7 +163,7 @@ jobs:
           path: .competitive-verifier/site
 
   deploy:
-    if: ${{ needs.docs.result == 'success' && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && needs.docs.result == 'success' && github.ref == 'refs/heads/main' }}
     needs: docs
     runs-on: ubuntu-latest
     timeout-minutes: 10
