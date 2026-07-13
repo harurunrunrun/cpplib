@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <functional>
 #include <limits>
+#include <map>
 #include <queue>
 #include <set>
 #include <stdexcept>
@@ -24,6 +25,40 @@ struct KthShortestPathResult{
 
 namespace kth_shortest_path_internal{
 
+struct AcceptedPathPrefixTrie{
+private:
+    int node_count = 1;
+    std::map<std::pair<int, int>, int> transition;
+
+public:
+    int root() const{ return 0; }
+
+    int follow(int node, int vertex) const{
+        auto iterator = transition.find({node, vertex});
+        if(iterator == transition.end())[[unlikely]]{
+            throw std::logic_error(
+                "library assertion fault: missing accepted path prefix."
+            );
+        }
+        return iterator->second;
+    }
+
+    bool has_next(int node, int vertex) const{
+        return transition.find({node, vertex}) != transition.end();
+    }
+
+    void insert(const std::vector<int>& path){
+        int node = root();
+        for(int vertex: path){
+            auto [iterator, inserted] = transition.emplace(
+                std::pair<int, int>{node, vertex}, node_count
+            );
+            if(inserted) ++node_count;
+            node = iterator->second;
+        }
+    }
+};
+
 template<class T>
 KthShortestPathResult<T> shortest_path(
     const std::vector<std::vector<KthShortestPathEdge<T>>>& graph,
@@ -31,7 +66,8 @@ KthShortestPathResult<T> shortest_path(
     int target,
     const std::vector<char>& banned_vertices,
     int banned_from,
-    const std::vector<int>& banned_to,
+    const AcceptedPathPrefixTrie* accepted_prefixes,
+    int banned_prefix,
     T inf
 ){
     const int n = static_cast<int>(graph.size());
@@ -57,8 +93,8 @@ KthShortestPathResult<T> shortest_path(
         if(v == target) break;
         for(const auto& e: graph[static_cast<std::size_t>(v)]){
             if(banned_vertices[static_cast<std::size_t>(e.to)]) continue;
-            if(v == banned_from &&
-               std::binary_search(banned_to.begin(), banned_to.end(), e.to)){
+            if(v == banned_from && accepted_prefixes != nullptr &&
+               accepted_prefixes->has_next(banned_prefix, e.to)){
                 continue;
             }
             T nd = d + e.cost;
@@ -128,18 +164,20 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
     if(k == 0) return result;
 
     std::vector<char> banned_vertices(static_cast<std::size_t>(n), 0);
-    std::vector<int> banned_to;
     auto first = kth_shortest_path_internal::shortest_path(
         graph,
         source,
         target,
         banned_vertices,
         -1,
-        banned_to,
+        nullptr,
+        -1,
         inf
     );
     if(first.vertices.empty()) return result;
     result.push_back(first);
+    kth_shortest_path_internal::AcceptedPathPrefixTrie accepted_prefixes;
+    accepted_prefixes.insert(first.vertices);
 
     std::priority_queue<
         kth_shortest_path_internal::Candidate<T>,
@@ -152,28 +190,14 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
 
     while(static_cast<int>(result.size()) < k){
         const auto& base = result.back();
+        int prefix_node = accepted_prefixes.root();
         for(int spur_index = 0; spur_index + 1 < static_cast<int>(base.vertices.size()); spur_index++){
             const int spur = base.vertices[static_cast<std::size_t>(spur_index)];
+            prefix_node = accepted_prefixes.follow(prefix_node, spur);
             banned_vertices.assign(static_cast<std::size_t>(n), 0);
             for(int i = 0; i < spur_index; i++){
                 banned_vertices[static_cast<std::size_t>(base.vertices[static_cast<std::size_t>(i)])] = 1;
             }
-            banned_to.clear();
-            for(const auto& path: result){
-                if(static_cast<int>(path.vertices.size()) <= spur_index + 1) continue;
-                bool same_root = true;
-                for(int i = 0; i <= spur_index; i++){
-                    if(path.vertices[static_cast<std::size_t>(i)] != base.vertices[static_cast<std::size_t>(i)]){
-                        same_root = false;
-                        break;
-                    }
-                }
-                if(same_root){
-                    banned_to.push_back(path.vertices[static_cast<std::size_t>(spur_index + 1)]);
-                }
-            }
-            std::sort(banned_to.begin(), banned_to.end());
-            banned_to.erase(std::unique(banned_to.begin(), banned_to.end()), banned_to.end());
 
             auto spur_path = kth_shortest_path_internal::shortest_path(
                 graph,
@@ -181,7 +205,8 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
                 target,
                 banned_vertices,
                 spur,
-                banned_to,
+                &accepted_prefixes,
+                prefix_node,
                 inf
             );
             if(spur_path.vertices.empty()) continue;
@@ -213,6 +238,7 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
         candidates.pop();
         queued.erase(next.vertices);
         used.insert(next.vertices);
+        accepted_prefixes.insert(next.vertices);
         result.push_back(next);
     }
     return result;

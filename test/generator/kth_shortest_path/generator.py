@@ -78,6 +78,21 @@ def main() -> None:
         large_edges.append((vertex, target, 0))
     cases.append((target + 1, large_edges, 0, target, 600))
 
+    prefix_length = 700
+    shared_branch_count = 1600
+    branch_vertex = prefix_length
+    shared_target = prefix_length + shared_branch_count + 1
+    shared_prefix_edges = [
+        (vertex, vertex + 1, 0) for vertex in range(prefix_length)
+    ]
+    for offset in range(shared_branch_count):
+        vertex = prefix_length + 1 + offset
+        shared_prefix_edges.append((branch_vertex, vertex, offset + 1))
+        shared_prefix_edges.append((vertex, shared_target, 0))
+    cases.append((
+        shared_target + 1, shared_prefix_edges, 0, shared_target, 1500
+    ))
+
     for i, case in enumerate(cases):
         write_case(out_dir, i, *case)
 
