@@ -103,32 +103,54 @@ jobs:
           prev-result: ${{ steps.prev-result.outputs.path }}
           check: true
 
+      # Override the implicit success() guard after a failed verification step.
       - name: Check documentation titles
+        id: docs_title
+        if: ${{ !cancelled() }}
         run: python3 scripts/check_docs_bilingual_titles.py docs
 
+      - name: Prepare documentation result
+        id: docs_result
+        if: ${{ !cancelled() }}
+        run: |
+          python3 scripts/competitive_verifier_docs_result.py \
+            verify-files.json \
+            .competitive-verifier/cache/result.json \
+            > .competitive-verifier/cache/docs-result.json.tmp
+          mv \
+            .competitive-verifier/cache/docs-result.json.tmp \
+            .competitive-verifier/cache/docs-result.json
+
       - name: Generate docs
+        id: docs
+        if: ${{ !cancelled() && steps.docs_title.outcome == 'success' && steps.docs_result.outcome == 'success' }}
         uses: competitive-verifier/actions/docs@v2
         with:
           verify-files: verify-files.json
-          verify-result: .competitive-verifier/cache/result.json
+          verify-result: .competitive-verifier/cache/docs-result.json
           destination: _jekyll
 
       - name: Order library sections
+        id: docs_index
+        if: ${{ !cancelled() && steps.docs.outcome == 'success' }}
         run: python3 scripts/reorder_competitive_verifier_index.py _jekyll/index.md
 
       - name: Setup Pages
-        if: github.ref == 'refs/heads/main'
+        id: pages_setup
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.docs_index.outcome == 'success' }}
         uses: actions/configure-pages@v5
 
       - name: Build with Jekyll
-        if: github.ref == 'refs/heads/main'
+        id: pages_build
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.pages_setup.outcome == 'success' }}
         uses: actions/jekyll-build-pages@v1
         with:
           source: _jekyll
           destination: _site
 
       - name: Remove unsafe polyfill.io reference
-        if: github.ref == 'refs/heads/main'
+        id: site_sanitize
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.pages_build.outcome == 'success' }}
         run: |
           sudo chown -R "$USER":"$USER" _site
 
@@ -150,7 +172,8 @@ jobs:
           PY
 
       - name: Check generated site for unsafe CDN references
-        if: github.ref == 'refs/heads/main'
+        id: site_check
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.site_sanitize.outcome == 'success' }}
         run: |
           if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' _site; then
             echo "::error::Unsafe CDN reference remains in generated site"
@@ -158,7 +181,7 @@ jobs:
           fi
 
       - name: Upload HTML artifact
-        if: github.ref == 'refs/heads/main'
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.site_check.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
           name: documentation-html
@@ -168,7 +191,7 @@ jobs:
 
       - name: Upload Pages artifact
         id: pages-artifact
-        if: github.ref == 'refs/heads/main'
+        if: ${{ !cancelled() && github.ref == 'refs/heads/main' && steps.site_check.outcome == 'success' }}
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
