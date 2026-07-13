@@ -1,0 +1,16 @@
+#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/problems/CGL_4_B"
+
+#include <iomanip>
+#include <iostream>
+#include <vector>
+
+#include "../../src/algorithm/geometry/geometry.hpp"
+
+int main(){
+    int size;
+    std::cin >> size;
+    std::vector<Point> polygon(static_cast<std::size_t>(size));
+    for(auto& point: polygon) std::cin >> point.x >> point.y;
+    std::cout << std::fixed << std::setprecision(12)
+              << convex_diameter(polygon) << '\n';
+}
