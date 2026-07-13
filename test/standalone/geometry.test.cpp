@@ -125,6 +125,64 @@ void self_test(){
     expect_domain([]{ (void)circle_circle_cross_points(Circle{{0, 0}, 1}, Circle{{0, 0}, 1}); });
     expect_domain([]{ (void)common_tangents(Circle{{0, 0}, 1}, Circle{{0, 0}, 1}); });
     expect_invalid([]{ (void)circle_relation(Circle{{0, 0}, -1}, Circle{{1, 0}, 1}); });
+    const long double pi = std::acos(-1.0L);
+    assert(close(
+        circle_circle_intersection_area(Circle{{0, 0}, 1}, Circle{{3, 0}, 1}),
+        0.0L
+    ));
+    assert(close(
+        circle_circle_intersection_area(Circle{{0, 0}, 1}, Circle{{2, 0}, 1}),
+        0.0L
+    ));
+    assert(close(
+        circle_circle_intersection_area(Circle{{0, 0}, 3}, Circle{{1, 0}, 1}),
+        pi
+    ));
+    assert(close(
+        circle_circle_intersection_area(Circle{{0, 0}, 2}, Circle{{1, 0}, 1}),
+        pi
+    ));
+    assert(close(
+        circle_circle_intersection_area(Circle{{1, 2}, 3}, Circle{{1, 2}, 3}),
+        9.0L * pi
+    ));
+    assert(close(
+        circle_circle_intersection_area(Circle{{0, 0}, 0}, Circle{{0, 0}, 0}),
+        0.0L
+    ));
+    const long double equal_overlap = 2.0L * pi / 3.0L - std::sqrt(3.0L) / 2.0L;
+    assert(close(
+        circle_circle_intersection_area(Circle{{0, 0}, 1}, Circle{{1, 0}, 1}),
+        equal_overlap
+    ));
+    assert(close(
+        circle_circle_intersection_area(Circle{{0, 0}, 1}, Circle{{2, 0}, 2}),
+        1.40306643968573875104L
+    ));
+    assert(close(
+        circle_circle_intersection_area(
+            Circle{{1e12L, -1e12L}, 1},
+            Circle{{1e12L + 1, -1e12L}, 1}
+        ),
+        equal_overlap
+    ));
+    const long double almost_tangent = circle_circle_intersection_area(
+        Circle{{0, 0}, 1},
+        Circle{{2.0L - 1e-12L, 0}, 1}
+    );
+    assert(0.0L < almost_tangent && almost_tangent < 1e-15L);
+    const Circle first_overlap{{0, 0}, 5};
+    const Circle second_overlap{{8, 0}, 5};
+    assert(close(
+        circle_circle_intersection_area(first_overlap, second_overlap),
+        circle_circle_intersection_area(second_overlap, first_overlap)
+    ));
+    expect_invalid([]{
+        (void)circle_circle_intersection_area(Circle{{0, 0}, -1}, Circle{{1, 0}, 1});
+    });
+    expect_invalid([]{
+        (void)circle_circle_intersection_area(Circle{{0, 0}, 1}, Circle{{1, 0}, -1});
+    });
     auto cc = circle_circle_cross_points(Circle{{0, 0}, 5}, Circle{{8, 0}, 5});
     assert(cc.size() == 2);
     for(const Point& point: cc){
@@ -347,6 +405,10 @@ int main(){
             }catch(const std::domain_error&){
                 std::cout << -1 << '\n';
             }
+        }else if(type == "CIRCLE_CIRCLE_AREA_1E9"){
+            Circle a, b;
+            std::cin >> a.center.x >> a.center.y >> a.radius >> b.center.x >> b.center.y >> b.radius;
+            std::cout << std::llround(circle_circle_intersection_area(a, b) * 1e9L) << '\n';
         }else if(type == "COMMON_TANGENT_COUNT"){
             Circle a, b;
             std::cin >> a.center.x >> a.center.y >> a.radius >> b.center.x >> b.center.y >> b.radius;

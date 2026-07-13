@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import random
 from pathlib import Path
 
@@ -157,6 +158,41 @@ def common_tangent_count(nums: list[int]) -> int:
         return -1
     return [0, 1, 2, 3, 4][relation]
 
+AREA_SCALE = 1_000_000_000
+
+
+def circle_circle_intersection_area_scaled(nums: list[int]) -> int:
+    x1, y1, r1, x2, y2, r2 = nums
+    assert r1 >= 0 and r2 >= 0
+    if min(r1, r2) == 0:
+        return 0
+
+    distance_squared = (x1 - x2) ** 2 + (y1 - y2) ** 2
+    radius_sum = r1 + r2
+    radius_difference = abs(r1 - r2)
+    if distance_squared >= radius_sum * radius_sum:
+        return 0
+    if distance_squared <= radius_difference * radius_difference:
+        area = math.pi * min(r1, r2) ** 2
+        return math.floor(area * AREA_SCALE + 0.5)
+
+    distance = math.sqrt(distance_squared)
+    first_cosine = (distance_squared + r1 * r1 - r2 * r2) / (2 * distance * r1)
+    second_cosine = (distance_squared + r2 * r2 - r1 * r1) / (2 * distance * r2)
+    first_angle = math.acos(max(-1.0, min(1.0, first_cosine)))
+    second_angle = math.acos(max(-1.0, min(1.0, second_cosine)))
+    heron_product = (
+        (-distance + r1 + r2)
+        * (distance + r1 - r2)
+        * (distance - r1 + r2)
+        * (distance + r1 + r2)
+    )
+    area = (
+        r1 * r1 * first_angle
+        + r2 * r2 * second_angle
+        - math.sqrt(max(0.0, heron_product)) / 2
+    )
+    return math.floor(area * AREA_SCALE + 0.5)
 
 def solve(queries: list[str]) -> str:
     out: list[str] = []
@@ -195,6 +231,8 @@ def solve(queries: list[str]) -> str:
             out.append(str(circle_line_count(list(map(int, xs[1:])))))
         elif xs[0] == "CIRCLE_CIRCLE_COUNT":
             out.append(str(circle_circle_count(list(map(int, xs[1:])))))
+        elif xs[0] == "CIRCLE_CIRCLE_AREA_1E9":
+            out.append(str(circle_circle_intersection_area_scaled(list(map(int, xs[1:])))))
         elif xs[0] == "COMMON_TANGENT_COUNT":
             out.append(str(common_tangent_count(list(map(int, xs[1:])))))
     return "\n".join(out) + "\n"
@@ -283,6 +321,14 @@ def main() -> None:
         "CIRCLE_CIRCLE_COUNT 0 0 5 0 0 5",
         "COMMON_TANGENT_COUNT 0 0 1 4 0 1",
         "COMMON_TANGENT_COUNT 0 0 1 0 0 1",
+        "CIRCLE_CIRCLE_AREA_1E9 0 0 1 3 0 1",
+        "CIRCLE_CIRCLE_AREA_1E9 0 0 1 2 0 1",
+        "CIRCLE_CIRCLE_AREA_1E9 0 0 3 1 0 1",
+        "CIRCLE_CIRCLE_AREA_1E9 0 0 2 1 0 1",
+        "CIRCLE_CIRCLE_AREA_1E9 1 2 3 1 2 3",
+        "CIRCLE_CIRCLE_AREA_1E9 0 0 0 0 0 0",
+        "CIRCLE_CIRCLE_AREA_1E9 0 0 1 1 0 1",
+        "CIRCLE_CIRCLE_AREA_1E9 0 0 1 2 0 2",
     ]
     write_case(out_dir, 0, fixed)
 
@@ -330,6 +376,12 @@ def main() -> None:
         else:
             nums = [rng.randrange(-5, 6), rng.randrange(-5, 6), rng.randrange(1, 6), rng.randrange(-5, 6), rng.randrange(-5, 6), rng.randrange(1, 6)]
             queries.append("COMMON_TANGENT_COUNT " + " ".join(map(str, nums)))
+    for _ in range(100):
+        nums = [
+            rng.randrange(-20, 21), rng.randrange(-20, 21), rng.randrange(0, 16),
+            rng.randrange(-20, 21), rng.randrange(-20, 21), rng.randrange(0, 16),
+        ]
+        queries.append("CIRCLE_CIRCLE_AREA_1E9 " + " ".join(map(str, nums)))
     write_case(out_dir, 2, queries)
     write_convex_query_case(out_dir)
 
