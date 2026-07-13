@@ -149,3 +149,13 @@ template<class Sequence>
 std::vector<int> lcp_array(const Sequence& s){
     return lcp_array(s, suffix_array(s));
 }
+
+template<class Sequence>
+long long number_of_distinct_substrings(const Sequence& s){
+    const auto sa = suffix_array(s);
+    const auto lcp = lcp_array(s, sa);
+    const long long n = static_cast<long long>(s.size());
+    long long result = n * (n + 1) / 2;
+    for(int value: lcp) result -= value;
+    return result;
+}

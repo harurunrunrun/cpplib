@@ -52,7 +52,7 @@ int main(){
             for(int value: sa) std::cout << ' ' << value;
             std::cout << '\n' << lcp.size();
             for(int value: lcp) std::cout << ' ' << value;
-            std::cout << '\n';
+            std::cout << '\n' << number_of_distinct_substrings(s) << '\n';
         }
         return 0;
     }
@@ -63,6 +63,7 @@ int main(){
         assert(suffix_array(s) == expected_sa);
         assert(lcp_array(s, expected_sa) == expected_lcp);
         assert(lcp_array(s) == expected_lcp);
+        assert(number_of_distinct_substrings(s) == 15);
     }
 
     std::mt19937 rng(20260720);

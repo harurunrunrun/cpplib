@@ -48,10 +48,26 @@ def main() -> None:
     for value in strings:
         suffixes = suffix_array(value)
         output_lines.append(format_vector(suffixes))
-        output_lines.append(format_vector(lcp_array(value, suffixes)))
+        lcps = lcp_array(value, suffixes)
+        output_lines.append(format_vector(lcps))
+        output_lines.append(str(len(value) * (len(value) + 1) // 2 - sum(lcps)))
 
     (out_dir / "case_00.in").write_text("\n".join(input_lines) + "\n", encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(output_lines) + "\n", encoding="utf-8")
+
+    maximum_length = 500_000
+    maximum_value = "a" * maximum_length
+    maximum_suffixes = list(range(maximum_length - 1, -1, -1))
+    maximum_lcp = list(range(1, maximum_length))
+    (out_dir / "case_01.in").write_text(
+        f"1\n{maximum_value}\n", encoding="utf-8"
+    )
+    (out_dir / "case_01.out").write_text(
+        f"{format_vector(maximum_suffixes)}\n"
+        f"{format_vector(maximum_lcp)}\n"
+        f"{maximum_length}\n",
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":

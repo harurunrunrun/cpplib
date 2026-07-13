@@ -11,12 +11,14 @@ Suffix Array と LCP Array。
     - `std::string` と `std::vector<T>` に対応。
 - `lcp_array(s, sa)`
 - `lcp_array(s)`
+- `number_of_distinct_substrings(s)`
 
 ## 計算量
 
 - `suffix_array`: $O(n \log n)$
 - `lcp_array(s, sa)`: $O(n)$
 - `lcp_array(s)`: $O(n\log n)$（suffix array構築を含む）
+- `number_of_distinct_substrings(s)`: $O(n\log n)$
 
 ## API別計算量
 
@@ -28,6 +30,7 @@ $N=|s|$ とする。
 | `suffix_array(const vector<T>& s)` | $O(N\log N)$ | $O(N)$ |
 | `lcp_array(s,sa)` | $O(N)$ | $O(N)$ |
 | `lcp_array(s)` | $O(N\log N)$ | $O(N)$ |
+| `number_of_distinct_substrings(s)` | $O(N\log N)$ | $O(N)$ |
 
 `lcp_array(s)` は内部でsuffix arrayも構築する。各関数は長さ $N$（LCPのみ最大 $N-1$）の列を列挙して返す。
 ## API詳細
@@ -39,3 +42,5 @@ $N=|s|$ とする。
   `lcp[i]` はsuffix `sa[i]` と `sa[i+1]` のLCP長。
   `sa` が長さ `N` の置換でなければ例外を送出する。
 - `lcp_array(s)` はsuffix arrayを内部構築して同じLCP列を返す。
+- `number_of_distinct_substrings(s)` は空でない相異なる連続部分列の個数を返す。
+  全suffixの長さの総和から隣接suffixのLCP長の総和を引いて求める。空列では0。
