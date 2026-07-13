@@ -40,6 +40,22 @@ int main(){
     }
     if(!rejected) return 2;
 
+    rejected = false;
+    try{
+        static_cast<void>(largest_first_order(1, {{0, 0}}));
+    }catch(const std::invalid_argument&){
+        rejected = true;
+    }
+    if(!rejected) return 3;
+
+    rejected = false;
+    try{
+        static_cast<void>(smallest_last_order(1, {{0, 0}}));
+    }catch(const std::invalid_argument&){
+        rejected = true;
+    }
+    if(!rejected) return 4;
+
     std::size_t query_count = 0;
     std::cin >> query_count;
     while(query_count-- > 0){
@@ -56,7 +72,7 @@ int main(){
         if(!is_proper(plain, edges) || !is_proper(largest, edges) ||
            !is_proper(smallest, edges) || !is_proper(welsh, edges) ||
            !is_proper(saturation, edges)){
-            return 3;
+            return 5;
         }
         print_coloring(plain);
         std::cout << " | ";
