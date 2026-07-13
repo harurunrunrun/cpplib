@@ -43,11 +43,31 @@ standalone-assets:
 		--cxx "$(CXX)" \
 		--cxxflags "$(CXXFLAGS)"
 
-verify: standalone-assets verifier-resolve
-	$(VERIFIER) verify \
-		--verify-json $(VERIFY_FILES) \
-		--check-error \
-		--output $(VERIFY_RESULT)
+verify:
+	@standalone_status=0; \
+	verifier_status=0; \
+	$(PYTHON) scripts/run_standalone_assets.py \
+		--cache-dir $(STANDALONE_ASSET_CACHE) \
+		--cxx "$(CXX)" \
+		--cxxflags "$(CXXFLAGS)" || standalone_status=$$?; \
+	if $(MAKE) --no-print-directory verifier-resolve; then \
+		$(VERIFIER) verify \
+			--verify-json $(VERIFY_FILES) \
+			--check-error \
+			--output $(VERIFY_RESULT) || verifier_status=$$?; \
+	else \
+		verifier_status=$$?; \
+		echo "[verify] competitive-verifier was not run because verifier-resolve failed" >&2; \
+	fi; \
+	if [ $$standalone_status -ne 0 ]; then \
+		echo "[verify] standalone assets failed (exit $$standalone_status)" >&2; \
+	fi; \
+	if [ $$verifier_status -ne 0 ]; then \
+		echo "[verify] competitive-verifier failed (exit $$verifier_status)" >&2; \
+	fi; \
+	if [ $$standalone_status -ne 0 ] || [ $$verifier_status -ne 0 ]; then \
+		exit 1; \
+	fi
 
 docs-source: verifier-resolve
 	$(PYTHON) scripts/competitive_verifier_docs_result.py \
