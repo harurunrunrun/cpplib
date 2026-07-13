@@ -53,11 +53,17 @@ int main(){
 
     {
         AhoCorasick<26, 32> ac;
-        ac.add("a");
-        ac.add("aa");
-        ac.add("aaa");
+        const int a = ac.add("a");
+        const int aa = ac.add("aa");
+        const int aaa = ac.add("aaa");
         ac.build();
         assert(ac.count_matches("aaaa") == 9);
+        assert(ac.parent(a) == 0);
+        assert(ac.parent(aa) == a);
+        assert(ac.parent(aaa) == aa);
+        assert(ac.failure_link(a) == 0);
+        assert(ac.failure_link(aa) == a);
+        assert(ac.failure_link(aaa) == aa);
     }
 
     std::mt19937 rng(20260719);

@@ -31,6 +31,8 @@ long long count_matches(string_view text)
 int next_state(int state, char c)
 int terminal_count(int state)
 int output_count(int state)
+int parent(int state)
+int failure_link(int state)
 ```
 
 `count_matches` は text に含まれる全パターンの出現回数の総和を返す。
@@ -54,6 +56,7 @@ $V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHAB
 | `build()` | $O(V\Sigma)$（failure link前処理） |
 | `next_state(state,c)` | $O(1)$ |
 | `terminal_count(state)` / `output_count(state)` | $O(1)$ |
+| `parent(state)` / `failure_link(state)` | $O(1)$ |
 | `count_matches(text)` | $O(T)$ |
 
 `add` で新規nodeを作ると長さ $\Sigma$ の遷移表を初期化する。保持領域は $O(MAX_NODES\cdot\Sigma)$。`count_matches` は一致位置を列挙せず総数だけを返す。
@@ -68,5 +71,8 @@ $V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHAB
 - `next_state(state,c)` は1文字読んだ次状態。
   `terminal_count(state)` はそのnodeで直接終わる登録pattern数、
   `output_count(state)` はfailure link上を含めて現在位置で終わるpattern数。
+- `parent(state)` はtrie上の親nodeを返す。rootの親はroot自身。
+  `failure_link(state)` は最長の真の接尾辞に対応するnodeを返し、
+  `build()` 前は例外。
 - `count_matches(text)` は重複pattern・重なる出現・空patternを含む総出現数。
   遷移・output・検索はbuild前、またはstate範囲外なら例外。

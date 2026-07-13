@@ -13,6 +13,7 @@ struct AhoCorasick{
 private:
     struct Node{
         std::array<int, ALPHABET> next{};
+        int parent = 0;
         int fail = 0;
         int terminal_count = 0;
         int output_count = 0;
@@ -29,12 +30,13 @@ private:
         }
         return id;
     }
-    int new_node(){
+    int new_node(int parent){
         if(used == MAX_NODES)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (add).");
         }
         int v = used++;
         nodes[v] = Node();
+        nodes[v].parent = parent;
         return v;
     }
 
@@ -53,7 +55,7 @@ public:
         int v = 0;
         for(char c: pattern){
             int id = char_id(c);
-            if(nodes[v].next[id] == 0) nodes[v].next[id] = new_node();
+            if(nodes[v].next[id] == 0) nodes[v].next[id] = new_node(v);
             v = nodes[v].next[id];
         }
         nodes[v].terminal_count++;
@@ -99,6 +101,21 @@ public:
             throw std::runtime_error("library assertion fault: range violation (terminal_count).");
         }
         return nodes[state].terminal_count;
+    }
+    int parent(int state) const{
+        if(state < 0 || used <= state)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (parent).");
+        }
+        return nodes[state].parent;
+    }
+    int failure_link(int state) const{
+        if(!built)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: not built (failure_link).");
+        }
+        if(state < 0 || used <= state)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (failure_link).");
+        }
+        return nodes[state].fail;
     }
     int output_count(int state) const{
         if(!built)[[unlikely]]{
