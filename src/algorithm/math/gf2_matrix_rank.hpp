@@ -11,8 +11,8 @@ inline std::size_t gf2_matrix_rank(
     const std::vector<std::string>& matrix,
     std::size_t column_count
 ){
-    const std::size_t word_count =
     if(matrix.empty()) return 0;
+    const std::size_t word_count =
         column_count / 64 + static_cast<std::size_t>(column_count % 64 != 0);
     std::vector<std::vector<std::uint64_t>> rows(
         matrix.size(), std::vector<std::uint64_t>(word_count)
