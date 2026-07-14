@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "detail.hpp"
+#include "../validate_circle.hpp"
 
 inline long double signed_circle_polygon_intersection_area(
     const Circle& circle,

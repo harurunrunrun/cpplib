@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "advanced_convex_geometry.hpp"
+#include "norm.hpp"
 
 inline constexpr std::size_t CONVEX_POLYGON_NPOS =
     std::numeric_limits<std::size_t>::max();

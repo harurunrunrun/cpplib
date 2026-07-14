@@ -5,7 +5,12 @@
 #include <cstddef>
 #include <vector>
 
-#include "../geometry.hpp"
+#include "../constants.hpp"
+#include "../cross.hpp"
+#include "../dot.hpp"
+#include "../geometry_sign.hpp"
+#include "../norm.hpp"
+#include "../types.hpp"
 
 namespace circle_polygon_intersection_internal{
 
