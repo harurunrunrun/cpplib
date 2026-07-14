@@ -239,6 +239,42 @@ int main(){
     }
     assert(overflow_thrown);
 
+    const DelaunayTriangulationResult separated_near_duplicates =
+        delaunay_triangulation({
+            {0.0L, 0.0L},
+            {5.0e-11L, 100.0L},
+            {9.0e-11L, 0.0L},
+        });
+    assert(separated_near_duplicates.sites.size() == 2);
+    assert(separated_near_duplicates.representative[0] == 0);
+    assert(separated_near_duplicates.representative[2] == 0);
+
+    const DelaunayTriangulationResult coordinate_order_representative =
+        delaunay_triangulation({{5.0e-11L, 0.0L}, {0.0L, 0.0L}});
+    assert(coordinate_order_representative.sites.size() == 1);
+    assert(coordinate_order_representative.sites[0] == 1);
+    assert(coordinate_order_representative.representative[0] == 1);
+    assert(coordinate_order_representative.representative[1] == 1);
+
+    const DelaunayTriangulationResult small_scale = delaunay_triangulation({
+        {0.0L, 0.0L},
+        {0.001L, 0.0L},
+        {0.001L, 0.002L},
+        {0.0L, 0.001L},
+    });
+    const DelaunayTriangulationResult unit_scale = delaunay_triangulation({
+        {0.0L, 0.0L},
+        {1.0L, 0.0L},
+        {1.0L, 2.0L},
+        {0.0L, 1.0L},
+    });
+    assert(std::find(small_scale.edges.begin(), small_scale.edges.end(),
+        std::pair<std::size_t, std::size_t>{1, 3}) != small_scale.edges.end());
+    assert(std::find(small_scale.edges.begin(), small_scale.edges.end(),
+        std::pair<std::size_t, std::size_t>{0, 2}) == small_scale.edges.end());
+    assert(small_scale.edges == unit_scale.edges);
+    assert(small_scale.triangles == unit_scale.triangles);
+
     int test_count;
     std::cin >> test_count;
     while(test_count-- > 0){

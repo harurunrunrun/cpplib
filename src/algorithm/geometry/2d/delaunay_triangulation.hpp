@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
+#include <map>
 #include <set>
 #include <stdexcept>
 #include <tuple>
@@ -23,8 +24,7 @@ struct DelaunayTriangulationResult{
 namespace delaunay_triangulation_detail{
 
 inline int robust_sign(long double value, long double magnitude){
-    const long double tolerance = GEOMETRY_EPS
-        + 64.0L * std::numeric_limits<long double>::epsilon() * magnitude;
+    const long double tolerance = 64.0L * std::numeric_limits<long double>::epsilon() * magnitude;
     return (value > tolerance) - (value < -tolerance);
 }
 
@@ -373,14 +373,13 @@ inline bool direction_less(const Point& first, const Point& second){
     const bool first_lower = lower_half(first);
     const bool second_lower = lower_half(second);
     if(first_lower != second_lower) return !first_lower;
-    const int direction = robust_sign(
-        cross(first, second),
-        std::abs(first.x * second.y) + std::abs(first.y * second.x)
-    );
-    if(direction != 0) return direction > 0;
+    const long double direction = cross(first, second);
+    if(direction != 0.0L) return direction > 0.0L;
     const long double first_norm = first.x * first.x + first.y * first.y;
     const long double second_norm = second.x * second.x + second.y * second.y;
-    return first_norm < second_norm;
+    if(first_norm != second_norm) return first_norm < second_norm;
+    if(first.x != second.x) return first.x < second.x;
+    return first.y < second.y;
 }
 
 inline std::vector<std::vector<int>> bounded_faces(
@@ -404,6 +403,14 @@ inline std::vector<std::vector<int>> bounded_faces(
             }
         );
     }
+    std::vector<std::map<int, std::size_t>> neighbor_positions(points.size());
+    for(std::size_t vertex = 0; vertex < points.size(); ++vertex){
+        for(std::size_t index = 0; index < adjacency[vertex].size(); ++index){
+            neighbor_positions[vertex].emplace(
+                adjacency[vertex][index], index
+            );
+        }
+    }
 
     std::set<std::pair<int, int>> visited;
     std::vector<std::vector<int>> faces;
@@ -421,8 +428,8 @@ inline std::vector<std::vector<int>> bounded_faces(
                 face.push_back(first);
                 const std::vector<int>& neighbors =
                     adjacency[static_cast<std::size_t>(second)];
-                const auto reverse = std::find(neighbors.begin(), neighbors.end(), first);
-                const std::size_t index = static_cast<std::size_t>(reverse - neighbors.begin());
+                const std::size_t index = neighbor_positions[
+                    static_cast<std::size_t>(second)].at(first);
                 const int next = neighbors[
                     (index + neighbors.size() - 1) % neighbors.size()
                 ];
@@ -488,14 +495,37 @@ inline DelaunayTriangulationResult delaunay_triangulation(
     });
 
     std::vector<Point> unique_points;
+    std::set<std::pair<long double, std::size_t>> active_sites;
+    std::size_t active_left = 0;
     for(std::size_t index: order){
-        if(unique_points.empty() || !delaunay_triangulation_detail::point_equal(
-            unique_points.back(), points[index]
-        )){
+        while(active_left < unique_points.size()
+            && geometry_sign(points[index].x - unique_points[active_left].x) > 0){
+            active_sites.erase({unique_points[active_left].y, active_left});
+            ++active_left;
+        }
+
+        std::size_t site_index = std::numeric_limits<std::size_t>::max();
+        auto candidate = active_sites.lower_bound({
+            points[index].y - GEOMETRY_EPS, 0
+        });
+        while(candidate != active_sites.end()
+            && geometry_sign(candidate->first - points[index].y) <= 0){
+            const std::size_t current_site = candidate->second;
+            if(delaunay_triangulation_detail::point_equal(
+                unique_points[current_site], points[index]
+            )){
+                site_index = std::min(site_index, current_site);
+            }
+            ++candidate;
+        }
+
+        if(site_index == std::numeric_limits<std::size_t>::max()){
+            site_index = unique_points.size();
             unique_points.push_back(points[index]);
             result.sites.push_back(index);
+            active_sites.emplace(points[index].y, site_index);
         }
-        result.representative[index] = result.sites.back();
+        result.representative[index] = result.sites[site_index];
     }
 
     if(unique_points.size() < 2) return result;
