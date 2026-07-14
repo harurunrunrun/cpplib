@@ -43,6 +43,17 @@ vector<int> directed_cycle(const vector<vector<int>>& graph);
 - 時間計算量: $O(N+M)$
 - 空間計算量: 戻り値と内部の辺番号付き隣接リストを含めて $O(N+M)$
 
+## `has_directed_cycle`
+
+```cpp
+bool has_directed_cycle(const vector<vector<int>>& graph);
+```
+
+有向隣接リストに閉路が存在するかを返す。
+
+- 時間計算量: $O(N+M)$
+- 空間計算量: 内部の辺番号付き隣接リストを含めて $O(N+M)$
+
 ## `undirected_cycle_with_edges`
 
 ```cpp

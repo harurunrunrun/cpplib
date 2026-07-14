@@ -22,6 +22,6 @@ int main(){
     while(q--){
         int u, v;
         std::cin >> u >> v;
-        std::cout << lca.dist(u - 1, v - 1) + 1 << '\n';
+        std::cout << lca.path_vertex_count(u - 1, v - 1) << '\n';
     }
 }

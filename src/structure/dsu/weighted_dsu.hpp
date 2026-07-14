@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -58,6 +59,15 @@ public:
         check_vertex(u, "library assertion fault: range violation (diff).");
         check_vertex(v, "library assertion fault: range violation (diff).");
         return weight(v) - weight(u);
+    }
+
+    std::optional<T> diff_if_connected(int u, int v){
+        check_vertex(u, "library assertion fault: range violation (diff_if_connected).");
+        check_vertex(v, "library assertion fault: range violation (diff_if_connected).");
+        const int root_u = leader(u);
+        const int root_v = leader(v);
+        if(root_u != root_v) return std::nullopt;
+        return diff_weight[v] - diff_weight[u];
     }
 
     bool merge(int u, int v, T w){

@@ -142,4 +142,8 @@ public:
         int w = lca(u, v);
         return depth_vertex[u] + depth_vertex[v] - 2 * depth_vertex[w];
     }
+
+    int path_vertex_count(int u, int v) const{
+        return dist(u, v) + 1;
+    }
 };

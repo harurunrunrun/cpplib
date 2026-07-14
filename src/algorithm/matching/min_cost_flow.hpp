@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <optional>
 #include <stdexcept>
 #include <vector>
 
@@ -119,5 +120,16 @@ struct MinCostFlow{
             result.cost += add * dist[static_cast<std::size_t>(sink)];
         }
         return result;
+    }
+
+    std::optional<T> min_cost_for_exact_flow(
+        int source,
+        int sink,
+        T required_flow,
+        T inf = std::numeric_limits<T>::max() / 4
+    ){
+        const auto result = min_cost_flow(source, sink, required_flow, inf);
+        if(result.flow != required_flow) return std::nullopt;
+        return result.cost;
     }
 };

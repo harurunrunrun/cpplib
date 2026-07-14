@@ -55,6 +55,8 @@ void test_binary_lifting(){
             int expected = naive_lca(u, v, parent, depth);
             assert(lca.lca(u, v) == expected);
             assert(lca.dist(u, v) == depth[u] + depth[v] - 2 * depth[expected]);
+            assert(lca.path_vertex_count(u, v) ==
+                   depth[u] + depth[v] - 2 * depth[expected] + 1);
             queries.push_back({u, v});
         }
     }
@@ -88,6 +90,7 @@ void test_root_change(){
     assert(lca.lca(0, 6) == 3);
     assert(lca.lca(4, 6) == 3);
     assert(lca.dist(2, 6) == 4);
+    assert(lca.path_vertex_count(2, 6) == 5);
 
     std::vector<std::pair<int, int>> queries = {{0, 2}, {0, 6}, {4, 6}, {3, 3}};
     auto answers = offline_lca(graph, queries, 3);
@@ -144,7 +147,7 @@ int main(){
         for(int i = 0; i < q; i++){
             const auto [u, v] = queries[static_cast<std::size_t>(i)];
             std::cout << lca.lca(u, v) << ' ' << lca.dist(u, v) << ' '
-                << offline[static_cast<std::size_t>(i)] << '\n';
+                << offline[static_cast<std::size_t>(i)] << ' ' << lca.path_vertex_count(u, v) << '\n';
         }
         return 0;
     }

@@ -17,6 +17,6 @@ int main(){
         std::cin >> from >> to >> capacity >> cost;
         flow.add_edge(from, to, capacity, cost);
     }
-    const auto result = flow.min_cost_flow(0, vertex_count - 1, required_flow);
-    std::cout << (result.flow == required_flow ? result.cost : -1) << '\n';
+    const auto cost = flow.min_cost_for_exact_flow(0, vertex_count - 1, required_flow);
+    std::cout << (cost ? *cost : -1) << '\n';
 }

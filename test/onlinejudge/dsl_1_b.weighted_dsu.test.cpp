@@ -17,10 +17,10 @@ int main(){
             long long weight;
             std::cin >> weight;
             dsu.merge(u, v, weight);
-        }else if(dsu.same(u, v)){
-            std::cout << dsu.diff(u, v) << '\n';
         }else{
-            std::cout << "?\n";
+            const auto difference = dsu.diff_if_connected(u, v);
+            if(difference) std::cout << *difference << '\n';
+            else std::cout << "?\n";
         }
     }
 }

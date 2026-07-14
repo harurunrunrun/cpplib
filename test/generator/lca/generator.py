@@ -51,7 +51,7 @@ def main() -> None:
     for u, v in queries:
         ancestor = lca(u, v)
         distance = depth[u] + depth[v] - 2 * depth[ancestor]
-        outputs.append(f"{ancestor} {distance} {ancestor}")
+        outputs.append(f"{ancestor} {distance} {ancestor} {distance + 1}")
     (out_dir / "case_00.in").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
 

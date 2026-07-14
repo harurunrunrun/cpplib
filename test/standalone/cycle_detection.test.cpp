@@ -51,10 +51,6 @@ bool valid_undirected_cycle(
     return true;
 }
 
-bool has_directed_cycle(const std::vector<std::vector<int>>& graph){
-    return !directed_cycle(graph).empty();
-}
-
 void self_test(){
     {
         const std::vector<std::pair<int, int>> edges = {{0, 1}, {0, 1}, {1, 2}, {2, 0}};

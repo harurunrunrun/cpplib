@@ -50,10 +50,13 @@ void check_all(WeightedDSU<long long, 64>& dsu, const NaiveWeighted& naive){
             bool same = naive.component[static_cast<std::size_t>(i)] ==
                         naive.component[static_cast<std::size_t>(j)];
             assert(dsu.same(i, j) == same);
+            const auto difference = dsu.diff_if_connected(i, j);
+            assert(difference.has_value() == same);
             if(same){
-                assert(dsu.diff(i, j) ==
-                       naive.potential[static_cast<std::size_t>(j)] -
-                       naive.potential[static_cast<std::size_t>(i)]);
+                const long long expected = naive.potential[static_cast<std::size_t>(j)] -
+                                           naive.potential[static_cast<std::size_t>(i)];
+                assert(*difference == expected);
+                assert(dsu.diff(i, j) == expected);
             }
         }
     }
@@ -66,6 +69,9 @@ void self_test(){
         assert(dsu.merge(1, 2, 4));
         assert(dsu.same(0, 2));
         assert(dsu.diff(0, 2) == 7);
+        const auto difference = dsu.diff_if_connected(0, 2);
+        assert(difference && *difference == 7);
+        assert(!dsu.diff_if_connected(0, 3));
         assert(dsu.merge(0, 2, 7));
         assert(!dsu.merge(0, 2, 8));
         assert(dsu.groups() == 2);
@@ -127,7 +133,8 @@ int main(){
         }else if(type == "DIFF"){
             int u, v;
             std::cin >> u >> v;
-            if(dsu.same(u, v)) std::cout << dsu.diff(u, v) << '\n';
+            const auto difference = dsu.diff_if_connected(u, v);
+            if(difference) std::cout << *difference << '\n';
             else std::cout << "NA\n";
         }else if(type == "GROUPS"){
             std::cout << dsu.groups() << '\n';

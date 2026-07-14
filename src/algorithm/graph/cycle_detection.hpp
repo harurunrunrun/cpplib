@@ -89,6 +89,10 @@ inline std::vector<int> directed_cycle(const std::vector<std::vector<int>>& grap
     return directed_cycle_with_edges(n, edges).vertices;
 }
 
+inline bool has_directed_cycle(const std::vector<std::vector<int>>& graph){
+    return !directed_cycle(graph).empty();
+}
+
 inline CycleDetectionResult undirected_cycle_with_edges(
     int n,
     const std::vector<std::pair<int, int>>& edges

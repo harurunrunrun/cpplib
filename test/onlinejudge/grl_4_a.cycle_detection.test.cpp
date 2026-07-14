@@ -16,5 +16,5 @@ int main(){
         std::cin >> from >> to;
         graph[static_cast<std::size_t>(from)].push_back(to);
     }
-    std::cout << !directed_cycle(graph).empty() << '\n';
+    std::cout << has_directed_cycle(graph) << '\n';
 }
