@@ -1,5 +1,5 @@
 ---
-title: Tree Euler Tour (木のオイラーツアー) [vertex_add_subtree_sum]
+title: Tree Euler Tour (木のオイラーツアー)
 documentation_of: ../src/algorithm/tree/euler_tour.hpp
 ---
 
