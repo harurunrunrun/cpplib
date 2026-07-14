@@ -3,6 +3,8 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <sstream>
+#include <stdexcept>
 #include "../../src/structure/modint/fast_modint.hpp"
 
 using mint = FastModint998244353;
@@ -18,6 +20,46 @@ long long mod_pow(long long a, long long n, long long mod){
 }
 
 void self_test(){
+    assert(mint::get_mod() == 998244353);
+    assert(mint().val() == 0);
+    assert(mint(-1).val() == 998244352);
+    assert(mint::raw(17).val() == 17);
+    mint compound = 10;
+    compound += 5;
+    compound -= 3;
+    compound *= 4;
+    compound /= 6;
+    assert(compound == 8);
+    assert(+compound == compound);
+    assert((-compound).val() == 998244345);
+    assert(compound != mint(9));
+    assert((++compound).val() == 9);
+    assert((compound++).val() == 9);
+    assert((--compound).val() == 9);
+    assert((compound--).val() == 9);
+    assert(compound.val() == 8);
+
+    std::stringstream stream("-3");
+    mint parsed;
+    stream >> parsed;
+    assert(parsed.val() == 998244350);
+    std::stringstream output;
+    output << parsed;
+    assert(output.str() == "998244350");
+
+    bool thrown = false;
+    try{ (void)mint(2).pow(-1); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+    thrown = false;
+    try{ (void)mint(0).inv(); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+    thrown = false;
+    try{ (void)FastModint<12>(6).inv(); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+
     assert((mint(2) + mint(3)).val() == 5);
     assert((mint(2) - mint(3)).val() == 998244352);
     assert((mint(123456789) * mint(987654321)).val() == 263684735);

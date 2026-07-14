@@ -71,6 +71,12 @@ int main(){
         return 0;
     }
 
+    Matrix<long long, 3, 4> empty;
+    assert(empty.rows() == 0);
+    assert(empty.cols() == 0);
+    assert(empty.empty());
+    assert((Matrix<long long, 3, 4>::zero(0, 3).empty()));
+
     Matrix<long long, 3, 4> a(2, 3);
     assert(a.rows() == 2);
     assert(a.cols() == 3);
@@ -91,6 +97,17 @@ int main(){
 
     Matrix<long long, 3, 4> diff = sum - b;
     assert(diff == a);
+    assert(diff != b);
+
+    Matrix<long long, 3, 4> compound = a;
+    compound += b;
+    assert(compound == sum);
+    compound -= b;
+    assert(compound == a);
+    compound *= 6;
+    compound /= 3;
+    assert(compound == a * 2);
+    assert(+a == a);
 
     Matrix<long long, 3, 4> neg = -a;
     for(int i = 0; i < a.rows(); i++){
@@ -102,6 +119,8 @@ int main(){
     Matrix<long long, 3, 4> scaled = a * 3;
     scaled /= 3;
     assert(scaled == a);
+    assert(3 * a == a * 3);
+    assert((a * 6) / 3 == a * 2);
 
     Matrix<long long, 3, 2> c({{1, 2}, {3, 4}, {5, 6}});
     Matrix<long long, 3, 2> prod = a * c;
@@ -120,6 +139,8 @@ int main(){
             assert(tr(j, i) == a(i, j));
         }
     }
+    const Matrix<long long, 3, 4>& const_a = a;
+    assert(const_a(1, 2) == 6);
 
     using mint = Modint998244353;
     Matrix<mint, 4, 4> fib({{1, 1}, {1, 0}});
@@ -166,6 +187,32 @@ int main(){
 
     thrown = false;
     try{
+        (void)a(-1, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        Matrix<long long, 3, 4> wrong_shape(1, 3);
+        (void)(a + wrong_shape);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        Matrix<long long, 3, 2> wrong_inner(2, 2);
+        (void)(a * wrong_inner);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
         fib.pow_entry_bmbm(-1, 0, 0);
     }catch(const std::runtime_error&){
         thrown = true;
@@ -184,6 +231,14 @@ int main(){
     thrown = false;
     try{
         fib.pow_entry_bmbm(5, 4);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        fib.pow_entry_bmbm(5, -1, 0);
     }catch(const std::runtime_error&){
         thrown = true;
     }

@@ -54,6 +54,27 @@ int main(){
     assert(cht.versions() == 1);
     assert(cht.empty(0));
     assert(cht.size(0) == 0);
+    bool thrown = false;
+    try{
+        (void)cht.query(0, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    thrown = false;
+    try{
+        (void)cht.line_at(0, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    thrown = false;
+    try{
+        (void)cht.size(1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 
     for(int step = 0; step < 250; step++){
         int base = static_cast<int>(rng() % naive.size());
@@ -129,5 +150,41 @@ int main(){
         assert(nodes.versions() == 1);
         assert(nodes.nodes_used() == 1);
         assert(nodes.empty(0));
+    }
+    {
+        using Small = PersistentConvexHullTrick<4, 8, 128>;
+        Small lines;
+        int first = lines.add_line(0, typename Small::Line{3, 9});
+        int second = lines.add_line(first, 2, 4);
+        assert(lines.line_at(second, 0).a == 3);
+        assert(lines.line_at(second, 0).b == 9);
+        assert(lines.line_at(second, 1).a == 2);
+        assert(lines.line_at(second, 1).b == 4);
+        bool failed = false;
+        try{
+            (void)lines.line_at(second, 2);
+        }catch(const std::runtime_error&){
+            failed = true;
+        }
+        assert(failed);
+        failed = false;
+        try{
+            (void)lines.add_line(second, 4, 0);
+        }catch(const std::runtime_error&){
+            failed = true;
+        }
+        assert(failed);
+    }
+    {
+        PersistentConvexHullTrick<1, 4, 32> full;
+        int first = full.add_line(0, 1, 0);
+        bool failed = false;
+        try{
+            (void)full.add_line(first, 0, 100);
+        }catch(const std::runtime_error&){
+            failed = true;
+        }
+        assert(failed);
+        assert(full.size(first) == 1);
     }
 }

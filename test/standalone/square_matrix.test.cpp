@@ -33,6 +33,11 @@ int main(){
         }
         return 0;
     }
+    SquareMatrix<long long, 4> empty;
+    assert(empty.size() == 0);
+    assert(empty.empty());
+    assert((SquareMatrix<long long, 4>::zero(0).empty()));
+
     SquareMatrix<long long, 4> a({{1, 2}, {3, 4}});
     assert(a.size() == 2);
     assert(!a.empty());
@@ -54,10 +59,24 @@ int main(){
     assert(sum(0, 0) == 2);
     assert(sum(1, 1) == 8);
     assert(sum - a == a);
+    assert(sum != a);
+
+    SquareMatrix<long long, 4> compound = a;
+    compound += a;
+    compound -= a;
+    assert(compound == a);
+    compound *= 6;
+    compound /= 3;
+    assert(compound == a * 2);
+    compound *= SquareMatrix<long long, 4>::identity(2);
+    assert(compound == a * 2);
+    assert(+a == a);
+    assert((-a)(1, 0) == -3);
 
     SquareMatrix<long long, 4> scaled = 6 * a;
     scaled /= 3;
     assert(scaled == a * 2);
+    assert((a * 6) / 3 == a * 2);
 
     SquareMatrix<long long, 4> fib({{1, 1}, {1, 0}});
     SquareMatrix<long long, 4> f10 = fib.pow(10);
@@ -69,6 +88,8 @@ int main(){
     auto tr = a.transposed();
     assert(tr(0, 1) == 3);
     assert(tr(1, 0) == 2);
+    const SquareMatrix<long long, 4>& const_a = a;
+    assert(const_a(1, 1) == 4);
 
     bool thrown = false;
     try{
@@ -89,6 +110,23 @@ int main(){
     thrown = false;
     try{
         a.pow(-1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)a(-1, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        SquareMatrix<long long, 4> wrong_size(3);
+        (void)(a + wrong_size);
     }catch(const std::runtime_error&){
         thrown = true;
     }

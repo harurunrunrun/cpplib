@@ -6,6 +6,7 @@
 #include <iostream>
 #include <limits>
 #include <random>
+#include <stdexcept>
 #include <utility>
 #include <vector>
 #include "../../src/structure/convex_hull_trick/convex_hull_trick.hpp"
@@ -38,6 +39,24 @@ int main(){
 
     ConvexHullTrick<300> cht;
     assert(cht.empty());
+    assert(cht.size() == 0);
+    bool thrown = false;
+    try{
+        (void)cht.query(0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    thrown = false;
+    try{
+        (void)cht.query_monotone_inc(0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    assert((ConvexHullTrick<1>::Line{
+        std::numeric_limits<long long>::max(), 1
+    }.eval(2) == std::numeric_limits<long long>::max()));
 
     std::vector<std::pair<long long, long long>> lines;
     std::mt19937 rng(135792468);
@@ -101,5 +120,29 @@ int main(){
         ConvexHullTrick<1> large;
         large.add_line(0, 3000000000000000000LL);
         assert(large.query(0) == 3000000000000000000LL);
+    }
+    {
+        ConvexHullTrick<2> monotonicity;
+        monotonicity.add_line(0, 0);
+        bool failed = false;
+        try{
+            monotonicity.add_line(1, -1);
+        }catch(const std::runtime_error&){
+            failed = true;
+        }
+        assert(failed);
+        assert(monotonicity.size() == 1);
+    }
+    {
+        ConvexHullTrick<1> capacity;
+        capacity.add_line(1, 0);
+        bool failed = false;
+        try{
+            capacity.add_line(0, 100);
+        }catch(const std::runtime_error&){
+            failed = true;
+        }
+        assert(failed);
+        assert(capacity.size() == 1);
     }
 }

@@ -66,6 +66,31 @@ void test_abc228_e_shape(){
     assert(mint(998244353).pow(mint(2).pow(mint(3))).val() == 0);
 }
 
+void test_public_value_operations(){
+    using mint = ExponentiableModint<10>;
+    static_assert(mint::get_mod() == 10);
+    static_assert(ExponentiableModint<1>::get_mod() == 1);
+    assert(mint().val() == 0);
+    typename mint::next_type next(7);
+    mint explicit_layers(7, next);
+    assert(explicit_layers.val() == 7);
+
+    mint value = 7;
+    value += mint(8);
+    assert(value.val() == 5);
+    value *= mint(3);
+    assert(value.val() == 5);
+    assert(value == mint(5));
+    assert(value != mint(6));
+
+    ExponentiableModint<1> terminal = 3;
+    terminal += ExponentiableModint<1>(0);
+    terminal *= ExponentiableModint<1>(2);
+    assert(terminal.val() == 0);
+    assert(terminal == ExponentiableModint<1>(0));
+    assert(!(terminal != ExponentiableModint<1>(99)));
+}
+
 int main(){
     int q;
     if(std::cin >> q){
@@ -110,4 +135,5 @@ int main(){
     test_nested_power();
     test_add_mul();
     test_abc228_e_shape();
+    test_public_value_operations();
 }

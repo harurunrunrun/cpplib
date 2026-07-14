@@ -42,6 +42,14 @@ void test_exceptions(){
     }
     assert(thrown);
 
+    thrown = false;
+    try{
+        FenwickTree<int, 3> fw(-1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
     FenwickTree<int, 3> fw(3);
     thrown = false;
     try{
@@ -54,6 +62,30 @@ void test_exceptions(){
     thrown = false;
     try{
         (void)fw.sum(2, 1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    volatile int out_of_range_prefix = 4;
+    thrown = false;
+    try{ (void)fw.prefix_sum(out_of_range_prefix); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+
+    thrown = false;
+    try{ (void)fw.get(-1); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+
+    thrown = false;
+    try{ fw.set(3, 1); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        FenwickTree<int, 3> too_many(std::vector<int>{1, 2, 3, 4});
     }catch(const std::runtime_error&){
         thrown = true;
     }

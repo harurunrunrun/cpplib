@@ -12,6 +12,7 @@ using mint = Modint<998244353>;
 
 void test_basic_arithmetic(){
     assert(mint::get_mod() == 998244353);
+    assert(mint().val() == 0);
     assert(mint(-1).val() == 998244352);
     assert(mint(998244353LL * 3 + 7).val() == 7);
     assert(mint::raw(123).val() == 123);
@@ -26,6 +27,14 @@ void test_basic_arithmetic(){
     assert((-a).val() == 998244343);
     assert(+a == a);
     assert(a != b);
+    assert(a == mint(10));
+
+    mint compound = 10;
+    compound += 5;
+    compound -= 3;
+    compound *= 4;
+    compound /= 6;
+    assert(compound == 8);
 }
 
 void test_pow_inv(){
@@ -38,6 +47,14 @@ void test_pow_inv(){
     assert((mod12(7) * mod12(7).inv()).val() == 1);
 
     bool thrown = false;
+    try{
+        (void)mint(0).inv();
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
     try{
         (void)mint(2).pow(-1);
     }catch(const std::runtime_error&){
@@ -75,6 +92,15 @@ void test_stream(){
     std::stringstream out;
     out << x;
     assert(out.str() == "998244350");
+
+    bool thrown = false;
+    try{
+        std::stringstream bad("not-a-number");
+        bad >> x;
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }
 
 int main(){

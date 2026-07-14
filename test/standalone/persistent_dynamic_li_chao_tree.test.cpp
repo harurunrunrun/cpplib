@@ -50,6 +50,25 @@ int main(){
     assert(cht.latest_version() == 0);
     assert(cht.empty(0));
     assert(cht.query(0, 0) == decltype(cht)::INF);
+    bool thrown = false;
+    try{
+        (void)cht.empty(1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    thrown = false;
+    try{
+        (void)cht.query(0, 31);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    int line_version = cht.add_line(
+        0, typename decltype(cht)::Line{2, 3}
+    );
+    assert(cht.query(line_version, 4) == 11);
+    naive.push_back({{2, 3}});
 
     std::mt19937 rng(1122334455);
 

@@ -53,6 +53,14 @@ void test_exceptions(){
 
     thrown = false;
     try{
+        FenwickTree2D<int, 2, 2> fw(2, -1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
         FenwickTree2D<int, 3, 3> fw(std::vector<std::vector<int>>{{1, 2}, {3}});
     }catch(const std::runtime_error&){
         thrown = true;
@@ -74,6 +82,21 @@ void test_exceptions(){
     }catch(const std::runtime_error&){
         thrown = true;
     }
+    assert(thrown);
+
+    thrown = false;
+    try{ (void)fw.prefix_sum(0, 3); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+
+    thrown = false;
+    try{ (void)fw.get(-1, 0); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+
+    thrown = false;
+    try{ fw.set(0, 2, 1); }
+    catch(const std::runtime_error&){ thrown = true; }
     assert(thrown);
 }
 

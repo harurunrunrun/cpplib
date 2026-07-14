@@ -77,6 +77,23 @@ void test_exceptions(){
     }
     assert(thrown);
 
+    thrown = false;
+    try{
+        DisjointSparseTable<add_monoid, 3> dst(-1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        DisjointSparseTable<add_monoid, 3> dst(
+            std::vector<long long>{1, 2, 3, 4});
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
     DisjointSparseTable<add_monoid, 4> dst(std::vector<long long>{1, 2, 3});
     thrown = false;
     try{
@@ -89,6 +106,22 @@ void test_exceptions(){
     thrown = false;
     try{
         (void)dst.get(3);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)dst.get(-1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)dst.prod(0, 4);
     }catch(const std::runtime_error&){
         thrown = true;
     }

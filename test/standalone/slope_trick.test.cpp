@@ -85,13 +85,20 @@ void test_basic(){
     SlopeTrick<long long, 16> slope;
     assert(slope.empty());
     assert(slope.size() == 0);
+    assert(slope.left_size() == 0);
+    assert(slope.right_size() == 0);
     assert(slope.min_f() == 0);
+    assert(slope.get_min() == std::tuple(
+        0LL, std::numeric_limits<long long>::lowest(),
+        std::numeric_limits<long long>::max()));
     assert(slope.argmin() == std::pair(
         std::numeric_limits<long long>::lowest(),
         std::numeric_limits<long long>::max()
     ));
 
     slope.add_abs(3);
+    assert(slope.left_size() == 1);
+    assert(slope.right_size() == 1);
     assert(slope.min_f() == 0);
     assert(slope.argmin() == std::pair(3LL, 3LL));
     assert(slope.eval(0) == 3);
@@ -109,11 +116,13 @@ void test_basic(){
     assert(slope.argmin() == std::pair(1LL, 9LL));
 
     slope.prefix_min();
+    assert(slope.right_size() == 0);
     assert(slope.argmin() == std::pair(
         1LL, std::numeric_limits<long long>::max()
     ));
     assert(slope.eval(20) == 12);
     slope.suffix_min();
+    assert(slope.left_size() == 0);
     assert(slope.argmin() == std::pair(
         std::numeric_limits<long long>::lowest(),
         std::numeric_limits<long long>::max()

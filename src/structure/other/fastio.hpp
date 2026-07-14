@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <stdio.h>
 
 #define read_size 1000000
@@ -57,44 +58,54 @@ public:
     readspeoln();
 
     int c = getch();
-    int sign = 1;
-    x = 0;
+    bool negative = false;
+    unsigned int value = 0;
 
     if (c == '-') {
-      sign = -1;
+      negative = true;
       c = getch();
     }
 
     while ('0' <= c && c <= '9') {
-      x = x * 10 + (c & 15);
+      value = value * 10U + static_cast<unsigned int>(c & 15);
       c = getch();
     }
 
     if (c != EOF) ungetch();
 
-    x *= sign;
+    if (negative && value == static_cast<unsigned int>(
+        std::numeric_limits<int>::max()) + 1U) {
+      x = std::numeric_limits<int>::min();
+    } else {
+      x = negative ? -static_cast<int>(value) : static_cast<int>(value);
+    }
   }
 
   void readll(long long &x) {
     readspeoln();
 
     int c = getch();
-    long long sign = 1;
-    x = 0;
+    bool negative = false;
+    unsigned long long value = 0;
 
     if (c == '-') {
-      sign = -1;
+      negative = true;
       c = getch();
     }
 
     while ('0' <= c && c <= '9') {
-      x = x * 10 + (c & 15);
+      value = value * 10ULL + static_cast<unsigned long long>(c & 15);
       c = getch();
     }
 
     if (c != EOF) ungetch();
 
-    x *= sign;
+    if (negative && value == static_cast<unsigned long long>(
+        std::numeric_limits<long long>::max()) + 1ULL) {
+      x = std::numeric_limits<long long>::min();
+    } else {
+      x = negative ? -static_cast<long long>(value) : static_cast<long long>(value);
+    }
   }
 
   // [a, z]
@@ -128,17 +139,20 @@ public:
       return;
     }
 
+    unsigned int value;
     if (x < 0) {
       write('-');
-      x = -x;
+      value = 0U - static_cast<unsigned int>(x);
+    } else {
+      value = static_cast<unsigned int>(x);
     }
 
     char s[20];
     int n = 0;
 
-    while (x > 0) {
-      s[n++] = char('0' + x % 10);
-      x /= 10;
+    while (value > 0) {
+      s[n++] = char('0' + value % 10U);
+      value /= 10U;
     }
 
     while (n--) write(s[n]);
@@ -150,17 +164,20 @@ public:
       return;
     }
 
+    unsigned long long value;
     if (x < 0) {
       write('-');
-      x = -x;
+      value = 0ULL - static_cast<unsigned long long>(x);
+    } else {
+      value = static_cast<unsigned long long>(x);
     }
 
     char s[30];
     int n = 0;
 
-    while (x > 0) {
-      s[n++] = char('0' + x % 10);
-      x /= 10;
+    while (value > 0) {
+      s[n++] = char('0' + value % 10ULL);
+      value /= 10ULL;
     }
 
     while (n--) write(s[n]);

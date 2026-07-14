@@ -18,6 +18,8 @@ void self_test(){
         const std::size_t one = heap.push(0, 5);
         const std::size_t two = heap.push(one, 2);
         const std::size_t three = heap.push(one, 7);
+        assert(heap.nodes_used() > 0);
+        assert(heap.versions() == 4);
         assert(heap.top(one) == 5);
         assert(heap.top(two) == 2);
         assert(heap.top(three) == 5);
@@ -44,6 +46,18 @@ void self_test(){
         version = heap.push(version, 8);
         version = heap.push(version, 3);
         assert(heap.top(version) == 8);
+    }
+    {
+        struct Compare{
+            bool maximum;
+            bool operator()(int left, int right) const{
+                return maximum ? left > right : left < right;
+            }
+        };
+        PersistentLeftistHeap<int, 8, 32, Compare> heap(Compare{true});
+        std::size_t version = heap.push(0, 1);
+        version = heap.push(version, 9);
+        assert(heap.top(version) == 9);
     }
     {
         PersistentLeftistHeap<int, 4, 2> heap;

@@ -59,6 +59,7 @@ void test_random(){
 void test_boundaries_and_errors(){
     SegmentLiChaoTree tree({5, -2, 5, 0, 10});
     assert(tree.size() == 4);
+    assert((tree.coordinates() == std::vector<long long>{-2, 0, 5, 10}));
     assert(tree.empty());
     assert(!tree.query(-2));
     tree.add_segment(-2, 5, 3, 7);
@@ -83,6 +84,33 @@ void test_boundaries_and_errors(){
     no_coordinates.add_line(1, 2);
     no_coordinates.add_segment(-5, 8, 3, 4);
     assert(no_coordinates.empty());
+
+    const SegmentLiChaoTree::Line safe{2, 3};
+    assert(safe.eval128(4) == 11);
+    assert(safe.eval(4) == 11);
+    bool overflow = false;
+    try{
+        (void)SegmentLiChaoTree::Line{
+            std::numeric_limits<long long>::max(),
+            std::numeric_limits<long long>::max()
+        }.eval(2);
+    }catch(const std::overflow_error&){
+        overflow = true;
+    }
+    assert(overflow);
+
+    SegmentLiChaoTree overflow_tree({2});
+    overflow_tree.add_line(SegmentLiChaoTree::Line{
+        std::numeric_limits<long long>::max(),
+        std::numeric_limits<long long>::max()
+    });
+    overflow = false;
+    try{
+        (void)overflow_tree.query(2);
+    }catch(const std::overflow_error&){
+        overflow = true;
+    }
+    assert(overflow);
 }
 
 struct Operation{

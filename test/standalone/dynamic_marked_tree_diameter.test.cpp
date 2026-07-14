@@ -102,6 +102,8 @@ void test_negative_edges_and_duplicates(){
     tree.add_edge(1, 2, -2);
     tree.add_edge(2, 3, -9);
     tree.build(true);
+    assert(tree.index().size() == tree.size());
+    assert(tree.index().root() >= 0);
     assert(tree.marked_count() == 4);
     assert(tree.diameter() == std::optional<Distance>(0));
     assert(!tree.mark(2));

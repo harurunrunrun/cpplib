@@ -48,14 +48,19 @@ void test_random(){
 
 void test_collisions_and_erase(){
     AssociativeArray<int, int, 128, ConstantHash> table;
+    static_assert(decltype(table)::max_size() == 128);
+    static_assert(decltype(table)::capacity() >= 256);
     for(int key = 0; key < 128; ++key) table[key] = key * key;
+    assert(table.at(3) == 9);
+    table.at(3) = 10;
+    assert(table.at(3) == 10);
     for(int key = 0; key < 128; key += 2) assert(table.erase(key));
     for(int key = 0; key < 128; ++key){
         const int* value = table.find(key);
         if(key % 2 == 0){
             assert(value == nullptr);
         }else{
-            assert(value != nullptr && *value == key * key);
+            assert(value != nullptr && *value == (key == 3 ? 10 : key * key));
         }
     }
     for(int key = 128; key < 192; ++key) table[key] = -key;
@@ -67,6 +72,18 @@ void test_collisions_and_erase(){
     table.clear();
     assert(table.empty());
     for(int key = 0; key < 128; ++key) assert(!table.contains(key));
+    table[200] = 17;
+    const auto& const_table = table;
+    assert(const_table.find(200) != nullptr);
+    assert(*const_table.find(200) == 17);
+    assert(const_table.at(200) == 17);
+    table.clear();
+
+    AssociativeArray<int, int, 4, ConstantHash> configured(
+        123, ConstantHash{}, std::equal_to<int>{});
+    assert(configured.insert_or_assign(1, 2));
+    assert(!configured.insert_or_assign(1, 3));
+    assert(configured.at(1) == 3);
 
     thrown = false;
     try{ (void)table.at(7); }catch(const std::out_of_range&){ thrown = true; }

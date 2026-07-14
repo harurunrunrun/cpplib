@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 #include "../../src/structure/other/kd_tree_2d.hpp"
@@ -12,6 +13,8 @@ void self_test(){
         {1, 2, 0}, {3, 4, 1}, {2, 3, 2}, {2, 3, 3}, {-1, 5, 4}
     };
     KdTree2D<int, 16> tree;
+    assert(tree.empty());
+    assert(tree.size() == 0);
     tree.build(points);
     assert(tree.size() == 5);
     auto ids = tree.range_search(1, 2, 2, 3);
@@ -22,6 +25,26 @@ void self_test(){
     assert(tree.empty());
     tree.build(points);
     assert(tree.size() == 5);
+
+    KdTree2D<int, 16> built(points);
+    assert(built.size() == 5);
+    assert(built.range_search(3, 3, 4, 4) == std::vector<int>{1});
+
+    bool thrown = false;
+    try{
+        (void)tree.range_search(2, 1, 0, 1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        KdTree2D<int, 2> too_small(points);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }
 
 int main(){

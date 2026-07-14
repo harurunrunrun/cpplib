@@ -6,6 +6,7 @@
 #include <queue>
 #include <random>
 #include <set>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -80,6 +81,8 @@ int main(){
 
     {
         OfflineDynamicConnectivity<2, 4, 20> dc(2, 4);
+        assert(dc.size() == 2);
+        assert(dc.time_size() == 4);
         dc.add_edge(0, 0, 1);
         dc.add_edge(1, 0, 1);
         dc.erase_edge(2, 0, 1);
@@ -135,4 +138,56 @@ int main(){
             assert(dsu.same(u, v) == expected);
         }
     });
+
+    {
+        OfflineDynamicConnectivity<2, 4, 4> empty(0, 0);
+        assert(empty.size() == 0);
+        assert(empty.time_size() == 0);
+        int calls = 0;
+        empty.run([&](int, const auto&){ ++calls; });
+        assert(calls == 0);
+        empty.run([&](int, const auto&){ ++calls; });
+        assert(calls == 0);
+    }
+    {
+        bool thrown = false;
+        try{
+            OfflineDynamicConnectivity<2, 4, 4> invalid(3, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            OfflineDynamicConnectivity<2, 4, 4> invalid(1, 5);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+
+        OfflineDynamicConnectivity<2, 4, 8> checked(2, 2);
+        thrown = false;
+        try{ checked.add_edge(2, 0, 1); }
+        catch(const std::runtime_error&){ thrown = true; }
+        assert(thrown);
+        thrown = false;
+        try{ checked.add_edge(0, -1, 1); }
+        catch(const std::runtime_error&){ thrown = true; }
+        assert(thrown);
+        thrown = false;
+        try{ checked.erase_edge(0, 0, 1); }
+        catch(const std::runtime_error&){ thrown = true; }
+        assert(thrown);
+
+        checked.add_edge(0, 0, 1);
+        checked.run([](int, const auto&){});
+        thrown = false;
+        try{ checked.add_edge(1, 0, 1); }
+        catch(const std::runtime_error&){ thrown = true; }
+        assert(thrown);
+        thrown = false;
+        try{ checked.erase_edge(1, 0, 1); }
+        catch(const std::runtime_error&){ thrown = true; }
+        assert(thrown);
+    }
 }

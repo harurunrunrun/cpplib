@@ -6,6 +6,7 @@
 #include <numeric>
 #include <optional>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include "../../src/structure/bbst/lazy_red_black_tree.hpp"
@@ -156,4 +157,30 @@ int main(){
         }
     }
     check_all(tree, naive);
+
+    tree.all_apply(7);
+    for(auto& [key, value]: naive){
+        (void)key;
+        value += 7;
+    }
+    check_all(tree, naive);
+    tree.clear();
+    naive.clear();
+    check_all(tree, naive);
+    tree.all_apply(100);
+    assert(tree.insert(5, 9));
+    assert(tree.get(5) == 9);
+
+    LazyRedBlackTree<int, range_add_sum, 2> tiny;
+    assert(tiny.empty());
+    tiny.all_apply(1);
+    assert(tiny.insert(1, 10));
+    assert(tiny.insert(2, 20));
+    bool thrown = false;
+    try{
+        (void)tiny.insert(3, 30);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }

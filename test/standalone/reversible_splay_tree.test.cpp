@@ -5,6 +5,7 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include "../../src/structure/bbst/reversible_splay_tree.hpp"
@@ -129,4 +130,35 @@ int main(){
         }
     }
     check_all(tree, naive);
+
+    tree.push_front(-11);
+    naive.insert(naive.begin(), -11);
+    tree.push_back(17);
+    naive.push_back(17);
+    check_all(tree, naive);
+    tree.clear();
+    naive.clear();
+    check_all(tree, naive);
+    tree.push_back(9);
+    naive.push_back(9);
+    check_all(tree, naive);
+
+    ReversibleSplayTree<sum_monoid, 2> tiny;
+    assert(tiny.empty());
+    tiny.push_back(1);
+    tiny.push_front(2);
+    bool thrown = false;
+    try{
+        tiny.insert(1, 3);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    thrown = false;
+    try{
+        (void)tiny.get(2);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }

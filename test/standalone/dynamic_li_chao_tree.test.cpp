@@ -58,6 +58,18 @@ int main(){
     }
     {
         DynamicLiChaoTree<-2, 2, 2> large;
+        bool thrown = false;
+        try{
+            (void)large.query(3);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        large.add_line(typename decltype(large)::Line{1, 4});
+        assert(large.query(-2) == 2);
+    }
+    {
+        DynamicLiChaoTree<-2, 2, 2> large;
         large.add_line(0, 3000000000000000000LL);
         assert(large.query(0) == 3000000000000000000LL);
     }
