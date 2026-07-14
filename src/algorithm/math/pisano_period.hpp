@@ -70,6 +70,9 @@ inline std::uint64_t pisano_period(std::uint64_t modulus){
     if(modulus < 2)[[unlikely]]{
         throw std::invalid_argument("pisano_period requires modulus >= 2");
     }
+    if(modulus > 1'000'000'000'000ULL)[[unlikely]]{
+        throw std::out_of_range("pisano_period requires modulus <= 10^12");
+    }
     std::uint64_t result = 1;
     for(const auto [prime, exponent]: factorize_pollard_rho(modulus)){
         const std::uint64_t component =

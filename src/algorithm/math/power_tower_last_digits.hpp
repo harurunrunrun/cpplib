@@ -38,12 +38,13 @@ inline bool tower_at_least(
     std::uint64_t height,
     std::uint64_t limit
 ){
-    if(limit <= 1) return true;
-    if(height == 0) return false;
+    if(limit == 0) return true;
+    if(height == 0) return 1 >= limit;
     if(base == 0){
         const std::uint64_t exact = (height % 2 == 0) ? 1 : 0;
         return exact >= limit;
     }
+    if(limit == 1) return true;
     if(base == 1) return false;
     if(height == 1) return base >= limit;
     std::uint64_t required_exponent = 0;
@@ -92,7 +93,7 @@ inline ModularTower tower_mod(
     std::uint64_t height,
     std::uint64_t modulus
 ){
-    if(modulus == 1) return {0, true};
+    if(modulus == 1) return {0, tower_at_least(base, height, 1)};
     if(height == 0) return {1 % modulus, 1 >= modulus};
     if(height == 1) return {base % modulus, base >= modulus};
     const std::uint64_t phi = totient(modulus);

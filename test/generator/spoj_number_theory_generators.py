@@ -385,6 +385,10 @@ def generate_aps(out_dir):
 
 
 def format_exact_tower(base, height):
+    if base == 0:
+        return str(1 if height % 2 == 0 else 0)
+    if base == 1:
+        return "1"
     value = 1
     for _ in range(height):
         value = base ** value
@@ -396,12 +400,15 @@ def format_exact_tower(base, height):
 
 
 def generate_powtow(out_dir):
-    cases = [(0, 0), (0, 1), (0, 2), (1, 2_147_483_647), (2, 5), (3, 3),
+    cases = [(0, 0), (0, 1), (0, 2), (0, 27), (0, 28), (0, 29),
+             (1, 2_147_483_647), (2, 5), (3, 3),
              (993_306_745, 75_707_320)]
-    answers = [format_exact_tower(a, h) if h <= 5 else None for a, h in cases]
+    answers = [
+        format_exact_tower(a, h) if h <= 5 or a <= 1 else None
+        for a, h in cases
+    ]
     answers[-2] = format_exact_tower(3, 3)
     answers[-1] = "...884765625"
-    answers[3] = "1"
     write_case(out_dir, "boundary", f"{len(cases)}\n" +
                "\n".join(f"{a} {h}" for a, h in cases) + "\n",
                "\n".join(answers) + "\n")

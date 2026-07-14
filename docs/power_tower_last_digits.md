@@ -25,6 +25,15 @@ PowerTowerLastNine power_tower_last_nine(uint64_t base, uint64_t height);
 
 `base ↑↑ height` を処理する。高さ0の値は1。
 
+## 引数
+
+- `base`: 累乗塔で繰り返す非負整数の底。
+- `height`: 累乗塔の高さ。
+
+## 戻り値
+
+末尾9桁と、真の値が $10^9$ 以上かを表す `PowerTowerLastNine`。
+
 ## API別の時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量 |
@@ -35,3 +44,4 @@ PowerTowerLastNine power_tower_last_nine(uint64_t base, uint64_t height);
 ## 注意点
 
 - `0 ↑↑ 0 = 1` と定義する。
+- 底が0の場合、高さが正の偶数なら1、奇数なら0となる。

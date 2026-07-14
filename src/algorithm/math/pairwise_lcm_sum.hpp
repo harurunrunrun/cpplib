@@ -35,16 +35,17 @@ inline std::int64_t power_mod(
 } // namespace pairwise_lcm_sum_internal
 
 inline std::int64_t pairwise_lcm_sum(
-    const std::vector<int>& values,
-    std::int64_t modulus = 998'244'353
+    const std::vector<int>& values
 ){
-    if(modulus <= 1)[[unlikely]]{
-        throw std::invalid_argument("pairwise_lcm_sum requires modulus > 1");
-    }
+    constexpr std::int64_t modulus = 998'244'353;
     int limit = 0;
     for(const int value: values){
         if(value <= 0)[[unlikely]]{
             throw std::invalid_argument("pairwise_lcm_sum requires positive values");
+        }
+        if(value % modulus == 0)[[unlikely]]{
+            throw std::invalid_argument(
+                "pairwise_lcm_sum requires values coprime to 998244353");
         }
         limit = std::max(limit, value);
     }

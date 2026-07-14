@@ -13,6 +13,14 @@ uint64_t pisano_period(uint64_t modulus);
 
 `(F_k,F_(k+1)) mod modulus = (0,1)` となる最小の正整数 `k` を返す。
 
+## 引数
+
+- `modulus`: Fibonacci列を還元する法。
+
+## 戻り値
+
+`modulus` に対するPisano周期。
+
 ## API別の時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量 |
@@ -21,4 +29,4 @@ uint64_t pisano_period(uint64_t modulus);
 
 ## 注意点
 
-- `modulus >= 2` が必要である。
+- `2 <= modulus <= 10^12` が必要である。下限違反では `std::invalid_argument`、上限違反では `std::out_of_range` を送出する。
