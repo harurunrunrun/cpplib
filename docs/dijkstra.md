@@ -1,5 +1,5 @@
 ---
-title: Dijkstra (ダイクストラ法) [GRL_1_A] [shortest_path]
+title: Dijkstra (ダイクストラ法) [GRL_1_A]
 documentation_of: ../src/algorithm/graph/dijkstra.hpp
 ---
 
