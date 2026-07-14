@@ -1,5 +1,5 @@
 ---
-title: Minimum Insertions to Palindrome (回文化の最小挿入回数) [AIBOHP]
+title: Minimum Insertions to Palindrome (回文化の最小挿入回数) [AIBOHP] [IOIPALIN]
 documentation_of: ../src/algorithm/string/minimum_insertions_to_palindrome.hpp
 ---
 
@@ -13,9 +13,7 @@ template<class Sequence>
 int minimum_insertions_to_palindrome(const Sequence& sequence)
 ```
 
-`sequence` を回文にする最小挿入回数を返す。
-`sequence` とその反転列の最長共通部分列は最長回文部分列になるため、列長を $N$、その長さを $L$ とすると答えは $N-L$ である。
-内部では、長さだけを2行DPで求める `longest_common_subsequence_length` を使う。
+`sequence` の順序を保ったまま回文にするための最小挿入回数を返す。
 
 ## API別の時間計算量・空間計算量
 
