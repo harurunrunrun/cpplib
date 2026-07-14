@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/highways.dijkstra.test.cpp"
+#include "../onlinejudge/highways.undirected_shortest_path_distance.test.cpp"

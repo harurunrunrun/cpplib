@@ -1,5 +1,5 @@
 ---
-title: Dijkstra (ダイクストラ法) [ABC340_D] [GRL_1_A] [HIGHWAYS] [shortest_path]
+title: Dijkstra (ダイクストラ法) [ABC340_D] [GRL_1_A] [shortest_path]
 documentation_of: ../src/algorithm/graph/dijkstra.hpp
 ---
 
