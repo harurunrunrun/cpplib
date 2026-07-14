@@ -26,7 +26,7 @@ VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points);
 - `vertices`: Voronoi頂点。
 - `edges`: Voronoi辺。
 - `cell_edges[i]`: 入力点 `i` のcell境界を構成する辺の添字。順序は規定しない。
-- `representative`: 各入力点と同一点とみなした最初の入力点の添字。
+- `representative`: 各入力点に対応する、座標辞書順の走査で先に選ばれたsiteの入力添字。
 - `sites`: 重複を除いたsiteの代表添字。座標の辞書順である。
 
 代表でない重複点の `cell_edges` は空である。`representative[i]` のcellを参照する。
@@ -50,3 +50,4 @@ VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points);
 - 非退化な凸包に対応する無限辺は `RAY` として返す。
 - 4点以上が同一円周上にある場合、同じ位置のVoronoi頂点を統合し、長さ0の双対辺を返さない。
 - `cell_edges` は境界辺の巡回順ではない。
+- EPS近接siteの代表選択はDelaunay三角形分割と同じで、入力順の最小添字とは限らない。
