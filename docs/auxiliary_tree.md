@@ -44,10 +44,6 @@ for(int i = 0; i < m; ++i){
 前処理後の保存領域は $O(MAX\_SIZE\log MAX\_SIZE)$。圧縮木の頂点数は
 高々 $2K-1$ で、問い合わせごとの動的確保は行わない。
 
-## 参考
-
-- [ABC340 G公式解説](https://atcoder.jp/contests/abc340/editorial/9256)
-
 ## 注意点
 
 `VirtualTree<MAX_SIZE>` はalias。`compress` は圧縮後sizeを返す。`vertex`, `parent_index`, `edge_length`, `selected` は元頂点、圧縮上の親、元木上距離、指定頂点flagを返す。size・辺・圧縮容量を検査し、違反時は `runtime_error`。
