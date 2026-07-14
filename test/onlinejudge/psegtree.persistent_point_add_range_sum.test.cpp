@@ -4,10 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../src/structure/segtree/persistent_segtree.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
-
-constexpr AddMonoid<long long> psegtree_sum_monoid{};
+#include "../../src/structure/segtree/persistent_point_add_range_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -20,9 +17,8 @@ int main(){
         std::cin >> value;
     }
 
-    auto segtree = std::make_unique<
-        PersistentSegtree<psegtree_sum_monoid, 100000, 100000>
-    >(values);
+    using Tree = PersistentPointAddRangeSum<long long, 100000, 100000>;
+    auto tree = std::make_unique<Tree>(values);
 
     int q;
     std::cin >> q;
@@ -30,11 +26,9 @@ int main(){
         int type, version, left, right;
         std::cin >> type >> version >> left >> right;
         if(type == 1){
-            const int position = left - 1;
-            const long long value = segtree->get(version, position) + right;
-            segtree->set(version, position, value);
+            tree->add(version, left - 1, right);
         }else{
-            std::cout << segtree->prod(version, left - 1, right) << '\n';
+            std::cout << tree->sum(version, left - 1, right) << '\n';
         }
     }
 }
