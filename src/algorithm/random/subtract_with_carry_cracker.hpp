@@ -81,9 +81,14 @@ private:
     }
 
 public:
+    template<std::size_t Count>
     constexpr explicit SubtractWithCarryCracker(
-        const std::array<result_type, LongLag + 1>& consecutive_outputs
+        const std::array<result_type, Count>& consecutive_outputs
     ){
+        static_assert(
+            LongLag + 1 <= Count,
+            "subtract-with-carry state recovery needs LongLag + 1 outputs"
+        );
         for(result_type value: consecutive_outputs){
             if(!valid_word(value)){
                 throw std::invalid_argument(
@@ -115,6 +120,13 @@ public:
         carry_ = next_carry(short_value, long_value, previous_carry);
         for(std::size_t index = 0; index < LongLag; ++index){
             state_[index] = consecutive_outputs[index + 1];
+        }
+        for(std::size_t index = LongLag + 1; index < Count; ++index){
+            if(next() != consecutive_outputs[index]){
+                throw std::invalid_argument(
+                    "outputs do not belong to one subtract-with-carry stream"
+                );
+            }
         }
     }
 
@@ -208,19 +220,34 @@ struct SubtractWithCarrySeedRecovery{
 
 template<class Engine, std::size_t Count>
 SubtractWithCarrySeedRecovery<Engine>
-recover_subtract_with_carry_seed_in_range(
+recover_subtract_with_carry_seed_candidates(
     const std::array<typename Engine::result_type, Count>& consecutive_outputs,
     unsigned long long discard_count,
     typename Engine::result_type seed_first,
-    typename Engine::result_type seed_last
+    unsigned long long candidate_count
 ){
     static_assert(0 < Count);
     using result_type = typename Engine::result_type;
-    if(seed_last < seed_first){
-        throw std::invalid_argument("invalid seed range");
+    static_assert(std::is_unsigned_v<result_type>);
+    static_assert(
+        std::numeric_limits<result_type>::digits
+            <= std::numeric_limits<unsigned long long>::digits
+    );
+    if(
+        candidate_count != 0
+        && candidate_count - 1 > static_cast<unsigned long long>(
+            std::numeric_limits<result_type>::max() - seed_first
+        )
+    ){
+        throw std::invalid_argument("seed candidate range overflows");
     }
     SubtractWithCarrySeedRecovery<Engine> recovery;
-    for(result_type seed = seed_first; seed != seed_last; ++seed){
+    result_type seed = seed_first;
+    for(
+        unsigned long long offset = 0;
+        offset < candidate_count;
+        ++offset
+    ){
         Engine engine(seed);
         engine.discard(discard_count);
         bool matches = true;
@@ -230,15 +257,44 @@ recover_subtract_with_carry_seed_in_range(
                 break;
             }
         }
-        if(!matches) continue;
-        if(recovery.status == SubtractWithCarrySeedRecoveryStatus::none){
-            recovery.status = SubtractWithCarrySeedRecoveryStatus::unique;
-            recovery.seed = seed;
-            recovery.predictor = std::move(engine);
-        }else{
-            recovery.status = SubtractWithCarrySeedRecoveryStatus::ambiguous;
-            return recovery;
+        if(matches){
+            if(recovery.status == SubtractWithCarrySeedRecoveryStatus::none){
+                recovery.status = SubtractWithCarrySeedRecoveryStatus::unique;
+                recovery.seed = seed;
+                recovery.predictor = std::move(engine);
+            }else{
+                recovery.status =
+                    SubtractWithCarrySeedRecoveryStatus::ambiguous;
+                return recovery;
+            }
         }
+        if(offset + 1 != candidate_count) ++seed;
     }
     return recovery;
+}
+
+template<class Engine, std::size_t Count>
+SubtractWithCarrySeedRecovery<Engine>
+recover_subtract_with_carry_seed_in_range(
+    const std::array<typename Engine::result_type, Count>& consecutive_outputs,
+    unsigned long long discard_count,
+    typename Engine::result_type seed_first,
+    typename Engine::result_type seed_last
+){
+    static_assert(0 < Count);
+    using result_type = typename Engine::result_type;
+    static_assert(std::is_unsigned_v<result_type>);
+    static_assert(
+        std::numeric_limits<result_type>::digits
+            <= std::numeric_limits<unsigned long long>::digits
+    );
+    if(seed_last < seed_first){
+        throw std::invalid_argument("invalid seed range");
+    }
+    return recover_subtract_with_carry_seed_candidates<Engine>(
+        consecutive_outputs,
+        discard_count,
+        seed_first,
+        static_cast<unsigned long long>(seed_last - seed_first)
+    );
 }

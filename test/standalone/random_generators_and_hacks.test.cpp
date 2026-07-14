@@ -577,8 +577,11 @@ int run_lcg(){
     LinearCongruentialCracker<WrapLcg> cracker64(first64);
     const auto recovered32 = cracker32.recovered_seed();
     const auto recovered64 = cracker64.recovered_seed();
+    const auto normalized32 = seed32 % MinStdRand0::modulus;
+    const auto expected32 =
+        normalized32 == 0 ? MinStdRand0::result_type(1) : normalized32;
     if(!recovered32 || !recovered64) return 1;
-    if(*recovered32 != seed32 % MinStdRand0::modulus
+    if(*recovered32 != expected32
        || *recovered64 != seed64){
         return 1;
     }

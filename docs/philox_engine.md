@@ -42,6 +42,12 @@ PhiloxEngine<UInt, WordSize, WordCount, RoundCount, Constants...>
 - <code>operator()()</code>：blockの次の語を返す。必要ならPhilox roundを実行してcounterを1増やす。
 - <code>discard(count)</code>：完全blockはcounter加算で飛ばし、端のblockだけ生成する。
 - <code>operator==</code>：将来の出力列を決めるcounter・key・indexを比較する。
+- <code>operator&lt;&lt;</code>：標準の textual representation と同じく、key <code>K[0..N/2)</code>、内部 counter <code>X[0..N)</code>、<code>index</code> の順に10進数で出力する。stream の flags と fill は呼出し後に復元する。
+- <code>operator&gt;&gt;</code>：上記の状態を読み戻す。各 word が $[0,2^w)$、index が $[0,N)$ にあることを検査し、途中 block なら直前 counter から buffer を復元する。不正入力では <code>failbit</code> を設定して engine を変更せず、stream の flags も復元する。
+
+textual representation の <code>X[0]</code> は最下位語である。
+<code>set_counter</code> / <code>counter()</code> の公開配列はこれと逆順なので注意する。
+
 - <code>min()</code> / <code>max()</code>：1語の出力範囲を返す。
 
 <code>Philox4x32</code> と <code>Philox4x64</code> は10 roundの
@@ -59,9 +65,13 @@ $N=\mathtt{WordCount}$、$R=\mathtt{RoundCount}$ とする。
 - <code>operator()</code>：最悪 $O(RN)$、ならし $O(R)$
 - <code>discard</code>：$O(N+RN)$。完全block数には依存しない
 - <code>operator==</code>：$O(N)$
+- <code>operator&lt;&lt;</code>：$O(N)$
+- <code>operator&gt;&gt;</code>：最悪 $O(RN)$、block 境界では $O(N)$
 
 保存領域は $O(N)$。<code>operator()</code> と <code>discard</code> の
 最悪追加空間計算量は $O(N)$、それ以外の操作は戻り値を除いて $O(1)$。
+
+stream 入出力の追加領域は $O(N)$。
 
 ## 注意点
 
@@ -69,3 +79,5 @@ $N=\mathtt{WordCount}$、$R=\mathtt{RoundCount}$ とする。
 末尾要素に対応する。<code>Constants</code> の並びは
 乗数、round定数、乗数、round定数の順。統計的乱数生成器であり、
 暗号用途には使用しない。
+64bit word の乗算には GCC/Clang の <code>unsigned __int128</code> 拡張を使う。
+stream 演算子は hosted 環境向けである。

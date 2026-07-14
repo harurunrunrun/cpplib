@@ -4,7 +4,10 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <ios>
+#include <istream>
 #include <limits>
+#include <ostream>
 #include <type_traits>
 #include <utility>
 
@@ -142,6 +145,18 @@ private:
             counter_[index] =
                 static_cast<result_type>(sum & wide_mask());
             carry = sum >> WordSize;
+        }
+    }
+
+    static constexpr void decrement_counter(counter_type& counter) noexcept{
+        for(std::size_t index = 0; index < WordCount; ++index){
+            if(counter[index] != 0){
+                counter[index] = mask_word(
+                    static_cast<result_type>(counter[index] - 1)
+                );
+                return;
+            }
+            counter[index] = static_cast<result_type>(wide_mask());
         }
     }
 
@@ -288,6 +303,115 @@ public:
         return left.counter_ == right.counter_
             && left.key_ == right.key_
             && left.index_ == right.index_;
+    }
+
+    template<class CharT, class Traits>
+    friend std::basic_ostream<CharT, Traits>& operator<<(
+        std::basic_ostream<CharT, Traits>& stream,
+        const PhiloxEngine& engine
+    ){
+        struct StreamStateGuard{
+            std::basic_ostream<CharT, Traits>& stream;
+            std::ios_base::fmtflags flags;
+            CharT fill;
+
+            ~StreamStateGuard(){
+                stream.flags(flags);
+                stream.fill(fill);
+            }
+        } guard{stream, stream.flags(), stream.fill()};
+
+        stream.flags(std::ios_base::dec | std::ios_base::left);
+        stream.fill(stream.widen(' '));
+        bool first = true;
+        const auto write = [&](unsigned long long value){
+            if(!first) stream << stream.widen(' ');
+            first = false;
+            stream << value;
+        };
+        for(const result_type value: engine.key_){
+            write(static_cast<unsigned long long>(value));
+        }
+        for(const result_type value: engine.counter_){
+            write(static_cast<unsigned long long>(value));
+        }
+        write(static_cast<unsigned long long>(engine.index_));
+        return stream;
+    }
+
+    template<class CharT, class Traits>
+    friend std::basic_istream<CharT, Traits>& operator>>(
+        std::basic_istream<CharT, Traits>& stream,
+        PhiloxEngine& engine
+    ){
+        struct StreamStateGuard{
+            std::basic_istream<CharT, Traits>& stream;
+            std::ios_base::fmtflags flags;
+
+            ~StreamStateGuard(){
+                stream.flags(flags);
+            }
+        } guard{stream, stream.flags()};
+
+        stream.flags(std::ios_base::dec | std::ios_base::skipws);
+        const auto fail = [&]{
+            stream.setstate(std::ios_base::failbit);
+        };
+        const auto read_bounded = [&](
+            unsigned long long limit,
+            unsigned long long& value
+        ) -> bool{
+            stream >> std::ws;
+            const auto next = stream.peek();
+            if(Traits::eq_int_type(next, Traits::eof())){
+                fail();
+                return false;
+            }
+            if(Traits::eq_int_type(
+                next,
+                Traits::to_int_type(stream.widen('-'))
+            )){
+                fail();
+                return false;
+            }
+            unsigned long long candidate = 0;
+            if(!(stream >> candidate)) return false;
+            if(candidate > limit){
+                fail();
+                return false;
+            }
+            value = candidate;
+            return true;
+        };
+
+        key_type key{};
+        counter_type counter{};
+        const auto word_limit = static_cast<unsigned long long>(wide_mask());
+        for(result_type& value: key){
+            unsigned long long candidate = 0;
+            if(!read_bounded(word_limit, candidate)) return stream;
+            value = static_cast<result_type>(candidate);
+        }
+        for(result_type& value: counter){
+            unsigned long long candidate = 0;
+            if(!read_bounded(word_limit, candidate)) return stream;
+            value = static_cast<result_type>(candidate);
+        }
+        unsigned long long index = 0;
+        if(!read_bounded(WordCount - 1, index)) return stream;
+
+        PhiloxEngine candidate = engine;
+        candidate.key_ = key;
+        candidate.counter_ = counter;
+        candidate.index_ = static_cast<std::size_t>(index);
+        candidate.buffer_.fill(0);
+        if(candidate.index_ < WordCount - 1){
+            counter_type previous = candidate.counter_;
+            decrement_counter(previous);
+            candidate.buffer_ = generate_block(previous, candidate.key_);
+        }
+        engine = std::move(candidate);
+        return stream;
     }
 
     static constexpr result_type min() noexcept{
