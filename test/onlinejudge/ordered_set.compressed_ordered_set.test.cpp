@@ -1,11 +1,10 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/ordered_set
 
-#include <algorithm>
 #include <vector>
 #include <utility>
 
 #include "../../src/structure/other/fastio.hpp"
-#include "../../src/structure/tree/integer_set.hpp"
+#include "../../src/structure/tree/compressed_ordered_set.hpp"
 
 using namespace std;
 
@@ -25,43 +24,35 @@ int main(){
         io.readint(B[i].second);
         C[i+N]=B[i].second;
     }
-    sort(C.begin(),C.end());
-    C.erase(unique(C.begin(),C.end()),C.end());
-    Int_Set<unsigned int, 1000000> IS;
-    for(int i=0;i<N;i++){
-        unsigned int x=lower_bound(C.begin(),C.end(),A[i])-C.begin();
-        IS.insert(x);
-    }
+    CompressedOrderedSet<int, 1000000> set(C, A);
     for(int i=0;i<Q;i++){
-        unsigned int x=lower_bound(C.begin(),C.end(),B[i].second)-C.begin();
         if(B[i].first==0){
-            IS.insert(x);
+            set.insert(B[i].second);
         }else if(B[i].first==1){
-            IS.erase(x);
+            set.erase(B[i].second);
         }else if(B[i].first==2){
-            auto val=IS.kth_ge(0u, (unsigned)B[i].second-1);
+            auto val=set.kth_smallest_one_based(B[i].second);
             if(val.has_value()){
-                io.writeint(C[*val]);
+                io.writeint(*val);
             }else{
                 io.writeint(-1);
             }
             io.write('\n');
         }else if(B[i].first==3){
-            auto ans=IS.range_sum(0u,x+1);
-            io.writeint((int)ans);
+            io.writeint(set.count_less_equal(B[i].second));
             io.write('\n');
         }else if(B[i].first==4){
-            auto val=IS.most(x);
+            auto val=set.predecessor_or_equal(B[i].second);
             if(val.has_value()){
-                io.writeint(C[*val]);
+                io.writeint(*val);
             }else{
                 io.writeint(-1);
             }
             io.write('\n');
         }else{
-            auto val=IS.least(x);
+            auto val=set.successor_or_equal(B[i].second);
             if(val.has_value()){
-                io.writeint(C[*val]);
+                io.writeint(*val);
             }else{
                 io.writeint(-1);
             }

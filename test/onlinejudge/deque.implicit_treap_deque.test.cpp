@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-#include "../../src/structure/tree/implicit_treap.hpp"
+#include "../../src/structure/tree/implicit_treap_deque.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 int main(){
@@ -13,7 +13,7 @@ int main(){
     int query_count;
     std::cin >> query_count;
     auto sequence = std::make_unique<
-        ImplicitTreap<AddMonoid<long long>{}, 500000>
+        ImplicitTreapDeque<AddMonoid<long long>{}, 500000>
     >();
     while(query_count--){
         int type;
@@ -27,9 +27,9 @@ int main(){
             std::cin >> value;
             sequence->push_back(value);
         }else if(type == 2){
-            sequence->erase(0);
+            sequence->pop_front();
         }else if(type == 3){
-            sequence->erase(sequence->size() - 1);
+            sequence->pop_back();
         }else{
             int index;
             std::cin >> index;
