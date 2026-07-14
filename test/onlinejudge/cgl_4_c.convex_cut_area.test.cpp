@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/geometry.hpp"
+#include "../../src/algorithm/geometry/2d/convex_cut_area.hpp"
 
 int main(){
     int size;
@@ -18,6 +18,6 @@ int main(){
     while(query_count--){
         Line line;
         std::cin >> line.a.x >> line.a.y >> line.b.x >> line.b.y;
-        std::cout << area(convex_cut(polygon, line)) << '\n';
+        std::cout << convex_cut_area(polygon, line) << '\n';
     }
 }

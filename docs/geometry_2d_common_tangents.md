@@ -1,5 +1,5 @@
 ---
-title: 2D Common Tangents (二次元円の共通接線) [CGL_7_G]
+title: 2D Common Tangents (二次元円の共通接線)
 documentation_of: ../src/algorithm/geometry/2d/common_tangents.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 2D Convex Polygon Cut (二次元凸多角形切断) [CGL_4_C]
+title: 2D Convex Polygon Cut (二次元凸多角形切断)
 documentation_of: ../src/algorithm/geometry/2d/convex_cut.hpp
 ---
 
