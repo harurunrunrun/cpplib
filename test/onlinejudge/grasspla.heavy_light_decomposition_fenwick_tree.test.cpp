@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/GRASSPLA/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/GRASSPLA/
 
 #include <algorithm>
 #include <iostream>

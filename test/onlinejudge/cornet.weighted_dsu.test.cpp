@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/CORNET/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/CORNET/
 
 #include <cstdlib>
 #include <iostream>

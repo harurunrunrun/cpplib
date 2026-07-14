@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/SEGSQRSS/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/SEGSQRSS/
 
 #include <iostream>
 #include <memory>

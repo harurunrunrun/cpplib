@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/GSS4/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/GSS4/
 
 #include <algorithm>
 #include <iostream>

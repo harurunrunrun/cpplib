@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/DISQUERY/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/DISQUERY/
 
 #include <algorithm>
 #include <iostream>

@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/MKTHNUM/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/MKTHNUM/
 
 #include <iostream>
 #include <vector>

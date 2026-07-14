@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/COT2/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/COT2/
 
 #include <algorithm>
 #include <cstddef>

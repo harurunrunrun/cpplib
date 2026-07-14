@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/KQUERY/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/KQUERY/
 
 #include <iostream>
 #include <vector>

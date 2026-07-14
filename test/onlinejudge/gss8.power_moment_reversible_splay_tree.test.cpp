@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/GSS8/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/GSS8/
 
 #include <cstddef>
 #include <cstdint>

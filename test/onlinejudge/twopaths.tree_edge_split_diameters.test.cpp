@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/TWOPATHS/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/TWOPATHS/
 
 #include <iostream>
 #include <utility>

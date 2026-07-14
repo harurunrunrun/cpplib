@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/POLQUERY/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/POLQUERY/
 
 #include <algorithm>
 #include <cstdint>

@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/SEQPAR/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/SEQPAR/
 
 #include <cstddef>
 #include <iostream>

@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/HORRIBLE/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/HORRIBLE/
 
 #include <iostream>
 #include <memory>

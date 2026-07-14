@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/ADAORANG/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/ADAORANG/
 
 #include <iostream>
 #include <memory>

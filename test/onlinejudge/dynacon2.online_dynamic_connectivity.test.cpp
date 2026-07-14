@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/DYNACON2/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/DYNACON2/
 
 #include <iostream>
 #include <string>

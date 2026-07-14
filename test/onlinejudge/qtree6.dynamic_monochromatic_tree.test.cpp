@@ -1,4 +1,4 @@
-#define PROBLEM "https://br.spoj.com/SPOJ/problems/QTREE6/"
+// competitive-verifier: PROBLEM https://br.spoj.com/SPOJ/problems/QTREE6/
 
 #include <iostream>
 #include <vector>

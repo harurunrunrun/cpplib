@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/NITTROAD/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/NITTROAD/
 
 #include <algorithm>
 #include <iostream>

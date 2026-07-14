@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/DQUERY/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/DQUERY/
 
 #include <iostream>
 #include <vector>

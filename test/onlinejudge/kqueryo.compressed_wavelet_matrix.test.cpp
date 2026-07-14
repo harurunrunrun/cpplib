@@ -1,4 +1,4 @@
-#define PROBLEM "https://www.spoj.com/problems/KQUERYO/"
+// competitive-verifier: PROBLEM https://www.spoj.com/problems/KQUERYO/
 
 #include <algorithm>
 #include <iostream>

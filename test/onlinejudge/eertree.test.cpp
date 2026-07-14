@@ -1,4 +1,4 @@
-#define PROBLEM "https://judge.yosupo.jp/problem/eertree"
+// competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/eertree
 
 #include <iostream>
 #include <memory>
