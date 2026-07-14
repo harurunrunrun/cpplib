@@ -271,7 +271,6 @@ jobs:
         env:
           SHARD_INDEX: ${{ matrix.index }}
           VERIFY_OUTCOME: ${{ steps.verifier.outcome }}
-          VERIFY_SUCCESS: ${{ steps.verifier.outputs.is-success }}
         run: |
           python3 - <<'PY'
           import json
@@ -281,7 +280,6 @@ jobs:
 
           index = int(os.environ["SHARD_INDEX"])
           outcome = os.environ.get("VERIFY_OUTCOME", "")
-          reported_success = os.environ.get("VERIFY_SUCCESS", "").lower() == "true"
           result_path = Path(f".competitive-verifier/shards/result-{index}.json")
 
           result_valid = False
@@ -295,7 +293,10 @@ jobs:
           status = {
               "index": index,
               "outcome": outcome,
-              "is_success": outcome == "success" and reported_success,
+              # The action's is-success output covers the inherited previous
+              # result too. Another shard may refresh a stale failure, so only
+              # the merged result can decide verification success.
+              "is_success": outcome == "success" and result_valid,
               "result_exists": result_path.is_file(),
               "result_valid": result_valid,
           }

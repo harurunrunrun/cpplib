@@ -154,6 +154,17 @@ def named_steps(job: dict) -> dict[str, dict]:
 
 
 class StandaloneResultsWorkflowTest(unittest.TestCase):
+    def test_verify_defers_shared_result_success_to_merged_check(self) -> None:
+        workflow = load_workflow("verify.yaml")
+        record = named_steps(workflow["jobs"]["verify"])["Record shard status"]
+
+        self.assertNotIn("VERIFY_SUCCESS", record["env"])
+        self.assertNotIn("reported_success", record["run"])
+        self.assertIn(
+            '"is_success": outcome == "success" and result_valid',
+            record["run"],
+        )
+
     def test_verify_uploads_every_standalone_shard_even_on_failure(self) -> None:
         workflow = load_workflow("verify.yaml")
         job = workflow["jobs"]["standalone-assets"]
