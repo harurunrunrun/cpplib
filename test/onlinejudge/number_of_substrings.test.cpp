@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/suffix_array.hpp"
+#include "../../src/algorithm/string/count_distinct_substrings.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -11,5 +11,5 @@ int main(){
 
     std::string text;
     std::cin >> text;
-    std::cout << number_of_distinct_substrings(text) << '\n';
+    std::cout << count_distinct_substrings(text) << '\n';
 }

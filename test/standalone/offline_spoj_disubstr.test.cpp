@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/disubstr.suffix_array.test.cpp"
+#include "../onlinejudge/disubstr.count_distinct_substrings.test.cpp"

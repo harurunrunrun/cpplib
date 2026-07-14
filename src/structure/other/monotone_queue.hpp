@@ -139,8 +139,3 @@ template<class T, int MAX_WINDOW>
 std::vector<T> sliding_window_min(const std::vector<T>& values, int window){
     return sliding_window_extreme<T, MAX_WINDOW>(values, window, std::less<T>());
 }
-
-template<class T, int MAX_WINDOW>
-std::vector<T> sliding_window_max(const std::vector<T>& values, int window){
-    return sliding_window_extreme<T, MAX_WINDOW>(values, window, std::greater<T>());
-}

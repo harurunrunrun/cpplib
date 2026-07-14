@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/adaclean.suffix_array.test.cpp"
+#include "../onlinejudge/adaclean.count_distinct_substrings_of_length.test.cpp"

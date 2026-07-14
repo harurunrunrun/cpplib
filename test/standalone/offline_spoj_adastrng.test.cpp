@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/adastrng.suffix_array.test.cpp"
+#include "../onlinejudge/adastrng.distinct_substrings_by_first_byte.test.cpp"

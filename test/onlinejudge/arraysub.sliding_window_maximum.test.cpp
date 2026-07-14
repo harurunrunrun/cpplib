@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/other/monotone_queue.hpp"
+#include "../../src/algorithm/range/sliding_window_maximum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -16,10 +16,10 @@ int main(){
     int window;
     std::cin >> window;
 
-    const auto answer = sliding_window_max<int, 100000>(values, window);
-    for(int i = 0; i < static_cast<int>(answer.size()); i++){
-        if(i != 0) std::cout << ' ';
-        std::cout << answer[static_cast<std::size_t>(i)];
+    const std::vector<int> answer = sliding_window_maximum(values, window);
+    for(int index = 0; index < static_cast<int>(answer.size()); index++){
+        if(index != 0) std::cout << ' ';
+        std::cout << answer[static_cast<std::size_t>(index)];
     }
     std::cout << '\n';
 }

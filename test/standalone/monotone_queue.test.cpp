@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include "../../src/algorithm/range/sliding_window_maximum.hpp"
 #include "../../src/structure/other/monotone_queue.hpp"
 
 template<class T>
@@ -20,7 +21,7 @@ void print_vector(const std::vector<T>& values){
 void self_test(){
     std::vector<int> values{4, 2, 2, 5, 1};
     assert((sliding_window_min<int, 8>(values, 3) == std::vector<int>{2, 2, 1}));
-    assert((sliding_window_max<int, 8>(values, 3) == std::vector<int>{4, 5, 5}));
+    assert((sliding_window_maximum(values, 3) == std::vector<int>{4, 5, 5}));
 
     MonotoneMinQueue<int, 8> queue;
     assert(queue.empty());
@@ -96,7 +97,7 @@ int main(){
         for(int& value: values) std::cin >> value;
 
         print_vector(sliding_window_min<int, 512>(values, window));
-        print_vector(sliding_window_max<int, 512>(values, window));
+        print_vector(sliding_window_maximum(values, window));
 
         MonotoneMinQueue<int, 512> queue;
         std::vector<long long> best_indices;

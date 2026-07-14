@@ -5,16 +5,16 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/suffix_array.hpp"
+#include "../../src/algorithm/string/count_distinct_substrings_of_length.hpp"
 
 int main(){
-    assert(number_of_distinct_substrings_of_length(std::string(), 1) == 0);
-    assert(number_of_distinct_substrings_of_length(std::string("aaa"), 1) == 1);
-    assert(number_of_distinct_substrings_of_length(std::string("aaa"), 2) == 1);
-    assert(number_of_distinct_substrings_of_length(std::string("abac"), 2) == 3);
-    assert(number_of_distinct_substrings_of_length(std::string("abc"), 0) == 0);
-    assert(number_of_distinct_substrings_of_length(std::string("abc"), 4) == 0);
-    assert(number_of_distinct_substrings_of_length(
+    assert(count_distinct_substrings_of_length(std::string(), 1) == 0);
+    assert(count_distinct_substrings_of_length(std::string("aaa"), 1) == 1);
+    assert(count_distinct_substrings_of_length(std::string("aaa"), 2) == 1);
+    assert(count_distinct_substrings_of_length(std::string("abac"), 2) == 3);
+    assert(count_distinct_substrings_of_length(std::string("abc"), 0) == 0);
+    assert(count_distinct_substrings_of_length(std::string("abc"), 4) == 0);
+    assert(count_distinct_substrings_of_length(
         std::vector<int>{1, 2, 1, 2}, 2
     ) == 2);
 
@@ -24,6 +24,6 @@ int main(){
         int length;
         std::string text;
         std::cin >> length >> text;
-        std::cout << number_of_distinct_substrings_of_length(text, length) << '\n';
+        std::cout << count_distinct_substrings_of_length(text, length) << '\n';
     }
 }

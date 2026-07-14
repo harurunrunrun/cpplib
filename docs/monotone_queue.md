@@ -1,5 +1,5 @@
 ---
-title: Monotone Queue (単調キュー) [ARRAYSUB] [DSL_3_D]
+title: Monotone Queue (単調キュー) [DSL_3_D]
 documentation_of: ../src/structure/other/monotone_queue.hpp
 ---
 
@@ -33,10 +33,9 @@ long long best_index() const
 ~~~cpp
 vector<T> sliding_window_extreme<T, MAX_WINDOW>(values, window, compare)
 vector<T> sliding_window_min<T, MAX_WINDOW>(values, window)
-vector<T> sliding_window_max<T, MAX_WINDOW>(values, window)
 ~~~
 
-長さ `window` の各連続部分列に対する最小値または最大値を、左から順に返す。
+長さ `window` の各連続部分列に対する `Compare` 上の最良値を、左から順に返す。
 
 # 時間計算量
 
