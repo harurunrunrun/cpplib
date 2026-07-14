@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "../../src/approximate/graph/fiduccia_mattheyses.hpp"
+#include "../../src/approximate/graph/graph_partition.hpp"
 #include "../../src/approximate/graph/kernighan_lin.hpp"
 #include "../../src/approximate/graph/multilevel_partitioning.hpp"
 #include "../../src/approximate/graph/spectral_bisection.hpp"

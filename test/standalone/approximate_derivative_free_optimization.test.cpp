@@ -11,6 +11,7 @@
 
 #include "../../src/approximate/optimization/compass_search.hpp"
 #include "../../src/approximate/optimization/nelder_mead.hpp"
+#include "../../src/approximate/optimization/detail/common.hpp"
 
 namespace {
 

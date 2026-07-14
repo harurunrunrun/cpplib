@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 
+#include "../../src/algorithm/math/polynomial_common.hpp"
 #include "../../src/algorithm/math/polynomial_product.hpp"
 
 namespace{
@@ -48,6 +49,30 @@ void check_case(const std::vector<polynomial>& polynomials){
 }
 
 void self_test(){
+    {
+        polynomial values{mint(1), mint(2), mint(0), mint(0)};
+        math::polynomial_internal::trim(values);
+        assert((values == polynomial{mint(1), mint(2)}));
+        assert((math::polynomial_internal::normalized<MOD>(
+            polynomial{mint(3), mint(0)}
+        ) == polynomial{mint(3)}));
+        assert((math::polynomial_internal::naive_multiply<MOD>(
+            polynomial{mint(1), mint(2)},
+            polynomial{mint(3), mint(4)}
+        ) == polynomial{mint(3), mint(10), mint(8)}));
+        assert((math::polynomial_multiply<MOD>(
+            polynomial{mint(1), mint(2)},
+            polynomial{mint(3), mint(4)}
+        ) == polynomial{mint(3), mint(10), mint(8)}));
+        assert((math::polynomial_add<MOD>(
+            polynomial{mint(1), mint(2)},
+            polynomial{mint(3), mint(-2), mint(5)}
+        ) == polynomial{mint(4), mint(0), mint(5)}));
+        assert((math::polynomial_derivative<MOD>(
+            polynomial{mint(7), mint(3), mint(4)}
+        ) == polynomial{mint(3), mint(8)}));
+    }
+
     check_case({});
     check_case({{}});
     check_case({{mint(2)}, {mint(1), mint(2)}, {mint(3), mint(2), mint(1)}});

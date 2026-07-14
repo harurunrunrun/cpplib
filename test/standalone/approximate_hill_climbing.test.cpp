@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "../../src/approximate/metaheuristic/hill_climbing.hpp"
+#include "../../src/approximate/metaheuristic/search_result.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -66,6 +67,22 @@ int main(){
             random_restart_hill_climbing(
                 restart_generator, neighborhood, evaluate, 3, limit, random
             );
+        const auto validate_result = [&](const auto& result){
+            assert(result.score == evaluate(result.state));
+            assert(result.evaluations >= 1);
+            assert(result.accepted_moves <= result.iterations);
+        };
+        validate_result(best);
+        validate_result(first);
+        validate_result(stochastic);
+        validate_result(sampled);
+        validate_result(restarted);
+        assert(stochastic.iterations == limit);
+        assert(stochastic.evaluations == limit + 1);
+        const auto sample_count =
+            static_cast<std::size_t>(upper - lower) + 1;
+        assert(sampled.iterations == sample_count);
+        assert(sampled.evaluations == sample_count);
         std::cout << best.score << ' ' << first.score << ' '
                   << stochastic.score << ' ' << sampled.score << ' '
                   << restarted.score << '\n';

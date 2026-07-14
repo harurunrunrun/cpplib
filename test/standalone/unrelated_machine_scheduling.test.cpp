@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "../../src/approximate/scheduling/unrelated_machine.hpp"
+#include "../../src/approximate/scheduling/scheduling_common.hpp"
 
 namespace {
 
@@ -51,6 +52,12 @@ bool throws_invalid(Function&& function){
 
 bool boundary_tests(){
     using namespace approximate::scheduling;
+    if(!scheduling_internal::finite_value(1.0)
+       || scheduling_internal::finite_value(
+            std::numeric_limits<double>::infinity()
+       )) return false;
+    if(scheduling_internal::checked_time_add(2LL, 3LL) != 5LL) return false;
+    scheduling_internal::validate_nonnegative_time(0LL, "valid time");
     if(min_min_schedule(std::vector<std::vector<long long>>{}).makespan != 0) return false;
     if(!throws_invalid([]{ (void)max_min_schedule(std::vector<std::vector<long long>>{{}}); })) return false;
     if(!throws_invalid([]{ (void)sufferage_schedule(std::vector<std::vector<long long>>{{1, 2}, {3}}); })) return false;

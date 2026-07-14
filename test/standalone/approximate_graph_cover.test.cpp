@@ -10,6 +10,7 @@
 #include "../../src/approximate/graph/dominating_set.hpp"
 #include "../../src/approximate/graph/independent_set.hpp"
 #include "../../src/approximate/graph/vertex_cover.hpp"
+#include "../../src/approximate/graph/detail/undirected_graph.hpp"
 
 namespace {
 
@@ -37,6 +38,17 @@ int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
+    const auto normalized = detail::make_undirected_graph(
+        3, {{0, 1}, {1, 0}, {2, 2}}
+    );
+    if(normalized.adjacency != std::vector<std::vector<std::size_t>>{
+        {1}, {0}, {}
+    }){
+        return 2;
+    }
+    if(normalized.self_loop != std::vector<bool>{false, false, true}){
+        return 2;
+    }
     bool rejected = false;
     try{
         static_cast<void>(greedy_dominating_set(1, {{0, 1}}));

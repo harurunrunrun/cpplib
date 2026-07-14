@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/polynomial_interpolation.hpp"
+#include "../../src/algorithm/math/polynomial_interpolation_fast.hpp"
 
 namespace{
 

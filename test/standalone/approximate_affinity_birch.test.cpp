@@ -12,6 +12,8 @@
 
 #include "../../src/approximate/clustering/affinity_propagation.hpp"
 #include "../../src/approximate/clustering/birch_features.hpp"
+#include "../../src/approximate/clustering/common.hpp"
+#include "../../src/approximate/clustering/detail/stable_numeric.hpp"
 
 namespace {
 
@@ -37,6 +39,17 @@ void require_throws(Function&& function){
 
 void boundary_tests(){
     using namespace approximate::clustering;
+    const DensePoint<int> origin{0, 0};
+    const DensePoint<int> three_four{3, 4};
+    require(squared_euclidean_distance(origin, three_four) == 25.0L);
+    require(euclidean_distance(origin, three_four) == 5.0L);
+    require(detail::stable_euclidean_distance(origin, three_four) == 5.0L);
+    require(detail::checked_nonnegative_product(
+        3.0L, 4.0L, "unexpected product overflow"
+    ) == 12.0L);
+    require(detail::checked_finite_sum(
+        3.0L, 4.0L, "unexpected sum overflow"
+    ) == 7.0L);
     require(affinity_propagation(DensePoints<int>{}).labels.empty());
     const auto singleton = affinity_propagation(DensePoints<int>{{7}});
     require(singleton.exemplars == std::vector<std::size_t>({0}));

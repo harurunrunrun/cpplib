@@ -11,6 +11,7 @@
 
 #include "../../src/approximate/optimization/hooke_jeeves.hpp"
 #include "../../src/approximate/optimization/powell.hpp"
+#include "../../src/approximate/optimization/detail/direct_search_common.hpp"
 
 namespace {
 

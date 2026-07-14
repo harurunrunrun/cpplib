@@ -10,9 +10,11 @@
 #include <vector>
 
 #include "../../src/approximate/graph/chinese_whispers.hpp"
+#include "../../src/approximate/graph/community_detection.hpp"
 #include "../../src/approximate/graph/greedy_modularity.hpp"
 #include "../../src/approximate/graph/label_propagation.hpp"
 #include "../../src/approximate/graph/louvain.hpp"
+#include "../../src/approximate/graph/weighted_undirected_graph.hpp"
 
 namespace {
 

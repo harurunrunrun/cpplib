@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 #include <cassert>
 #include <iostream>
+#include "../../src/structure/segtree/wide_segtree_persistence_common.hpp"
 #include "../../src/structure/segtree/persistent_widesegtree.hpp"
 
 using Tree = PersistentWideSegtree<1000000000039LL, 10000, 256>;

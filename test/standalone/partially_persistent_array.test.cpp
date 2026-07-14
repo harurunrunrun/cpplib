@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "../../src/structure/other/partially_persistent_storage.hpp"
 #include "../../src/structure/array/partially_persistent_array.hpp"
 
 struct Box{

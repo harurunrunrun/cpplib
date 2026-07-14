@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "../../src/structure/tree/top_tree_internal.hpp"
 #include "../../src/structure/tree/top_tree.hpp"
 #include "../../src/structure/types/monoid.hpp"
 

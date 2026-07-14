@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
+#include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area/detail.hpp"
 
 #include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area/signed_circle_polygon_intersection_area.hpp"
 #include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area.hpp"

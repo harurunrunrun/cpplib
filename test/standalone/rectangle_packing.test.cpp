@@ -8,7 +8,13 @@
 #include <utility>
 #include <vector>
 
+#include "../../src/approximate/packing/bottom_left_packing.hpp"
+#include "../../src/approximate/packing/guillotine_packing.hpp"
+#include "../../src/approximate/packing/maxrects_packing.hpp"
 #include "../../src/approximate/packing/rectangle_packing.hpp"
+#include "../../src/approximate/packing/shelf_packing.hpp"
+#include "../../src/approximate/packing/skyline_packing.hpp"
+#include "../../src/approximate/packing/rectangle_packing_common.hpp"
 
 namespace {
 

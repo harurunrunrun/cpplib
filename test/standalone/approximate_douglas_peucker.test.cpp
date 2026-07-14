@@ -10,10 +10,17 @@
 #include <vector>
 
 #include "../../src/approximate/geometry/douglas_peucker.hpp"
+#include "../../src/approximate/geometry/detail/polyline_common.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+    const std::array<long double, 2> probe{1.0L, 1.0L};
+    const std::array<long double, 2> first{0.0L, 0.0L};
+    const std::array<long double, 2> second{2.0L, 0.0L};
+    assert(approximate::geometry::detail::point_segment_squared_distance(
+        probe, first, second
+    ) == 1.0L);
     std::size_t n;
     long double tolerance;
     if(!(std::cin >> n >> tolerance)) return 0;

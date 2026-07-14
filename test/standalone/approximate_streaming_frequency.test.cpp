@@ -11,10 +11,22 @@
 #include "../../src/approximate/streaming/cuckoo_filter.hpp"
 #include "../../src/approximate/streaming/count_min_sketch.hpp"
 #include "../../src/approximate/streaming/count_sketch.hpp"
+#include "../../src/approximate/streaming/hash.hpp"
 
 int main(){
     int count;
     if(!(std::cin >> count)) return 0;
+    using approximate_streaming_detail::key_hash;
+    using approximate_streaming_detail::splitmix64;
+    using approximate_streaming_detail::unit_open;
+    assert(splitmix64(0) == 0xe220a8397b1dcdafULL);
+    assert(splitmix64(0) != splitmix64(1));
+    assert(key_hash(std::uint64_t{42}, 7) == key_hash(std::uint64_t{42}, 7));
+    const long double minimum_unit = unit_open(0);
+    const long double maximum_unit = unit_open(~std::uint64_t{0});
+    assert(0.0L < minimum_unit && minimum_unit < maximum_unit);
+    assert(maximum_unit < 1.0L);
+
     std::vector<std::uint64_t> values(static_cast<std::size_t>(count));
     BloomFilter<65536, 7> bloom(12345);
     CountingBloomFilter<65536, 7> counting(12345);

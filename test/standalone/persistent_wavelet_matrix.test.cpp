@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "../../src/structure/wavelet_matrix/detail/persistent_block_reference.hpp"
 #include "../../src/structure/wavelet_matrix/partially_persistent_wavelet_matrix.hpp"
 #include "../../src/structure/wavelet_matrix/persistent_wavelet_matrix.hpp"
 

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include "../../src/algorithm/matching/minimum_weight_general_matching_internal.hpp"
 #include "../../src/algorithm/matching/minimum_weight_general_matching.hpp"
 
 std::pair<int, long long> brute(

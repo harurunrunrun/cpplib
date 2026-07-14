@@ -12,6 +12,8 @@
 
 #include "../../src/approximate/optimization/nonlinear_conjugate_gradient.hpp"
 #include "../../src/approximate/optimization/quasi_newton.hpp"
+#include "../../src/approximate/optimization/detail/advanced_common.hpp"
+#include "../../src/approximate/optimization/optimization_result.hpp"
 
 namespace {
 

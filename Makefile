@@ -31,13 +31,14 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-wrapper-test verifier-resolve standalone-assets-test standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-wrapper-test verifier-resolve test-coverage-check standalone-assets-test standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
 	@echo "make verify LOCAL_VERIFY_JOBS=N  local verifyの並列数を指定 (default: $(LOCAL_VERIFY_JOBS))"
 	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
 	@echo "make docs-title-check  docsの英日併記タイトルを検査"
+	@echo "make test-coverage-check  全headerに直接対象テストがあることを検査"
 	@echo "make docs-coverage-check  全headerのdocsと注意点見出しを検査"
 	@echo "make docs    testを実行せずHTMLを$(DOCS_OUTPUT)へ生成"
 	@echo "make docs-serve  HTMLを生成してlocalhost:4000で配信"
@@ -60,7 +61,11 @@ verifier-resolve: verifier-setup verifier-wrapper-test
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
-standalone-assets-test:
+test-coverage-check:
+	$(PYTHON) scripts/test_list_untested_headers.py
+	$(PYTHON) scripts/list_untested_headers.py --require-complete
+
+standalone-assets-test: test-coverage-check
 	$(PYTHON) scripts/test_run_standalone_assets.py
 	$(PYTHON) scripts/test_check_unsupported_onlinejudge_assets.py
 	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py

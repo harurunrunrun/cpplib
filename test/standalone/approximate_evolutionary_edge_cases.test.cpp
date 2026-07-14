@@ -17,6 +17,10 @@
 #include "../../src/approximate/evolutionary/genetic_algorithm.hpp"
 #include "../../src/approximate/evolutionary/hybrid_genetic_algorithm.hpp"
 #include "../../src/approximate/evolutionary/particle_swarm_optimization.hpp"
+#include "../../src/approximate/evolutionary/detail/box_constraints.hpp"
+#include "../../src/approximate/evolutionary/detail/objective.hpp"
+#include "../../src/approximate/evolutionary/detail/safe_count.hpp"
+#include "../../src/approximate/evolutionary/evolution_result.hpp"
 
 template<class Exception, class Callable>
 bool expect(Callable callable){
@@ -35,6 +39,31 @@ int main(){
     const auto crossover = [](const int& lhs, const int&, auto&){ return lhs; };
     const auto mutate = [](int&, auto&){};
     const auto int_score = [](const int& value){ return value; };
+    const std::vector<double> clamp_lower{0.0, -1.0, -1.0};
+    const std::vector<double> clamp_upper{1.0, 1.0, 1.0};
+    approximate::evolutionary::detail::validate_box(
+        clamp_lower, clamp_upper, 3
+    );
+    std::vector<double> clamped{
+        std::numeric_limits<double>::quiet_NaN(), -2.0, 2.0
+    };
+    approximate::evolutionary::detail::clamp_to_box(
+        clamped, clamp_lower, clamp_upper
+    );
+    assert((clamped == std::vector<double>{0.0, -1.0, 1.0}));
+    assert(approximate::evolutionary::detail::checked_add(2, 3, "overflow") == 5);
+    assert(approximate::evolutionary::detail::checked_multiply_add(
+        2, 3, 4, "overflow"
+    ) == 10);
+    auto doubled_score = [](const int& value){ return value * 2; };
+    assert(approximate::evolutionary::detail::evaluate_objective(
+        doubled_score, 3
+    ) == 6);
+    const approximate::evolutionary::EvolutionResult<int, int> invariant_result{
+        3, 6, 4, 5
+    };
+    assert(invariant_result.score == doubled_score(invariant_result.individual));
+    assert(invariant_result.iterations == 4 && invariant_result.evaluations == 5);
 
     std::size_t calls = 0;
     assert(expect<std::length_error>([&]{

@@ -13,9 +13,12 @@
 #include <vector>
 
 #include "../../src/approximate/facility/add_drop_k_median.hpp"
+#include "../../src/approximate/facility/add_k_median.hpp"
 #include "../../src/approximate/facility/drop_k_median.hpp"
 #include "../../src/approximate/facility/local_search_k_median.hpp"
+#include "../../src/approximate/facility/teitz_bart.hpp"
 #include "../../src/approximate/facility/vertex_substitution.hpp"
+#include "../../src/approximate/facility/common.hpp"
 
 using approximate::facility::KMedianResult;
 

@@ -8,6 +8,7 @@
 
 #include "../../src/approximate/set_cover/greedy_max_coverage.hpp"
 #include "../../src/approximate/set_cover/greedy_set_cover.hpp"
+#include "../../src/approximate/set_cover/detail/set_system.hpp"
 
 namespace {
 
@@ -22,6 +23,23 @@ int main(){
     using namespace approximate::set_cover;
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
+    const auto system = detail::normalize_set_system(
+        3, {{2, 1, 2}, {1}}
+    );
+    if(system.sets != std::vector<std::vector<std::size_t>>{
+        {1, 2}, {1}
+    }){
+        return 2;
+    }
+    if(system.incidence != std::vector<std::vector<std::size_t>>{
+        {}, {0, 1}, {0}
+    }){
+        return 2;
+    }
+    if(detail::collect_elements(
+        std::vector<bool>{true, false, true}, false
+    ) != std::vector<std::size_t>{1}) return 2;
 
     bool rejected = false;
     try{

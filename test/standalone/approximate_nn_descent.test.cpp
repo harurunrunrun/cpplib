@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <vector>
 #include "../../src/approximate/nearest_neighbor/nn_descent.hpp"
+#include "../../src/approximate/nearest_neighbor/ann_common.hpp"
 namespace {
 using Point = std::array<long double, 2>;
 using Descent = approximate::nearest_neighbor::NnDescent<long double, 2>;

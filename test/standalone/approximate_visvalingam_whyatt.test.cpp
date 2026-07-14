@@ -9,10 +9,17 @@
 #include <vector>
 
 #include "../../src/approximate/geometry/visvalingam_whyatt.hpp"
+#include "../../src/approximate/geometry/detail/polyline_common.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+    const std::array<long double, 2> first{0.0L, 0.0L};
+    const std::array<long double, 2> middle{1.0L, 0.0L};
+    const std::array<long double, 2> last{0.0L, 1.0L};
+    assert(approximate::geometry::detail::doubled_triangle_area(
+        first, middle, last
+    ) == 1.0L);
     std::size_t n;
     std::size_t target;
     if(!(std::cin >> n >> target)) return 0;

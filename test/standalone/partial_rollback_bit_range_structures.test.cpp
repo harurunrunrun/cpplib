@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 
+#include "../../src/structure/segtree/detail/partially_persistent_bit_range_tree.hpp"
+#include "../../src/structure/segtree/detail/rollback_bit_range_tree.hpp"
 #include "../../src/structure/segtree/partially_persistent_bitassign_rangesum.hpp"
 #include "../../src/structure/segtree/partially_persistent_bitassign_rangesum_rangeflip.hpp"
 #include "../../src/structure/segtree/partially_persistent_bitoverwrite_rangesum.hpp"

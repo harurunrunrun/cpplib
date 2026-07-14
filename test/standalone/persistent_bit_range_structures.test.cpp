@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#include "../../src/structure/segtree/detail/persistent_bit_range_tree.hpp"
 #include "../../src/structure/segtree/persistent_bitassign_rangesum.hpp"
 #include "../../src/structure/segtree/persistent_bitassign_rangesum_rangeflip.hpp"
 #include "../../src/structure/segtree/persistent_bitoverwrite_rangesum.hpp"

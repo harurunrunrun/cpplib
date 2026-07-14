@@ -1,12 +1,15 @@
 // competitive-verifier: STANDALONE
 
+#include <cassert>
 #include <cstddef>
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include <vector>
 
 #include "../../src/approximate/routing/local_moves.hpp"
 #include "../../src/approximate/routing/tour_cost.hpp"
+#include "../../src/approximate/routing/distance_matrix.hpp"
 
 namespace {
 
@@ -38,6 +41,28 @@ int main(){
     using namespace approximate::routing;
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
+    const std::vector<std::vector<int>> valid_distance{
+        {0, 3}, {3, 0}
+    };
+    assert(internal::validate_distance_matrix(valid_distance) == 2);
+    internal::validate_tour_vertices({0, 1}, 2);
+    bool rejected = false;
+    try{
+        static_cast<void>(internal::validate_distance_matrix(
+            std::vector<std::vector<int>>{{0, 1}, {1}}
+        ));
+    }catch(const std::invalid_argument&){
+        rejected = true;
+    }
+    assert(rejected);
+    rejected = false;
+    try{
+        internal::validate_tour_vertices({0, -1}, 2);
+    }catch(const std::out_of_range&){
+        rejected = true;
+    }
+    assert(rejected);
 
     int query_count = 0;
     std::cin >> query_count;
