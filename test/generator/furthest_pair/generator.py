@@ -91,6 +91,15 @@ def main() -> None:
             (-280, 6810),
             (-189, 4855),
         ],
+        [
+            (-(1 << 63), -(1 << 63)),
+            ((1 << 63) - 1, (1 << 63) - 1),
+        ],
+        [
+            (-(1 << 63), 0),
+            ((1 << 63) - 1, 1 << 33),
+            (-(1 << 63), 1 << 34),
+        ],
     ]
     basic = [(points, furthest_pair_brute(points)) for points in point_sets]
     write_batch(args.out_dir, 0, basic)

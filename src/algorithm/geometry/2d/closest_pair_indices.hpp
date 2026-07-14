@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/multiprecision/cpp_int.hpp>
+
 #include <algorithm>
 #include <concepts>
 #include <cstddef>
@@ -11,7 +13,7 @@
 struct ClosestPairResult{
     std::size_t first = std::numeric_limits<std::size_t>::max();
     std::size_t second = std::numeric_limits<std::size_t>::max();
-    __uint128_t squared_distance = 0;
+    boost::multiprecision::uint256_t squared_distance = 0;
 
     bool exists() const{
         return first != std::numeric_limits<std::size_t>::max();
@@ -22,23 +24,28 @@ namespace closest_pair_indices_detail{
 
 template<std::integral Coordinate>
 struct IndexedPoint{
+    static_assert(
+        sizeof(Coordinate) <= sizeof(std::uint64_t),
+        "closest_pair_indices supports integer coordinates up to 64 bits"
+    );
     Coordinate x;
     Coordinate y;
     std::size_t index;
 };
 
 template<std::integral Coordinate>
-__uint128_t square_difference(Coordinate first, Coordinate second){
-    const __int128_t difference = static_cast<__int128_t>(first)
-        - static_cast<__int128_t>(second);
-    const __uint128_t magnitude = difference < 0
-        ? static_cast<__uint128_t>(-difference)
-        : static_cast<__uint128_t>(difference);
-    return magnitude * magnitude;
+boost::multiprecision::uint256_t square_difference(
+    Coordinate first,
+    Coordinate second
+){
+    using boost::multiprecision::int256_t;
+    using boost::multiprecision::uint256_t;
+    const int256_t difference = int256_t(first) - int256_t(second);
+    return uint256_t(difference * difference);
 }
 
 template<std::integral Coordinate>
-__uint128_t squared_distance(
+boost::multiprecision::uint256_t squared_distance(
     const IndexedPoint<Coordinate>& first,
     const IndexedPoint<Coordinate>& second
 ){
@@ -50,7 +57,7 @@ inline void update(
     ClosestPairResult& result,
     std::size_t first,
     std::size_t second,
-    __uint128_t distance
+    const boost::multiprecision::uint256_t& distance
 ){
     if(first > second) std::swap(first, second);
     if(!result.exists() || distance < result.squared_distance

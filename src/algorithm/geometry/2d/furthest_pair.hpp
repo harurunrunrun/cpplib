@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/multiprecision/cpp_int.hpp>
+
 #include <algorithm>
 #include <concepts>
 #include <cstddef>
@@ -11,7 +13,7 @@
 struct FurthestPairResult{
     std::size_t first = std::numeric_limits<std::size_t>::max();
     std::size_t second = std::numeric_limits<std::size_t>::max();
-    __uint128_t squared_distance = 0;
+    boost::multiprecision::uint256_t squared_distance = 0;
 
     bool exists() const{
         return first != std::numeric_limits<std::size_t>::max();
@@ -22,38 +24,39 @@ namespace furthest_pair_detail{
 
 template<std::integral Coordinate>
 struct IndexedPoint{
+    static_assert(
+        sizeof(Coordinate) <= sizeof(std::uint64_t),
+        "furthest_pair supports integer coordinates up to 64 bits"
+    );
     Coordinate x;
     Coordinate y;
     std::size_t index;
 };
 
 template<std::integral Coordinate>
-__int128_t cross(
+boost::multiprecision::int256_t cross(
     const IndexedPoint<Coordinate>& first,
     const IndexedPoint<Coordinate>& second,
     const IndexedPoint<Coordinate>& third
 ){
-    const __int128_t first_x = static_cast<__int128_t>(second.x)
-        - static_cast<__int128_t>(first.x);
-    const __int128_t first_y = static_cast<__int128_t>(second.y)
-        - static_cast<__int128_t>(first.y);
-    const __int128_t second_x = static_cast<__int128_t>(third.x)
-        - static_cast<__int128_t>(first.x);
-    const __int128_t second_y = static_cast<__int128_t>(third.y)
-        - static_cast<__int128_t>(first.y);
+    using boost::multiprecision::int256_t;
+    const int256_t first_x = int256_t(second.x) - int256_t(first.x);
+    const int256_t first_y = int256_t(second.y) - int256_t(first.y);
+    const int256_t second_x = int256_t(third.x) - int256_t(first.x);
+    const int256_t second_y = int256_t(third.y) - int256_t(first.y);
     return first_x * second_y - first_y * second_x;
 }
 
 template<std::integral Coordinate>
-__uint128_t squared_distance(
+boost::multiprecision::uint256_t squared_distance(
     const IndexedPoint<Coordinate>& first,
     const IndexedPoint<Coordinate>& second
 ){
-    const __int128_t dx = static_cast<__int128_t>(first.x)
-        - static_cast<__int128_t>(second.x);
-    const __int128_t dy = static_cast<__int128_t>(first.y)
-        - static_cast<__int128_t>(second.y);
-    return static_cast<__uint128_t>(dx * dx + dy * dy);
+    using boost::multiprecision::int256_t;
+    using boost::multiprecision::uint256_t;
+    const int256_t dx = int256_t(first.x) - int256_t(second.x);
+    const int256_t dy = int256_t(first.y) - int256_t(second.y);
+    return uint256_t(dx * dx + dy * dy);
 }
 
 }  // namespace furthest_pair_detail
@@ -113,7 +116,7 @@ FurthestPairResult furthest_pair(
     FurthestPairResult result;
     const auto update = [&result](const IndexedPoint& first, const IndexedPoint& second){
         if(first.index == second.index) return;
-        const __uint128_t distance =
+        const boost::multiprecision::uint256_t distance =
             furthest_pair_detail::squared_distance(first, second);
         const std::size_t first_index = std::min(first.index, second.index);
         const std::size_t second_index = std::max(first.index, second.index);
@@ -136,10 +139,10 @@ FurthestPairResult furthest_pair(
         const std::size_t next_index = (index + 1) % size;
         while(true){
             const std::size_t next_opposite = (opposite + 1) % size;
-            const __int128_t current_area = furthest_pair_detail::cross(
+            const boost::multiprecision::int256_t current_area = furthest_pair_detail::cross(
                 hull[index], hull[next_index], hull[opposite]
             );
-            const __int128_t next_area = furthest_pair_detail::cross(
+            const boost::multiprecision::int256_t next_area = furthest_pair_detail::cross(
                 hull[index], hull[next_index], hull[next_opposite]
             );
             if(next_area <= current_area) break;
@@ -149,10 +152,10 @@ FurthestPairResult furthest_pair(
         update(hull[next_index], hull[opposite]);
 
         const std::size_t next_opposite = (opposite + 1) % size;
-        const __int128_t current_area = furthest_pair_detail::cross(
+        const boost::multiprecision::int256_t current_area = furthest_pair_detail::cross(
             hull[index], hull[next_index], hull[opposite]
         );
-        const __int128_t next_area = furthest_pair_detail::cross(
+        const boost::multiprecision::int256_t next_area = furthest_pair_detail::cross(
             hull[index], hull[next_index], hull[next_opposite]
         );
         if(next_area == current_area){

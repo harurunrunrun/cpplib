@@ -3,10 +3,10 @@
 #include <cassert>
 #include <cstddef>
 #include <iostream>
+#include <limits>
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/furthest_pair.hpp"
 #include "../../src/algorithm/geometry/2d/furthest_pair.hpp"
 
 int main(){
@@ -17,6 +17,37 @@ int main(){
     assert(!furthest_pair(
         std::vector<std::pair<long long, long long>>{{3, 4}}
     ).exists());
+
+    const long long minimum = std::numeric_limits<long long>::min();
+    const long long maximum = std::numeric_limits<long long>::max();
+    const boost::multiprecision::uint256_t full_difference =
+        std::numeric_limits<unsigned long long>::max();
+    const boost::multiprecision::uint256_t full_squared_distance =
+        2 * full_difference * full_difference;
+    const FurthestPairResult signed_boundary = furthest_pair(
+        std::vector<std::pair<long long, long long>>{
+            {minimum, minimum}, {maximum, maximum}
+        }
+    );
+    assert(signed_boundary.first == 0 && signed_boundary.second == 1);
+    assert(signed_boundary.squared_distance == full_squared_distance);
+    const FurthestPairResult unsigned_boundary = furthest_pair(
+        std::vector<std::pair<unsigned long long, unsigned long long>>{
+            {0, 0},
+            {
+                std::numeric_limits<unsigned long long>::max(),
+                std::numeric_limits<unsigned long long>::max()
+            }
+        }
+    );
+    assert(unsigned_boundary.squared_distance == full_squared_distance);
+
+    const FurthestPairResult overflow_order = furthest_pair(
+        std::vector<std::pair<long long, long long>>{
+            {minimum, 0}, {maximum, 1LL << 33}, {minimum, 1LL << 34}
+        }
+    );
+    assert(overflow_order.first == 0 && overflow_order.second == 1);
 
     int test_count;
     std::cin >> test_count;
