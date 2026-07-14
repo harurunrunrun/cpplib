@@ -1,4 +1,5 @@
 // competitive-verifier: PROBLEM https://onlinejudge.u-aizu.ac.jp/problems/CGL_2_C
+// competitive-verifier: ERROR 1e-8
 
 #include <iomanip>
 #include <iostream>
@@ -8,7 +9,7 @@
 int main(){
     int query_count;
     std::cin >> query_count;
-    std::cout << std::fixed << std::setprecision(12);
+    std::cout << std::fixed << std::setprecision(10);
     while(query_count--){
         Segment a, b;
         std::cin >> a.a.x >> a.a.y >> a.b.x >> a.b.y;

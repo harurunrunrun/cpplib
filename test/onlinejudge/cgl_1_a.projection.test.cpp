@@ -1,4 +1,5 @@
 // competitive-verifier: PROBLEM https://onlinejudge.u-aizu.ac.jp/problems/CGL_1_A
+// competitive-verifier: ERROR 1e-8
 
 #include <iomanip>
 #include <iostream>
@@ -10,7 +11,7 @@ int main(){
     std::cin >> line.a.x >> line.a.y >> line.b.x >> line.b.y;
     int query_count;
     std::cin >> query_count;
-    std::cout << std::fixed << std::setprecision(12);
+    std::cout << std::fixed << std::setprecision(10);
     while(query_count--){
         Point point;
         std::cin >> point.x >> point.y;

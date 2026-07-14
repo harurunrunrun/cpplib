@@ -1,4 +1,5 @@
 // competitive-verifier: PROBLEM https://onlinejudge.u-aizu.ac.jp/problems/CGL_7_G
+// competitive-verifier: ERROR 1e-8
 
 #include <algorithm>
 #include <iomanip>
@@ -14,6 +15,6 @@ int main(){
     std::vector<Point> points;
     for(const Line& tangent: common_tangents(a, b)) points.push_back(tangent.a);
     std::sort(points.begin(), points.end());
-    std::cout << std::fixed << std::setprecision(12);
+    std::cout << std::fixed << std::setprecision(10);
     for(const Point& point: points) std::cout << point.x << ' ' << point.y << '\n';
 }
