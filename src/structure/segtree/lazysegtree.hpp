@@ -165,16 +165,16 @@ struct LazySegtree{
                     push((r - 1) >> i);
                 }
             }
-            [this, &f](int l, int r){
-                while(l < r){
-                    if(l & 1){
-                        all_apply(l++, f);
+            [this, &f](int left, int right){
+                while(left < right){
+                    if(left & 1){
+                        all_apply(left++, f);
                     }
-                    if(r & 1){
-                        all_apply(--r, f);
+                    if(right & 1){
+                        all_apply(--right, f);
                     }
-                    l >>= 1;
-                    r >>= 1;
+                    left >>= 1;
+                    right >>= 1;
                 }
             }(l, r);
             for(int i = 1; i <= height; i++){

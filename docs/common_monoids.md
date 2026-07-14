@@ -23,8 +23,33 @@ documentation_of: ../src/structure/types/common_monoids.hpp
 | `XorMonoid<T>` | bitwise xor | `0` | $O(1)$ | $O(1)$ |
 | `BitAndMonoid<T>` | bitwise and | `~T(0)` | $O(1)$ | $O(1)$ |
 | `BitOrMonoid<T>` | bitwise or | `0` | $O(1)$ | $O(1)$ |
+| `NonEmptyMaxSubarrayMonoid<T>` | 非空最大部分配列aggregateの結合 | `empty == true` | $O(1)$ | $O(1)$ |
 
 `GcdMonoid`、`LcmMonoid`、bitwise 3種は整数型用である。
+
+### `NonEmptyMaxSubarrayMonoid<T>`
+
+非空最大部分配列を表す `Monoid` alias。区間値
+`NonEmptyMaxSubarrayAggregate<T>` は次の公開fieldを持つ。
+
+| field | 意味 | 参照の計算量 |
+| --- | --- | --- |
+| `empty` | 空列単位元なら `true` | $O(1)$ |
+| `sum` | 非空列の全要素の和 | $O(1)$ |
+| `prefix` | 非空最大prefix和 | $O(1)$ |
+| `suffix` | 非空最大suffix和 | $O(1)$ |
+| `best` | 非空最大部分配列和 | $O(1)$ |
+
+`non_empty_max_subarray_singleton(value)` は1要素aggregate
+`{false,value,value,value,value}` を $O(1)$ 時間・空間で返す。
+`op` は列の順序を保存する非可換な結合で $O(1)$、`e` は
+`empty == true` の空列で $O(1)$ である。空列単位元の数値fieldは0だが、
+意味を持たない。
+
+```cpp
+constexpr NonEmptyMaxSubarrayMonoid<long long> non_empty_max_subarray{};
+auto value = non_empty_max_subarray_singleton(-3LL);
+```
 
 ## 長さを使わない作用
 
@@ -36,6 +61,39 @@ documentation_of: ../src/structure/types/common_monoids.hpp
 | `AssignMaxMonoidAct<T, Identity>` | max | 代入 | 代入なし | $O(1)$ |
 | `ChminMinMonoidAct<T, Identity>` | min | chmin | `Identity` | $O(1)$ |
 | `ChmaxMaxMonoidAct<T, Identity>` | max | chmax | `Identity` | $O(1)$ |
+| `AddHistoricalMaxMonoidAct<T>` | 現在値のmax・過去に到達した値のmax | 各要素へ加算 | `HistoricalAdd<T>{0,0}` | $O(1)$ |
+
+`HistoricalMaxAggregate<T>` は次の公開fieldを持つ。
+
+| field | 意味 | 参照の計算量 |
+| --- | --- | --- |
+| `current` | 現在値の区間最大値 | $O(1)$ |
+| `historical` | 初期化以降に到達した値の区間最大値 | $O(1)$ |
+
+`historical_max_singleton(value)` は両fieldが `value` の1要素aggregateを
+$O(1)$ 時間・空間で返す。monoidの空区間単位元では両fieldが
+`numeric_limits<T>::lowest()` になる。
+
+`HistoricalAdd<T>` は作用列について次の公開fieldを持つ。
+
+| field | 意味 | 参照の計算量 |
+| --- | --- | --- |
+| `total` | 作用列全体の加算量 | $O(1)$ |
+| `peak` | 空prefixを含む作用列の最大prefix加算量 | $O(1)$ |
+
+`historical_add(delta)` は1回の加算を表す
+`{delta, max(T(0), delta)}` を $O(1)$ 時間・空間で返す。
+`composition(newer, older)` は先に `older`、後に `newer` を適用し、
+
+```cpp
+{
+    older.total + newer.total,
+    max(older.peak, older.total + newer.peak)
+}
+```
+
+を返す。`op`、`e`、`mapping`、`composition`、`id` はすべて $O(1)$ 時間・
+$O(1)$ 追加空間である。
 
 代入作用の型は `MonoidAssignment<T>` である。
 
@@ -136,6 +194,18 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 - 表の $O(1)$ は `T` の対応する算術・比較・構築を $O(1)$ としたもの。
   一般の `T` では、各aliasが呼ぶ `T` の操作コストに従う。
 - 各補助型の公開field参照は $O(1)$。
+- `NonEmptyMaxSubarrayAggregate<T>` の `sum`、`prefix`、`suffix`、`best` と、
+  `non_empty_max_subarray_op` が計算するすべての部分和は `T` で表現できなければならない。
+- historical maximum関連APIの `T` は、`numeric_limits<T>` が特殊化された符号付き型で
+  なければならない。`numeric_limits<T>::lowest()` は空区間の番兵なので、実値の
+  `current` / `historical` に使用しない。
+- `HistoricalMaxAggregate<T>` は通常 `historical >= current` を満たす値を渡す。
+  `HistoricalAdd<T>` を直接作る場合、`peak` は作用列の空prefixを含む最大prefix和であり、
+  `peak >= 0` かつ `peak >= total` を満たさなければならない。1回の加算には
+  `historical_add(delta)` を使う。
+- historical加算の `current + total`、`current + peak`、`total` 同士の加算、
+  `total + peak` はすべて `T` で表現できなければならない。符号付き整数のoverflowは
+  未定義動作になる。
 
 ## helper API
 
@@ -176,6 +246,13 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 | `max_subarray_op(left,llen,right,rlen)` | 2列のaggregateを順に結合 | $O(1)$ |
 | `max_subarray_identity<T>()` | 空列aggregate `{0,0,0,0}` | $O(1)$ |
 | `assign_max_subarray_mapping(f,x,length)` | 一様代入後のaggregate | $O(1)$ |
+| `non_empty_max_subarray_op(left,right)` | 2つの非空最大部分配列aggregateを列順に結合 | $O(1)$ |
+| `non_empty_max_subarray_identity<T>()` | `empty == true` の空列単位元 | $O(1)$ |
+| `historical_max_op(left,right)` | current/historicalをそれぞれmaxで結合 | $O(1)$ |
+| `historical_max_identity<T>()` | 両fieldが `numeric_limits<T>::lowest()` の単位元 | $O(1)$ |
+| `historical_add_mapping(f,x)` | 加算作用列をcurrent/historicalへ反映 | $O(1)$ |
+| `historical_add_composition(f,g)` | 先に `g`、後に `f` の加算作用列を合成 | $O(1)$ |
+| `historical_add_identity<T>()` | 加算作用列の単位元 `{0,0}` | $O(1)$ |
 | `bool_xor(f,g)` | bool作用のxor合成 | $O(1)$ |
 | `false_value()` | bool作用の単位元 `false` | $O(1)$ |
 
@@ -197,6 +274,24 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 - `max_subarray_singleton(value)`：1要素列のaggregateを返す。
 - `AssignMaxSubarrayMonoidAct<T>`：`MaxSubarrayAggregate<T>` に
   `MonoidAssignment<T>` を作用させる `Monoid_Act_Len` alias。
+- `NonEmptyMaxSubarrayAggregate<T>::empty`：monoidの空列単位元なら `true`。
+- `NonEmptyMaxSubarrayAggregate<T>::sum` / `prefix` / `suffix` / `best`：
+  非空列の全体和、非空最大prefix和、非空最大suffix和、非空最大部分配列和。
+- `operator==(NonEmptyMaxSubarrayAggregate, NonEmptyMaxSubarrayAggregate)`：
+  `empty` と4つの値fieldを比較する。
+- `non_empty_max_subarray_singleton(value)`：1要素の非空aggregateを返す。
+- `NonEmptyMaxSubarrayMonoid<T>`：上記aggregateを列順に結合する `Monoid` alias。
+- `HistoricalMaxAggregate<T>::current`：現在値の区間最大値。
+- `HistoricalMaxAggregate<T>::historical`：初期化以降に到達した値の区間最大値。
+- `operator==(HistoricalMaxAggregate, HistoricalMaxAggregate)`：2つのfieldを比較する。
+- `historical_max_singleton(value)`：`current` と `historical` がともに `value` の
+  aggregateを返す。
+- `HistoricalAdd<T>::total`：作用列をすべて適用したときの加算量。
+- `HistoricalAdd<T>::peak`：空prefixを含む作用列の最大prefix加算量。
+- `operator==(HistoricalAdd, HistoricalAdd)`：2つのfieldを比較する。
+- `historical_add(delta)`：1回の加算を表す `{delta, max(0, delta)}` を返す。
+- `AddHistoricalMaxMonoidAct<T>`：historical maximumへ区間加算を作用させる
+  `Monoid_Act` alias。
 
 各field参照、aggregate構築、比較の時間・追加空間計算量は $O(1)$。各objectの保存領域は
 `T` 1個、2個、または4個とflagに対して $O(1)$。

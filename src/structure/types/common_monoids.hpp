@@ -168,6 +168,62 @@ constexpr MaxSubarrayAggregate<T> max_subarray_singleton(T value){
     return {value, nonnegative, nonnegative, nonnegative};
 }
 
+template<class T>
+struct NonEmptyMaxSubarrayAggregate{
+    bool empty = true;
+    T sum{};
+    T prefix{};
+    T suffix{};
+    T best{};
+
+    friend constexpr bool operator==(
+        const NonEmptyMaxSubarrayAggregate&,
+        const NonEmptyMaxSubarrayAggregate&
+    ) = default;
+};
+
+template<class T>
+constexpr NonEmptyMaxSubarrayAggregate<T>
+non_empty_max_subarray_singleton(T value){
+    return {false, value, value, value, value};
+}
+
+template<class T>
+struct HistoricalMaxAggregate{
+    T current{};
+    T historical{};
+
+    friend constexpr bool operator==(
+        const HistoricalMaxAggregate&,
+        const HistoricalMaxAggregate&
+    ) = default;
+};
+
+template<class T>
+constexpr HistoricalMaxAggregate<T> historical_max_singleton(T value){
+    return {value, value};
+}
+
+template<class T>
+struct HistoricalAdd{
+    T total{};
+    T peak{};
+
+    friend constexpr bool operator==(
+        const HistoricalAdd&,
+        const HistoricalAdd&
+    ) = default;
+};
+
+template<class T>
+constexpr HistoricalAdd<T> historical_add(T delta){
+    static_assert(
+        std::numeric_limits<T>::is_specialized &&
+        std::numeric_limits<T>::is_signed
+    );
+    return {delta, std::max(T(0), delta)};
+}
+
 namespace common_monoid_internal{
 
 template<class T, T Identity>
@@ -306,11 +362,117 @@ constexpr MaxSubarrayAggregate<T> assign_max_subarray_mapping(
     return {sum, nonnegative, nonnegative, nonnegative};
 }
 
+template<class T>
+constexpr NonEmptyMaxSubarrayAggregate<T> non_empty_max_subarray_op(
+    NonEmptyMaxSubarrayAggregate<T> left,
+    NonEmptyMaxSubarrayAggregate<T> right
+){
+    if(left.empty) return right;
+    if(right.empty) return left;
+    return {
+        false,
+        left.sum + right.sum,
+        std::max(left.prefix, left.sum + right.prefix),
+        std::max(right.suffix, right.sum + left.suffix),
+        std::max({left.best, right.best, left.suffix + right.prefix})
+    };
+}
+
+template<class T>
+constexpr NonEmptyMaxSubarrayAggregate<T> non_empty_max_subarray_identity(){
+    return {};
+}
+
+template<class T>
+constexpr HistoricalMaxAggregate<T> historical_max_op(
+    HistoricalMaxAggregate<T> left,
+    HistoricalMaxAggregate<T> right
+){
+    static_assert(
+        std::numeric_limits<T>::is_specialized &&
+        std::numeric_limits<T>::is_signed
+    );
+    return {
+        std::max(left.current, right.current),
+        std::max(left.historical, right.historical)
+    };
+}
+
+template<class T>
+constexpr HistoricalMaxAggregate<T> historical_max_identity(){
+    static_assert(
+        std::numeric_limits<T>::is_specialized &&
+        std::numeric_limits<T>::is_signed
+    );
+    const T identity = std::numeric_limits<T>::lowest();
+    return {identity, identity};
+}
+
+template<class T>
+constexpr HistoricalMaxAggregate<T> historical_add_mapping(
+    HistoricalAdd<T> operation,
+    HistoricalMaxAggregate<T> aggregate
+){
+    static_assert(
+        std::numeric_limits<T>::is_specialized &&
+        std::numeric_limits<T>::is_signed
+    );
+    if(aggregate.current == std::numeric_limits<T>::lowest()){
+        return historical_max_identity<T>();
+    }
+    return {
+        aggregate.current + operation.total,
+        std::max(
+            aggregate.historical,
+            aggregate.current + operation.peak
+        )
+    };
+}
+
+template<class T>
+constexpr HistoricalAdd<T> historical_add_composition(
+    HistoricalAdd<T> newer,
+    HistoricalAdd<T> older
+){
+    static_assert(
+        std::numeric_limits<T>::is_specialized &&
+        std::numeric_limits<T>::is_signed
+    );
+    return {
+        older.total + newer.total,
+        std::max(older.peak, older.total + newer.peak)
+    };
+}
+
+template<class T>
+constexpr HistoricalAdd<T> historical_add_identity(){
+    static_assert(
+        std::numeric_limits<T>::is_specialized &&
+        std::numeric_limits<T>::is_signed
+    );
+    return {};
+}
+
 constexpr bool bool_xor(bool f, bool g){ return f != g; }
 
 constexpr bool false_value(){ return false; }
 
 } // namespace common_monoid_internal
+
+template<class T>
+using NonEmptyMaxSubarrayMonoid = Monoid<
+    common_monoid_internal::non_empty_max_subarray_op<T>,
+    common_monoid_internal::non_empty_max_subarray_identity<T>
+>;
+
+template<class T>
+using AddHistoricalMaxMonoidAct = Monoid_Act<
+    common_monoid_internal::historical_max_op<T>,
+    common_monoid_internal::historical_max_identity<T>,
+    common_monoid_internal::historical_add_mapping<T>,
+    common_monoid_internal::historical_add_composition<T>,
+    common_monoid_internal::historical_add_identity<T>
+>;
 
 template<class T, T Identity = std::numeric_limits<T>::max()>
 using AddMinMonoidAct = Monoid_Act<
