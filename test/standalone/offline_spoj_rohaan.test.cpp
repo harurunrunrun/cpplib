@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/rohaan.floyd_warshall.test.cpp"
+#include "../onlinejudge/rohaan.sum_shortest_path_query_costs.test.cpp"

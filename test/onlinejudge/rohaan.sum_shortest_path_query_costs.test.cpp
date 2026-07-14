@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/floyd_warshall.hpp"
+#include "../../src/algorithm/graph/sum_shortest_path_query_costs.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -25,18 +25,20 @@ int main(){
             for(long long& value: row) std::cin >> value;
         }
 
-        const auto shortest = floyd_warshall(std::move(distance), INF);
         int order_count;
         std::cin >> order_count;
-        long long total = 0;
-        for(int order = 0; order < order_count; order++){
-            int source, destination;
-            std::cin >> source >> destination;
-            source--;
-            destination--;
-            total += shortest.dist[static_cast<std::size_t>(source)]
-                                  [static_cast<std::size_t>(destination)];
+        std::vector<ShortestPathCostQuery> orders(
+            static_cast<std::size_t>(order_count)
+        );
+        for(auto& order: orders){
+            std::cin >> order.from >> order.to;
+            --order.from;
+            --order.to;
         }
-        std::cout << "Case #" << test_case << ": " << total << '\n';
+        std::cout << "Case #" << test_case << ": "
+                  << sum_shortest_path_query_costs(
+                         std::move(distance), orders, INF
+                     )
+                  << '\n';
     }
 }
