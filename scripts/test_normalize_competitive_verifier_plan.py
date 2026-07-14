@@ -78,6 +78,86 @@ class NormalizePlanTest(unittest.TestCase):
             normalizer.normalize_plan(plan)
         self.assertEqual(plan, original)
 
+    def test_known_unsupported_hosts_remove_only_minimal_failure(self) -> None:
+        urls = (
+            "https://atcoder.jp/contests/example/tasks/example_a",
+            "https://spoj.com/problems/EXAMPLE/",
+            "https://www.spoj.com/problems/EXAMPLE/",
+            "https://br.spoj.com/problems/EXAMPLE/",
+            "https://codechef.com/problems/EXAMPLE",
+            "https://www.codechef.com/problems/EXAMPLE",
+        )
+        for url in urls:
+            with self.subTest(url=url):
+                const_success = {"type": "const", "status": "success"}
+                problem_verification = {"type": "problem", "problem": url}
+                plan = {
+                    "files": {
+                        "test.cpp": file_entry(
+                            url,
+                            [
+                                {"type": "const", "status": "failure"},
+                                const_success,
+                                problem_verification,
+                            ],
+                        )
+                    }
+                }
+                normalized, removed = normalizer.normalize_plan(plan)
+                self.assertEqual(removed, ["test.cpp"])
+                self.assertEqual(
+                    normalized["files"]["test.cpp"]["verification"],
+                    [const_success, problem_verification],
+                )
+
+    def test_rejects_unknown_and_lookalike_hosts(self) -> None:
+        urls = (
+            "https://spoj.com.example.com/problems/A/",
+            "https://codechef.com.example.com/problems/A",
+            "https://example-spoj.com/problems/A/",
+            "https://judge.yosupo.jp/problem/aplusb",
+        )
+        for url in urls:
+            with self.subTest(url=url):
+                plan = {
+                    "files": {
+                        "test.cpp": file_entry(
+                            url,
+                            [{"type": "const", "status": "failure"}],
+                        )
+                    }
+                }
+                with self.assertRaisesRegex(
+                    normalizer.PlanNormalizationError, "unexpected constant"
+                ):
+                    normalizer.normalize_plan(plan)
+
+    def test_rejects_richer_known_host_constant_failures(self) -> None:
+        for url in (
+            "https://www.spoj.com/problems/EXAMPLE/",
+            "https://br.spoj.com/problems/EXAMPLE/",
+            "https://www.codechef.com/problems/EXAMPLE",
+        ):
+            with self.subTest(url=url):
+                plan = {
+                    "files": {
+                        "test.cpp": file_entry(
+                            url,
+                            [
+                                {
+                                    "type": "const",
+                                    "status": "failure",
+                                    "reason": "compilation failed",
+                                }
+                            ],
+                        )
+                    }
+                }
+                with self.assertRaisesRegex(
+                    normalizer.PlanNormalizationError, "unexpected constant"
+                ):
+                    normalizer.normalize_plan(plan)
+
     def test_rejects_missing_problem_url(self) -> None:
         plan = {
             "files": {

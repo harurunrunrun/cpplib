@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Remove known-unresolvable AtCoder entries from a verifier plan.
+"""Remove known unsupported-provider entries from a verifier plan.
 
-competitive-verifier 4.1.2 does not provide an AtCoder problem provider. Its
-resolver therefore represents an AtCoder PROBLEM as a constant failed
-verification. Those entries are not test executions and must not make the
-verification job fail. This script removes only that exact representation;
-all executable problem verifications are preserved, and an unexpected
+competitive-verifier 4.1.2 does not provide problem providers for AtCoder,
+SPOJ, or CodeChef. Its resolver therefore represents those PROBLEM entries as
+constant failed verifications. Those entries are not test executions and must
+not make the verification job fail. This script removes only that exact
+representation for a documented URL on a known unsupported host; all success
+and executable problem verifications are preserved, and an unexpected
 constant failure aborts normalization instead of being hidden.
 """
 
@@ -26,7 +27,10 @@ class PlanNormalizationError(ValueError):
     """The verifier plan has an unexpected or malformed entry."""
 
 
-def is_atcoder_url(value: object) -> bool:
+UNSUPPORTED_PROBLEM_HOSTS = frozenset({"atcoder.jp", "spoj.com", "codechef.com"})
+
+
+def is_known_unsupported_problem_url(value: object) -> bool:
     if not isinstance(value, str):
         return False
     try:
@@ -37,7 +41,10 @@ def is_atcoder_url(value: object) -> bool:
     if parsed.scheme not in {"http", "https"} or hostname is None:
         return False
     hostname = hostname.rstrip(".").lower()
-    return hostname == "atcoder.jp" or hostname.endswith(".atcoder.jp")
+    return any(
+        hostname == domain or hostname.endswith(f".{domain}")
+        for domain in UNSUPPORTED_PROBLEM_HOSTS
+    )
 
 
 def _documented_problem(file_data: dict[str, Any]) -> object:
@@ -49,19 +56,20 @@ def _documented_problem(file_data: dict[str, Any]) -> object:
     return None
 
 
-def _is_unresolved_atcoder_provider_entry(
+def _is_unsupported_provider_entry(
     file_data: dict[str, Any], verification: dict[str, Any]
 ) -> bool:
     # competitive-verifier 4.1.2 emits exactly this minimal constant failure
     # when problem_from_url cannot find a provider. Requiring exact equality
     # prevents an unrelated or future richer failure from being hidden.
-    return verification == {"type": "const", "status": "failure"} and is_atcoder_url(
-        _documented_problem(file_data)
-    )
+    return verification == {
+        "type": "const",
+        "status": "failure",
+    } and is_known_unsupported_problem_url(_documented_problem(file_data))
 
 
 def normalize_plan(plan: object) -> tuple[dict[str, Any], list[str]]:
-    """Return a normalized deep copy and paths whose AtCoder failures moved out."""
+    """Return a normalized deep copy and paths whose provider failures moved out."""
 
     if not isinstance(plan, dict):
         raise PlanNormalizationError("verification plan must be a JSON object")
@@ -95,7 +103,7 @@ def normalize_plan(plan: object) -> tuple[dict[str, Any], list[str]]:
                 continue
 
             documented_problem = _documented_problem(file_data)
-            if _is_unresolved_atcoder_provider_entry(file_data, verification):
+            if _is_unsupported_provider_entry(file_data, verification):
                 removed_count += 1
                 continue
 
@@ -160,7 +168,7 @@ def main(argv: list[str] | None = None) -> int:
     unique_paths = list(dict.fromkeys(removed))
     print(
         "verification plan normalization: "
-        f"removed {len(removed)} unresolved AtCoder verification(s) "
+        f"removed {len(removed)} unsupported-provider verification(s) "
         f"from {len(unique_paths)} file(s)",
         file=sys.stderr,
     )
