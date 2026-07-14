@@ -22,12 +22,27 @@ STANDALONE_DIRECTIVE = "// competitive-verifier: STANDALONE"
 def find_violations(root: Path) -> list[str]:
     violations: list[str] = []
     onlinejudge = sorted((root / "test" / "onlinejudge").glob("*.test.cpp"))
-    standalone = sorted((root / "test" / "standalone").glob("*.test.cpp"))
+    standalone_directory = root / "test" / "standalone"
+    standalone_cpp_sources = sorted(
+        path for path in standalone_directory.glob("*.cpp") if path.is_file()
+    )
+    standalone = [
+        path for path in standalone_cpp_sources if path.name.endswith(".test.cpp")
+    ]
 
     if not onlinejudge:
         violations.append("test/onlinejudge: no .test.cpp files found")
     if not standalone:
         violations.append("test/standalone: no .test.cpp files found")
+
+    for path in standalone_cpp_sources:
+        if path.name.endswith(".test.cpp"):
+            continue
+        relative = path.relative_to(root).as_posix()
+        violations.append(
+            f"{relative}: C++ sources directly under test/standalone must be "
+            ".test.cpp entrypoints; move helper sources to test/support"
+        )
 
     for path in onlinejudge:
         relative = path.relative_to(root).as_posix()

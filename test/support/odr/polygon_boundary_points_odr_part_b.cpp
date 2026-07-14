@@ -1,7 +1,7 @@
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/polygon_boundary_points/polygon_boundary_point_query.hpp"
-#include "../../src/algorithm/geometry/2d/polygon_boundary_points.hpp"
+#include "../../../src/algorithm/geometry/2d/polygon_boundary_points/polygon_boundary_point_query.hpp"
+#include "../../../src/algorithm/geometry/2d/polygon_boundary_points.hpp"
 
 std::vector<int> polygon_boundary_points_odr_part_b(
     const std::vector<Point>& polygon,

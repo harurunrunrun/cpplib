@@ -31,7 +31,8 @@ def main() -> int:
     build_dir = Path(args.build_dir)
     build_dir.mkdir(parents=True, exist_ok=True)
     executable = build_dir / "a.out"
-    sources = [test, *(test.parent / part for part in PARTS)]
+    support_dir = test.parent.parent / "support" / "odr"
+    sources = [test, *(support_dir / part for part in PARTS)]
     compile_result = subprocess.run(
         [
             args.cxx,

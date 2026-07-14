@@ -25,10 +25,11 @@ def main() -> int:
     build_dir = Path(args.build_dir)
     build_dir.mkdir(parents=True, exist_ok=True)
     executable = build_dir / "a.out"
+    support_dir = test.parent.parent / "support" / "odr"
     sources = [
         test,
-        test.parent / "geometry_2d_umbrella_odr_part_a.cpp",
-        test.parent / "geometry_2d_umbrella_odr_part_b.cpp",
+        support_dir / "geometry_2d_umbrella_odr_part_a.cpp",
+        support_dir / "geometry_2d_umbrella_odr_part_b.cpp",
     ]
     compile_result = subprocess.run([
         args.cxx,

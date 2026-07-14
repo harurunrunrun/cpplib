@@ -83,7 +83,7 @@ standalone-assets-test: test-coverage-check test-verifier-markers
 	$(PYTHON) scripts/test_standalone_verification_results.py
 	$(PYTHON) scripts/test_check_standalone_verification_results.py
 	$(PYTHON) scripts/test_competitive_verifier_docs_result.py
-	$(PYTHON) scripts/test_standalone_results_workflows.py
+	$(PYTHON) -S scripts/test_standalone_results_workflows.py
 	$(PYTHON) scripts/test_run_standalone_assets.py
 	$(PYTHON) scripts/test_check_unsupported_onlinejudge_assets.py
 	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py

@@ -73,6 +73,22 @@ class TestVerifierMarkerCheckTest(unittest.TestCase):
                 any("late.test.cpp" in item for item in find_violations(root))
             )
 
+    def test_rejects_cpp_helper_directly_under_standalone(self) -> None:
+        temporary, root = self.make_root()
+        with temporary:
+            self.write_valid_pair(root)
+            helper = root / "test" / "standalone" / "unexpected_helper.cpp"
+            helper.write_text("int helper() { return 0; }\n", encoding="utf-8")
+
+            violations = find_violations(root)
+            self.assertTrue(
+                any(
+                    "test/standalone/unexpected_helper.cpp" in item
+                    and "move helper sources to test/support" in item
+                    for item in violations
+                )
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

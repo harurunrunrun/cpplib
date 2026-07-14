@@ -5,17 +5,144 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-import yaml
-
-
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def parse_scalar(value: str) -> str | list[str]:
+    value = value.strip()
+    if value.startswith("[") and value.endswith("]"):
+        inside = value[1:-1].strip()
+        if not inside:
+            return []
+        return [str(parse_scalar(part)) for part in inside.split(",")]
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+        return value[1:-1]
+    return value
+
+
+def indentation(line: str) -> int:
+    return len(line) - len(line.lstrip(" "))
+
+
+def skip_blank(lines: list[str], index: int) -> int:
+    while index < len(lines) and not lines[index].strip():
+        index += 1
+    return index
+
+
+def parse_literal(
+    lines: list[str], index: int, parent_indent: int
+) -> tuple[str, int]:
+    end = index
+    while end < len(lines):
+        line = lines[end]
+        if line.strip() and indentation(line) <= parent_indent:
+            break
+        end += 1
+
+    body = lines[index:end]
+    content = [line for line in body if line.strip()]
+    if not content:
+        return "", end
+    common_indent = min(indentation(line) for line in content)
+    return "\n".join(
+        line[common_indent:] if line.strip() else "" for line in body
+    ), end
+
+
+def parse_node(
+    lines: list[str], index: int, indent: int
+) -> tuple[dict | list, int]:
+    index = skip_blank(lines, index)
+    if lines[index].lstrip().startswith("- "):
+        return parse_sequence(lines, index, indent)
+    return parse_mapping(lines, index, indent)
+
+
+def parse_mapping(
+    lines: list[str], index: int, indent: int
+) -> tuple[dict, int]:
+    result: dict = {}
+    while True:
+        index = skip_blank(lines, index)
+        if index >= len(lines) or indentation(lines[index]) < indent:
+            break
+        if indentation(lines[index]) != indent or lines[index].lstrip().startswith("- "):
+            break
+
+        content = lines[index].strip()
+        if ":" not in content:
+            raise ValueError(f"invalid workflow mapping line: {lines[index]!r}")
+        key, raw_value = content.split(":", 1)
+        raw_value = raw_value.strip()
+        index += 1
+        if raw_value in ("|", ">"):
+            result[key], index = parse_literal(lines, index, indent)
+        elif raw_value:
+            result[key] = parse_scalar(raw_value)
+        else:
+            child = skip_blank(lines, index)
+            if child >= len(lines) or indentation(lines[child]) <= indent:
+                result[key] = {}
+                index = child
+            else:
+                result[key], index = parse_node(
+                    lines, child, indentation(lines[child])
+                )
+    return result, index
+
+
+def parse_sequence(
+    lines: list[str], index: int, indent: int
+) -> tuple[list, int]:
+    result: list = []
+    while True:
+        index = skip_blank(lines, index)
+        if (
+            index >= len(lines)
+            or indentation(lines[index]) != indent
+            or not lines[index].lstrip().startswith("- ")
+        ):
+            break
+
+        content = lines[index].strip()[2:].strip()
+        index += 1
+        if ":" not in content:
+            result.append(parse_scalar(content))
+            continue
+
+        key, raw_value = content.split(":", 1)
+        item: dict = {key: parse_scalar(raw_value)} if raw_value.strip() else {}
+        continuation = skip_blank(lines, index)
+        if continuation < len(lines) and indentation(lines[continuation]) > indent:
+            if raw_value.strip():
+                extra, index = parse_mapping(lines, continuation, indent + 2)
+                item.update(extra)
+            else:
+                item[key], index = parse_node(
+                    lines, continuation, indentation(lines[continuation])
+                )
+                continuation = skip_blank(lines, index)
+                if (
+                    continuation < len(lines)
+                    and indentation(lines[continuation]) == indent + 2
+                ):
+                    extra, index = parse_mapping(lines, continuation, indent + 2)
+                    item.update(extra)
+        result.append(item)
+    return result, index
+
+
 def load_workflow(name: str) -> dict:
-    return yaml.load(
-        (ROOT / ".github" / "workflows" / name).read_text(encoding="utf-8"),
-        Loader=yaml.BaseLoader,
+    lines = (
+        (ROOT / ".github" / "workflows" / name)
+        .read_text(encoding="utf-8")
+        .splitlines()
     )
+    workflow, end = parse_node(lines, 0, 0)
+    if skip_blank(lines, end) != len(lines) or not isinstance(workflow, dict):
+        raise ValueError(f"could not parse complete workflow: {name}")
+    return workflow
 
 
 def named_steps(job: dict) -> dict[str, dict]:
