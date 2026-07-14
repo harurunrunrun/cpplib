@@ -33,7 +33,7 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-wrapper-test test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-assets-test standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-wrapper-test test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
@@ -65,6 +65,8 @@ verifier-resolve: verifier-setup verifier-wrapper-test test-verifier-markers
 	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge --config config.toml > $(VERIFY_FILES).tmp
 	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py
 	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
+	$(VERIFIER_VENV)/bin/python scripts/test_filter_competitive_verifier_result.py
+	$(VERIFIER_VENV)/bin/python scripts/test_report_competitive_verifier_failures.py
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
@@ -79,7 +81,11 @@ test-coverage-check:
 	$(PYTHON) scripts/test_list_untested_headers.py
 	$(PYTHON) scripts/list_untested_headers.py --require-complete
 
-standalone-assets-test: test-coverage-check test-verifier-markers
+standalone-generator-interface-check:
+	$(PYTHON) scripts/test_check_standalone_generator_interfaces.py
+	$(PYTHON) scripts/check_standalone_generator_interfaces.py
+
+standalone-assets-test: test-coverage-check test-verifier-markers standalone-generator-interface-check
 	$(PYTHON) scripts/test_standalone_verification_results.py
 	$(PYTHON) scripts/test_check_standalone_verification_results.py
 	$(PYTHON) scripts/test_competitive_verifier_docs_result.py

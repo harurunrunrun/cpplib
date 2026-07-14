@@ -55,6 +55,35 @@ def write_executable(path: Path, source: str) -> None:
 
 
 class FilterCompetitiveVerifierResultTest(unittest.TestCase):
+    def test_success_only_removes_failure_and_skipped_results(self) -> None:
+        result = runner.VerifyCommandResult.model_validate(
+            {
+                "total_seconds": 3,
+                "files": {
+                    "success.cpp": file_result("success"),
+                    "failure.cpp": file_result("failure"),
+                    "skipped.cpp": file_result("skipped"),
+                    "stale.cpp": file_result("success"),
+                    "empty.cpp": {"verifications": [], "newest": True},
+                },
+            }
+        )
+        filtered = result_filter.filter_result(
+            result,
+            {
+                Path("success.cpp"),
+                Path("failure.cpp"),
+                Path("skipped.cpp"),
+                Path("empty.cpp"),
+            },
+            root=Path.cwd(),
+            success_only=True,
+        )
+        self.assertEqual(
+            {path.as_posix() for path in filtered.files}, {"success.cpp"}
+        )
+        self.assertEqual(filtered.total_seconds, 3)
+
     def test_cli_removes_deleted_and_empty_plan_entries(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

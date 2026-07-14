@@ -72,6 +72,38 @@ def run_shard(
     return completed.returncode
 
 
+def prepare_successful_previous_result(
+    previous: Path | None,
+    planned_paths: set[Path],
+    destination: Path,
+) -> Path | None:
+    """Write a planned, success-only verifier cache for reuse by this run."""
+
+    destination.unlink(missing_ok=True)
+    if previous is None or not previous.is_file():
+        return None
+    try:
+        original = read_result(previous)
+        filtered = filter_result(
+            original,
+            planned_paths,
+            success_only=True,
+        )
+        write_result_atomic(destination, filtered)
+    except (OSError, UnicodeError, ValueError, ResultFilterError) as error:
+        print(
+            f"[competitive-verifier] ignoring invalid previous result: {error}",
+            file=sys.stderr,
+        )
+        return None
+    print(
+        f"[competitive-verifier] reusing {len(filtered.files)}/"
+        f"{len(original.files)} successful previous file result(s)",
+        file=sys.stderr,
+    )
+    return destination
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--verifier", type=Path, required=True)
@@ -93,10 +125,6 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, UnicodeError, ValueError, ResultFilterError) as error:
         parser.error(f"invalid verification plan: {error}")
 
-    previous = args.prev_result
-    if previous is not None and not previous.is_file():
-        previous = None
-
     args.shard_dir.mkdir(parents=True, exist_ok=True)
     outputs = [args.shard_dir / f"result-{index}.json" for index in range(args.jobs)]
     if args.output.resolve() in {output.resolve() for output in outputs}:
@@ -106,6 +134,15 @@ def main(argv: list[str] | None = None) -> int:
     # old result-N.json could make a crashed shard look valid.
     for output in outputs:
         output.unlink(missing_ok=True)
+
+    previous_path = args.shard_dir / "previous-success.json"
+    if args.output.resolve() == previous_path.resolve():
+        parser.error("--output must not be the prepared previous-result path")
+    previous = prepare_successful_previous_result(
+        args.prev_result,
+        planned_paths,
+        previous_path,
+    )
 
     with ThreadPoolExecutor(max_workers=args.jobs) as executor:
         futures = [

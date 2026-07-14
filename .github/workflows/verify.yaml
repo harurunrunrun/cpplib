@@ -33,7 +33,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  standalone-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run standalone preflight
+        run: make standalone-assets-test
+
   standalone-assets:
+    needs: standalone-preflight
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -55,9 +75,9 @@ jobs:
 
       - name: Verify standalone generated assets
         run: |
-          make standalone-assets \
-            STANDALONE_SPLIT_SIZE=4 \
-            STANDALONE_SPLIT_INDEX=${{ matrix.index }}
+          python3 scripts/run_standalone_assets.py \
+            --split-size 4 \
+            --split-index ${{ matrix.index }}
 
       - name: Upload standalone verification results
         if: ${{ always() }}
@@ -116,6 +136,8 @@ jobs:
           python3 scripts/check_unsupported_onlinejudge_assets.py
           python3 scripts/test_normalize_competitive_verifier_plan.py
           python3 scripts/normalize_competitive_verifier_plan.py verify-files.json
+          python3 scripts/test_filter_competitive_verifier_result.py
+          python3 scripts/test_report_competitive_verifier_failures.py
           python3 scripts/test_run_competitive_verifier_shards.py
 
       - name: Plan verification shards
@@ -179,7 +201,7 @@ jobs:
     if: ${{ needs.resolve.result == 'success' && needs.resolve.outputs.shard_count != '0' }}
     needs: resolve
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
 
     strategy:
       fail-fast: false
@@ -229,64 +251,101 @@ jobs:
             competitive-verifier-result-${{ hashFiles('config.toml') }}-
             competitive-verifier-result-
 
-      - name: Detect valid previous verification result
+      - name: Filter restored successful verification results
         id: previous
         shell: bash
         run: |
-          python3 - <<'PY'
-          import os
-          from pathlib import Path
-          from competitive_verifier.models import VerifyCommandResult
-
-          path = Path(".competitive-verifier/cache/result.json")
-          valid = False
-          if path.is_file():
-              try:
-                  VerifyCommandResult.model_validate_json(path.read_bytes())
-                  valid = True
-              except (OSError, UnicodeError, ValueError):
-                  pass
-
-          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as file:
-              file.write(f"path={path if valid else ''}\n")
-          PY
+          path=.competitive-verifier/cache/result.json
+          selected=
+          if [ -f "$path" ] && python3 scripts/filter_competitive_verifier_result.py \
+              --verify-json verify-files.json \
+              --result "$path" \
+              --success-only; then
+            selected="$path"
+          fi
+          echo "path=$selected" >> "$GITHUB_OUTPUT"
 
       - name: Verify shard ${{ matrix.index }} (attempt 1)
         id: verifier_initial
         uses: competitive-verifier/actions/verify@v2
         timeout-minutes: 14
+        continue-on-error: true
         with:
           verify-files: verify-files.json
           destination: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-1.json
           prev-result: ${{ steps.previous.outputs.path }}
           split-size: ${{ needs.resolve.outputs.shard_count }}
           split-index: ${{ matrix.index }}
-          timeout: "900"
+          timeout: "780"
           check: false
+
+      - name: Prepare successful results for attempt 2
+        id: retry_previous_1
+        if: ${{ always() && steps.verifier_initial.outputs.is-success != 'true' }}
+        shell: bash
+        env:
+          CANDIDATE: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-1.json
+          FALLBACK: ${{ steps.previous.outputs.path }}
+          DESTINATION: .competitive-verifier/shards/previous-${{ matrix.index }}-attempt-1.json
+        run: |
+          selected=
+          if [ -f "$CANDIDATE" ] && python3 scripts/filter_competitive_verifier_result.py \
+              --verify-json verify-files.json \
+              --result "$CANDIDATE" \
+              --output "$DESTINATION" \
+              --success-only; then
+            selected="$DESTINATION"
+          elif [ -n "$FALLBACK" ] && [ -f "$FALLBACK" ]; then
+            selected="$FALLBACK"
+          fi
+          echo "path=$selected" >> "$GITHUB_OUTPUT"
 
       - name: Retry failed verification entries (attempt 2)
         id: verifier_retry_1
         if: ${{ always() && steps.verifier_initial.outputs.is-success != 'true' }}
         uses: competitive-verifier/actions/verify@v2
         timeout-minutes: 4
+        continue-on-error: true
         with:
           verify-files: verify-files.json
           destination: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-2.json
-          prev-result: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-1.json
+          prev-result: ${{ steps.retry_previous_1.outputs.path }}
           split-size: ${{ needs.resolve.outputs.shard_count }}
           split-index: ${{ matrix.index }}
           timeout: "180"
           check: false
 
+      - name: Prepare successful results for attempt 3
+        id: retry_previous_2
+        if: ${{ always() && steps.verifier_retry_1.outcome != 'skipped' && steps.verifier_retry_1.outputs.is-success != 'true' }}
+        shell: bash
+        env:
+          CANDIDATE: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-2.json
+          FALLBACK: ${{ steps.retry_previous_1.outputs.path }}
+          DESTINATION: .competitive-verifier/shards/previous-${{ matrix.index }}-attempt-2.json
+        run: |
+          selected=
+          if [ -f "$CANDIDATE" ] && python3 scripts/filter_competitive_verifier_result.py \
+              --verify-json verify-files.json \
+              --result "$CANDIDATE" \
+              --output "$DESTINATION" \
+              --success-only; then
+            selected="$DESTINATION"
+          elif [ -n "$FALLBACK" ] && [ -f "$FALLBACK" ]; then
+            selected="$FALLBACK"
+          fi
+          echo "path=$selected" >> "$GITHUB_OUTPUT"
+
       - name: Retry failed verification entries (attempt 3)
         id: verifier_retry_2
-        if: ${{ always() && steps.verifier_retry_1.outcome == 'success' && steps.verifier_retry_1.outputs.is-success != 'true' }}
+        if: ${{ always() && steps.verifier_retry_1.outcome != 'skipped' && steps.verifier_retry_1.outputs.is-success != 'true' }}
         uses: competitive-verifier/actions/verify@v2
         timeout-minutes: 4
+        continue-on-error: true
         with:
           verify-files: verify-files.json
           destination: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-3.json
-          prev-result: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-2.json
+          prev-result: ${{ steps.retry_previous_2.outputs.path }}
           split-size: ${{ needs.resolve.outputs.shard_count }}
           split-index: ${{ matrix.index }}
           timeout: "180"
@@ -547,9 +606,29 @@ jobs:
               file.write(f"fallback={str(fallback).lower()}\n")
           PY
 
-      - name: Save merged verification cache
-        id: save_cache
+      - name: Preserve complete merged verification result
+        id: preserve_result
         if: ${{ always() && steps.filter_result.outcome == 'success' && steps.merged_result.outputs.fallback == 'false' }}
+        shell: bash
+        run: |
+          mkdir -p .competitive-verifier/merged
+          cp .competitive-verifier/cache/result.json \
+            .competitive-verifier/merged/result.json
+
+      - name: Prepare successful verification cache
+        id: cache_result
+        if: ${{ always() && steps.preserve_result.outcome == 'success' }}
+        shell: bash
+        continue-on-error: true
+        run: |
+          python3 scripts/filter_competitive_verifier_result.py \
+            --verify-json verify-files.json \
+            --result .competitive-verifier/cache/result.json \
+            --success-only
+
+      - name: Save successful verification cache
+        id: save_cache
+        if: ${{ always() && steps.cache_result.outcome == 'success' }}
         uses: actions/cache/save@v4
         continue-on-error: true
         with:
@@ -558,22 +637,22 @@ jobs:
 
       - name: Upload merged verification result
         id: upload_merged
-        if: ${{ always() && steps.filter_result.outcome == 'success' && steps.merged_result.outcome == 'success' && steps.merged_result.outputs.fallback == 'false' }}
+        if: ${{ always() && steps.preserve_result.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
           name: competitive-verifier-result-${{ github.run_attempt }}
-          path: .competitive-verifier/cache/result.json
+          path: .competitive-verifier/merged/result.json
           if-no-files-found: error
           retention-days: 7
           include-hidden-files: true
 
       - name: Check merged verification result
         id: check
-        if: ${{ always() && steps.filter_result.outcome == 'success' && steps.merged_result.outcome == 'success' && steps.merged_result.outputs.fallback == 'false' }}
+        if: ${{ always() && steps.preserve_result.outcome == 'success' }}
         uses: competitive-verifier/actions/check@v2
         continue-on-error: true
         with:
-          verify-result: .competitive-verifier/cache/result.json
+          verify-result: .competitive-verifier/merged/result.json
 
       - name: Report verification failures
         if: ${{ always() }}
@@ -591,6 +670,8 @@ jobs:
           FILTER_OUTCOME: ${{ steps.filter_result.outcome }}
           USED_FALLBACK: ${{ steps.merged_result.outputs.fallback }}
           CACHE_SAVE_OUTCOME: ${{ steps.save_cache.outcome }}
+          PRESERVE_OUTCOME: ${{ steps.preserve_result.outcome }}
+          CACHE_PREP_OUTCOME: ${{ steps.cache_result.outcome }}
           CHECK_OUTCOME: ${{ steps.check.outcome }}
           CHECK_COUNT: ${{ steps.check.outputs.result-count }}
           CHECK_FAILURE: ${{ steps.check.outputs.result-count-failure }}
@@ -602,6 +683,15 @@ jobs:
             echo "::error::$1"
             status=1
           }
+          report_warning() {
+            echo "::warning::$1"
+          }
+
+
+          if ! python3 scripts/report_competitive_verifier_failures.py \
+              --result .competitive-verifier/merged/result.json; then
+            report_error "Detailed competitive-verifier diagnostics could not be produced"
+          fi
 
           if [ "$RESOLVE_RESULT" != "success" ]; then
             report_error "Verification file resolution did not succeed: $RESOLVE_RESULT"
@@ -633,8 +723,14 @@ jobs:
           if [ "$USED_FALLBACK" != "false" ]; then
             report_error "The merged result required an empty JSON fallback"
           fi
-          if [ "$FILTER_OUTCOME" = "success" ] && [ "$USED_FALLBACK" = "false" ] && [ "$CACHE_SAVE_OUTCOME" != "success" ]; then
-            report_error "The valid merged result was not saved to cache: ${CACHE_SAVE_OUTCOME:-unknown}"
+          if [ "$PRESERVE_OUTCOME" != "success" ]; then
+            report_error "The complete merged result was not preserved: ${PRESERVE_OUTCOME:-unknown}"
+          fi
+          if [ "$CACHE_PREP_OUTCOME" != "success" ]; then
+            report_warning "The successful-result cache was not prepared: ${CACHE_PREP_OUTCOME:-unknown}"
+          fi
+          if [ "$CACHE_PREP_OUTCOME" = "success" ] && [ "$CACHE_SAVE_OUTCOME" != "success" ]; then
+            report_warning "The successful-result cache was not saved: ${CACHE_SAVE_OUTCOME:-unknown}"
           fi
           if [ "$CHECK_OUTCOME" != "success" ]; then
             report_error "competitive-verifier check failed or was skipped: $CHECK_OUTCOME"

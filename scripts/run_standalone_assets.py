@@ -8,6 +8,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -65,6 +66,24 @@ def asset_command(
             f"native asset compilation exited with code {compile_result.returncode}"
         )
     return [str(native_executable)]
+
+
+def run_with_failure_diagnostic(command: list[str]) -> tuple[int, str]:
+    """Run COMMAND without retaining successful output; return failure tail."""
+
+    with tempfile.TemporaryFile() as output:
+        completed = subprocess.run(
+            command,
+            check=False,
+            stdout=output,
+            stderr=output,
+        )
+        if completed.returncode == 0:
+            return 0, ""
+        size = output.tell()
+        output.seek(max(0, size - 4096))
+        diagnostic = output.read().decode("utf-8", errors="replace").strip()
+        return completed.returncode, diagnostic
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -169,34 +188,46 @@ def main(argv: list[str] | None = None) -> int:
 
         build_dir = cache_dir / name / "build"
 
+        generator_succeeded = False
         if generator_exists:
             try:
-                generator_result = subprocess.run(
-                    [
-                        *asset_command(
-                            generator, build_dir / "generator.out", args.cxx, args.cxxflags
-                        ),
-                        "--out-dir",
-                        str(case_dir),
-                    ],
-                    check=False,
+                generator_command = [
+                    *asset_command(
+                        generator, build_dir / "generator.out", args.cxx, args.cxxflags
+                    ),
+                    "--out-dir",
+                    str(case_dir),
+                ]
+                generator_returncode, generator_diagnostic = (
+                    run_with_failure_diagnostic(generator_command)
                 )
             except Exception as error:
                 failures.append((name, f"generator could not start: {error}"))
             else:
-                if generator_result.returncode != 0:
+                if generator_returncode == 0:
+                    generator_succeeded = True
+                else:
+                    diagnostic = (
+                        f"; diagnostic:\n{generator_diagnostic}"
+                        if generator_diagnostic
+                        else ""
+                    )
                     failures.append(
                         (
                             name,
-                            f"generator exited with code {generator_result.returncode}",
+                            "generator exited with code "
+                            f"{generator_returncode}; command: "
+                            f"{shlex.join(generator_command)}{diagnostic}",
                         )
                     )
 
         case_count = len(list(case_dir.glob("*.in")))
-        if case_count == 0:
-            failures.append((name, "generator produced no .in cases"))
+        if generator_succeeded and case_count == 0:
+            failures.append(
+                (name, "generator produced no .in cases; checker was skipped")
+            )
 
-        if checker_exists:
+        if checker_exists and generator_succeeded and case_count > 0:
             try:
                 checker_result = subprocess.run(
                     [

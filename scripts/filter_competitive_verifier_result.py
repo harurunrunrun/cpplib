@@ -66,14 +66,21 @@ def filter_result(
     planned_paths: set[Path],
     *,
     root: Path | None = None,
+    success_only: bool = False,
 ) -> VerifyCommandResult:
-    """Keep partial results, but only for files still executable in the plan."""
+    """Keep planned partial results and, optionally, successful files only."""
 
     repository = (Path.cwd() if root is None else root).resolve()
     files = {}
     for path, file_result in result.files.items():
         relative = _relative_path(path, root=repository)
-        if relative in planned_paths:
+        if relative in planned_paths and (
+            not success_only
+            or (
+                bool(file_result.verifications)
+                and file_result.is_success(allow_skip=False)
+            )
+        ):
             files[relative] = file_result
     return VerifyCommandResult(total_seconds=result.total_seconds, files=files)
 
@@ -104,23 +111,33 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="output path (default: replace RESULT atomically)",
     )
+    parser.add_argument(
+        "--success-only",
+        action="store_true",
+        help="discard failed and skipped file results as well as stale entries",
+    )
     args = parser.parse_args(argv)
 
     destination = args.result if args.output is None else args.output
     try:
         planned = read_plan_paths(args.verify_json)
         result = read_result(args.result)
-        filtered = filter_result(result, planned)
+        filtered = filter_result(
+            result,
+            planned,
+            success_only=args.success_only,
+        )
         write_result_atomic(destination, filtered)
     except (OSError, UnicodeError, json.JSONDecodeError, ResultFilterError, ValueError) as error:
         print(f"verification result filtering failed: {error}", file=sys.stderr)
         return 1
 
     removed = len(result.files) - len(filtered.files)
+    removed_kind = "stale or unsuccessful" if args.success_only else "stale"
     print(
         "verification result filtering: "
         f"kept {len(filtered.files)}/{len(result.files)} result(s); "
-        f"removed {removed} stale result(s)",
+        f"removed {removed} {removed_kind} result(s)",
         file=sys.stderr,
     )
     return 0

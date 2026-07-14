@@ -63,7 +63,25 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--out-dir")
 parser.parse_args()
 """
-EMPTY_CHECKER = "import argparse\nargparse.ArgumentParser().parse_known_args()\n"
+EMPTY_CHECKER = """\\
+import argparse
+from pathlib import Path
+argparse.ArgumentParser().parse_known_args()
+Path("checker-ran").write_text("yes", encoding="utf-8")
+"""
+
+FAILING_GENERATOR = """\\
+import argparse
+import sys
+from pathlib import Path
+parser = argparse.ArgumentParser()
+parser.add_argument("--out-dir", type=Path)
+args = parser.parse_args()
+args.out_dir.mkdir(parents=True, exist_ok=True)
+(args.out_dir / "partial.in").write_text("partial\\n", encoding="utf-8")
+print("deliberate generator failure", file=sys.stderr)
+raise SystemExit(7)
+"""
 
 
 def add_test(root: Path, name: str) -> None:
@@ -175,7 +193,42 @@ class RunStandaloneAssetsTest(unittest.TestCase):
             )
             self.assertEqual(manifest["status"], "failure")
             self.assertEqual(manifest["case_count"], 0)
-            self.assertIn("generator produced no .in cases", output.getvalue())
+            self.assertIn(
+                "generator produced no .in cases; checker was skipped",
+                output.getvalue(),
+            )
+            self.assertFalse((root / "checker-ran").exists())
+
+    def test_generator_failure_is_single_root_cause_and_skips_checker(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            name = "broken_generator"
+            add_test(root, name)
+            (root / "test" / "generator" / name / "generator.py").write_text(
+                FAILING_GENERATOR, encoding="utf-8"
+            )
+            (root / "test" / "checker" / name / "checker.py").write_text(
+                EMPTY_CHECKER, encoding="utf-8"
+            )
+            output = io.StringIO()
+            with working_directory(root), redirect_stderr(output):
+                status = runner.main(
+                    ["--cache-dir", "cache", "--result-dir", "results"]
+                )
+            rendered = output.getvalue()
+            self.assertEqual(status, 1)
+            self.assertIn("FAIL: 1 failure(s)", rendered)
+            self.assertIn("generator exited with code 7; command:", rendered)
+            self.assertIn("diagnostic%3A%0Adeliberate generator failure", rendered)
+            self.assertNotIn("generator produced no .in cases", rendered)
+            self.assertFalse((root / "checker-ran").exists())
+            manifest = load_manifest(
+                result_path(
+                    root / "results",
+                    "test/standalone/broken_generator.test.cpp",
+                )
+            )
+            self.assertEqual(manifest["case_count"], 1)
 
     def test_fingerprint_failure_is_annotated(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

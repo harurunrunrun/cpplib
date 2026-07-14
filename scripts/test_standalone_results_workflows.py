@@ -154,6 +154,79 @@ def named_steps(job: dict) -> dict[str, dict]:
 
 
 class StandaloneResultsWorkflowTest(unittest.TestCase):
+    def test_standalone_preflight_runs_once_before_all_shards(self) -> None:
+        workflow = load_workflow("verify.yaml")
+        preflight = workflow["jobs"]["standalone-preflight"]
+        shards = workflow["jobs"]["standalone-assets"]
+        self.assertEqual(shards["needs"], "standalone-preflight")
+        self.assertEqual(shards["if"], "${{ always() }}")
+        self.assertEqual(
+            named_steps(preflight)["Run standalone preflight"]["run"],
+            "make standalone-assets-test",
+        )
+        shard_run = named_steps(shards)["Verify standalone generated assets"]["run"]
+        self.assertIn("python3 scripts/run_standalone_assets.py", shard_run)
+        self.assertNotIn("make standalone-assets", shard_run)
+        source = (ROOT / ".github" / "workflows" / "verify.yaml").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(source.count("make standalone-assets-test"), 1)
+
+    def test_verify_retries_only_with_successful_previous_results(self) -> None:
+        workflow = load_workflow("verify.yaml")
+        job = workflow["jobs"]["verify"]
+        steps = named_steps(job)
+        restore = steps["Restore previous verification result"]
+        previous = steps["Filter restored successful verification results"]
+        initial = steps["Verify shard ${{ matrix.index }} (attempt 1)"]
+        first = steps["Prepare successful results for attempt 2"]
+        second = steps["Prepare successful results for attempt 3"]
+        retry_two = steps["Retry failed verification entries (attempt 2)"]
+        retry_three = steps["Retry failed verification entries (attempt 3)"]
+        self.assertGreaterEqual(int(job["timeout-minutes"]), 30)
+        for attempt in (initial, retry_two, retry_three):
+            self.assertEqual(attempt["continue-on-error"], "true")
+            self.assertLess(
+                int(attempt["with"]["timeout"]),
+                60 * int(attempt["timeout-minutes"]),
+            )
+        self.assertEqual(
+            restore["with"]["path"], ".competitive-verifier/cache/result.json"
+        )
+        for filter_step in (previous, first, second):
+            self.assertIn("--success-only", filter_step["run"])
+        self.assertEqual(
+            retry_two["with"]["prev-result"],
+            "${{ steps.retry_previous_1.outputs.path }}",
+        )
+        self.assertEqual(
+            retry_three["with"]["prev-result"],
+            "${{ steps.retry_previous_2.outputs.path }}",
+        )
+        self.assertIn("outcome != 'skipped'", second["if"])
+        self.assertIn("outcome != 'skipped'", retry_three["if"])
+
+    def test_merge_reports_details_and_caches_only_successes(self) -> None:
+        workflow = load_workflow("verify.yaml")
+        steps = named_steps(workflow["jobs"]["merge-and-check"])
+        cache = steps["Prepare successful verification cache"]
+        report = steps["Report verification failures"]
+        save = steps["Save successful verification cache"]
+        self.assertIn("--success-only", cache["run"])
+        self.assertEqual(
+            save["with"]["path"], ".competitive-verifier/cache/result.json"
+        )
+        self.assertIn(
+            "scripts/report_competitive_verifier_failures.py", report["run"]
+        )
+        self.assertIn(".competitive-verifier/merged/result.json", report["run"])
+        for message in (
+            "The successful-result cache was not prepared",
+            "The successful-result cache was not saved",
+        ):
+            self.assertIn(f'report_warning "{message}', report["run"])
+            self.assertNotIn(f'report_error "{message}', report["run"])
+
     def test_verify_defers_shared_result_success_to_merged_check(self) -> None:
         workflow = load_workflow("verify.yaml")
         record = named_steps(workflow["jobs"]["verify"])["Record shard status"]

@@ -84,6 +84,36 @@ with open(args.output, "w", encoding="utf-8") as stream:
 """
 
 
+PREVIOUS_INSPECTING_VERIFIER = r"""#!/usr/bin/env python3
+import argparse
+import json
+
+parser = argparse.ArgumentParser()
+parser.add_argument("command")
+parser.add_argument("--verify-json")
+parser.add_argument("--output")
+parser.add_argument("--prev-result")
+parser.add_argument("--split", type=int, required=True)
+parser.add_argument("--split-index", type=int, required=True)
+args = parser.parse_args()
+with open(args.prev_result, encoding="utf-8") as stream:
+    previous = json.load(stream)
+if set(previous["files"]) != {"passed.cpp"}:
+    raise SystemExit(9)
+with open(args.output, "w", encoding="utf-8") as stream:
+    json.dump({
+        "total_seconds": 1,
+        "files": {
+            path: {
+                "verifications": [{"status": "success", "elapsed": 0.1}],
+                "newest": True,
+            }
+            for path in ("passed.cpp", "failed.cpp")
+        },
+    }, stream)
+"""
+
+
 def write_executable(path: Path, source: str) -> None:
     path.write_text(source, encoding="utf-8")
     path.chmod(path.stat().st_mode | 0o111)
@@ -96,6 +126,57 @@ def verification_plan(*paths: str, empty: tuple[str, ...] = ()) -> str:
 
 
 class RunCompetitiveVerifierShardsTest(unittest.TestCase):
+    def test_previous_result_is_planned_and_success_only_for_verifier(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            verifier = root / "fake-verifier"
+            plan = root / "verify-files.json"
+            output = root / "result.json"
+            previous = root / "previous.json"
+            shards = root / "shards"
+            write_executable(verifier, PREVIOUS_INSPECTING_VERIFIER)
+            plan.write_text(
+                verification_plan("passed.cpp", "failed.cpp"), encoding="utf-8"
+            )
+            previous.write_text(
+                json.dumps(
+                    {
+                        "total_seconds": 0,
+                        "files": {
+                            "passed.cpp": file_result("success", newest=False),
+                            "failed.cpp": file_result("failure", newest=True),
+                            "stale.cpp": file_result("success", newest=True),
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            status = runner.main(
+                [
+                    "--verifier",
+                    str(verifier),
+                    "--verify-json",
+                    str(plan),
+                    "--output",
+                    str(output),
+                    "--prev-result",
+                    str(previous),
+                    "--shard-dir",
+                    str(shards),
+                    "--jobs",
+                    "1",
+                ]
+            )
+
+            self.assertEqual(status, 0)
+            normalized = runner.read_result(shards / "previous-success.json")
+            self.assertEqual(
+                {path.as_posix() for path in normalized.files}, {"passed.cpp"}
+            )
+            original = runner.read_result(previous)
+            self.assertEqual(len(original.files), 3)
+
     def test_merge_keeps_successes_when_another_file_fails(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

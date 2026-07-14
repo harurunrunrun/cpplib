@@ -91,19 +91,16 @@ GENERATORS = {
 }
 
 
-def main(code=None):
+def main(code=None, argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument("out_dir", type=Path)
+    if code is None:
+        parser.add_argument("code", choices=sorted(GENERATORS))
+    parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=0)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    GENERATORS[code](args.out_dir)
+    GENERATORS[code if code is not None else args.code](args.out_dir)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("code", choices=sorted(GENERATORS))
-    parser.add_argument("out_dir", type=Path)
-    args = parser.parse_args()
-    args.out_dir.mkdir(parents=True, exist_ok=True)
-    GENERATORS[args.code](args.out_dir)
+    main()
