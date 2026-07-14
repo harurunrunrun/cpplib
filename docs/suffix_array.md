@@ -1,5 +1,5 @@
 ---
-title: Suffix Array (接尾辞配列) [number_of_substrings] [SARRAY] [SUBLEX] [suffixarray]
+title: Suffix Array (接尾辞配列) [DISUBSTR] [number_of_substrings] [SARRAY] [SUBLEX] [suffixarray]
 documentation_of: ../src/algorithm/string/suffix_array.hpp
 ---
 
@@ -43,7 +43,8 @@ $N=|s|$ とする。
   `sa` が長さ `N` の置換でなければ例外を送出する。
 - `lcp_array(s)` はsuffix arrayを内部構築して同じLCP列を返す。
 - `number_of_distinct_substrings(s)` は空でない相異なる連続部分列の個数を返す。
-  全suffixの長さの総和から隣接suffixのLCP長の総和を引いて求める。空列では0。
+  戻り値型は long long で、値域は $[0,N(N+1)/2]$。全suffixの長さの
+  総和から隣接suffixのLCP長の総和を引いて求める。空列では0。
 
 ## 注意点
 
