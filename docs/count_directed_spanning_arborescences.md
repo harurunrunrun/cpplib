@@ -31,7 +31,7 @@ long long count_directed_spanning_arborescences(
 
 ## 注意点
 
-- 隣接行列は空でない正方行列で、各要素は `'0'` または `'1'` でなければならない。
+- 頂点数は $1$ 以上 $8$ 以下で、隣接行列は正方、各要素は `'0'` または `'1'` でなければならない。
 - 自己ループは数えない。
 - 行列式は符号付き128 bitのBareiss法で厳密に計算する。
 - 答えが `long long` を越える場合は `overflow_error`、入力前提に違反する場合は `runtime_error` を送出する。

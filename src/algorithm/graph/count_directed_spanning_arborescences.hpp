@@ -64,9 +64,9 @@ inline long long count_directed_spanning_arborescences(
     const std::vector<std::string>& adjacency
 ){
     const int vertex_count = static_cast<int>(adjacency.size());
-    if(vertex_count <= 0)[[unlikely]]{
+    if(vertex_count <= 0 || 8 < vertex_count)[[unlikely]]{
         throw std::runtime_error(
-            "library assertion fault: empty graph "
+            "library assertion fault: range violation "
             "(count_directed_spanning_arborescences)."
         );
     }
