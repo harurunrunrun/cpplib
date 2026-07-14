@@ -1,5 +1,5 @@
 ---
-title: Fenwick Tree (フェンウィック木) [ABC231_F] [DSL_2_B] [point_add_range_sum] [RRSCHED] [TRIPINV] [UPDATEIT] [vertex_add_path_sum]
+title: Fenwick Tree (フェンウィック木) [DSL_2_B] [point_add_range_sum] [RRSCHED] [TRIPINV] [UPDATEIT]
 documentation_of: ../src/structure/other/fenwick_tree.hpp
 ---
 

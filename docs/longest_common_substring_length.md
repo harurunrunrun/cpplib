@@ -1,5 +1,5 @@
 ---
-title: Longest Common Substring Length (最長共通部分文字列長) [ADAPHOTO]
+title: Longest Common Substring Length (最長共通部分文字列長) [ADAPHOTO] [LCS]
 documentation_of: ../src/algorithm/string/longest_common_substring_length.hpp
 ---
 

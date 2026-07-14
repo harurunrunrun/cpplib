@@ -1,5 +1,5 @@
 ---
-title: Suffix Automaton (接尾辞オートマトン) [LCS] [LCS2] [NSUBSTR]
+title: Suffix Automaton (接尾辞オートマトン) [NSUBSTR]
 documentation_of: ../src/algorithm/string/suffix_automaton.hpp
 ---
 

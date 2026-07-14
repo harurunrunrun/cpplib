@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/abc231_f.fenwick_tree.test.cpp"
+#include "../onlinejudge/abc231_f.count_dominance_pairs.test.cpp"

@@ -1,5 +1,5 @@
 ---
-title: Rerooting DP (全方位木DP) [ABC220_F]
+title: Rerooting DP (全方位木DP)
 documentation_of: ../src/algorithm/tree/rerooting_dp.hpp
 ---
 

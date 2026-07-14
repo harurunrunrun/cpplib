@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/lcs.suffix_automaton.test.cpp"
+#include "../onlinejudge/lcs.longest_common_substring_length.test.cpp"

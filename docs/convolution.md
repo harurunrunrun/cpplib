@@ -1,5 +1,5 @@
 ---
-title: Convolution (畳み込み) [ABC196_F] [convolution_mod] [convolution_mod_1000000007]
+title: Convolution (畳み込み) [convolution_mod] [convolution_mod_1000000007]
 documentation_of: ../src/algorithm/fft/convolution.hpp
 ---
 
