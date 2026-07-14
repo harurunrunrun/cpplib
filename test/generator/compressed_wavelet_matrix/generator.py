@@ -91,6 +91,11 @@ def main() -> None:
     )
     (out_dir / "case_00.in").write_text(input_text, encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
+    (out_dir / "case_01.in").write_text("-1 0\n", encoding="utf-8")
+    (out_dir / "case_01.out").write_text(
+        "32769 32768\n0 32767\n2\n32769\nTHROW\n",
+        encoding="utf-8",
+    )
 
 
 if __name__ == "__main__":

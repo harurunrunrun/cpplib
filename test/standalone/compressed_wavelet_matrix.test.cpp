@@ -9,9 +9,40 @@
 #include <vector>
 #include "../../src/structure/wavelet_matrix/compressed_wavelet_matrix.hpp"
 
+void check_fifteen_bit_ids(){
+    constexpr int distinct_count = 1 << 15;
+    std::vector<int> boundary(static_cast<std::size_t>(distinct_count + 1));
+    for(int k = 0; k < distinct_count; k++){
+        boundary[static_cast<std::size_t>(k)] = distinct_count - 1 - k;
+    }
+    boundary.back() = 0;
+
+    CompressedWaveletMatrix<int, distinct_count + 1, 15> matrix(boundary);
+    std::cout << matrix.size() << ' ' << matrix.value_count() << '\n';
+    std::cout << matrix.kth_smallest(0, matrix.size(), 0) << ' '
+        << matrix.kth_largest(0, matrix.size(), 0) << '\n';
+    std::cout << matrix.rank(0, 0, matrix.size()) << '\n';
+    std::cout << matrix.range_freq(0, matrix.size(), distinct_count) << '\n';
+
+    std::vector<int> overflow(static_cast<std::size_t>(distinct_count + 1));
+    for(int k = 0; k <= distinct_count; k++){
+        overflow[static_cast<std::size_t>(k)] = k;
+    }
+    try{
+        CompressedWaveletMatrix<int, distinct_count + 1, 15> invalid(overflow);
+        std::cout << "NO_THROW\n";
+    }catch(const std::runtime_error&){
+        std::cout << "THROW\n";
+    }
+}
+
 int main(){
     int input_n, q;
     if(std::cin >> input_n >> q){
+        if(input_n == -1){
+            check_fifteen_bit_ids();
+            return 0;
+        }
         std::vector<int> input(static_cast<std::size_t>(input_n));
         for(int& value: input) std::cin >> value;
         CompressedWaveletMatrix<int, 256> matrix(input);
