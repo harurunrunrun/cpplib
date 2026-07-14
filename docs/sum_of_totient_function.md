@@ -9,8 +9,7 @@ $$
 \Phi(N)=\sum_{i=1}^{N}\varphi(i)
 $$
 
-を法 `MOD` で求める。現行 Library Checker の公式制約
-$N\le 10^{10}$ に対応する。
+を法 `MOD` で求める。
 
 ## 対応上限
 
@@ -18,7 +17,7 @@ $N\le 10^{10}$ に対応する。
 inline constexpr std::uint64_t math::sum_totient_function_max_n;
 ```
 
-現行公式問題で保証する最大値 $10^{10}$ を表す定数。
+この実装が保証する最大値 $10^{10}$ を表す定数。
 
 ## トーティエント関数の総和
 

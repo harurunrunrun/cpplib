@@ -30,8 +30,7 @@ std::optional<T> distance = shortest_path_with_at_most_one_optional_edge(
 
 `optional_edges_are_bidirectional == false`なら各候補を`from -> to`の有向辺として
 扱う。`true`なら同じコストの`from -> to`と`to -> from`のどちらか一方向を、
-高々1回使える。SPOJ TRAFFICNの既存道路は一方向、候補道路は二方向なので`true`を
-指定する。
+高々1回使える。
 
 `source`、`target`、辺の端点が範囲外、または既存辺・候補辺のコストが負なら
 `std::runtime_error`を送出する。`inf`の意味は`dijkstra`と同じ。

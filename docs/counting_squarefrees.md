@@ -4,7 +4,6 @@ documentation_of: ../src/algorithm/math/counting_squarefrees.hpp
 ---
 
 $1$ 以上 $N$ 以下の無平方数（どの素数の2乗でも割り切れない整数）の個数を求める。
-Library Checker の $N\le 10^{18}$ に対応する。
 
 ## 対応上限
 

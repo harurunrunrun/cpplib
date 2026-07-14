@@ -17,7 +17,6 @@ EuclideanMstResult result = euclidean_mst(points);
 
 向き判定、外接円判定、平方距離を整数演算で行う。外接円判定の中間値が
 128-bit符号付き整数に、座標差の二乗和が128-bit符号なし整数に収まる必要がある。
-Library Checkerの$|x|,|y|\leq10^4$では常に満たされる。
 
 ## `EuclideanMstResult` / `EuclideanMstEdge`
 

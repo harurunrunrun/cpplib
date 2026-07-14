@@ -22,7 +22,7 @@ std::vector<bool> result = wildcard_pattern_matching(text, pattern, wildcard);
 `pattern`または`text`がすべてwildcardなら畳み込みを省略する。
 
 必要なNTT長が$2^{23}$を超える場合、または下記の完全性の上限を超える場合は
-`std::length_error`を送出する。Library Checkerの$|text|\leq524288$はこの範囲内である。
+`std::length_error`を送出する。
 
 ## 完全性
 

@@ -118,7 +118,7 @@ $O(\mathtt{MAX\_POWER}^2\log(N+1))$となる。
   なければならない。
 - `left.length + right.length`が`std::size_t`に収まることを要求する。
 - `T = std::uint32_t`では、C++のunsigned加算・乗算が$2^{32}$を法として
-  wrapするため、SPOJ GSS8の剰余を追加のmod演算なしで正確に表す。
+  wrapする。
 - signed整数型のoverflowは未定義動作である。途中結果が型に収まることを
   保証するか、unsigned整数型またはmod整数型を使う。
 - `moment[p]`の位置は常にaggregateの左端から1始まりである。絶対indexを

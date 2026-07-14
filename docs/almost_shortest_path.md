@@ -56,7 +56,7 @@ $N=n$、$M=edges.size()$ とする。
 ## 注意点
 
 - `source`, `target`, `from`, `to` は $[0,N)$ に含まれ、辺重みは非負でなければならない。違反時は `runtime_error` を送出する。
-- `source == target` では空路を最短路として扱い、辺を除外せず `reachable = true`, `distance = 0` を返す。SPOJ SAMER08Aの入力では `source != target` が保証される。
+- `source == target` では空路を最短路として扱い、辺を除外せず `reachable = true`, `distance = 0` を返す。
 - 元のグラフで `target` に到達不能なら辺は除外されず、`reachable = false`, `distance = inf` を返す。
-- 0重み辺と並列辺を扱える。SPOJ SAMER08Aの入力は正重みかつ同じ向きの並列辺を含まない。
+- 0重み辺と並列辺を扱える。
 - 到達可能な経路で行う距離加算は `T` で表現できる必要がある。

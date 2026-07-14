@@ -1,0 +1,34 @@
+#pragma once
+
+#include <vector>
+
+#include "sqrt_tree.hpp"
+#include "../types/common_monoids.hpp"
+
+template<class T>
+inline constexpr AddMonoid<T> static_range_sum_add_monoid{};
+
+template<class T, int MAX_SIZE>
+class StaticRangeSumSqrtTree{
+    SqrtTree<static_range_sum_add_monoid<T>, MAX_SIZE> tree;
+
+public:
+    StaticRangeSumSqrtTree() = default;
+
+    explicit StaticRangeSumSqrtTree(const std::vector<T>& values):
+        tree(values){}
+
+    void build(const std::vector<T>& values){ tree.build(values); }
+
+    int size() const{ return tree.size(); }
+    bool empty() const{ return tree.empty(); }
+    T get(int index) const{ return tree.get(index); }
+
+    T sum(int left, int right) const{
+        return left == right ? T(0) : tree.prod(left, right);
+    }
+
+    T all_sum() const{
+        return tree.empty() ? T(0) : tree.all_prod();
+    }
+};

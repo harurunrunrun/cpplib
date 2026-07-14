@@ -4,15 +4,12 @@ documentation_of: ../src/algorithm/math/sum_of_multiplicative_function_large.hpp
 ---
 
 素数冪での値と素数上の累積和が分かる乗法的関数を、
-$N$ 以下で高速に総和する。現行 Library Checker の公式問題では
+$N$ 以下で高速に総和する。乗法的関数なので $f(1)=1$ とする。
+`LinearPrimePowerMultiplicativeFunction` は、次の関数族を表す。
 
 $$
-f(p^e)=ae+bp,\qquad
-\sum_{n=1}^{N}f(n)\pmod{469762049}
+f(p^e)=ae+bp
 $$
-
-を求め、$N\le 10^{13}$ である。乗法的関数なので $f(1)=1$ とする。
-公式の最終出力はテストケースごとに1個の剰余である。
 
 ## 対応上限
 
@@ -60,7 +57,7 @@ struct math::LinearPrimePowerMultiplicativeFunction {
 ```
 
 `exponent_coefficient * exponent + prime_coefficient * prime`、
-すなわち公式入力の $ae+bp$ を返す。`operator()` は $O(1)$。
+すなわち $ae+bp$ を返す。`operator()` は $O(1)$。
 
 ## 汎用総和器
 
@@ -135,7 +132,7 @@ $$
 このように `quotient_values()` を使えば、$a+bp$ 以外の素数累積和 provider
 も安全に接続できる。
 
-## 公式問題用の高水準 API
+## 線形素数冪関数用の高水準 API
 
 ```cpp
 template<int MOD = 469762049>
@@ -175,5 +172,4 @@ DFS で素数冪を列挙する。$p^3$ が残り上限を超える枝は
 - `MOD >= 1`。
 - `function(p,e)` は `Modint<MOD>` に変換できる値を返す。
 - `prime_prefix` は同じ `n` の総和器が返す商配置に対応させる。
-- 公式入力では $1\le N\le10^{13}$、$0\le a,b<469762049$。
-- 複数ケースでは公式 verifier が $T\sqrt N\le10^6$ も要求する。
+- `n <= sum_multiplicative_function_large_max_n` が必要。

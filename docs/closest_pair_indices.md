@@ -17,7 +17,6 @@ ClosestPairResult result = closest_pair_indices(points);
 同じ座標を持つ異なる入力点も区別する。
 
 0点または1点では組が存在しない。座標差の二乗和が128-bit符号なし整数に収まる必要がある。
-Library Checkerの$|x|,|y|\leq10^9$では常に満たされる。
 
 ## `ClosestPairResult`
 
