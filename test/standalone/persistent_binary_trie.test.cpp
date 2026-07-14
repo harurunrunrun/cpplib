@@ -86,6 +86,9 @@ int main(){
     PersistentBinaryTrie<int, 10, 30000, 1024> trie;
     std::vector<std::vector<int>> versions(1);
     std::mt19937 rng(20260718);
+    assert(trie.versions() == 1);
+    assert(trie.node_count() == 1);
+    assert(trie.root(0) == 0);
 
     for(int step = 0; step < 700; step++){
         int base = static_cast<int>(rng() % versions.size());
@@ -93,18 +96,30 @@ int main(){
         int type = static_cast<int>(rng() % 10);
         int next_version;
         auto next_values = versions[static_cast<std::size_t>(base)];
+        int nodes_before = trie.node_count();
+        int base_root = trie.root(base);
+        bool existed = trie.contains(base, x);
         if(type < 5){
             next_version = trie.insert(base, x);
             next_values.push_back(x);
+            assert(trie.node_count() == nodes_before + 11);
         }else if(type < 8){
             next_version = trie.erase(base, x);
             auto it = std::find(next_values.begin(), next_values.end(), x);
             if(it != next_values.end()) next_values.erase(it);
+            assert(trie.node_count() == nodes_before + (existed ? 11 : 0));
         }else{
             next_version = trie.fork(base);
+            assert(trie.node_count() == nodes_before);
         }
         versions.push_back(next_values);
         assert(next_version == static_cast<int>(versions.size()) - 1);
+        assert(trie.versions() == static_cast<int>(versions.size()));
+        if(type >= 8 || (type >= 5 && !existed)){
+            assert(trie.root(next_version) == base_root);
+        }else{
+            assert(trie.root(next_version) != base_root);
+        }
 
         for(int q = 0; q < 8; q++){
             int v = static_cast<int>(rng() % versions.size());

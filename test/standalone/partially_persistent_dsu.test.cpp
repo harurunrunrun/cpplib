@@ -41,6 +41,9 @@ struct NaiveDSU{
 void compare_all(const PartiallyPersistentDSU<30, 300>& dsu, int version, const NaiveDSU& naive){
     assert(dsu.groups(version) == naive.group_count);
     for(int i = 0; i < 30; i++){
+        int root = dsu.leader(version, i);
+        assert(dsu.leader(version, root) == root);
+        assert(naive.same(i, root));
         assert(dsu.component_size(version, i) == naive.component_size(i));
         for(int j = 0; j < 30; j++){
             assert(dsu.same(version, i, j) == naive.same(i, j));
@@ -101,6 +104,9 @@ int main(){
     PartiallyPersistentDSU<30, 300> dsu(30);
     std::vector<NaiveDSU> naive(1);
     std::mt19937 rng(20260714);
+    assert(dsu.size() == 30);
+    assert(dsu.versions() == 1);
+    assert(dsu.latest_version() == 0);
 
     for(int step = 0; step < 250; step++){
         int u = static_cast<int>(rng() % 30);
@@ -110,6 +116,9 @@ int main(){
         int version = dsu.merge(u, v);
         assert(version == static_cast<int>(naive.size()));
         naive.push_back(next);
+        assert(dsu.size() == 30);
+        assert(dsu.versions() == static_cast<int>(naive.size()));
+        assert(dsu.latest_version() == version);
 
         for(int t = 0; t < 20; t++){
             int qv = static_cast<int>(rng() % naive.size());

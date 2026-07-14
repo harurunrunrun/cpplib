@@ -60,6 +60,9 @@ int main(){
 
     PartiallyPersistentArray<std::int64_t, 64, MAX_UPDATE> a(initial);
     std::vector<std::vector<std::int64_t>> expected(1, initial);
+    assert(a.size() == N);
+    assert(a.versions() == 1);
+    assert(a.latest_version() == 0);
 
     for(int q = 0; q < MAX_UPDATE; q++){
         int k = (int)(rng() % N);
@@ -81,6 +84,9 @@ int main(){
         }
         assert(a.get(k) == x);
     }
+    assert(a.size() == N);
+    assert(a.versions() == static_cast<int>(expected.size()));
+    assert(a.latest_version() + 1 == a.versions());
 
     std::array<Box, 3> boxes{Box(1), Box(2), Box(3)};
     PartiallyPersistentArray<Box, 3, 2> non_default(boxes);

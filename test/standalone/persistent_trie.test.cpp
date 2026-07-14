@@ -68,6 +68,10 @@ int main(){
     PersistentTrie<4, 30000, 1024> trie;
     std::vector<std::map<std::string, int>> versions(1);
     std::mt19937 rng(20260717);
+    assert(trie.versions() == 1);
+    assert(trie.node_count() == 2);
+    assert(trie.node(0, "") == trie.root(0));
+    assert(trie.size(0) == 0);
 
     for(int step = 0; step < 700; step++){
         int base = static_cast<int>(rng() % versions.size());
@@ -75,17 +79,31 @@ int main(){
         int type = static_cast<int>(rng() % 10);
         int next_version;
         auto next_map = versions[static_cast<std::size_t>(base)];
+        int nodes_before = trie.node_count();
+        int base_root = trie.root(base);
+        bool existed = trie.contains(base, s);
         if(type < 5){
             next_version = trie.insert(base, s);
             next_map[s]++;
+            assert(trie.node_count() == nodes_before + static_cast<int>(s.size()) + 1);
         }else if(type < 8){
             next_version = trie.erase(base, s);
             if(next_map[s] > 0) next_map[s]--;
+            int expected_growth = existed ? static_cast<int>(s.size()) + 1 : 0;
+            assert(trie.node_count() == nodes_before + expected_growth);
         }else{
             next_version = trie.fork(base);
+            assert(trie.node_count() == nodes_before);
         }
         versions.push_back(next_map);
         assert(next_version == static_cast<int>(versions.size()) - 1);
+        assert(trie.versions() == static_cast<int>(versions.size()));
+        assert(trie.node(next_version, "") == trie.root(next_version));
+        if(type >= 8 || (type >= 5 && !existed)){
+            assert(trie.root(next_version) == base_root);
+        }else{
+            assert(trie.root(next_version) != base_root);
+        }
 
         for(int q = 0; q < 8; q++){
             int v = static_cast<int>(rng() % versions.size());
@@ -94,6 +112,10 @@ int main(){
             assert(trie.count(v, t) == mp[t]);
             assert(trie.contains(v, t) == (mp[t] > 0));
             assert(trie.prefix_count(v, t) == prefix_count_naive(mp, t));
+            int expected_size = 0;
+            for(const auto& entry: mp) expected_size += entry.second;
+            assert(trie.size(v) == expected_size);
+            assert(trie.node(v, "") == trie.root(v));
         }
     }
 }

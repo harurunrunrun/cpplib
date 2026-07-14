@@ -32,8 +32,17 @@ bool naive_merge(Naive& state, int u, int v, long long w){
 
 void check_all(const RollbackWeightedDSU<long long, 32, 2000>& dsu, const Naive& naive){
     int n = static_cast<int>(naive.component.size());
+    assert(dsu.size() == n);
     assert(dsu.groups() == naive.groups);
     for(int i = 0; i < n; i++){
+        int root = dsu.leader(i);
+        assert(dsu.leader(root) == root);
+        assert(dsu.weight(root) == 0);
+        int expected_size = 0;
+        for(int component: naive.component){
+            expected_size += component == naive.component[i];
+        }
+        assert(dsu.component_size(i) == expected_size);
         for(int j = 0; j < n; j++){
             assert(dsu.same(i, j) == (naive.component[i] == naive.component[j]));
             if(dsu.same(i, j)){
@@ -72,6 +81,7 @@ void self_test(){
             for(int i = 0; i < n; i++) initial.component[static_cast<std::size_t>(i)] = i;
             Naive naive = initial;
             std::vector<Naive> states = {naive};
+            assert(dsu.snapshot() == 0);
 
             for(int op = 0; op < 200; op++){
                 int type = static_cast<int>(rng() % 5);
@@ -92,6 +102,7 @@ void self_test(){
                     states.resize(static_cast<std::size_t>(snap + 1));
                     naive = states.back();
                 }
+                assert(dsu.snapshot() == static_cast<int>(states.size()) - 1);
                 check_all(dsu, naive);
             }
         }

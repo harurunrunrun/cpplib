@@ -88,6 +88,7 @@ int main(){
     assert(dsu.size() == N);
     assert(dsu.versions() == 1);
     assert(dsu.latest_version() == 0);
+    assert(dsu.nodes_used() == 0);
     assert(dsu.groups(0) == N);
 
     std::mt19937 rng(123456789);
@@ -97,17 +98,22 @@ int main(){
         int u = static_cast<int>(rng() % N);
         int v = static_cast<int>(rng() % N);
         int type = static_cast<int>(rng() % 5);
+        int nodes_before = dsu.nodes_used();
 
         if(type == 0){
             int created = dsu.fork(base);
             naive.push_back(naive[base]);
             assert(created == static_cast<int>(naive.size()) - 1);
+            assert(dsu.nodes_used() == nodes_before);
         }else if(type <= 2){
+            bool already_same = naive[base].same(u, v);
             int created = dsu.merge(base, u, v);
             NaiveDSU expected = naive[base];
             expected.merge(u, v);
             naive.push_back(expected);
             assert(created == static_cast<int>(naive.size()) - 1);
+            if(already_same) assert(dsu.nodes_used() == nodes_before);
+            else assert(dsu.nodes_used() > nodes_before);
         }else{
             assert(dsu.same(base, u, v) == naive[base].same(u, v));
             assert(dsu.component_size(base, u) == naive[base].component_size(u));
@@ -117,6 +123,9 @@ int main(){
         for(int version = 0; version < static_cast<int>(naive.size()); version++){
             assert(dsu.groups(version) == naive[version].groups());
             for(int a = 0; a < N; a++){
+                int root = dsu.leader(version, a);
+                assert(dsu.leader(version, root) == root);
+                assert(naive[version].same(a, root));
                 assert(dsu.component_size(version, a) == naive[version].component_size(a));
                 for(int b = 0; b < N; b++){
                     assert(dsu.same(version, a, b) == naive[version].same(a, b));
@@ -127,4 +136,5 @@ int main(){
 
     assert(dsu.versions() == static_cast<int>(naive.size()));
     assert(dsu.latest_version() == dsu.versions() - 1);
+    assert(dsu.nodes_used() > 0);
 }
