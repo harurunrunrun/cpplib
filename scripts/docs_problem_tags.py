@@ -129,37 +129,54 @@ def primary_sources(wrapper: Path, source: str) -> list[Path]:
     key = stem.split(".", 1)[-1]
     key = PRIMARY_SOURCE_ALIASES.get(key, key)
     normalized_key = normalize_identifier(key)
-    non_helper_targets = [
-        target for target in targets if target.stem not in HELPER_SOURCE_STEMS
-    ]
-    scoring_targets = non_helper_targets or targets
-    scores: list[tuple[int, int, int]] = []
-    for target in scoring_targets:
+    def match_score(target: Path) -> tuple[int, int, int]:
         normalized_stem = normalize_identifier(target.stem)
         if normalized_stem == normalized_key:
-            score = (3, len(normalized_stem), 0)
-        elif len(normalized_key) >= 4 and normalized_key in normalized_stem:
+            return (3, len(normalized_stem), 0)
+        if len(normalized_key) >= 4 and normalized_key in normalized_stem:
             # Prefer a more-specific header such as
             # circle_circle_cross_points.hpp for ``circle_cross_points``.
-            score = (
+            return (
                 2,
                 -abs(len(normalized_stem) - len(normalized_key)),
                 len(normalized_stem),
             )
-        elif len(normalized_stem) >= 4 and normalized_stem in normalized_key:
+        if len(normalized_stem) >= 4 and normalized_stem in normalized_key:
             # For ``segment_cross_point``, prefer cross_point.hpp to the
             # transitive cross.hpp dependency by using the longest match.
-            score = (1, len(normalized_stem), 0)
-        else:
-            score = (0, 0, 0)
-        scores.append(score)
-    best = max(scores)
-    if best[0] > 0:
+            return (1, len(normalized_stem), 0)
+        return (0, 0, 0)
+
+    def best_matches(candidates: list[Path]) -> list[Path]:
+        scores = [match_score(target) for target in candidates]
+        if not scores:
+            return []
+        best = max(scores)
+        if best[0] == 0:
+            return []
         return [
             target
-            for target, score in zip(scoring_targets, scores)
+            for target, score in zip(candidates, scores)
             if score == best
         ]
+
+    # A directly included answer API owns the problem tag even when its
+    # implementation includes a generic backend with an equally similar name.
+    direct_non_helpers = [
+        target
+        for target in direct_targets
+        if target.stem not in HELPER_SOURCE_STEMS
+    ]
+    direct_matches = best_matches(direct_non_helpers or direct_targets)
+    if direct_matches:
+        return direct_matches
+
+    non_helper_targets = [
+        target for target in targets if target.stem not in HELPER_SOURCE_STEMS
+    ]
+    transitive_matches = best_matches(non_helper_targets or targets)
+    if transitive_matches:
+        return transitive_matches
 
     non_helpers = [target for target in direct_targets if target.stem not in HELPER_SOURCE_STEMS]
     if len(non_helpers) == 1:

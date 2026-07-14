@@ -76,6 +76,41 @@ class DocsProblemTagsTransitiveSourcesTest(unittest.TestCase):
             "cgl_3_c.point_in_polygon.test.cpp", ["area", "contains"], "contains"
         )
 
+    def test_direct_answer_api_wins_over_similar_transitive_backend(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            wrapper = (
+                root / "test" / "onlinejudge" / "point_add_rectangle_sum.test.cpp"
+            )
+            answer_api = (
+                root
+                / "src"
+                / "algorithm"
+                / "other"
+                / "offline_point_add_rectangle_sum.hpp"
+            )
+            backend = (
+                root
+                / "src"
+                / "structure"
+                / "rectangle"
+                / "dynamic_point_add_rectangle_sum.hpp"
+            )
+            wrapper.parent.mkdir(parents=True)
+            answer_api.parent.mkdir(parents=True)
+            backend.parent.mkdir(parents=True)
+            answer_api.write_text(
+                '#include "../../structure/rectangle/dynamic_point_add_rectangle_sum.hpp"\n',
+                encoding="utf-8",
+            )
+            backend.write_text("#pragma once\n", encoding="utf-8")
+            source = (
+                '#include "../../src/algorithm/other/'
+                'offline_point_add_rectangle_sum.hpp"\n'
+            )
+
+            self.assertEqual(primary_sources(wrapper, source), [answer_api.resolve()])
+
 
 if __name__ == "__main__":
     unittest.main()
