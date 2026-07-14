@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/phonelst.trie.test.cpp"
+#include "../onlinejudge/phonelst.phone_list_consistency.test.cpp"
