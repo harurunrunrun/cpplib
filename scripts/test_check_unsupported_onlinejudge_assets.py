@@ -80,6 +80,17 @@ class UnsupportedOnlinejudgeAssetsTest(unittest.TestCase):
             add_assets(root, "offline_atcoder_abc001_a", wrapper)
             self.assertEqual(find_violations(root), [])
 
+    def test_kattis_assets_are_accepted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            wrapper = add_wrapper(
+                root,
+                "cats.answer.test.cpp",
+                "https://open.kattis.com/problems/cats",
+            )
+            add_assets(root, "offline_kattis_cats", wrapper)
+            self.assertEqual(find_violations(root), [])
+
     def test_wrong_include_and_missing_marker_are_reported(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

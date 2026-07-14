@@ -86,6 +86,7 @@ class NormalizePlanTest(unittest.TestCase):
             "https://br.spoj.com/problems/EXAMPLE/",
             "https://codechef.com/problems/EXAMPLE",
             "https://www.codechef.com/problems/EXAMPLE",
+            "https://open.kattis.com/problems/example",
         )
         for url in urls:
             with self.subTest(url=url):
@@ -116,6 +117,7 @@ class NormalizePlanTest(unittest.TestCase):
             "https://codechef.com.example.com/problems/A",
             "https://example-spoj.com/problems/A/",
             "https://judge.yosupo.jp/problem/aplusb",
+            "https://open.kattis.com.example.com/problems/a",
         )
         for url in urls:
             with self.subTest(url=url):

@@ -30,6 +30,7 @@ def provider_from_source(source: str) -> str | None:
         ("atcoder", "atcoder.jp"),
         ("spoj", "spoj.com"),
         ("codechef", "codechef.com"),
+        ("kattis", "open.kattis.com"),
     ):
         if hostname == domain or hostname.endswith("." + domain):
             return provider

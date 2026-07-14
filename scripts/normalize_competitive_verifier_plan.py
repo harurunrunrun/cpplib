@@ -27,7 +27,9 @@ class PlanNormalizationError(ValueError):
     """The verifier plan has an unexpected or malformed entry."""
 
 
-UNSUPPORTED_PROBLEM_HOSTS = frozenset({"atcoder.jp", "spoj.com", "codechef.com"})
+UNSUPPORTED_PROBLEM_HOSTS = frozenset(
+    {"atcoder.jp", "spoj.com", "codechef.com", "open.kattis.com"}
+)
 
 
 def is_known_unsupported_problem_url(value: object) -> bool:
