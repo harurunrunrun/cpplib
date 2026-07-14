@@ -1,5 +1,5 @@
 ---
-title: Circle Polygon Intersection Area (円と多角形の共通部分面積)
+title: Circle Polygon Intersection Area (円と多角形の共通部分面積) [CGL_7_H]
 documentation_of: ../src/algorithm/geometry/2d/circle_polygon_intersection_area.hpp
 ---
 

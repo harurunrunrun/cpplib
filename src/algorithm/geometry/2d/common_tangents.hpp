@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <initializer_list>
 #include <stdexcept>
 #include <vector>
 
@@ -11,9 +12,12 @@
 #include "same_line.hpp"
 #include "validate_circle.hpp"
 
-inline std::vector<Line> common_tangents(
+namespace common_tangents_detail{
+
+inline std::vector<Line> common_tangents_with_sides(
     const Circle& first,
-    const Circle& second
+    const Circle& second,
+    std::initializer_list<int> same_sides
 ){
     validate_circle(first);
     validate_circle(second);
@@ -27,7 +31,7 @@ inline std::vector<Line> common_tangents(
     }
     if(geometry_sign(abs(center_difference)) == 0) return {};
     std::vector<Line> result;
-    for(const int same_side: {-1, 1}){
+    for(const int same_side: same_sides){
         const long double radius_difference =
             first.radius - same_side * second.radius;
         const long double height_squared =
@@ -56,4 +60,15 @@ inline std::vector<Line> common_tangents(
         }
     }
     return result;
+}
+
+}  // namespace common_tangents_detail
+
+inline std::vector<Line> common_tangents(
+    const Circle& first,
+    const Circle& second
+){
+    return common_tangents_detail::common_tangents_with_sides(
+        first, second, {-1, 1}
+    );
 }
