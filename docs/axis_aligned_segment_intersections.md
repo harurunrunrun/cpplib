@@ -1,5 +1,5 @@
 ---
-title: Axis Aligned Segment Intersections (軸平行線分交差)
+title: Axis Aligned Segment Intersections (軸平行線分交差) [CGL_6_A]
 documentation_of: ../src/algorithm/geometry/2d/axis_aligned_segment_intersections.hpp
 ---
 
