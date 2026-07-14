@@ -8,6 +8,19 @@ struct StronglyConnectedComponentsResult{
     int count;
     std::vector<int> id;
     std::vector<std::vector<int>> groups;
+
+    bool same_component(int first, int second) const{
+        const int vertex_count = static_cast<int>(id.size());
+        if(first < 0 || vertex_count <= first ||
+           second < 0 || vertex_count <= second)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation "
+                "(StronglyConnectedComponentsResult::same_component)."
+            );
+        }
+        return id[static_cast<std::size_t>(first)] ==
+            id[static_cast<std::size_t>(second)];
+    }
 };
 
 StronglyConnectedComponentsResult strongly_connected_components(const std::vector<std::vector<int>>& graph){

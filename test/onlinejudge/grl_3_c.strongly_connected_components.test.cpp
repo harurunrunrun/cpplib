@@ -22,7 +22,6 @@ int main(){
     while(query_count--){
         int from, to;
         std::cin >> from >> to;
-        std::cout << (result.id[static_cast<std::size_t>(from)] ==
-                      result.id[static_cast<std::size_t>(to)]) << '\n';
+        std::cout << result.same_component(from, to) << '\n';
     }
 }
