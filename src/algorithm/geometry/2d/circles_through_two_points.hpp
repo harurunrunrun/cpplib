@@ -7,7 +7,6 @@
 
 #include "distance.hpp"
 #include "rotate90.hpp"
-#include "unit.hpp"
 #include "validate_circle.hpp"
 
 inline std::vector<Circle> circles_through_two_points(
@@ -17,20 +16,27 @@ inline std::vector<Circle> circles_through_two_points(
 ){
     validate_circle({{}, radius});
     const long double chord_length = distance(first, second);
-    if(geometry_sign(chord_length) == 0){
-        if(geometry_sign(radius) == 0) return {{first, radius}};
+    if(chord_length == 0.0L){
+        if(radius == 0.0L) return {{first, radius}};
         throw std::domain_error(
             "infinitely many circles pass through one point"
         );
     }
-    if(geometry_sign(chord_length - 2.0L * radius) > 0) return {};
+    if(circle_numeric_detail::compare(
+        chord_length, 2.0L * radius
+    ) > 0) return {};
 
     const Point midpoint = (first + second) / 2.0L;
     long double height_squared = radius * radius
         - chord_length * chord_length / 4.0L;
-    if(geometry_sign(height_squared) == 0) return {{midpoint, radius}};
+    const int height_sign = circle_numeric_detail::scaled_sign(
+        height_squared,
+        radius * radius + chord_length * chord_length / 4.0L
+    );
+    if(height_sign < 0) return {};
+    if(height_sign == 0) return {{midpoint, radius}};
     height_squared = std::max(0.0L, height_squared);
-    const Point offset = rotate90(unit(second - first))
+    const Point offset = rotate90((second - first) / chord_length)
         * std::sqrt(height_squared);
     std::vector<Circle> result = {
         {midpoint - offset, radius},

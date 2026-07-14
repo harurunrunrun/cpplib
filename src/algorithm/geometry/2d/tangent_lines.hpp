@@ -12,8 +12,8 @@ inline std::vector<Line> tangent_lines(
     const Point& point
 ){
     validate_circle(circle);
-    if(geometry_sign(circle.radius) == 0){
-        if(point == circle.center){
+    if(circle.radius == 0.0L){
+        if(point.x == circle.center.x && point.y == circle.center.y){
             throw std::domain_error(
                 "a point circle has no unique tangent at its center"
             );
@@ -22,7 +22,7 @@ inline std::vector<Line> tangent_lines(
     }
     std::vector<Line> result;
     for(const Point& tangent_point: tangent_points(circle, point)){
-        if(tangent_point == point){
+        if(tangent_point.x == point.x && tangent_point.y == point.y){
             result.push_back({
                 tangent_point,
                 tangent_point + rotate90(tangent_point - circle.center),

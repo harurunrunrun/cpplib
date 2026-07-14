@@ -15,3 +15,6 @@ documentation_of: ../src/algorithm/geometry/2d/circle_relation.hpp
 ## 注意点
 
 負の半径には `std::invalid_argument` を送出する。接触と一致の判定には許容誤差を用いる。
+
+- 円の中心座標と半径は有限値であること。非有限値または負半径にはstd::invalid_argumentを送出する。
+- 中心距離・半径和・半径差を同じ長さscaleで比較する。同一点の半径0円同士はCIRCLE_COINCIDENT。

@@ -11,19 +11,24 @@
 #include "../geometry_sign.hpp"
 #include "../norm.hpp"
 #include "../types.hpp"
+#include "../validate_circle.hpp"
 
 namespace circle_polygon_intersection_internal{
 
 inline long double edge_area(Point a, Point b, long double radius){
     const Point direction = b - a;
     const long double aa = norm(direction);
-    if(geometry_sign(aa) == 0) return 0.0L;
+    if(aa == 0.0L) return 0.0L;
 
     std::vector<long double> parameters = {0.0L, 1.0L};
     const long double bb = 2.0L * dot(a, direction);
     const long double cc = norm(a) - radius * radius;
     long double discriminant = bb * bb - 4.0L * aa * cc;
-    if(discriminant >= -GEOMETRY_EPS){
+    const int discriminant_sign = circle_numeric_detail::scaled_sign(
+        discriminant,
+        bb * bb + std::fabs(4.0L * aa * cc)
+    );
+    if(discriminant_sign >= 0){
         discriminant = std::max(0.0L, discriminant);
         const long double root = std::sqrt(discriminant);
         const long double first = (-bb - root) / (2.0L * aa);
@@ -47,7 +52,11 @@ inline long double edge_area(Point a, Point b, long double radius){
         const Point p = a + direction * left;
         const Point q = a + direction * right;
         const Point middle = a + direction * ((left + right) / 2.0L);
-        if(norm(middle) <= radius * radius + GEOMETRY_EPS){
+        const long double middle_squared = norm(middle);
+        const long double radius_squared = radius * radius;
+        if(circle_numeric_detail::scaled_sign(
+            middle_squared - radius_squared, middle_squared + radius_squared
+        ) <= 0){
             result += cross(p, q) / 2.0L;
         }else{
             result += radius * radius * std::atan2(cross(p, q), dot(p, q)) / 2.0L;

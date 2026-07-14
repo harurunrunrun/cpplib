@@ -14,6 +14,9 @@ inline std::vector<Point> circle_circle_cross_points(
 ){
     const int relation = circle_relation(first, second);
     if(relation == CIRCLE_COINCIDENT){
+        if(first.radius == 0.0L && second.radius == 0.0L){
+            return {first.center};
+        }
         throw std::domain_error(
             "coincident circles have infinitely many intersections"
         );
@@ -27,11 +30,15 @@ inline std::vector<Point> circle_circle_cross_points(
     ) / (2.0L * center_distance);
     const long double height_squared =
         first.radius * first.radius - along * along;
-    if(geometry_sign(height_squared) < 0) return {};
+    const int height_sign = circle_numeric_detail::scaled_sign(
+        height_squared,
+        first.radius * first.radius + along * along
+    );
+    if(height_sign < 0) return {};
     const Point direction =
         (second.center - first.center) / center_distance;
     const Point base = first.center + direction * along;
-    if(geometry_sign(height_squared) == 0) return {base};
+    if(height_sign == 0) return {base};
     const long double height =
         std::sqrt(std::max<long double>(0.0L, height_squared));
     std::vector<Point> result = {
