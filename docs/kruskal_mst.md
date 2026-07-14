@@ -1,5 +1,5 @@
 ---
-title: Kruskal MST (クラスカル法) [GRL_2_A] [minimum_spanning_tree]
+title: Kruskal MST (クラスカル法) [BLINNET] [GRL_2_A] [minimum_spanning_tree]
 documentation_of: ../src/algorithm/graph/kruskal_mst.hpp
 ---
 
