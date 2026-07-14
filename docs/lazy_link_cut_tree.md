@@ -1,5 +1,5 @@
 ---
-title: Lazy Link Cut Tree (遅延リンクカット木) [dynamic_tree_vertex_add_path_sum] [GSS7]
+title: Lazy Link Cut Tree (遅延リンクカット木) [GSS7]
 documentation_of: ../src/structure/tree/lazy_link_cut_tree.hpp
 ---
 

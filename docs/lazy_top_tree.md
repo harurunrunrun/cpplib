@@ -1,5 +1,5 @@
 ---
-title: Lazy Top Tree (遅延トップ木) [dynamic_tree_vertex_add_path_sum]
+title: Lazy Top Tree (遅延トップ木)
 documentation_of: ../src/structure/tree/lazy_top_tree.hpp
 ---
 
