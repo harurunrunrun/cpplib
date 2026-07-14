@@ -174,7 +174,7 @@ int main(){
         int m;
         std::cin >> s >> m;
         if(m == -1){
-            auto large_tree = std::make_unique<PalindromicTree<1, 100005>>(s);
+            auto large_tree = std::make_unique<PalindromicTree<1, 1000002>>(s);
             std::cout << large_tree->count_palindromic_substrings() << '\n';
             continue;
         }

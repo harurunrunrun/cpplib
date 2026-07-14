@@ -22,7 +22,9 @@ int main(){
     std::string text;
     std::cin >> text;
 
-    auto tree = std::make_unique<PalindromicTree<26, 500002>>();
+    // The official constraints allow |text| = 1,000,000. An eertree can
+    // contain one node for every character in addition to its two roots.
+    auto tree = std::make_unique<PalindromicTree<26, 1000002>>();
     std::vector<int> longest_suffix;
     longest_suffix.reserve(text.size());
     for(char character: text){

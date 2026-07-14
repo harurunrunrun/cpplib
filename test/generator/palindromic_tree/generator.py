@@ -70,7 +70,9 @@ def main() -> None:
         for t in queries:
             output_lines.append(f"{int(t in pals)} {occurrence(s, t) if t in pals else 0}")
 
-    large_n = 100000
+    # Maximum-length unary text creates one distinct palindrome per character,
+    # so this also exercises the exact n + 2 node-capacity boundary.
+    large_n = 1000000
     input_lines.append("a" * large_n + " -1")
     output_lines.append(str(large_n * (large_n + 1) // 2))
 
