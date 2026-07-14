@@ -15,6 +15,7 @@ private:
         std::array<int, ALPHABET> next{};
         int parent = 0;
         int fail = 0;
+        int output_link_plus_one = 0;
         int terminal_count = 0;
         int output_count = 0;
     };
@@ -48,6 +49,12 @@ public:
     int node_count() const{ return used; }
     bool is_built() const{ return built; }
 
+    void clear(){
+        for(int v = 0; v < used; v++) nodes[v] = Node();
+        used = 1;
+        built = false;
+    }
+
     int add(std::string_view pattern){
         if(built)[[unlikely]]{
             throw std::runtime_error("library assertion fault: already built (add).");
@@ -72,6 +79,10 @@ public:
         while(!que.empty()){
             int v = que.front();
             que.pop();
+            const int failure = nodes[v].fail;
+            nodes[v].output_link_plus_one = nodes[failure].terminal_count > 0
+                ? failure + 1
+                : nodes[failure].output_link_plus_one;
             nodes[v].output_count = nodes[v].terminal_count + nodes[nodes[v].fail].output_count;
             for(int c = 0; c < ALPHABET; c++){
                 int to = nodes[v].next[c];
@@ -116,6 +127,15 @@ public:
             throw std::runtime_error("library assertion fault: range violation (failure_link).");
         }
         return nodes[state].fail;
+    }
+    int output_link(int state) const{
+        if(!built)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: not built (output_link).");
+        }
+        if(state < 0 || used <= state)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (output_link).");
+        }
+        return nodes[state].output_link_plus_one - 1;
     }
     int output_count(int state) const{
         if(!built)[[unlikely]]{

@@ -48,6 +48,7 @@ void test_state_api(){
     expect_aho_error([&]{ (void)ac.next_state(0, 'a'); });
     expect_aho_error([&]{ (void)ac.output_count(0); });
     expect_aho_error([&]{ (void)ac.failure_link(0); });
+    expect_aho_error([&]{ (void)ac.output_link(0); });
     expect_aho_error([&]{ (void)ac.count_matches("a"); });
 
     ac.build();
@@ -66,6 +67,12 @@ void test_state_api(){
     assert(ac.failure_link(ba) == a);
     assert(ac.failure_link(ab) == b);
     assert(ac.failure_link(aba) == ba);
+    assert(ac.output_link(root) == -1);
+    assert(ac.output_link(a) == root);
+    assert(ac.output_link(b) == root);
+    assert(ac.output_link(ba) == a);
+    assert(ac.output_link(ab) == root);
+    assert(ac.output_link(aba) == ba);
     assert(ac.terminal_count(ab) == 0);
     assert(ac.output_count(root) == 1);
     assert(ac.output_count(a) == 3);
@@ -89,6 +96,16 @@ void test_state_api(){
     expect_aho_error([&]{ (void)ac.parent(ac.node_count()); });
     expect_aho_error([&]{ (void)ac.failure_link(-1); });
     expect_aho_error([&]{ (void)ac.failure_link(ac.node_count()); });
+    expect_aho_error([&]{ (void)ac.output_link(-1); });
+    expect_aho_error([&]{ (void)ac.output_link(ac.node_count()); });
+
+    ac.clear();
+    assert(ac.node_count() == 1);
+    assert(!ac.is_built());
+    assert(ac.add("c") == 1);
+    ac.build();
+    assert(ac.count_matches("cc") == 2);
+
     AhoCorasick<2, 2> capacity;
     capacity.add("a");
     expect_aho_error([&]{ (void)capacity.add("b"); });
