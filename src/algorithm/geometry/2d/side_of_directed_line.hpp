@@ -7,8 +7,14 @@
 
 inline int side_of_directed_line(const Line& line, const Point& point){
     const Point direction = line.b - line.a;
-    if(geometry_sign(abs(direction)) == 0)[[unlikely]]{
+    const long double length = abs(direction);
+    if(geometry_sign(length) == 0)[[unlikely]]{
         throw std::invalid_argument("degenerate line");
     }
-    return geometry_sign(cross(direction, point - line.a));
+    const Point relative = point - line.a;
+    const long double roundoff =
+        std::abs(direction.x * relative.y) + std::abs(direction.y * relative.x);
+    return geometry_scaled_sign(
+        cross(direction, relative), length, roundoff
+    );
 }

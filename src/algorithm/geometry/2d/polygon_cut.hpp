@@ -7,8 +7,9 @@
 #include <utility>
 #include <vector>
 
-#include "area.hpp"
+#include "abs.hpp"
 #include "contains.hpp"
+#include "cross.hpp"
 #include "cross_point.hpp"
 
 struct PolygonLineCutResult{
@@ -17,6 +18,33 @@ struct PolygonLineCutResult{
 };
 
 namespace polygon_line_cut_detail{
+
+inline int signed_area_sign(const std::vector<Point>& polygon){
+    if(polygon.empty()) return 0;
+    const Point origin = polygon.front();
+    long double value = 0.0L;
+    long double coordinate_scale = 0.0L;
+    long double roundoff_scale = 0.0L;
+    for(std::size_t index = 0; index < polygon.size(); ++index){
+        const Point first = polygon[index] - origin;
+        const Point second =
+            polygon[(index + 1) % polygon.size()] - origin;
+        value += cross(first, second);
+        coordinate_scale = std::max({
+            coordinate_scale,
+            abs(first),
+            abs(second),
+        });
+        roundoff_scale +=
+            std::abs(first.x * second.y)
+            + std::abs(first.y * second.x);
+    }
+    return geometry_scaled_sign(
+        value,
+        coordinate_scale * coordinate_scale,
+        roundoff_scale
+    );
+}
 
 struct BoundaryGraph{
     std::vector<Point> vertices;
@@ -109,7 +137,7 @@ struct BoundaryGraph{
                     }
                 }
                 if(!closed || polygon.size() < 3) continue;
-                if(geometry_sign(area(polygon)) <= 0) continue;
+                if(signed_area_sign(polygon) <= 0) continue;
                 result.push_back(std::move(polygon));
             }
         }
@@ -143,10 +171,12 @@ inline PolygonLineCutResult polygon_cut(
     const std::vector<Point>& polygon,
     const Line& line
 ){
-    const Point direction = line.b - line.a;
-    if(geometry_sign(abs(direction)) == 0)[[unlikely]]{
+    const Point raw_direction = line.b - line.a;
+    const long double direction_length = abs(raw_direction);
+    if(geometry_sign(direction_length) == 0)[[unlikely]]{
         throw std::invalid_argument("degenerate line");
     }
+    const Point direction = raw_direction / direction_length;
     polygon_line_cut_detail::BoundaryGraph left_graph;
     polygon_line_cut_detail::BoundaryGraph right_graph;
     std::vector<Point> on_line;

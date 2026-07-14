@@ -22,3 +22,4 @@ documentation_of: ../src/algorithm/geometry/2d/polygon_line_intersections.hpp
 ## 注意点
 
 退化直線では `std::invalid_argument`。
+退化判定に該当しない範囲では、直線の方向ベクトルを正の定数倍しても交点集合と順序は変わらない。

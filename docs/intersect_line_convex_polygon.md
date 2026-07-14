@@ -23,3 +23,4 @@ documentation_of: ../src/algorithm/geometry/2d/intersect_line_convex_polygon.hpp
 ## 注意点
 
 退化直線には `std::invalid_argument` を送出する。空の凸集合には `false` を返す。
+退化判定に該当しない範囲では、直線の方向ベクトルを正の定数倍しても判定は変わらない。

@@ -6,7 +6,17 @@
 #include "dot.hpp"
 
 inline bool orthogonal(const Point& left, const Point& right){
-    return geometry_sign(dot(left, right)) == 0;
+    const long double left_length = abs(left);
+    const long double right_length = abs(right);
+    if(geometry_sign(left_length) == 0 ||
+       geometry_sign(right_length) == 0){
+        return true;
+    }
+    const long double roundoff =
+        std::abs(left.x * right.x) + std::abs(left.y * right.y);
+    return geometry_scaled_sign(
+        dot(left, right), left_length * right_length, roundoff
+    ) == 0;
 }
 
 inline bool orthogonal(const Line& left, const Line& right){

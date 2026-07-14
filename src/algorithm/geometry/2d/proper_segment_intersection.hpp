@@ -1,22 +1,19 @@
 #pragma once
 
-#include "cross.hpp"
+#include "abs.hpp"
+#include "side_of_directed_line.hpp"
 
 inline bool proper_segment_intersection(
     const Segment& first,
     const Segment& second
 ){
-    const int first_a = geometry_sign(cross(
-        first.b - first.a, second.a - first.a
-    ));
-    const int first_b = geometry_sign(cross(
-        first.b - first.a, second.b - first.a
-    ));
-    const int second_a = geometry_sign(cross(
-        second.b - second.a, first.a - second.a
-    ));
-    const int second_b = geometry_sign(cross(
-        second.b - second.a, first.b - second.a
-    ));
+    const auto side = [](const Segment& segment, const Point& point){
+        if(geometry_sign(abs(segment.b - segment.a)) == 0) return 0;
+        return side_of_directed_line(segment, point);
+    };
+    const int first_a = side(first, second.a);
+    const int first_b = side(first, second.b);
+    const int second_a = side(second, first.a);
+    const int second_b = side(second, first.b);
     return first_a * first_b < 0 && second_a * second_b < 0;
 }

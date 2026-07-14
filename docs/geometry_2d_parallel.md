@@ -14,4 +14,6 @@ documentation_of: ../src/algorithm/geometry/2d/parallel.hpp
 
 ## 注意点
 
-許容誤差付きの外積判定を行う。退化直線は渡してはならない。
+2ベクトルの長さの積をscaleとする許容誤差付き外積判定を行うため、各ベクトルの非零定数倍に対して判定は不変である。
+零ベクトルを含むベクトルoverloadは従来互換のため `true` を返す。
+直線overloadは退化直線に `std::invalid_argument` を送出する。

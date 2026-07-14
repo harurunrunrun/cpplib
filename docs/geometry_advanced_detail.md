@@ -25,3 +25,5 @@ documentation_of: ../src/algorithm/geometry/2d/advanced/detail.hpp
 ## 注意点
 
 `advanced_geometry_detail` 名前空間の実装内部APIであり、互換性は保証しない。`line_intersection_unchecked` は非退化かつ非平行な直線を前提とする。
+`scaled_tolerance(scale)` と `scaled_sign(value, scale)` は `abs(scale)` に比例する許容幅と丸め誤差を用い、単位が異なる量へ固定の絶対許容幅を加えない。
+`side_sign` は境界方向を正規化して符号付き垂直距離を判定する。

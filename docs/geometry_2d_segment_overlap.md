@@ -22,3 +22,4 @@ documentation_of: ../src/algorithm/geometry/2d/segment_overlap.hpp
 ## 注意点
 
 浮動小数点比較には `GEOMETRY_EPS` を用いる。
+退化線分を1点として扱い、非退化線分の共線性は線分からの垂直距離で判定する。

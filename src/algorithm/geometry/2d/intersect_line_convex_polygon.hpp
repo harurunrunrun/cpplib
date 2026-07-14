@@ -13,10 +13,12 @@ inline bool intersect_line_convex_polygon(
     const Line& line,
     const NormalizedConvexPolygon& polygon
 ){
-    const Point direction = line.b - line.a;
-    if(geometry_sign(abs(direction)) == 0){
+    const Point raw_direction = line.b - line.a;
+    const long double direction_length = abs(raw_direction);
+    if(geometry_sign(direction_length) == 0){
         throw std::invalid_argument("degenerate line");
     }
+    const Point direction = raw_direction / direction_length;
     if(polygon.empty()) return false;
     const Point normal = rotate90(direction);
     const std::size_t maximum_index =

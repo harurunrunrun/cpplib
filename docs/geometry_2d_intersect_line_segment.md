@@ -14,3 +14,4 @@ documentation_of: ../src/algorithm/geometry/2d/intersect_line_segment.hpp
 ## 注意点
 
 線分が直線上に重なる場合も真。退化直線には `std::invalid_argument` を送出し、退化線分は1点として扱う。
+退化判定に該当しない範囲では、直線の方向ベクトルを正の定数倍しても判定は変わらない。

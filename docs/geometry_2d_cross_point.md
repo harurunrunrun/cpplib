@@ -14,3 +14,4 @@ documentation_of: ../src/algorithm/geometry/2d/cross_point.hpp
 ## 注意点
 
 退化直線には `std::invalid_argument`、平行または一致して一意な交点がない場合には `std::domain_error` を送出する。
+退化判定に該当しない範囲では、各直線の方向ベクトルを任意の正の定数倍しても交点は変わらない。

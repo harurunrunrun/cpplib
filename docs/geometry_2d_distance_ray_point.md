@@ -22,3 +22,4 @@ documentation_of: ../src/algorithm/geometry/2d/distance_ray_point.hpp
 ## 注意点
 
 退化半直線では `std::invalid_argument` を送出する。
+退化判定に該当しない範囲では、`through - origin` を正の定数倍しても距離は変わらない。

@@ -27,16 +27,20 @@ inline long double distance_segment_point(
     const Segment& segment,
     const Point& point
 ){
-    if(geometry_sign(abs(segment.b - segment.a)) == 0){
+    const Point direction = segment.b - segment.a;
+    const long double length = abs(direction);
+    if(geometry_sign(length) == 0){
         return abs(point - segment.a);
     }
-    if(geometry_sign(dot(segment.b - segment.a, point - segment.a)) < 0){
+    const Point unit_direction = direction / length;
+    const long double projection = dot(point - segment.a, unit_direction);
+    if(geometry_sign(projection) < 0){
         return abs(point - segment.a);
     }
-    if(geometry_sign(dot(segment.a - segment.b, point - segment.b)) < 0){
+    if(geometry_sign(projection - length) > 0){
         return abs(point - segment.b);
     }
-    return distance(Line{segment.a, segment.b}, point);
+    return std::abs(cross(unit_direction, point - segment.a));
 }
 
 inline long double distance(const Segment& first, const Segment& second){

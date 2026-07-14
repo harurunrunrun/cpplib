@@ -19,3 +19,5 @@ documentation_of: ../src/algorithm/geometry/2d/distance.hpp
 ## 注意点
 
 線分は退化してもよい。無限直線を取るAPIへ退化直線を渡すと `std::invalid_argument` を送出する。
+`distance_segment_point` は単位方向への射影で端点領域を分類するため、線分長を係数として持つ生の内積への絶対誤差に依存しない。
+無限直線の表現は、退化判定に該当しない正の方向scaleに対して同じ距離を返す。

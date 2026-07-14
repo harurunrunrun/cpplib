@@ -14,3 +14,4 @@ documentation_of: ../src/algorithm/geometry/2d/convex_cut.hpp
 ## 注意点
 
 境界上の点を残す。入力は頂点順の凸多角形、`line` は非退化直線でなければならない。
+退化判定に該当しない範囲では、`line.b - line.a` を正の定数倍しても切断結果は変わらない。

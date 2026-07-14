@@ -22,3 +22,4 @@ documentation_of: ../src/algorithm/geometry/2d/half_plane_intersection_area.hpp
 ## 注意点
 
 退化境界・非有限座標では `invalid_argument`、内部bounding計算が表現範囲を超える場合は `overflow_error`。
+退化判定に該当しない範囲では、各境界の方向ベクトルを正の定数倍しても共通部分と面積は変わらない。

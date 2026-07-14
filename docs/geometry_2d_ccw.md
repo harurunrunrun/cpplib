@@ -17,3 +17,5 @@ documentation_of: ../src/algorithm/geometry/2d/ccw.hpp
 ## 注意点
 
 共線判定には `GEOMETRY_EPS` を用いる。`first` から `second` への有向線分を基準とする。
+外積と内積は基準線分長に応じた許容幅で判定するため、生の外積に絶対誤差を適用したときの二次scale依存を持たない。
+`first == second` の退化基準では、`third == first` のときだけ `ON_SEGMENT`、それ以外は `ONLINE_FRONT` を返す。

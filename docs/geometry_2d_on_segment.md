@@ -13,4 +13,5 @@ documentation_of: ../src/algorithm/geometry/2d/on_segment.hpp
 
 ## 注意点
 
-端点を含み、退化線分は1点として扱う。判定には許容誤差を用いる。
+端点を含み、退化線分は1点として扱う。線分方向に対する垂直距離と射影距離を `GEOMETRY_EPS` で判定する。
+このため、生の外積・内積に絶対誤差を適用したときの線分長scale依存を持たない。

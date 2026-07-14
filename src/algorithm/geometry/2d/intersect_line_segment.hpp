@@ -6,9 +6,12 @@
 #include "cross.hpp"
 
 inline bool intersect_line_segment(const Line& line, const Segment& segment){
-    if(geometry_sign(abs(line.b - line.a)) == 0)[[unlikely]]{
+    const Point direction = line.b - line.a;
+    const long double length = abs(direction);
+    if(geometry_sign(length) == 0)[[unlikely]]{
         throw std::invalid_argument("degenerate line");
     }
-    return geometry_sign(cross(line.b - line.a, segment.a - line.a)) *
-        geometry_sign(cross(line.b - line.a, segment.b - line.a)) <= 0;
+    const Point unit_direction = direction / length;
+    return geometry_sign(cross(unit_direction, segment.a - line.a)) *
+        geometry_sign(cross(unit_direction, segment.b - line.a)) <= 0;
 }

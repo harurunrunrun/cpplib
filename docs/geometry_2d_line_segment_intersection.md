@@ -22,3 +22,4 @@ documentation_of: ../src/algorithm/geometry/2d/line_segment_intersection.hpp
 ## 注意点
 
 退化直線では `invalid_argument`、交点なしまたは交点が無数なら `domain_error`。
+退化判定に該当しない範囲では、直線の方向ベクトルを正の定数倍しても交点は変わらない。

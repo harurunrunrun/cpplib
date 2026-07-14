@@ -4,14 +4,28 @@
 #include <array>
 #include <optional>
 
+#include "abs.hpp"
 #include "on_segment.hpp"
+#include "side_of_directed_line.hpp"
 
 inline std::optional<Segment> segment_overlap(
     const Segment& first,
     const Segment& second
 ){
-    if(geometry_sign(cross(first.b - first.a, second.a - first.a)) != 0 ||
-       geometry_sign(cross(first.b - first.a, second.b - first.a)) != 0){
+    const bool first_is_point =
+        geometry_sign(abs(first.b - first.a)) == 0;
+    const bool second_is_point =
+        geometry_sign(abs(second.b - second.a)) == 0;
+    if(first_is_point){
+        if(on_segment(second, first.a)) return Segment{first.a, first.a};
+        return std::nullopt;
+    }
+    if(second_is_point){
+        if(on_segment(first, second.a)) return Segment{second.a, second.a};
+        return std::nullopt;
+    }
+    if(side_of_directed_line(first, second.a) != 0 ||
+       side_of_directed_line(first, second.b) != 0){
         return std::nullopt;
     }
     Point first_low = first.a;

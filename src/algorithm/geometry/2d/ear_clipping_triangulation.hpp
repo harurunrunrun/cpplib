@@ -67,17 +67,31 @@ inline std::vector<IndexedVertex> normalize_polygon(
     return vertices;
 }
 
-inline long double doubled_signed_area(
-    const std::vector<IndexedVertex>& vertices
-){
-    long double result = 0.0L;
+inline int signed_area_sign(const std::vector<IndexedVertex>& vertices){
+    if(vertices.empty()) return 0;
+    const Point origin = vertices.front().point;
+    long double value = 0.0L;
+    long double roundoff_scale = 0.0L;
+    long double coordinate_scale = 0.0L;
     for(std::size_t index = 0; index < vertices.size(); ++index){
-        result += cross(
-            vertices[index].point,
-            vertices[(index + 1) % vertices.size()].point
-        );
+        const Point first = vertices[index].point - origin;
+        const Point second =
+            vertices[(index + 1) % vertices.size()].point - origin;
+        value += cross(first, second);
+        roundoff_scale +=
+            std::abs(first.x * second.y)
+            + std::abs(first.y * second.x);
+        coordinate_scale = std::max({
+            coordinate_scale,
+            advanced_geometry_detail::length(first),
+            advanced_geometry_detail::length(second),
+        });
     }
-    return result;
+    return geometry_scaled_sign(
+        value,
+        coordinate_scale * coordinate_scale,
+        roundoff_scale
+    );
 }
 
 inline void validate_simple(const std::vector<IndexedVertex>& vertices){
@@ -127,9 +141,7 @@ inline std::vector<EarClippingTriangle> ear_clipping_triangulation(
     if(vertices.size() < 3){
         throw std::invalid_argument("a polygon needs three noncollinear vertices");
     }
-    const int orientation = geometry_sign(
-        ear_clipping_detail::doubled_signed_area(vertices)
-    );
+    const int orientation = ear_clipping_detail::signed_area_sign(vertices);
     if(orientation == 0){
         throw std::invalid_argument("a polygon must have positive area");
     }

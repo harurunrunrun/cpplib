@@ -12,10 +12,12 @@ inline std::vector<Point> polygon_line_intersections(
     const std::vector<Point>& polygon,
     const Line& line
 ){
-    const Point direction = line.b - line.a;
-    if(geometry_sign(abs(direction)) == 0)[[unlikely]]{
+    const Point raw_direction = line.b - line.a;
+    const long double direction_length = abs(raw_direction);
+    if(geometry_sign(direction_length) == 0)[[unlikely]]{
         throw std::invalid_argument("degenerate line");
     }
+    const Point direction = raw_direction / direction_length;
     std::vector<Point> result;
     const auto append = [&](const Point& point){
         if(std::none_of(result.begin(), result.end(), [&](const Point& current){

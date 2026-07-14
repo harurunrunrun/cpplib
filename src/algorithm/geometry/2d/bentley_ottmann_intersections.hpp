@@ -133,9 +133,9 @@ inline std::pair<long double, long double> status_key(
         (context.x - segment.left.x) / (segment.right.x - segment.left.x);
     long double y = segment.left.y
         + (segment.right.y - segment.left.y) * ratio;
-    if(advanced_geometry_detail::scaled_sign(
-        y - context.event_y, std::abs(y) + std::abs(context.event_y)
-    ) == 0){
+    if(std::abs(y - context.event_y)
+        <= advanced_geometry_detail::point_tolerance(
+            Point{0.0L, y}, Point{0.0L, context.event_y})){
         y = context.event_y;
     }
     return {y, segment.slope};

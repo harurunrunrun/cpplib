@@ -16,19 +16,31 @@ inline long double length(const Point& vector){
 }
 
 inline long double scaled_tolerance(long double scale){
-    return GEOMETRY_EPS * std::max(1.0L, scale);
+    return GEOMETRY_EPS * std::abs(scale)
+        + 64.0L * std::numeric_limits<long double>::epsilon()
+            * std::abs(scale);
 }
 
 inline int scaled_sign(long double value, long double scale){
-    const long double tolerance = scaled_tolerance(scale);
-    return (value > tolerance) - (value < -tolerance);
+    return geometry_scaled_sign(value, scale);
 }
 
 inline int cross_sign(const Point& first, const Point& second){
-    return scaled_sign(
-        cross(first, second),
-        length(first) * length(second)
-    );
+    const long double first_length = length(first);
+    const long double second_length = length(second);
+    if(geometry_sign(first_length) == 0 ||
+       geometry_sign(second_length) == 0){
+        return 0;
+    }
+    const Point first_unit = first / first_length;
+    const Point second_unit = second / second_length;
+    const long double value = cross(first_unit, second_unit);
+    const long double roundoff =
+        64.0L * std::numeric_limits<long double>::epsilon()
+        * (std::abs(first_unit.x * second_unit.y)
+           + std::abs(first_unit.y * second_unit.x));
+    const long double tolerance = GEOMETRY_EPS + roundoff;
+    return (value > tolerance) - (value < -tolerance);
 }
 
 inline long double point_tolerance(const Point& first, const Point& second){
@@ -54,14 +66,16 @@ inline long double side_value(const Line& half_plane, const Point& point){
 }
 
 inline int side_sign(const Line& half_plane, const Point& point){
-    const Point direction = half_plane.b - half_plane.a;
+    const Point raw_direction = half_plane.b - half_plane.a;
+    const long double direction_length = length(raw_direction);
+    if(geometry_sign(direction_length) == 0) return 0;
+    const Point direction = raw_direction / direction_length;
     const Point relative = point - half_plane.a;
-    const long double value = side_value(half_plane, point);
+    const long double value = cross(direction, relative);
     const long double roundoff = 64.0L * std::numeric_limits<long double>::epsilon()
         * (std::abs(direction.x * relative.y)
            + std::abs(direction.y * relative.x));
-    const long double tolerance = GEOMETRY_EPS * std::max(1.0L, length(direction))
-        + roundoff;
+    const long double tolerance = GEOMETRY_EPS + roundoff;
     return (value > tolerance) - (value < -tolerance);
 }
 

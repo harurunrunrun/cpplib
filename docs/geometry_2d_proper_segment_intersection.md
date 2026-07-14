@@ -22,3 +22,4 @@ documentation_of: ../src/algorithm/geometry/2d/proper_segment_intersection.hpp
 ## 注意点
 
 端点接触、共線重複、退化線分は `false`。
+各向き判定は基準線分からの垂直距離に基づく許容誤差を用いる。

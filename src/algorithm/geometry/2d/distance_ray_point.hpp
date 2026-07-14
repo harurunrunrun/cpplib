@@ -10,11 +10,13 @@
 
 inline long double distance(const Ray& ray, const Point& point){
     const Point direction = ray.through - ray.origin;
-    if(geometry_sign(abs(direction)) == 0)[[unlikely]]{
+    const long double length = abs(direction);
+    if(geometry_sign(length) == 0)[[unlikely]]{
         throw std::invalid_argument("degenerate ray");
     }
-    if(geometry_sign(dot(point - ray.origin, direction)) <= 0){
+    const Point unit_direction = direction / length;
+    if(geometry_sign(dot(point - ray.origin, unit_direction)) <= 0){
         return abs(point - ray.origin);
     }
-    return std::abs(cross(direction, point - ray.origin)) / abs(direction);
+    return std::abs(cross(unit_direction, point - ray.origin));
 }
