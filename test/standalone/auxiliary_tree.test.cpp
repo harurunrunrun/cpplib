@@ -17,6 +17,7 @@ void self_test(){
     tree.build();
     const std::vector<int> vertices = {3, 4, 6, 3};
     assert(tree.compress(vertices) == 6);
+    assert(tree.compressed_size() == 6);
     assert(tree.vertex(0) == 0);
     assert(tree.parent_index(0) == -1);
     assert(tree.edge_length(0) == 0);
@@ -24,6 +25,7 @@ void self_test(){
     assert(tree.lca(3, 6) == 0);
     assert(tree.dist(3, 6) == 4);
     assert(tree.compress(std::span<const int>()) == 0);
+    assert(tree.compressed_size() == 0);
 }
 
 int main(){
@@ -45,6 +47,7 @@ int main(){
         std::vector<int> vertices(static_cast<std::size_t>(k));
         for(int& vertex: vertices) std::cin >> vertex;
         const int size = tree.compress(vertices);
+        assert(tree.compressed_size() == size);
         std::cout << size << '\n';
         for(int index = 0; index < size; ++index){
             const int parent_index = tree.parent_index(index);

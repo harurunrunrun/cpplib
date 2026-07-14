@@ -26,6 +26,13 @@ void test_basic(){
     assert(basis.kth_smallest(1) == 3);
     assert(basis.kth_smallest(2) == 5);
     assert(basis.kth_smallest(3) == 6);
+    const auto vectors = basis.vectors();
+    assert(vectors.size() == static_cast<std::size_t>(basis.rank()));
+    XorBasis<unsigned, 8> rebuilt;
+    for(const unsigned value: vectors) assert(rebuilt.insert(value));
+    for(unsigned value = 0; value < (1U << 8); ++value){
+        assert(rebuilt.contains(value) == basis.contains(value));
+    }
 
     XorBasis<unsigned, 8> other;
     other.insert(1);
@@ -51,6 +58,7 @@ void test_basic(){
 
     basis.clear();
     assert(basis.empty());
+    assert(basis.vectors().empty());
 }
 
 int main(){

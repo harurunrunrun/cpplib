@@ -113,6 +113,11 @@ void self_test(){
         assert(tree.longest_palindrome_length() == 5);
         assert(tree.palindrome(tree.longest_palindrome_node()) == "ababa");
         assert((tree.suffix_palindrome_lengths() == std::vector<int>{5, 3, 1}));
+        assert(tree.last() == tree.longest_palindrome_node());
+        const auto suffix_nodes = tree.suffix_palindrome_nodes();
+        std::vector<int> suffix_lengths;
+        for(const int node: suffix_nodes) suffix_lengths.push_back(tree.length(node));
+        assert((suffix_lengths == std::vector<int>{5, 3, 1}));
         auto nodes = tree.palindrome_nodes();
         for(int v: nodes){
             auto [l, r] = tree.first_occurrence_range(v);
@@ -133,6 +138,12 @@ void self_test(){
                 tree.add(c);
                 assert(tree.longest_suffix_palindrome_length() == longest_suffix_pal_naive(prefix));
                 assert(tree.suffix_palindrome_lengths() == suffix_pal_lengths_naive(prefix));
+                assert(tree.length(tree.last()) == longest_suffix_pal_naive(prefix));
+                std::vector<int> suffix_lengths;
+                for(const int node: tree.suffix_palindrome_nodes()){
+                    suffix_lengths.push_back(tree.length(node));
+                }
+                assert(suffix_lengths == suffix_pal_lengths_naive(prefix));
                 assert(tree.count_suffix_palindromes() == static_cast<int>(suffix_pal_lengths_naive(prefix).size()));
             }
             auto set = palindrome_set(s);

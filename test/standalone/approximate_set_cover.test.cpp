@@ -62,6 +62,8 @@ int main(){
         {maximum, maximum * 0.75L}
     );
     if(floating_boundary.selected_sets != std::vector<std::size_t>{1}) return 4;
+    if(!floating_boundary.covers_universe()) return 4;
+    if(greedy_set_cover(2, {{0}}).covers_universe()) return 4;
 
     std::size_t query_count = 0;
     std::cin >> query_count;
@@ -82,6 +84,8 @@ int main(){
         const SetCoverResult unweighted = greedy_set_cover(universe_size, sets);
         const SetCoverResult weighted = greedy_weighted_set_cover(universe_size, sets, weights);
         const MaxCoverageResult coverage = greedy_max_coverage(universe_size, sets, budget);
+        if(unweighted.covers_universe() != unweighted.uncovered_elements.empty()) return 5;
+        if(weighted.covers_universe() != weighted.uncovered_elements.empty()) return 5;
         print_vector(unweighted.selected_sets);
         std::cout << " | ";
         print_vector(unweighted.uncovered_elements);
