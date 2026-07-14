@@ -38,28 +38,22 @@ def generate_sqfree(out_dir):
                "\n".join(map(str, answers)) + "\n")
 
 
-def gcd_extreme_prefix(limit):
-    phi = list(range(limit + 1))
-    for prime in range(2, limit + 1):
-        if phi[prime] != prime:
-            continue
-        for multiple in range(prime, limit + 1, prime):
-            phi[multiple] -= phi[multiple] // prime
-    values = [0] * (limit + 1)
-    for q in range(2, limit + 1):
-        coefficient = phi[q]
-        for n in range(q, limit + 1, q):
-            values[n] += coefficient * (n // q)
-    for n in range(1, limit + 1):
-        values[n] += values[n - 1]
-    return values
+def gcd_extreme_brute(limit):
+    return sum(math.gcd(left, right)
+               for left in range(1, limit)
+               for right in range(left + 1, limit + 1))
 
 
 def generate_gcdex(out_dir):
-    queries = [1, 2, 3, 10, 100, 999, 100_000, 1_000_000]
-    prefix = gcd_extreme_prefix(max(queries))
+    queries = [1, 2, 3, 4, 10, 100, 999, 200_000, 1_000_000]
+    pinned = {
+        200_000: 143_295_493_160,
+        1_000_000: 4_071_628_673_912,
+    }
+    answers = [pinned[n] if n in pinned else gcd_extreme_brute(n)
+               for n in queries]
     write_case(out_dir, "boundary", "\n".join(map(str, queries + [0])) + "\n",
-               "\n".join(str(prefix[n]) for n in queries) + "\n")
+               "\n".join(map(str, answers)) + "\n")
 
 
 def phi_trial(n):
@@ -112,12 +106,20 @@ def proper_divisor_sum_brute(n):
 
 def generate_divsum2(out_dir):
     rng = random.Random(179)
-    values = [1, 2, 10, 20] + [rng.randrange(1, 1_000_000) for _ in range(30)]
+    values = [1, 2, 10, 20] + [rng.randrange(1, 1_000_000) for _ in range(492)]
     answers = [proper_divisor_sum_brute(n) for n in values]
+    large_prime = 9_999_999_967
+    square_prime = 99_999_989
+    other_prime = 99_999_971
+    assert all(phi_trial(prime) == prime - 1
+               for prime in (large_prime, square_prime, other_prime))
+    values.extend([large_prime, square_prime ** 2, square_prime * other_prime])
+    answers.extend([1, square_prime + 1, square_prime + other_prime + 1])
     maximum = 10 ** 16
     sigma_maximum = (2 ** 17 - 1) * (5 ** 17 - 1) // 4
     values.append(maximum)
     answers.append(sigma_maximum - maximum)
+    assert len(values) == 500
     write_case(out_dir, "mixed", f"{len(values)}\n" + "\n".join(map(str, values)) + "\n",
                "\n".join(map(str, answers)) + "\n")
 
@@ -153,6 +155,12 @@ def generate_mpow(out_dir):
     cases = [([[1, 0], [1, 1]], 3), ([[1, 0, 4], [1, 2, 2], [0, 4, 4]], 3)]
     identity = [[int(i == j) for j in range(50)] for i in range(50)]
     cases.append((identity, 100_000))
+    rng = random.Random(181)
+    dense = [[rng.randrange(1_000_000_001) for _ in range(50)]
+             for _ in range(50)]
+    dense[0][0] = 0
+    dense[0][1] = 1_000_000_000
+    cases.append((dense, 100_000))
     input_lines = [str(len(cases))]
     output_lines = []
     for matrix, exponent in cases:
@@ -230,23 +238,29 @@ def generate_fibosum(out_dir):
                "\n".join(map(str, answers)) + "\n")
 
 
-def lucifer_count_up_to(limit):
-    digits = tuple(map(int, str(limit)))
-    @functools.lru_cache(None)
-    def dp(position, difference, tight):
-        if position == len(digits):
-            return int(difference >= 2 and all(difference % d for d in range(2, math.isqrt(difference) + 1)))
-        maximum = digits[position] if tight else 9
-        sign = 1 if (len(digits) - position) % 2 == 0 else -1
-        return sum(dp(position + 1, difference + sign * digit,
-                      tight and digit == maximum) for digit in range(maximum + 1))
-    return dp(0, 0, True)
+def is_lucifer_number_brute(value):
+    difference = sum((1 if position % 2 == 0 else -1) * int(digit)
+                     for position, digit in enumerate(reversed(str(value)), 1))
+    return difference >= 2 and all(
+        difference % divisor for divisor in range(2, math.isqrt(difference) + 1)
+    )
+
+
+def lucifer_count_brute(left, right):
+    return sum(is_lucifer_number_brute(value)
+               for value in range(left, right + 1))
 
 
 def generate_lucifer(out_dir):
     ranges = [(200, 250), (150, 200), (100, 150), (50, 100), (0, 50),
+              (0, 5000), (4321, 9876),
               (0, 1_000_000_000), (999_999_000, 1_000_000_000)]
-    answers = [lucifer_count_up_to(right) - (lucifer_count_up_to(left - 1) if left else 0)
+    pinned = {
+        (0, 1_000_000_000): 130_629_858,
+        (999_999_000, 1_000_000_000): 85,
+    }
+    answers = [pinned[(left, right)] if (left, right) in pinned
+               else lucifer_count_brute(left, right)
                for left, right in ranges]
     write_case(out_dir, "boundary", f"{len(ranges)}\n" +
                "\n".join(f"{a} {b}" for a, b in ranges) + "\n",
@@ -262,19 +276,22 @@ def generate_gcd2(out_dir):
                "\n".join(answers) + "\n")
 
 
-def fraction_tree(index):
-    numerator = denominator = 1
-    for bit in bin(index)[3:]:
-        if bit == "0":
-            denominator += numerator
-        else:
-            numerator += denominator
-    return numerator, denominator
+def fraction_tree_stern(index):
+    memo = {0: 0, 1: 1}
+
+    def stern(value):
+        if value not in memo:
+            half = value // 2
+            memo[value] = (stern(half) if value % 2 == 0
+                           else stern(half) + stern(half + 1))
+        return memo[value]
+
+    return stern(index), stern(index + 1)
 
 
 def generate_ng0frctn(out_dir):
     values = [1, 2, 3, 7, 12345, 10_000_000_000]
-    answers = ["%d/%d" % fraction_tree(n) for n in values]
+    answers = ["%d/%d" % fraction_tree_stern(n) for n in values]
     write_case(out_dir, "boundary", "\n".join(map(str, values + [0])) + "\n",
                "\n".join(answers) + "\n")
 
@@ -335,17 +352,13 @@ def generate_tdprimes(out_dir):
 
 
 def lucky_values(rank):
-    limit = 4 * rank
-    while True:
-        omega = bytearray(limit + 1)
-        for prime in range(2, limit + 1):
-            if omega[prime] == 0:
-                for multiple in range(prime, limit + 1, prime):
-                    omega[multiple] += 1
-        values = [n for n in range(2, limit + 1) if omega[n] >= 3]
-        if len(values) >= rank:
-            return values[:rank]
-        limit *= 2
+    values = []
+    candidate = 2
+    while len(values) < rank:
+        if len(factor_trial(candidate)) >= 3:
+            values.append(candidate)
+        candidate += 1
+    return values
 
 
 def generate_amr11e(out_dir):
@@ -355,31 +368,26 @@ def generate_amr11e(out_dir):
                "\n".join(str(values[r - 1]) for r in ranks) + "\n")
 
 
-def spf_prefix_values(limit, wanted):
-    smallest = array("I", [0]) * (limit + 1)
-    primes = []
-    wanted_set = set(wanted)
-    result = {}
-    total = 0
+def smallest_prime_factor_trial(value):
+    for divisor in range(2, math.isqrt(value) + 1):
+        if value % divisor == 0:
+            return divisor
+    return value
+
+
+def spf_prefix_values_trial(limit):
+    prefix = [0] * (limit + 1)
     for value in range(2, limit + 1):
-        if smallest[value] == 0:
-            smallest[value] = value
-            primes.append(value)
-        total += smallest[value]
-        if value in wanted_set:
-            result[value] = total
-        for prime in primes:
-            product = value * prime
-            if product > limit or prime > smallest[value]:
-                break
-            smallest[product] = prime
-    result[0] = result[1] = 0
-    return result
+        prefix[value] = prefix[value - 1] + smallest_prime_factor_trial(value)
+    return prefix
 
 
 def generate_aps(out_dir):
-    values = [2, 3, 4, 10, 1000, 9_999_999]
-    answers = spf_prefix_values(max(values), values)
+    values = [2, 3, 4, 10, 100, 999, 1000, 9_999_999]
+    prefix = spf_prefix_values_trial(1000)
+    pinned = {9_999_999: 3_203_714_961_607}
+    answers = {value: (pinned[value] if value in pinned else prefix[value])
+               for value in values}
     write_case(out_dir, "boundary", f"{len(values)}\n" + "\n".join(map(str, values)) + "\n",
                "\n".join(str(answers[n]) for n in values) + "\n")
 
