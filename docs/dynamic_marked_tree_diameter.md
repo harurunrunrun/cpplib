@@ -1,5 +1,5 @@
 ---
-title: Dynamic Marked Tree Diameter (動的マーク頂点間直径) [QTREE4]
+title: Dynamic Marked Tree Diameter (動的マーク頂点間直径)
 documentation_of: ../src/structure/tree/dynamic_marked_tree_diameter.hpp
 ---
 

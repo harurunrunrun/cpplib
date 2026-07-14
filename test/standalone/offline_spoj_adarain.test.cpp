@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/adarain.prefix_sum.test.cpp"
+#include "../onlinejudge/adarain.static_interval_coverage.test.cpp"

@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/gss4.isqrt_segtree_unstable_set.test.cpp"
+#include "../onlinejudge/gss4.range_integer_sqrt_sum.test.cpp"

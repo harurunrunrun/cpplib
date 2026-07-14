@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/qtree5.dynamic_nearest_marked_vertex.test.cpp"
+#include "../onlinejudge/qtree5.nearest_marked_tree_queries.test.cpp"

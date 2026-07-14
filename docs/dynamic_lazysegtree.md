@@ -1,5 +1,5 @@
 ---
-title: Dynamic Lazy Segment Tree (動的遅延セグメント木) [CDC12_H] [CNTPRIME] [HORRIBLE] [LITE]
+title: Dynamic Lazy Segment Tree (動的遅延セグメント木)
 documentation_of: ../src/structure/segtree/dynamic_lazysegtree.hpp
 ---
 

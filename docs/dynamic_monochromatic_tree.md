@@ -1,5 +1,5 @@
 ---
-title: Dynamic Monochromatic Tree (動的同色連結成分木) [QTREE6] [QTREE7]
+title: Dynamic Monochromatic Tree (動的同色連結成分木)
 documentation_of: ../src/structure/tree/dynamic_monochromatic_tree.hpp
 ---
 

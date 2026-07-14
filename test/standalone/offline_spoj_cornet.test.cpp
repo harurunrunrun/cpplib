@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/cornet.weighted_dsu.test.cpp"
+#include "../onlinejudge/cornet.enterprise_network.test.cpp"

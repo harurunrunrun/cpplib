@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/racetime.dynamic_point_add_rectangle_sum.test.cpp"
+#include "../onlinejudge/racetime.offline_dynamic_range_count_less_equal.test.cpp"

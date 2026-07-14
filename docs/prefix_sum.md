@@ -1,5 +1,5 @@
 ---
-title: Prefix Sum (累積和) [ADARAIN] [static_range_sum]
+title: Prefix Sum (累積和) [static_range_sum]
 documentation_of: ../src/structure/other/prefix_sum.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Segment Tree (セグメント木) [BRCKTS] [DSL_2_A] [GSS1] [GSS3] [GSS4] [GSS5] [NICEDAY]
+title: Segment Tree (セグメント木) [DSL_2_A]
 documentation_of: ../src/structure/segtree/segtree.hpp
 ---
 

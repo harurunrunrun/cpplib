@@ -1,5 +1,5 @@
 ---
-title: Static Range Distinct Count Query (静的区間内の異なる値の個数クエリ) [ADAORANG] [DQUERY] [static_range_count_distinct]
+title: Static Range Distinct Count Query (静的区間内の異なる値の個数クエリ) [DQUERY] [static_range_count_distinct]
 documentation_of: ../src/algorithm/range/static_range_count_distinct.hpp
 ---
 

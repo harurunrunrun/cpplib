@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/qtree2.static_tree_path_fold.test.cpp"
+#include "../onlinejudge/qtree2.qtree_distance_kth_vertex.test.cpp"

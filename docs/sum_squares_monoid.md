@@ -1,5 +1,5 @@
 ---
-title: Sum Squares Monoid Act (二乗和作用付きモノイド) [SEGSQRSS]
+title: Sum Squares Monoid Act (二乗和作用付きモノイド)
 documentation_of: ../src/structure/types/sum_squares_monoid.hpp
 ---
 

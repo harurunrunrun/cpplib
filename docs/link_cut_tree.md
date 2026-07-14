@@ -1,5 +1,5 @@
 ---
-title: Link Cut Tree (リンクカット木) [DYNACON1] [jump_on_tree] [OTOCI]
+title: Link Cut Tree (リンクカット木) [jump_on_tree]
 documentation_of: ../src/structure/tree/link_cut_tree.hpp
 ---
 

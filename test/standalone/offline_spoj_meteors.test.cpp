@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/meteors.parallel_binary_search.test.cpp"
+#include "../onlinejudge/meteors.earliest_circular_range_requirement_times.test.cpp"

@@ -1,5 +1,5 @@
 ---
-title: Dynamic Nearest Marked Vertex (動的マーク頂点最近傍) [QTREE5]
+title: Dynamic Nearest Marked Vertex (動的マーク頂点最近傍)
 documentation_of: ../src/structure/tree/dynamic_nearest_marked_vertex.hpp
 ---
 

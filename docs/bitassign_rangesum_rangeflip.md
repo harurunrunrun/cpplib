@@ -1,5 +1,5 @@
 ---
-title: BitAssign RangeSum RangeFlip (ビット代入・区間和・区間反転)
+title: BitAssign RangeSum RangeFlip (ビット代入・区間和・区間反転) [LITE]
 documentation_of: ../src/structure/segtree/bitassign_rangesum_rangeflip.hpp
 ---
 

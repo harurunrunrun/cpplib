@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/segsqrss.sum_squares_monoid.test.cpp"
+#include "../onlinejudge/segsqrss.range_assign_add_sum_squares.test.cpp"

@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/gss6.non_empty_max_subarray_reversible_splay_tree.test.cpp"
+#include "../onlinejudge/gss6.dynamic_maximum_subarray_sum_sequence.test.cpp"

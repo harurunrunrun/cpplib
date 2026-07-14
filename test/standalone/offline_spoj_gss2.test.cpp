@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/gss2.add_historical_max.test.cpp"
+#include "../onlinejudge/gss2.maximum_distinct_subarray_sums.test.cpp"

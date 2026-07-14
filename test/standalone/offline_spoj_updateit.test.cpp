@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/updateit.fenwick_tree.test.cpp"
+#include "../onlinejudge/updateit.range_add_point_get.test.cpp"

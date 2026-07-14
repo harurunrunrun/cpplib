@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/qtree6.dynamic_monochromatic_tree.test.cpp"
+#include "../onlinejudge/qtree6.monochromatic_component_size_tree.test.cpp"

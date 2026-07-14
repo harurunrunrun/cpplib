@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/ctrick.integer_set.test.cpp"
+#include "../onlinejudge/ctrick.card_trick_permutation.test.cpp"

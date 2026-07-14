@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/disquery.static_tree_path_fold.test.cpp"
+#include "../onlinejudge/disquery.tree_path_minmax.test.cpp"

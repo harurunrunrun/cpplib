@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/horrible.dynamic_lazysegtree.test.cpp"
+#include "../onlinejudge/horrible.range_add_range_sum.test.cpp"

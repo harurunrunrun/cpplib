@@ -1,5 +1,5 @@
 ---
-title: Tree Edge Split Diameters (辺切断後の木の直径) [TWOPATHS]
+title: Tree Edge Split Diameters (辺切断後の木の直径)
 documentation_of: ../src/algorithm/tree/tree_edge_split_diameters.hpp
 ---
 

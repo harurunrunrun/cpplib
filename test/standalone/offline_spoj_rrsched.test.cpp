@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/rrsched.fenwick_tree.test.cpp"
+#include "../onlinejudge/rrsched.round_robin_completion_times.test.cpp"

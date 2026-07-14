@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/dynacon1.link_cut_tree.test.cpp"
+#include "../onlinejudge/dynacon1.dynamic_forest_connectivity.test.cpp"

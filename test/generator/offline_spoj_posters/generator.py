@@ -7,12 +7,15 @@ from pathlib import Path
 
 
 def visible_count(intervals):
-    left = min(a for a, _ in intervals)
-    right = max(b for _, b in intervals)
-    top = [0] * (right - left + 1)
+    coordinates = sorted({coordinate for interval in intervals for coordinate in interval})
+    coordinate_id = {coordinate: index for index, coordinate in enumerate(coordinates)}
+    # Even atoms are endpoints; odd atoms are the open gaps between neighbours.
+    top = [0] * (2 * len(coordinates) - 1)
     for poster, (a, b) in enumerate(intervals, 1):
-        for x in range(a, b + 1):
-            top[x - left] = poster
+        first = 2 * coordinate_id[a]
+        last = 2 * coordinate_id[b]
+        for atom in range(first, last + 1):
+            top[atom] = poster
     return len(set(top) - {0})
 
 
@@ -49,6 +52,8 @@ def main():
                 intervals.append((left, right))
             groups.append(intervals)
         cases.append(groups)
+    # Maximum number of distinct endpoints/atoms allowed by the SPOJ input.
+    cases.append([[(2 * index, 2 * index) for index in range(40000)]])
     for index, groups in enumerate(cases):
         write_case(out_dir, index, groups)
 

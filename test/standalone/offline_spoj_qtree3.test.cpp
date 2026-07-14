@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/qtree3.heavy_light_decomposition.test.cpp"
+#include "../onlinejudge/qtree3.root_path_first_marked.test.cpp"

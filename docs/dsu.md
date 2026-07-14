@@ -1,5 +1,5 @@
 ---
-title: Disjoint Set Union (素集合データ構造) [DSL_1_A] [NITTROAD] [unionfind]
+title: Disjoint Set Union (素集合データ構造) [DSL_1_A] [unionfind]
 documentation_of: ../src/structure/dsu/dsu.hpp
 ---
 

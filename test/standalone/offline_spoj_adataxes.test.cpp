@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/adataxes.monoid_merge_sort_tree.test.cpp"
+#include "../onlinejudge/adataxes.static_range_product_less_equal_mod.test.cpp"

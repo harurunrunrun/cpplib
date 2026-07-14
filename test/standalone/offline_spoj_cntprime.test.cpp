@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/cntprime.dynamic_lazysegtree.test.cpp"
+#include "../onlinejudge/cntprime.dynamic_prime_count_range_assign.test.cpp"

@@ -1,5 +1,5 @@
 ---
-title: Tree Path Order Statistics (木上パス順序統計) [GOT]
+title: Tree Path Order Statistics (木上パス順序統計)
 documentation_of: ../src/algorithm/tree/tree_path_order_statistics.hpp
 ---
 

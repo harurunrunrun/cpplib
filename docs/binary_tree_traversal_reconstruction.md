@@ -1,5 +1,5 @@
 ---
-title: Binary Tree Traversal Reconstruction (二分木の巡回順復元) [TREEORD]
+title: Binary Tree Traversal Reconstruction (二分木の巡回順復元)
 documentation_of: ../src/algorithm/tree/binary_tree_traversal_reconstruction.hpp
 ---
 

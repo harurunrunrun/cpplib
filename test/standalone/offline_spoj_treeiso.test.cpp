@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/treeiso.tree_isomorphism.test.cpp"
+#include "../onlinejudge/treeiso.tree_isomorphism_answer.test.cpp"

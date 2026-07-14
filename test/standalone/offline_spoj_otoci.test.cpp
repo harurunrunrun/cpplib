@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/otoci.link_cut_tree.test.cpp"
+#include "../onlinejudge/otoci.penguin_forest.test.cpp"

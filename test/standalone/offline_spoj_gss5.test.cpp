@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/gss5.non_empty_max_subarray_segtree.test.cpp"
+#include "../onlinejudge/gss5.static_two_ranges_maximum_subarray_sum.test.cpp"

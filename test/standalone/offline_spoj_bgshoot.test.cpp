@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/bgshoot.sparse_table.test.cpp"
+#include "../onlinejudge/bgshoot.static_interval_maximum_overlap.test.cpp"

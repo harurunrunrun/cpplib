@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/polquery.single_failure_connectivity.test.cpp"
+#include "../onlinejudge/polquery.endpoint_failure_connectivity.test.cpp"

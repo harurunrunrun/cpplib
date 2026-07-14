@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/lite.dynamic_lazysegtree.test.cpp"
+#include "../onlinejudge/lite.bitassign_rangesum_rangeflip.test.cpp"

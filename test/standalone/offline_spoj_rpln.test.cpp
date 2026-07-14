@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/rpln.sparse_table.test.cpp"
+#include "../onlinejudge/rpln.static_range_minimum.test.cpp"

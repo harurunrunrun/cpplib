@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/nittroad.dsu.test.cpp"
+#include "../onlinejudge/nittroad.offline_road_disconnection.test.cpp"

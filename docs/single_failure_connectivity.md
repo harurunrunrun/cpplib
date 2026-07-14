@@ -1,5 +1,5 @@
 ---
-title: Single Failure Connectivity Oracle (単一故障連結性オラクル) [POLQUERY]
+title: Single Failure Connectivity Oracle (単一故障連結性オラクル)
 documentation_of: ../src/algorithm/graph/single_failure_connectivity.hpp
 ---
 
