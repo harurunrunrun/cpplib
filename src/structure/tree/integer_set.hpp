@@ -243,8 +243,8 @@ struct Int_Set{
                     node->is_lazy = true;
                     node->lazy[x - l]++;
                 }
-                node->exist |= (1u << (x - l));
-                node->full |= (1u << (x - l));
+                node->exist = static_cast<unsigned short>(node->exist | (1u << (x - l)));
+                node->full = static_cast<unsigned short>(node->full | (1u << (x - l)));
                 return res;
             }
             L child = child_index(l, r, x);
@@ -257,9 +257,9 @@ struct Int_Set{
             L nl = child_l(l, r, child);
             L nr = child_r(l, r, child);
             bool flag = internal_insert(node->nodes[child].get(), nl, nr, x);
-            node->exist |= 1 << child;
-            if(node->nodes[child]->full == full_mask(std::min<L>((L)node_size, nr - nl))){
-                node->full |= 1u << child;
+            node->exist = static_cast<unsigned short>(node->exist | (1u << child));
+            if(node->nodes[child]->full == full_mask(static_cast<int>(std::min<L>((L)node_size, nr - nl)))){
+                node->full = static_cast<unsigned short>(node->full | (1u << child));
             }
             if(flag){
                 node->is_lazy = true;
@@ -275,8 +275,12 @@ struct Int_Set{
                     node->is_lazy = true;
                     node->lazy[x - l]--;
                 }
-                node->exist &= ~(1u << (x - l));
-                node->full &= ~(1u << (x - l));
+                node->exist = static_cast<unsigned short>(
+                    node->exist & ~(1u << (x - l))
+                );
+                node->full = static_cast<unsigned short>(
+                    node->full & ~(1u << (x - l))
+                );
                 return res;
             }
             L child = child_index(l, r, x);
@@ -290,9 +294,13 @@ struct Int_Set{
             L nr = child_r(l, r, child);
             bool flag = internal_erase(node->nodes[child].get(), nl, nr, x);
             if(node->nodes[child]->exist == 0){
-                node->exist &= ~(1u << child);
+                node->exist = static_cast<unsigned short>(
+                    node->exist & ~(1u << child)
+                );
             }
-            node->full &= ~(1u << child);
+            node->full = static_cast<unsigned short>(
+                node->full & ~(1u << child)
+            );
             if(flag){
                 node->is_lazy = true;
                 node->lazy[child]--;
@@ -409,7 +417,7 @@ struct Int_Set{
                 if(x <= l){
                     return l + std::countr_zero(node->exist);
                 }else{
-                    unsigned short tmp = node->exist & (~0u << (x - l));
+                    unsigned short tmp = static_cast<unsigned short>(node->exist & (~0u << (x - l)));
                     if(tmp == 0){
                         return std::nullopt;
                     }else{
@@ -425,7 +433,7 @@ struct Int_Set{
             }else{
                 L child_x = child_index(l, r, x);
                 if(!node->nodes[child_x] || node->nodes[child_x]->exist == 0){
-                    unsigned short tmp = node->exist & (~0u << child_x);
+                    unsigned short tmp = static_cast<unsigned short>(node->exist & (~0u << child_x));
                     if(tmp == 0){
                         return std::nullopt;
                     }
@@ -440,7 +448,7 @@ struct Int_Set{
                     if(res.has_value()){
                         return *res;
                     }else{
-                        unsigned short tmp = node->exist & (~0u << (child_x + 1));
+                        unsigned short tmp = static_cast<unsigned short>(node->exist & (~0u << (child_x + 1)));
                         if(tmp == 0){
                             return std::nullopt;
                         }else{
@@ -462,7 +470,7 @@ struct Int_Set{
                 if(r - 1 <= x){
                     return l + std::bit_width(node->exist) - 1;
                 }else{
-                    unsigned short mask = node->exist & ((1u << (x - l + 1)) - 1);
+                    unsigned short mask = static_cast<unsigned short>(node->exist & ((1u << (x - l + 1)) - 1));
                     if(mask == 0){
                         return std::nullopt;
                     }else{
@@ -478,7 +486,7 @@ struct Int_Set{
             }else{
                 L child_x = child_index(l, r, x);
                 if(!node->nodes[child_x] || node->nodes[child_x]->exist == 0){
-                    unsigned short mask = node->exist & ((1u << child_x) - 1);
+                    unsigned short mask = static_cast<unsigned short>(node->exist & ((1u << child_x) - 1));
                     if(mask == 0){
                         return std::nullopt;
                     }
@@ -493,7 +501,7 @@ struct Int_Set{
                     if(res.has_value()){
                         return *res;
                     }else{
-                        unsigned short mask = node->exist & ((1u << child_x) - 1);
+                        unsigned short mask = static_cast<unsigned short>(node->exist & ((1u << child_x) - 1));
                         if(mask == 0){
                             return std::nullopt;
                         }else{
@@ -514,14 +522,14 @@ struct Int_Set{
             if(r - l <= node_size){
                 unsigned short bit = node->exist;
                 while(bit > 0){
-                    unsigned short pos = std::countr_zero(bit);
+                    unsigned short pos = static_cast<unsigned short>(std::countr_zero(bit));
                     res.push_back(l + pos);
                     bit &= bit - 1;
                 }
             }else{
                 unsigned short bit = node->exist;
                 while(bit > 0){
-                    unsigned short pos = std::countr_zero(bit);
+                    unsigned short pos = static_cast<unsigned short>(std::countr_zero(bit));
                     L nl = child_l(l, r, pos);
                     L nr = child_r(l, r, pos);
                     internal_list(node->nodes[pos].get(), nl, nr, res);
