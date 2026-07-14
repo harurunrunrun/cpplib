@@ -1,5 +1,5 @@
 ---
-title: Dijkstra (ダイクストラ法) [ABC340_D] [CCHESS] [GRL_1_A] [HIGHWAYS] [MICEMAZE] [shortest_path]
+title: Dijkstra (ダイクストラ法) [ABC340_D] [CCHESS] [GRL_1_A] [HIGHWAYS] [shortest_path]
 documentation_of: ../src/algorithm/graph/dijkstra.hpp
 ---
 
@@ -38,6 +38,3 @@ vector<char> reachable;
 ## 注意点
 
 頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
-
-MICEMAZE adapterでは有向辺を反転し、出口から1回探索して制限時間以内に到達できる
-cell数を数える。
