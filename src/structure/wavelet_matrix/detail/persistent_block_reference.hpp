@@ -94,7 +94,8 @@ public:
             );
         }
         _size = size;
-        return size == 0 ? -1 : build_rec(values, 0, size);
+        if constexpr(MAX_BLOCK == 0) return -1;
+        else return size == 0 ? -1 : build_rec(values, 0, size);
     }
 
     int get(int root, int position) const{
