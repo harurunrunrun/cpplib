@@ -8,6 +8,48 @@
 #include <vector>
 #include "../../src/structure/trie/trie.hpp"
 
+template<class Function>
+void expect_trie_error(Function&& function){
+    bool thrown = false;
+    try{
+        function();
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+}
+
+void test_node_api(){
+    Trie<2, 16, '-'> trie;
+    trie.insert("--");
+    trie.insert("--");
+    trie.insert("-.");
+
+    const int dash = trie.next_node(0, '-');
+    const int dash_dash = trie.next_node(dash, '-');
+    const int dash_dot = trie.next_node(dash, '.');
+    assert(dash >= 0 && dash_dash >= 0 && dash_dot >= 0);
+    assert(trie.next_node(0, '.') == -1);
+    assert(trie.terminal_count(0) == 0);
+    assert(trie.terminal_count(dash) == 0);
+    assert(trie.terminal_count(dash_dash) == 2);
+    assert(trie.terminal_count(dash_dot) == 1);
+    expect_trie_error([&]{ (void)trie.next_node(-1, '-'); });
+    expect_trie_error([&]{ (void)trie.next_node(trie.node_count(), '-'); });
+    expect_trie_error([&]{ (void)trie.next_node(0, 'a'); });
+    expect_trie_error([&]{ (void)trie.terminal_count(-1); });
+    expect_trie_error([&]{ (void)trie.terminal_count(trie.node_count()); });
+
+    trie.clear();
+    assert(trie.empty());
+    assert(trie.size() == 0);
+    assert(trie.node_count() == 1);
+    assert(trie.next_node(0, '-') == -1);
+    assert(trie.terminal_count(0) == 0);
+    trie.insert(".");
+    assert(trie.count(".") == 1);
+}
+
 std::string random_string(std::mt19937& rng){
     int n = static_cast<int>(rng() % 8);
     std::string s;
@@ -26,6 +68,7 @@ int prefix_count_naive(const std::map<std::string, int>& mp, const std::string& 
 }
 
 int main(){
+    test_node_api();
     int query_count;
     if(std::cin >> query_count){
         Trie<4, 65536> trie;

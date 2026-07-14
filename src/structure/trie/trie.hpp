@@ -45,6 +45,31 @@ public:
     int node_count() const{ return used; }
     bool empty() const{ return word_count == 0; }
 
+    void clear(){
+        for(int v = 0; v < used; v++) nodes[v] = Node();
+        used = 1;
+        word_count = 0;
+    }
+
+    int next_node(int state, char c) const{
+        if(state < 0 || used <= state)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (next_node)."
+            );
+        }
+        const int next = nodes[state].next[char_id(c)];
+        return next == 0 ? -1 : next;
+    }
+
+    int terminal_count(int state) const{
+        if(state < 0 || used <= state)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (terminal_count)."
+            );
+        }
+        return nodes[state].terminal_count;
+    }
+
     int node(std::string_view s) const{
         int v = 0;
         for(char c: s){
