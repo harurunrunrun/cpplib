@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/shpath.dijkstra.test.cpp"
+#include "../onlinejudge/shpath.named_shortest_paths.test.cpp"

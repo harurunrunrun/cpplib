@@ -3,10 +3,9 @@
 #include <cstddef>
 #include <iostream>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
-#include "../../src/algorithm/graph/dijkstra.hpp"
+#include "../../src/algorithm/graph/named_shortest_paths.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -20,13 +19,10 @@ int main(){
         std::vector<std::vector<DijkstraEdge<int>>> graph(
             static_cast<std::size_t>(city_count)
         );
-        std::unordered_map<std::string, int> city_index;
-        city_index.reserve(static_cast<std::size_t>(city_count) * 2);
+        std::vector<std::string> names(static_cast<std::size_t>(city_count));
         for(int city = 0; city < city_count; city++){
-            std::string name;
             int neighbor_count;
-            std::cin >> name >> neighbor_count;
-            city_index.emplace(std::move(name), city);
+            std::cin >> names[static_cast<std::size_t>(city)] >> neighbor_count;
             auto& edges = graph[static_cast<std::size_t>(city)];
             edges.reserve(static_cast<std::size_t>(neighbor_count));
             for(int edge = 0; edge < neighbor_count; edge++){
@@ -36,24 +32,16 @@ int main(){
             }
         }
 
-        std::vector<std::vector<int>> cached_distance(
-            static_cast<std::size_t>(city_count)
+        NamedShortestPaths<int> shortest_paths(
+            std::move(names), std::move(graph)
         );
-        std::vector<char> cached(static_cast<std::size_t>(city_count), 0);
         int query_count;
         std::cin >> query_count;
         while(query_count--){
             std::string source_name, destination_name;
             std::cin >> source_name >> destination_name;
-            const int source = city_index.at(source_name);
-            const int destination = city_index.at(destination_name);
-            if(!cached[static_cast<std::size_t>(source)]){
-                cached_distance[static_cast<std::size_t>(source)] =
-                    dijkstra<int>(graph, source).dist;
-                cached[static_cast<std::size_t>(source)] = 1;
-            }
-            std::cout << cached_distance[static_cast<std::size_t>(source)]
-                                        [static_cast<std::size_t>(destination)]
+            std::cout << shortest_paths.distance(source_name, destination_name)
+                             .value_or(-1)
                       << '\n';
         }
     }
