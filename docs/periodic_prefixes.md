@@ -1,5 +1,5 @@
 ---
-title: Periodic Prefixes (周期的接頭辞) [PERIOD]
+title: Periodic Prefixes (周期的接頭辞) [FINDSR] [PERIOD]
 documentation_of: ../src/algorithm/string/periodic_prefixes.hpp
 ---
 
