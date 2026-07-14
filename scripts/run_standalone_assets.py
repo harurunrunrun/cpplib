@@ -11,6 +11,26 @@ import sys
 from pathlib import Path
 
 
+def escape_workflow_command(value: str) -> str:
+    """Escape a GitHub Actions workflow-command property or message."""
+    return (
+        value.replace("%", "%25")
+        .replace("\r", "%0D")
+        .replace("\n", "%0A")
+        .replace(":", "%3A")
+        .replace(",", "%2C")
+    )
+
+
+def report_failure_annotation(name: str, message: str) -> None:
+    title = escape_workflow_command(f"standalone-assets: {name}")
+    escaped_message = escape_workflow_command(message)
+    print(
+        f"::error title={title}::{escaped_message}",
+        file=sys.stderr,
+    )
+
+
 def asset_command(
     asset: Path,
     native_executable: Path,
@@ -160,6 +180,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         for name, message in failures:
             print(f"  - {name}: {message}", file=sys.stderr)
+            report_failure_annotation(name, message)
         return 1
 
     print(

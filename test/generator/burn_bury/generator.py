@@ -46,9 +46,26 @@ def main() -> None:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    inf = 1 << 60
+    boundary = 1 << 59
     cases = [
         (0, [], []),
         (2, [(3, 0), (0, 3)], [(0, 1, 0, 5, 5, 0)]),
+        (
+            6,
+            [(0, 0)] * 6,
+            [
+                (row, column, penalty, 0, inf, penalty)
+                for row in range(3)
+                for column in range(3, 6)
+                for penalty in [row + column + 1]
+            ],
+        ),
+        (
+            2,
+            [(0, 0), (0, 0)],
+            [(0, 1, -boundary, boundary, boundary, -boundary)],
+        ),
     ]
     rng = random.Random(20260825)
     for n in [1, 5, 10, 12]:

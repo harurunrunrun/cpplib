@@ -58,9 +58,9 @@ struct BurnBury{
             throw std::runtime_error("library assertion fault: pair cost must be submodular (BurnBury::add_pair_cost).");
         }
         constant += cost00;
-        add_one_delta(i, cost10 - cost00);
-        add_one_delta(j, cost11 - cost10);
-        graph.add_edge(i, j, cut_cost);
+        add_one_delta(i, cost11 - cost01);
+        add_one_delta(j, cost01 - cost00);
+        graph.add_edge(j, i, cut_cost);
     }
 
     BurnBuryResult<T> solve(){

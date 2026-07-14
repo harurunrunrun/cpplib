@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import io
 import os
 import tempfile
 import unittest
-from contextlib import contextmanager
+from contextlib import contextmanager, redirect_stderr
 from pathlib import Path
 
 import run_standalone_assets as runner
@@ -98,7 +99,8 @@ class RunStandaloneAssetsTest(unittest.TestCase):
             add_test(root, "missing_checker")
             (root / "test" / "checker" / "missing_checker" / "checker.py").unlink()
 
-            with working_directory(root):
+            output = io.StringIO()
+            with working_directory(root), redirect_stderr(output):
                 status = runner.main(["--cache-dir", "cache"])
 
             self.assertEqual(status, 1)
@@ -107,6 +109,20 @@ class RunStandaloneAssetsTest(unittest.TestCase):
         with self.assertRaises(SystemExit) as context:
             runner.main(["--split-size", "0"])
         self.assertEqual(context.exception.code, 2)
+
+    def test_failure_annotation_is_safely_escaped(self) -> None:
+        output = io.StringIO()
+        with redirect_stderr(output):
+            runner.report_failure_annotation(
+                "bad:name,100%",
+                "first line\r\nsecond: line, 100%",
+            )
+
+        self.assertEqual(
+            output.getvalue(),
+            "::error title=standalone-assets%3A bad%3Aname%2C100%25::"
+            "first line%0D%0Asecond%3A line%2C 100%25\n",
+        )
 
 
 if __name__ == "__main__":
