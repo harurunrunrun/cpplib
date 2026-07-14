@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/nsubstr.suffix_automaton.test.cpp"
+#include "../onlinejudge/nsubstr.maximum_substring_occurrences_by_length.test.cpp"

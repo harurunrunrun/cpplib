@@ -4,16 +4,18 @@ documentation_of: ../src/algorithm/string/count_palindromic_substrings.hpp
 ---
 
 文字列に含まれるすべての非空な回文部分文字列を、出現位置ごとに数える。
-Manacher 法で求めた各中心の奇数・偶数回文半径の総和を返す。
 
-# count_palindromic_substrings
+## API
 
 ```cpp
 long long count_palindromic_substrings(const string& text)
 ```
 
-`text` の回文部分文字列の出現数を返す。同じ内容でも区間が異なれば別々に数える。
-例えば `"aaa"` では長さ1が3個、長さ2が2個、長さ3が1個なので `6` を返す。
+## 引数・戻り値
+
+- `text`: 回文部分文字列を数える文字列。
+- 戻り値: 非空な回文部分文字列の出現数。同じ内容でも開始・終了位置が
+  異なれば別々に数える。空文字列では `0` を返す。
 
 ## API別の時間計算量・空間計算量
 

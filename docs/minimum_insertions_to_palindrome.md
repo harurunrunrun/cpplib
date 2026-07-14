@@ -6,22 +6,25 @@ documentation_of: ../src/algorithm/string/minimum_insertions_to_palindrome.hpp
 列に要素を挿入して回文にするために必要な最小挿入回数を求める。
 挿入位置は先頭・末尾・途中のいずれでもよく、元の列の要素の順序は変えない。
 
-# minimum_insertions_to_palindrome
+## API
 
 ```cpp
 template<class Sequence>
 int minimum_insertions_to_palindrome(const Sequence& sequence)
 ```
 
-`sequence` の順序を保ったまま回文にするための最小挿入回数を返す。
+## 引数・戻り値
+
+- `sequence`: 元の順序を保ったまま回文化する列。
+- 戻り値: 必要な挿入回数の最小値。空列またはすでに回文である列では `0`。
 
 ## API別の時間計算量・空間計算量
+
+$N=sequence.size()$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
 | `minimum_insertions_to_palindrome(sequence)` | $O(N^2)$ | $O(N)$ |
-
-空間計算量には反転列とLCSの2行DPを含み、$O(N^2)$ のDP表は保持しない。
 
 ## 注意点
 

@@ -85,6 +85,14 @@ def generate_bytese1(out_dir: Path) -> None:
         cases.append((grid, row, column, budget))
     write_case(out_dir, "random", *render(cases))
 
+    maximum_grid = [[9] * 100 for _ in range(100)]
+    maximum_cost = 9 * (100 + 100 - 1)
+    write_case(
+        out_dir,
+        "maximum",
+        *render([(maximum_grid, 99, 99, maximum_cost)]),
+    )
+
 
 def capital_answer(size: int, edges: list[tuple[int, int]]) -> list[int]:
     reach = reachability(size, edges)

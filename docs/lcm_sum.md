@@ -5,15 +5,17 @@ documentation_of: ../src/algorithm/math/lcm_sum.hpp
 
 `sum(lcm(i,n), 1 <= i <= n)` を繰り返し問い合わせるための前計算表。
 
-# `LcmSumTable`
+## API
+
+### `LcmSumTable(limit)`
 
 ```cpp
 explicit LcmSumTable(int limit);
 ```
 
-`1..limit` の最小素因数を前計算する。
+`1` 以上 `limit` 以下の問い合わせを処理できる表を構築する。
 
-# `limit`
+### `limit()`
 
 ```cpp
 int limit() const;
@@ -21,13 +23,20 @@ int limit() const;
 
 構築時の上限を返す。
 
-# `value`
+### `value(n)`
 
 ```cpp
 uint64_t value(int n) const;
 ```
 
 `sum(lcm(i,n), 1 <= i <= n)` を返す。
+
+## 引数・戻り値
+
+- `limit`: 構築する表の上限。
+- `n`: 問い合わせる正整数。
+- `limit()` は構築時の `limit` を返す。
+- `value(n)` は $\sum_{i=1}^{n}\operatorname{lcm}(i,n)$ を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -39,5 +48,6 @@ uint64_t value(int n) const;
 
 ## 注意点
 
-- `limit >= 1` が必要である。
-- `n` が表の外なら `out_of_range` を送出する。
+- `limit >= 1` を前提とする。
+- `n < 1` または `n > limit()` なら `out_of_range` を送出する。
+- `value(n)` の答えは `uint64_t` に収まる必要がある。

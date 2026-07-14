@@ -140,13 +140,13 @@ def matrix_multiply(a, b, modulus=MOD1):
     return result
 
 
-def matrix_power(a, exponent):
+def matrix_power(a, exponent, modulus=MOD1):
     n = len(a)
     result = [[int(i == j) for j in range(n)] for i in range(n)]
     while exponent:
         if exponent & 1:
-            result = matrix_multiply(result, a)
-        a = matrix_multiply(a, a)
+            result = matrix_multiply(result, a, modulus)
+        a = matrix_multiply(a, a, modulus)
         exponent //= 2
     return result
 
@@ -178,6 +178,22 @@ def recurrence_brute(initial, coefficient, index, modulus=1_000_000_000):
     return sequence[index - 1] % modulus
 
 
+def recurrence_companion_oracle(initial, coefficient, index,
+                                modulus=1_000_000_000):
+    degree = len(initial)
+    if index <= degree:
+        return initial[index - 1] % modulus
+
+    transition = [[0] * degree for _ in range(degree)]
+    transition[0] = [value % modulus for value in coefficient]
+    for row in range(1, degree):
+        transition[row][row - 1] = 1
+    powered = matrix_power(transition, index - degree, modulus)
+    state = list(reversed(initial))
+    return sum(powered[0][column] * (state[column] % modulus)
+               for column in range(degree)) % modulus
+
+
 def generate_seq(out_dir):
     rng = random.Random(183)
     cases = [([5, 8, 2], [32, 54, 6], 2), ([1, 2, 3], [4, 5, 6], 6)]
@@ -186,15 +202,21 @@ def generate_seq(out_dir):
         cases.append(([rng.randrange(1000) for _ in range(degree)],
                       [rng.randrange(1000) for _ in range(degree)], rng.randrange(1, 50)))
     cases.append(([987_654_321], [1], 1_000_000_000))
+    degree = 10
+    cases.append((
+        [999_999_999 - 7_919 * index for index in range(degree)],
+        [999_999_937 - 65_537 * index for index in range(degree)],
+        1_000_000_000,
+    ))
     lines = [str(len(cases))]
     answers = []
     for initial, coefficient, index in cases:
         lines.extend([str(len(initial)), " ".join(map(str, initial)),
                       " ".join(map(str, coefficient)), str(index)])
-        if len(initial) == 1 and coefficient[0] == 1:
-            answers.append(initial[0] % 1_000_000_000)
-        else:
-            answers.append(recurrence_brute(initial, coefficient, index))
+        answer = recurrence_companion_oracle(initial, coefficient, index)
+        if index <= 50:
+            assert answer == recurrence_brute(initial, coefficient, index)
+        answers.append(answer)
     write_case(out_dir, "mixed", "\n".join(lines) + "\n", "\n".join(map(str, answers)) + "\n")
 
 

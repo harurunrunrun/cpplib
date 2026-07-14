@@ -107,25 +107,22 @@ def brkstrng(out: Path) -> None:
         p = [0] + cuts + [length]
         n = len(p)
         dp = [[0] * n for _ in range(n)]
-        optimum = [[0] * n for _ in range(n)]
-        for left in range(n - 1):
-            optimum[left][left + 1] = left + 1
         for span in range(2, n):
             for left in range(n - span):
                 right = left + span
-                first = max(left + 1, optimum[left][right - 1])
-                last = min(right - 1, optimum[left + 1][right])
-                best = None
-                best_cut = first
-                for cut in range(first, last + 1):
-                    candidate = dp[left][cut] + dp[cut][right]
-                    if best is None or candidate < best:
-                        best = candidate
-                        best_cut = cut
-                assert best is not None
-                dp[left][right] = best + p[right] - p[left]
-                optimum[left][right] = best_cut
+                dp[left][right] = p[right] - p[left] + min(
+                    dp[left][cut] + dp[cut][right]
+                    for cut in range(left + 1, right)
+                )
         return dp[0][-1]
+
+    def balanced_unit_break_cost(segment_count: int) -> int:
+        height = (segment_count - 1).bit_length()
+        return segment_count * height - ((1 << height) - segment_count)
+
+    assert solve(10_000, list(range(1, 33))) == (
+        10_000 + balanced_unit_break_cost(32)
+    )
 
     source = random.Random(154)
     cases = [(10, []), (20, [3, 8, 10]), (20, [2, 3, 8, 10])]
@@ -136,7 +133,8 @@ def brkstrng(out: Path) -> None:
     data = "".join(f"{length} {len(cuts)}\n{' '.join(map(str, cuts))}\n" for length, cuts in cases)
     write(out, "random", data, "".join(f"{solve(length, cuts)}\n" for length, cuts in cases))
     cuts = list(range(1, 1001))
-    write(out, "maximum", "10000000 1000\n" + " ".join(map(str, cuts)) + "\n", f"{solve(10_000_000, cuts)}\n")
+    maximum_answer = 10_000_000 + balanced_unit_break_cost(1000)
+    write(out, "maximum", "10000000 1000\n" + " ".join(map(str, cuts)) + "\n", f"{maximum_answer}\n")
 
 
 def mixtures(out: Path) -> None:

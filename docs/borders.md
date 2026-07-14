@@ -12,13 +12,11 @@ template<class Sequence>
 std::vector<int> border_lengths(const Sequence& sequence)
 ```
 
-## API詳細
+## 引数・戻り値
 
-`border_lengths(sequence)` はすべてのborder長を狭義単調増加順で返す。
-内部でprefix functionを構築し、列全体の最長borderからfailure linkをたどる。
-
-例えば `sequence = "ababab"` では `{2, 4}`、`sequence = "aaaa"` では
-`{1, 2, 3}` を返す。空列と長さ1の列では空vectorを返す。
+- `sequence`: borderを列挙する入力列。
+- 戻り値: すべてのborder長を狭義単調増加順に格納したvector。
+  空列と長さ1の列では空vectorを返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -26,9 +24,9 @@ $N$ を列長、$K$ をborder数とする。
 
 | API | 時間計算量 | 空間計算量（出力・追加領域） |
 | --- | --- | --- |
-| `border_lengths(sequence)` | $O(N+K)$ | $O(N+K)$ |
+| `border_lengths(sequence)` | $O(N+K)$ | 追加領域 $O(N)$、出力 $O(K)$ |
 
-prefix functionに $O(N)$、結果に $O(K)$ の領域を使う。要素比較は $O(1)$ とする。
+要素比較は $O(1)$ とする。
 
 ## 注意点
 

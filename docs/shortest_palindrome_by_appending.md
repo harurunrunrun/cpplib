@@ -4,19 +4,18 @@ documentation_of: ../src/algorithm/string/shortest_palindrome_by_appending.hpp
 ---
 
 文字列の末尾だけに文字を追加して得られる最短の回文を返す。
-既存の Manacher 法を再利用して最長回文接尾辞を求め、その直前の部分を逆順に追加する。
 
-# shortest_palindrome_by_appending
+## API
 
 ```cpp
 string shortest_palindrome_by_appending(string_view text)
 ```
 
-`text` を接頭辞として持ち、末尾への0文字以上の追加だけで作れる最短の回文を返す。
-追加する文字列は一意に定まる。
+## 引数・戻り値
 
-例えば `"abcd"` には `"cba"` を追加して `"abcdcba"` を返す。
-すでに回文なら入力と同じ文字列を返す。
+- `text`: 接頭辞として残す文字列。
+- 戻り値: `text` の末尾へ0文字以上を追加して得られる最短の回文。
+  追加列は一意で、すでに回文なら入力と同じ文字列、空文字列なら空文字列を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -35,4 +34,3 @@ $0\le R\le 2N-1$（ただし $N=0$ なら $R=0$）である。
 - 文字集合に制限はなく、null文字を含む `string_view` も長さどおり扱う。
 - 文字の変更や先頭への追加は行わず、元の `text` は返り値の接頭辞としてそのまま残る。
 - 入力長は `int` に収まる必要がある。
-- 内部で `manacher_odd` と `manacher_even` を順に実行する。
