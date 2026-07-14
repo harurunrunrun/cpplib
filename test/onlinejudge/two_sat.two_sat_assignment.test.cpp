@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include <iostream>
-#include "../../src/algorithm/graph/two_sat.hpp"
+#include "../../src/algorithm/graph/two_sat_assignment.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -20,13 +20,14 @@ int main(){
         (void)zero;
         solver.add_clause(std::abs(a) - 1, a > 0, std::abs(b) - 1, b > 0);
     }
-    if(!solver.satisfiable()){
+    const auto assignment = two_sat_assignment(solver);
+    if(!assignment){
         std::cout << "s UNSATISFIABLE\n";
         return 0;
     }
     std::cout << "s SATISFIABLE\nv";
     for(int i = 0; i < n; ++i){
-        std::cout << ' ' << (solver.answer[static_cast<std::size_t>(i)] ? i + 1 : -i - 1);
+        std::cout << ' ' << ((*assignment)[static_cast<std::size_t>(i)] ? i + 1 : -i - 1);
     }
     std::cout << " 0\n";
 }

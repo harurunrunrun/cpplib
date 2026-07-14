@@ -1,5 +1,5 @@
 ---
-title: Persistent Disjoint Set Union (完全永続素集合データ構造) [persistent_unionfind]
+title: Persistent Disjoint Set Union (完全永続素集合データ構造)
 documentation_of: ../src/structure/dsu/persistent_dsu.hpp
 ---
 

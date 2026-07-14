@@ -1,5 +1,5 @@
 ---
-title: Persistent Queue (完全永続キュー) [persistent_queue]
+title: Persistent Queue (完全永続キュー)
 documentation_of: ../src/structure/other/persistent_queue.hpp
 ---
 

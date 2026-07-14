@@ -1,5 +1,5 @@
 ---
-title: Weighted Wavelet Matrix (重み付きウェーブレット行列) [static_range_sum_with_upper_bound]
+title: Weighted Wavelet Matrix (重み付きウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/weighted_wavelet_matrix.hpp
 ---
 

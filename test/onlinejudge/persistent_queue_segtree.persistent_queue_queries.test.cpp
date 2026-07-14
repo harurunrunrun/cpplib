@@ -2,11 +2,10 @@
 
 #include <iostream>
 #include "../../src/structure/other/persistent_queue.hpp"
+#include "../../src/structure/other/persistent_queue_queries.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr int MAX_Q = 500000;
-
-static PersistentSegtreeQueue<MaxMonoid<int>{}, MAX_Q, MAX_Q> queue(MAX_Q);
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -15,18 +14,18 @@ int main(){
     int Q;
     std::cin >> Q;
 
+    PersistentQueueQueries<
+        PersistentSegtreeQueue<MaxMonoid<int>{}, MAX_Q, MAX_Q>, MAX_Q
+    > queue(MAX_Q);
     for(int q = 0; q < Q; q++){
         int type, t;
         std::cin >> type >> t;
-        const int base = t + 1;
-
         if(type == 0){
             int x;
             std::cin >> x;
-            (void)queue.push(base, x);
+            queue.push(t, x);
         }else{
-            std::cout << queue.front(base) << '\n';
-            (void)queue.pop(base);
+            std::cout << queue.pop(t) << '\n';
         }
     }
 }

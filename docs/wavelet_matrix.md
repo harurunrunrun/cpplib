@@ -1,5 +1,5 @@
 ---
-title: Wavelet Matrix (ウェーブレット行列) [range_kth_smallest] [static_range_frequency]
+title: Wavelet Matrix (ウェーブレット行列) [range_kth_smallest]
 documentation_of: ../src/structure/wavelet_matrix/wavelet_matrix.hpp
 ---
 
