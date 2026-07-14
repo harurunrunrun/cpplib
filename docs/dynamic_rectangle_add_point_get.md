@@ -1,5 +1,5 @@
 ---
-title: Dynamic Rectangle Add Point Get (動的長方形加算一点取得) [rectangle_add_point_get]
+title: Dynamic Rectangle Add Point Get (動的長方形加算一点取得)
 documentation_of: ../src/algorithm/other/dynamic_rectangle_add_point_get.hpp
 ---
 

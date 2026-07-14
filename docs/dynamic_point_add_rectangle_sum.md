@@ -1,5 +1,5 @@
 ---
-title: Dynamic Point Add Rectangle Sum (動的点加算長方形和) [GIVEAWAY] [point_add_rectangle_sum] [RACETIME]
+title: Dynamic Point Add Rectangle Sum (動的点加算長方形和) [GIVEAWAY] [RACETIME]
 documentation_of: ../src/algorithm/other/dynamic_point_add_rectangle_sum.hpp
 ---
 

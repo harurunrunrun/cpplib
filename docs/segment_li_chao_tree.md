@@ -1,5 +1,5 @@
 ---
-title: Segment Li Chao Tree (線分Li Chao木) [segment_add_get_min]
+title: Segment Li Chao Tree (線分Li Chao木)
 documentation_of: ../src/structure/convex_hull_trick/segment_li_chao_tree.hpp
 ---
 
@@ -85,9 +85,8 @@ const vector<long long>& coordinates() const
 
 ## 注意点
 
-query座標はconstructorで与えた離散座標のいずれかでなければならない。線分の有効範囲は
-座標値の半開区間 `[xl,xr)`。無効な座標・区間、node容量超過、直線がない点へのqueryでは
-`runtime_error`。`MIN_QUERY=true` は最小値、falseは最大値を扱う。
-`T` の `a*x+b` が表現範囲を超えないことを呼出側が保証する。
-保存領域は $O(\mathtt{MAX\_NODES}+N)$、追加1回のnodeと再帰stackは $O(\log N)$、
-queryの追加領域は $O(1)$。
+- query座標はconstructorで与えた離散座標のいずれかでなければならない。未登録座標は `runtime_error`。
+- 線分の有効範囲は座標値の半開区間 `[left,right)`。`right < left` は `runtime_error`。
+- 有効な直線がない点の `query` は `nullopt` を返す。
+- 一次関数の評価値が `long long` に収まらない場合は `overflow_error`。
+- 追加時の再帰stackは $O(\log K)$、queryの追加領域は $O(1)$。
