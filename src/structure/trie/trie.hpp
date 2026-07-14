@@ -45,6 +45,16 @@ public:
     int node_count() const{ return used; }
     bool empty() const{ return word_count == 0; }
 
+    bool is_prefix_free() const{
+        for(int state = 0; state < used; state++){
+            if(nodes[state].terminal_count > 0
+                && nodes[state].pass_count != 1){
+                return false;
+            }
+        }
+        return true;
+    }
+
     void clear(){
         for(int v = 0; v < used; v++) nodes[v] = Node();
         used = 1;
