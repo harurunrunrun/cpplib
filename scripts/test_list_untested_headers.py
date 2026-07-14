@@ -29,26 +29,26 @@ class ListUntestedHeadersTest(unittest.TestCase):
                 ["second.hpp", "missing.hpp"],
             )
 
-    def test_thin_test_wrapper_is_followed(self) -> None:
+    def test_thin_test_wrapper_does_not_count_as_direct_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             header = root / "src" / "target.hpp"
-            onlinejudge = root / "test" / "onlinejudge" / "target.test.cpp"
+            implementation = root / "test" / "support" / "target_impl.cpp"
             standalone = root / "test" / "standalone" / "target.test.cpp"
-            for path in (header, onlinejudge, standalone):
+            for path in (header, implementation, standalone):
                 path.parent.mkdir(parents=True, exist_ok=True)
             header.write_text("#pragma once\n", encoding="utf-8")
-            onlinejudge.write_text(
+            implementation.write_text(
                 '#include "../../src/target.hpp"\n', encoding="utf-8"
             )
             standalone.write_text(
-                '#include "../onlinejudge/target.test.cpp"\n',
+                '#include "../support/target_impl.cpp"\n',
                 encoding="utf-8",
             )
 
-            self.assertEqual(untested_headers(root), [])
+            self.assertEqual(untested_headers(root), [header.resolve()])
 
-    def test_test_helper_header_is_followed(self) -> None:
+    def test_test_helper_header_does_not_count_as_direct_coverage(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             header = root / "src" / "target.hpp"
@@ -64,7 +64,7 @@ class ListUntestedHeadersTest(unittest.TestCase):
                 '#include "helper.hpp"\n', encoding="utf-8"
             )
 
-            self.assertEqual(untested_headers(root), [])
+            self.assertEqual(untested_headers(root), [header.resolve()])
 
     def test_include_outside_root_is_ignored(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
