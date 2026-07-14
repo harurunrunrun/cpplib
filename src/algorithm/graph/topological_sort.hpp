@@ -1,6 +1,8 @@
 #pragma once
 
 #include <algorithm>
+#include <functional>
+#include <queue>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -10,7 +12,9 @@ struct TopologicalSortResult{
     bool is_dag;
 };
 
-TopologicalSortResult topological_sort(const std::vector<std::vector<int>>& graph){
+namespace topological_sort_internal{
+
+inline void validate_graph(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());
     for(const auto& edges: graph){
         for(int to: edges){
@@ -19,6 +23,13 @@ TopologicalSortResult topological_sort(const std::vector<std::vector<int>>& grap
             }
         }
     }
+}
+
+} // namespace topological_sort_internal
+
+TopologicalSortResult topological_sort(const std::vector<std::vector<int>>& graph){
+    const int n = static_cast<int>(graph.size());
+    topological_sort_internal::validate_graph(graph);
 
     TopologicalSortResult result;
     result.order.reserve(static_cast<std::size_t>(n));
@@ -55,5 +66,34 @@ TopologicalSortResult topological_sort(const std::vector<std::vector<int>>& grap
     }
 
     std::reverse(result.order.begin(), result.order.end());
+    return result;
+}
+
+TopologicalSortResult lexicographical_topological_sort(
+    const std::vector<std::vector<int>>& graph
+){
+    const int n = static_cast<int>(graph.size());
+    topological_sort_internal::validate_graph(graph);
+
+    std::vector<int> indegree(static_cast<std::size_t>(n));
+    for(const auto& edges: graph){
+        for(int to: edges) indegree[static_cast<std::size_t>(to)]++;
+    }
+    std::priority_queue<int, std::vector<int>, std::greater<int>> queue;
+    for(int vertex = 0; vertex < n; vertex++){
+        if(indegree[static_cast<std::size_t>(vertex)] == 0) queue.push(vertex);
+    }
+
+    TopologicalSortResult result;
+    result.order.reserve(static_cast<std::size_t>(n));
+    while(!queue.empty()){
+        int vertex = queue.top();
+        queue.pop();
+        result.order.push_back(vertex);
+        for(int to: graph[static_cast<std::size_t>(vertex)]){
+            if(--indegree[static_cast<std::size_t>(to)] == 0) queue.push(to);
+        }
+    }
+    result.is_dag = static_cast<int>(result.order.size()) == n;
     return result;
 }

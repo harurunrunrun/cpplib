@@ -51,6 +51,26 @@ void self_test(){
         assert(!res.is_dag);
         assert(res.order.size() == graph.size());
     }
+    {
+        std::vector<std::vector<int>> graph(8);
+        graph[0] = {3, 1};
+        graph[2] = {1, 4};
+        graph[3] = {1, 2};
+        graph[4] = {1};
+        graph[7] = {1, 5};
+        const auto res = lexicographical_topological_sort(graph);
+        assert(res.is_dag);
+        assert((res.order == std::vector<int>{0, 3, 2, 4, 6, 7, 1, 5}));
+    }
+    {
+        std::vector<std::vector<int>> graph(3);
+        graph[0] = {1};
+        graph[1] = {2};
+        graph[2] = {0};
+        const auto res = lexicographical_topological_sort(graph);
+        assert(!res.is_dag);
+        assert(res.order.empty());
+    }
     for(int n = 1; n <= 50; n++){
         std::vector<std::vector<int>> graph(static_cast<std::size_t>(n));
         for(int u = 0; u < n; u++){
