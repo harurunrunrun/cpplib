@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 void self_test(){
     SuffixAutomaton<3, 16> empty;
@@ -26,11 +27,15 @@ void self_test(){
     automaton.build_occurrences();
     automaton.build_occurrences();
     assert(automaton.occurrence_count("aba") == 2);
+    assert((automaton.maximum_occurrences_by_length() ==
+            std::vector<long long>{3, 2, 2, 1, 1}));
 
     const int extended = automaton.extend('c');
     assert(extended == automaton.last());
     assert(automaton[extended].length == 6);
     assert(automaton.contains("bac"));
+    assert((automaton.maximum_occurrences_by_length() ==
+            std::vector<long long>{3, 2, 2, 1, 1, 1}));
 
     bool thrown = false;
     try{
@@ -49,6 +54,7 @@ void self_test(){
     assert(thrown);
 
     SuffixAutomaton<1, 2> full;
+    assert(full.maximum_occurrences_by_length().empty());
     full.extend('a');
     thrown = false;
     try{

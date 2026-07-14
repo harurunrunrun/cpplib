@@ -151,6 +151,26 @@ public:
         return states[v].occurrence;
     }
 
+    std::vector<long long> maximum_occurrences_by_length(){
+        build_occurrences();
+        const int text_length = states[last_state].length;
+        std::vector<long long> result(static_cast<std::size_t>(text_length));
+        for(int v = 1; v < used; v++){
+            const int length = states[v].length;
+            result[static_cast<std::size_t>(length - 1)] = std::max(
+                result[static_cast<std::size_t>(length - 1)],
+                states[v].occurrence
+            );
+        }
+        for(int length = text_length - 1; length > 0; length--){
+            result[static_cast<std::size_t>(length - 1)] = std::max(
+                result[static_cast<std::size_t>(length - 1)],
+                result[static_cast<std::size_t>(length)]
+            );
+        }
+        return result;
+    }
+
     Match longest_common_substring(std::string_view s) const{
         int v = 0;
         int len = 0;
