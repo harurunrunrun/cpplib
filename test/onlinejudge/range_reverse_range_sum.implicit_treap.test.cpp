@@ -3,11 +3,8 @@
 #include <vector>
 #include "../../src/structure/other/fastio.hpp"
 #include "../../src/structure/tree/implicit_treap.hpp"
-#include "../../src/structure/types/monoid.hpp"
+#include "../../src/structure/types/common_monoids.hpp"
 
-long long op(long long a, long long b){ return a + b; }
-long long e(){ return 0; }
-constexpr Monoid<op, e> monoid;
 
 int main(){
     fastio io;
@@ -16,7 +13,7 @@ int main(){
     io.readint(q);
     std::vector<long long> a(n);
     for(auto& x: a) io.readll(x);
-    ImplicitTreap<monoid, 400000> tree(a);
+    ImplicitTreap<AddMonoid<long long>{}, 400000> tree(a);
     while(q--){
         int t, l, r;
         io.readint(t);

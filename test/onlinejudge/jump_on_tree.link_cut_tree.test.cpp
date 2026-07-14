@@ -3,11 +3,8 @@
 #include <iostream>
 
 #include "../../src/structure/tree/link_cut_tree.hpp"
-#include "../../src/structure/types/monoid.hpp"
+#include "../../src/structure/types/common_monoids.hpp"
 
-int add_int(int left, int right){ return left + right; }
-int zero_int(){ return 0; }
-constexpr Monoid<add_int, zero_int> sum_monoid;
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -15,7 +12,7 @@ int main(){
 
     int n, query_count;
     std::cin >> n >> query_count;
-    LinkCutTree<sum_monoid, 500000> tree(n);
+    LinkCutTree<AddMonoid<int>{}, 500000> tree(n);
     for(int edge = 1; edge < n; ++edge){
         int left, right;
         std::cin >> left >> right;
