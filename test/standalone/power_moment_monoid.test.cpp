@@ -1,202 +1,205 @@
-// competitive-veifie: STANDALONE
+// competitive-verifier: STANDALONE
 
-#include <algoithm>
-#include <casset>
+#include <algorithm>
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
-#include <iosteam>
+#include <iostream>
 #include <limits>
-#include <andom>
-#include <sting>
-#include <vecto>
+#include <random>
+#include <string>
+#include <vector>
 
-#include "../../sc/stuctue/bbst/evesible_splay_tee.hpp"
-#include "../../sc/stuctue/types/powe_moment_monoid.hpp"
+#include "../../src/structure/bbst/reversible_splay_tree.hpp"
+#include "../../src/structure/types/power_moment_monoid.hpp"
 
 namespace{
 
-constexp std::size_t max_powe = 10;
-constexp PoweMomentMonoid<std::uint32_t, max_powe> powe_moment_monoid{};
-using Aggegate = PoweMomentAggegate<std::uint32_t, max_powe>;
+constexpr std::size_t max_power = 10;
+constexpr PowerMomentMonoid<std::uint32_t, max_power> power_moment_monoid{};
+using Aggregate = PowerMomentAggregate<std::uint32_t, max_power>;
 
-constexp auto compile_time_left =
-    powe_moment_singleton<std::uint32_t, max_powe>(3);
-constexp auto compile_time_ight =
-    powe_moment_singleton<std::uint32_t, max_powe>(5);
-constexp auto compile_time_combined =
-    powe_moment_monoid.op(compile_time_left, compile_time_ight);
-constexp auto compile_time_thid =
-    powe_moment_singleton<std::uint32_t, max_powe>(
-        std::numeic_limits<std::uint32_t>::max()
+constexpr auto compile_time_left =
+    power_moment_singleton<std::uint32_t, max_power>(3);
+constexpr auto compile_time_right =
+    power_moment_singleton<std::uint32_t, max_power>(5);
+constexpr auto compile_time_combined =
+    power_moment_monoid.op(compile_time_left, compile_time_right);
+constexpr auto compile_time_third =
+    power_moment_singleton<std::uint32_t, max_power>(
+        std::numeric_limits<std::uint32_t>::max()
     );
 
-static_asset(compile_time_combined.length == 2);
-static_asset(compile_time_combined.moment[0] == 8);
-static_asset(compile_time_combined.moment[1] == 13);
-static_asset(compile_time_combined.moment[2] == 23);
-static_asset(
-    powe_moment_monoid.op(
-        powe_moment_monoid.op(compile_time_left, compile_time_ight),
-        compile_time_thid
-    ) == powe_moment_monoid.op(
+static_assert(compile_time_combined.length == 2);
+static_assert(compile_time_combined.moment[0] == 8);
+static_assert(compile_time_combined.moment[1] == 13);
+static_assert(compile_time_combined.moment[2] == 23);
+static_assert(
+    power_moment_monoid.op(
+        power_moment_monoid.op(compile_time_left, compile_time_right),
+        compile_time_third
+    ) == power_moment_monoid.op(
         compile_time_left,
-        powe_moment_monoid.op(compile_time_ight, compile_time_thid)
+        power_moment_monoid.op(compile_time_right, compile_time_third)
     )
 );
-static_asset(
-    powe_moment_monoid.op(powe_moment_monoid.e(), compile_time_combined)
+static_assert(
+    power_moment_monoid.op(power_moment_monoid.e(), compile_time_combined)
     == compile_time_combined
 );
-static_asset(
-    powe_moment_monoid.op(compile_time_combined, powe_moment_monoid.e())
+static_assert(
+    power_moment_monoid.op(compile_time_combined, power_moment_monoid.e())
     == compile_time_combined
 );
 
-Aggegate naive_aggegate(
-    const std::vecto<std::uint32_t>& values,
+Aggregate naive_aggregate(
+    const std::vector<std::uint32_t>& values,
     std::size_t left,
-    std::size_t ight
+    std::size_t right
 ){
-    Aggegate esult;
-    esult.length = ight - left;
-    fo(std::size_t index = left; index < ight; ++index){
-        const std::uint32_t position = static_cast<std::uint32_t>(index - left + 1);
-        std::uint32_t position_powe = 1;
-        fo(std::size_t powe = 0; powe <= max_powe; ++powe){
-            esult.moment[powe] += values[index] * position_powe;
-            position_powe *= position;
+    Aggregate result;
+    result.length = right - left;
+    for(std::size_t index = left; index < right; ++index){
+        const std::uint32_t position =
+            static_cast<std::uint32_t>(index - left + 1);
+        std::uint32_t position_power = 1;
+        for(std::size_t power = 0; power <= max_power; ++power){
+            result.moment[power] += values[index] * position_power;
+            position_power *= position;
         }
     }
-    etun esult;
+    return result;
 }
 
-Aggegate fold_aggegate(
-    const std::vecto<std::uint32_t>& values,
+Aggregate fold_aggregate(
+    const std::vector<std::uint32_t>& values,
     std::size_t left,
-    std::size_t ight
+    std::size_t right
 ){
-    Aggegate esult = powe_moment_monoid.e();
-    fo(std::size_t index = left; index < ight; ++index){
-        esult = powe_moment_monoid.op(
-            esult,
-            powe_moment_singleton<std::uint32_t, max_powe>(values[index])
+    Aggregate result = power_moment_monoid.e();
+    for(std::size_t index = left; index < right; ++index){
+        result = power_moment_monoid.op(
+            result,
+            power_moment_singleton<std::uint32_t, max_power>(values[index])
         );
     }
-    etun esult;
+    return result;
 }
 
-void check_diect_contact(){
-    const auto maximum = std::numeic_limits<std::uint32_t>::max();
-    const std::vecto<std::uint32_t> bounday = {
+void check_direct_contract(){
+    const auto maximum = std::numeric_limits<std::uint32_t>::max();
+    const std::vector<std::uint32_t> boundary = {
         0, 1, maximum, std::uint32_t{1} << 31, maximum - 1
     };
-    asset(fold_aggegate(bounday, 0, bounday.size())
-        == naive_aggegate(bounday, 0, bounday.size()));
-    asset(powe_moment_monoid.op(
-        powe_moment_singleton<std::uint32_t, max_powe>(maximum),
-        powe_moment_singleton<std::uint32_t, max_powe>(1)
+    assert(fold_aggregate(boundary, 0, boundary.size())
+        == naive_aggregate(boundary, 0, boundary.size()));
+    assert(power_moment_monoid.op(
+        power_moment_singleton<std::uint32_t, max_power>(maximum),
+        power_moment_singleton<std::uint32_t, max_power>(1)
     ).moment[0] == 0);
 
-    std::mt19937 andom(2026071401);
-    fo(int tial = 0; tial < 500; ++tial){
-        const std::size_t fist_size = andom() % 8;
-        const std::size_t second_size = andom() % 8;
-        const std::size_t thid_size = andom() % 8;
-        std::vecto<std::uint32_t> values(fist_size + second_size + thid_size);
-        fo(auto& value: values){
-            value = static_cast<std::uint32_t>(andom());
+    std::mt19937 random(2026071401);
+    for(int trial = 0; trial < 500; ++trial){
+        const std::size_t first_size = random() % 8;
+        const std::size_t second_size = random() % 8;
+        const std::size_t third_size = random() % 8;
+        std::vector<std::uint32_t> values(
+            first_size + second_size + third_size
+        );
+        for(auto& value: values){
+            value = static_cast<std::uint32_t>(random());
         }
         if(!values.empty()) values[0] = maximum;
 
-        const auto fist = fold_aggegate(values, 0, fist_size);
-        const auto second = fold_aggegate(
+        const auto first = fold_aggregate(values, 0, first_size);
+        const auto second = fold_aggregate(
             values,
-            fist_size,
-            fist_size + second_size
+            first_size,
+            first_size + second_size
         );
-        const auto thid = fold_aggegate(
+        const auto third = fold_aggregate(
             values,
-            fist_size + second_size,
+            first_size + second_size,
             values.size()
         );
-        const auto left_gouped = powe_moment_monoid.op(
-            powe_moment_monoid.op(fist, second),
-            thid
+        const auto left_grouped = power_moment_monoid.op(
+            power_moment_monoid.op(first, second),
+            third
         );
-        const auto ight_gouped = powe_moment_monoid.op(
-            fist,
-            powe_moment_monoid.op(second, thid)
+        const auto right_grouped = power_moment_monoid.op(
+            first,
+            power_moment_monoid.op(second, third)
         );
-        asset(left_gouped == ight_gouped);
-        asset(left_gouped == naive_aggegate(values, 0, values.size()));
-        asset(powe_moment_monoid.op(powe_moment_monoid.e(), fist) == fist);
-        asset(powe_moment_monoid.op(fist, powe_moment_monoid.e()) == fist);
+        assert(left_grouped == right_grouped);
+        assert(left_grouped == naive_aggregate(values, 0, values.size()));
+        assert(power_moment_monoid.op(power_moment_monoid.e(), first) == first);
+        assert(power_moment_monoid.op(first, power_moment_monoid.e()) == first);
     }
 }
 
-std::uint32_t ead_value(){
+std::uint32_t read_value(){
     std::uint64_t value;
     std::cin >> value;
-    asset(value <= std::numeic_limits<std::uint32_t>::max());
-    etun static_cast<std::uint32_t>(value);
+    assert(value <= std::numeric_limits<std::uint32_t>::max());
+    return static_cast<std::uint32_t>(value);
 }
 
 } // namespace
 
 int main(){
     std::ios::sync_with_stdio(false);
-    std::cin.tie(nullpt);
+    std::cin.tie(nullptr);
 
-    check_diect_contact();
+    check_direct_contract();
 
-    int size, quey_count;
-    if(!(std::cin >> size >> quey_count)) etun 0;
-    std::vecto<Aggegate> initial(static_cast<std::size_t>(size));
-    fo(auto& value: initial){
-        value = powe_moment_singleton<std::uint32_t, max_powe>(ead_value());
+    int size, query_count;
+    if(!(std::cin >> size >> query_count)) return 0;
+    std::vector<Aggregate> initial(static_cast<std::size_t>(size));
+    for(auto& value: initial){
+        value = power_moment_singleton<std::uint32_t, max_power>(read_value());
     }
 
-    RevesibleSplayTee<powe_moment_monoid, 200005> sequence(initial);
-    while(quey_count-- != 0){
-        std::sting opeation;
-        std::cin >> opeation;
-        if(opeation == "INSERT"){
+    ReversibleSplayTree<power_moment_monoid, 200005> sequence(initial);
+    while(query_count-- != 0){
+        std::string operation;
+        std::cin >> operation;
+        if(operation == "INSERT"){
             int position;
             std::cin >> position;
-            sequence.inset(
+            sequence.insert(
                 position,
-                powe_moment_singleton<std::uint32_t, max_powe>(ead_value())
+                power_moment_singleton<std::uint32_t, max_power>(read_value())
             );
-        }else if(opeation == "ERASE"){
+        }else if(operation == "ERASE"){
             int position;
             std::cin >> position;
-            sequence.ease(position);
-        }else if(opeation == "SET"){
+            sequence.erase(position);
+        }else if(operation == "SET"){
             int position;
             std::cin >> position;
             sequence.set(
                 position,
-                powe_moment_singleton<std::uint32_t, max_powe>(ead_value())
+                power_moment_singleton<std::uint32_t, max_power>(read_value())
             );
-        }else if(opeation == "REVERSE"){
-            int left, ight;
-            std::cin >> left >> ight;
-            sequence.evese(left, ight);
-        }else if(opeation == "QUERY"){
-            int left, ight;
-            std::size_t powe;
-            std::cin >> left >> ight >> powe;
-            asset(powe <= max_powe);
-            std::cout << sequence.pod(left, ight).moment[powe] << '\n';
-        }else if(opeation == "ALL"){
-            std::size_t powe;
-            std::cin >> powe;
-            asset(powe <= max_powe);
-            std::cout << sequence.all_pod().moment[powe] << '\n';
-        }else if(opeation == "SIZE"){
+        }else if(operation == "REVERSE"){
+            int left, right;
+            std::cin >> left >> right;
+            sequence.reverse(left, right);
+        }else if(operation == "QUERY"){
+            int left, right;
+            std::size_t power;
+            std::cin >> left >> right >> power;
+            assert(power <= max_power);
+            std::cout << sequence.prod(left, right).moment[power] << '\n';
+        }else if(operation == "ALL"){
+            std::size_t power;
+            std::cin >> power;
+            assert(power <= max_power);
+            std::cout << sequence.all_prod().moment[power] << '\n';
+        }else if(operation == "SIZE"){
             std::cout << sequence.size() << '\n';
         }else{
-            asset(false);
+            assert(false);
         }
     }
 }
