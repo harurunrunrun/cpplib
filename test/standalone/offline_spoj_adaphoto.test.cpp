@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/adaphoto.suffix_automaton.test.cpp"
+#include "../onlinejudge/adaphoto.longest_common_substring_length.test.cpp"
