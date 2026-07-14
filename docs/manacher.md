@@ -1,5 +1,5 @@
 ---
-title: Manacher (Manacher法) [enumerate_palindromes]
+title: Manacher (Manacher法)
 documentation_of: ../src/algorithm/string/manacher.hpp
 ---
 

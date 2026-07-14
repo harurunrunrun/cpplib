@@ -1,5 +1,5 @@
 ---
-title: Aho Corasick (Aho-Corasick法) [aho_corasick] [WPUZZLES]
+title: Aho Corasick (Aho-Corasick法) [WPUZZLES]
 documentation_of: ../src/algorithm/string/aho_corasick.hpp
 ---
 

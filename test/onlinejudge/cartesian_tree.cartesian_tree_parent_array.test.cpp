@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/tree/cartesian_tree.hpp"
+#include "../../src/algorithm/tree/cartesian_tree_parent_array.hpp"
 
 int main() {
     std::ios::sync_with_stdio(false);
@@ -14,11 +14,10 @@ int main() {
     std::vector<int> values(n);
     for (int& value : values) std::cin >> value;
 
-    auto tree = cartesian_tree(values);
-    tree.parent[tree.root] = tree.root;
+    const auto parent = cartesian_tree_parent_array(values);
     for (int vertex = 0; vertex < n; ++vertex) {
         if (vertex) std::cout << ' ';
-        std::cout << tree.parent[vertex];
+        std::cout << parent[static_cast<std::size_t>(vertex)];
     }
     std::cout << '\n';
 }

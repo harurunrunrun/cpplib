@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_circle.hpp"
+#include "../../src/algorithm/geometry/2d/minimum_enclosing_circle_boundary_flags.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -14,9 +14,7 @@ int main(){
     std::cin >> size;
     std::vector<Point> points(static_cast<std::size_t>(size));
     for(Point& point: points) std::cin >> point.x >> point.y;
-    const MinimumEnclosingCircleResult result = minimum_enclosing_circle(points);
-    for(const Point& point: points){
-        std::cout << (result.on_boundary(point) ? '1' : '0');
-    }
+    const auto answer = minimum_enclosing_circle_boundary_flags(points);
+    for(bool value: answer) std::cout << static_cast<int>(value);
     std::cout << '\n';
 }
