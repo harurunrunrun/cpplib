@@ -53,6 +53,7 @@ void test_state_api(){
 
     ac.build();
     assert(ac.is_built());
+    ac.build();
     const int b = ac.next_state(root, 'b');
     const int ab = ac.next_state(a, 'b');
     assert(b == b_trie);

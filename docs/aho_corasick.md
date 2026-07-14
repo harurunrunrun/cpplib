@@ -75,6 +75,7 @@ $V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHAB
   文字はalphabet内、node数は `MAX_NODES` 以下が必要。
   `build()` 後の追加は例外。
 - `build()` はfailure linkと未定義遷移を構築する。pattern追加後に呼ぶ。
+  構築済みなら何もせず、既存の構築結果を保持する。
 - `next_state(state,c)` は1文字読んだ次状態。
   `terminal_count(state)` はそのnodeで直接終わる登録pattern数、
   `output_count(state)` はfailure link上を含めて現在位置で終わるpattern数。

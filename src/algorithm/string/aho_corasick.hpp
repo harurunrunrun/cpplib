@@ -70,6 +70,7 @@ public:
     }
 
     void build(){
+        if(built) return;
         nodes[0].output_count = nodes[0].terminal_count;
         std::queue<int> que;
         for(int c = 0; c < ALPHABET; c++){
