@@ -8,7 +8,15 @@ import shlex
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
+
+from standalone_verification_results import (
+    make_manifest,
+    result_path,
+    source_fingerprint,
+    write_manifest,
+)
 
 
 def escape_workflow_command(value: str) -> str:
@@ -62,6 +70,10 @@ def asset_command(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cache-dir", default=".competitive-verifier/cache/standalone-assets")
+    parser.add_argument(
+        "--result-dir",
+        default=".competitive-verifier/cache/standalone-results",
+    )
     parser.add_argument("--cxx", default="g++")
     parser.add_argument("--cxxflags", default="-std=c++20 -O2 -Wall -Wextra")
     parser.add_argument("--split-size", type=int, default=1)
@@ -75,6 +87,14 @@ def main(argv: list[str] | None = None) -> int:
 
     root = Path(".")
     cache_dir = Path(args.cache_dir)
+    result_dir = Path(args.result_dir)
+    try:
+        fingerprint = source_fingerprint(root)
+    except Exception as error:
+        message = f"could not fingerprint standalone sources: {error}"
+        print(f"[standalone-assets] {message}", file=sys.stderr)
+        report_failure_annotation("fingerprint", message)
+        return 1
     all_tests = sorted((root / "test" / "standalone").glob("*.test.cpp"))
     tests = all_tests[args.split_index :: args.split_size]
     failures: list[tuple[str, str]] = []
@@ -91,7 +111,23 @@ def main(argv: list[str] | None = None) -> int:
 
     for test in tests:
         name = test.name[: -len(".test.cpp")]
+        test_path = test.as_posix()
+        manifest_path = result_path(result_dir, test_path)
+        started = time.monotonic()
         print(f"[standalone-assets] START {name}", file=sys.stderr)
+        try:
+            write_manifest(
+                manifest_path,
+                make_manifest(
+                    test_path=test_path,
+                    fingerprint=fingerprint,
+                    status="running",
+                    cxx=args.cxx,
+                    cxxflags=args.cxxflags,
+                ),
+            )
+        except Exception as error:
+            failures.append((name, f"could not record running result: {error}"))
         generator_python = root / "test" / "generator" / name / "generator.py"
         generator_cpp = root / "test" / "generator" / name / "generator.cpp"
         checker_python = root / "test" / "checker" / name / "checker.py"
@@ -112,6 +148,23 @@ def main(argv: list[str] | None = None) -> int:
             case_dir.mkdir(parents=True, exist_ok=True)
         except Exception as error:
             failures.append((name, f"could not prepare case directory: {error}"))
+            try:
+                write_manifest(
+                    manifest_path,
+                    make_manifest(
+                        test_path=test_path,
+                        fingerprint=fingerprint,
+                        status="failure",
+                        elapsed_seconds=time.monotonic() - started,
+                        case_count=0,
+                        cxx=args.cxx,
+                        cxxflags=args.cxxflags,
+                    ),
+                )
+            except Exception as manifest_error:
+                failures.append(
+                    (name, f"could not record failure result: {manifest_error}")
+                )
             continue
 
         build_dir = cache_dir / name / "build"
@@ -138,6 +191,10 @@ def main(argv: list[str] | None = None) -> int:
                             f"generator exited with code {generator_result.returncode}",
                         )
                     )
+
+        case_count = len(list(case_dir.glob("*.in")))
+        if case_count == 0:
+            failures.append((name, "generator produced no .in cases"))
 
         if checker_exists:
             try:
@@ -170,7 +227,25 @@ def main(argv: list[str] | None = None) -> int:
                         )
                     )
 
-        if not any(failed_name == name for failed_name, _ in failures):
+        successful = not any(failed_name == name for failed_name, _ in failures)
+        try:
+            write_manifest(
+                manifest_path,
+                make_manifest(
+                    test_path=test_path,
+                    fingerprint=fingerprint,
+                    status="success" if successful else "failure",
+                    elapsed_seconds=time.monotonic() - started,
+                    case_count=case_count,
+                    cxx=args.cxx,
+                    cxxflags=args.cxxflags,
+                ),
+            )
+        except Exception as error:
+            failures.append((name, f"could not record final result: {error}"))
+            successful = False
+
+        if successful:
             print(f"[standalone-assets] PASS {name}", file=sys.stderr)
 
     if failures:

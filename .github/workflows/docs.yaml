@@ -1,6 +1,11 @@
 name: docs
 
 on:
+  workflow_run:
+    workflows: [verify]
+    types: [completed]
+    branches: [main]
+
   push:
     branches:
       - main
@@ -27,13 +32,116 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: docs-${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
+  route:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      should_build: ${{ steps.context.outputs.should_build }}
+      head_sha: ${{ steps.context.outputs.head_sha }}
+      verify_run_id: ${{ steps.context.outputs.verify_run_id }}
+      verify_run_attempt: ${{ steps.context.outputs.verify_run_attempt }}
+      use_trigger_results: ${{ steps.context.outputs.use_trigger_results }}
+      deploy: ${{ steps.context.outputs.deploy }}
+
+    steps:
+      - name: Select documentation source and results
+        id: context
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const event = context.eventName;
+            let shouldBuild = true;
+            let headSha = context.sha;
+            let verifyRunId = '';
+            let verifyRunAttempt = '';
+            let useTriggerResults = false;
+            let deploy = false;
+
+            const triggersVerify = (path) =>
+              path.startsWith('src/') ||
+              path.startsWith('test/') ||
+              path.startsWith('scripts/') ||
+              path.startsWith('.competitive-verifier/') ||
+              path === 'Makefile' ||
+              path === 'config.toml' ||
+              path === '.github/workflows/verify.yaml';
+
+            if (event === 'workflow_run') {
+              const run = context.payload.workflow_run;
+              headSha = run.head_sha;
+              verifyRunId = String(run.id);
+              verifyRunAttempt = String(run.run_attempt);
+              useTriggerResults = true;
+              deploy = run.head_branch === 'main' &&
+                run.head_repository.full_name === `${context.repo.owner}/${context.repo.repo}`;
+
+              if (!deploy) {
+                core.notice('Ignoring a verify run outside this repository main branch');
+                shouldBuild = false;
+              } else {
+                const branch = await github.rest.repos.getBranch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  branch: 'main',
+                });
+                if (branch.data.commit.sha !== headSha) {
+                  core.notice(`Skipping stale verify run for ${headSha}; main is ${branch.data.commit.sha}`);
+                  shouldBuild = false;
+                  deploy = false;
+                }
+              }
+            } else if (event === 'push') {
+              deploy = context.ref === 'refs/heads/main';
+              const before = context.payload.before;
+              const after = context.payload.after;
+              if (/^0+$/.test(before)) {
+                shouldBuild = false;
+                core.notice('Initial branch push waits for the verify workflow');
+              } else {
+                const comparison = await github.rest.repos.compareCommitsWithBasehead({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  basehead: `${before}...${after}`,
+                });
+                const files = comparison.data.files || [];
+                if (files.some((file) => triggersVerify(file.filename))) {
+                  shouldBuild = false;
+                  deploy = false;
+                  core.notice('This push changes verification inputs; docs wait for workflow_run');
+                }
+              }
+            } else if (event === 'pull_request') {
+              deploy = false;
+            } else if (event === 'workflow_dispatch') {
+              deploy = context.ref === 'refs/heads/main';
+            }
+
+            core.setOutput('should_build', String(shouldBuild));
+            core.setOutput('head_sha', headSha);
+            core.setOutput('verify_run_id', verifyRunId);
+            core.setOutput('verify_run_attempt', verifyRunAttempt);
+            core.setOutput('use_trigger_results', String(useTriggerResults));
+            core.setOutput('deploy', String(deploy));
+
   docs:
+    needs: route
+    if: ${{ needs.route.outputs.should_build == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     permissions:
       contents: read
+      actions: read
       pages: write
       id-token: write
 
@@ -42,6 +150,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          ref: ${{ needs.route.outputs.head_sha }}
 
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
@@ -71,9 +180,9 @@ jobs:
         run: python3 scripts/check_docs_coverage.py src docs
 
       - name: Prepare cache directory
-        run: mkdir -p .competitive-verifier/cache
+        run: mkdir -p .competitive-verifier/cache/standalone-results
 
-      - name: Restore latest verify result
+      - name: Restore latest online verification result
         uses: actions/cache/restore@v4
         continue-on-error: true
         with:
@@ -83,11 +192,49 @@ jobs:
             competitive-verifier-result-${{ hashFiles('config.toml') }}-
             competitive-verifier-result-
 
+      - name: Restore standalone verification results
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: .competitive-verifier/cache/standalone-results
+          key: standalone-results-${{ hashFiles('src/**', 'test/**', 'config.toml', 'scripts/run_standalone_assets.py', 'scripts/standalone_verification_results.py') }}
+
+      - name: Download online verification result from triggering run
+        if: ${{ needs.route.outputs.use_trigger_results == 'true' }}
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: competitive-verifier-result-${{ needs.route.outputs.verify_run_attempt }}
+          path: .competitive-verifier/cache
+          run-id: ${{ needs.route.outputs.verify_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download standalone verification results from triggering run
+        id: trigger_standalone_results
+        if: ${{ needs.route.outputs.use_trigger_results == 'true' }}
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: standalone-results-${{ needs.route.outputs.verify_run_attempt }}-*
+          path: .competitive-verifier/cache/standalone-results
+          merge-multiple: true
+          run-id: ${{ needs.route.outputs.verify_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Save standalone verification result cache
+        if: ${{ needs.route.outputs.use_trigger_results == 'true' && steps.trigger_standalone_results.outcome == 'success' }}
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: .competitive-verifier/cache/standalone-results
+          key: standalone-results-${{ hashFiles('src/**', 'test/**', 'config.toml', 'scripts/run_standalone_assets.py', 'scripts/standalone_verification_results.py') }}
+
       - name: Prepare documentation result
         run: |
           python3 scripts/competitive_verifier_docs_result.py \
             verify-files.json \
             .competitive-verifier/cache/result.json \
+            --standalone-results .competitive-verifier/cache/standalone-results \
             > .competitive-verifier/cache/docs-result.json.tmp
           mv \
             .competitive-verifier/cache/docs-result.json.tmp \
@@ -109,18 +256,18 @@ jobs:
           python3 scripts/check_generated_docs_index.py _jekyll/index.md verify-files.json
 
       - name: Setup Pages
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ needs.route.outputs.deploy == 'true' }}
         uses: actions/configure-pages@v5
 
       - name: Build with Jekyll
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ needs.route.outputs.deploy == 'true' }}
         uses: actions/jekyll-build-pages@v1
         with:
           source: _jekyll
           destination: _site
 
       - name: Remove unsafe polyfill.io reference
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ needs.route.outputs.deploy == 'true' }}
         run: |
           sudo chown -R "$USER":"$USER" _site
 
@@ -142,7 +289,7 @@ jobs:
           PY
 
       - name: Check generated site for unsafe CDN references
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ needs.route.outputs.deploy == 'true' }}
         run: |
           if grep -RInE 'polyfill\.io|bootcss\.com|bootcdn\.net|staticfile\.org' _site; then
             echo "::error::Unsafe CDN reference remains in generated site"
@@ -150,7 +297,7 @@ jobs:
           fi
 
       - name: Upload HTML artifact
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ needs.route.outputs.deploy == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: documentation-html
@@ -159,14 +306,14 @@ jobs:
           retention-days: 7
 
       - name: Upload Pages artifact
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ needs.route.outputs.deploy == 'true' }}
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
 
   deploy:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs: docs
+    if: ${{ needs.route.outputs.deploy == 'true' && needs.docs.result == 'success' }}
+    needs: [route, docs]
     runs-on: ubuntu-latest
     timeout-minutes: 10
 

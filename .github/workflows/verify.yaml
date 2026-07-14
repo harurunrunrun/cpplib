@@ -59,6 +59,16 @@ jobs:
             STANDALONE_SPLIT_SIZE=4 \
             STANDALONE_SPLIT_INDEX=${{ matrix.index }}
 
+      - name: Upload standalone verification results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: standalone-results-${{ github.run_attempt }}-${{ matrix.index }}
+          path: .competitive-verifier/cache/standalone-results
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: true
+
   resolve:
     runs-on: ubuntu-latest
     timeout-minutes: 15

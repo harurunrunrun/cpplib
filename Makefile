@@ -15,6 +15,7 @@ DOCS_SOURCE := $(VERIFIER_ROOT)/_jekyll
 DOCS_OUTPUT := $(VERIFIER_ROOT)/site
 BUNDLE_PATH := $(VERIFIER_ROOT)/vendor/bundle
 STANDALONE_ASSET_CACHE := $(VERIFIER_CACHE)/standalone-assets
+STANDALONE_RESULT_DIR := $(VERIFIER_CACHE)/standalone-results
 CXX ?= g++
 CXXFLAGS ?= -std=c++20 -O2 -Wall -Wextra
 STANDALONE_SPLIT_SIZE ?= 1
@@ -32,12 +33,13 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-wrapper-test verifier-resolve docs-verifier-resolve test-coverage-check standalone-assets-test standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-wrapper-test test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-assets-test standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
 	@echo "make verify LOCAL_VERIFY_JOBS=N  local verifyの並列数を指定 (default: $(LOCAL_VERIFY_JOBS))"
 	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
+	@echo "make standalone-results-check  standalone全件の最新成功manifestを検査"
 	@echo "make docs-title-check  docsの英日併記タイトルを検査"
 	@echo "make test-coverage-check  全headerに直接対象テストがあることを検査"
 	@echo "make docs-coverage-check  全headerのdocsと注意点見出しを検査"
@@ -54,7 +56,11 @@ verifier-setup: $(VERIFIER)
 verifier-wrapper-test:
 	$(PYTHON) scripts/test_competitive_verifier_gcc15_wrapper.py
 
-verifier-resolve: verifier-setup verifier-wrapper-test
+test-verifier-markers:
+	$(PYTHON) scripts/test_check_test_verifier_markers.py
+	$(PYTHON) scripts/check_test_verifier_markers.py
+
+verifier-resolve: verifier-setup verifier-wrapper-test test-verifier-markers
 	@mkdir -p $(VERIFIER_CACHE)
 	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge --config config.toml > $(VERIFY_FILES).tmp
 	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py
@@ -62,7 +68,7 @@ verifier-resolve: verifier-setup verifier-wrapper-test
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
-docs-verifier-resolve: verifier-setup verifier-wrapper-test
+docs-verifier-resolve: verifier-setup verifier-wrapper-test test-verifier-markers
 	@mkdir -p $(VERIFIER_CACHE)
 	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge test/standalone --config config.toml > $(DOCS_VERIFY_FILES).tmp
 	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
@@ -73,14 +79,23 @@ test-coverage-check:
 	$(PYTHON) scripts/test_list_untested_headers.py
 	$(PYTHON) scripts/list_untested_headers.py --require-complete
 
-standalone-assets-test: test-coverage-check
+standalone-assets-test: test-coverage-check test-verifier-markers
+	$(PYTHON) scripts/test_standalone_verification_results.py
+	$(PYTHON) scripts/test_check_standalone_verification_results.py
+	$(PYTHON) scripts/test_competitive_verifier_docs_result.py
+	$(PYTHON) scripts/test_standalone_results_workflows.py
 	$(PYTHON) scripts/test_run_standalone_assets.py
 	$(PYTHON) scripts/test_check_unsupported_onlinejudge_assets.py
 	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py
 
+standalone-results-check:
+	$(PYTHON) scripts/check_standalone_verification_results.py \
+		--result-dir $(STANDALONE_RESULT_DIR)
+
 standalone-assets: standalone-assets-test
 	$(PYTHON) scripts/run_standalone_assets.py \
 		--cache-dir $(STANDALONE_ASSET_CACHE) \
+		--result-dir $(STANDALONE_RESULT_DIR) \
 		--cxx "$(CXX)" \
 		--cxxflags "$(CXXFLAGS)" \
 		--split-size "$(STANDALONE_SPLIT_SIZE)" \
@@ -100,6 +115,7 @@ verify:
 		for ((index = 0; index < jobs; ++index)); do \
 			$(PYTHON) scripts/run_standalone_assets.py \
 				--cache-dir $(STANDALONE_ASSET_CACHE) \
+				--result-dir $(STANDALONE_RESULT_DIR) \
 				--cxx "$(CXX)" \
 				--cxxflags "$(CXXFLAGS)" \
 				--split-size "$$jobs" \
@@ -109,6 +125,8 @@ verify:
 		for pid in "$${standalone_pids[@]}"; do \
 			wait "$$pid" || standalone_status=1; \
 		done; \
+		$(PYTHON) scripts/check_standalone_verification_results.py \
+			--result-dir $(STANDALONE_RESULT_DIR) || standalone_status=1; \
 	else \
 		standalone_status=$$?; \
 	fi; \
@@ -149,8 +167,10 @@ docs-coverage-check:
 	$(PYTHON) scripts/check_docs_coverage.py src docs
 
 docs-source: docs-title-check docs-coverage-check docs-verifier-resolve
+	$(PYTHON) scripts/test_competitive_verifier_docs_result.py
 	$(PYTHON) scripts/competitive_verifier_docs_result.py \
-		$(DOCS_VERIFY_FILES) $(VERIFY_RESULT) > $(DOCS_RESULT)
+		$(DOCS_VERIFY_FILES) $(VERIFY_RESULT) \
+		--standalone-results $(STANDALONE_RESULT_DIR) > $(DOCS_RESULT)
 	$(VERIFIER) docs \
 		--verify-json $(DOCS_VERIFY_FILES) \
 		--destination $(DOCS_SOURCE) \
