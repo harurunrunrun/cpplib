@@ -1,5 +1,5 @@
 ---
-title: GCD / LCM Convolution (GCD・LCM畳み込み)
+title: GCD / LCM Convolution (GCD・LCM畳み込み) [gcd_convolution] [lcm_convolution]
 documentation_of: ../src/algorithm/fft/divisor_convolution.hpp
 ---
 

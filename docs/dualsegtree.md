@@ -1,5 +1,5 @@
 ---
-title: Dual Segment Tree (双対セグメント木)
+title: Dual Segment Tree (双対セグメント木) [POSTERS] [range_affine_point_get]
 documentation_of: ../src/structure/segtree/dualsegtree.hpp
 ---
 

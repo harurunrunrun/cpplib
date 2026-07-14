@@ -1,5 +1,5 @@
 ---
-title: Longest Common Subsequence (最長共通部分列)
+title: Longest Common Subsequence (最長共通部分列) [ALDS1_10_C]
 documentation_of: ../src/algorithm/string/longest_common_subsequence.hpp
 ---
 

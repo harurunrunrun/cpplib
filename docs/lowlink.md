@@ -1,5 +1,5 @@
 ---
-title: Lowlink (Lowlink法)
+title: Lowlink (Lowlink法) [ABC075_C] [GRL_3_A] [GRL_3_B]
 documentation_of: ../src/algorithm/graph/lowlink.hpp
 ---
 

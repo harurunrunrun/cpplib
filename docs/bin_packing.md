@@ -1,5 +1,5 @@
 ---
-title: One-Dimensional Bin Packing Heuristics (一次元ビンパッキングヒューリスティック)
+title: One-Dimensional Bin Packing Heuristics (一次元ビンパッキングヒューリスティック) [HELPR2D2]
 documentation_of: ../src/approximate/packing/bin_packing.hpp
 ---
 

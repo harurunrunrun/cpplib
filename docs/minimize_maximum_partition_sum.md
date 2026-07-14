@@ -1,5 +1,5 @@
 ---
-title: Minimize Maximum Partition Sum (最大区間和最小化)
+title: Minimize Maximum Partition Sum (最大区間和最小化) [SEQPAR]
 documentation_of: ../src/algorithm/other/minimize_maximum_partition_sum.hpp
 ---
 

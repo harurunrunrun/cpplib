@@ -1,5 +1,5 @@
 ---
-title: 2D Convex Hull (二次元凸包)
+title: 2D Convex Hull (二次元凸包) [static_convex_hull]
 documentation_of: ../src/algorithm/geometry/2d/convex_hull.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Reversible Splay Tree (反転可能スプレー木)
+title: Reversible Splay Tree (反転可能スプレー木) [GSS6] [GSS8] [range_reverse_range_sum]
 documentation_of: ../src/structure/bbst/reversible_splay_tree.hpp
 ---
 

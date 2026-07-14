@@ -1,5 +1,5 @@
 ---
-title: Palindromic Tree (回文木)
+title: Palindromic Tree (回文木) [eertree]
 documentation_of: ../src/algorithm/string/palindromic_tree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Parallel Binary Search (並列二分探索)
+title: Parallel Binary Search (並列二分探索) [METEORS]
 documentation_of: ../src/algorithm/other/parallel_binary_search.hpp
 ---
 

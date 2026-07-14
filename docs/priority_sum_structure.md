@@ -1,5 +1,5 @@
 ---
-title: Priority Sum Structure (優先度付き和構造)
+title: Priority Sum Structure (優先度付き和構造) [ABC281_E]
 documentation_of: ../src/structure/other/priority_sum_structure.hpp
 ---
 

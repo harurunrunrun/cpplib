@@ -1,5 +1,5 @@
 ---
-title: 0-1 BFS (0-1幅優先探索)
+title: 0-1 BFS (0-1幅優先探索) [ABC277_E]
 documentation_of: ../src/algorithm/graph/zero_one_bfs.hpp
 ---
 

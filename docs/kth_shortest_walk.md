@@ -1,5 +1,5 @@
 ---
-title: K-th Shortest Walk (K番目最短歩)
+title: K-th Shortest Walk (K番目最短歩) [k_shortest_walk]
 documentation_of: ../src/algorithm/graph/kth_shortest_walk.hpp
 ---
 

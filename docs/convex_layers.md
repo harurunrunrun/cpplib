@@ -1,5 +1,5 @@
 ---
-title: Convex Layers (凸層)
+title: Convex Layers (凸層) [convex_layers]
 documentation_of: ../src/algorithm/geometry/2d/convex_layers.hpp
 ---
 

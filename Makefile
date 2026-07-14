@@ -55,12 +55,15 @@ verifier-wrapper-test:
 verifier-resolve: verifier-setup verifier-wrapper-test
 	@mkdir -p $(VERIFIER_CACHE)
 	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge --config config.toml > $(VERIFY_FILES).tmp
+	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py
 	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
 standalone-assets-test:
 	$(PYTHON) scripts/test_run_standalone_assets.py
+	$(PYTHON) scripts/test_check_unsupported_onlinejudge_assets.py
+	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py
 
 standalone-assets: standalone-assets-test
 	$(PYTHON) scripts/run_standalone_assets.py \
@@ -79,7 +82,7 @@ verify:
 	resolve_status=0; \
 	$(MAKE) --no-print-directory verifier-resolve || resolve_status=$$?; \
 	standalone_status=0; \
-	if $(PYTHON) scripts/test_run_standalone_assets.py; then \
+	if $(MAKE) --no-print-directory standalone-assets-test; then \
 		standalone_pids=(); \
 		for ((index = 0; index < jobs; ++index)); do \
 			$(PYTHON) scripts/run_standalone_assets.py \
@@ -122,7 +125,12 @@ verify:
 	fi
 
 docs-title-check:
+	$(PYTHON) scripts/test_check_docs_bilingual_titles.py
+	$(PYTHON) scripts/test_docs_problem_tags.py
+	$(PYTHON) scripts/test_docs_problem_tags_primary_sources.py
+	$(PYTHON) scripts/test_docs_problem_tags_transitive_sources.py
 	$(PYTHON) scripts/check_docs_bilingual_titles.py docs
+	$(PYTHON) scripts/docs_problem_tags.py docs test/onlinejudge
 
 docs-coverage-check:
 	$(PYTHON) scripts/check_docs_coverage.py src docs

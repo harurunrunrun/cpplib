@@ -1,5 +1,5 @@
 ---
-title: 2D Circle-Line Cross Points (二次元円と直線の交点)
+title: 2D Circle-Line Cross Points (二次元円と直線の交点) [CGL_7_D]
 documentation_of: ../src/algorithm/geometry/2d/circle_line_cross_points.hpp
 ---
 

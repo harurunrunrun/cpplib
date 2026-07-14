@@ -1,5 +1,5 @@
 ---
-title: Rectangle Union Area (長方形の和集合面積)
+title: Rectangle Union Area (長方形の和集合面積) [area_of_union_of_rectangles]
 documentation_of: ../src/algorithm/other/rectangle_union.hpp
 ---
 

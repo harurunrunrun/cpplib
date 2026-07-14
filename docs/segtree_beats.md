@@ -1,5 +1,5 @@
 ---
-title: Segment Tree Beats (セグメント木Beats)
+title: Segment Tree Beats (セグメント木Beats) [range_add_range_min] [range_chmin_chmax_add_range_sum]
 documentation_of: ../src/structure/segtree/segtree_beats.hpp
 ---
 

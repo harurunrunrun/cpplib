@@ -1,5 +1,5 @@
 ---
-title: Tree Diameter (木の直径)
+title: Tree Diameter (木の直径) [GRL_5_A] [tree_diameter]
 documentation_of: ../src/algorithm/tree/tree_diameter.hpp
 ---
 

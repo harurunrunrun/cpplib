@@ -1,5 +1,5 @@
 ---
-title: Tree Isomorphism (木の同型判定)
+title: Tree Isomorphism (木の同型判定) [rooted_tree_isomorphism_classification] [TREEISO]
 documentation_of: ../src/algorithm/tree/tree_isomorphism.hpp
 ---
 

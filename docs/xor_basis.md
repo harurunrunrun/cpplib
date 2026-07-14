@@ -1,5 +1,5 @@
 ---
-title: XOR Basis (XOR基底)
+title: XOR Basis (XOR基底) [ABC283_G]
 documentation_of: ../src/structure/other/xor_basis.hpp
 ---
 

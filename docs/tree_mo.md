@@ -1,5 +1,5 @@
 ---
-title: Tree Mo (木上のMo)
+title: Tree Mo (木上のMo) [COT2]
 documentation_of: ../src/algorithm/tree/tree_mo.hpp
 ---
 

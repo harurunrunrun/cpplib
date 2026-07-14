@@ -1,5 +1,5 @@
 ---
-title: Incremental Strongly Connected Components (増分強連結成分)
+title: Incremental Strongly Connected Components (増分強連結成分) [incremental_scc]
 documentation_of: ../src/algorithm/graph/incremental_scc.hpp
 ---
 

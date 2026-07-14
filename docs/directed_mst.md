@@ -1,5 +1,5 @@
 ---
-title: Directed MST (有向最小全域木)
+title: Directed MST (有向最小全域木) [GRL_2_B]
 documentation_of: ../src/algorithm/graph/directed_mst.hpp
 ---
 

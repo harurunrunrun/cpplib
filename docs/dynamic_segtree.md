@@ -1,5 +1,5 @@
 ---
-title: Dynamic Segment Tree (動的セグメント木)
+title: Dynamic Segment Tree (動的セグメント木) [point_set_range_composite_large_array]
 documentation_of: ../src/structure/segtree/dynamic_segtree.hpp
 ---
 

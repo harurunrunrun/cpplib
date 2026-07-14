@@ -1,5 +1,5 @@
 ---
-title: 2D Circle Intersection Area (二次元円盤共通部分面積)
+title: 2D Circle Intersection Area (二次元円盤共通部分面積) [CGL_7_I]
 documentation_of: ../src/algorithm/geometry/2d/circle_circle_intersection_area.hpp
 ---
 

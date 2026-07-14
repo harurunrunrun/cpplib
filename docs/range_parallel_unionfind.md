@@ -1,5 +1,5 @@
 ---
-title: Range Parallel Union-Find (区間並列Union-Find)
+title: Range Parallel Union-Find (区間並列Union-Find) [range_parallel_unionfind]
 documentation_of: ../src/structure/dsu/range_parallel_unionfind.hpp
 ---
 

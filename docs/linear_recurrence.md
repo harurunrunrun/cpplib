@@ -1,5 +1,5 @@
 ---
-title: Linear Recurrence (線形漸化式)
+title: Linear Recurrence (線形漸化式) [kth_term_of_linearly_recurrent_sequence]
 documentation_of: ../src/algorithm/math/linear_recurrence.hpp
 ---
 

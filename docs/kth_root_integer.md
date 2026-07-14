@@ -1,5 +1,5 @@
 ---
-title: K-th Root Integer (整数のK乗根)
+title: K-th Root Integer (整数のK乗根) [kth_root_integer]
 documentation_of: ../src/algorithm/math/kth_root_integer.hpp
 ---
 

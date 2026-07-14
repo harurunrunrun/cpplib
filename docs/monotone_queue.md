@@ -1,5 +1,5 @@
 ---
-title: Monotone Queue (単調キュー)
+title: Monotone Queue (単調キュー) [ARRAYSUB] [DSL_3_D]
 documentation_of: ../src/structure/other/monotone_queue.hpp
 ---
 

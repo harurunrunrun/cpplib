@@ -1,5 +1,5 @@
 ---
-title: Online Dynamic Connectivity (オンライン動的連結性)
+title: Online Dynamic Connectivity (オンライン動的連結性) [DYNACON2]
 documentation_of: ../src/structure/graph/online_dynamic_connectivity.hpp
 ---
 

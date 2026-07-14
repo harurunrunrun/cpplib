@@ -1,5 +1,5 @@
 ---
-title: Sparse Formal Power Series (疎な形式的冪級数)
+title: Sparse Formal Power Series (疎な形式的冪級数) [exp_of_formal_power_series_sparse] [inv_of_formal_power_series_sparse] [log_of_formal_power_series_sparse] [pow_of_formal_power_series_sparse] [sqrt_of_formal_power_series_sparse]
 documentation_of: ../src/algorithm/fft/sparse_formal_power_series.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Number of Distinct Subsequences (異なる部分列の個数)
+title: Number of Distinct Subsequences (異なる部分列の個数) [number_of_subsequences]
 documentation_of: ../src/algorithm/math/number_of_subsequences.hpp
 ---
 

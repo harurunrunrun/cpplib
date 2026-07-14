@@ -1,5 +1,5 @@
 ---
-title: Division of Polynomials (多項式除算)
+title: Division of Polynomials (多項式除算) [division_of_polynomials]
 documentation_of: ../src/algorithm/math/polynomial_division.hpp
 ---
 

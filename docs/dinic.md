@@ -1,5 +1,5 @@
 ---
-title: Dinic (Dinic法)
+title: Dinic (Dinic法) [GRL_6_A]
 documentation_of: ../src/algorithm/matching/dinic.hpp
 ---
 

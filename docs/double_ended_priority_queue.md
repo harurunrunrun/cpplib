@@ -1,5 +1,5 @@
 ---
-title: Double-Ended Priority Queue (両端優先度付きキュー)
+title: Double-Ended Priority Queue (両端優先度付きキュー) [double_ended_priority_queue]
 documentation_of: ../src/structure/other/double_ended_priority_queue.hpp
 ---
 

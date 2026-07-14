@@ -1,5 +1,5 @@
 ---
-title: Min-Plus Convolution (Concave and Arbitrary) (凹列と任意列の最小加算畳み込み)
+title: Min-Plus Convolution (Concave and Arbitrary) (凹列と任意列の最小加算畳み込み) [min_plus_convolution_concave_arbitrary]
 documentation_of: ../src/algorithm/fft/min_plus_convolution_concave.hpp
 ---
 

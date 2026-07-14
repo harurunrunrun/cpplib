@@ -1,5 +1,5 @@
 ---
-title: Inversion Count (転倒数)
+title: Inversion Count (転倒数) [INVCNT] [MSE06H] [YODANESS]
 documentation_of: ../src/algorithm/other/inversion_count.hpp
 ---
 

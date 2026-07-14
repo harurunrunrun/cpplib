@@ -1,5 +1,5 @@
 ---
-title: Weighted DSU (重み付き素集合データ構造)
+title: Weighted DSU (重み付き素集合データ構造) [CORNET] [DSL_1_B] [unionfind_with_potential]
 documentation_of: ../src/structure/dsu/weighted_dsu.hpp
 ---
 

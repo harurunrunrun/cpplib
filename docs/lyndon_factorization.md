@@ -1,5 +1,5 @@
 ---
-title: Lyndon Factorization (Lyndon分解)
+title: Lyndon Factorization (Lyndon分解) [lyndon_factorization]
 documentation_of: ../src/algorithm/string/lyndon_factorization.hpp
 ---
 

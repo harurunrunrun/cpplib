@@ -1,5 +1,5 @@
 ---
-title: Sqrt Tree (平方根木)
+title: Sqrt Tree (平方根木) [static_range_sum]
 documentation_of: ../src/structure/other/sqrt_tree.hpp
 ---
 

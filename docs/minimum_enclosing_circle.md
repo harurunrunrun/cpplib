@@ -1,5 +1,5 @@
 ---
-title: Minimum Enclosing Circle (最小包含円)
+title: Minimum Enclosing Circle (最小包含円) [minimum_enclosing_circle]
 documentation_of: ../src/algorithm/geometry/2d/minimum_enclosing_circle.hpp
 ---
 

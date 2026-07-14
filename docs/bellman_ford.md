@@ -1,5 +1,5 @@
 ---
-title: Bellman Ford (ベルマン・フォード法)
+title: Bellman Ford (ベルマン・フォード法) [GRL_1_B]
 documentation_of: ../src/algorithm/graph/bellman_ford.hpp
 ---
 

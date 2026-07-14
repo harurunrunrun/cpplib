@@ -1,5 +1,5 @@
 ---
-title: Min Cost Flow (最小費用流)
+title: Min Cost Flow (最小費用流) [GRL_6_B]
 documentation_of: ../src/algorithm/matching/min_cost_flow.hpp
 ---
 

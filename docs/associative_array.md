@@ -1,5 +1,5 @@
 ---
-title: Associative Array (連想配列)
+title: Associative Array (連想配列) [associative_array]
 documentation_of: ../src/structure/hash/associative_array.hpp
 ---
 

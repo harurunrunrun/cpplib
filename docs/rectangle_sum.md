@@ -1,5 +1,5 @@
 ---
-title: Rectangle Sum (長方形和)
+title: Rectangle Sum (長方形和) [rectangle_sum]
 documentation_of: ../src/structure/wavelet_matrix/rectangle_sum.hpp
 ---
 

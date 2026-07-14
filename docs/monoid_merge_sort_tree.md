@@ -1,5 +1,5 @@
 ---
-title: Monoid Merge Sort Tree (モノイドマージソート木)
+title: Monoid Merge Sort Tree (モノイドマージソート木) [ADATAXES]
 documentation_of: ../src/structure/other/monoid_merge_sort_tree.hpp
 ---
 

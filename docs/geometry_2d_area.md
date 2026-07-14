@@ -1,5 +1,5 @@
 ---
-title: 2D Polygon Area (二次元多角形面積)
+title: 2D Polygon Area (二次元多角形面積) [CGL_3_A]
 documentation_of: ../src/algorithm/geometry/2d/area.hpp
 ---
 

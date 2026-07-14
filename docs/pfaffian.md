@@ -1,5 +1,5 @@
 ---
-title: Pfaffian (パフィアン)
+title: Pfaffian (パフィアン) [pfaffian_of_matrix]
 documentation_of: ../src/algorithm/math/pfaffian.hpp
 ---
 

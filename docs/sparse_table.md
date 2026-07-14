@@ -1,5 +1,5 @@
 ---
-title: Sparse Table (スパーステーブル)
+title: Sparse Table (スパーステーブル) [BGSHOOT] [FREQUENT] [RMQSQ] [RPLN] [staticrmq] [THRBL]
 documentation_of: ../src/structure/other/sparse_table.hpp
 ---
 

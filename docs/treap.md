@@ -1,5 +1,5 @@
 ---
-title: Treap (トレープ)
+title: Treap (トレープ) [ordered_set]
 documentation_of: ../src/structure/tree/treap.hpp
 ---
 

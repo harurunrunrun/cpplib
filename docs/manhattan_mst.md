@@ -1,5 +1,5 @@
 ---
-title: Manhattan MST (マンハッタン最小全域木)
+title: Manhattan MST (マンハッタン最小全域木) [manhattanmst]
 documentation_of: ../src/algorithm/graph/manhattan_mst.hpp
 ---
 

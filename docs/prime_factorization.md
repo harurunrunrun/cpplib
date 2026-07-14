@@ -1,5 +1,5 @@
 ---
-title: Prime Factorization (素因数分解)
+title: Prime Factorization (素因数分解) [ALDS1_1_C] [factorize] [NTL_1_A] [NTL_1_D] [primality_test]
 documentation_of: ../src/algorithm/math/prime_factorization.hpp
 ---
 

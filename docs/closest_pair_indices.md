@@ -1,5 +1,5 @@
 ---
-title: Closest Pair of Points (indices) (最近点対)
+title: Closest Pair of Points (indices) (最近点対) [closest_pair]
 documentation_of: ../src/algorithm/geometry/2d/closest_pair_indices.hpp
 ---
 

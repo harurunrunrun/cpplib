@@ -1,5 +1,5 @@
 ---
-title: Longest Common Substring (最長共通部分文字列)
+title: Longest Common Substring (最長共通部分文字列) [longest_common_substring]
 documentation_of: ../src/algorithm/string/longest_common_substring.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Persistent Array (完全永続配列)
+title: Persistent Array (完全永続配列) [persistent_queue]
 documentation_of: ../src/structure/array/persistent_array.hpp
 ---
 

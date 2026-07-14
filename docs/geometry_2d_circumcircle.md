@@ -1,5 +1,5 @@
 ---
-title: 2D Circumcircle (二次元外接円)
+title: 2D Circumcircle (二次元外接円) [CGL_7_C]
 documentation_of: ../src/algorithm/geometry/2d/circumcircle.hpp
 ---
 

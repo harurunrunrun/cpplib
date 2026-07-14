@@ -1,5 +1,5 @@
 ---
-title: Integer Set (整数集合)
+title: Integer Set (整数集合) [CTRICK] [ordered_set] [ORDERS] [predecessor_problem]
 documentation_of: ../src/structure/tree/integer_set.hpp
 ---
 

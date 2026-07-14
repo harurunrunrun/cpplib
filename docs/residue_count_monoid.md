@@ -1,5 +1,5 @@
 ---
-title: Residue Count Monoid (剰余個数モノイド)
+title: Residue Count Monoid (剰余個数モノイド) [MULTQ3]
 documentation_of: ../src/structure/types/residue_count_monoid.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Euclidean Minimum Spanning Tree (ユークリッド最小全域木)
+title: Euclidean Minimum Spanning Tree (ユークリッド最小全域木) [euclidean_mst]
 documentation_of: ../src/algorithm/geometry/2d/euclidean_mst.hpp
 ---
 

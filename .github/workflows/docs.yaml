@@ -64,7 +64,7 @@ jobs:
           python3 scripts/normalize_competitive_verifier_plan.py verify-files.json
 
       - name: Check documentation titles
-        run: python3 scripts/check_docs_bilingual_titles.py docs
+        run: make docs-title-check
 
       - name: Check documentation coverage
         run: python3 scripts/check_docs_coverage.py src docs

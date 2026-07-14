@@ -1,5 +1,5 @@
 ---
-title: Matrix-Tree Theorem (行列木定理)
+title: Matrix-Tree Theorem (行列木定理) [counting_spanning_tree_directed] [counting_spanning_tree_undirected]
 documentation_of: ../src/algorithm/graph/matrix_tree_theorem.hpp
 ---
 

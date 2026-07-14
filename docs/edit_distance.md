@@ -1,5 +1,5 @@
 ---
-title: Edit Distance (編集距離)
+title: Edit Distance (編集距離) [DPL_1_E]
 documentation_of: ../src/algorithm/string/edit_distance.hpp
 ---
 

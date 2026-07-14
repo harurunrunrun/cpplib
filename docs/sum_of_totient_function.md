@@ -1,5 +1,5 @@
 ---
-title: Sum of Totient Function (オイラーのトーシェント関数和)
+title: Sum of Totient Function (オイラーのトーシェント関数和) [sum_of_totient_function]
 documentation_of: ../src/algorithm/math/sum_of_totient_function.hpp
 ---
 

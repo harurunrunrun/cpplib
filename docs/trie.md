@@ -1,5 +1,5 @@
 ---
-title: Trie (トライ)
+title: Trie (トライ) [ABC287_E]
 documentation_of: ../src/structure/trie/trie.hpp
 ---
 

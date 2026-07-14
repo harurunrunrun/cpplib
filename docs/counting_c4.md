@@ -1,5 +1,5 @@
 ---
-title: Counting C4 (長さ4の閉路数え上げ)
+title: Counting C4 (長さ4の閉路数え上げ) [counting_c4]
 documentation_of: ../src/algorithm/graph/counting_c4.hpp
 ---
 

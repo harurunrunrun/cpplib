@@ -1,5 +1,5 @@
 ---
-title: Tetration Mod (テトレーションの剰余)
+title: Tetration Mod (テトレーションの剰余) [tetration_mod]
 documentation_of: ../src/algorithm/math/tetration_mod.hpp
 ---
 

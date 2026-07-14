@@ -1,5 +1,5 @@
 ---
-title: Min-Plus Convolution (最小加算畳み込み)
+title: Min-Plus Convolution (最小加算畳み込み) [min_plus_convolution_convex_arbitrary] [min_plus_convolution_convex_convex]
 documentation_of: ../src/algorithm/fft/min_plus_convolution.hpp
 ---
 

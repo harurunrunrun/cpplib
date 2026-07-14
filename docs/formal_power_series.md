@@ -1,5 +1,5 @@
 ---
-title: Formal Power Series (形式的冪級数)
+title: Formal Power Series (形式的冪級数) [exp_of_formal_power_series] [inv_of_formal_power_series] [log_of_formal_power_series] [pow_of_formal_power_series] [sqrt_of_formal_power_series]
 documentation_of: ../src/algorithm/fft/formal_power_series.hpp
 ---
 

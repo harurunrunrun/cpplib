@@ -1,5 +1,5 @@
 ---
-title: Compressed Wavelet Matrix (座標圧縮ウェーブレット行列)
+title: Compressed Wavelet Matrix (座標圧縮ウェーブレット行列) [KQUERY] [KQUERYO] [MKTHNUM] [PT07J] [range_kth_smallest]
 documentation_of: ../src/structure/wavelet_matrix/compressed_wavelet_matrix.hpp
 ---
 

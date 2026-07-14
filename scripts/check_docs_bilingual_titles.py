@@ -4,8 +4,12 @@
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
+
+
+TRAILING_PROBLEM_TAGS = re.compile(r"(?: \[[^\[\]\n]+\])+$")
 
 
 def is_japanese_character(character: str) -> bool:
@@ -96,8 +100,9 @@ def front_matter_titles(path: Path) -> tuple[list[str], list[str]]:
 
 
 def split_bilingual_title(title: str) -> tuple[str, str] | None:
-    """Split the final balanced ASCII-parenthesized suffix from *title*."""
+    """Split the bilingual part before optional trailing problem tags."""
 
+    title = TRAILING_PROBLEM_TAGS.sub("", title)
     if not title.endswith(")"):
         return None
 
@@ -125,7 +130,7 @@ def validate_title(title: str) -> list[str]:
 
     parts = split_bilingual_title(title)
     if parts is None:
-        return ["title must end with an ASCII-parenthesized Japanese name"]
+        return ["title must contain an ASCII-parenthesized Japanese name"]
 
     english, japanese = parts
     errors: list[str] = []

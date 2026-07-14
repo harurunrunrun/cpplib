@@ -1,5 +1,5 @@
 ---
-title: Myers Bit-Parallel Edit Distance (Myersのビット並列編集距離)
+title: Myers Bit-Parallel Edit Distance (Myersのビット並列編集距離) [DPL_1_E]
 documentation_of: ../src/algorithm/string/myers_edit_distance.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Basic Number Theory (初等整数論)
+title: Basic Number Theory (初等整数論) [ALDS1_1_B] [enumerate_quotients] [NTL_1_B] [NTL_1_C]
 documentation_of: ../src/algorithm/math/basic_number_theory.hpp
 ---
 

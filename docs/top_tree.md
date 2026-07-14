@@ -1,5 +1,5 @@
 ---
-title: Top Tree (トップ木)
+title: Top Tree (トップ木) [dynamic_tree_vertex_add_path_sum]
 documentation_of: ../src/structure/tree/top_tree.hpp
 ---
 

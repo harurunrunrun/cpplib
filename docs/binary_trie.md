@@ -1,5 +1,5 @@
 ---
-title: Binary Trie (二進トライ)
+title: Binary Trie (二進トライ) [ABC308_G]
 documentation_of: ../src/structure/trie/binary_trie.hpp
 ---
 

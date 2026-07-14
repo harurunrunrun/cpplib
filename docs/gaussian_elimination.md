@@ -1,5 +1,5 @@
 ---
-title: Gaussian Elimination (ガウスの消去法)
+title: Gaussian Elimination (ガウスの消去法) [inverse_matrix] [matrix_det] [matrix_rank] [matrix_rank_mod_2] [system_of_linear_equations] [system_of_linear_equations_mod_2]
 documentation_of: ../src/algorithm/math/gaussian_elimination.hpp
 ---
 

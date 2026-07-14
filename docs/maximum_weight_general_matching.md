@@ -1,5 +1,5 @@
 ---
-title: Maximum-Weight Matching in General Graphs (一般グラフの最大重みマッチング)
+title: Maximum-Weight Matching in General Graphs (一般グラフの最大重みマッチング) [general_weighted_matching]
 documentation_of: ../src/algorithm/matching/maximum_weight_general_matching.hpp
 ---
 

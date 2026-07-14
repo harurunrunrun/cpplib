@@ -1,5 +1,5 @@
 ---
-title: Hafnian (ハフニアン)
+title: Hafnian (ハフニアン) [hafnian_of_matrix]
 documentation_of: ../src/algorithm/math/hafnian.hpp
 ---
 

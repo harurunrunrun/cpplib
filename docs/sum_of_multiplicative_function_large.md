@@ -1,5 +1,5 @@
 ---
-title: Sum of Multiplicative Function (Large) (大きなNまでの乗法的関数和)
+title: Sum of Multiplicative Function (Large) (大きなNまでの乗法的関数和) [sum_of_multiplicative_function] [sum_of_multiplicative_function_large]
 documentation_of: ../src/algorithm/math/sum_of_multiplicative_function_large.hpp
 ---
 

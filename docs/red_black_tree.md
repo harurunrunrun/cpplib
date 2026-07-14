@@ -1,5 +1,5 @@
 ---
-title: Red Black Tree (赤黒木)
+title: Red Black Tree (赤黒木) [ordered_set] [ORDERSET]
 documentation_of: ../src/structure/bbst/red_black_tree.hpp
 ---
 

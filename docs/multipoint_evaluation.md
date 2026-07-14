@@ -1,5 +1,5 @@
 ---
-title: Multipoint Evaluation (多点評価)
+title: Multipoint Evaluation (多点評価) [multipoint_evaluation]
 documentation_of: ../src/algorithm/math/multipoint_evaluation.hpp
 ---
 

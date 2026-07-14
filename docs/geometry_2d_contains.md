@@ -1,5 +1,5 @@
 ---
-title: 2D Point in Polygon (二次元多角形包含判定)
+title: 2D Point in Polygon (二次元多角形包含判定) [CGL_3_C]
 documentation_of: ../src/algorithm/geometry/2d/contains.hpp
 ---
 

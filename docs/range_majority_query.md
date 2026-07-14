@@ -1,5 +1,5 @@
 ---
-title: Range Majority Query (区間多数決クエリ)
+title: Range Majority Query (区間多数決クエリ) [majority_voting]
 documentation_of: ../src/algorithm/range/range_majority_query.hpp
 ---
 

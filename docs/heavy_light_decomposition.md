@@ -1,5 +1,5 @@
 ---
-title: Heavy Light Decomposition (HL分解)
+title: Heavy Light Decomposition (HL分解) [ABC294_G] [GRASSPLA] [vertex_add_path_sum]
 documentation_of: ../src/algorithm/tree/heavy_light_decomposition.hpp
 ---
 

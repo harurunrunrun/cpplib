@@ -1,5 +1,5 @@
 ---
-title: Largest Rectangle in a Histogram (ヒストグラム最大長方形)
+title: Largest Rectangle in a Histogram (ヒストグラム最大長方形) [DPL_3_C] [HISTOGRA]
 documentation_of: ../src/algorithm/other/largest_rectangle_histogram.hpp
 ---
 

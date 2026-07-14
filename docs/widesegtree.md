@@ -1,5 +1,5 @@
 ---
-title: Wide Segtree (ワイドセグメント木)
+title: Wide Segtree (ワイドセグメント木) [point_add_range_sum]
 documentation_of: ../src/structure/segtree/widesegtree.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Lowest Common Ancestor (最小共通祖先)
+title: Lowest Common Ancestor (最小共通祖先) [ABC014_4] [GRL_5_C] [lca]
 documentation_of: ../src/algorithm/tree/lca.hpp
 ---
 

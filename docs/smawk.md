@@ -1,5 +1,5 @@
 ---
-title: SMAWK (SMAWK法)
+title: SMAWK (SMAWK法) [min_plus_convolution_convex_arbitrary]
 documentation_of: ../src/algorithm/other/smawk.hpp
 ---
 

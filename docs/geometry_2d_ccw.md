@@ -1,5 +1,5 @@
 ---
-title: 2D Counterclockwise Test (二次元反時計回り判定)
+title: 2D Counterclockwise Test (二次元反時計回り判定) [CGL_1_C]
 documentation_of: ../src/algorithm/geometry/2d/ccw.hpp
 ---
 

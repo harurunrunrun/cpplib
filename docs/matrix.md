@@ -1,5 +1,5 @@
 ---
-title: Matrix (行列)
+title: Matrix (行列) [matrix_det_mod_2] [matrix_product]
 documentation_of: ../src/structure/matrix/matrix.hpp
 ---
 

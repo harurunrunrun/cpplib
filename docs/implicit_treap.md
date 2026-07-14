@@ -1,5 +1,5 @@
 ---
-title: Implicit Treap (暗黙トレープ)
+title: Implicit Treap (暗黙トレープ) [deque] [range_reverse_range_sum]
 documentation_of: ../src/structure/tree/implicit_treap.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Connected Components of Complement Graph (補グラフの連結成分)
+title: Connected Components of Complement Graph (補グラフの連結成分) [connected_components_of_complement_graph]
 documentation_of: ../src/algorithm/graph/connected_components_of_complement_graph.hpp
 ---
 

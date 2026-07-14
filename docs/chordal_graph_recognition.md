@@ -1,5 +1,5 @@
 ---
-title: Chordal Graph Recognition (弦グラフ判定)
+title: Chordal Graph Recognition (弦グラフ判定) [chordal_graph_recognition]
 documentation_of: ../src/algorithm/graph/chordal_graph_recognition.hpp
 ---
 

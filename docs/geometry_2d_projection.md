@@ -1,5 +1,5 @@
 ---
-title: 2D Projection (二次元射影)
+title: 2D Projection (二次元射影) [CGL_1_A]
 documentation_of: ../src/algorithm/geometry/2d/projection.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 2D Circle-Circle Cross Points (二次元円同士の交点)
+title: 2D Circle-Circle Cross Points (二次元円同士の交点) [CGL_7_E]
 documentation_of: ../src/algorithm/geometry/2d/circle_circle_cross_points.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Static Tree Path Fold (静的木上パス積)
+title: Static Tree Path Fold (静的木上パス積) [DISQUERY]
 documentation_of: ../src/algorithm/tree/static_tree_path_fold.hpp
 ---
 

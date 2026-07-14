@@ -1,5 +1,5 @@
 ---
-title: Fenwick Tree 2D (二次元フェンウィック木)
+title: Fenwick Tree 2D (二次元フェンウィック木) [MATSUM]
 documentation_of: ../src/structure/other/fenwick_tree_2d.hpp
 ---
 

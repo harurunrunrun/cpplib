@@ -102,6 +102,8 @@ jobs:
 
       - name: Normalize verification plan
         run: |
+          python3 scripts/test_check_unsupported_onlinejudge_assets.py
+          python3 scripts/check_unsupported_onlinejudge_assets.py
           python3 scripts/test_normalize_competitive_verifier_plan.py
           python3 scripts/normalize_competitive_verifier_plan.py verify-files.json
           python3 scripts/test_run_competitive_verifier_shards.py

@@ -1,5 +1,5 @@
 ---
-title: Enumerate Triangles (三角形列挙)
+title: Enumerate Triangles (三角形列挙) [enumerate_triangles]
 documentation_of: ../src/algorithm/graph/enumerate_triangles.hpp
 ---
 

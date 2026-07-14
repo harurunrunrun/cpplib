@@ -1,5 +1,5 @@
 ---
-title: 2D Reflection (二次元鏡映)
+title: 2D Reflection (二次元鏡映) [CGL_1_B]
 documentation_of: ../src/algorithm/geometry/2d/reflection.hpp
 ---
 

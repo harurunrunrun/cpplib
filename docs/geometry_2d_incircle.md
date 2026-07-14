@@ -1,5 +1,5 @@
 ---
-title: 2D Incircle (二次元内接円)
+title: 2D Incircle (二次元内接円) [CGL_7_B]
 documentation_of: ../src/algorithm/geometry/2d/incircle.hpp
 ---
 

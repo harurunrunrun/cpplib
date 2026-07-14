@@ -1,5 +1,5 @@
 ---
-title: 2D Circle Relation (二次元円の位置関係)
+title: 2D Circle Relation (二次元円の位置関係) [CGL_7_A]
 documentation_of: ../src/algorithm/geometry/2d/circle_relation.hpp
 ---
 

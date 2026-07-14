@@ -1,5 +1,5 @@
 ---
-title: 2D Line Cross Point (二次元直線交点)
+title: 2D Line Cross Point (二次元直線交点) [CGL_2_C]
 documentation_of: ../src/algorithm/geometry/2d/cross_point.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 2D Tangent Points (二次元円への接点)
+title: 2D Tangent Points (二次元円への接点) [CGL_7_F]
 documentation_of: ../src/algorithm/geometry/2d/tangent_points.hpp
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 2D Distance (二次元距離)
+title: 2D Distance (二次元距離) [CGL_2_D]
 documentation_of: ../src/algorithm/geometry/2d/distance.hpp
 ---
 

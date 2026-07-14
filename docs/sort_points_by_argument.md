@@ -1,5 +1,5 @@
 ---
-title: Sort Points by Argument (偏角ソート)
+title: Sort Points by Argument (偏角ソート) [sort_points_by_argument]
 documentation_of: ../src/algorithm/geometry/2d/sort_points_by_argument.hpp
 ---
 

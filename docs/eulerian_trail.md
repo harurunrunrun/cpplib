@@ -1,5 +1,5 @@
 ---
-title: Eulerian Trail (オイラー路)
+title: Eulerian Trail (オイラー路) [eulerian_trail_directed] [eulerian_trail_undirected]
 documentation_of: ../src/algorithm/graph/eulerian_trail.hpp
 ---
 

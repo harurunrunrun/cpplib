@@ -1,5 +1,5 @@
 ---
-title: Montmort Number (モンモール数)
+title: Montmort Number (モンモール数) [montmort_number_mod]
 documentation_of: ../src/algorithm/math/montmort_number.hpp
 ---
 
