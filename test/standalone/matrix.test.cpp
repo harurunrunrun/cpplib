@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -50,15 +51,15 @@ int main(){
             }else{
                 int rows, inner, cols;
                 std::cin >> rows >> inner >> cols;
-                Matrix<input_mint, 128, 128> lhs(rows, inner);
-                Matrix<input_mint, 128, 128> rhs(inner, cols);
+                auto lhs = std::make_unique<Matrix<input_mint, 1024, 1024>>(rows, inner);
+                auto rhs = std::make_unique<Matrix<input_mint, 1024, 1024>>(inner, cols);
                 for(int i = 0; i < rows; i++){
-                    for(int j = 0; j < inner; j++) std::cin >> lhs(i, j);
+                    for(int j = 0; j < inner; j++) std::cin >> (*lhs)(i, j);
                 }
                 for(int i = 0; i < inner; i++){
-                    for(int j = 0; j < cols; j++) std::cin >> rhs(i, j);
+                    for(int j = 0; j < cols; j++) std::cin >> (*rhs)(i, j);
                 }
-                const auto product = lhs * rhs;
+                const auto product = *lhs * *rhs;
                 std::cout << rows << ' ' << cols;
                 for(int i = 0; i < rows; i++){
                     for(int j = 0; j < cols; j++){

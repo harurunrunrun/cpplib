@@ -73,6 +73,24 @@ def main() -> None:
                  for _ in range(large_n)]
     multiply_cases.append((large_lhs, large_rhs))
 
+    # Exercise each independent compile-time dimension at the official limit
+    # without making the standalone oracle cubic.
+    limit = 1024
+    multiply_cases.extend([
+        (
+            [[i % 17 - 8] for i in range(limit)],
+            [[7, -11]],
+        ),
+        (
+            [[i % 23 - 11 for i in range(limit)]],
+            [[i % 19 - 9] for i in range(limit)],
+        ),
+        (
+            [[3], [-5]],
+            [[j % 29 - 14 for j in range(limit)]],
+        ),
+    ])
+
     input_lines = [str(len(cases) + len(multiply_cases))]
     output_lines: list[str] = []
     for matrix, exponent, row, col in cases:

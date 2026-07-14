@@ -31,11 +31,25 @@ void self_test(){
         assert(valid_order(graph, res));
     }
     {
+        // AOJ GRL_4_B publishes the ascending-start, input-edge-order DFS
+        // reverse postorder as its deterministic cached answer.
+        std::vector<std::vector<int>> graph(6);
+        graph[0] = {1};
+        graph[1] = {2};
+        graph[3] = {1, 4};
+        graph[4] = {5};
+        graph[5] = {2};
+        const auto res = topological_sort(graph);
+        assert(res.is_dag);
+        assert((res.order == std::vector<int>{3, 4, 5, 0, 1, 2}));
+    }
+    {
         std::vector<std::vector<int>> graph(2);
         graph[0] = {1};
         graph[1] = {0};
         auto res = topological_sort(graph);
         assert(!res.is_dag);
+        assert(res.order.size() == graph.size());
     }
     for(int n = 1; n <= 50; n++){
         std::vector<std::vector<int>> graph(static_cast<std::size_t>(n));
@@ -51,9 +65,9 @@ void self_test(){
 }
 
 int main(){
+    self_test();
     int n, m;
     if(!(std::cin >> n >> m)){
-        self_test();
         return 0;
     }
     std::vector<std::vector<int>> graph(static_cast<std::size_t>(n));

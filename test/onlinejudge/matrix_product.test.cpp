@@ -13,8 +13,8 @@ int main(){
     using mint = Modint<998244353>;
     int rows, inner, columns;
     std::cin >> rows >> inner >> columns;
-    auto left = std::make_unique<Matrix<mint, 500, 500>>(rows, inner);
-    auto right = std::make_unique<Matrix<mint, 500, 500>>(inner, columns);
+    auto left = std::make_unique<Matrix<mint, 1024, 1024>>(rows, inner);
+    auto right = std::make_unique<Matrix<mint, 1024, 1024>>(inner, columns);
     for(int row = 0; row < rows; ++row){
         for(int column = 0; column < inner; ++column){
             std::cin >> (*left)(row, column);
