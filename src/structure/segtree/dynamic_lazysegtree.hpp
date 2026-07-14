@@ -24,7 +24,7 @@ struct DynamicLazySegtree{
             Node* left = nullptr;
             Node* right = nullptr;
             long long len;
-            Node(long long len):len(len){}
+            explicit Node(long long node_length):len(node_length){}
         };
 
         void delete_subtree(Node* node){
