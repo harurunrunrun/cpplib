@@ -11,6 +11,66 @@
 
 constexpr AddMonoid<long long> add_monoid_2d{};
 
+template<class Function>
+void expect_segtree_2d_error(Function&& function){
+    bool thrown = false;
+    try{
+        function();
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+}
+
+void test_build_api(){
+    Segtree2D<add_monoid_2d, 4, 5> seg;
+    assert(seg.height() == 0);
+    assert(seg.width() == 0);
+    assert(seg.empty());
+    assert(seg.all_prod() == 0);
+    assert(seg.prod(0, 0, 0, 0) == 0);
+
+    seg.build({{1, -2, 3}, {4, 5, -6}});
+    assert(seg.height() == 2);
+    assert(seg.width() == 3);
+    assert(!seg.empty());
+    assert(seg.get(0, 1) == -2);
+    assert(seg.prod(0, 0, 2, 3) == 5);
+    assert(seg.prod(1, 1, 2, 3) == -1);
+
+    seg.build({{7}});
+    assert(seg.height() == 1);
+    assert(seg.width() == 1);
+    assert(seg.all_prod() == 7);
+    assert(seg.prod(0, 0, 1, 1) == 7);
+
+    seg.build(std::vector<std::vector<long long>>(2));
+    assert(seg.height() == 2);
+    assert(seg.width() == 0);
+    assert(seg.empty());
+    assert(seg.all_prod() == 0);
+    assert(seg.prod(0, 0, 2, 0) == 0);
+
+    seg.build({});
+    assert(seg.height() == 0);
+    assert(seg.width() == 0);
+    assert(seg.empty());
+
+    Segtree2D<add_monoid_2d, 2, 2> bounded({{11}});
+    expect_segtree_2d_error([&]{
+        bounded.build({{1}, {2}, {3}});
+    });
+    expect_segtree_2d_error([&]{
+        bounded.build({{1, 2, 3}});
+    });
+    expect_segtree_2d_error([&]{
+        bounded.build({{1, 2}, {3}});
+    });
+    assert(bounded.height() == 1);
+    assert(bounded.width() == 1);
+    assert(bounded.all_prod() == 11);
+}
+
 void test_basic(){
     Segtree2D<add_monoid_2d, 4, 5> seg(
         std::vector<std::vector<long long>>{{1, 2, 3}, {4, 5, 6}}
@@ -52,6 +112,7 @@ void test_exceptions(){
 }
 
 int main(){
+    test_build_api();
     int height, width, query_count;
     if(std::cin >> height >> width >> query_count){
         std::vector<std::vector<long long>> values(

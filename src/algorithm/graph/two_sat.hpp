@@ -23,7 +23,10 @@ struct TwoSat{
     }
 
     void add_implication(int from_variable, bool from_value, int to_variable, bool to_value){
-        graph[static_cast<std::size_t>(id(from_variable, from_value))].push_back(id(to_variable, to_value));
+        const int from = id(from_variable, from_value);
+        const int to = id(to_variable, to_value);
+        graph[static_cast<std::size_t>(from)].push_back(to);
+        graph[static_cast<std::size_t>(to ^ 1)].push_back(from ^ 1);
     }
 
     void add_clause(int i, bool f, int j, bool g){

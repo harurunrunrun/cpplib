@@ -11,6 +11,19 @@
 
 void validate_forest(const BlockCutTreeResult& result){
     const int nodes = result.node_count();
+    assert(!result.is_block_node(-1));
+    assert(!result.is_block_node(result.node_count()));
+    for(int node = 0; node < nodes; ++node){
+        const bool original = node < result.original_vertex_count;
+        const bool block =
+            result.original_vertex_count <= node && node < result.node_count();
+        assert(result.is_original_vertex(node) == original);
+        assert(result.is_block_node(node) == block);
+        assert(result.is_original_vertex(node) != result.is_block_node(node));
+        if(block){
+            assert(result.block_node(result.block_id(node)) == node);
+        }
+    }
     std::vector<char> visited(static_cast<std::size_t>(nodes), false);
     int component_count = 0;
     int edge_twice = 0;
