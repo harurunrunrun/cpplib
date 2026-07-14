@@ -149,6 +149,9 @@ int main(){
         }
         assert(persistent.select(v, x, occurrence) == n);
     }
+    assert(persistent.size() == n);
+    assert(persistent.versions() == static_cast<int>(versions.size()));
+    assert(persistent.latest_version() == static_cast<int>(versions.size()) - 1);
 
     PartiallyPersistentWaveletMatrix<int, 220, max_version, 32, 24> partial(initial);
     std::vector<std::vector<int>> history(1, initial);
@@ -182,6 +185,9 @@ int main(){
             }
         }
     }
+    assert(partial.size() == n);
+    assert(partial.versions() == static_cast<int>(history.size()));
+    assert(partial.latest_version() == static_cast<int>(history.size()) - 1);
 
     std::vector<unsigned> small = {0, 1, 7, 3, 12, 31, 4, 8};
     PersistentWaveletMatrix<unsigned, 16, 4, 5, 4> small_matrix(small);

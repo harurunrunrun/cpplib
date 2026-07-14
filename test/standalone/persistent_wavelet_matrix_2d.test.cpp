@@ -205,6 +205,15 @@ int main(){
             }
         }
     }
+    assert(plain.size() == n);
+    assert(weighted.size() == n);
+    assert(rectangle_sum.size() == n);
+    assert(plain.versions() == static_cast<int>(y_versions.size()));
+    assert(weighted.versions() == static_cast<int>(y_versions.size()));
+    assert(rectangle_sum.versions() == static_cast<int>(y_versions.size()));
+    assert(plain.latest_version() == static_cast<int>(y_versions.size()) - 1);
+    assert(weighted.latest_version() == static_cast<int>(y_versions.size()) - 1);
+    assert(rectangle_sum.latest_version() == static_cast<int>(y_versions.size()) - 1);
 
     PartiallyPersistentWaveletMatrix2D<int, int, 160, max_version, 32, 20> partial_plain(xs, ys);
     PartiallyPersistentWaveletMatrix2DWeighted<int, int, long long, 160, max_version, 32, 20> partial_weighted(xs, ys, weights);
@@ -253,6 +262,15 @@ int main(){
             assert(partial_sum.rectangle_sum(query_version, xl, xr, yl, yr) == sum);
         }
     }
+    assert(partial_plain.size() == n);
+    assert(partial_weighted.size() == n);
+    assert(partial_sum.size() == n);
+    assert(partial_plain.versions() == static_cast<int>(history_y.size()));
+    assert(partial_weighted.versions() == static_cast<int>(history_y.size()));
+    assert(partial_sum.versions() == static_cast<int>(history_y.size()));
+    assert(partial_plain.latest_version() == static_cast<int>(history_y.size()) - 1);
+    assert(partial_weighted.latest_version() == static_cast<int>(history_y.size()) - 1);
+    assert(partial_sum.latest_version() == static_cast<int>(history_y.size()) - 1);
 
     bool thrown = false;
     try{

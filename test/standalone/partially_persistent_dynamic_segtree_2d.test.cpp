@@ -34,6 +34,9 @@ long long rectangle_sum(const State& state, long long rb, long long cb,
 void test_random(){
     std::mt19937_64 rng(2026071302);
     std::vector<State> versions(1);
+    assert(tree.versions() == 1 && tree.latest_version() == 0);
+    assert(tree.row_nodes_used() == 0 && tree.column_nodes_used() == 0);
+    assert(tree.changes_used() == 0);
     for(int turn = 0; turn < 90; ++turn){
         const long long row = static_cast<long long>(rng() % 1000000);
         const long long col = static_cast<long long>(rng() % 1000000);
@@ -50,6 +53,11 @@ void test_random(){
         }
         versions.push_back(next);
         assert(version == static_cast<int>(versions.size()) - 1);
+        assert(tree.versions() == static_cast<int>(versions.size()));
+        assert(tree.latest_version() == version);
+        assert(tree.row_nodes_used() > 0);
+        assert(tree.column_nodes_used() > 0);
+        assert(tree.changes_used() > 0);
         for(int repeat = 0; repeat < 3; ++repeat){
             const int query_version = static_cast<int>(rng() % versions.size());
             long long rb = static_cast<long long>(rng() % 1000001);
@@ -73,6 +81,8 @@ void test_boundaries_and_capacity(){
     bool thrown = false;
     try{ (void)too_small.set(1, 1, 3); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && too_small.versions() == 1 && too_small.row_nodes_used() == 0);
+    assert(too_small.latest_version() == 0 && too_small.column_nodes_used() == 0);
+    assert(too_small.changes_used() == 0);
 
     static PartiallyPersistentDynamicSegtree2D<
         partially_persistent_dynamic_2d_sum, 1, 1, 2, 2, 1, 2
@@ -81,6 +91,9 @@ void test_boundaries_and_capacity(){
     thrown = false;
     try{ (void)limited.set(0, 0, 9); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && limited.all_prod(version) == 7 && limited.all_prod(0) == 0);
+    assert(limited.versions() == 2 && limited.latest_version() == version);
+    assert(limited.row_nodes_used() > 0 && limited.column_nodes_used() > 0);
+    assert(limited.changes_used() > 0);
     thrown = false;
     try{ (void)limited.get(version, -1, 0); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown);

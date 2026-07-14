@@ -25,6 +25,21 @@ int main(){
     KLLSketch<int, 128, 24> kll(654321);
     std::unordered_map<int, std::uint64_t> exact;
     std::vector<int> values(static_cast<std::size_t>(count));
+    assert((TDigest<128>::maximum_centroids() == 128U));
+    assert(tdigest.centroid_count() == 0U);
+    assert((AMSSketch<9, 32, int>::groups() == 9U));
+    assert((AMSSketch<9, 32, int>::samples_per_group() == 32U));
+    assert((KLLSketch<int, 128, 24>::capacity_per_level() == 128U));
+    assert((KLLSketch<int, 128, 24>::maximum_levels() == 24U));
+    assert((KLLSketch<int, 128, 24>::typical_rank_error_rate() > 0.0L));
+    assert((MisraGries<int, 15>::capacity() == 15U));
+    assert((SpaceSaving<int, 16>::capacity() == 16U));
+    assert(misra_gries.total() == 0U);
+    assert(space_saving.total() == 0U);
+    assert(space_saving.size() == 0U);
+    assert(tdigest.total_weight() == 0.0L);
+    assert(kll.size() == 0U);
+    assert(kll.retained_items() == 0U);
     for(int& value: values){
         std::cin >> value;
         ++exact[value];
@@ -37,16 +52,30 @@ int main(){
     for(const auto& candidate: misra_gries.candidates()){
         assert(candidate.second <= exact[candidate.first]);
         assert(exact[candidate.first] - candidate.second <= misra_gries.maximum_underestimate());
+        assert(misra_gries.estimate_lower_bound(candidate.first) == candidate.second);
     }
     for(const auto& candidate: space_saving.candidates()){
         assert(candidate.estimate >= exact[candidate.key]);
         assert(candidate.estimate - candidate.error <= exact[candidate.key]);
+        auto found = space_saving.estimate(candidate.key);
+        assert(found.key == candidate.key);
+        assert(found.estimate == candidate.estimate);
+        assert(found.error == candidate.error);
     }
+    assert(misra_gries.total() == static_cast<std::uint64_t>(count));
+    assert(space_saving.total() == static_cast<std::uint64_t>(count));
+    assert((space_saving.size() <= SpaceSaving<int, 16>::capacity()));
+    assert(kll.size() == static_cast<std::uint64_t>(count));
+    assert(tdigest.total_weight() == static_cast<long double>(count));
     std::uint64_t exact_second_moment = 0;
     for(const auto& entry: exact) exact_second_moment += entry.second * entry.second;
     const long double estimated_second_moment = ams.estimate_second_moment();
     assert(std::fabs(estimated_second_moment - static_cast<long double>(exact_second_moment))
            <= static_cast<long double>(exact_second_moment) * 0.55L + 2.0L);
+    assert(tdigest.centroid_count() <= TDigest<128>::maximum_centroids());
+    assert((tdigest.centroid_count() == 0U) == values.empty());
+    assert(kll.retained_items() <= static_cast<std::size_t>(kll.size()));
+    assert((kll.retained_items() == 0U) == values.empty());
 
     std::sort(values.begin(), values.end());
     for(const long double probability: {0.1L, 0.5L, 0.9L}){
@@ -94,6 +123,47 @@ int main(){
     try{
         small_space_saving.add(1);
     }catch(const std::overflow_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    TDigest<8> digest_left, digest_right;
+    digest_left.add(1.0L);
+    digest_right.add(3.0L, 2.0L);
+    digest_left.merge(digest_right);
+    assert(digest_left.total_weight() == 3.0L);
+    assert(digest_left.centroid_count() == 2U);
+    assert(digest_left.quantile(0.0L) == 1.0L);
+    assert(digest_left.quantile(1.0L) == 3.0L);
+    digest_left.merge(digest_left);
+    assert(digest_left.total_weight() == 6.0L);
+    assert(digest_left.centroid_count() <= TDigest<8>::maximum_centroids());
+
+    misra_gries.clear();
+    assert(misra_gries.total() == 0U);
+    assert(misra_gries.maximum_underestimate() == 0U);
+    assert(misra_gries.estimate_lower_bound(0) == 0U);
+    assert(misra_gries.candidates().empty());
+
+    space_saving.clear();
+    assert(space_saving.total() == 0U);
+    assert(space_saving.size() == 0U);
+    assert(space_saving.candidates().empty());
+    assert(space_saving.estimate(0).estimate == 0U);
+
+    ams.clear();
+    assert(ams.estimate_second_moment() == 0.0L);
+    tdigest.clear();
+    assert(tdigest.centroid_count() == 0U);
+    assert(tdigest.total_weight() == 0.0L);
+    assert(tdigest.cdf(0.0L) == 0.0L);
+    kll.clear(777);
+    assert(kll.size() == 0U);
+    assert(kll.retained_items() == 0U);
+    thrown = false;
+    try{
+        (void)kll.quantile(0.5L);
+    }catch(const std::logic_error&){
         thrown = true;
     }
     assert(thrown);

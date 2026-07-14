@@ -30,11 +30,21 @@ int main(){
         return 0;
     }
     Tree tree;
+    assert(tree.history_size() == 0 && tree.snapshot() == 0);
+    assert(tree.nodes_used() == 0 && !tree.can_undo());
     tree.add(9, 3);
     int snapshot = tree.snapshot();
+    assert(snapshot == 1 && tree.history_size() == 1 && tree.can_undo());
     tree.add(9, 4);
     tree.set(1000000000000LL, 5);
+    assert(tree.history_size() == 3 && tree.snapshot() == 3);
+    assert(tree.nodes_used() > 0);
     assert(tree.all_prod() == 12);
     tree.rollback(snapshot);
+    assert(tree.history_size() == snapshot && tree.can_undo());
     assert(tree.all_prod() == 3 && tree.get(1000000000000LL) == 0);
+    tree.undo();
+    assert(tree.history_size() == 0 && tree.snapshot() == 0);
+    assert(tree.nodes_used() == 0 && !tree.can_undo());
+    assert(tree.all_prod() == 0);
 }

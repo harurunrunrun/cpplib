@@ -34,10 +34,13 @@ void test_branching(){
     PersistentSegtree2D<persistent_sum_2d, 4, 4, 8> seg(
         std::vector<std::vector<long long>>{{1, 2, 3}, {4, 5, 6}}
     );
+    assert(seg.height() == 2 && seg.width() == 3 && !seg.empty());
+    assert(seg.versions() == 1 && seg.latest_version() == 0);
     const int first = seg.set(0, 0, 1, 20);
     const int second = seg.apply(0, 1, 2, 10);
     const int copied = seg.fork(first);
     assert(first == 1 && second == 2 && copied == 3);
+    assert(seg.versions() == 4 && seg.latest_version() == copied);
     assert(seg.all_prod(0) == 21);
     assert(seg.all_prod(first) == 39);
     assert(seg.all_prod(second) == 31);
@@ -122,6 +125,7 @@ void test_capacity_and_boundaries(){
     }
     assert(thrown);
     assert(limited.versions() == 3);
+    assert(limited.latest_version() == 2 && limited.height() == 2 && limited.width() == 2);
     assert(limited.all_prod(1) == 1);
 
     thrown = false;
@@ -134,6 +138,8 @@ void test_capacity_and_boundaries(){
 
     PersistentSegtree2D<persistent_sum_2d, 2, 2, 0> no_update;
     assert(no_update.empty() && no_update.all_prod(0) == 0);
+    assert(no_update.height() == 0 && no_update.width() == 0);
+    assert(no_update.versions() == 1 && no_update.latest_version() == 0);
     thrown = false;
     try{
         (void)no_update.set(0, 0, 0, 1);

@@ -44,6 +44,13 @@ int main(){
     assert(tree.prod(v3, 0, 1000000000039LL) == 9);
     assert(tree.max_right(v3, 0, [](long long value){ return value <= 4; }) == 999999999999LL);
     assert(tree.min_left(v3, 1000000000039LL, [](long long value){ return value <= 5; }) == 8);
+    assert(tree.versions() == 4 && tree.latest_version() == v3);
+    assert(tree.nodes_used() > 0);
+    int nodes_before_fork = tree.nodes_used();
+    int v4 = tree.fork(v1);
+    assert(v4 == 4 && tree.versions() == 5 && tree.latest_version() == v4);
+    assert(tree.nodes_used() == nodes_before_fork);
+    assert(tree.all_prod(v4) == tree.all_prod(v1));
     PersistentDynamicSegtree<concat_monoid, 16, 30, 4> ordered;
     int ordered_v1 = ordered.set(0, 9, std::string("b"));
     int ordered_v2 = ordered.set(ordered_v1, 2, std::string("a"));
@@ -56,4 +63,5 @@ int main(){
     thrown = false;
     try{ (void)version_limited.set(only_version, 1, 2); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && version_limited.versions() == 2 && version_limited.all_prod(only_version) == 6);
+    assert(version_limited.latest_version() == only_version && version_limited.nodes_used() > 0);
 }

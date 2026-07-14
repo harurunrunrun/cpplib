@@ -37,6 +37,8 @@ void self_test(){
     assert(matrix.access(1, 2) == 31);
     assert(matrix.weight(1, 2) == 9);
     assert(throws_runtime_error([&]{ matrix.set(1, 5, 6); }));
+    assert(matrix.size() == 4);
+    assert(matrix.latest_version() == 1);
     assert(matrix.versions() == 2);
     assert(matrix.access(1, 2) == 31);
     assert(matrix.weight(1, 2) == 9);
@@ -45,6 +47,8 @@ void self_test(){
         std::vector<unsigned>{1, 7}, std::vector<int>{4, 5}
     );
     assert(throws_runtime_error([&]{ narrow.set_value(0, 8); }));
+    assert(narrow.size() == 2);
+    assert(narrow.latest_version() == 0);
     assert(narrow.versions() == 1);
     assert(narrow.access(0, 0) == 1);
     assert(narrow.weight(0, 0) == 4);
@@ -54,6 +58,9 @@ void self_test(){
     int functional_version = functional.set(1, 5);
     assert(functional.sum(0, 0, 3) == 6);
     assert(functional.sum(functional_version, 0, 3) == 12);
+    assert(functional.size() == 3);
+    assert(functional.versions() == 2);
+    assert(functional.latest_version() == functional_version);
 }
 
 } // namespace

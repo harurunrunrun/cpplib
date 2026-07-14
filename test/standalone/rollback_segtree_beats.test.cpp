@@ -59,19 +59,25 @@ int main(){
         std::vector<long long>{1, 9, 3, 7}
     );
     auto initial = seg.snapshot();
+    assert(seg.size() == 4 && initial == 0 && seg.operations() == 0);
+    assert(seg.changes_used() == 0);
     seg.range_add(0, 4, 5);
     auto added = seg.snapshot();
+    assert(added == 1 && seg.operations() == added);
     seg.range_chmin(1, 4, 10);
     seg.range_chmax(0, 2, 20);
+    assert(seg.snapshot() == 3 && seg.operations() == 3);
     int query_changes = seg.changes_used();
     assert(seg.get(0) == 20 && seg.get(1) == 20);
     assert(seg.range_min(0, 4) == 8 && seg.range_max(0, 4) == 20);
     assert(seg.changes_used() == query_changes);
     seg.rollback(added);
+    assert(seg.snapshot() == added && seg.operations() == added);
     assert(seg.range_sum(0, 4) == 40);
     assert(seg.get(0) == 6 && seg.get(1) == 14);
     seg.rollback(initial);
     assert(seg.range_sum(0, 4) == 20);
+    assert(seg.snapshot() == 0 && seg.operations() == 0 && seg.changes_used() == 0);
 
     RollbackSegmentTreeBeats<long long, 2, 1, 4> limited(
         std::vector<long long>{1, 2}
@@ -84,6 +90,7 @@ int main(){
     catch(const std::runtime_error&){ thrown = true; }
     assert(thrown);
     assert(limited.changes_used() == before_changes && limited.operations() == before_operations);
+    assert(limited.size() == 2 && limited.snapshot() == before_operations);
     assert(limited.range_sum(0, 2) == 5);
     RollbackSegmentTreeBeats<long long, 2, 8, 0> no_operations(
         std::vector<long long>{3, 4}
@@ -92,5 +99,6 @@ int main(){
     try{ no_operations.range_add(0, 2, 1); }
     catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && no_operations.operations() == 0 && no_operations.changes_used() == 0);
+    assert(no_operations.size() == 2 && no_operations.snapshot() == 0);
     assert(no_operations.range_sum(0, 2) == 7);
 }

@@ -219,6 +219,9 @@ void test_partially_persistent(){
             naive_prod(versions.back(), l, r)
         );
     }
+    assert(seg.size() == n);
+    assert(seg.versions() == static_cast<int>(versions.size()));
+    assert(seg.latest_version() == seg.versions() - 1);
 }
 
 void test_binary_search(){

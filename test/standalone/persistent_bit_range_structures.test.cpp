@@ -1,5 +1,6 @@
 // competitive-verifier: STANDALONE
 
+#include <cassert>
 #include <iostream>
 #include <string>
 
@@ -10,6 +11,41 @@
 #include "../../src/structure/segtree/persistent_dynamic_bitassign_rangesum.hpp"
 #include "../../src/structure/segtree/persistent_dynamic_bitassign_rangesum_rangeflip.hpp"
 #include "../../src/structure/segtree/persistent_dynamic_bitoverwrite_rangesum.hpp"
+
+template<class Tree>
+void check_persistent_state_api(){
+    Tree tree(8);
+    assert(tree.size() == 8);
+    assert(tree.versions() == 1 && tree.latest_version() == 0);
+    assert(tree.nodes_used() == 0);
+
+    const int one = tree.set_one(0, 1, 5);
+    assert(one == 1 && tree.sum(one, 0, 8) == 4);
+    assert(tree.versions() == 2 && tree.latest_version() == one);
+    assert(tree.nodes_used() > 0);
+
+    const int nodes = tree.nodes_used();
+    const int copied = tree.fork(0);
+    assert(copied == 2 && tree.versions() == 3 && tree.latest_version() == copied);
+    assert(tree.nodes_used() == nodes && tree.sum(copied, 0, 8) == 0);
+
+    const int assigned = tree.assign(one, 2, 4, false);
+    const int flipped = tree.flip(assigned, 0, 3);
+    assert(assigned == 3 && flipped == 4);
+    assert(tree.versions() == 5 && tree.latest_version() == flipped);
+    assert(tree.sum(one, 0, 8) == 4);
+    assert(tree.sum(assigned, 0, 8) == 2);
+    assert(tree.sum(flipped, 0, 8) == 3);
+}
+
+void self_test(){
+    check_persistent_state_api<PersistentBitAssignRangeSum<16, 512, 16>>();
+    check_persistent_state_api<PersistentDynamicBitAssignRangeSum<16, 512, 16>>();
+    check_persistent_state_api<PersistentBitAssignRangeSumRangeFlip<16, 512, 16>>();
+    check_persistent_state_api<PersistentDynamicBitAssignRangeSumRangeFlip<16, 512, 16>>();
+    check_persistent_state_api<PersistentBitOverwriteRangeSum<16, 512, 16>>();
+    check_persistent_state_api<PersistentDynamicBitOverwriteRangeSum<16, 512, 16>>();
+}
 
 template<class Tree>
 void run_assign(int n, int q){
@@ -83,7 +119,11 @@ void run_overwrite(int n, int q){
 int main(){
     std::string mode;
     int n, q;
-    if(!(std::cin >> mode >> n >> q)) return 0;
+    if(!(std::cin >> mode >> n >> q)){
+        self_test();
+        std::cout << "OK\n";
+        return 0;
+    }
     constexpr int max_nodes = 200000;
     constexpr int max_versions = 1000;
     if(mode == "ASSIGN"){

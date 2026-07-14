@@ -53,10 +53,14 @@ int main(){
     PartiallyPersistentSegmentTreeBeats<long long, 4, 16, 256> seg(
         std::vector<long long>{1, 9, 3, 7}
     );
+    assert(seg.size() == 4 && seg.versions() == 1 && seg.latest_version() == 0);
+    assert(seg.changes_used() == 0);
     int added = seg.range_add(0, 4, 5);
     int capped = seg.range_chmin(1, 4, 10);
     int raised = seg.range_chmax(0, 2, 20);
     assert(added == 1 && capped == 2 && raised == 3);
+    assert(seg.size() == 4 && seg.versions() == 4 && seg.latest_version() == raised);
+    assert(seg.changes_used() > 0);
     assert(seg.range_sum(0, 0, 4) == 20);
     assert(seg.range_sum(1, 0, 4) == 40);
     assert(seg.get(2, 1) == 10 && seg.get(2, 3) == 10);
@@ -86,4 +90,5 @@ int main(){
     catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && no_versions.versions() == 1 && no_versions.changes_used() == 0);
     assert(no_versions.range_sum(0, 0, 2) == 7);
+    assert(no_versions.size() == 2 && no_versions.latest_version() == 0);
 }

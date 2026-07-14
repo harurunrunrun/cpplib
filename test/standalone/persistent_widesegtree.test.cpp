@@ -27,8 +27,18 @@ int main(){
         return 0;
     }
     Tree tree;
+    assert(tree.versions() == 1 && tree.latest_version() == 0);
+    assert(tree.nodes_used() == 0);
     int v1 = tree.add(0, 9, 3);
     int v2 = tree.add(v1, 9, 4);
     int v3 = tree.set(v1, 1000000000000LL, 5);
+    assert(v1 == 1 && v2 == 2 && v3 == 3);
+    assert(tree.versions() == 4 && tree.latest_version() == v3);
+    assert(tree.nodes_used() > 0);
     assert(tree.get(v2, 9) == 7 && tree.get(v3, 9) == 3 && tree.all_prod(v3) == 8);
+    int nodes_before_fork = tree.nodes_used();
+    int v4 = tree.fork(v2);
+    assert(v4 == 4 && tree.versions() == 5 && tree.latest_version() == v4);
+    assert(tree.nodes_used() == nodes_before_fork);
+    assert(tree.all_prod(v4) == tree.all_prod(v2));
 }

@@ -58,9 +58,17 @@ int main(){
 
     std::vector<long long> initial = {1, 9, 3, 7};
     PersistentSegmentTreeBeats<long long, 4, 256, 16> seg(initial);
+    assert(seg.size() == 4 && seg.versions() == 1 && seg.latest_version() == 0);
+    assert(seg.nodes_used() > 0);
     int added = seg.range_add(0, 0, 4, 5);
     int capped = seg.range_chmin(added, 1, 4, 10);
     int branched = seg.range_chmax(added, 0, 2, 20);
+    assert(seg.versions() == 4 && seg.latest_version() == branched);
+    int nodes_before_fork = seg.nodes_used();
+    int copied = seg.fork(capped);
+    assert(copied == 4 && seg.versions() == 5 && seg.latest_version() == copied);
+    assert(seg.nodes_used() == nodes_before_fork);
+    assert(seg.range_sum(copied, 0, 4) == seg.range_sum(capped, 0, 4));
     assert(seg.range_sum(0, 0, 4) == 20);
     assert(seg.range_sum(added, 0, 4) == 40);
     assert(seg.get(capped, 1) == 10 && seg.get(capped, 3) == 10);
@@ -87,4 +95,5 @@ int main(){
     try{ (void)no_versions.fork(0); }
     catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && no_versions.versions() == 1 && no_versions.range_sum(0, 0, 2) == 7);
+    assert(no_versions.size() == 2 && no_versions.latest_version() == 0);
 }

@@ -164,6 +164,9 @@ int main(){
             }
         }
     }
+    assert(persistent.size() == n);
+    assert(persistent.versions() == static_cast<int>(values.size()));
+    assert(persistent.latest_version() == static_cast<int>(values.size()) - 1);
 
     PartiallyPersistentWeightedWaveletMatrix<int, long long, 180, max_version, 32, 20> partial(
         initial, initial_weight);
@@ -197,15 +200,23 @@ int main(){
             assert(partial.range_sum(v, l, r, x) == expected);
         }
     }
+    assert(partial.size() == n);
+    assert(partial.versions() == static_cast<int>(history_value.size()));
+    assert(partial.latest_version() == static_cast<int>(history_value.size()) - 1);
 
     std::vector<int> f = {3, -1, 4, 1, 5, -9, 2};
     PersistentFunctionalWaveletMatrix<int, 16, 8, long long> functional(f);
     int f_version = functional.set(0, 1, 6);
     assert(functional.sum(0, 0, 7) == 5);
     assert(functional.sum(f_version, 0, 7) == 12);
+    assert(functional.size() == 7);
+    assert(functional.versions() == 2 && functional.latest_version() == f_version);
     PartiallyPersistentFunctionalWaveletMatrix<int, 16, 8, long long> partial_functional(f);
     int pf_version = partial_functional.set(1, 6);
     assert(partial_functional.sum(pf_version, 0, 7) == 12);
+    assert(partial_functional.size() == 7);
+    assert(partial_functional.versions() == 2);
+    assert(partial_functional.latest_version() == pf_version);
 
     bool thrown = false;
     try{

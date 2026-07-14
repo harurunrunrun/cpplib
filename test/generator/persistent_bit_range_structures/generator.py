@@ -69,6 +69,8 @@ def main() -> None:
     args = parser.parse_args()
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "state_api.in").write_text("", encoding="utf-8")
+    (out_dir / "state_api.out").write_text("OK\n", encoding="utf-8")
     index = 0
     for mode in ("ASSIGN", "DASSIGN", "FLIP", "DFLIP", "OVERWRITE", "DOVERWRITE"):
         for n in (1, 65, 511):

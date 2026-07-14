@@ -29,8 +29,13 @@ int main(){
         return 0;
     }
     Tree tree;
+    assert(tree.versions() == 1 && tree.latest_version() == 0);
+    assert(tree.nodes_used() == 0 && tree.changes_used() == 0);
     int v1 = tree.set(999999999999LL, 5);
     int v2 = tree.set(7, 4);
+    assert(v1 == 1 && v2 == 2);
+    assert(tree.versions() == 3 && tree.latest_version() == v2);
+    assert(tree.nodes_used() > 0 && tree.changes_used() > 0);
     assert(tree.all_prod(0) == 0 && tree.all_prod(v1) == 5 && tree.all_prod(v2) == 9);
     assert(tree.get(v1, 7) == 0 && tree.get(v2, 7) == 4);
     assert(tree.max_right(v2, 0, [](long long value){ return value <= 4; }) == 999999999999LL);

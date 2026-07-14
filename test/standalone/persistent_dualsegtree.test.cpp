@@ -158,4 +158,9 @@ int main(){
             versions.back()[static_cast<std::size_t>(k)]
         );
     }
+    assert(partial.size() == n);
+    assert(partial.versions() == static_cast<int>(versions.size()));
+    assert(partial.latest_version() == partial.versions() - 1);
+    assert(seg.size() == n);
+    assert(seg.versions() == 1501 && seg.latest_version() == 1500);
 }

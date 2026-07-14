@@ -207,6 +207,9 @@ int main(){
         assert(partial.prod(v, l, r) == sum);
         assert(partial.get(k) == partial_versions.back()[k]);
     }
+    assert(partial.size() == N);
+    assert(partial.versions() == static_cast<int>(partial_versions.size()));
+    assert(partial.latest_version() == partial.versions() - 1);
 
     Rollback rollback(initial);
     std::vector<std::vector<ll>> states(1, initial);

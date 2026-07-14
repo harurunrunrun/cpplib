@@ -58,6 +58,8 @@ void test_random(){
             history.push_back(next);
         }
         assert(tree.snapshot() == static_cast<int>(history.size()) - 1);
+        assert(tree.history_size() == tree.snapshot());
+        assert(tree.can_undo() == (history.size() > 1));
         long long rb = static_cast<long long>(rng() % 1000001);
         long long re = static_cast<long long>(rng() % 1000001);
         long long cb = static_cast<long long>(rng() % 1000001);
@@ -68,6 +70,8 @@ void test_random(){
     }
     tree.rollback(0);
     assert(tree.all_prod() == 0 && tree.row_nodes_used() == 0 && tree.column_nodes_used() == 0);
+    assert(tree.history_size() == 0 && tree.snapshot() == 0);
+    assert(!tree.can_undo());
 }
 
 void test_boundaries_and_capacity(){
@@ -75,6 +79,8 @@ void test_boundaries_and_capacity(){
     bool thrown = false;
     try{ too_small.set(1, 1, 3); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && too_small.snapshot() == 0 && too_small.row_nodes_used() == 0);
+    assert(too_small.history_size() == 0 && !too_small.can_undo());
+    assert(too_small.column_nodes_used() == 0);
 
     static RollbackDynamicSegtree2D<rollback_dynamic_2d_sum, 1, 1, 2, 2, 2> small;
     small.set(0, 0, 7);
@@ -82,6 +88,8 @@ void test_boundaries_and_capacity(){
     thrown = false;
     try{ small.set(1, 0, 9); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && small.snapshot() == snapshot && small.all_prod() == 7);
+    assert(small.history_size() == snapshot && small.can_undo());
+    assert(small.row_nodes_used() > 0 && small.column_nodes_used() > 0);
     small.undo();
     assert(!small.can_undo() && small.all_prod() == 0);
     thrown = false;

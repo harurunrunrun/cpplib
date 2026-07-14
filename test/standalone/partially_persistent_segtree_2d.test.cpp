@@ -34,9 +34,12 @@ void test_versions(){
     PartiallyPersistentSegtree2D<partial_sum_2d, 4, 4, 8> seg(
         std::vector<std::vector<long long>>{{1, 2, 3}, {4, 5, 6}}
     );
+    assert(seg.height() == 2 && seg.width() == 3 && !seg.empty());
+    assert(seg.versions() == 1 && seg.latest_version() == 0);
     const int first = seg.set(0, 1, 20);
     const int second = seg.apply(1, 2, 10);
     assert(first == 1 && second == 2);
+    assert(seg.versions() == 3 && seg.latest_version() == second);
     assert(seg.all_prod(0) == 21);
     assert(seg.all_prod(1) == 39);
     assert(seg.all_prod() == 49);
@@ -64,6 +67,8 @@ void test_random(){
 
         PartiallyPersistentSegtree2D<partial_sum_2d, 4, 5, 80> seg(initial);
         std::vector<std::vector<std::vector<long long>>> versions = {initial};
+        assert(seg.height() == height && seg.width() == width && !seg.empty());
+        assert(seg.versions() == 1 && seg.latest_version() == 0);
         for(int operation = 0; operation < 80; ++operation){
             const int row = static_cast<int>(random() % static_cast<unsigned>(height));
             const int col = static_cast<int>(random() % static_cast<unsigned>(width));
@@ -72,6 +77,8 @@ void test_random(){
             next[static_cast<std::size_t>(row)][static_cast<std::size_t>(col)] = value;
             assert(seg.set(row, col, value) == operation + 1);
             versions.push_back(std::move(next));
+            assert(seg.versions() == static_cast<int>(versions.size()));
+            assert(seg.latest_version() == operation + 1);
 
             const int version = static_cast<int>(
                 random() % static_cast<unsigned>(versions.size())
@@ -107,6 +114,7 @@ void test_capacity_and_boundaries(){
     }
     assert(thrown);
     assert(limited.versions() == 2);
+    assert(limited.latest_version() == 1 && limited.height() == 2 && limited.width() == 2);
     assert(limited.all_prod(0) == 0 && limited.all_prod(1) == 3);
 
     thrown = false;
@@ -119,6 +127,8 @@ void test_capacity_and_boundaries(){
 
     PartiallyPersistentSegtree2D<partial_sum_2d, 2, 2, 0> empty;
     assert(empty.empty() && empty.all_prod() == 0);
+    assert(empty.height() == 0 && empty.width() == 0);
+    assert(empty.versions() == 1 && empty.latest_version() == 0);
 }
 
 void self_test(){

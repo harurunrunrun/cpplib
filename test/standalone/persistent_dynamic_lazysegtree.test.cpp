@@ -53,6 +53,14 @@ int main(){
     assert(tree.get(v1, 999999999999LL) == 1 && tree.get(v2, 999999999999LL) == 5);
     assert(tree.all_prod(v3) == 30 && tree.max_right(v3, 10, [](long long x){ return x <= 15; }) == 15);
     assert(tree.min_left(v3, 20, [](long long x){ return x <= 15; }) == 15);
+    assert(tree.size() == n);
+    assert(tree.versions() == 4 && tree.latest_version() == v3);
+    assert(tree.nodes_used() > 0);
+    int nodes_before_fork = tree.nodes_used();
+    int v4 = tree.fork(v2);
+    assert(v4 == 4 && tree.versions() == 5 && tree.latest_version() == v4);
+    assert(tree.nodes_used() == nodes_before_fork);
+    assert(tree.all_prod(v4) == tree.all_prod(v2));
     PersistentDynamicLazySegtree<affine_monoid, 8, 100, 8> affine;
     int a1 = affine.set(0, 2, 1);
     int a2 = affine.apply(a1, 0, 8, Affine{2, 3});

@@ -37,9 +37,15 @@ int main(){
     }
     constexpr long long n = 1000000000039LL;
     Tree tree(n);
+    assert(tree.size() == n);
+    assert(tree.versions() == 1 && tree.latest_version() == 0);
+    assert(tree.nodes_used() == 0 && tree.changes_used() == 0);
     int v1 = tree.apply(0, n, 1);
     int v2 = tree.set(999999999999LL, 5);
     int v3 = tree.apply(10, 20, 3);
+    assert(v1 == 1 && v2 == 2 && v3 == 3);
+    assert(tree.versions() == 4 && tree.latest_version() == v3);
+    assert(tree.nodes_used() > 0 && tree.changes_used() > 0);
     assert(tree.all_prod(0) == 0 && tree.all_prod(v1) == n && tree.all_prod(v2) == n + 4);
     assert(tree.get(v1, 999999999999LL) == 1 && tree.get(v2, 999999999999LL) == 5);
     assert(tree.prod(v3, 10, 20) == 40);
@@ -48,4 +54,6 @@ int main(){
     bool thrown = false;
     try{ (void)limited.set(1, 2); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && limited.latest_version() == only_version && limited.all_prod() == 6);
+    assert(limited.size() == 2 && limited.versions() == 2);
+    assert(limited.nodes_used() > 0 && limited.changes_used() > 0);
 }

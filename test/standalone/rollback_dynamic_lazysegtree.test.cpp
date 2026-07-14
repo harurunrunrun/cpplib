@@ -39,20 +39,28 @@ int main(){
     }
     constexpr long long n = 1000000000039LL;
     Tree tree(n);
+    assert(tree.size() == n && tree.history_size() == 0);
+    assert(!tree.can_undo() && tree.nodes_used() == 0 && tree.changes_used() == 0);
     tree.apply(0, n, 1);
     int snapshot = tree.snapshot();
+    assert(snapshot == 1 && tree.history_size() == 1 && tree.can_undo());
     tree.set(999999999999LL, 5);
     tree.apply(10, 20, 3);
+    assert(tree.history_size() == 3 && tree.snapshot() == 3);
     assert(tree.all_prod() == n + 34);
     tree.rollback(snapshot);
+    assert(tree.history_size() == snapshot && tree.can_undo());
     assert(tree.all_prod() == n && tree.get(999999999999LL) == 1);
     tree.undo();
-    assert(tree.all_prod() == 0 && tree.nodes_used() == 0);
+    assert(tree.all_prod() == 0 && tree.nodes_used() == 0 && tree.changes_used() == 0);
+    assert(tree.history_size() == 0 && !tree.can_undo());
     RollbackDynamicLazySegtree<rollback_lazy_monoid, 2, 3, 8> limited;
     limited.set(0, 6);
     bool thrown = false;
     try{ limited.set(1, 2); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && limited.history_size() == 1 && limited.all_prod() == 6);
+    assert(limited.size() == 2 && limited.can_undo() && limited.snapshot() == 1);
     limited.undo();
     assert(limited.nodes_used() == 0 && limited.changes_used() == 0);
+    assert(limited.history_size() == 0 && !limited.can_undo());
 }

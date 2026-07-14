@@ -112,6 +112,9 @@ int main(){
         }
         assert(persistent.select(version, value, occurrence) == n);
     }
+    assert(persistent.size() == n);
+    assert(persistent.versions() == static_cast<int>(versions.size()));
+    assert(persistent.latest_version() == static_cast<int>(versions.size()) - 1);
 
     PartiallyPersistentFullyIndexableDictionary<300, max_version> partial(initial);
     std::vector<std::vector<bool>> history(1, initial);
@@ -144,6 +147,9 @@ int main(){
                 history[static_cast<std::size_t>(query_version)][index]);
         }
     }
+    assert(partial.size() == n);
+    assert(partial.versions() == static_cast<int>(history.size()));
+    assert(partial.latest_version() == static_cast<int>(history.size()) - 1);
 
     bool thrown = false;
     try{

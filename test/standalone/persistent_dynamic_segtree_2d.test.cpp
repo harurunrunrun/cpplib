@@ -35,12 +35,20 @@ long long rectangle_sum(const State& state, long long rb, long long cb,
 void test_random(){
     std::mt19937_64 rng(2026071301);
     std::vector<State> versions(1);
+    assert(tree.versions() == 1 && tree.latest_version() == 0);
+    assert(tree.row_nodes_used() == 0 && tree.column_nodes_used() == 0);
     for(int turn = 0; turn < 90; ++turn){
         const int base = static_cast<int>(rng() % versions.size());
         if(turn % 9 == 0){
+            int row_nodes = tree.row_nodes_used();
+            int column_nodes = tree.column_nodes_used();
             const int version = tree.fork(base);
             versions.push_back(versions[static_cast<std::size_t>(base)]);
             assert(version == static_cast<int>(versions.size()) - 1);
+            assert(tree.versions() == static_cast<int>(versions.size()));
+            assert(tree.latest_version() == version);
+            assert(tree.row_nodes_used() == row_nodes);
+            assert(tree.column_nodes_used() == column_nodes);
             continue;
         }
         const long long row = static_cast<long long>(rng() % 1000000);
@@ -58,6 +66,10 @@ void test_random(){
         }
         versions.push_back(next);
         assert(version == static_cast<int>(versions.size()) - 1);
+        assert(tree.versions() == static_cast<int>(versions.size()));
+        assert(tree.latest_version() == version);
+        assert(tree.row_nodes_used() > 0);
+        assert(tree.column_nodes_used() > 0);
         for(int repeat = 0; repeat < 3; ++repeat){
             const int query_version = static_cast<int>(rng() % versions.size());
             long long rb = static_cast<long long>(rng() % 1000001);
@@ -79,12 +91,16 @@ void test_boundaries_and_capacity(){
     bool thrown = false;
     try{ (void)too_small.set(0, 1, 1, 3); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && too_small.versions() == 1 && too_small.row_nodes_used() == 0);
+    assert(too_small.latest_version() == 0);
+    assert(too_small.column_nodes_used() == 0);
 
     static PersistentDynamicSegtree2D<persistent_dynamic_2d_sum, 1, 1, 2, 2, 1> limited;
     const int version = limited.set(0, 0, 0, 7);
     thrown = false;
     try{ (void)limited.fork(version); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown && limited.all_prod(version) == 7);
+    assert(limited.versions() == 2 && limited.latest_version() == version);
+    assert(limited.row_nodes_used() > 0 && limited.column_nodes_used() > 0);
     thrown = false;
     try{ (void)limited.get(version, 1, 0); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown);
