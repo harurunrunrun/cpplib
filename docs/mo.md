@@ -1,5 +1,5 @@
 ---
-title: Mo (Moのアルゴリズム) [ABC242_G] [ZQUERY]
+title: Mo (Moのアルゴリズム) [ZQUERY]
 documentation_of: ../src/algorithm/other/mo.hpp
 ---
 

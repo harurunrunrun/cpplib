@@ -1,5 +1,5 @@
 ---
-title: Bipartite Edge Coloring (二部グラフの辺彩色) [ABC317_G] [bipartite_edge_coloring]
+title: Bipartite Edge Coloring (二部グラフの辺彩色) [bipartite_edge_coloring]
 documentation_of: ../src/algorithm/graph/bipartite_edge_coloring.hpp
 ---
 

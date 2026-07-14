@@ -1,5 +1,5 @@
 ---
-title: Incremental Strongly Connected Components (増分強連結成分) [incremental_scc]
+title: Incremental Strongly Connected Components (増分強連結成分)
 documentation_of: ../src/algorithm/graph/incremental_scc.hpp
 ---
 
@@ -32,4 +32,5 @@ SCC探索は再帰を使わない。
 
 ## 注意点
 
-`vertex_count`または辺端点が範囲外の場合は `runtime_error` を送出する。
+`vertex_count`または辺端点が範囲外の場合は `runtime_error`。頂点数または
+辺数が `INT_MAX` 以上なら、内部の `+1` sentinelを表せないため `length_error`。

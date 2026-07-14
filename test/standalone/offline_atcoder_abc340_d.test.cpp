@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/abc340_d.dijkstra.test.cpp"
+#include "../onlinejudge/abc340_d.minimum_forward_or_jump_cost.test.cpp"

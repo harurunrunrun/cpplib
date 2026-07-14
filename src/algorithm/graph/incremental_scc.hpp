@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -127,8 +128,15 @@ inline std::vector<int> incremental_scc(
     constexpr const char* message =
         "library assertion fault: range violation (incremental_scc).";
     if(vertex_count < 0)[[unlikely]] throw std::runtime_error(message);
-    const int edge_count = static_cast<int>(added_edges.size());
+    if(vertex_count == std::numeric_limits<int>::max())[[unlikely]]{
+        throw std::length_error("incremental_scc has too many vertices");
+    }
+    if(added_edges.size() >=
+       static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
+        throw std::length_error("incremental_scc has too many edges");
+    }
     std::vector<incremental_scc_internal::Edge> records;
+    const int edge_count = static_cast<int>(added_edges.size());
     records.reserve(added_edges.size());
     for(int index = 0; index < edge_count; ++index){
         const auto [from, to] = added_edges[static_cast<std::size_t>(index)];

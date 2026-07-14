@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/abc317_g.bipartite_edge_coloring.test.cpp"
+#include "../onlinejudge/abc317_g.rearrange_rows_into_permutation_columns.test.cpp"

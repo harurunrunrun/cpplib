@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/abc281_e.priority_sum_structure.test.cpp"
+#include "../onlinejudge/abc281_e.sliding_window_k_smallest_sums.test.cpp"

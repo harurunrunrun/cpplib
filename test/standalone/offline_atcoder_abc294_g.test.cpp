@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/abc294_g.heavy_light_decomposition.test.cpp"
+#include "../onlinejudge/abc294_g.dynamic_tree_edge_path_sum.test.cpp"

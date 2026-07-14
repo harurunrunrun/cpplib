@@ -1,5 +1,5 @@
 ---
-title: Binary Submodular Optimization (燃やす埋める) [ABC259_G]
+title: Binary Submodular Optimization (燃やす埋める)
 documentation_of: ../src/algorithm/matching/burn_bury.hpp
 ---
 
