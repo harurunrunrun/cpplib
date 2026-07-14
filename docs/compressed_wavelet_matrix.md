@@ -68,9 +68,11 @@ T median_ceil(int l, int r) const
 ```cpp
 int range_freq(int l, int r, const T& upper) const
 int range_freq(int l, int r, const T& lower, const T& upper) const
+int count_greater(int l, int r, const T& value) const
 ```
 
 区間 $[l,r)$ にある `upper` 未満、または `[lower, upper)` の値の個数を返す。
+`count_greater` は同じ区間にある `value` より大きい値の個数を返す。
 
 # 前後の値
 
@@ -90,7 +92,7 @@ $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$、$W=\lceil\mathtt{MA
 - vector/array constructor: $O(N\log N+\mathtt{MAX\_SIZE}+H(N+W))$
 - `size`, `value_count`, `value`: $O(1)$
 - `access`, `operator[]`, `kth_smallest`, `kth_largest`, `quantile`, `range_min`, `range_max`, `median_floor`, `median_ceil`: $O(H)$
-- `rank`, `range_freq`, `prev_value`, `next_value`: $O(\log D+H)$
+- `rank`, `range_freq`, `count_greater`, `prev_value`, `next_value`: $O(\log D+H)$
 - `select`: $O(\log D+H\log N)$
 
 ## 注意点

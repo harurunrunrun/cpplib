@@ -33,6 +33,10 @@ private:
         return static_cast<int>(std::lower_bound(values.begin(), values.end(), value) -
             values.begin());
     }
+    int upper_id(const T& value) const{
+        return static_cast<int>(std::upper_bound(values.begin(), values.end(), value) -
+            values.begin());
+    }
     std::optional<int> find_id(const T& value) const{
         int id = lower_id(value);
         if(id == static_cast<int>(values.size()) || values[static_cast<std::size_t>(id)] != value){
@@ -119,6 +123,9 @@ public:
         }
         return count_id_less(l, r, lower_id(upper)) -
             count_id_less(l, r, lower_id(lower));
+    }
+    int count_greater(int l, int r, const T& value) const{
+        return r - l - count_id_less(l, r, upper_id(value));
     }
 
     T range_min(int l, int r) const{ return kth_smallest(l, r, 0); }

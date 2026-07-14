@@ -20,8 +20,6 @@ int main(){
     while(query_count-- != 0){
         int left, right, threshold;
         std::cin >> left >> right >> threshold;
-        const int length = right - left + 1;
-        const int less_or_equal = matrix.range_freq(left - 1, right, threshold + 1);
-        std::cout << length - less_or_equal << '\n';
+        std::cout << matrix.count_greater(left - 1, right, threshold) << '\n';
     }
 }

@@ -26,6 +26,9 @@ def main() -> None:
     outputs = [str(values[0]), str(values.count(values[0])), "0", "0", "NONE", "NONE"]
     kinds = ["ACCESS", "RANK", "SELECT", "KTH", "KLARG", "FREQ", "RANGE", "MIN", "MAX", "MFLOOR", "MCEIL", "PREV", "NEXT"]
 
+    commands.append(f"GREATER 0 {n} 2147483647")
+    outputs.append("0")
+    kinds.append("GREATER")
     for _ in range(1000):
         kind = rng.choice(kinds)
         if kind == "ACCESS":
@@ -71,6 +74,11 @@ def main() -> None:
             lower, upper = sorted((rng.randrange(-1600, 1601), rng.randrange(-1600, 1601)))
             commands.append(f"RANGE {l} {r} {lower} {upper}")
             outputs.append(str(sum(lower <= value < upper for value in values[l:r])))
+        elif kind == "GREATER":
+            l, r = sorted((rng.randrange(n + 1), rng.randrange(n + 1)))
+            value = rng.randrange(-1600, 1601)
+            commands.append(f"GREATER {l} {r} {value}")
+            outputs.append(str(sum(value < item for item in values[l:r])))
         else:
             l, r = sorted((rng.randrange(n + 1), rng.randrange(n + 1)))
             value = rng.randrange(-1600, 1601)

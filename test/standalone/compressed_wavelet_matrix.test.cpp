@@ -78,6 +78,10 @@ int main(){
                 int l, r, lower, upper;
                 std::cin >> l >> r >> lower >> upper;
                 std::cout << matrix.range_freq(l, r, lower, upper) << '\n';
+            }else if(type == "GREATER"){
+                int l, r, value;
+                std::cin >> l >> r >> value;
+                std::cout << matrix.count_greater(l, r, value) << '\n';
             }else if(type == "MIN" || type == "MAX" || type == "MFLOOR" || type == "MCEIL"){
                 int l, r;
                 std::cin >> l >> r;
@@ -120,6 +124,9 @@ int main(){
         assert(matrix.range_freq(l, r, x, y) ==
             std::count_if(values.begin() + l, values.begin() + r,
                 [&](int value){ return x <= value && value < y; }));
+        assert(matrix.count_greater(l, r, x) ==
+            std::count_if(values.begin() + l, values.begin() + r,
+                [&](int value){ return x < value; }));
 
         if(l != r){
             std::vector<int> sorted(values.begin() + l, values.begin() + r);
