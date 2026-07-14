@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/morse.trie.test.cpp"
+#include "../onlinejudge/morse.count_morse_decodings.test.cpp"

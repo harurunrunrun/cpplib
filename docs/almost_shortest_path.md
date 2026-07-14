@@ -43,7 +43,6 @@ AlmostShortestPathResult<T> almost_shortest_path(
 )
 ```
 
-正方向・逆方向のDijkstra法で全最短路に使われ得る辺を判定し、それらを除外してもう一度Dijkstra法を実行する。
 
 ## API別の時間計算量・空間計算量
 

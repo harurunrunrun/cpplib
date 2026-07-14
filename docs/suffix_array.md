@@ -1,5 +1,5 @@
 ---
-title: Suffix Array (接尾辞配列) [SARRAY] [SUBLEX] [suffixarray]
+title: Suffix Array (接尾辞配列) [SARRAY] [suffixarray]
 documentation_of: ../src/algorithm/string/suffix_array.hpp
 ---
 

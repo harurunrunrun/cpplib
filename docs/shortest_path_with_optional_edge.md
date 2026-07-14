@@ -4,7 +4,6 @@ documentation_of: ../src/algorithm/graph/shortest_path_with_optional_edge.hpp
 ---
 
 非負重み有向グラフで、候補辺を高々1本だけ使えるときの2頂点間最短距離を求める。
-始点からのDijkstraと、辺を反転したグラフ上で終点から行うDijkstraを利用する。
 
 ## `OptionalShortestPathEdge<T>`
 
@@ -46,6 +45,4 @@ std::optional<T> distance = shortest_path_with_at_most_one_optional_edge(
 ## 注意点
 
 - `T`は距離の加算・比較ができ、全ての経路長を表現できる型でなければならない。
-- 候補道路を建設した後に何度でも通れる問題でも、重みが正なら最短路は同じ道路を
-  繰り返し使わないため、このAPIを適用できる。
 - 平行辺、自己辺、空の候補集合を扱える。

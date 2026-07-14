@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/cstreet.kruskal_mst.test.cpp"
+#include "../onlinejudge/cstreet.minimum_paved_street_cost.test.cpp"

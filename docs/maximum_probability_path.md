@@ -1,5 +1,5 @@
 ---
-title: Maximum Probability Path (最大確率路) [CHICAGO]
+title: Maximum Probability Path (最大確率路)
 documentation_of: ../src/algorithm/graph/maximum_probability_path.hpp
 ---
 

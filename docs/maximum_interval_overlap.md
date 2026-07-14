@@ -1,5 +1,5 @@
 ---
-title: Maximum Interval Overlap (区間最大重複数) [BYTESE2]
+title: Maximum Interval Overlap (区間最大重複数)
 documentation_of: ../src/algorithm/range/maximum_interval_overlap.hpp
 ---
 

@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/kaththi.zero_one_bfs.test.cpp"
+#include "../onlinejudge/kaththi.minimum_grid_character_changes.test.cpp"

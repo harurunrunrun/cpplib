@@ -1,5 +1,5 @@
 ---
-title: Trie (トライ) [MORSE] [PHONELST]
+title: Trie (トライ) [PHONELST]
 documentation_of: ../src/structure/trie/trie.hpp
 ---
 

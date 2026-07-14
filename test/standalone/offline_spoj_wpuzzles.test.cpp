@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/wpuzzles.aho_corasick.test.cpp"
+#include "../onlinejudge/wpuzzles.find_word_puzzle_placements.test.cpp"
