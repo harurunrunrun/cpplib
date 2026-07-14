@@ -1,5 +1,5 @@
 ---
-title: Lazy Segment Tree (遅延セグメント木) [GSS2] [range_affine_range_sum] [range_set_range_composite] [SALMAN] [TEMPLEQ]
+title: Lazy Segment Tree (遅延セグメント木) [GSS2] [SALMAN] [TEMPLEQ]
 documentation_of: ../src/structure/segtree/lazysegtree.hpp
 ---
 

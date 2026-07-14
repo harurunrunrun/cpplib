@@ -150,6 +150,28 @@ struct MonoidAffine{
 };
 
 template<class T>
+struct SumLengthAggregate{
+    T sum{};
+    long long length = 0;
+
+    friend constexpr bool operator==(
+        const SumLengthAggregate&,
+        const SumLengthAggregate&
+    ) = default;
+};
+
+template<class T>
+struct AffineCompositionAggregate{
+    MonoidAffine<T> affine{};
+    long long length = 0;
+
+    friend constexpr bool operator==(
+        const AffineCompositionAggregate&,
+        const AffineCompositionAggregate&
+    ) = default;
+};
+
+template<class T>
 struct MaxSubarrayAggregate{
     T sum{};
     T prefix{};
@@ -295,6 +317,86 @@ constexpr MonoidAffine<T> affine_composition(
 template<class T>
 constexpr MonoidAffine<T> affine_id(){
     return {};
+}
+
+template<class T>
+constexpr MonoidAffine<T> affine_sequence_op(
+    MonoidAffine<T> left,
+    MonoidAffine<T> right
+){
+    return affine_composition(right, left);
+}
+
+template<class T>
+constexpr SumLengthAggregate<T> sum_length_op(
+    SumLengthAggregate<T> left,
+    SumLengthAggregate<T> right
+){
+    return {
+        left.sum + right.sum,
+        left.length + right.length
+    };
+}
+
+template<class T>
+constexpr SumLengthAggregate<T> sum_length_identity(){
+    return {};
+}
+
+template<class T>
+constexpr SumLengthAggregate<T> affine_sum_length_mapping(
+    MonoidAffine<T> f,
+    SumLengthAggregate<T> aggregate
+){
+    return {
+        f.multiplier * aggregate.sum
+            + f.addend * T(aggregate.length),
+        aggregate.length
+    };
+}
+
+template<class T>
+constexpr MonoidAffine<T> affine_power(
+    MonoidAffine<T> base,
+    long long exponent
+){
+    MonoidAffine<T> result{};
+    while(exponent > 0){
+        if(exponent & 1LL){
+            result = affine_composition(base, result);
+        }
+        base = affine_composition(base, base);
+        exponent >>= 1;
+    }
+    return result;
+}
+
+template<class T>
+constexpr AffineCompositionAggregate<T> affine_aggregate_op(
+    AffineCompositionAggregate<T> left,
+    AffineCompositionAggregate<T> right
+){
+    return {
+        affine_sequence_op(left.affine, right.affine),
+        left.length + right.length
+    };
+}
+
+template<class T>
+constexpr AffineCompositionAggregate<T> affine_aggregate_identity(){
+    return {};
+}
+
+template<class T>
+constexpr AffineCompositionAggregate<T> assign_affine_mapping(
+    MonoidAssignment<MonoidAffine<T>> assignment,
+    AffineCompositionAggregate<T> aggregate
+){
+    if(!assignment.assigned) return aggregate;
+    return {
+        affine_power(assignment.value, aggregate.length),
+        aggregate.length
+    };
 }
 
 template<class T>
@@ -463,6 +565,30 @@ template<class T>
 using NonEmptyMaxSubarrayMonoid = Monoid<
     common_monoid_internal::non_empty_max_subarray_op<T>,
     common_monoid_internal::non_empty_max_subarray_identity<T>
+>;
+
+template<class T>
+using AffineCompositionMonoid = Monoid<
+    common_monoid_internal::affine_sequence_op<T>,
+    common_monoid_internal::affine_id<T>
+>;
+
+template<class T>
+using AffineSumAggregateMonoidAct = Monoid_Act<
+    common_monoid_internal::sum_length_op<T>,
+    common_monoid_internal::sum_length_identity<T>,
+    common_monoid_internal::affine_sum_length_mapping<T>,
+    common_monoid_internal::affine_composition<T>,
+    common_monoid_internal::affine_id<T>
+>;
+
+template<class T>
+using AssignAffineCompositionMonoidAct = Monoid_Act<
+    common_monoid_internal::affine_aggregate_op<T>,
+    common_monoid_internal::affine_aggregate_identity<T>,
+    common_monoid_internal::assign_affine_mapping<T>,
+    common_monoid_internal::assignment_composition<MonoidAffine<T>>,
+    common_monoid_internal::assignment_id<MonoidAffine<T>>
 >;
 
 template<class T>

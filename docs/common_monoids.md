@@ -24,8 +24,12 @@ documentation_of: ../src/structure/types/common_monoids.hpp
 | `BitAndMonoid<T>` | bitwise and | `~T(0)` | $O(1)$ | $O(1)$ |
 | `BitOrMonoid<T>` | bitwise or | `0` | $O(1)$ | $O(1)$ |
 | `NonEmptyMaxSubarrayMonoid<T>` | 非空最大部分配列aggregateの結合 | `empty == true` | $O(1)$ | $O(1)$ |
+| `AffineCompositionMonoid<T>` | affine関数を列順に合成 | 恒等関数 | $O(1)$ | $O(1)$ |
 
 `GcdMonoid`、`LcmMonoid`、bitwise 3種は整数型用である。
+`AffineCompositionMonoid<T>` は左の関数を先、右の関数を後に適用する
+非可換monoidである。値型は `MonoidAffine<T>`。
+
 
 ### `NonEmptyMaxSubarrayMonoid<T>`
 
@@ -62,6 +66,8 @@ auto value = non_empty_max_subarray_singleton(-3LL);
 | `ChminMinMonoidAct<T, Identity>` | min | chmin | `Identity` | $O(1)$ |
 | `ChmaxMaxMonoidAct<T, Identity>` | max | chmax | `Identity` | $O(1)$ |
 | `AddHistoricalMaxMonoidAct<T>` | 現在値のmax・過去に到達した値のmax | 各要素へ加算 | `HistoricalAdd<T>{0,0}` | $O(1)$ |
+| `AffineSumAggregateMonoidAct<T>` | 和と長さ | 各要素を `a*x+b` | `MonoidAffine<T>{1,0}` | $O(1)$ |
+| `AssignAffineCompositionMonoidAct<T>` | affine合成と長さ | 全関数を一様代入 | `MonoidAssignment<MonoidAffine<T>>{}` | mappingは $O(\log length)$、ほかは $O(1)$ |
 
 `HistoricalMaxAggregate<T>` は次の公開fieldを持つ。
 
@@ -101,6 +107,15 @@ $O(1)$ 追加空間である。
 MonoidAssignment<long long> none{};          // 代入なし
 MonoidAssignment<long long> set_five{true, 5};
 ```
+
+`SumLengthAggregate<T>` は公開field `sum` と `length` を持ち、区間和と区間長を
+表す。`AffineSumAggregateMonoidAct<T>` の値型として使う。field参照、構築、比較、
+`op`、`e`、`mapping`、`composition`、`id` はすべて $O(1)$。
+
+`AffineCompositionAggregate<T>` は公開field `affine` と `length` を持ち、
+区間の関数合成と区間長を表す。`AssignAffineCompositionMonoidAct<T>` の値型である。
+`op`、`e`、`composition`、`id` は $O(1)$。`mapping` は代入するaffine関数を
+`length` 回合成するため $O(\log length)$、追加空間 $O(1)$ である。
 
 ## 長さを使う作用
 
@@ -237,6 +252,14 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 | `affine_sum_mapping(f,x,length)` | 区間和へaffine作用を反映 | $O(1)$ |
 | `affine_composition(f,g)` | `f(g(x))` のaffine作用 | $O(1)$ |
 | `affine_id<T>()` | 恒等affine作用 | $O(1)$ |
+| `affine_sequence_op(left,right)` | 左を先、右を後に適用するaffine合成 | $O(1)$ |
+| `sum_length_op(left,right)` | 和・長さaggregateの結合 | $O(1)$ |
+| `sum_length_identity<T>()` | 和0・長さ0のaggregate | $O(1)$ |
+| `affine_sum_length_mapping(f,x)` | 和・長さaggregateへaffine作用を反映 | $O(1)$ |
+| `affine_power(base,exponent)` | affine関数の反復合成 | $O(\log exponent)$ |
+| `affine_aggregate_op(left,right)` | affine合成・長さaggregateの結合 | $O(1)$ |
+| `affine_aggregate_identity<T>()` | 恒等関数・長さ0のaggregate | $O(1)$ |
+| `assign_affine_mapping(f,x)` | 一様代入後のaffine合成を反映 | $O(\log x.length)$ |
 | `xor_len_op(left,llen,right,rlen)` | 長さ付きxorの結合 | $O(1)$ |
 | `xor_xor_mapping(f,x,length)` | 区間xorへ一様xorを反映 | $O(1)$ |
 | `chmin_mapping<T,Identity>(f,x)` | 番兵を保って `min(f,x)` | $O(1)$ |
@@ -268,6 +291,18 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 - `MonoidAffine<T>::multiplier` / `addend`：`x -> multiplier*x+addend` を表し、既定値は
   `1` / `0`。
 - `operator==(MonoidAffine, MonoidAffine)`：2つのfieldを比較する。
+- `SumLengthAggregate<T>::sum` / `length`：区間和と0以上の区間長。
+- `operator==(SumLengthAggregate, SumLengthAggregate)`：2つのfieldを比較する。
+- `AffineCompositionAggregate<T>::affine` / `length`：列順の関数合成と
+  0以上の区間長。
+- `operator==(AffineCompositionAggregate, AffineCompositionAggregate)`：
+  2つのfieldを比較する。
+- `AffineCompositionMonoid<T>`：`MonoidAffine<T>` を列順に合成する
+  `Monoid` alias。
+- `AffineSumAggregateMonoidAct<T>`：`SumLengthAggregate<T>` へaffine作用を行う
+  `Monoid_Act` alias。
+- `AssignAffineCompositionMonoidAct<T>`：`AffineCompositionAggregate<T>` へ
+  affine関数の一様代入を行う `Monoid_Act` alias。
 - `MaxSubarrayAggregate<T>::sum` / `prefix` / `suffix` / `best`：
   列全体の和、空列を許す最大prefix和、最大suffix和、最大部分配列和を表す。
 - `operator==(MaxSubarrayAggregate, MaxSubarrayAggregate)`：4つのfieldを比較する。
