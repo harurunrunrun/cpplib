@@ -1,5 +1,5 @@
 ---
-title: Cat Feast Milk Feasibility (猫の宴の牛乳充足判定) [CATS]
+title: Cat Feast Milk Feasibility (猫の宴の牛乳充足判定)
 documentation_of: ../src/algorithm/graph/can_feed_all_cats.hpp
 ---
 
