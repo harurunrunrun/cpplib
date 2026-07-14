@@ -21,3 +21,4 @@ documentation_of: ../src/algorithm/geometry/2d/convex_polygon_query.hpp
 ## 注意点
 
 入力は凸多角形でなければならない。`vertices()` の参照はquery objectの生存中のみ有効である。
+構築時のturnは角度基準、`contains` の点対辺判定は辺長で正規化した有向距離基準である。許容誤差内で辺上なら境界とし、辺の延長上だけにある点は境界にしない。

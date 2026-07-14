@@ -21,4 +21,4 @@ documentation_of: ../src/algorithm/geometry/2d/triangle_centroid.hpp
 
 ## 注意点
 
-退化した3点にも座標平均を定義する。
+退化した3点にも座標平均を定義する。最初の頂点からの2差分を3等分して加えるため、3頂点の絶対座標和を中間計算しない。

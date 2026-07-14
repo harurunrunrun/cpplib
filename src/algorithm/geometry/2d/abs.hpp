@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-#include "norm.hpp"
+#include "types.hpp"
 
 inline long double abs(const Point& point){
-    return std::sqrt(norm(point));
+    return std::hypot(point.x, point.y);
 }

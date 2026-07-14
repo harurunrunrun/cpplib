@@ -15,4 +15,6 @@ documentation_of: ../src/algorithm/geometry/2d/polygon_boundary_points/enumerate
 
 ## 注意点
 
-多角形は頂点順に与える。零長辺にも対応し、戻り値は座標でなく入力 `points` のindexである。
+多角形は頂点順に与える。厳密に零長の辺にも対応し、非零の短辺では辺方向parameterを
+辺長平方で正規化して進行順を決める。線分上判定には絶対距離
+`GEOMETRY_EPS` と機械丸め誤差を用いる。戻り値は座標でなく入力 `points` のindexである。

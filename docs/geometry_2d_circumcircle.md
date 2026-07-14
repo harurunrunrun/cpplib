@@ -13,4 +13,4 @@ documentation_of: ../src/algorithm/geometry/2d/circumcircle.hpp
 
 ## 注意点
 
-3点が共線の場合は `std::invalid_argument` を送出する。
+3点が共線の場合は `std::invalid_argument` を送出する。半径は外心から頂点への差分を `hypot` 相当で求める。

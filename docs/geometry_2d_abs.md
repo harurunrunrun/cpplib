@@ -13,4 +13,4 @@ documentation_of: ../src/algorithm/geometry/2d/abs.hpp
 
 ## 注意点
 
-`std::sqrt(norm(point))` を計算し、戻り値は `long double` である。
+`std::hypot(point.x, point.y)` を用いるため、各成分が有限でベクトル長も表現可能なら、成分の二乗がoverflowする大きさでも有限な長さを返す。戻り値は `long double`。

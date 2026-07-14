@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "abs.hpp"
+#include "advanced/detail.hpp"
 #include "convex_calipers_common.hpp"
 
 inline long double convex_polygon_minimum_width(
@@ -29,7 +30,10 @@ inline long double convex_polygon_minimum_width(
             const long double next_area = std::abs(cross(
                 edge, vertices[candidate] - vertices[index]
             ));
-            if(geometry_sign(next_area - current_area) <= 0) break;
+            if(advanced_geometry_detail::scaled_sign(
+                next_area - current_area,
+                std::max(current_area, next_area)
+            ) <= 0) break;
             opposite = candidate;
         }
         result = std::min(result, std::abs(cross(

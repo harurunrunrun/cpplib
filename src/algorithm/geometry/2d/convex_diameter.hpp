@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <vector>
 
+#include "advanced/detail.hpp"
 #include "cross.hpp"
 #include "distance.hpp"
 
@@ -34,7 +35,9 @@ inline long double convex_diameter(
         const Point& next = vertices[static_cast<std::size_t>(
             (index + 1) % count
         )];
-        if(geometry_sign(cross(current - previous, next - current)) != 0){
+        if(advanced_geometry_detail::cross_sign(
+            current - previous, next - current
+        ) != 0){
             start = index;
             break;
         }
@@ -51,10 +54,11 @@ inline long double convex_diameter(
         const Point& point = vertices[static_cast<std::size_t>(
             (start + offset) % count
         )];
-        while(polygon.size() >= 2 && geometry_sign(cross(
-            polygon.back() - polygon[polygon.size() - 2],
-            point - polygon.back()
-        )) == 0){
+        while(polygon.size() >= 2 &&
+            advanced_geometry_detail::cross_sign(
+                polygon.back() - polygon[polygon.size() - 2],
+                point - polygon.back()
+            ) == 0){
             polygon.pop_back();
         }
         polygon.push_back(point);
@@ -80,7 +84,10 @@ inline long double convex_diameter(
                 polygon[static_cast<std::size_t>(next_opposite)] -
                     polygon[static_cast<std::size_t>(index)]
             ));
-            if(geometry_sign(next_area - current_area) <= 0) break;
+            if(advanced_geometry_detail::scaled_sign(
+                next_area - current_area,
+                std::max(current_area, next_area)
+            ) <= 0) break;
             opposite = next_opposite;
         }
         result = std::max(result, distance(

@@ -22,3 +22,4 @@ documentation_of: ../src/algorithm/geometry/2d/angle_bisectors.hpp
 ## 注意点
 
 退化直線では `invalid_argument`、平行または一致する直線では `domain_error`。
+平行判定は正規化方向同士の角度に対する `GEOMETRY_EPS` を用いる。

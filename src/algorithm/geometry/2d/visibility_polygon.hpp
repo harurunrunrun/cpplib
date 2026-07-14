@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include "advanced/detail.hpp"
 #include "constants.hpp"
 #include "contains.hpp"
 #include "cross.hpp"
@@ -27,7 +28,6 @@ inline void validate_simple_polygon(const std::vector<Point>& polygon){
     if(size < 3)[[unlikely]]{
         throw std::invalid_argument("polygon must have at least three vertices");
     }
-    long double twice_area = 0.0L;
     for(std::size_t index = 0; index < size; ++index){
         const Point& first = polygon[index];
         const Point& second = polygon[(index + 1) % size];
@@ -38,9 +38,20 @@ inline void validate_simple_polygon(const std::vector<Point>& polygon){
             <= GEOMETRY_EPS * GEOMETRY_EPS)[[unlikely]]{
             throw std::invalid_argument("polygon has a degenerate edge");
         }
-        twice_area += cross(first, second);
     }
-    if(std::fabs(twice_area) <= GEOMETRY_EPS)[[unlikely]]{
+    const Point& origin = polygon[0];
+    long double twice_area = 0.0L;
+    long double area_scale = 0.0L;
+    for(std::size_t index = 1; index + 1 < size; ++index){
+        const Point first = polygon[index] - origin;
+        const Point second = polygon[index + 1] - origin;
+        twice_area += cross(first, second);
+        area_scale += advanced_geometry_detail::length(first) *
+            advanced_geometry_detail::length(second);
+    }
+    if(advanced_geometry_detail::scaled_sign(
+        twice_area, area_scale
+    ) == 0)[[unlikely]]{
         throw std::invalid_argument("polygon area must be nonzero");
     }
     for(std::size_t first = 0; first < size; ++first){
@@ -70,13 +81,17 @@ inline std::pair<bool, long double> ray_segment_distance(
     const Point edge = segment.b - segment.a;
     const Point offset = segment.a - origin;
     const long double denominator = cross(direction, edge);
-    const long double scale = std::sqrt(
-        std::max(0.0L, norm(direction) * norm(edge))
-    );
+    const long double scale = advanced_geometry_detail::length(direction) *
+        advanced_geometry_detail::length(edge);
     if(std::fabs(denominator)
-        <= 1e-18L * std::max(1.0L, scale)){
-        if(std::fabs(cross(offset, direction))
-            > GEOMETRY_EPS * std::max(1.0L, std::sqrt(norm(offset)))){
+        <= 1e-18L * scale){
+        const long double collinear_value = cross(offset, direction);
+        const long double collinear_roundoff =
+            std::abs(offset.x * direction.y) +
+            std::abs(offset.y * direction.x);
+        if(geometry_scaled_sign(
+            collinear_value, 1.0L, collinear_roundoff
+        ) != 0){
             return {false, 0.0L};
         }
         const long double divisor = norm(direction);
@@ -187,28 +202,40 @@ inline std::vector<Point> visibility_polygon(
             return first.first < second.first;
         });
 
-    long double coordinate_scale = 1.0L;
+    long double local_extent = 1.0L;
+    long double coordinate_scale = std::max({
+        1.0L,
+        std::abs(observer.x),
+        std::abs(observer.y),
+    });
     for(const Point& point: polygon){
+        local_extent = std::max(
+            local_extent,
+            advanced_geometry_detail::length(point - observer)
+        );
         coordinate_scale = std::max(
             coordinate_scale,
             std::max(std::fabs(point.x), std::fabs(point.y))
         );
     }
-    const long double merge_distance =
-        GEOMETRY_EPS * coordinate_scale * 8.0L;
-    const long double merge_distance_squared =
-        merge_distance * merge_distance;
+    const long double merge_distance = 8.0L * GEOMETRY_EPS +
+        1024.0L * std::numeric_limits<long double>::epsilon() *
+            (coordinate_scale + local_extent);
     std::vector<Point> result;
     result.reserve(candidates.size());
     for(const auto& [angle, point]: candidates){
         static_cast<void>(angle);
         if(result.empty()
-            || norm(point - result.back()) > merge_distance_squared){
+            || advanced_geometry_detail::length(
+                point - result.back()
+            ) > merge_distance){
             result.push_back(point);
         }
     }
     if(result.size() > 1
-        && norm(result.front() - result.back()) <= merge_distance_squared){
+        && advanced_geometry_detail::length(
+            result.front() - result.back()
+        ) <= merge_distance){
         result.pop_back();
     }
     return result;

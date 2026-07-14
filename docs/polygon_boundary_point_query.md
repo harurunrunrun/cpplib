@@ -21,4 +21,8 @@ documentation_of: ../src/algorithm/geometry/2d/polygon_boundary_points/polygon_b
 
 ## 注意点
 
-高速経路が不適用または数値的に曖昧なら自動的に一般経路へ戻る。`polygon()` の参照はquery objectの生存中のみ有効である。
+高速経路が不適用または数値的に曖昧なら自動的に一般経路へ戻る。凸多角形上の辺判定は
+正規化した有向距離と真の線分上判定を併用し、細長い多角形を角度EPSだけで境界外と
+誤判定しない。辺上parameterの探索許容誤差は、辺長を `L` として概ね
+`GEOMETRY_EPS / L` と機械丸め誤差の和であり、短辺でも一般経路と同じ端点許容誤差を
+保つ。`polygon()` の参照はquery objectの生存中のみ有効である。

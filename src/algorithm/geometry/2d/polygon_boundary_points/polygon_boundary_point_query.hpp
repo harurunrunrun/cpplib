@@ -4,10 +4,12 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <limits>
 #include <utility>
 #include <vector>
 
 #include "../geometry.hpp"
+#include "../side_of_directed_line.hpp"
 #include "enumerate_points_on_polygon_boundary.hpp"
 
 class PolygonBoundaryPointQuery{
@@ -49,6 +51,20 @@ class PolygonBoundaryPointQuery{
     std::vector<SideData> sides_;
     bool convex_fast_path_ = false;
 
+    static int resolved_side(
+        const Point& first,
+        const Point& second,
+        const Point& point
+    ){
+        const Point direction = second - first;
+        const long double value = cross(direction, point - first);
+        if(geometry_sign(abs(direction)) != 0){
+            const int side = side_of_directed_line({first, second}, point);
+            if(side != 0) return side;
+        }
+        return (value > 0.0L) - (value < 0.0L);
+    }
+
     long double side_parameter(int side, const Point& point) const;
     long double side_parameter_tolerance(int side) const;
     SideCandidates locate_boundary_sides(const Point& point) const;
@@ -84,15 +100,21 @@ inline long double PolygonBoundaryPointQuery::side_parameter(
         static_cast<std::size_t>((side + 1) % static_cast<int>(convex_vertices_.size()))
     ];
     const Point base = second - first;
-    return dot(point - first, base) / norm(base);
+    const long double length = abs(base);
+    const Point unit_direction = base / length;
+    return dot(point - first, unit_direction) / length;
 }
 
-inline long double PolygonBoundaryPointQuery::side_parameter_tolerance(int side) const{
+inline long double PolygonBoundaryPointQuery::side_parameter_tolerance(
+    int side
+) const{
     const Point& first = convex_vertices_[static_cast<std::size_t>(side)];
     const Point& second = convex_vertices_[
         static_cast<std::size_t>((side + 1) % static_cast<int>(convex_vertices_.size()))
     ];
-    return std::sqrt(GEOMETRY_EPS / norm(second - first)) + GEOMETRY_EPS;
+    const long double length = abs(second - first);
+    return GEOMETRY_EPS / length +
+        64.0L * std::numeric_limits<long double>::epsilon();
 }
 
 inline PolygonBoundaryPointQuery::SideCandidates
@@ -112,11 +134,14 @@ PolygonBoundaryPointQuery::locate_boundary_sides(const Point& point) const{
     };
 
     const Point& origin = convex_vertices_[0];
-    const int first_side = geometry_sign(cross(convex_vertices_[1] - origin, point - origin));
-    const int last_side = geometry_sign(cross(
-        convex_vertices_[static_cast<std::size_t>(n - 1)] - origin,
-        point - origin
-    ));
+    const int first_side = resolved_side(
+        origin, convex_vertices_[1], point
+    );
+    const int last_side = resolved_side(
+        origin,
+        convex_vertices_[static_cast<std::size_t>(n - 1)],
+        point
+    );
     if(first_side < 0 || last_side > 0) return result;
     if(first_side == 0){
         if(!on_segment({origin, convex_vertices_[1]}, point)) return result;
@@ -135,10 +160,11 @@ PolygonBoundaryPointQuery::locate_boundary_sides(const Point& point) const{
     int high = n - 1;
     while(high - low > 1){
         const int middle = low + (high - low) / 2;
-        if(geometry_sign(cross(
-            convex_vertices_[static_cast<std::size_t>(middle)] - origin,
-            point - origin
-        )) >= 0){
+        if(resolved_side(
+            origin,
+            convex_vertices_[static_cast<std::size_t>(middle)],
+            point
+        ) >= 0){
             low = middle;
         }else{
             high = middle;
@@ -167,7 +193,7 @@ inline bool PolygonBoundaryPointQuery::build_convex_fast_path(){
         const Point& first = polygon_[static_cast<std::size_t>(edge)];
         const Point& second = polygon_[static_cast<std::size_t>((edge + 1) % edge_count)];
         const long double edge_norm = norm(second - first);
-        const bool point_edge = geometry_sign(edge_norm) == 0;
+        const bool point_edge = edge_norm == 0.0L;
         if(point_edge && !(first == second)) return false;
 
         const Point middle = point_edge ? first : (first + second) / 2.0L;
@@ -315,7 +341,7 @@ inline std::vector<int> PolygonBoundaryPointQuery::enumerate_convex(
             const Point base =
                 polygon_[static_cast<std::size_t>((edge + 1) % edge_count)] - first;
             const long double base_norm = norm(base);
-            const long double parameter = geometry_sign(base_norm) == 0
+            const long double parameter = base_norm == 0.0L
                 ? 0.0L
                 : dot(point - first, base) / base_norm;
             points_on_edge[static_cast<std::size_t>(edge)].push_back({

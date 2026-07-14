@@ -14,3 +14,4 @@ documentation_of: ../src/algorithm/geometry/2d/is_convex.hpp
 ## 注意点
 
 時計回り・反時計回りのどちらにも対応し、共線な辺を許す。自己交差のない頂点列を前提とする。
+各turnは隣接2辺の長さで正規化した角度基準で判定する。

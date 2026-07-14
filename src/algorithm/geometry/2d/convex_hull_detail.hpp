@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "cross.hpp"
+#include "advanced/detail.hpp"
 
 namespace convex_hull_detail{
 
@@ -28,10 +28,10 @@ inline std::vector<Point> build_chain_from_sorted(
     chain.reserve(points.size());
     for(const Point& point: points){
         while(chain.size() >= 2){
-            const int turn = geometry_sign(cross(
+            const int turn = advanced_geometry_detail::cross_sign(
                 chain.back() - chain[chain.size() - 2],
                 point - chain.back()
-            ));
+            );
             const bool invalid = upper
                 ? (keep_collinear ? turn > 0 : turn >= 0)
                 : (keep_collinear ? turn < 0 : turn <= 0);
@@ -53,9 +53,9 @@ inline std::vector<Point> build_convex_hull(
     if(keep_collinear){
         bool all_collinear = true;
         for(std::size_t index = 2; index < points.size(); ++index){
-            if(geometry_sign(cross(
+            if(advanced_geometry_detail::cross_sign(
                 points[1] - points[0], points[index] - points[0]
-            )) != 0){
+            ) != 0){
                 all_collinear = false;
                 break;
             }

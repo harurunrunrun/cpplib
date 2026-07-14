@@ -13,4 +13,5 @@ documentation_of: ../src/algorithm/geometry/2d/incenter.hpp
 
 ## 注意点
 
-退化三角形には `std::invalid_argument` を送出する。
+退化三角形には `std::invalid_argument` を送出し、退化判定は2辺の角度基準で行う。
+辺長には `hypot` 相当を用い、辺長weightを正規化して最初の頂点からの差分を加えるため、絶対座標と辺長の積を中間計算しない。

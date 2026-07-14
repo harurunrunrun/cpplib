@@ -25,7 +25,7 @@ inline std::vector<int> enumerate_points_on_polygon_boundary(
         for(int j = 0; j < m; j++){
             if(unique && used[static_cast<std::size_t>(j)]) continue;
             if(!on_segment({a, b}, points[static_cast<std::size_t>(j)])) continue;
-            long double parameter = geometry_sign(base_norm) == 0
+            long double parameter = base_norm == 0.0L
                                         ? 0.0L
                                         : dot(points[static_cast<std::size_t>(j)] - a, base) / base_norm;
             current.push_back({parameter, j});

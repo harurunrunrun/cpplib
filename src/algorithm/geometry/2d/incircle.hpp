@@ -1,6 +1,8 @@
 #pragma once
 
-#include "distance.hpp"
+#include <cmath>
+
+#include "advanced/detail.hpp"
 #include "incenter.hpp"
 
 inline Circle incircle(
@@ -9,5 +11,8 @@ inline Circle incircle(
     const Point& third
 ){
     const Point center = incenter(first, second, third);
-    return {center, distance(Line{first, second}, center)};
+    const Point direction = second - first;
+    const long double length = advanced_geometry_detail::length(direction);
+    const long double radius = std::abs(cross(direction / length, center - first));
+    return {center, radius};
 }

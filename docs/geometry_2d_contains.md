@@ -13,4 +13,5 @@ documentation_of: ../src/algorithm/geometry/2d/contains.hpp
 
 ## 注意点
 
-単純多角形を頂点順に与える。時計回り・反時計回りのどちらでもよく、境界判定には許容誤差を用いる。
+単純多角形を頂点順に与える。時計回り・反時計回りのどちらでもよい。
+境界は `on_segment` と同じ絶対距離 `GEOMETRY_EPS` で判定し、ray crossingのy方向比較はhalf-open規則を厳密比較で行う。

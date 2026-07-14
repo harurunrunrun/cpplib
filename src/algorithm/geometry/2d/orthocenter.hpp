@@ -7,6 +7,6 @@ inline Point orthocenter(
     const Point& second,
     const Point& third
 ){
-    return first + second + third -
-        circumcenter(first, second, third) * 2.0L;
+    const Point center = circumcenter(first, second, third);
+    return first + (second - center) + (third - center);
 }

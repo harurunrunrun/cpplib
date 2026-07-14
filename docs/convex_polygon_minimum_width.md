@@ -23,3 +23,4 @@ documentation_of: ../src/algorithm/geometry/2d/convex_polygon_minimum_width.hpp
 ## 注意点
 
 点・線分へ退化した凸集合の幅は0。非凸入力には `std::invalid_argument` を送出する。
+rotating calipersの面積差は、比較する面積と同じ二次元scaleに対する相対許容誤差で判定する。

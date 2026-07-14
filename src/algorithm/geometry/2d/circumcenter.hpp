@@ -1,27 +1,42 @@
 #pragma once
 
+#include <algorithm>
 #include <stdexcept>
 
-#include "cross_point.hpp"
-#include "rotate90.hpp"
+#include "advanced/detail.hpp"
 
 inline Point circumcenter(
     const Point& first,
     const Point& second,
     const Point& third
 ){
-    if(geometry_sign(cross(second - first, third - first)) == 0){
+    const Point first_direction = second - first;
+    const Point second_direction = third - first;
+    if(advanced_geometry_detail::cross_sign(
+        first_direction, second_direction
+    ) == 0){
         throw std::invalid_argument("collinear triangle");
     }
-    const Point first_midpoint = (first + second) / 2.0L;
-    const Point second_midpoint = (first + third) / 2.0L;
-    const Line first_bisector{
-        first_midpoint,
-        first_midpoint + rotate90(second - first),
+
+    const long double scale = std::max(
+        advanced_geometry_detail::length(first_direction),
+        advanced_geometry_detail::length(second_direction)
+    );
+    const Point first_scaled = first_direction / scale;
+    const Point second_scaled = second_direction / scale;
+    const long double first_norm = dot(first_scaled, first_scaled);
+    const long double second_norm = dot(second_scaled, second_scaled);
+    const long double denominator =
+        2.0L * cross(first_scaled, second_scaled);
+    const Point offset{
+        (
+            second_scaled.y * first_norm -
+            first_scaled.y * second_norm
+        ) / denominator,
+        (
+            first_scaled.x * second_norm -
+            second_scaled.x * first_norm
+        ) / denominator,
     };
-    const Line second_bisector{
-        second_midpoint,
-        second_midpoint + rotate90(third - first),
-    };
-    return cross_point(first_bisector, second_bisector);
+    return first + offset * scale;
 }

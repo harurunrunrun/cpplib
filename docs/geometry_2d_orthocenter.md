@@ -21,4 +21,4 @@ documentation_of: ../src/algorithm/geometry/2d/orthocenter.hpp
 
 ## 注意点
 
-3点が共線なら `std::invalid_argument`。
+3点が共線なら `std::invalid_argument`。外心からの差分を最初の頂点へ加える形で計算し、3頂点の絶対座標和を中間計算しない。

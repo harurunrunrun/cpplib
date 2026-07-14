@@ -24,4 +24,4 @@ documentation_of: ../src/algorithm/geometry/2d/convex_hull_detail.hpp
 
 ## 注意点
 
-これらは凸包API間で実装を共有する内部関数である。浮動小数点の向き判定には `geometry_sign` を使う。
+これらは凸包API間で実装を共有する内部関数である。向き判定は2辺の長さの積で正規化した角度基準で行い、座標の正の一様scaleに依存しない。

@@ -22,3 +22,4 @@ documentation_of: ../src/algorithm/geometry/2d/triangle_contains_strict.hpp
 ## 注意点
 
 頂点順は時計回りでもよい。退化三角形では常に `false`。
+境界除外と点対辺の符号には、辺長で正規化した有向距離に対する `GEOMETRY_EPS` を用いる。三角形自体の退化は辺同士の角度で判定する。

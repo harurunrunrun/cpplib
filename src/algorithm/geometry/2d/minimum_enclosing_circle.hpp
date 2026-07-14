@@ -5,11 +5,11 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <stdexcept>
 #include <vector>
 
+#include "advanced/detail.hpp"
 #include "circumcircle.hpp"
-#include "cross.hpp"
-#include "norm.hpp"
 #include "types.hpp"
 
 enum class MinimumEnclosingCircleContainment : int{
@@ -23,34 +23,58 @@ struct MinimumEnclosingCircleResult{
     std::size_t support_size = 0;
 
 private:
-    static MinimumEnclosingCircleContainment compare_value(long double value){
-        const int sign = geometry_sign(value);
+    static MinimumEnclosingCircleContainment compare_value(
+        long double value,
+        long double scale
+    ){
+        const int sign = advanced_geometry_detail::scaled_sign(value, scale);
         if(sign < 0) return MinimumEnclosingCircleContainment::INSIDE;
         if(sign == 0) return MinimumEnclosingCircleContainment::ON_BOUNDARY;
         return MinimumEnclosingCircleContainment::OUTSIDE;
     }
 
+    static MinimumEnclosingCircleContainment compare_distance(
+        long double point_distance,
+        long double boundary_distance
+    ){
+        if(!std::isfinite(boundary_distance)){
+            throw std::overflow_error(
+                "minimum enclosing circle is not representable"
+            );
+        }
+        if(!std::isfinite(point_distance)){
+            return MinimumEnclosingCircleContainment::OUTSIDE;
+        }
+        return compare_value(
+            point_distance - boundary_distance,
+            std::max(point_distance, boundary_distance)
+        );
+    }
+
     MinimumEnclosingCircleContainment diameter_containment(
         const Point& point
     ) const{
-        const Point doubled = point * 2.0L - support[0] - support[1];
-        return compare_value(norm(doubled) - norm(support[0] - support[1]));
+        const Point doubled_offset =
+            (point - support[0]) + (point - support[1]);
+        const long double doubled_distance =
+            advanced_geometry_detail::length(doubled_offset);
+        const long double diameter = advanced_geometry_detail::length(
+            support[1] - support[0]
+        );
+        return compare_distance(doubled_distance, diameter);
     }
 
     MinimumEnclosingCircleContainment circumcircle_containment(
         const Point& point
     ) const{
-        const Point first = support[0] - point;
-        const Point second = support[1] - point;
-        const Point third = support[2] - point;
-        const long double determinant =
-            first.x * (second.y * norm(third) - third.y * norm(second))
-            - first.y * (second.x * norm(third) - third.x * norm(second))
-            + norm(first) * cross(second, third);
-        const int orientation = geometry_sign(cross(
-            support[1] - support[0], support[2] - support[0]
-        ));
-        return compare_value(-static_cast<long double>(orientation) * determinant);
+        const Point center = circumcenter(
+            support[0], support[1], support[2]
+        );
+        const long double point_distance =
+            advanced_geometry_detail::length(point - center);
+        const long double radius =
+            advanced_geometry_detail::length(support[0] - center);
+        return compare_distance(point_distance, radius);
     }
 
 public:
@@ -59,9 +83,9 @@ public:
             return MinimumEnclosingCircleContainment::OUTSIDE;
         }
         if(support_size == 1){
-            return geometry_sign(norm(point - support[0])) == 0
-                ? MinimumEnclosingCircleContainment::ON_BOUNDARY
-                : MinimumEnclosingCircleContainment::OUTSIDE;
+            const long double point_distance =
+                advanced_geometry_detail::length(point - support[0]);
+            return compare_distance(point_distance, 0.0L);
         }
         if(support_size == 2) return diameter_containment(point);
         return circumcircle_containment(point);
@@ -80,10 +104,29 @@ public:
         if(support_size == 0) return {{0, 0}, 0};
         if(support_size == 1) return {support[0], 0};
         if(support_size == 2){
-            const Point center = (support[0] + support[1]) / 2.0L;
-            return {center, std::sqrt(norm(support[0] - support[1])) / 2.0L};
+            const Point direction = support[1] - support[0];
+            const long double radius = advanced_geometry_detail::length(
+                direction
+            ) / 2.0L;
+            if(!std::isfinite(radius)){
+                throw std::overflow_error(
+                    "minimum enclosing circle is not representable"
+                );
+            }
+            const Point center = support[0] + direction / 2.0L;
+            return {center, radius};
         }
-        return circumcircle(support[0], support[1], support[2]);
+        const Circle result = circumcircle(
+            support[0], support[1], support[2]
+        );
+        if(!std::isfinite(result.center.x) ||
+            !std::isfinite(result.center.y) ||
+            !std::isfinite(result.radius)){
+            throw std::overflow_error(
+                "minimum enclosing circle is not representable"
+            );
+        }
+        return result;
     }
 };
 
@@ -109,19 +152,19 @@ inline void deterministic_shuffle(
 
 inline void reduce_collinear_support(MinimumEnclosingCircleResult& result){
     if(result.support_size != 3) return;
-    if(geometry_sign(cross(
+    if(advanced_geometry_detail::cross_sign(
         result.support[1] - result.support[0],
         result.support[2] - result.support[0]
-    )) != 0){
+    ) != 0){
         return;
     }
-    const long double first_second = norm(
+    const long double first_second = advanced_geometry_detail::length(
         result.support[0] - result.support[1]
     );
-    const long double second_third = norm(
+    const long double second_third = advanced_geometry_detail::length(
         result.support[1] - result.support[2]
     );
-    const long double first_third = norm(
+    const long double first_third = advanced_geometry_detail::length(
         result.support[0] - result.support[2]
     );
     result.support_size = 2;

@@ -13,4 +13,4 @@ documentation_of: ../src/algorithm/geometry/2d/incircle.hpp
 
 ## 注意点
 
-退化三角形には `std::invalid_argument` を送出する。
+退化三角形には `std::invalid_argument` を送出する。半径は1辺の単位方向と内心への差分の外積から求め、辺ベクトル同士の積を避ける。

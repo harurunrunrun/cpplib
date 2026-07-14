@@ -3,11 +3,25 @@
 #include <algorithm>
 #include <vector>
 
-#include "area.hpp"
+#include "advanced/detail.hpp"
 
 inline std::vector<Point> counterclockwise_polygon(std::vector<Point> polygon){
-    if(geometry_sign(area(polygon)) < 0){
-        std::reverse(polygon.begin(), polygon.end());
+    long double doubled_area = 0.0L;
+    long double area_scale = 0.0L;
+    if(polygon.size() >= 3){
+        const Point& origin = polygon[0];
+        for(std::size_t index = 1; index + 1 < polygon.size(); ++index){
+            const Point first = polygon[index] - origin;
+            const Point second = polygon[index + 1] - origin;
+            doubled_area += cross(first, second);
+            area_scale += advanced_geometry_detail::length(first) *
+                advanced_geometry_detail::length(second);
+        }
+    }
+    if(advanced_geometry_detail::scaled_sign(
+        doubled_area, area_scale
+    ) < 0){
+        std::reverse(polygon.begin() + 1, polygon.end());
     }
     return polygon;
 }
