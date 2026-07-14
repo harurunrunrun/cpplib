@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 #include "../../src/structure/other/static_range_sum_sqrt_tree.hpp"
@@ -15,6 +16,14 @@ void self_test(){
     assert(tree.sum(0, 3) == 6);
     assert(tree.sum(1, 3) == 3);
     assert(tree.all_sum() == 6);
+    bool thrown = false;
+    try{
+        (void)tree.sum(-1, -1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
     tree.build({});
     assert(tree.empty());
     assert(tree.all_sum() == 0);

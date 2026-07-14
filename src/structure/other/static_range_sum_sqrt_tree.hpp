@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdexcept>
 #include <vector>
 
 #include "sqrt_tree.hpp"
@@ -25,6 +26,11 @@ public:
     T get(int index) const{ return tree.get(index); }
 
     T sum(int left, int right) const{
+        if(left < 0 || left > right || tree.size() < right)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (sum)."
+            );
+        }
         return left == right ? T(0) : tree.prod(left, right);
     }
 
