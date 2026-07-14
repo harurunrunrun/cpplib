@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <span>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -194,5 +195,57 @@ public:
             }
         }
         return best;
+    }
+
+    int longest_common_substring_length(
+        std::span<const std::string_view> additional_strings
+    ) const{
+        const int text_length = states[last_state].length;
+        std::vector<int> count(text_length + 1), order(used);
+        for(int v = 0; v < used; v++) count[states[v].length]++;
+        for(int length = 1; length <= text_length; length++){
+            count[length] += count[length - 1];
+        }
+        for(int v = used - 1; v >= 0; v--){
+            order[--count[states[v].length]] = v;
+        }
+
+        std::vector<int> common(used);
+        for(int v = 0; v < used; v++) common[v] = states[v].length;
+
+        for(std::string_view text: additional_strings){
+            std::vector<int> best(used);
+            int state = 0;
+            int matched = 0;
+            for(char c: text){
+                const int id = char_id(c);
+                while(state != 0 && states[state].next[id] == -1){
+                    state = states[state].link;
+                    matched = std::min(matched, states[state].length);
+                }
+                if(states[state].next[id] == -1){
+                    state = 0;
+                    matched = 0;
+                }else{
+                    state = states[state].next[id];
+                    matched++;
+                    best[state] = std::max(best[state], matched);
+                }
+            }
+
+            for(int index = used - 1; index > 0; index--){
+                const int v = order[index];
+                const int parent = states[v].link;
+                best[parent] = std::max(
+                    best[parent],
+                    std::min(best[v], states[parent].length)
+                );
+            }
+            for(int v = 0; v < used; v++){
+                common[v] = std::min(common[v], best[v]);
+            }
+        }
+
+        return *std::max_element(common.begin(), common.end());
     }
 };
