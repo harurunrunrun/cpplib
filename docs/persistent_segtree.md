@@ -1,5 +1,5 @@
 ---
-title: Persistent Segment Tree (完全永続セグメント木) [persistent_queue] [PSEGTREE]
+title: Persistent Segment Tree (完全永続セグメント木) [PSEGTREE]
 documentation_of: ../src/structure/segtree/persistent_segtree.hpp
 ---
 
