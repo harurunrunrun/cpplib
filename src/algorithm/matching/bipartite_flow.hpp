@@ -26,14 +26,18 @@ struct BipartiteFlow{
     std::vector<BipartiteFlowEdge<T>> edges;
 
     BipartiteFlow(int left_size_, int right_size_)
-        : left_size(left_size_),
-          right_size(right_size_),
-          left_cap(static_cast<std::size_t>(left_size_), T(0)),
-          right_cap(static_cast<std::size_t>(right_size_), T(0)){
-        if(left_size < 0 || right_size < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (BipartiteFlow).");
-        }
-    }
+        : left_size(left_size_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (BipartiteFlow)."
+            )
+            : left_size_),
+          right_size(right_size_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (BipartiteFlow)."
+            )
+            : right_size_),
+          left_cap(static_cast<std::size_t>(left_size), T(0)),
+          right_cap(static_cast<std::size_t>(right_size), T(0)){}
 
     void add_left_capacity(int left, T cap){
         if(left < 0 || left_size <= left || cap < T(0))[[unlikely]]{

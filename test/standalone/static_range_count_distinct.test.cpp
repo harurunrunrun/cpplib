@@ -53,6 +53,17 @@ void test_large_and_errors(){
     thrown = false;
     try{ (void)structure.count(4, 3); }catch(const std::runtime_error&){ thrown = true; }
     assert(thrown);
+    thrown = false;
+    try{ (void)structure.count(0, n + 1); }catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        [[maybe_unused]] StaticRangeCountDistinct<int, 2> too_large({1, 2, 3});
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }
 
 int main(){

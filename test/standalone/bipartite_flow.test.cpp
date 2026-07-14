@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 #include "../../src/algorithm/matching/bipartite_flow.hpp"
@@ -45,7 +46,49 @@ void self_test(){
         graph.add_edge(0, 0, 2);
         graph.add_edge(0, 1, 3);
         graph.add_edge(1, 1, 2);
-        assert(graph.max_flow().flow == 5);
+        const auto result = graph.max_flow();
+        assert(result.flow == 5);
+        assert(result.edges.size() == 14);
+        long long source_flow = 0;
+        long long sink_flow = 0;
+        const int source = 4;
+        const int sink = 5;
+        for(std::size_t index = 0; index < result.edges.size(); index += 2){
+            const auto& edge = result.edges[index];
+            const auto& reverse = result.edges[index + 1];
+            assert(edge.from == reverse.to);
+            assert(edge.to == reverse.from);
+            assert(edge.flow == -reverse.flow);
+            assert(0 <= edge.flow && edge.flow <= edge.cap);
+            if(edge.from == source) source_flow += edge.flow;
+            if(edge.to == sink) sink_flow += edge.flow;
+        }
+        assert(source_flow == result.flow);
+        assert(sink_flow == result.flow);
+    }
+    {
+        bool thrown = false;
+        try{
+            [[maybe_unused]] BipartiteFlow<int> invalid(-1, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        BipartiteFlow<int> graph(1, 1);
+        thrown = false;
+        try{
+            graph.add_left_capacity(1, 2);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            graph.add_edge(0, 0, -1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
     }
     std::mt19937 rng(20260823);
     for(int l = 0; l <= 5; l++){

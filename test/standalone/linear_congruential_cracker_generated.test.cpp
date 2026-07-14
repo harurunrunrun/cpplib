@@ -69,6 +69,7 @@ int run_known_engine(){
     const result_type observation_state = engine.state();
     const result_type first_output = engine();
     LinearCongruentialCracker<Engine> cracker(first_output);
+    if(cracker.current_output() != first_output) return 1;
     const auto recovered = cracker.recovered_seed();
     if(!recovered || *recovered != observation_state) return 1;
 
@@ -89,8 +90,9 @@ int run_known_engine(){
     std::cout << *recovered << ' ' << parameters->multiplier << ' '
               << parameters->increment << '\n';
     for(int query = 0; query < prediction_count; ++query){
-        const result_type predicted = cracker.next();
+        const result_type predicted = (query & 1) == 0 ? cracker() : cracker.next();
         if(predicted != engine()) return 1;
+        if(cracker.current_output() != predicted) return 1;
         std::cout << predicted << '\n';
     }
     return 0;
@@ -102,9 +104,12 @@ int run_noninvertible(){
     if(!(std::cin >> latest_output >> prediction_count)) return 1;
     LinearCongruentialCracker<NoninvertibleLcg> cracker(latest_output);
     if(cracker.recovered_seed()) return 1;
+    if(cracker.current_output() != latest_output) return 1;
     std::cout << "none\n";
     for(int query = 0; query < prediction_count; ++query){
-        std::cout << cracker.next() << '\n';
+        const auto predicted = (query & 1) == 0 ? cracker() : cracker.next();
+        if(cracker.current_output() != predicted) return 1;
+        std::cout << predicted << '\n';
     }
     return 0;
 }

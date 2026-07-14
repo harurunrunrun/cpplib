@@ -371,24 +371,25 @@ class Solver{
 
 public:
     Solver(int n_, const std::vector<MinimumWeightUnicyclicMatchingEdge<T>>& input_edges)
-        : n(n_),
-          graph(static_cast<std::size_t>(n_)),
-          match(static_cast<std::size_t>(n_), -1),
-          parent(static_cast<std::size_t>(n_)),
-          parent_edge(static_cast<std::size_t>(n_)),
-          children(static_cast<std::size_t>(n_)),
-          dp0(static_cast<std::size_t>(n_)),
-          dp1(static_cast<std::size_t>(n_)),
-          choice_child(static_cast<std::size_t>(n_)),
-          best_state(static_cast<std::size_t>(n_)),
-          visited(static_cast<std::size_t>(n_), 0),
+        : n(n_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (minimum_weight_unicyclic_matching)."
+            )
+            : n_),
+          graph(static_cast<std::size_t>(n)),
+          match(static_cast<std::size_t>(n), -1),
+          parent(static_cast<std::size_t>(n)),
+          parent_edge(static_cast<std::size_t>(n)),
+          children(static_cast<std::size_t>(n)),
+          dp0(static_cast<std::size_t>(n)),
+          dp1(static_cast<std::size_t>(n)),
+          choice_child(static_cast<std::size_t>(n)),
+          best_state(static_cast<std::size_t>(n)),
+          visited(static_cast<std::size_t>(n), 0),
           used_edge(input_edges.size(), 0),
           cycle_edge(input_edges.size(), 0),
-          removed(static_cast<std::size_t>(n_), 0),
-          degree(static_cast<std::size_t>(n_), 0){
-        if(n < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (minimum_weight_unicyclic_matching).");
-        }
+          removed(static_cast<std::size_t>(n), 0),
+          degree(static_cast<std::size_t>(n), 0){
         edges.reserve(input_edges.size());
         for(const auto& edge: input_edges){
             if(edge.from < 0 || n <= edge.from || edge.to < 0 || n <= edge.to || edge.from == edge.to)[[unlikely]]{

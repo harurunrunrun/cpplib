@@ -22,6 +22,14 @@ void test_basic(){
         thrown = true;
     }
     assert(thrown);
+
+    thrown = false;
+    try{
+        (void)lcm_convolution(std::vector<int>{1}, std::vector<int>{1, 2});
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }
 
 int main(){

@@ -111,6 +111,39 @@ std::vector<Answer> naive(
 
 void self_test(){
     {
+        using Events = TimeSegmentTree<int, 8, 3>;
+        static_assert(Events::time_capacity() == 8);
+        static_assert(Events::event_capacity() == 3);
+        static_assert(Events::reference_capacity() >= 3);
+        Events events(6);
+        assert(events.size() == 6);
+        assert(events.event_count() == 0);
+        assert(events.reference_count() == 0);
+        int first = 4;
+        events.add_interval(1, 5, first);
+        events.emplace_interval(2, 4, 7);
+        assert(events.event_count() == 2);
+        assert(events.reference_count() > 0);
+        int sum = 0;
+        std::vector<int> history;
+        std::vector<int> answer;
+        events.run(
+            [&](const int& value){ history.push_back(sum); sum += value; },
+            [&](){ return history.size(); },
+            [&](std::size_t snapshot){
+                while(history.size() > snapshot){
+                    sum = history.back();
+                    history.pop_back();
+                }
+            },
+            [&](int){ answer.push_back(sum); }
+        );
+        assert((answer == std::vector<int>{0, 4, 11, 11, 4, 0}));
+        events.clear();
+        assert(events.event_count() == 0);
+        assert(events.reference_count() == 0);
+    }
+    {
         std::vector<std::tuple<int, int, int>> intervals = {
             {0, 5, 3}, {1, 4, -2}, {2, 2, 100}, {2, 5, 3}, {4, 5, 7}
         };

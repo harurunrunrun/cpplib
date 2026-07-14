@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include "../../src/algorithm/other/dynamic_rectangle_add_point_get.hpp"
@@ -34,6 +35,46 @@ std::vector<long long> solve(const std::vector<Query>& queries){
 }
 
 void self_test(){
+    {
+        DynamicRectangleAddPointGet<long long, int> structure;
+        bool thrown = false;
+        try{
+            (void)structure.get(0, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            structure.add(0, 0, 1, 1, 3);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+
+        structure.reserve_rectangle(4, 5, 1, 2);
+        structure.build();
+        structure.add(4, 5, 1, 2, 9);
+        assert(structure.get(1, 2) == 9);
+        assert(structure.get(3, 4) == 9);
+        assert(structure.get(4, 4) == 0);
+        assert(structure.get(3, 5) == 0);
+
+        thrown = false;
+        try{
+            structure.reserve_rectangle(0, 0, 2, 2);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            structure.build();
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
     {
         std::vector<Query> queries = {
             {"ADD", 0, 0, 3, 3, 5},

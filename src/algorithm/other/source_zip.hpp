@@ -36,10 +36,11 @@ U read_varuint(const std::vector<unsigned char>& bytes, std::size_t& position){
         }
         const unsigned char byte = bytes[position++];
         const U part = static_cast<U>(byte & 127U);
-        if(shift >= digits || (part << shift) >> shift != part)[[unlikely]]{
+        if(shift >= digits
+           || part > (std::numeric_limits<U>::max() >> shift))[[unlikely]]{
             throw std::runtime_error("library assertion fault: source zip varint overflow.");
         }
-        result |= part << shift;
+        result |= static_cast<U>(part << shift);
         if((byte & 128U) == 0) return result;
         shift += 7;
     }

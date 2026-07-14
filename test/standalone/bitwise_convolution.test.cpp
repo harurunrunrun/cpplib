@@ -106,6 +106,32 @@ void test_exceptions(){
     }
     assert(thrown);
 
+    for(int transform = 0; transform < 5; ++transform){
+        thrown = false;
+        try{
+            std::vector<long long> values{1, 2, 3};
+            if(transform == 0) or_zeta_transform(values);
+            if(transform == 1) or_mobius_transform(values);
+            if(transform == 2) and_zeta_transform(values);
+            if(transform == 3) and_mobius_transform(values);
+            if(transform == 4) walsh_hadamard_transform(values);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+
+    thrown = false;
+    try{
+        (void)and_convolution(
+            std::vector<long long>{1, 2},
+            std::vector<long long>{1}
+        );
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
     thrown = false;
     try{
         (void)xor_convolution(std::vector<long long>{1, 2}, std::vector<long long>{1});

@@ -34,11 +34,13 @@ struct MinCostFlow{
     std::vector<MinCostFlowEdge<T>> edges;
     std::vector<std::vector<InternalEdge>> graph;
 
-    explicit MinCostFlow(int n_): n(n_), graph(static_cast<std::size_t>(n_)){
-        if(n < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (MinCostFlow).");
-        }
-    }
+    explicit MinCostFlow(int n_)
+        : n(n_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (MinCostFlow)."
+            )
+            : n_),
+          graph(static_cast<std::size_t>(n)){}
 
     int add_edge(int from, int to, T cap, T cost){
         if(from < 0 || n <= from || to < 0 || n <= to || cap < T(0))[[unlikely]]{

@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 #include "../../src/algorithm/matching/burn_bury.hpp"
@@ -41,6 +42,32 @@ long long brute(
     return best;
 }
 
+long long assignment_cost(
+    int n,
+    const std::vector<std::pair<long long, long long>>& one,
+    const std::vector<PairCost>& pair,
+    const std::vector<int>& assignment
+){
+    assert(assignment.size() == static_cast<std::size_t>(n));
+    long long cost = 0;
+    for(int i = 0; i < n; ++i){
+        assert(assignment[static_cast<std::size_t>(i)] == 0
+            || assignment[static_cast<std::size_t>(i)] == 1);
+        cost += assignment[static_cast<std::size_t>(i)]
+            ? one[static_cast<std::size_t>(i)].second
+            : one[static_cast<std::size_t>(i)].first;
+    }
+    for(const auto& p: pair){
+        const int left = assignment[static_cast<std::size_t>(p.i)];
+        const int right = assignment[static_cast<std::size_t>(p.j)];
+        if(left == 0 && right == 0) cost += p.c00;
+        if(left == 0 && right == 1) cost += p.c01;
+        if(left == 1 && right == 0) cost += p.c10;
+        if(left == 1 && right == 1) cost += p.c11;
+    }
+    return cost;
+}
+
 void self_test(){
     {
         BurnBury<long long> graph(2);
@@ -49,6 +76,30 @@ void self_test(){
         graph.add_pair_cost(0, 1, 0, 5, 5, 0);
         auto res = graph.solve();
         assert(res.cost == 3);
+        assert(assignment_cost(
+            2,
+            {{3, 0}, {0, 3}},
+            {{0, 1, 0, 5, 5, 0}},
+            res.assignment
+        ) == res.cost);
+    }
+    {
+        BurnBury<long long> graph(2);
+        graph.add_one_delta(0, 5);
+        graph.add_one_delta(1, -4);
+        const auto result = graph.solve();
+        assert(result.cost == -4);
+        assert((result.assignment == std::vector<int>{0, 1}));
+    }
+    {
+        BurnBury<long long> graph(2);
+        bool thrown = false;
+        try{
+            graph.add_pair_cost(0, 1, 0, 0, 0, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
     }
     std::mt19937 rng(20260825);
     for(int n = 0; n <= 12; n++){
@@ -75,7 +126,9 @@ void self_test(){
                     graph.add_pair_cost(i, j, c00, c01, c10, c11);
                 }
             }
-            assert(graph.solve().cost == brute(n, one, pair));
+            const auto result = graph.solve();
+            assert(result.cost == brute(n, one, pair));
+            assert(assignment_cost(n, one, pair, result.assignment) == result.cost);
         }
     }
 }

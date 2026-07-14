@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <vector>
 #include "../../src/algorithm/matching/bipartite_matching.hpp"
 
@@ -30,6 +31,25 @@ int brute(int left_size, int right_size, const std::vector<std::pair<int, int>>&
     return best;
 }
 
+void verify_matching(const BipartiteMatching& graph, const BipartiteMatchingResult& result){
+    assert(result.left_match.size() == static_cast<std::size_t>(graph.left_size));
+    assert(result.right_match.size() == static_cast<std::size_t>(graph.right_size));
+    int count = 0;
+    for(int left = 0; left < graph.left_size; ++left){
+        const int right = result.left_match[static_cast<std::size_t>(left)];
+        if(right == -1) continue;
+        assert(0 <= right && right < graph.right_size);
+        assert(result.right_match[static_cast<std::size_t>(right)] == left);
+        assert(std::find(
+            graph.graph[static_cast<std::size_t>(left)].begin(),
+            graph.graph[static_cast<std::size_t>(left)].end(),
+            right
+        ) != graph.graph[static_cast<std::size_t>(left)].end());
+        ++count;
+    }
+    assert(count == result.size);
+}
+
 void self_test(){
     {
         BipartiteMatching graph(3, 3);
@@ -38,7 +58,27 @@ void self_test(){
         graph.add_edge(1, 1);
         graph.add_edge(2, 1);
         graph.add_edge(2, 2);
-        assert(graph.solve().size == 3);
+        const auto result = graph.solve();
+        assert(result.size == 3);
+        verify_matching(graph, result);
+        verify_matching(graph, graph.solve());
+    }
+    {
+        bool thrown = false;
+        try{
+            [[maybe_unused]] BipartiteMatching invalid(-1, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        BipartiteMatching graph(1, 1);
+        thrown = false;
+        try{
+            graph.add_edge(1, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
     }
     std::mt19937 rng(20260822);
     for(int l = 0; l <= 9; l++){
@@ -54,7 +94,9 @@ void self_test(){
                         }
                     }
                 }
-                assert(graph.solve().size == brute(l, r, edges));
+                const auto result = graph.solve();
+                verify_matching(graph, result);
+                assert(result.size == brute(l, r, edges));
             }
         }
     }

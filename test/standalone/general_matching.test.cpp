@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <vector>
 #include "../../src/algorithm/matching/general_matching.hpp"
 
@@ -40,6 +41,15 @@ bool valid(int n, const GeneralMatchingResult& result){
 }
 
 void self_test(){
+    {
+        bool thrown = false;
+        try{
+            [[maybe_unused]] GeneralMatching graph(-1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
     {
         GeneralMatching graph(5);
         graph.add_edge(0, 1);

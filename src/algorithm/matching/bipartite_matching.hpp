@@ -19,16 +19,20 @@ struct BipartiteMatching{
     std::vector<int> dist;
 
     BipartiteMatching(int left_size_, int right_size_)
-        : left_size(left_size_),
-          right_size(right_size_),
-          graph(static_cast<std::size_t>(left_size_)),
-          left_match(static_cast<std::size_t>(left_size_), -1),
-          right_match(static_cast<std::size_t>(right_size_), -1),
-          dist(static_cast<std::size_t>(left_size_), -1){
-        if(left_size < 0 || right_size < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (BipartiteMatching).");
-        }
-    }
+        : left_size(left_size_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (BipartiteMatching)."
+            )
+            : left_size_),
+          right_size(right_size_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (BipartiteMatching)."
+            )
+            : right_size_),
+          graph(static_cast<std::size_t>(left_size)),
+          left_match(static_cast<std::size_t>(left_size), -1),
+          right_match(static_cast<std::size_t>(right_size), -1),
+          dist(static_cast<std::size_t>(left_size), -1){}
 
     void add_edge(int left, int right){
         if(left < 0 || left_size <= left || right < 0 || right_size <= right)[[unlikely]]{
@@ -79,6 +83,9 @@ struct BipartiteMatching{
 
     BipartiteMatchingResult solve(){
         int result = 0;
+        for(int left = 0; left < left_size; ++left){
+            result += left_match[static_cast<std::size_t>(left)] != -1;
+        }
         while(bfs()){
             for(int v = 0; v < left_size; v++){
                 if(left_match[static_cast<std::size_t>(v)] == -1 && dfs(v)){

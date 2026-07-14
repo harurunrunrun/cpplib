@@ -29,6 +29,15 @@ long long brute_min_cut(
 
 void self_test(){
     {
+        bool thrown = false;
+        try{
+            [[maybe_unused]] FordFulkerson<int> graph(-1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+    {
         FordFulkerson<long long> graph(4);
         graph.add_edge(0, 1, 3);
         graph.add_edge(0, 2, 2);

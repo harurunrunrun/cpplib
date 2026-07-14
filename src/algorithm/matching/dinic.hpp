@@ -22,11 +22,15 @@ struct Dinic{
     std::vector<int> level;
     std::vector<int> iter;
 
-    explicit Dinic(int n_): n(n_), graph(static_cast<std::size_t>(n_)), level(static_cast<std::size_t>(n_)), iter(static_cast<std::size_t>(n_)){
-        if(n < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (Dinic).");
-        }
-    }
+    explicit Dinic(int n_)
+        : n(n_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (Dinic)."
+            )
+            : n_),
+          graph(static_cast<std::size_t>(n)),
+          level(static_cast<std::size_t>(n)),
+          iter(static_cast<std::size_t>(n)){}
 
     int add_edge(int from, int to, T cap){
         if(from < 0 || n <= from || to < 0 || n <= to)[[unlikely]]{

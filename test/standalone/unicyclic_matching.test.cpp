@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <vector>
 #include "../../src/algorithm/matching/unicyclic_matching.hpp"
 
@@ -66,6 +67,15 @@ std::vector<UnicyclicMatchingEdge> make_case(int n, std::mt19937& rng){
 }
 
 void self_test(){
+    {
+        bool thrown = false;
+        try{
+            (void)unicyclic_matching(-1, {});
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
     {
         std::vector<UnicyclicMatchingEdge> edges = {
             {0, 1},

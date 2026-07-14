@@ -45,6 +45,51 @@ std::vector<long long> solve(int n, const std::vector<std::tuple<int, int, long 
 
 void self_test(){
     {
+        DynamicPointAddRectangleSum<long long, int> seg;
+        bool thrown = false;
+        try{
+            (void)seg.prefix_sum_less(0, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+
+        seg.reserve_point(-2, 4);
+        seg.reserve_point(1, -3);
+        seg.reserve_point(1, 5);
+        seg.build();
+        seg.add(-2, 4, 7);
+        seg.add(1, -3, 11);
+        seg.add(1, 5, 13);
+        assert(seg.prefix_sum_less(1, 5) == 7);
+        assert(seg.prefix_sum_less(2, 6) == 31);
+        assert(seg.prefix_sum_leq(1, 4) == 18);
+        assert(seg.prefix_sum_leq(-2, 3) == 0);
+        assert(seg.sum(-2, -3, 2, 5) == 18);
+
+        thrown = false;
+        try{
+            seg.add(1, 4, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            seg.reserve_point(0, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            seg.build();
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+    {
         std::vector<std::tuple<int, int, long long>> initial = {
             {1, 2, 5},
             {3, 4, 7},

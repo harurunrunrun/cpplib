@@ -6,6 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <string>
+#include <limits>
 #include <utility>
 #include <vector>
 
@@ -54,6 +55,78 @@ void test_base64_api(){
     expect_source_zip_error([]{ (void)decode_base64("AB"); });
 }
 
+void test_varuint_and_integer_api(){
+    using source_zip_internal::append_varuint;
+    using source_zip_internal::base64_value;
+    using source_zip_internal::decode_integer;
+    using source_zip_internal::encode_integer;
+    using source_zip_internal::read_varuint;
+
+    assert(base64_value('A') == 0);
+    assert(base64_value('Z') == 25);
+    assert(base64_value('a') == 26);
+    assert(base64_value('9') == 61);
+    assert(base64_value('-') == 62);
+    assert(base64_value('_') == 63);
+    assert(base64_value('!') == -1);
+
+    const std::vector<std::uint64_t> values = {
+        0,
+        1,
+        127,
+        128,
+        16384,
+        std::numeric_limits<std::uint64_t>::max(),
+    };
+    std::vector<unsigned char> bytes;
+    for(std::uint64_t value: values) append_varuint(bytes, value);
+    std::size_t position = 0;
+    for(std::uint64_t value: values){
+        assert(read_varuint<std::uint64_t>(bytes, position) == value);
+    }
+    assert(position == bytes.size());
+
+    for(std::int64_t value: {
+        std::numeric_limits<std::int64_t>::min(),
+        std::int64_t{-1},
+        std::int64_t{0},
+        std::int64_t{1},
+        std::numeric_limits<std::int64_t>::max(),
+    }){
+        assert(decode_integer<std::int64_t>(encode_integer(value)) == value);
+    }
+    assert(decode_integer<std::uint64_t>(encode_integer(
+        std::numeric_limits<std::uint64_t>::max()
+    )) == std::numeric_limits<std::uint64_t>::max());
+
+    expect_source_zip_error([]{
+        const std::vector<unsigned char> truncated{0x80};
+        std::size_t position = 0;
+        (void)read_varuint<std::uint64_t>(truncated, position);
+    });
+    expect_source_zip_error([]{
+        const std::vector<unsigned char> overflow{0x80, 0x02};
+        std::size_t position = 0;
+        (void)read_varuint<std::uint8_t>(overflow, position);
+    });
+}
+
+void test_malformed_source_zip(){
+    using source_zip_internal::encode_base64;
+    expect_source_zip_error([&]{
+        (void)source_unzip<std::uint8_t>(encode_base64({1}));
+    });
+    expect_source_zip_error([&]{
+        (void)source_unzip<std::uint8_t>(encode_base64({1, 0, 0}));
+    });
+    expect_source_zip_error([&]{
+        (void)source_unzip<std::uint8_t>(encode_base64({0, 0}));
+    });
+    expect_source_zip_error([&]{
+        (void)source_unzip<std::uint8_t>(encode_base64({1, 1, 0x80, 0x02}));
+    });
+}
+
 template<class T>
 void encode_values(int n){
     std::vector<T> values(static_cast<std::size_t>(n));
@@ -80,6 +153,8 @@ void decode_values(){
 
 int main(){
     test_base64_api();
+    test_varuint_and_integer_api();
+    test_malformed_source_zip();
     std::string operation;
     if(!(std::cin >> operation)) return 0;
     if(operation == "ENCODE_I64"){

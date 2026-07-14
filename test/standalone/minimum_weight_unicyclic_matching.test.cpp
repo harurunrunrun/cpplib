@@ -6,6 +6,7 @@
 #include <limits>
 #include <map>
 #include <random>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 #include "../../src/algorithm/matching/minimum_weight_unicyclic_matching.hpp"
@@ -84,6 +85,15 @@ std::vector<Edge> make_case(int n, std::mt19937& rng){
 }
 
 void self_test(){
+    {
+        bool thrown = false;
+        try{
+            (void)minimum_weight_unicyclic_matching<long long>(-1, {});
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
     {
         std::vector<Edge> edges = {
             {0, 1, 5},

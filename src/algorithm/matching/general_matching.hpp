@@ -21,17 +21,17 @@ struct GeneralMatching{
     std::queue<int> que;
 
     explicit GeneralMatching(int n_)
-        : n(n_),
-          graph(static_cast<std::size_t>(n_)),
-          match(static_cast<std::size_t>(n_), -1),
-          parent(static_cast<std::size_t>(n_)),
-          base(static_cast<std::size_t>(n_)),
-          used(static_cast<std::size_t>(n_)),
-          blossom(static_cast<std::size_t>(n_)){
-        if(n < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (GeneralMatching).");
-        }
-    }
+        : n(n_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (GeneralMatching)."
+            )
+            : n_),
+          graph(static_cast<std::size_t>(n)),
+          match(static_cast<std::size_t>(n), -1),
+          parent(static_cast<std::size_t>(n)),
+          base(static_cast<std::size_t>(n)),
+          used(static_cast<std::size_t>(n)),
+          blossom(static_cast<std::size_t>(n)){}
 
     void add_edge(int u, int v){
         if(u < 0 || n <= u || v < 0 || n <= v)[[unlikely]]{

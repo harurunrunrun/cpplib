@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 #include "../../src/algorithm/matching/min_cost_flow.hpp"
@@ -55,6 +56,15 @@ std::pair<long long, long long> brute(
 }
 
 void self_test(){
+    {
+        bool thrown = false;
+        try{
+            [[maybe_unused]] MinCostFlow<int> graph(-1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
     {
         MinCostFlow<long long> graph(4);
         graph.add_edge(0, 1, 2, 1);

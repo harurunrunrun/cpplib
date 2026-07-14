@@ -18,11 +18,14 @@ struct FordFulkerson{
     std::vector<std::vector<FordFulkersonEdge<T>>> graph;
     std::vector<char> used;
 
-    explicit FordFulkerson(int n_): n(n_), graph(static_cast<std::size_t>(n_)), used(static_cast<std::size_t>(n_)){
-        if(n < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (FordFulkerson).");
-        }
-    }
+    explicit FordFulkerson(int n_)
+        : n(n_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (FordFulkerson)."
+            )
+            : n_),
+          graph(static_cast<std::size_t>(n)),
+          used(static_cast<std::size_t>(n)){}
 
     void add_edge(int from, int to, T cap){
         if(from < 0 || n <= from || to < 0 || n <= to || cap < T(0))[[unlikely]]{

@@ -60,10 +60,13 @@ class RangeDSU{
 
 public:
     explicit RangeDSU(int n_)
-        : n(n_), parent(static_cast<std::size_t>(n_)), size_(static_cast<std::size_t>(n_), 1){
-        if(n < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (RangeDSU).");
-        }
+        : n(n_ < 0
+            ? throw std::runtime_error(
+                "library assertion fault: range violation (RangeDSU)."
+            )
+            : n_),
+          parent(static_cast<std::size_t>(n)),
+          size_(static_cast<std::size_t>(n), 1){
         std::iota(parent.begin(), parent.end(), 0);
         for(int i = 0; i < n; i++){
             intervals[i] = {i + 1, i};

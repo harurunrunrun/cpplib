@@ -28,6 +28,44 @@ long long brute_min_cut(
 
 void self_test(){
     {
+        Dinic<long long> graph(3);
+        const int first = graph.add_edge(0, 1, 5);
+        const int second = graph.add_edge(1, 2, 5);
+        assert(first == 0);
+        assert(second == 2);
+        assert(graph.edges[static_cast<std::size_t>(first)].cap == 5);
+        assert(graph.max_flow(0, 2, 3) == 3);
+        assert(graph.edges[static_cast<std::size_t>(first)].flow == 3);
+        assert(graph.edges[static_cast<std::size_t>(first ^ 1)].flow == -3);
+        assert((graph.min_cut(0) == std::vector<char>{1, 1, 1}));
+        assert(graph.max_flow(0, 2) == 2);
+        assert((graph.min_cut(0) == std::vector<char>{1, 0, 0}));
+    }
+    {
+        bool thrown = false;
+        try{
+            [[maybe_unused]] Dinic<int> graph(-1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        Dinic<int> graph(2);
+        thrown = false;
+        try{
+            (void)graph.add_edge(0, 2, 1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            (void)graph.min_cut(-1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+    {
         Dinic<long long> graph(4);
         graph.add_edge(0, 1, 3);
         graph.add_edge(0, 2, 2);

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <optional>
 #include <random>
+#include <stdexcept>
 #include <unordered_map>
 #include <vector>
 
@@ -23,6 +24,37 @@ std::optional<int> naive_majority(
 }
 
 void self_test(){
+    {
+        RangeMajorityQuery<int> empty;
+        assert(empty.size() == 0);
+        assert(!empty.majority(0, 0));
+        bool thrown = false;
+        try{
+            (void)empty.get(0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+    {
+        RangeMajorityQuery<int> query({1, 2, 3});
+        bool thrown = false;
+        try{
+            query.set(-1, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            (void)query.majority(2, 4);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        query.set(1, 2);
+        assert(query.get(1) == 2);
+    }
     {
         RangeMajorityQuery<int> query({1, 2, 1, 1, 3, 1});
         assert(query.size() == 6);

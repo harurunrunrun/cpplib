@@ -21,15 +21,22 @@ int mex_naive(const std::vector<char>& used, int x){
 
 void self_test(){
     IntervalSet<int> intervals;
+    assert(intervals.empty());
+    assert(intervals.intervals().empty());
     intervals.add(1, 4);
     intervals.add(4, 7);
+    assert(!intervals.empty());
     assert(intervals.size() == 1);
+    assert(intervals.intervals().at(1) == 7);
     assert(intervals.covered(1, 7));
     intervals.erase(3, 5);
     assert(intervals.contains(2));
     assert(!intervals.contains(3));
     assert(intervals.contains(5));
     assert(intervals.mex(1) == 3);
+    intervals.clear();
+    assert(intervals.empty());
+    assert(intervals.size() == 0);
 
     std::mt19937 rng(20260908);
     for(int step = 0; step < 1000; step++){

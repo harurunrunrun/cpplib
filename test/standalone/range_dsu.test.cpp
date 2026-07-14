@@ -43,6 +43,10 @@ struct NaiveDSU{
 void self_test(){
     {
         RangeDSU dsu(8);
+        assert(dsu.leader(3) == 3);
+        const RangeDSU& const_dsu = dsu;
+        assert(const_dsu.leader(3) == 3);
+        assert(dsu.unite(0, 0) == false);
         dsu.unite_range(1, 4, 1);
         assert(dsu.same(1, 3));
         assert(!dsu.same(0, 1));
@@ -50,6 +54,31 @@ void self_test(){
         assert(dsu.same(1, 7));
         assert(dsu.same_range(1, 6));
         assert(dsu.size(7) == 6);
+        assert(dsu.same_range(4, 4));
+    }
+    {
+        bool thrown = false;
+        try{
+            [[maybe_unused]] RangeDSU invalid(-1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        RangeDSU dsu(3);
+        thrown = false;
+        try{
+            (void)dsu.leader(3);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            dsu.unite_range(2, 1, 0);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
     }
     std::mt19937 rng(20260909);
     for(int step = 0; step < 300; step++){
@@ -83,6 +112,14 @@ void self_test(){
                     assert(dsu.same(i, j) == naive.same(i, j));
                 }
             }
+            int left = static_cast<int>(rng() % static_cast<unsigned>(n + 1));
+            int right = static_cast<int>(rng() % static_cast<unsigned>(n + 1));
+            if(left > right) std::swap(left, right);
+            bool expected_range = true;
+            for(int index = left + 1; index < right; ++index){
+                expected_range &= naive.same(left, index);
+            }
+            assert(dsu.same_range(left, right) == expected_range);
         }
     }
 }

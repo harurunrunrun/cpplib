@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 #include "../../src/algorithm/other/zip_unzip.hpp"
 
@@ -12,6 +13,14 @@ void self_test(){
     assert(zipped == expected);
     assert(run_length_unzip(zipped) == data);
     assert(run_length_zip(std::vector<int>{}).empty());
+    assert(run_length_unzip(std::vector<std::pair<int, int>>{{3, 0}}).empty());
+    bool thrown = false;
+    try{
+        (void)run_length_unzip(std::vector<std::pair<int, int>>{{3, -1}});
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }
 
 int main(){

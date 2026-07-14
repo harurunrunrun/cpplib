@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <vector>
 #include "../../src/algorithm/other/mo.hpp"
 
@@ -25,6 +26,61 @@ std::vector<int> solve_distinct(const std::vector<int>& a, const std::vector<std
 }
 
 void self_test(){
+    {
+        Mo mo(5);
+        assert(mo.size() == 0);
+        assert(mo.add_query(1, 1) == 0);
+        assert(mo.add_query(0, 4) == 1);
+        assert(mo.add_query(2, 5) == 2);
+        assert(mo.add_query(3, 3) == 3);
+        assert(mo.size() == 4);
+
+        const std::vector<int> values = {2, 3, 5, 7, 11};
+        const std::vector<int> expected = {0, 17, 23, 0};
+        std::vector<int> answer(4, -1);
+        int current = 0;
+        int add_left_calls = 0;
+        int add_right_calls = 0;
+        int erase_left_calls = 0;
+        int erase_right_calls = 0;
+        mo.solve(
+            [&](int index){ current += values[static_cast<std::size_t>(index)]; ++add_left_calls; },
+            [&](int index){ current += values[static_cast<std::size_t>(index)]; ++add_right_calls; },
+            [&](int index){ current -= values[static_cast<std::size_t>(index)]; ++erase_left_calls; },
+            [&](int index){ current -= values[static_cast<std::size_t>(index)]; ++erase_right_calls; },
+            [&](int index){ answer[static_cast<std::size_t>(index)] = current; },
+            2
+        );
+        assert(answer == expected);
+        assert(add_left_calls > 0);
+        assert(add_right_calls > 0);
+        assert(erase_left_calls > 0);
+        assert(erase_right_calls > 0);
+    }
+    {
+        bool thrown = false;
+        try{
+            [[maybe_unused]] Mo invalid(-1);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        Mo mo(3);
+        thrown = false;
+        try{
+            (void)mo.add_query(-1, 2);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try{
+            (void)mo.add_query(1, 4);
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
     {
         std::vector<int> a = {1, 2, 1, 3, 2};
         std::vector<std::pair<int, int>> queries = {{0, 3}, {1, 5}, {2, 2}};

@@ -18,6 +18,20 @@ void test_basic(){
     assert(longest_increasing_subsequence_length(
         std::vector<int>{1, 3, 2, 0}, true, std::greater<int>()
     ) == 3);
+
+    const std::vector<int> descending_with_duplicates = {3, 3, 2, 2, 1};
+    const auto non_strict = longest_increasing_subsequence(
+        descending_with_duplicates, false, std::greater<int>()
+    );
+    assert((non_strict == std::vector<int>{0, 1, 2, 3, 4}));
+    const auto strict = longest_increasing_subsequence(
+        descending_with_duplicates, true, std::greater<int>()
+    );
+    assert(strict.size() == 3);
+    for(std::size_t index = 1; index < strict.size(); ++index){
+        assert(descending_with_duplicates[strict[index - 1]]
+            > descending_with_duplicates[strict[index]]);
+    }
     assert(longest_increasing_subsequence(std::vector<int>{}).empty());
 }
 

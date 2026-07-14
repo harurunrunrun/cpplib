@@ -42,6 +42,11 @@ public:
         if(built)[[unlikely]]{
             throw std::runtime_error("library assertion fault: DynamicPointAddRectangleSum is already built.");
         }
+        std::sort(reserved_points.begin(), reserved_points.end());
+        reserved_points.erase(
+            std::unique(reserved_points.begin(), reserved_points.end()),
+            reserved_points.end()
+        );
         xs.reserve(reserved_points.size());
         for(auto [x, y]: reserved_points){
             (void)y;
@@ -68,6 +73,11 @@ public:
 
     void add(Coordinate x, Coordinate y, const T& value){
         require_built();
+        if(!std::binary_search(reserved_points.begin(), reserved_points.end(), std::pair{x, y}))[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: unknown coordinate (DynamicPointAddRectangleSum)."
+            );
+        }
         int xi = x_index(x);
         for(int i = xi; i < static_cast<int>(ys.size()); i += i & -i){
             int yi = static_cast<int>(std::lower_bound(ys[static_cast<std::size_t>(i)].begin(), ys[static_cast<std::size_t>(i)].end(), y) - ys[static_cast<std::size_t>(i)].begin());
