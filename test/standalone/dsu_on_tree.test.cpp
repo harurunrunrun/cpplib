@@ -15,6 +15,11 @@ namespace{
 
 constexpr int MAX_TEST_SIZE = 512;
 
+[[gnu::noinline]]
+void run_before_build(DsuOnTree<3>& sack){
+    sack.run([](int){}, [](int){}, [](int){});
+}
+
 template<class Sack>
 std::vector<std::pair<int, int>> solve_with_remove(
     Sack& sack,
@@ -161,7 +166,10 @@ void test_fixed_and_naive(){
     };
     const std::vector<int> color = {0, 1, 0, 1, 2, 2, 2};
     DsuOnTree<8> sack(7);
+    assert(sack.size() == 7);
+    assert(sack.edge_count() == 0);
     for(auto [u, v] : edges) sack.add_edge(u, v);
+    assert(sack.edge_count() == 6);
     sack.build(0);
 
     assert(sack.root() == 0);
@@ -171,6 +179,8 @@ void test_fixed_and_naive(){
     assert(sack.heavy_child(0) == 1 || sack.heavy_child(0) == 2);
     for(int vertex = 0; vertex < 7; ++vertex){
         const auto [left, right] = sack.subtree_range(vertex);
+        assert(sack.tin(vertex) == left);
+        assert(sack.tout(vertex) == right);
         assert(right - left == sack.subtree_size(vertex));
         assert(sack.preorder_vertex(left) == vertex);
     }
@@ -182,6 +192,8 @@ void test_fixed_and_naive(){
 
 void test_empty_and_exceptions(){
     DsuOnTree<0> empty;
+    assert(empty.size() == 0);
+    assert(empty.edge_count() == 0);
     empty.build();
     assert(empty.root() == -1);
     int calls = 0;
@@ -206,10 +218,19 @@ void test_empty_and_exceptions(){
     }
     assert(thrown);
 
+    DsuOnTree<3> not_built_metadata(3);
+    thrown = false;
+    try{
+        (void)not_built_metadata.tin(0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
     thrown = false;
     try{
         DsuOnTree<3> not_built(3);
-        not_built.run([](int){}, [](int){}, [](int){});
+        run_before_build(not_built);
     }catch(const std::runtime_error&){
         thrown = true;
     }

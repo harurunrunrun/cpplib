@@ -58,6 +58,8 @@ void self_test(){
         auto res = cow_game<long long>(3, 0, constraints, INF);
         assert(res.feasible);
         assert(res.bounded[2]);
+        assert(cow_game_has_maximum(res, 0));
+        assert(cow_game_has_maximum(res, 2));
         assert(res.maximum[2] == 7);
         auto maximum = cow_game_max_difference<long long>(3, 0, 2, constraints, INF);
         assert(maximum.feasible);
@@ -93,6 +95,7 @@ void self_test(){
         auto res = cow_game<long long>(2, 0, {}, INF);
         assert(res.feasible);
         assert(!res.bounded[1]);
+        assert(!cow_game_has_maximum(res, 1));
         auto range = cow_game_difference_range<long long>(2, 0, 1, {}, INF);
         assert(range.feasible);
         assert(!range.has_minimum);
@@ -105,6 +108,22 @@ void self_test(){
         assert(res.feasible);
         assert(res.bounded[1]);
         assert(res.maximum[1] == large);
+    }
+    {
+        const auto infeasible = cow_game<long long>(
+            2, 0, {{0, 1, -1}, {1, 0, -1}}, INF
+        );
+        assert(!cow_game_has_maximum(infeasible, 0));
+
+        bool thrown = false;
+        try{
+            (void)cow_game_has_maximum(
+                cow_game<long long>(2, 0, {}, INF), 2
+            );
+        }catch(const std::runtime_error&){
+            thrown = true;
+        }
+        assert(thrown);
     }
     std::mt19937 rng(20260821);
     for(int n = 1; n <= 30; n++){

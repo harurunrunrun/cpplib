@@ -2,10 +2,65 @@
 
 #include "../../src/algorithm/string/suffix_automaton.hpp"
 
+#include <cassert>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 
+void self_test(){
+    SuffixAutomaton<3, 16> empty;
+    assert(empty.size() == 1);
+    assert(empty.last() == 0);
+    assert(empty[0].link == -1);
+    assert(empty[0].length == 0);
+    for(int next: empty[0].next) assert(next == -1);
+
+    SuffixAutomaton<3, 16> automaton("ababa");
+    assert(automaton.size() >= 6);
+    assert(0 <= automaton.last() && automaton.last() < automaton.size());
+    assert(automaton[automaton.last()].length == 5);
+    assert(automaton[0].next[0] != -1);
+    assert(automaton.contains("aba"));
+    assert(!automaton.contains("ac"));
+    assert(automaton.count_distinct_substrings() == 9);
+    automaton.build_occurrences();
+    automaton.build_occurrences();
+    assert(automaton.occurrence_count("aba") == 2);
+
+    const int extended = automaton.extend('c');
+    assert(extended == automaton.last());
+    assert(automaton[extended].length == 6);
+    assert(automaton.contains("bac"));
+
+    bool thrown = false;
+    try{
+        (void)automaton[-1];
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)automaton.contains("d");
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    SuffixAutomaton<1, 2> full;
+    full.extend('a');
+    thrown = false;
+    try{
+        (void)full.extend('a');
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+}
+
 int main(){
+    self_test();
     int case_count;
     if(!(std::cin >> case_count)) return 0;
 

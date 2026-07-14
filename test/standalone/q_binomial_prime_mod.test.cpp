@@ -43,6 +43,18 @@ int main(){
     const QBinomialPrimeMod solver(modulus, q, maximum_n);
     if(solver.modulus() != modulus || solver.base() != q ||
        solver.maximum_n() != maximum_n) return 1;
+    std::size_t expected_period = 0;
+    std::uint64_t q_integer = 1 % modulus;
+    for(std::size_t index = 1; index <= maximum_n; ++index){
+        if(q_integer == 0){
+            expected_period = index;
+            break;
+        }
+        q_integer = (
+            static_cast<std::uint64_t>(q) * q_integer + 1
+        ) % modulus;
+    }
+    if(solver.period() != expected_period) return 1;
     try{
         (void)solver.binomial(maximum_n + 1, 0);
         return 1;

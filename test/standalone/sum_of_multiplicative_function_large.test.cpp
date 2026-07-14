@@ -41,7 +41,13 @@ mint naive_official(std::uint64_t n, mint a, mint b){
 
 void generic_self_test(){
     constexpr std::uint64_t n = 10000;
+    const math::LinearPrimePowerMultiplicativeFunction<MOD> linear{
+        mint(2), mint(3)
+    };
+    assert(linear(5, 4) == mint(23));
+
     math::LargeMultiplicativeFunctionSummatory<MOD> summatory(n);
+    assert(summatory.limit() == n);
     const auto values = summatory.quotient_values();
     const auto components = summatory.prime_prefix_components();
     assert(values.size() == summatory.quotient_table_size());
@@ -153,6 +159,7 @@ void self_test(){
     assert(thrown);
 
     math::LargeMultiplicativeFunctionSummatory<MOD> empty(0);
+    assert(empty.limit() == 0);
     assert(empty.quotient_values().empty());
     assert(empty.prime_prefix_components().prime_count.empty());
     assert(empty.sum(

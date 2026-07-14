@@ -13,6 +13,25 @@
 using math::u64;
 
 void test_miller_rabin(){
+    constexpr u64 a = 18'446'744'073'709'551'000ULL;
+    constexpr u64 b = 18'446'744'073'709'550'000ULL;
+    constexpr u64 modulus = 1'000'000'007ULL;
+    assert(
+        math::mul_mod_u64(a, b, modulus) ==
+        static_cast<u64>(static_cast<math::u128>(a) * b % modulus)
+    );
+    assert(math::pow_mod_u64(2, 10, 1000) == 24);
+    assert(math::miller_rabin_test(17, 3, 1, 4));
+    assert(!math::miller_rabin_test(21, 2, 5, 2));
+
+    std::vector<u64> recursive_factors;
+    math::factorize_pollard_rho_rec(60, recursive_factors);
+    std::sort(recursive_factors.begin(), recursive_factors.end());
+    assert((recursive_factors == std::vector<u64>{2, 2, 3, 5}));
+    recursive_factors.clear();
+    math::factorize_pollard_rho_rec(1, recursive_factors);
+    assert(recursive_factors.empty());
+
     assert(!math::is_prime_miller_rabin(0));
     assert(!math::is_prime_miller_rabin(1));
     assert(math::is_prime_miller_rabin(2));

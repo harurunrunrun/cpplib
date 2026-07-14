@@ -144,10 +144,13 @@ bool close_value(long double left, long double right){
 void self_test(){
     {
         LinearProgramming<8, 2> problem(2);
+        assert(problem.variable_count() == 2);
+        assert(problem.constraint_count() == 0);
         problem.set_objective({3, 2});
         problem.add_less_equal({1, 1}, 4);
         problem.add_less_equal({1, 0}, 2);
         problem.add_less_equal({0, 1}, 3);
+        assert(problem.constraint_count() == 3);
         const auto result = problem.maximize();
         assert(result.status == LINEAR_PROGRAMMING_OPTIMAL);
         assert(close_value(result.value, 10));
@@ -190,8 +193,11 @@ void self_test(){
     }
     {
         LinearProgramming<2, 0> feasible(0);
+        assert(feasible.variable_count() == 0);
+        assert(feasible.constraint_count() == 0);
         feasible.add_less_equal({}, 0);
         assert(feasible.maximize().status == LINEAR_PROGRAMMING_OPTIMAL);
+        assert(feasible.constraint_count() == 1);
         LinearProgramming<2, 0> infeasible(0);
         infeasible.add_less_equal({}, -1);
         assert(infeasible.maximize().status == LINEAR_PROGRAMMING_INFEASIBLE);

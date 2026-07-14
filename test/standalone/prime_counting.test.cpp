@@ -29,6 +29,7 @@ int main(){
     }
 
     math::PrimeCounting<1000> pc(1000);
+    assert(pc.size() == 1000);
     int count = 0;
     for(int n = 0; n <= 1000; n++){
         if(is_prime_naive(n)) count++;
@@ -40,4 +41,17 @@ int main(){
     assert(pc.count_primes_less(10) == 4);
     assert(pc.count_primes_less(11) == 4);
     assert(pc.count_primes(11) == 5);
+
+    pc.build(20);
+    assert(pc.size() == 20);
+    assert(pc.count_primes(20) == 8);
+    assert(pc.count_primes_less(20) == 8);
+
+    bool thrown = false;
+    try{
+        pc.build(1001);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }

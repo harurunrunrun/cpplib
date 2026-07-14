@@ -22,7 +22,48 @@ int lcp_naive(const std::string& a, const std::string& b, int i, int j){
     return result;
 }
 
+void test_public_api(){
+    RollingHash hash;
+    assert(hash.size() == 0);
+    assert(hash.base_value() == RollingHash::default_base);
+    assert(hash.all() == 0);
+
+    constexpr RollingHash::u64 custom_base = 911382323;
+    hash.build("banana", custom_base);
+    assert(hash.size() == 6);
+    assert(hash.base_value() == custom_base);
+    const RollingHash same("banana", custom_base);
+    assert(hash.all() == same.all());
+    assert(hash.get(1, 4) == same.get(1, 4));
+    assert(hash.lcp(same, 0, 0) == 6);
+
+    bool thrown = false;
+    try{
+        hash.build("x", 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)hash.get(-1, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)hash.lcp(RollingHash("banana"), 0, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+}
+
 int main(){
+    test_public_api();
     int case_count;
     if(std::cin >> case_count){
         while(case_count--){

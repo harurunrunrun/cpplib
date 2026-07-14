@@ -2,19 +2,29 @@
 
 #include <cassert>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 #include "../../src/algorithm/tree/auxiliary_tree.hpp"
 
 void self_test(){
     AuxiliaryTree<8> tree(7);
+    assert(tree.size() == 7);
+    assert(tree.edge_count() == 0);
     tree.add_edge(0, 1);
     tree.add_edge(0, 2);
     tree.add_edge(1, 3);
     tree.add_edge(1, 4);
     tree.add_edge(2, 5);
     tree.add_edge(2, 6);
+    assert(tree.edge_count() == 6);
     tree.build();
+    assert(tree.depth(0) == 0);
+    assert(tree.depth(3) == 2);
+    assert(tree.tin(0) == 0);
+    assert(tree.is_ancestor(0, 6));
+    assert(tree.is_ancestor(1, 4));
+    assert(!tree.is_ancestor(1, 6));
     const std::vector<int> vertices = {3, 4, 6, 3};
     assert(tree.compress(vertices) == 6);
     assert(tree.compressed_size() == 6);
@@ -26,6 +36,23 @@ void self_test(){
     assert(tree.dist(3, 6) == 4);
     assert(tree.compress(std::span<const int>()) == 0);
     assert(tree.compressed_size() == 0);
+
+    bool thrown = false;
+    try{
+        (void)tree.is_ancestor(-1, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    AuxiliaryTree<2> not_built(2);
+    thrown = false;
+    try{
+        (void)not_built.depth(0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }
 
 int main(){

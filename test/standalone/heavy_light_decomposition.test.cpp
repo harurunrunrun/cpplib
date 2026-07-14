@@ -47,6 +47,13 @@ void test_fixed_tree(){
     assert(hld.parent(8) == 7);
     assert(hld.depth(8) == 4);
     assert(hld.subtree(5) == 4);
+    for(int vertex = 0; vertex < hld.size(); ++vertex){
+        assert(hld[hld.in(vertex)] == vertex);
+        assert(hld.out(vertex) - hld.in(vertex) == hld.subtree(vertex));
+        const int chain_head = hld.head(vertex);
+        assert(hld.is_ancestor(chain_head, vertex));
+        assert(hld.in(chain_head) <= hld.in(vertex));
+    }
 
     assert(hld.lca(3, 4) == 1);
     assert(hld.lca(3, 8) == 0);
@@ -121,6 +128,16 @@ void test_exceptions(){
     try{
         HeavyLightDecomposition hld(1);
         hld.add_edge(0, 1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    HeavyLightDecomposition hld(1);
+    hld.build();
+    thrown = false;
+    try{
+        (void)hld.out(1);
     }catch(const std::runtime_error&){
         thrown = true;
     }

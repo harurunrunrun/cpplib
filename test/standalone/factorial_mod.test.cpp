@@ -8,6 +8,7 @@
 
 void test_small(){
     math::FactorialModPrime fac3(3);
+    assert(fac3.mod() == 3);
     {
         auto res = fac3.factorial(10);
         assert(res.value == 1);
@@ -20,6 +21,7 @@ void test_small(){
     }
 
     math::FactorialModPrime fac5(5);
+    assert(fac5.mod() == 5);
     {
         auto res = fac5.factorial(10);
         assert(res.value == 2);
@@ -35,6 +37,7 @@ void test_small(){
 void test_naive(){
     for(int p: {2, 3, 5, 7, 11}){
         math::FactorialModPrime fac(p);
+        assert(fac.mod() == p);
         for(int n = 0; n <= 80; n++){
             long long value = 1;
             long long exponent = 0;

@@ -31,6 +31,11 @@ void test_path(){
     assert(cd.parent(4) == 5);
     assert(cd.parent(6) == 5);
 
+    cd.build();
+    assert(cd.root() == 3);
+    assert(cd.parent(1) == 3);
+    assert(cd.depth(6) == 2);
+
     const auto& tree = cd.tree();
     int edges = 0;
     for(const auto& adjacency: tree){
@@ -56,6 +61,8 @@ void test_star(){
 void test_empty_and_single(){
     CentroidDecomposition empty;
     assert(empty.size() == 0);
+    assert(empty.root() == -1);
+    empty.build();
     assert(empty.root() == -1);
 
     std::vector<std::vector<int>> graph(1);

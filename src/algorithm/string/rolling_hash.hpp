@@ -16,8 +16,8 @@ struct RollingHash{
 private:
     int n = 0;
     u64 base = default_base;
-    std::vector<u64> power;
-    std::vector<u64> prefix;
+    std::vector<u64> power{1};
+    std::vector<u64> prefix{0};
 
     static u64 add_mod(u64 a, u64 b){
         a += b;

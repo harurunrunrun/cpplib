@@ -30,6 +30,10 @@ void test_divisors_and_quotients(){
 }
 
 void test_gcd_lcm_extgcd(){
+    static_assert(math::abs_ll(0) == 0);
+    static_assert(math::abs_ll(42) == 42);
+    static_assert(math::abs_ll(-42) == 42);
+
     static_assert(math::gcd(18, 24) == 6);
     static_assert(math::gcd(-18, 24) == 6);
     static_assert(math::lcm(6, 10) == 30);

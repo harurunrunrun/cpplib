@@ -138,6 +138,13 @@ void test_search(){
 }
 
 void test_boundaries_and_exceptions(){
+    SBT::Path empty_path;
+    assert(empty_path.capacity() > 0);
+    assert(SBT::is_node(Fraction{1, 1}));
+    assert(SBT::is_node(Fraction{2, 3}));
+    assert(!SBT::is_node(Fraction{2, 2}));
+    assert(!SBT::is_node(Fraction{-1, 2}));
+
     constexpr long long maximum = std::numeric_limits<long long>::max();
     const Fraction large{maximum, 1};
     const auto large_path = SBT::encode_path(large);

@@ -26,6 +26,12 @@ void test_basic(){
 }
 
 void test_ranges(){
+    assert(math::segmented_sieve_isqrt(0) == 0);
+    assert(math::segmented_sieve_isqrt(1) == 1);
+    assert(math::segmented_sieve_isqrt(15) == 3);
+    assert(math::segmented_sieve_isqrt(16) == 4);
+    assert(math::segmented_sieve_isqrt(17) == 4);
+    assert(math::segmented_sieve_isqrt(999999999999999999LL) == 999999999);
     assert((math::primes_in_range(1, 2) == std::vector<long long>{}));
     assert((math::primes_in_range(2, 3) == std::vector<long long>{2}));
     assert((math::primes_in_range(100, 130) == std::vector<long long>{101, 103, 107, 109, 113, 127}));
