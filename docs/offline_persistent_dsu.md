@@ -1,5 +1,5 @@
 ---
-title: Offline Persistent Disjoint Set Union (オフライン完全永続素集合データ構造) [persistent_unionfind]
+title: Offline Persistent Disjoint Set Union (オフライン完全永続素集合データ構造)
 documentation_of: ../src/structure/dsu/offline_persistent_dsu.hpp
 ---
 
