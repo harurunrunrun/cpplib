@@ -2,7 +2,9 @@
 
 #include <vector>
 
-#include "../geometry.hpp"
+#include "../constants.hpp"
+#include "../cross.hpp"
+#include "../dot.hpp"
 
 enum HalfPlaneIntersectionKind{
     HALF_PLANE_EMPTY,
