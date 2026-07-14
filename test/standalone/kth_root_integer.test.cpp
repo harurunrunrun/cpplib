@@ -6,8 +6,6 @@
 #include <limits>
 #include <stdexcept>
 
-#include <boost/multiprecision/cpp_int.hpp>
-
 #include "../../src/algorithm/math/kth_root_integer.hpp"
 
 namespace{
@@ -17,9 +15,12 @@ bool oracle_power_less_equal(
     unsigned int exponent,
     std::uint64_t value
 ){
-    boost::multiprecision::cpp_int power = 1;
-    for(unsigned int index = 0; index < exponent; ++index) power *= base;
-    return power <= value;
+    std::uint64_t power = 1;
+    for(unsigned int index = 0; index < exponent; ++index){
+        if(base != 0 && power > value / base) return false;
+        power *= base;
+    }
+    return true;
 }
 
 std::uint64_t oracle(std::uint64_t value, unsigned int exponent){
