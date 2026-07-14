@@ -42,7 +42,7 @@ inline bool point_equal(const Point& first, const Point& second){
         && geometry_sign(first.y - second.y) == 0;
 }
 
-inline bool in_circumcircle(
+inline int circumcircle_sign(
     Point first,
     Point second,
     Point third,
@@ -63,7 +63,16 @@ inline bool in_circumcircle(
     const long double value = first_term + second_term + third_term;
     const long double magnitude = std::abs(first_term)
         + std::abs(second_term) + std::abs(third_term);
-    return robust_sign(value, magnitude) > 0;
+    return robust_sign(value, magnitude);
+}
+
+inline bool in_circumcircle(
+    Point first,
+    Point second,
+    Point third,
+    const Point& query
+){
+    return circumcircle_sign(first, second, third, query) > 0;
 }
 
 class Builder{

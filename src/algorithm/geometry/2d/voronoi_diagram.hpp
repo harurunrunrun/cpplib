@@ -10,7 +10,6 @@
 #include <utility>
 #include <vector>
 
-#include "circumcenter.hpp"
 #include "delaunay_triangulation.hpp"
 #include "dot.hpp"
 #include "rotate90.hpp"
@@ -45,19 +44,43 @@ struct VoronoiDiagramResult{
 
 namespace voronoi_diagram_detail{
 
-inline bool point_equal(const Point& first, const Point& second){
-    const long double scale = std::max({
-        1.0L,
-        std::abs(first.x),
-        std::abs(first.y),
-        std::abs(second.x),
-        std::abs(second.y),
-    });
-    const long double tolerance = GEOMETRY_EPS
-        + 64.0L * std::numeric_limits<long double>::epsilon() * scale;
-    return std::abs(first.x - second.x) <= tolerance
-        && std::abs(first.y - second.y) <= tolerance;
-}
+class DisjointSet{
+public:
+    explicit DisjointSet(std::size_t size)
+        : parent_(size), size_(size, 1){
+
+        for(std::size_t index = 0; index < size; ++index){
+            parent_[index] = index;
+        }
+    }
+
+    std::size_t find(std::size_t vertex){
+        std::size_t root = vertex;
+        while(parent_[root] != root) root = parent_[root];
+        while(parent_[vertex] != vertex){
+            const std::size_t next = parent_[vertex];
+            parent_[vertex] = root;
+            vertex = next;
+        }
+        return root;
+    }
+
+    void unite(std::size_t first, std::size_t second){
+        first = find(first);
+        second = find(second);
+        if(first == second) return;
+        if(size_[first] < size_[second]
+            || (size_[first] == size_[second] && first > second)){
+            std::swap(first, second);
+        }
+        parent_[second] = first;
+        size_[first] += size_[second];
+    }
+
+private:
+    std::vector<std::size_t> parent_;
+    std::vector<std::size_t> size_;
+};
 
 inline Point canonical_direction(Point direction){
     direction = unit(direction);
@@ -87,6 +110,42 @@ inline std::size_t third_vertex(
     return VORONOI_NO_VERTEX;
 }
 
+inline Point delaunay_triangle_circumcenter(
+    const Point& first,
+    const Point& second,
+    const Point& third
+){
+    if(delaunay_triangulation_detail::orientation(first, second, third) == 0){
+        throw std::logic_error("Delaunay triangle is collinear");
+    }
+
+    const Point first_direction = second - first;
+    const Point second_direction = third - first;
+    const long double scale = std::max({
+        std::abs(first_direction.x),
+        std::abs(first_direction.y),
+        std::abs(second_direction.x),
+        std::abs(second_direction.y),
+    });
+    const Point normalized_first = first_direction / scale;
+    const Point normalized_second = second_direction / scale;
+    const long double denominator = 2.0L * cross(
+        normalized_first, normalized_second
+    );
+    if(denominator == 0.0L){
+        throw std::overflow_error("Voronoi circumcenter is not representable");
+    }
+    const long double first_norm = dot(normalized_first, normalized_first);
+    const long double second_norm = dot(normalized_second, normalized_second);
+    const Point normalized_offset{
+        std::fma(first_norm, normalized_second.y,
+                 -second_norm * normalized_first.y) / denominator,
+        std::fma(second_norm, normalized_first.x,
+                 -first_norm * normalized_second.x) / denominator,
+    };
+    return first + normalized_offset * scale;
+}
+
 }  // namespace voronoi_diagram_detail
 
 inline VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points){
@@ -100,37 +159,13 @@ inline VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points){
     std::vector<Point> triangle_centers;
     triangle_centers.reserve(triangulation.triangles.size());
     for(const auto& triangle: triangulation.triangles){
-        const Point center = circumcenter(
+        const Point center = voronoi_diagram_detail::delaunay_triangle_circumcenter(
             points[triangle[0]], points[triangle[1]], points[triangle[2]]
         );
         if(!std::isfinite(center.x) || !std::isfinite(center.y)){
             throw std::overflow_error("Voronoi vertex is not finite");
         }
         triangle_centers.push_back(center);
-    }
-
-    std::vector<std::size_t> center_order(triangle_centers.size());
-    for(std::size_t index = 0; index < center_order.size(); ++index){
-        center_order[index] = index;
-    }
-    std::sort(center_order.begin(), center_order.end(), [&](std::size_t first, std::size_t second){
-        if(triangle_centers[first].x != triangle_centers[second].x){
-            return triangle_centers[first].x < triangle_centers[second].x;
-        }
-        if(triangle_centers[first].y != triangle_centers[second].y){
-            return triangle_centers[first].y < triangle_centers[second].y;
-        }
-        return first < second;
-    });
-    std::vector<std::size_t> triangle_vertex(triangle_centers.size());
-    for(std::size_t triangle_index: center_order){
-        if(result.vertices.empty()
-            || !voronoi_diagram_detail::point_equal(
-                result.vertices.back(), triangle_centers[triangle_index]
-            )){
-            result.vertices.push_back(triangle_centers[triangle_index]);
-        }
-        triangle_vertex[triangle_index] = result.vertices.size() - 1;
     }
 
     std::map<
@@ -147,6 +182,73 @@ inline VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points){
                 triangle[static_cast<std::size_t>((edge + 1) % 3)]
             )].push_back(triangle_index);
         }
+    }
+
+    voronoi_diagram_detail::DisjointSet components(triangle_centers.size());
+    for(const auto& [site_edge, adjacent]: adjacent_triangles){
+        if(adjacent.size() < 2) continue;
+        const std::size_t first_opposite = voronoi_diagram_detail::third_vertex(
+            triangulation.triangles[adjacent[0]],
+            site_edge.first,
+            site_edge.second
+        );
+        for(std::size_t index = 1; index < adjacent.size(); ++index){
+            const std::size_t second_opposite =
+                voronoi_diagram_detail::third_vertex(
+                    triangulation.triangles[adjacent[index]],
+                    site_edge.first,
+                    site_edge.second
+                );
+            if(delaunay_triangulation_detail::circumcircle_sign(
+                points[site_edge.first],
+                points[site_edge.second],
+                points[first_opposite],
+                points[second_opposite]
+            ) == 0){
+                components.unite(adjacent[0], adjacent[index]);
+            }
+        }
+    }
+
+    std::vector<std::size_t> component_center(
+        triangle_centers.size(), VORONOI_NO_VERTEX
+    );
+    for(std::size_t index = 0; index < triangle_centers.size(); ++index){
+        const std::size_t component = components.find(index);
+        const std::size_t current = component_center[component];
+        if(current == VORONOI_NO_VERTEX
+            || triangle_centers[index] < triangle_centers[current]){
+            component_center[component] = index;
+        }
+    }
+    std::vector<std::size_t> component_order;
+    for(std::size_t component = 0;
+        component < component_center.size();
+        ++component){
+        if(component_center[component] != VORONOI_NO_VERTEX){
+            component_order.push_back(component);
+        }
+    }
+    std::sort(component_order.begin(), component_order.end(), [&](
+        std::size_t first,
+        std::size_t second
+    ){
+        const Point& first_center = triangle_centers[component_center[first]];
+        const Point& second_center = triangle_centers[component_center[second]];
+        if(first_center < second_center) return true;
+        if(second_center < first_center) return false;
+        return first < second;
+    });
+    std::vector<std::size_t> component_vertex(
+        triangle_centers.size(), VORONOI_NO_VERTEX
+    );
+    for(std::size_t component: component_order){
+        component_vertex[component] = result.vertices.size();
+        result.vertices.push_back(triangle_centers[component_center[component]]);
+    }
+    std::vector<std::size_t> triangle_vertex(triangle_centers.size());
+    for(std::size_t index = 0; index < triangle_centers.size(); ++index){
+        triangle_vertex[index] = component_vertex[components.find(index)];
     }
 
     for(const auto& site_edge: triangulation.edges){

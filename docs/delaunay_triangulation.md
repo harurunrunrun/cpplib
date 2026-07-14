@@ -36,7 +36,7 @@ DelaunayTriangulationResult delaunay_triangulation(
 
 - NaNまたは無限大の座標には `std::invalid_argument` を送出する。
 - 外接円判定の4次式を `long double` で有限に計算できない大きさの座標には `std::overflow_error` を送出する。
-- 点の同一性と幾何述語は `GEOMETRY_EPS` と丸め誤差を考慮して判定する。
+- 点の同一性は `GEOMETRY_EPS`、向きと外接円の符号は各式の項の大きさに対する `long double` の丸め誤差を考慮して判定する。
 - 0点または1種類の点では辺と三角形を返さない。
 - 全点が同一直線上なら、座標順で隣接する点の辺だけを返し、三角形は空である。
 - 4点以上が同一円周上にある場合、Delaunay三角形分割は一意でない。このAPIはそのうち決定的に選んだ1つを返す。

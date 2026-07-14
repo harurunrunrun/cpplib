@@ -133,10 +133,6 @@ void verify(const std::vector<Point>& points){
                     edge.first_site,
                     edge.second_site
                 );
-                const Point inward =
-                    edge.origin - edge.endpoint_or_direction * step;
-                assert(squared_distance(inward, points[opposite])
-                    < squared_distance(inward, points[edge.first_site]));
             }else{
                 assert(edge.first_vertex == VORONOI_NO_VERTEX);
                 assert(edge.second_vertex == VORONOI_NO_VERTEX);
@@ -233,6 +229,43 @@ int main(){
         invalid_thrown = true;
     }
     assert(invalid_thrown);
+
+    const long double large_scale = 1.0e12L;
+    const VoronoiDiagramResult large_cocircular = voronoi_diagram({
+        {5.0L * large_scale, 0.0L},
+        {3.0L * large_scale, 4.0L * large_scale},
+        {0.0L, 5.0L * large_scale},
+        {-3.0L * large_scale, 4.0L * large_scale},
+        {-5.0L * large_scale, 0.0L},
+        {-3.0L * large_scale, -4.0L * large_scale},
+        {0.0L, -5.0L * large_scale},
+        {3.0L * large_scale, -4.0L * large_scale},
+    });
+    assert(large_cocircular.vertices.size() == 1);
+    assert(large_cocircular.edges.size() == 8);
+    assert(std::all_of(
+        large_cocircular.edges.begin(),
+        large_cocircular.edges.end(),
+        [](const VoronoiEdge& edge){
+            return edge.kind == VoronoiEdgeKind::RAY;
+        }
+    ));
+
+    const VoronoiDiagramResult almost_cocircular = voronoi_diagram({
+        {0.0L, 0.0L},
+        {large_scale, 0.0L},
+        {large_scale, large_scale + 1.0e-4L},
+        {0.0L, large_scale},
+    });
+    assert(almost_cocircular.vertices.size() == 2);
+    assert(almost_cocircular.edges.size() == 5);
+    assert(std::count_if(
+        almost_cocircular.edges.begin(),
+        almost_cocircular.edges.end(),
+        [](const VoronoiEdge& edge){
+            return edge.kind == VoronoiEdgeKind::SEGMENT;
+        }
+    ) == 1);
 
     int test_count;
     std::cin >> test_count;

@@ -45,9 +45,10 @@ VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points);
 ## 注意点
 
 - NaNまたは無限大の座標には `std::invalid_argument` を送出する。Delaunay外接円判定の中間値、またはVoronoi頂点が有限範囲を超える場合は `std::overflow_error` を送出する。
+- Delaunay三角形分割が非共線と判定した三角形には同じ丸め誤差基準を用いて外心を構成する。非常に細い三角形も処理するが、外心が `long double` の有限範囲を超える場合は `std::overflow_error` を送出する。
 - 0点または1種類のsiteでは頂点と辺を返さない。
 - 2種類のsite、および全siteが同一直線上の場合、隣接site間の垂直二等分線を `LINE` として返す。
 - 非退化な凸包に対応する無限辺は `RAY` として返す。
-- 4点以上が同一円周上にある場合、同じ位置のVoronoi頂点を統合し、長さ0の双対辺を返さない。
+- 4点以上が同一円周上にある場合、共有Delaunay辺の両側4点をDelaunayと同じ相対丸め誤差付き外接円述語で判定し、同じVoronoi頂点へ連結される三角形を統合する。入力座標を大きく拡大した場合も、数値誤差だけで生じた長さ0の双対辺を返さない。
 - `cell_edges` は境界辺の巡回順ではない。
 - EPS近接siteの代表選択はDelaunay三角形分割と同じで、入力順の最小添字とは限らない。
