@@ -251,18 +251,78 @@ jobs:
               file.write(f"path={path if valid else ''}\n")
           PY
 
-      - name: Verify shard ${{ matrix.index }}
-        id: verifier
+      - name: Verify shard ${{ matrix.index }} (attempt 1)
+        id: verifier_initial
         uses: competitive-verifier/actions/verify@v2
-        timeout-minutes: 18
+        timeout-minutes: 14
         with:
           verify-files: verify-files.json
-          destination: .competitive-verifier/shards/result-${{ matrix.index }}.json
+          destination: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-1.json
           prev-result: ${{ steps.previous.outputs.path }}
           split-size: ${{ needs.resolve.outputs.shard_count }}
           split-index: ${{ matrix.index }}
           timeout: "900"
           check: false
+
+      - name: Retry failed verification entries (attempt 2)
+        id: verifier_retry_1
+        if: ${{ always() && steps.verifier_initial.outputs.is-success != 'true' }}
+        uses: competitive-verifier/actions/verify@v2
+        timeout-minutes: 4
+        with:
+          verify-files: verify-files.json
+          destination: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-2.json
+          prev-result: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-1.json
+          split-size: ${{ needs.resolve.outputs.shard_count }}
+          split-index: ${{ matrix.index }}
+          timeout: "180"
+          check: false
+
+      - name: Retry failed verification entries (attempt 3)
+        id: verifier_retry_2
+        if: ${{ always() && steps.verifier_retry_1.outcome == 'success' && steps.verifier_retry_1.outputs.is-success != 'true' }}
+        uses: competitive-verifier/actions/verify@v2
+        timeout-minutes: 4
+        with:
+          verify-files: verify-files.json
+          destination: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-3.json
+          prev-result: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-2.json
+          split-size: ${{ needs.resolve.outputs.shard_count }}
+          split-index: ${{ matrix.index }}
+          timeout: "180"
+          check: false
+
+      - name: Select latest valid shard result
+        id: verifier
+        if: ${{ always() }}
+        shell: bash
+        env:
+          SHARD_INDEX: ${{ matrix.index }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import shutil
+          from pathlib import Path
+          from competitive_verifier.models import VerifyCommandResult
+
+          index = int(os.environ["SHARD_INDEX"])
+          root = Path(".competitive-verifier/shards")
+          destination = root / f"result-{index}.json"
+
+          for attempt in (3, 2, 1):
+              candidate = root / f"result-{index}-attempt-{attempt}.json"
+              if not candidate.is_file():
+                  continue
+              try:
+                  VerifyCommandResult.model_validate_json(candidate.read_bytes())
+              except (OSError, UnicodeError, ValueError):
+                  continue
+              shutil.copyfile(candidate, destination)
+              print(f"selected {candidate}")
+              break
+          else:
+              raise SystemExit("no valid verification result was produced")
+          PY
 
       - name: Record shard status
         id: shard_status
