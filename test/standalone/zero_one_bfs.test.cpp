@@ -96,12 +96,57 @@ void self_test(){
             auto result = zero_one_bfs(graph, sources);
             assert(result.dist == dijkstra_brute(graph, sources));
             validate_paths(graph, result);
+
+            auto implicit_result = zero_one_bfs_implicit(
+                n,
+                sources,
+                [&](int vertex, const auto& relax){
+                    for(const auto& edge: graph[static_cast<std::size_t>(vertex)]){
+                        relax(edge.to, edge.cost);
+                    }
+                }
+            );
+            assert(implicit_result.dist == result.dist);
+            assert(implicit_result.source == result.source);
+            validate_paths(graph, implicit_result);
         }
     }
 
     bool thrown = false;
     try{
         (void)zero_one_bfs(std::vector<std::vector<ZeroOneBFSEdge>>{{{0, 2}}}, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)zero_one_bfs_implicit(
+            1,
+            0,
+            [](int, const auto& relax){ relax(0, 2); }
+        );
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)zero_one_bfs_implicit(1, -1, [](int, const auto&){});
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        (void)zero_one_bfs_implicit(
+            -1,
+            std::vector<int>{},
+            [](int, const auto&){}
+        );
     }catch(const std::runtime_error&){
         thrown = true;
     }
