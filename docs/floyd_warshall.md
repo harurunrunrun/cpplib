@@ -1,5 +1,5 @@
 ---
-title: Floyd Warshall (ワーシャル・フロイド法) [GRL_1_C]
+title: Floyd Warshall (ワーシャル・フロイド法) [GRL_1_C] [ROHAAN]
 documentation_of: ../src/algorithm/graph/floyd_warshall.hpp
 ---
 
@@ -50,3 +50,6 @@ $N$ を頂点数、$L$ を復元して返すpath長とする。
 入力は正方行列とする。`path(from,to)` は両端を含み、到達不能または負閉路の影響下なら空列、端点範囲外なら `runtime_error`。
 
 頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+
+ROHAAN adapterでは、非対称な完全距離行列を入力し、全点対最短距離を求めた後に
+各移動命令の最短距離を合計する。
