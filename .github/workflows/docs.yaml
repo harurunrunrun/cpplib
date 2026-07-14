@@ -57,6 +57,7 @@ jobs:
           include: |
             src
             test/onlinejudge
+            test/standalone
 
       - name: Normalize verification plan
         run: |
@@ -101,8 +102,11 @@ jobs:
 
       - name: Normalize documentation index
         run: |
+          python3 scripts/test_docs_standalone_index.py
+          python3 scripts/test_check_generated_docs_index.py
           python3 scripts/test_reorder_competitive_verifier_index.py
           python3 scripts/reorder_competitive_verifier_index.py _jekyll/index.md
+          python3 scripts/check_generated_docs_index.py _jekyll/index.md verify-files.json
 
       - name: Setup Pages
         if: ${{ github.ref == 'refs/heads/main' }}

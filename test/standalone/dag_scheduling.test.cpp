@@ -1,3 +1,5 @@
+// competitive-verifier: STANDALONE
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>

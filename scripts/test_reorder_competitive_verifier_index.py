@@ -66,6 +66,43 @@ class NormalizeIndexTest(unittest.TestCase):
         self.assertFalse(index_order.normalize_index(front_matter))
         index_order.validate_index(front_matter)
 
+    def test_moves_standalone_pages_and_orders_verification_categories(self) -> None:
+        standalone = page("test/standalone/example.test.cpp", "warning")
+        onlinejudge = page("test/onlinejudge/example.test.cpp", "heavy_check_mark")
+        front_matter = {
+            "data": {
+                "top": [
+                    {
+                        "type": "Library Files",
+                        "categories": [
+                            {"name": "test/standalone/", "pages": [standalone]}
+                        ],
+                    },
+                    {
+                        "type": "Verification Files",
+                        "categories": [
+                            {"name": "test/standalone/", "pages": []},
+                            {"name": "test/onlinejudge/", "pages": [onlinejudge]},
+                        ],
+                    },
+                ]
+            }
+        }
+
+        self.assertTrue(index_order.normalize_index(front_matter))
+        index_order.validate_index(front_matter)
+
+        top = front_matter["data"]["top"]
+        self.assertEqual(top[0]["categories"], [])
+        self.assertEqual(
+            [category["name"] for category in top[1]["categories"]],
+            ["test/onlinejudge/", "test/standalone/"],
+        )
+        self.assertEqual(top[1]["categories"][1]["pages"], [standalone])
+
+        self.assertFalse(index_order.normalize_index(front_matter))
+        index_order.validate_index(front_matter)
+
     def test_creates_destination_category_and_sorts_pages(self) -> None:
         z_page = page("test/onlinejudge/z.test.cpp", "warning")
         a_page = page("test/onlinejudge/a.test.cpp", "warning")

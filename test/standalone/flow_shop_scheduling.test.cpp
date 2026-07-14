@@ -1,3 +1,5 @@
+// competitive-verifier: STANDALONE
+
 #include <cstddef>
 #include <iostream>
 #include <numeric>

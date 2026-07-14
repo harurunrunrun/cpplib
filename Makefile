@@ -8,6 +8,7 @@ VERIFIER_VENV := $(VERIFIER_ROOT)/venv
 VERIFIER := $(VERIFIER_VENV)/bin/competitive-verifier
 VERIFIER_CACHE := $(VERIFIER_ROOT)/cache
 VERIFY_FILES := $(VERIFIER_CACHE)/verify-files.json
+DOCS_VERIFY_FILES := $(VERIFIER_CACHE)/docs-verify-files.json
 VERIFY_RESULT := $(VERIFIER_CACHE)/result.json
 DOCS_RESULT := $(VERIFIER_CACHE)/docs-result.json
 DOCS_SOURCE := $(VERIFIER_ROOT)/_jekyll
@@ -31,7 +32,7 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-wrapper-test verifier-resolve test-coverage-check standalone-assets-test standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-wrapper-test verifier-resolve docs-verifier-resolve test-coverage-check standalone-assets-test standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
@@ -60,6 +61,13 @@ verifier-resolve: verifier-setup verifier-wrapper-test
 	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
+
+docs-verifier-resolve: verifier-setup verifier-wrapper-test
+	@mkdir -p $(VERIFIER_CACHE)
+	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge test/standalone --config config.toml > $(DOCS_VERIFY_FILES).tmp
+	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
+	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(DOCS_VERIFY_FILES).tmp
+	mv $(DOCS_VERIFY_FILES).tmp $(DOCS_VERIFY_FILES)
 
 test-coverage-check:
 	$(PYTHON) scripts/test_list_untested_headers.py
@@ -140,16 +148,20 @@ docs-title-check:
 docs-coverage-check:
 	$(PYTHON) scripts/check_docs_coverage.py src docs
 
-docs-source: docs-title-check docs-coverage-check verifier-resolve
+docs-source: docs-title-check docs-coverage-check docs-verifier-resolve
 	$(PYTHON) scripts/competitive_verifier_docs_result.py \
-		$(VERIFY_FILES) $(VERIFY_RESULT) > $(DOCS_RESULT)
+		$(DOCS_VERIFY_FILES) $(VERIFY_RESULT) > $(DOCS_RESULT)
 	$(VERIFIER) docs \
-		--verify-json $(VERIFY_FILES) \
+		--verify-json $(DOCS_VERIFY_FILES) \
 		--destination $(DOCS_SOURCE) \
 		$(DOCS_RESULT)
+	$(PYTHON) scripts/test_docs_standalone_index.py
+	$(PYTHON) scripts/test_check_generated_docs_index.py
 	$(PYTHON) scripts/test_reorder_competitive_verifier_index.py
 	$(VERIFIER_VENV)/bin/python scripts/reorder_competitive_verifier_index.py \
 		$(DOCS_SOURCE)/index.md
+	$(VERIFIER_VENV)/bin/python scripts/check_generated_docs_index.py \
+		$(DOCS_SOURCE)/index.md $(DOCS_VERIFY_FILES)
 
 
 docs-prerequisites:

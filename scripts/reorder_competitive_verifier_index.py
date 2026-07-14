@@ -10,7 +10,8 @@ import yaml
 
 
 SECTION_ORDER = ("algorithm", "structure", "approximate")
-VERIFICATION_PATH_PREFIX = "test/onlinejudge/"
+VERIFICATION_PATH_PREFIXES = ("test/onlinejudge/", "test/standalone/")
+VERIFICATION_CATEGORY_ORDER = VERIFICATION_PATH_PREFIXES
 
 
 def split_front_matter(text: str) -> tuple[dict[str, Any], str]:
@@ -106,7 +107,7 @@ def move_verification_pages(
         moved_pages: list[Any] = []
         for page in category_pages(category):
             path = page_path(page)
-            if path is not None and path.startswith(VERIFICATION_PATH_PREFIX):
+            if path is not None and path.startswith(VERIFICATION_PATH_PREFIXES):
                 moved_pages.append(page)
             else:
                 kept_pages.append(page)
@@ -149,6 +150,27 @@ def normalize_index(front_matter: dict[str, Any]) -> bool:
     library_entry = find_entry(top, "Library Files")
     verification_entry = find_entry(top, "Verification Files")
     changed = move_verification_pages(library_entry, verification_entry)
+
+    verification_categories = entry_categories(verification_entry)
+    verification_rank = {
+        name: index for index, name in enumerate(VERIFICATION_CATEGORY_ORDER)
+    }
+    verification_positions = {
+        id(category): index for index, category in enumerate(verification_categories)
+    }
+    reordered_verification = sorted(
+        verification_categories,
+        key=lambda category: (
+            verification_rank.get(
+                category.get("name") if isinstance(category, dict) else None,
+                len(verification_rank),
+            ),
+            verification_positions[id(category)],
+        ),
+    )
+    if reordered_verification != verification_categories:
+        verification_entry["categories"] = reordered_verification
+        changed = True
 
     categories = entry_categories(library_entry)
     rank = {name: index for index, name in enumerate(SECTION_ORDER)}
@@ -208,10 +230,21 @@ def validate_index(front_matter: dict[str, Any]) -> None:
                 continue
             for page in category_pages(category):
                 path = page_path(page)
-                if path is not None and path.startswith(VERIFICATION_PATH_PREFIX):
+                if path is not None and path.startswith(VERIFICATION_PATH_PREFIXES):
                     raise ValueError(
                         f"verification file is outside Verification Files: {path}"
                     )
+
+    verification_rank = {
+        name: index for index, name in enumerate(VERIFICATION_CATEGORY_ORDER)
+    }
+    previous_verification_rank = -1
+    for category in entry_categories(verification_entry):
+        name = category.get("name") if isinstance(category, dict) else None
+        current_rank = verification_rank.get(name, len(verification_rank))
+        if current_rank < previous_verification_rank:
+            raise ValueError("Verification Files categories are out of order")
+        previous_verification_rank = current_rank
 
 
 def dump_front_matter(front_matter: dict[str, Any], content: str) -> str:
@@ -228,7 +261,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Order competitive-verifier library categories and keep online-judge "
-            "tests under Verification Files."
+            "and standalone tests under Verification Files."
         )
     )
     parser.add_argument("index", type=Path)
