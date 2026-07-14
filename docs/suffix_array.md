@@ -1,5 +1,5 @@
 ---
-title: Suffix Array (接尾辞配列) [DISUBSTR] [number_of_substrings] [SARRAY] [SUBLEX] [suffixarray]
+title: Suffix Array (接尾辞配列) [ADASTRNG] [DISUBSTR] [number_of_substrings] [SARRAY] [SUBLEX] [suffixarray]
 documentation_of: ../src/algorithm/string/suffix_array.hpp
 ---
 
@@ -12,6 +12,7 @@ Suffix Array と LCP Array。
 - `lcp_array(s, sa)`
 - `lcp_array(s)`
 - `number_of_distinct_substrings(s)`
+- `number_of_distinct_substrings_by_first_byte(s)`
 
 ## 計算量の概要
 
@@ -19,6 +20,7 @@ Suffix Array と LCP Array。
 - `lcp_array(s, sa)`: $O(n)$
 - `lcp_array(s)`: $O(n\log n)$（suffix array構築を含む）
 - `number_of_distinct_substrings(s)`: $O(n\log n)$
+- `number_of_distinct_substrings_by_first_byte(s)`: $O(n\log n)$
 
 ## API別の時間計算量・空間計算量
 
@@ -31,6 +33,7 @@ $N=|s|$ とする。
 | `lcp_array(s,sa)` | $O(N)$ | $O(N)$ |
 | `lcp_array(s)` | $O(N\log N)$ | $O(N)$ |
 | `number_of_distinct_substrings(s)` | $O(N\log N)$ | $O(N)$ |
+| `number_of_distinct_substrings_by_first_byte(s)` | $O(N\log N)$ | $O(N)$ |
 
 `lcp_array(s)` は内部でsuffix arrayも構築する。各関数は長さ $N$（LCPのみ最大 $N-1$）の列を列挙して返す。
 ## API詳細
@@ -45,6 +48,10 @@ $N=|s|$ とする。
 - `number_of_distinct_substrings(s)` は空でない相異なる連続部分列の個数を返す。
   戻り値型は long long で、値域は $[0,N(N+1)/2]$。全suffixの長さの
   総和から隣接suffixのLCP長の総和を引いて求める。空列では0。
+- `number_of_distinct_substrings_by_first_byte(s)` はbyte値ごとに、そのbyteで
+  始まる空でない相異なる部分文字列数を長さ256のarrayで返す。添字は
+  `unsigned char` として解釈したbyte値。各suffixが初めて追加するLCPより長い
+  prefixを、そのsuffixの先頭byteへ加算する。空文字列では全要素0。
 
 ## 注意点
 

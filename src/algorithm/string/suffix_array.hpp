@@ -159,3 +159,20 @@ long long number_of_distinct_substrings(const Sequence& s){
     for(int value: lcp) result -= value;
     return result;
 }
+
+inline std::array<long long, 256>
+number_of_distinct_substrings_by_first_byte(const std::string& s){
+    std::array<long long, 256> result{};
+    const std::vector<int> sa = suffix_array(s);
+    const std::vector<int> lcp = lcp_array(s, sa);
+    const int size = static_cast<int>(s.size());
+    for(int rank = 0; rank < size; rank++){
+        const int suffix = sa[static_cast<std::size_t>(rank)];
+        const int duplicated_prefix = rank == 0
+            ? 0
+            : lcp[static_cast<std::size_t>(rank - 1)];
+        result[static_cast<unsigned char>(s[static_cast<std::size_t>(suffix)])]
+            += size - suffix - duplicated_prefix;
+    }
+    return result;
+}
