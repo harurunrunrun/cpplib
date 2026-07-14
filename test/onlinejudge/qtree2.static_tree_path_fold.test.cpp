@@ -18,15 +18,6 @@ constexpr Monoid<qtree2_add, qtree2_zero> qtree2_sum_monoid{};
 
 using QTree2 = StaticTreePathFold<qtree2_sum_monoid, 10000>;
 
-int qtree2_kth_vertex(const QTree2& tree, int left, int right, int k){
-    const int ancestor = tree.lca(left, right);
-    const int upward_edges = tree.depth(left) - tree.depth(ancestor);
-    const int downward_edges = tree.depth(right) - tree.depth(ancestor);
-    const int offset = k - 1;
-    if(offset <= upward_edges) return tree.jump(left, offset);
-    return tree.jump(right, upward_edges + downward_edges - offset);
-}
-
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
@@ -56,7 +47,7 @@ int main(){
             }else{
                 int k;
                 std::cin >> k;
-                std::cout << qtree2_kth_vertex(tree, left, right, k) + 1
+                std::cout << tree.kth_vertex_on_path(left, right, k - 1) + 1
                           << '\n';
             }
         }

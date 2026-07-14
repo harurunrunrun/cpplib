@@ -99,6 +99,14 @@ copy構築・copy代入は、辺集合と構築済み索引を複製する。mov
 - 時間計算量: $O(\log(n+1))$
 - 追加空間計算量: $O(1)$
 
+### `kth_vertex_on_path(left, right, index_on_path)`
+
+`left` から `right` への頂点列で、0-indexedの `index_on_path` 番目の
+頂点を返す。両端も頂点列に含む。
+
+- 時間計算量: $O(\log(n+1))$
+- 追加空間計算量: $O(1)$
+
 ### `prod(left, right)`
 
 `left` から `right` へ進む順に、パス上の辺要素を `Monoid.op` で畳み込む。

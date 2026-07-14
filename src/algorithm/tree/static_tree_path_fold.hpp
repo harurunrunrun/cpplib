@@ -258,6 +258,25 @@ public:
             - 2 * depth_vertex[static_cast<std::size_t>(ancestor_vertex)];
     }
 
+    int kth_vertex_on_path(int left, int right, int index_on_path) const{
+        const int ancestor_vertex = lca(left, right);
+        const int upward_edges = depth_vertex[static_cast<std::size_t>(left)]
+            - depth_vertex[static_cast<std::size_t>(ancestor_vertex)];
+        const int downward_edges = depth_vertex[static_cast<std::size_t>(right)]
+            - depth_vertex[static_cast<std::size_t>(ancestor_vertex)];
+        const int path_edges = upward_edges + downward_edges;
+        if(index_on_path < 0 || path_edges < index_on_path)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation "
+                "(kth_vertex_on_path)."
+            );
+        }
+        if(index_on_path <= upward_edges){
+            return jump(left, index_on_path);
+        }
+        return jump(right, path_edges - index_on_path);
+    }
+
     S prod(int left, int right) const{
         require_built("library assertion fault: not built (prod).");
         check_vertex(left, "library assertion fault: range violation (prod).");
