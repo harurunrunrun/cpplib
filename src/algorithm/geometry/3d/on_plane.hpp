@@ -224,24 +224,49 @@ inline long double exact_ratio(
         throw std::domain_error("exact ratio has zero denominator");
     }
     if(numerator.significand == 0) return 0.0L;
-    const NormalizedDyadic normalized_numerator =
-        normalize_exact_dyadic(numerator);
-    const NormalizedDyadic normalized_denominator =
-        normalize_exact_dyadic(denominator);
+    using boost::multiprecision::cpp_int;
+    using HighPrecision = boost::multiprecision::number<
+        boost::multiprecision::cpp_bin_float<256>
+    >;
+    struct LeadingValue{
+        HighPrecision value{};
+        unsigned discarded = 0;
+    };
+    const auto leading_value = [](const cpp_int& significand){
+        cpp_int magnitude = significand;
+        const bool negative = magnitude < 0;
+        if(negative) magnitude = -magnitude;
+        const unsigned bit_count =
+            boost::multiprecision::msb(magnitude) + 1U;
+        constexpr unsigned kept_bits = 256;
+        const unsigned discarded = bit_count > kept_bits
+            ? bit_count - kept_bits : 0U;
+        HighPrecision value =
+            (magnitude >> discarded).convert_to<HighPrecision>();
+        if(negative) value = -value;
+        return LeadingValue{value, discarded};
+    };
+    const LeadingValue normalized_numerator =
+        leading_value(numerator.significand);
+    const LeadingValue normalized_denominator =
+        leading_value(denominator.significand);
     const long long exponent =
-        static_cast<long long>(normalized_numerator.exponent)
-        - static_cast<long long>(normalized_denominator.exponent);
+        static_cast<long long>(numerator.exponent)
+        + static_cast<long long>(normalized_numerator.discarded)
+        - static_cast<long long>(denominator.exponent)
+        - static_cast<long long>(normalized_denominator.discarded);
     if(exponent < std::numeric_limits<int>::min()
         || exponent > std::numeric_limits<int>::max())[[unlikely]]{
         throw std::overflow_error(overflow_message);
     }
-    const long double quotient =
-        normalized_numerator.mantissa / normalized_denominator.mantissa;
+    const long double quotient = (
+        normalized_numerator.value / normalized_denominator.value
+    ).convert_to<long double>();
     const long double result = std::scalbn(
         quotient,
         static_cast<int>(exponent)
     );
-    if(!std::isfinite(result))[[unlikely]]{
+    if(!std::isfinite(result) || result == 0.0L)[[unlikely]]{
         throw std::overflow_error(overflow_message);
     }
     return result;

@@ -13,4 +13,5 @@ documentation_of: ../src/algorithm/geometry/3d/triangle_circumcenter.hpp
 
 ## 注意点
 
-退化三角形には `std::invalid_argument` を送出する。
+`circumcircle`と同じexact dyadic外心計算を使う。退化三角形・非有限入力には
+`std::invalid_argument`、結果を表現できない場合は `std::overflow_error` を送出する。

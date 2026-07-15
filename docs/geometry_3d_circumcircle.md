@@ -13,4 +13,7 @@ documentation_of: ../src/algorithm/geometry/3d/circumcircle.hpp
 
 ## 注意点
 
-退化三角形には `std::invalid_argument` を送出する。円の法線は頂点順に従う。
+退化三角形・非有限入力には `std::invalid_argument` を送出する。円の法線は頂点順に従う。
+退化判定、外心の分子・分母は入力 `long double` のexact dyadic値で計算し、中心座標
+だけを最後に丸める。巨大な平行移動や一様な巨大・微小scaleでも中間overflow・underflowを
+避ける。中心または半径を表現できない場合は `std::overflow_error` を送出する。

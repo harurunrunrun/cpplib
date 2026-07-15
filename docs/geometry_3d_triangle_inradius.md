@@ -13,4 +13,6 @@ documentation_of: ../src/algorithm/geometry/3d/triangle_inradius.hpp
 
 ## 注意点
 
-退化三角形には `std::invalid_argument` を送出する。
+退化三角形・非有限入力には `std::invalid_argument` を送出する。辺差分を共通の
+局所scaleへ正規化し、正規化面積と周長の比から半径を求める。局所形状または半径を
+`long double` で表現できない場合は `std::overflow_error` を送出する。

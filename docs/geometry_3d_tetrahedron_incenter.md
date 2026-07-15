@@ -13,4 +13,7 @@ documentation_of: ../src/algorithm/geometry/3d/tetrahedron_incenter.hpp
 
 ## 注意点
 
-退化四面体には `std::invalid_argument` を送出する。退化判定には正確な `adaptive_orient3d` の符号を用いる。
+退化四面体・非有限入力には `std::invalid_argument` を送出する。退化判定には正確な
+`adaptive_orient3d` の符号を用いる。anchorからの辺差分を共通scaleへ正規化し、
+局所面積を重みにしてFMAで中心を復元する。局所形状または結果を表現できない場合は
+`std::overflow_error` を送出する。
