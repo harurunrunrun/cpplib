@@ -244,3 +244,7 @@
 #include "epa_3d.hpp"
 #include "convex_collision_3d.hpp"
 #include "sphere_sphere_distance.hpp"
+#include "line_plane_common_intersection.hpp"
+#include "ray_plane_common_intersection.hpp"
+#include "segment_plane_common_intersection.hpp"
+#include "plane_plane_common_intersection.hpp"
