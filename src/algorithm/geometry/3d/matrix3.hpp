@@ -103,26 +103,43 @@ struct Matrix3{
             }
         }
         if(scale == 0) return std::nullopt;
-        const long double det = determinant();
-        const long double threshold = relative_epsilon * scale * scale * scale;
-        if(!std::isfinite(det) || std::abs(det) <= threshold){
+        Matrix3 normalized;
+        for(std::size_t row = 0; row < 3; ++row){
+            for(std::size_t column = 0; column < 3; ++column){
+                normalized[row][column] = values[row][column] / scale;
+            }
+        }
+        const long double det = normalized.determinant();
+        if(!std::isfinite(det) || std::abs(det) <= relative_epsilon){
             return std::nullopt;
         }
 
         Matrix3 adjugate;
-        adjugate[0][0] = values[1][1] * values[2][2] - values[1][2] * values[2][1];
-        adjugate[0][1] = values[0][2] * values[2][1] - values[0][1] * values[2][2];
-        adjugate[0][2] = values[0][1] * values[1][2] - values[0][2] * values[1][1];
-        adjugate[1][0] = values[1][2] * values[2][0] - values[1][0] * values[2][2];
-        adjugate[1][1] = values[0][0] * values[2][2] - values[0][2] * values[2][0];
-        adjugate[1][2] = values[0][2] * values[1][0] - values[0][0] * values[1][2];
-        adjugate[2][0] = values[1][0] * values[2][1] - values[1][1] * values[2][0];
-        adjugate[2][1] = values[0][1] * values[2][0] - values[0][0] * values[2][1];
-        adjugate[2][2] = values[0][0] * values[1][1] - values[0][1] * values[1][0];
+        adjugate[0][0] = normalized[1][1] * normalized[2][2]
+            - normalized[1][2] * normalized[2][1];
+        adjugate[0][1] = normalized[0][2] * normalized[2][1]
+            - normalized[0][1] * normalized[2][2];
+        adjugate[0][2] = normalized[0][1] * normalized[1][2]
+            - normalized[0][2] * normalized[1][1];
+        adjugate[1][0] = normalized[1][2] * normalized[2][0]
+            - normalized[1][0] * normalized[2][2];
+        adjugate[1][1] = normalized[0][0] * normalized[2][2]
+            - normalized[0][2] * normalized[2][0];
+        adjugate[1][2] = normalized[0][2] * normalized[1][0]
+            - normalized[0][0] * normalized[1][2];
+        adjugate[2][0] = normalized[1][0] * normalized[2][1]
+            - normalized[1][1] * normalized[2][0];
+        adjugate[2][1] = normalized[0][1] * normalized[2][0]
+            - normalized[0][0] * normalized[2][1];
+        adjugate[2][2] = normalized[0][0] * normalized[1][1]
+            - normalized[0][1] * normalized[1][0];
 
-        const long double inverse_determinant = 1 / det;
         for(Row& row: adjugate.values){
-            for(long double& value: row) value *= inverse_determinant;
+            for(long double& value: row){
+                value /= det;
+                value /= scale;
+                if(!std::isfinite(value)) return std::nullopt;
+            }
         }
         return adjugate;
     }
