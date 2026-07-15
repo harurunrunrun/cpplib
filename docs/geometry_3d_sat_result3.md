@@ -18,3 +18,5 @@ documentation_of: ../src/algorithm/geometry/3d/sat_result3.hpp
 ## 注意点
 
 `axis` は第1形状から第2形状を向くようそろえる。中心が一致する場合は符号が一意でない。
+
+`separation` と `penetration_depth` は入力座標系の長さ。`axis` は有限な単位ベクトルである。

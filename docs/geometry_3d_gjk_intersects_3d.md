@@ -14,3 +14,5 @@ documentation_of: ../src/algorithm/geometry/3d/gjk_intersects_3d.hpp
 ## 注意点
 
 前提と例外は `gjk_query_3d` と同じ。許容誤差以内の接触を交差とする。
+
+許容誤差は共通平行移動を除いた両形状の広がりに対する相対値である。

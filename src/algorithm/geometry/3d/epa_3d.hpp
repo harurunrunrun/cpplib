@@ -24,6 +24,20 @@ struct Face{
     bool alive = true;
 };
 
+inline void validate_full_dimensional(
+    const ConvexPolyhedron3& first,
+    const ConvexPolyhedron3& second
+){
+    gjk_3d_detail::validate(first);
+    gjk_3d_detail::validate(second);
+    if(first.affine_dimension != 3
+        || second.affine_dimension != 3)[[unlikely]]{
+        throw std::invalid_argument(
+            "EPA requires full-dimensional convex polyhedra"
+        );
+    }
+}
+
 inline bool same_point(
     const Point3& first,
     const Point3& second,
@@ -186,7 +200,7 @@ inline EPAResult3 sat_fallback(
     std::size_t iterations,
     long double tolerance
 ){
-    const SATResult3 sat = separating_axis_theorem_3d(
+    const SATResult3 sat = sat_3d_detail::separating_axis_theorem_core(
         first, second, tolerance
     );
     EPAResult3 result;
@@ -205,18 +219,14 @@ inline EPAResult3 sat_fallback(
     return result;
 }
 
-}  // namespace epa_3d_detail
-
-inline EPAResult3 epa_3d(
+inline EPAResult3 epa_core(
     const ConvexPolyhedron3& first,
     const ConvexPolyhedron3& second,
     const GJKResult3& gjk_result,
-    long double tolerance = 1.0e-10L,
-    std::size_t max_iterations = 128
+    long double tolerance,
+    std::size_t max_iterations
 ){
-    using namespace epa_3d_detail;
-    gjk_3d_detail::validate(first);
-    gjk_3d_detail::validate(second);
+    validate_full_dimensional(first, second);
     if(!(tolerance > 0.0L) || !std::isfinite(tolerance))[[unlikely]]{
         throw std::invalid_argument("EPA tolerance must be finite and positive");
     }
@@ -317,16 +327,86 @@ inline EPAResult3 epa_3d(
     );
 }
 
+inline EPAResult3 restore_result(
+    EPAResult3 result,
+    const gjk_3d_detail::CollisionNormalization3& normalization
+){
+    if(!result.intersects) return result;
+    result.penetration_depth = gjk_3d_detail::restore_length(
+        result.penetration_depth, normalization
+    );
+    result.normal = gjk_3d_detail::finite_unit_normal(result.normal);
+    result.point_on_first = gjk_3d_detail::restore_point(
+        result.point_on_first, normalization
+    );
+    result.point_on_second = gjk_3d_detail::restore_point(
+        result.point_on_second, normalization
+    );
+    return result;
+}
+
+}  // namespace epa_3d_detail
+
+inline EPAResult3 epa_3d(
+    const ConvexPolyhedron3& first,
+    const ConvexPolyhedron3& second,
+    const GJKResult3& gjk_result,
+    long double tolerance = 1.0e-10L,
+    std::size_t max_iterations = 128
+){
+    if(!(tolerance > 0.0L) || !std::isfinite(tolerance))[[unlikely]]{
+        throw std::invalid_argument("EPA tolerance must be finite and positive");
+    }
+    if(max_iterations == 0)[[unlikely]]{
+        throw std::invalid_argument("EPA iteration limit must be positive");
+    }
+    epa_3d_detail::validate_full_dimensional(first, second);
+    const gjk_3d_detail::CollisionNormalization3 normalization =
+        gjk_3d_detail::normalize_pair(first, second);
+    if(!gjk_result.intersects) return {};
+    GJKResult3 normalized_gjk = gjk_result;
+    normalized_gjk.simplex = gjk_3d_detail::normalize_simplex(
+        gjk_result.simplex, normalization
+    );
+    if(normalized_gjk.simplex.empty()){
+        normalized_gjk = gjk_3d_detail::gjk_query_core(
+            normalization.first, normalization.second,
+            tolerance * 0.01L, 96
+        );
+    }
+    return epa_3d_detail::restore_result(
+        epa_3d_detail::epa_core(
+            normalization.first, normalization.second,
+            normalized_gjk, tolerance, max_iterations
+        ),
+        normalization
+    );
+}
+
 inline EPAResult3 epa_3d(
     const ConvexPolyhedron3& first,
     const ConvexPolyhedron3& second,
     long double tolerance = 1.0e-10L,
     std::size_t max_iterations = 128
 ){
-    const GJKResult3 gjk_result = gjk_query_3d(
-        first, second, tolerance * 0.01L, 96
+    if(!(tolerance > 0.0L) || !std::isfinite(tolerance))[[unlikely]]{
+        throw std::invalid_argument("EPA tolerance must be finite and positive");
+    }
+    if(max_iterations == 0)[[unlikely]]{
+        throw std::invalid_argument("EPA iteration limit must be positive");
+    }
+    epa_3d_detail::validate_full_dimensional(first, second);
+    const gjk_3d_detail::CollisionNormalization3 normalization =
+        gjk_3d_detail::normalize_pair(first, second);
+    const GJKResult3 gjk_result = gjk_3d_detail::gjk_query_core(
+        normalization.first, normalization.second,
+        tolerance * 0.01L, 96
     );
-    return epa_3d(
-        first, second, gjk_result, tolerance, max_iterations
+    return epa_3d_detail::restore_result(
+        epa_3d_detail::epa_core(
+            normalization.first, normalization.second,
+            gjk_result, tolerance, max_iterations
+        ),
+        normalization
     );
 }

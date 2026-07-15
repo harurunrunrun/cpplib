@@ -12,6 +12,7 @@
 #include "convex_polyhedron_edges.hpp"
 #include "cross.hpp"
 #include "dot.hpp"
+#include "gjk_query_3d.hpp"
 #include "is_finite.hpp"
 #include "sat_result3.hpp"
 
@@ -102,14 +103,11 @@ inline std::pair<long double, long double> projection(
     return {minimum, maximum};
 }
 
-}  // namespace sat_3d_detail
-
-inline SATResult3 separating_axis_theorem_3d(
+inline SATResult3 separating_axis_theorem_core(
     const ConvexPolyhedron3& first,
     const ConvexPolyhedron3& second,
-    long double tolerance = 1.0e-12L
+    long double tolerance
 ){
-    using namespace sat_3d_detail;
     if(first.vertices.empty() || second.vertices.empty())[[unlikely]]{
         throw std::invalid_argument("SAT requires nonempty convex polyhedra");
     }
@@ -181,4 +179,38 @@ inline SATResult3 separating_axis_theorem_3d(
         result.axis = separation_axis;
     }
     return result;
+}
+
+inline SATResult3 restore_result(
+    SATResult3 result,
+    const gjk_3d_detail::CollisionNormalization3& normalization
+){
+    result.separation = gjk_3d_detail::restore_length(
+        result.separation, normalization
+    );
+    result.penetration_depth = gjk_3d_detail::restore_length(
+        result.penetration_depth, normalization
+    );
+    result.axis = gjk_3d_detail::finite_unit_normal(result.axis);
+    return result;
+}
+
+}  // namespace sat_3d_detail
+
+inline SATResult3 separating_axis_theorem_3d(
+    const ConvexPolyhedron3& first,
+    const ConvexPolyhedron3& second,
+    long double tolerance = 1.0e-12L
+){
+    if(!(tolerance > 0.0L) || !std::isfinite(tolerance))[[unlikely]]{
+        throw std::invalid_argument("SAT tolerance must be finite and positive");
+    }
+    const gjk_3d_detail::CollisionNormalization3 normalization =
+        gjk_3d_detail::normalize_pair(first, second);
+    return sat_3d_detail::restore_result(
+        sat_3d_detail::separating_axis_theorem_core(
+            normalization.first, normalization.second, tolerance
+        ),
+        normalization
+    );
 }

@@ -14,3 +14,9 @@ documentation_of: ../src/algorithm/geometry/3d/convex_collision_3d.hpp
 ## 注意点
 
 有限頂点を持つ空でない凸形状が前提。`normal` は第1形状から第2形状向きで、第1形状を `-normal * penetration_depth` 動かすと分離できる。非正・非有限の許容誤差は例外。
+
+GJKとEPAは共通平行移動を除去し全頂点の広がりで無次元化するため、`tolerance` は相対値であり一様scale・共通平行移動に依存しない。反復上限到達時は `converged=false`。
+
+距離、貫通深度、最近点・接触点は入力座標系へ戻す。真値が `long double` で表現不能なら `std::overflow_error`。定義される `normal` は有限な単位ベクトルである。
+
+点・線分・平面など、片方でも `affine_dimension != 3` の交差では貫通深度を定義せず `penetration_depth=0`、`normal=(0,0,0)`、`epa_iterations=0` とし、GJKから復元した有限な接触代表点を返す。非交差時は次元によらず通常の距離と単位法線を返す。

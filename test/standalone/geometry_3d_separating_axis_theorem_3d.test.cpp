@@ -41,6 +41,101 @@ int main(){
                 {2, 0, 0}, half, quarter_turn
             )
         ).intersects) return false;
+
+        for(const long double scale: {1.0e-2000L, 1.0e2000L}){
+            const ConvexPolyhedron3 scaled_first =
+                geometry3d_collision_axis_box(
+                    {-scale, -scale, -scale}, {scale, scale, scale}
+                );
+            result = separating_axis_theorem_3d(
+                scaled_first,
+                geometry3d_collision_axis_box(
+                    {2 * scale, -scale, -scale},
+                    {4 * scale, scale, scale}
+                )
+            );
+            if(result.intersects
+                || !geometry3d_api_close(result.separation / scale, 1.0L)
+                || !geometry3d_collision_is_unit_finite(result.axis)){
+                return false;
+            }
+            result = separating_axis_theorem_3d(
+                scaled_first,
+                geometry3d_collision_axis_box(
+                    {scale / 2, -scale, -scale},
+                    {5 * scale / 2, scale, scale}
+                )
+            );
+            if(!result.intersects
+                || !geometry3d_api_close(
+                    result.penetration_depth / scale, 0.5L
+                )
+                || !geometry3d_collision_is_unit_finite(result.axis)){
+                return false;
+            }
+        }
+
+        const long double translation = 1.0e2000L;
+        const long double unit = std::nextafter(
+            translation, std::numeric_limits<long double>::infinity()
+        ) - translation;
+        const ConvexPolyhedron3 translated_first =
+            geometry3d_collision_axis_box(
+                {translation, translation, translation},
+                {translation + 8 * unit, translation + 8 * unit,
+                    translation + 8 * unit}
+            );
+        result = separating_axis_theorem_3d(
+            translated_first,
+            geometry3d_collision_axis_box(
+                {translation + 12 * unit, translation, translation},
+                {translation + 20 * unit, translation + 8 * unit,
+                    translation + 8 * unit}
+            )
+        );
+        if(result.intersects
+            || !geometry3d_api_close(result.separation / unit, 4.0L)
+            || !geometry3d_collision_is_unit_finite(result.axis)){
+            return false;
+        }
+
+        ConvexPolyhedron3 invalid = translated_first;
+        invalid.vertices[0].z =
+            std::numeric_limits<long double>::quiet_NaN();
+        try{
+            static_cast<void>(separating_axis_theorem_3d(
+                invalid, translated_first
+            ));
+            return false;
+        }catch(const std::invalid_argument&){}
+        invalid.vertices[0].z =
+            std::numeric_limits<long double>::infinity();
+        try{
+            static_cast<void>(separating_axis_theorem_3d(
+                translated_first, invalid
+            ));
+            return false;
+        }catch(const std::invalid_argument&){}
+
+        const long double near_max =
+            std::numeric_limits<long double>::max() * 0.75L;
+        const long double max_unit = std::nextafter(
+            near_max, std::numeric_limits<long double>::infinity()
+        ) - near_max;
+        try{
+            static_cast<void>(separating_axis_theorem_3d(
+                geometry3d_collision_axis_box(
+                    {-near_max - 8 * max_unit, -max_unit, -max_unit},
+                    {-near_max, max_unit, max_unit}
+                ),
+                geometry3d_collision_axis_box(
+                    {near_max, -max_unit, -max_unit},
+                    {near_max + 8 * max_unit, max_unit, max_unit}
+                )
+            ));
+            return false;
+        }catch(const std::overflow_error&){}
+
         for(std::size_t iteration = 0; iteration < rounds; ++iteration){
             const Point3 first_center = geometry3d_random_point(random, -4, 4);
             const Point3 second_center = geometry3d_random_point(random, -4, 4);

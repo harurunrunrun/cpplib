@@ -14,3 +14,5 @@ documentation_of: ../src/algorithm/geometry/3d/gjk_closest_points_3d.hpp
 ## 注意点
 
 交差時は共通点を表す1組を返す。最近点が一意でない場合、返る組も一意でない。
+
+返却点は入力と同じ座標系。共通平行移動と一様scaleに対して不変で、点の復元結果が `long double` で表現不能なら `std::overflow_error`。

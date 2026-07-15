@@ -20,3 +20,5 @@ documentation_of: ../src/algorithm/geometry/3d/gjk_result3.hpp
 ## 注意点
 
 `normal` は交差時には規定しない。最近点は一意でない場合がある。
+
+`distance`、両最近点、`simplex` は正規化coreの値ではなく入力座標系へ復元済み。`normal` が規定される場合は有限な単位ベクトルである。

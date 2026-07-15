@@ -11,6 +11,60 @@ int main(){
         if(gjk_intersects_3d(
             geometry3d_collision_tetra(), geometry3d_collision_tetra({3, 3, 3})
         )) return false;
+        for(const long double scale: {1.0e-2000L, 1.0e2000L}){
+            const ConvexPolyhedron3 scaled_first =
+                geometry3d_collision_axis_box(
+                    {-scale, -scale, -scale}, {scale, scale, scale}
+                );
+            if(gjk_intersects_3d(
+                scaled_first,
+                geometry3d_collision_axis_box(
+                    {2 * scale, -scale, -scale},
+                    {4 * scale, scale, scale}
+                )
+            )) return false;
+            if(!gjk_intersects_3d(
+                scaled_first,
+                geometry3d_collision_axis_box(
+                    {scale, -scale, -scale},
+                    {3 * scale, scale, scale}
+                )
+            )) return false;
+        }
+        const long double translation = 1.0e2000L;
+        const long double unit = std::nextafter(
+            translation, std::numeric_limits<long double>::infinity()
+        ) - translation;
+        const ConvexPolyhedron3 translated_first =
+            geometry3d_collision_axis_box(
+                {translation, translation, translation},
+                {translation + 8 * unit, translation + 8 * unit,
+                    translation + 8 * unit}
+            );
+        if(gjk_intersects_3d(
+            translated_first,
+            geometry3d_collision_axis_box(
+                {translation + 12 * unit, translation, translation},
+                {translation + 20 * unit, translation + 8 * unit,
+                    translation + 8 * unit}
+            )
+        )) return false;
+        if(!gjk_intersects_3d(
+            translated_first,
+            geometry3d_collision_axis_box(
+                {translation + 4 * unit, translation, translation},
+                {translation + 12 * unit, translation + 8 * unit,
+                    translation + 8 * unit}
+            )
+        )) return false;
+        ConvexPolyhedron3 invalid = translated_first;
+        invalid.vertices[0].x =
+            std::numeric_limits<long double>::infinity();
+        try{
+            static_cast<void>(gjk_intersects_3d(invalid, translated_first));
+            return false;
+        }catch(const std::invalid_argument&){}
+
         for(std::size_t iteration = 0; iteration < rounds; ++iteration){
             const Point3 center = geometry3d_random_point(random, -3, 3);
             const Point3 half = geometry3d_random_point(random, 0.2L, 1.5L);

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <limits>
 #include <random>
 #include <vector>
 
@@ -23,6 +24,36 @@ inline ConvexPolyhedron3 geometry3d_collision_box(
         });
     }
     return convex_hull_3d(std::move(points));
+}
+
+inline ConvexPolyhedron3 geometry3d_collision_axis_box(
+    const Point3& minimum,
+    const Point3& maximum
+){
+    ConvexPolyhedron3 result;
+    result.affine_dimension = 3;
+    result.vertices = {
+        {minimum.x, minimum.y, minimum.z},
+        {minimum.x, minimum.y, maximum.z},
+        {minimum.x, maximum.y, minimum.z},
+        {minimum.x, maximum.y, maximum.z},
+        {maximum.x, minimum.y, minimum.z},
+        {maximum.x, minimum.y, maximum.z},
+        {maximum.x, maximum.y, minimum.z},
+        {maximum.x, maximum.y, maximum.z}
+    };
+    result.faces = {
+        {0, 3, 2}, {0, 1, 3}, {4, 6, 7}, {4, 7, 5},
+        {0, 4, 5}, {0, 5, 1}, {2, 3, 7}, {2, 7, 6},
+        {0, 2, 6}, {0, 6, 4}, {1, 5, 7}, {1, 7, 3}
+    };
+    return result;
+}
+
+inline bool geometry3d_collision_is_unit_finite(const Point3& point){
+    const long double length = std::hypot(point.x, point.y, point.z);
+    return std::isfinite(length)
+        && geometry3d_api_close(length, 1.0L, 1.0e-9L);
 }
 
 inline ConvexPolyhedron3 geometry3d_collision_tetra(Point3 shift = {}){

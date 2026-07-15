@@ -19,3 +19,5 @@ documentation_of: ../src/algorithm/geometry/3d/convex_collision_result3.hpp
 ## 注意点
 
 接触点と法線は対称形や面接触では一意でない。
+
+非交差時および3次元内部を持つ形状同士の交差では `normal` は有限な単位ベクトル。退化形状との交差では貫通方向を定義せず `normal=(0,0,0)`、`penetration_depth=0` とする。

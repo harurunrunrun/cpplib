@@ -14,3 +14,5 @@ documentation_of: ../src/algorithm/geometry/3d/gjk_distance_3d.hpp
 ## 注意点
 
 前提と例外は `gjk_query_3d` と同じ。
+
+許容誤差は両形状の広がりに対する相対値。結果は入力座標系の長さで、表現不能なら `std::overflow_error`。

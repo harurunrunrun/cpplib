@@ -18,3 +18,5 @@ documentation_of: ../src/algorithm/geometry/3d/epa_result3.hpp
 ## 注意点
 
 接触点が面や辺に広がる場合、返る代表点は一意でない。
+
+貫通深度と接触点は入力座標系の値。交差時の `normal` は有限な単位ベクトルである。

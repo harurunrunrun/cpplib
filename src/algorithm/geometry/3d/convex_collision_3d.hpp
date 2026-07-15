@@ -21,26 +21,55 @@ inline ConvexCollisionResult3 convex_collision_3d(
             "collision tolerance must be finite and positive"
         );
     }
-    const GJKResult3 gjk = gjk_query_3d(
-        first, second, tolerance * 0.01L, gjk_max_iterations
+    const gjk_3d_detail::CollisionNormalization3 normalization =
+        gjk_3d_detail::normalize_pair(first, second);
+    const GJKResult3 gjk = gjk_3d_detail::gjk_query_core(
+        normalization.first, normalization.second,
+        tolerance * 0.01L, gjk_max_iterations
     );
     ConvexCollisionResult3 result;
     result.intersects = gjk.intersects;
-    result.distance = gjk.distance;
-    result.normal = gjk.normal;
-    result.point_on_first = gjk.point_on_first;
-    result.point_on_second = gjk.point_on_second;
     result.gjk_iterations = gjk.iterations;
     result.converged = gjk.converged;
-    if(!gjk.intersects) return result;
+    if(!gjk.intersects){
+        result.distance = gjk_3d_detail::restore_length(
+            gjk.distance, normalization
+        );
+        result.normal = gjk_3d_detail::finite_unit_normal(gjk.normal);
+        result.point_on_first = gjk_3d_detail::restore_point(
+            gjk.point_on_first, normalization
+        );
+        result.point_on_second = gjk_3d_detail::restore_point(
+            gjk.point_on_second, normalization
+        );
+        return result;
+    }
+    if(first.affine_dimension != 3 || second.affine_dimension != 3){
+        result.penetration_depth = 0.0L;
+        result.normal = {};
+        result.point_on_first = gjk_3d_detail::restore_point(
+            gjk.point_on_first, normalization
+        );
+        result.point_on_second = gjk_3d_detail::restore_point(
+            gjk.point_on_second, normalization
+        );
+        result.epa_iterations = 0;
+        return result;
+    }
 
-    const EPAResult3 epa = epa_3d(
-        first, second, gjk, tolerance, epa_max_iterations
+    const EPAResult3 epa = epa_3d_detail::restore_result(
+        epa_3d_detail::epa_core(
+            normalization.first, normalization.second,
+            gjk, tolerance, epa_max_iterations
+        ),
+        normalization
     );
     result.penetration_depth = epa.penetration_depth;
-    result.normal = epa.normal;
-    result.point_on_first = epa.point_on_first;
-    result.point_on_second = epa.point_on_second;
+    if(epa.intersects){
+        result.normal = epa.normal;
+        result.point_on_first = epa.point_on_first;
+        result.point_on_second = epa.point_on_second;
+    }
     result.epa_iterations = epa.iterations;
     result.converged = gjk.converged && epa.converged;
     return result;
