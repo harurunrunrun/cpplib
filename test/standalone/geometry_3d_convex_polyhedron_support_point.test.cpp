@@ -10,6 +10,17 @@ int main(){
             geometry3d_test_cube(), {1, 0, 0}
         );
         if(point.x != 1.0L) return false;
+        const long double translation = 1e3000L;
+        const long double local = 1e-3000L;
+        const ConvexPolyhedron3 thin{
+            1, {{0, 0, translation}, {local, 0, translation}}, {}
+        };
+        const Point3 thin_support = convex_polyhedron_support_point(
+            thin, {1, 0, 0}
+        );
+        if(thin_support.x != local || thin_support.z != translation){
+            return false;
+        }
         try{ (void)convex_polyhedron_support_point(geometry3d_test_cube(), {}); }
         catch(const std::invalid_argument&){ return true; }
         return false;

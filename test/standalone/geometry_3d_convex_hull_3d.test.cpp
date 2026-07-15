@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <limits>
 #include <set>
 #include <utility>
@@ -58,6 +59,32 @@ int main(){
         });
         if(extreme_line.affine_dimension != 1) return false;
         if(extreme_line.vertices.size() != 2) return false;
+        const long double translation = 1e3000L;
+        const long double local = 1e-3000L;
+        const auto tiny_translated_triangle = convex_hull_3d({
+            {0, 0, translation},
+            {local, 0, translation},
+            {0, local, translation},
+        });
+        if(tiny_translated_triangle.affine_dimension != 2
+            || tiny_translated_triangle.vertices.size() != 3
+            || tiny_translated_triangle.faces.size() != 1) return false;
+
+        const long double translated_ulp = std::nextafter(
+            translation, std::numeric_limits<long double>::infinity()
+        ) - translation;
+        const std::vector<Point3> thin_tetrahedron{
+            {0, 0, translation},
+            {local, 0, translation},
+            {0, local, translation},
+            {0, 0, translation + translated_ulp},
+        };
+        const auto thin_hull = convex_hull_3d(thin_tetrahedron);
+        if(thin_hull.affine_dimension != 3
+            || thin_hull.vertices.size() != 4
+            || thin_hull.faces.size() != 4
+            || !validates_hull(thin_hull, thin_tetrahedron)) return false;
+
 
         const std::vector<Point3> cube{
             {-1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}, {-1, 1, 1},

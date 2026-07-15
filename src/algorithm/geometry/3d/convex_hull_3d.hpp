@@ -44,33 +44,55 @@ inline std::vector<Point3> unique_points(std::vector<Point3> points){
     return points;
 }
 
-inline bool independent_directions(const Point3& first, const Point3& second){
-    const long double scale = std::max({
-        std::abs(first.x), std::abs(first.y), std::abs(first.z),
-        std::abs(second.x), std::abs(second.y), std::abs(second.z),
-    });
-    if(scale == 0 || !std::isfinite(scale)) return false;
-    const Point3 product = cross(first / scale, second / scale);
-    return geometry3d_sign(std::hypot(product.x, product.y, product.z)) != 0;
-}
-
-inline long double coordinate_scale(const std::vector<Point3>& points){
-    long double scale = 0.0L;
-    for(const Point3& point: points){
-        scale = std::max({
-            scale, std::abs(point.x), std::abs(point.y), std::abs(point.z)
-        });
-    }
-    return scale == 0.0L ? 1.0L : scale;
-}
-
-inline std::vector<Point3> scaled_points(
-    const std::vector<Point3>& points,
-    long double scale
+inline bool exactly_non_collinear(
+    const Point3& first,
+    const Point3& second,
+    const Point3& third
 ){
+    using namespace geometry3d_adaptive_detail;
+    const std::array<ExactDyadic, 3> first_direction{
+        subtract(exact_dyadic(second.x), exact_dyadic(first.x)),
+        subtract(exact_dyadic(second.y), exact_dyadic(first.y)),
+        subtract(exact_dyadic(second.z), exact_dyadic(first.z)),
+    };
+    const std::array<ExactDyadic, 3> second_direction{
+        subtract(exact_dyadic(third.x), exact_dyadic(first.x)),
+        subtract(exact_dyadic(third.y), exact_dyadic(first.y)),
+        subtract(exact_dyadic(third.z), exact_dyadic(first.z)),
+    };
+    for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
+        const std::size_t next = (coordinate + 1) % 3;
+        const std::size_t last = (coordinate + 2) % 3;
+        if(sign(subtract(
+            multiply(first_direction[next], second_direction[last]),
+            multiply(first_direction[last], second_direction[next])
+        )) != 0) return true;
+    }
+    return false;
+}
+
+inline std::vector<Point3> locally_normalized_points(
+    const std::vector<Point3>& points,
+    const Point3& anchor
+){
+    std::vector<Geometry3DNormalizedDifference> differences;
+    differences.reserve(points.size());
+    long double local_scale = 0.0L;
+    for(const Point3& point: points){
+        differences.push_back(geometry3d_normalized_difference(point, anchor));
+        const Point3& value = differences.back().value;
+        if(value.x != 0.0L || value.y != 0.0L || value.z != 0.0L){
+            local_scale = std::max(local_scale, differences.back().scale);
+        }
+    }
+    if(local_scale == 0.0L) local_scale = 1.0L;
     std::vector<Point3> result;
     result.reserve(points.size());
-    for(const Point3& point: points) result.push_back(point / scale);
+    for(const Geometry3DNormalizedDifference& difference: differences){
+        result.push_back(
+            difference.value * (difference.scale / local_scale)
+        );
+    }
     return result;
 }
 
@@ -78,15 +100,19 @@ inline Face outward_face(
     std::size_t first,
     std::size_t second,
     std::size_t third,
-    const Point3& interior,
+    const std::array<std::size_t, 4>& interior_witness,
     const std::vector<Point3>& points
 ){
-    if(adaptive_orient3d(
-        points[first], points[second], points[third], interior
-    ) > 0){
-        std::swap(second, third);
+    for(const std::size_t witness: interior_witness){
+        const int side = adaptive_orient3d(
+            points[first], points[second], points[third], points[witness]
+        );
+        if(side != 0){
+            if(side > 0) std::swap(second, third);
+            return {{{first, second, third}}, true};
+        }
     }
-    return {{{first, second, third}}, true};
+    throw std::logic_error("convex hull produced a degenerate face");
 }
 
 inline ConvexPolyhedron3 collinear_hull(const std::vector<Point3>& points){
@@ -148,14 +174,12 @@ inline ConvexPolyhedron3 convex_hull_3d(std::vector<Point3> input){
         return {points.empty() ? -1 : 0, std::move(points), {}};
     }
 
-    const long double scale = coordinate_scale(points);
-    const std::vector<Point3> scaled = scaled_points(points, scale);
     const std::size_t first = 0;
     const std::size_t second = 1;
     std::size_t third = points.size();
     for(std::size_t index = 0; index < points.size(); ++index){
-        if(index != first && index != second && independent_directions(
-            scaled[second] - scaled[first], scaled[index] - scaled[first]
+        if(index != first && index != second && exactly_non_collinear(
+            points[first], points[second], points[index]
         )){
             third = index;
             break;
@@ -174,17 +198,20 @@ inline ConvexPolyhedron3 convex_hull_3d(std::vector<Point3> input){
         }
     }
     if(fourth == points.size()){
-        return coplanar_hull(points, scaled, first, second, third);
+        return coplanar_hull(
+            points, locally_normalized_points(points, points[first]),
+            first, second, third
+        );
     }
 
-    const Point3 interior = (
-        scaled[first] + scaled[second] + scaled[third] + scaled[fourth]
-    ) * (scale / 4.0L);
+    const std::array<std::size_t, 4> interior_witness{
+        first, second, third, fourth,
+    };
     std::vector<Face> faces{
-        outward_face(first, second, third, interior, points),
-        outward_face(first, fourth, second, interior, points),
-        outward_face(first, third, fourth, interior, points),
-        outward_face(second, fourth, third, interior, points),
+        outward_face(first, second, third, interior_witness, points),
+        outward_face(first, fourth, second, interior_witness, points),
+        outward_face(first, third, fourth, interior_witness, points),
+        outward_face(second, fourth, third, interior_witness, points),
     };
     const std::set<std::size_t> initial{first, second, third, fourth};
 
@@ -227,7 +254,8 @@ inline ConvexPolyhedron3 convex_hull_3d(std::vector<Point3> input){
             static_cast<void>(key);
             if(edge.count != 1) continue;
             faces.push_back(outward_face(
-                edge.first, edge.second, point_index, interior, points
+                edge.first, edge.second, point_index,
+                interior_witness, points
             ));
         }
     }

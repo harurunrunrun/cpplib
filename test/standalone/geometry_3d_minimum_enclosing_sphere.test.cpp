@@ -111,6 +111,31 @@ int main(){
     if(!close_point(translated_sphere.center, {shift, -shift, shift}, 2e-15L) ||
        !close_value(translated_sphere.radius, 10, 2e-12L)) return 1;
 
+    const long double extreme_radius =
+        0.75L * std::numeric_limits<long double>::max();
+    const Point3 extreme_left{-extreme_radius, 0, 0};
+    const Point3 extreme_right{extreme_radius, 0, 0};
+    const Sphere3 extreme_pair = minimum_enclosing_sphere(
+        extreme_left, extreme_right
+    );
+    if(extreme_pair.center.x != 0.0L || extreme_pair.center.y != 0.0L
+        || extreme_pair.center.z != 0.0L
+        || extreme_pair.radius != extreme_radius) return 1;
+    const Sphere3 extreme_vector = minimum_enclosing_sphere(
+        std::vector<Point3>{extreme_left, {}, extreme_right}, seed
+    );
+    if(extreme_vector.center.x != 0.0L || extreme_vector.center.y != 0.0L
+        || extreme_vector.center.z != 0.0L
+        || extreme_vector.radius != extreme_radius) return 1;
+
+    const long double tiny_radius = 1e-3000L;
+    const Sphere3 tiny_vector = minimum_enclosing_sphere(
+        std::vector<Point3>{{0, 0, 0}, {2 * tiny_radius, 0, 0}}, seed
+    );
+    if(tiny_vector.center.x != tiny_radius
+        || tiny_vector.center.y != 0.0L || tiny_vector.center.z != 0.0L
+        || tiny_vector.radius != tiny_radius) return 1;
+
     bool empty_threw = false;
     try{
         static_cast<void>(minimum_enclosing_sphere(std::vector<Point3>{}));

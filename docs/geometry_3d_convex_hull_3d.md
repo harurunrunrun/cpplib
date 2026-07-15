@@ -13,4 +13,7 @@ documentation_of: ../src/algorithm/geometry/3d/convex_hull_3d.hpp
 
 ## 注意点
 
-非有限座標には`std::invalid_argument`を送出する。3次元の面は外向きで、同一支持平面上の多角形面は複数の三角形に分割される。
+非有限座標には`std::invalid_argument`を送出する。アフィン次元と面の向きは入力座標の
+exact dyadic predicateで判定するため、巨大な平行移動量に比べて局所形状が非常に小さい
+場合も、入力の`long double`に残っている差を失わない。共面凸包の射影前には局所差分を
+正規化する。3次元の面は外向きで、同一支持平面上の多角形面は複数の三角形に分割される。
