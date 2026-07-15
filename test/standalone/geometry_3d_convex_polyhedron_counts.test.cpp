@@ -8,6 +8,8 @@ int main(){
     return geometry3d_api_test_main([](std::mt19937_64&, std::size_t){
         const auto counts = convex_polyhedron_counts(geometry3d_test_cube());
         return counts.vertices == 8 && counts.edges == 12
-            && counts.triangular_faces == 12;
+            && counts.facet_count == 6
+            && counts.triangulated_face_count == 12
+            && counts.triangular_faces == counts.triangulated_face_count;
     });
 }

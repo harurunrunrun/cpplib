@@ -226,6 +226,7 @@
 #include "divide_and_conquer_convex_hull_3d.hpp"
 #include "convex_polyhedron_counts.hpp"
 #include "convex_polyhedron_face_adjacency.hpp"
+#include "convex_polyhedron_facets.hpp"
 #include "polygon3_line_intersection.hpp"
 #include "polygon3_ray_intersection.hpp"
 #include "polygon3_segment_intersection.hpp"
