@@ -110,3 +110,7 @@
 #include "circle_plane_intersections.hpp"
 #include "circle_circle_intersections.hpp"
 #include "circle_sphere_intersections.hpp"
+#include "minimum_enclosing_sphere.hpp"
+#include "minimum_enclosing_sphere_welzl.hpp"
+#include "closest_pair_3d.hpp"
+#include "point_set_diameter_3d.hpp"
