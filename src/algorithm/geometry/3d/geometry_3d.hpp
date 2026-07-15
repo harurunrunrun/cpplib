@@ -114,3 +114,5 @@
 #include "minimum_enclosing_sphere_welzl.hpp"
 #include "closest_pair_3d.hpp"
 #include "point_set_diameter_3d.hpp"
+#include "convex_polyhedron3.hpp"
+#include "convex_hull_3d.hpp"
