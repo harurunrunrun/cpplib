@@ -218,3 +218,7 @@
 #include "convex_polyhedron_intersects.hpp"
 #include "convex_polyhedron_diameter.hpp"
 #include "convex_polyhedron_sphere_intersects.hpp"
+#include "aabb3.hpp"
+#include "kd_tree_3d.hpp"
+#include "octree_3d.hpp"
+#include "triangle_bvh_3d.hpp"
