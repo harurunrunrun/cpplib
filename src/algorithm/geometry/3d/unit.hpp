@@ -9,13 +9,19 @@
 #include <vector>
 
 #include "base.hpp"
-#include "abs.hpp"
-#include "geometry3d_sign.hpp"
+#include "is_finite.hpp"
 
 inline Point3 unit(const Point3& point){
-    const long double length = abs(point);
-    if(geometry3d_sign(length) == 0)[[unlikely]]{
+    if(!geometry3d_is_finite(point))[[unlikely]]{
+        throw std::invalid_argument("unit vector requires finite coordinates");
+    }
+    const long double scale = std::max({
+        std::abs(point.x), std::abs(point.y), std::abs(point.z)
+    });
+    if(scale == 0.0L)[[unlikely]]{
         throw std::invalid_argument("unit vector of zero 3D vector");
     }
-    return point / length;
+    const Point3 scaled = point / scale;
+    const long double length = std::hypot(scaled.x, scaled.y, scaled.z);
+    return scaled / length;
 }

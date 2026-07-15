@@ -9,8 +9,7 @@
 #include <vector>
 
 #include "base.hpp"
-#include "geometry3d_sign.hpp"
-#include "scalar_triple.hpp"
+#include "adaptive_orient3d.hpp"
 
 inline bool coplanar(
     const Point3& first,
@@ -18,7 +17,5 @@ inline bool coplanar(
     const Point3& third,
     const Point3& fourth
 ){
-    return geometry3d_sign(scalar_triple(
-        second - first, third - first, fourth - first
-    )) == 0;
+    return adaptive_orient3d(first, second, third, fourth) == 0;
 }

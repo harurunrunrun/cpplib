@@ -11,8 +11,21 @@
 #include "base.hpp"
 #include "abs.hpp"
 #include "cross.hpp"
-#include "geometry3d_sign.hpp"
+#include "is_finite.hpp"
 
 inline bool parallel(const Point3& left, const Point3& right){
-    return geometry3d_sign(abs(cross(left, right))) == 0;
+    if(!geometry3d_is_finite(left) || !geometry3d_is_finite(right))[[unlikely]]{
+        throw std::invalid_argument("parallel requires finite vectors");
+    }
+    const long double left_scale = std::max({
+        std::abs(left.x), std::abs(left.y), std::abs(left.z)
+    });
+    const long double right_scale = std::max({
+        std::abs(right.x), std::abs(right.y), std::abs(right.z)
+    });
+    if(left_scale == 0.0L || right_scale == 0.0L) return true;
+    const Point3 scaled_left = left / left_scale;
+    const Point3 scaled_right = right / right_scale;
+    return abs(cross(scaled_left, scaled_right)) <=
+        GEOMETRY3D_EPS * abs(scaled_left) * abs(scaled_right);
 }

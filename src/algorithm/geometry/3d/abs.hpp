@@ -9,6 +9,17 @@
 #include <vector>
 
 #include "base.hpp"
-#include "norm.hpp"
+#include "is_finite.hpp"
 
-inline long double abs(const Point3& point){ return std::sqrt(norm(point)); }
+inline long double abs(const Point3& point){
+    if(!geometry3d_is_finite(point))[[unlikely]]{
+        throw std::invalid_argument("3D vector length requires finite coordinates");
+    }
+    const long double result = std::hypot(point.x, point.y, point.z);
+    if(!std::isfinite(result))[[unlikely]]{
+        throw std::overflow_error(
+            "3D vector length is not representable as long double"
+        );
+    }
+    return result;
+}
