@@ -55,6 +55,20 @@ int main(){
             )) return false;
         }
 
+        const long double absolute_translation = 1e3000L;
+        const long double absolute_local = 1e-3000L;
+        const Polygon3 absolute_scale_polygon{
+            {0, 0, absolute_translation},
+            {absolute_local, 0, absolute_translation},
+            {0, absolute_local, absolute_translation},
+        };
+        if(!geometry3d_api_close(
+            polygon3_distance(
+                absolute_scale_polygon,
+                {2 * absolute_local, 0, absolute_translation}
+            ) / absolute_local, 1.0L
+        )) return false;
+
         const long double maximum = std::numeric_limits<long double>::max();
         const long double near_maximum = maximum / 16;
         const Polygon3 extreme{

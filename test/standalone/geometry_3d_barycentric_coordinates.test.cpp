@@ -71,6 +71,22 @@ int main(){
             }
         }
 
+        const long double absolute_translation = 1e3000L;
+        const long double absolute_local = 1e-3000L;
+        const auto absolute_scale_triangle = barycentric_coordinates(
+            Triangle3{
+                {0, 0, absolute_translation},
+                {absolute_local, 0, absolute_translation},
+                {0, absolute_local, absolute_translation},
+            },
+            {absolute_local / 4, absolute_local / 4, absolute_translation}
+        );
+        if(!geometry3d_close_value(absolute_scale_triangle[0], 0.5L)
+            || !geometry3d_close_value(absolute_scale_triangle[1], 0.25L)
+            || !geometry3d_close_value(absolute_scale_triangle[2], 0.25L)){
+            return false;
+        }
+
         const long double maximum = std::numeric_limits<long double>::max();
         const long double near_maximum = maximum * 0.75L;
         const auto extreme = barycentric_coordinates(

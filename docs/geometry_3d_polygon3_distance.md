@@ -19,7 +19,9 @@ documentation_of: ../src/algorithm/geometry/3d/polygon3_distance.hpp
   頂点数不足、面積0、非共面の場合は `std::invalid_argument` を送出する。
 - 全頂点と `point` は有限でなければならず、違反時は
   `std::invalid_argument` を送出する。
-- 座標差と多角形の局所scaleを正規化して計算するため、非常に大きい・小さい
-  一様scaleと巨大な共通平行移動による中間overflow・underflowを抑える。
+- 先頭頂点をanchorとし、頂点差から求めた局所scaleで多角形とqueryを正規化する。
+  絶対座標の大きさを局所scaleへ混ぜないため、異なる座標軸に巨大な共通平行移動が
+  ある場合も表現可能な局所辺を失わない。
+- query差を局所scaleで表現できない場合は`std::overflow_error`を送出する。
 - 真の距離が `long double` で表現できない場合は `std::overflow_error` を送出する。
 - 自己交差の検査は行わない。

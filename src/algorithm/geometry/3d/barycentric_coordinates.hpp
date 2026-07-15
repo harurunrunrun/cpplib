@@ -17,35 +17,26 @@
 namespace geometry3d_barycentric_detail{
 
 template<std::size_t Size>
-inline long double coordinate_scale(
+inline long double edge_scale(
     const std::array<Point3, Size>& points
 ){
-    long double coordinate_scale = 0.0L;
+    long double result = 0.0L;
     for(const Point3& current: points){
         if(!geometry3d_is_finite(current))[[unlikely]]{
             throw std::invalid_argument(
                 "barycentric coordinates require finite points"
             );
         }
-        coordinate_scale = std::max({
-            coordinate_scale,
-            std::abs(current.x),
-            std::abs(current.y),
-            std::abs(current.z),
-        });
     }
-    return coordinate_scale;
-}
-
-inline long double normalized_difference(
-    long double left,
-    long double right,
-    long double scale
-){
-    if(std::signbit(left) == std::signbit(right)){
-        return (left - right) / scale;
+    for(std::size_t index = 1; index < points.size(); ++index){
+        const Geometry3DNormalizedDifference difference =
+            geometry3d_normalized_difference(points[index], points.front());
+        if(difference.value.x != 0.0L || difference.value.y != 0.0L
+            || difference.value.z != 0.0L){
+            result = std::max(result, difference.scale);
+        }
     }
-    return left / scale - right / scale;
+    return result;
 }
 
 inline Point3 normalized_difference(
@@ -53,11 +44,7 @@ inline Point3 normalized_difference(
     const Point3& right,
     long double scale
 ){
-    return {
-        normalized_difference(left.x, right.x, scale),
-        normalized_difference(left.y, right.y, scale),
-        normalized_difference(left.z, right.z, scale),
-    };
+    return geometry3d_safe_normalized_difference(left, right, scale);
 }
 
 inline long double vector_scale(const Point3& first, const Point3& second){
@@ -92,19 +79,19 @@ inline std::array<long double, 3> barycentric_coordinates(
     const std::array<Point3, 3> vertices{
         triangle.a, triangle.b, triangle.c,
     };
-    const long double coordinate_scale =
-        geometry3d_barycentric_detail::coordinate_scale(vertices);
-    if(coordinate_scale == 0.0L)[[unlikely]]{
+    const long double edge_scale =
+        geometry3d_barycentric_detail::edge_scale(vertices);
+    if(edge_scale == 0.0L)[[unlikely]]{
         throw std::invalid_argument("degenerate 3D triangle");
     }
     Point3 first = geometry3d_barycentric_detail::normalized_difference(
-        triangle.b, triangle.a, coordinate_scale
+        triangle.b, triangle.a, edge_scale
     );
     Point3 second = geometry3d_barycentric_detail::normalized_difference(
-        triangle.c, triangle.a, coordinate_scale
+        triangle.c, triangle.a, edge_scale
     );
     Point3 offset = geometry3d_barycentric_detail::normalized_difference(
-        point, triangle.a, coordinate_scale
+        point, triangle.a, edge_scale
     );
     const long double scale =
         geometry3d_barycentric_detail::vector_scale(first, second);
@@ -146,22 +133,22 @@ inline std::array<long double, 4> barycentric_coordinates(
     const std::array<Point3, 4> vertices{
         tetrahedron.a, tetrahedron.b, tetrahedron.c, tetrahedron.d,
     };
-    const long double coordinate_scale =
-        geometry3d_barycentric_detail::coordinate_scale(vertices);
-    if(coordinate_scale == 0.0L)[[unlikely]]{
+    const long double edge_scale =
+        geometry3d_barycentric_detail::edge_scale(vertices);
+    if(edge_scale == 0.0L)[[unlikely]]{
         throw std::invalid_argument("degenerate tetrahedron");
     }
     Point3 first = geometry3d_barycentric_detail::normalized_difference(
-        tetrahedron.b, tetrahedron.a, coordinate_scale
+        tetrahedron.b, tetrahedron.a, edge_scale
     );
     Point3 second = geometry3d_barycentric_detail::normalized_difference(
-        tetrahedron.c, tetrahedron.a, coordinate_scale
+        tetrahedron.c, tetrahedron.a, edge_scale
     );
     Point3 third = geometry3d_barycentric_detail::normalized_difference(
-        tetrahedron.d, tetrahedron.a, coordinate_scale
+        tetrahedron.d, tetrahedron.a, edge_scale
     );
     Point3 offset = geometry3d_barycentric_detail::normalized_difference(
-        point, tetrahedron.a, coordinate_scale
+        point, tetrahedron.a, edge_scale
     );
     const long double scale =
         geometry3d_barycentric_detail::vector_scale(first, second, third);
