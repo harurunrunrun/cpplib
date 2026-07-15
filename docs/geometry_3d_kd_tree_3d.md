@@ -36,4 +36,3 @@ documentation_of: ../src/algorithm/geometry/3d/kd_tree_3d.hpp
 - `radius` は有限かつ非負でなければならない。
 - 動的更新は行わない。更新後は `build` で再構築する。
 - 距離とAABB下界には `std::hypot` を使い、平方距離のoverflowを避ける。
-

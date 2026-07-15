@@ -199,4 +199,3 @@ public:
         return std::pair{best_index, best_distance};
     }
 };
-

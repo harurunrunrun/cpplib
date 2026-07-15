@@ -340,4 +340,3 @@ public:
         return std::tuple{best_index, best_parameter, best_point};
     }
 };
-

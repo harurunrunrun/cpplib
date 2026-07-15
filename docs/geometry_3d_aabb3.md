@@ -26,4 +26,3 @@ documentation_of: ../src/algorithm/geometry/3d/aabb3.hpp
   `std::invalid_argument` を送出する。点も有限でなければならない。
 - 境界を含む閉集合として扱う。
 - 距離は `std::hypot` で計算し、平方和による不要なoverflowを避ける。
-

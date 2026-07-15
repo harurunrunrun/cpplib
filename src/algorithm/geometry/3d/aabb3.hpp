@@ -53,4 +53,3 @@ struct AABB3{
         if(!valid()) throw std::invalid_argument("invalid AABB3");
     }
 };
-
