@@ -243,3 +243,4 @@
 #include "separating_axis_theorem_3d.hpp"
 #include "epa_3d.hpp"
 #include "convex_collision_3d.hpp"
+#include "sphere_sphere_distance.hpp"
