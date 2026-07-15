@@ -23,3 +23,7 @@ $O(S+T+E)$。Delaunay構築の最悪時間は $O(S^3)$。
 - `bounds` は外向き三角形面を持つ非空の三次元凸多面体でなければならない。
 - siteが空、boundsが三次元でない場合は `std::invalid_argument` を送出する。
 - 同率最大の中心が複数ある場合、そのうち列挙順で最初のものを返す。
+- bounds包含は外向き面の適応的predicateで判定し、辺・面・site差は局所scaleへ
+  正規化する。補助交点が `long double` で表現不能な場合はその候補を除外する。
+- 最近siteまでの真の距離が `long double` で表現不能な場合は
+  `std::overflow_error` を送出する。

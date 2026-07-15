@@ -4,11 +4,13 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
+#include <numeric>
 #include <stdexcept>
 #include <variant>
 #include <vector>
 
 #include "convex_polyhedron3.hpp"
+#include "convex_polyhedron_contains.hpp"
 #include "convex_polyhedron_edges.hpp"
 #include "cross.hpp"
 #include "dot.hpp"
@@ -21,8 +23,12 @@ namespace maximum_empty_sphere_detail{
 
 inline Plane3 bisector_plane(const Point3& first, const Point3& second){
     return {
-        first / 2.0L + second / 2.0L,
-        second - first,
+        {
+            std::midpoint(first.x, second.x),
+            std::midpoint(first.y, second.y),
+            std::midpoint(first.z, second.z),
+        },
+        geometry3d_normalized_difference(second, first).value,
     };
 }
 
@@ -30,28 +36,7 @@ inline bool inside_bounds(
     const ConvexPolyhedron3& bounds,
     const Point3& point
 ){
-    for(const auto& face: bounds.faces){
-        for(std::size_t vertex: face){
-            if(vertex >= bounds.vertices.size())[[unlikely]]{
-                throw std::out_of_range("maximum empty sphere face index");
-            }
-        }
-        const Point3& first = bounds.vertices[face[0]];
-        const Point3 normal = cross(
-            bounds.vertices[face[1]] - first,
-            bounds.vertices[face[2]] - first
-        );
-        const long double normal_length = std::hypot(normal.x, normal.y, normal.z);
-        if(normal_length == 0.0L) continue;
-        const Point3 difference = point - first;
-        const long double scale = std::max({
-            1.0L, std::abs(difference.x), std::abs(difference.y),
-            std::abs(difference.z)
-        });
-        if(dot(normal, difference) >
-            16.0L * GEOMETRY3D_EPS * normal_length * scale) return false;
-    }
-    return true;
+    return convex_polyhedron_contains(bounds, point);
 }
 
 inline long double nearest_site_distance(
@@ -60,9 +45,22 @@ inline long double nearest_site_distance(
 ){
     long double result = std::numeric_limits<long double>::infinity();
     for(const Point3& site: sites){
-        result = std::min(result, std::hypot(
-            point.x - site.x, point.y - site.y, point.z - site.z
-        ));
+        const Geometry3DNormalizedDifference difference =
+            geometry3d_normalized_difference(point, site);
+        const long double normalized_distance = std::hypot(
+            difference.value.x,
+            difference.value.y,
+            difference.value.z
+        );
+        if(normalized_distance >
+            std::numeric_limits<long double>::max() / difference.scale){
+            throw std::overflow_error(
+                "maximum empty sphere radius is not representable"
+            );
+        }
+        result = std::min(
+            result, normalized_distance * difference.scale
+        );
     }
     return result;
 }
@@ -108,35 +106,47 @@ inline Sphere3 maximum_empty_sphere(
         };
         for(std::size_t first = 0; first < sites.size(); ++first){
             for(std::size_t second = first + 1; second < sites.size(); ++second){
-                const auto intersection = segment_plane_intersection(
-                    segment, bisector_plane(sites[first], sites[second])
-                );
-                if(intersection) consider(*intersection);
+                try{
+                    const auto intersection = segment_plane_intersection(
+                        segment, bisector_plane(sites[first], sites[second])
+                    );
+                    if(intersection) consider(*intersection);
+                }catch(const std::overflow_error&){
+                }
             }
         }
     }
 
     for(const auto& face: bounds.faces){
         const Point3& first_vertex = bounds.vertices[face[0]];
+        const Point3 first_direction =
+            geometry3d_normalized_difference(
+                bounds.vertices[face[1]], first_vertex
+            ).value;
+        const Point3 second_direction =
+            geometry3d_normalized_difference(
+                bounds.vertices[face[2]], first_vertex
+            ).value;
         const Plane3 face_plane{
             first_vertex,
-            cross(
-                bounds.vertices[face[1]] - first_vertex,
-                bounds.vertices[face[2]] - first_vertex
-            ),
+            cross(first_direction, second_direction),
         };
         for(std::size_t first = 0; first < sites.size(); ++first){
             for(std::size_t second = first + 1; second < sites.size(); ++second){
                 for(std::size_t third = second + 1;
                     third < sites.size(); ++third){
-                    const ThreePlaneIntersection3 intersection =
-                        three_plane_intersection(
-                            face_plane,
-                            bisector_plane(sites[first], sites[second]),
-                            bisector_plane(sites[first], sites[third])
-                        );
-                    if(const Point3* point = std::get_if<Point3>(&intersection)){
-                        consider(*point);
+                    try{
+                        const ThreePlaneIntersection3 intersection =
+                            three_plane_intersection(
+                                face_plane,
+                                bisector_plane(sites[first], sites[second]),
+                                bisector_plane(sites[first], sites[third])
+                            );
+                        if(const Point3* point =
+                            std::get_if<Point3>(&intersection)){
+                            consider(*point);
+                        }
+                    }catch(const std::overflow_error&){
                     }
                 }
             }

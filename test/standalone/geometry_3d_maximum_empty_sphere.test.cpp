@@ -53,6 +53,38 @@ int main(){
             return false;
         }
 
+        const long double translation = 1e3000L;
+        const long double ulp = std::nextafter(
+            translation, std::numeric_limits<long double>::infinity()
+        ) - translation;
+        const long double upper = translation + 64 * ulp;
+        std::vector<Point3> thin_box_vertices;
+        for(int x = 0; x < 2; ++x){
+            for(int y = 0; y < 2; ++y){
+                for(int z = 0; z < 2; ++z){
+                    thin_box_vertices.push_back({
+                        static_cast<long double>(x),
+                        static_cast<long double>(y),
+                        z ? upper : translation,
+                    });
+                }
+            }
+        }
+        const ConvexPolyhedron3 thin_box =
+            convex_hull_3d(thin_box_vertices);
+        const Sphere3 translated = maximum_empty_sphere({
+            {0, 0, translation},
+            {1, 0, translation},
+            {0, 1, translation},
+            {0, 0, upper},
+        }, thin_box);
+        if(translated.center.x != 0.5L
+            || translated.center.y != 0.5L
+            || translated.center.z != translation + 32 * ulp
+            || translated.radius != 32 * ulp){
+            return false;
+        }
+
         std::uniform_real_distribution<long double> coordinate(-0.9L, 0.9L);
         const std::size_t iterations = std::min<std::size_t>(rounds, 20);
         for(std::size_t iteration = 0; iteration < iterations; ++iteration){

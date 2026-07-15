@@ -28,3 +28,6 @@ $O(N+T)$。有限cellのhalfspace polyhedron構成コストを別途要する。
 - 有限cellの `bounded_polyhedron` は数値的に頂点列挙できた場合だけ設定するため、
   cell幾何の基本契約は常に存在する `boundary_halfspaces` である。
 - 外心が有限範囲を超える場合は `std::overflow_error` を送出する。
+- 四面体外心は入力座標のexact dyadic Cramer式で求め、最終座標だけを
+  `long double`へ丸める。境界面と二等分面はanchorからの局所差分を正規化するため、
+  巨大な共通移動量と非常に薄い局所形状を同時に扱える。

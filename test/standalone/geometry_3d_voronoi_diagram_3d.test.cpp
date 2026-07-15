@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <limits>
 #include <random>
 #include <vector>
 
@@ -118,6 +119,38 @@ int main(){
         });
         if(!validate_voronoi(cospherical_cube)) return false;
         if(cospherical_cube.finite_vertices.size() != 1) return false;
+
+        const long double translation = 1e3000L;
+        const long double ulp = std::nextafter(
+            translation, std::numeric_limits<long double>::infinity()
+        ) - translation;
+        const long double upper = translation + 64 * ulp;
+        std::vector<Point3> thin_box_sites;
+        for(int x = 0; x < 2; ++x){
+            for(int y = 0; y < 2; ++y){
+                for(int z = 0; z < 2; ++z){
+                    thin_box_sites.push_back({
+                        static_cast<long double>(x),
+                        static_cast<long double>(y),
+                        z ? upper : translation,
+                    });
+                }
+            }
+        }
+        const auto translated_thin_box =
+            voronoi_diagram_3d(thin_box_sites);
+        if(translated_thin_box.affine_dimension != 3
+            || !validate_voronoi(translated_thin_box)
+            || translated_thin_box.finite_vertices.size() != 1){
+            return false;
+        }
+        const Point3& translated_center =
+            translated_thin_box.finite_vertices.front();
+        if(translated_center.x != 0.5L
+            || translated_center.y != 0.5L
+            || translated_center.z != translation + 32 * ulp){
+            return false;
+        }
 
         const auto flat = voronoi_diagram_3d({
             {0, 0, 0}, {1, 0, 0}, {0, 1, 0}

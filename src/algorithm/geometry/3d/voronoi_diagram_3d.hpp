@@ -5,20 +5,60 @@
 #include <cmath>
 #include <cstddef>
 #include <map>
+#include <numeric>
 #include <set>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
 #include "adaptive_orient3d.hpp"
-#include "circumsphere.hpp"
 #include "cross.hpp"
 #include "delaunay_tetrahedralization_3d.hpp"
 #include "halfspace_intersection_3d.hpp"
 #include "is_finite.hpp"
+#include "on_plane.hpp"
 #include "voronoi_diagram3.hpp"
 
 namespace voronoi_diagram_3d_detail{
+
+using ExactDyadic3 = std::array<
+    geometry3d_adaptive_detail::ExactDyadic, 3
+>;
+
+inline geometry3d_adaptive_detail::ExactDyadic exact_dot(
+    const ExactDyadic3& first,
+    const ExactDyadic3& second
+){
+    using namespace geometry3d_adaptive_detail;
+    ExactDyadic result{};
+    for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
+        result = add(result, multiply(
+            first[coordinate], second[coordinate]
+        ));
+    }
+    return result;
+}
+
+inline ExactDyadic3 exact_cross(
+    const ExactDyadic3& first,
+    const ExactDyadic3& second
+){
+    using namespace geometry3d_adaptive_detail;
+    return {
+        subtract(
+            multiply(first[1], second[2]),
+            multiply(first[2], second[1])
+        ),
+        subtract(
+            multiply(first[2], second[0]),
+            multiply(first[0], second[2])
+        ),
+        subtract(
+            multiply(first[0], second[1]),
+            multiply(first[1], second[0])
+        ),
+    };
+}
 
 template<std::size_t Size>
 inline std::array<std::size_t, Size> sorted_indices(
@@ -32,23 +72,63 @@ inline Point3 tetrahedron_circumcenter(
     const std::array<std::size_t, 4>& tetrahedron,
     const std::vector<Point3>& points
 ){
-    long double scale = 0.0L;
-    for(std::size_t index: tetrahedron){
-        scale = std::max({
-            scale, std::abs(points[index].x), std::abs(points[index].y),
-            std::abs(points[index].z)
-        });
+    using namespace geometry3d_adaptive_detail;
+    const Point3& anchor = points[tetrahedron[0]];
+    const std::array<ExactDyadic3, 3> directions{
+        geometry3d_plane_numeric_detail::exact_difference(
+            points[tetrahedron[1]], anchor
+        ),
+        geometry3d_plane_numeric_detail::exact_difference(
+            points[tetrahedron[2]], anchor
+        ),
+        geometry3d_plane_numeric_detail::exact_difference(
+            points[tetrahedron[3]], anchor
+        ),
+    };
+    const std::array<ExactDyadic3, 3> cofactors{
+        exact_cross(directions[1], directions[2]),
+        exact_cross(directions[2], directions[0]),
+        exact_cross(directions[0], directions[1]),
+    };
+    const ExactDyadic denominator = multiply(
+        exact_dyadic(2.0L), exact_dot(directions[0], cofactors[0])
+    );
+    if(sign(denominator) == 0)[[unlikely]]{
+        throw std::logic_error("degenerate Delaunay tetrahedron");
     }
-    if(scale == 0.0L) scale = 1.0L;
-    const Sphere3 sphere = circumsphere({
-        points[tetrahedron[0]] / scale, points[tetrahedron[1]] / scale,
-        points[tetrahedron[2]] / scale, points[tetrahedron[3]] / scale,
-    });
-    const Point3 center = sphere.center * scale;
-    if(!geometry3d_is_finite(center))[[unlikely]]{
-        throw std::overflow_error("3D Voronoi circumcenter overflow");
+
+    const std::array<ExactDyadic, 3> squared_lengths{
+        exact_dot(directions[0], directions[0]),
+        exact_dot(directions[1], directions[1]),
+        exact_dot(directions[2], directions[2]),
+    };
+    const std::array<long double, 3> anchor_coordinates{
+        anchor.x, anchor.y, anchor.z,
+    };
+    std::array<long double, 3> center{};
+    for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
+        ExactDyadic offset_numerator{};
+        for(std::size_t direction_index = 0;
+            direction_index < 3; ++direction_index){
+            offset_numerator = add(offset_numerator, multiply(
+                squared_lengths[direction_index],
+                cofactors[direction_index][coordinate]
+            ));
+        }
+        const ExactDyadic center_numerator = add(
+            multiply(
+                exact_dyadic(anchor_coordinates[coordinate]), denominator
+            ),
+            offset_numerator
+        );
+        center[coordinate] =
+            geometry3d_plane_numeric_detail::exact_ratio(
+                center_numerator,
+                denominator,
+                "3D Voronoi circumcenter is not representable"
+            );
     }
-    return center;
+    return {center[0], center[1], center[2]};
 }
 
 template<class Range>
@@ -57,12 +137,7 @@ inline void sort_unique(Range& values){
     values.erase(std::unique(values.begin(), values.end()), values.end());
 }
 inline Point3 scaled_difference(const Point3& first, const Point3& second){
-    long double scale = std::max({
-        std::abs(first.x), std::abs(first.y), std::abs(first.z),
-        std::abs(second.x), std::abs(second.y), std::abs(second.z)
-    });
-    if(scale == 0.0L) scale = 1.0L;
-    return first / scale - second / scale;
+    return geometry3d_normalized_difference(first, second).value;
 }
 
 
@@ -175,7 +250,14 @@ inline Plane3 cell_bisector_halfspace(
     const Point3& site,
     const Point3& neighbor
 ){
-    return {site / 2.0L + neighbor / 2.0L, scaled_difference(neighbor, site)};
+    return {
+        {
+            std::midpoint(site.x, neighbor.x),
+            std::midpoint(site.y, neighbor.y),
+            std::midpoint(site.z, neighbor.z),
+        },
+        scaled_difference(neighbor, site),
+    };
 }
 
 }  // namespace voronoi_diagram_3d_detail
