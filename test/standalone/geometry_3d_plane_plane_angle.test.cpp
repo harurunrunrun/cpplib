@@ -1,0 +1,14 @@
+// competitive-verifier: STANDALONE
+
+#include "../../src/algorithm/geometry/3d/plane_plane_angle.hpp"
+#include "geometry_3d_api_test_common.hpp"
+
+int main(){
+    return geometry3d_api_test_main([](std::mt19937_64&, std::size_t){
+        return geometry3d_api_close(plane_plane_angle(
+            Plane3{{}, {0, 0, 1}}, Plane3{{}, {0, 0, -2}}
+        ), 0) && geometry3d_api_close(plane_plane_angle(
+            Plane3{{}, {0, 0, 1}}, Plane3{{}, {1, 0, 0}}
+        ), GEOMETRY3D_PI / 2);
+    });
+}
