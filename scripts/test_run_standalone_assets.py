@@ -83,6 +83,14 @@ print("deliberate generator failure", file=sys.stderr)
 raise SystemExit(7)
 """
 
+FAILING_CHECKER = """\\
+import argparse
+import sys
+argparse.ArgumentParser().parse_known_args()
+print("deliberate checker failure", file=sys.stderr)
+raise SystemExit(9)
+"""
+
 
 def add_test(root: Path, name: str) -> None:
     (root / "test" / "standalone").mkdir(parents=True, exist_ok=True)
@@ -228,6 +236,33 @@ class RunStandaloneAssetsTest(unittest.TestCase):
                     "test/standalone/broken_generator.test.cpp",
                 )
             )
+            self.assertEqual(manifest["case_count"], 1)
+
+    def test_checker_failure_includes_command_and_diagnostic(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            name = "broken_checker"
+            add_test(root, name)
+            (root / "test" / "checker" / name / "checker.py").write_text(
+                FAILING_CHECKER, encoding="utf-8"
+            )
+            output = io.StringIO()
+            with working_directory(root), redirect_stderr(output):
+                status = runner.main(
+                    ["--cache-dir", "cache", "--result-dir", "results"]
+                )
+            rendered = output.getvalue()
+            self.assertEqual(status, 1)
+            self.assertIn("FAIL: 1 failure(s)", rendered)
+            self.assertIn("checker exited with code 9; command:", rendered)
+            self.assertIn("diagnostic%3A%0Adeliberate checker failure", rendered)
+            manifest = load_manifest(
+                result_path(
+                    root / "results",
+                    "test/standalone/broken_checker.test.cpp",
+                )
+            )
+            self.assertEqual(manifest["status"], "failure")
             self.assertEqual(manifest["case_count"], 1)
 
     def test_fingerprint_failure_is_annotated(self) -> None:

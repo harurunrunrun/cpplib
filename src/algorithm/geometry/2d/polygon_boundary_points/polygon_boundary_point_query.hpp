@@ -8,7 +8,14 @@
 #include <utility>
 #include <vector>
 
-#include "../geometry.hpp"
+#include "../abs.hpp"
+#include "../convex_polygon_query.hpp"
+#include "../cross.hpp"
+#include "../dot.hpp"
+#include "../geometry_sign.hpp"
+#include "../is_convex.hpp"
+#include "../norm.hpp"
+#include "../on_segment.hpp"
 #include "../side_of_directed_line.hpp"
 #include "enumerate_points_on_polygon_boundary.hpp"
 

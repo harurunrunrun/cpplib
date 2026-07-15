@@ -5,7 +5,9 @@
 #include <utility>
 #include <vector>
 
-#include "../geometry.hpp"
+#include "../dot.hpp"
+#include "../norm.hpp"
+#include "../on_segment.hpp"
 
 inline std::vector<int> enumerate_points_on_polygon_boundary(
     const std::vector<Point>& polygon,

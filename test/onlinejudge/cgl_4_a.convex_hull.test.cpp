@@ -6,14 +6,14 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/convex_hull.hpp"
+#include "../../src/algorithm/geometry/2d/convex_hull_with_collinear.hpp"
 
 int main(){
     int count;
     std::cin >> count;
     std::vector<Point> points(static_cast<std::size_t>(count));
     for(Point& point: points) std::cin >> point.x >> point.y;
-    std::vector<Point> hull = convex_hull(std::move(points));
+    std::vector<Point> hull = convex_hull_with_collinear(std::move(points));
     if(!hull.empty()){
         const auto start = std::min_element(
             hull.begin(), hull.end(),

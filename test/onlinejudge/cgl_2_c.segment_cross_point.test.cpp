@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/geometry.hpp"
+#include "../../src/algorithm/geometry/2d/segment_intersection.hpp"
 
 int main(){
     int query_count;

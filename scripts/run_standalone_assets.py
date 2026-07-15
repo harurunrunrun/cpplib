@@ -229,32 +229,39 @@ def main(argv: list[str] | None = None) -> int:
 
         if checker_exists and generator_succeeded and case_count > 0:
             try:
-                checker_result = subprocess.run(
-                    [
-                        *asset_command(
-                            checker, build_dir / "checker.out", args.cxx, args.cxxflags
-                        ),
-                        "--test",
-                        str(test),
-                        "--case-dir",
-                        str(case_dir),
-                        "--build-dir",
-                        str(build_dir),
-                        "--cxx",
-                        args.cxx,
-                        "--cxxflags",
-                        args.cxxflags,
-                    ],
-                    check=False,
+                checker_command = [
+                    *asset_command(
+                        checker, build_dir / "checker.out", args.cxx, args.cxxflags
+                    ),
+                    "--test",
+                    str(test),
+                    "--case-dir",
+                    str(case_dir),
+                    "--build-dir",
+                    str(build_dir),
+                    "--cxx",
+                    args.cxx,
+                    "--cxxflags",
+                    args.cxxflags,
+                ]
+                checker_returncode, checker_diagnostic = run_with_failure_diagnostic(
+                    checker_command
                 )
             except Exception as error:
                 failures.append((name, f"checker could not start: {error}"))
             else:
-                if checker_result.returncode != 0:
+                if checker_returncode != 0:
+                    diagnostic = (
+                        f"; diagnostic:\n{checker_diagnostic}"
+                        if checker_diagnostic
+                        else ""
+                    )
                     failures.append(
                         (
                             name,
-                            f"checker exited with code {checker_result.returncode}",
+                            "checker exited with code "
+                            f"{checker_returncode}; command: "
+                            f"{shlex.join(checker_command)}{diagnostic}",
                         )
                     )
 

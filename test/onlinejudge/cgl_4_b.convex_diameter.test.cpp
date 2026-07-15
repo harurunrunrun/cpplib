@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/geometry.hpp"
+#include "../../src/algorithm/geometry/2d/convex_diameter.hpp"
 
 int main(){
     int size;

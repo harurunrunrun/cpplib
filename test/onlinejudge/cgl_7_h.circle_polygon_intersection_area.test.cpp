@@ -10,8 +10,8 @@
 int main(){
     int count;
     std::cin >> count;
-    Circle circle;
-    std::cin >> circle.center.x >> circle.center.y >> circle.radius;
+    Circle circle{{0.0L, 0.0L}, 0.0L};
+    std::cin >> circle.radius;
     std::vector<Point> polygon(static_cast<std::size_t>(count));
     for(Point& point: polygon) std::cin >> point.x >> point.y;
     std::cout << std::fixed << std::setprecision(12)

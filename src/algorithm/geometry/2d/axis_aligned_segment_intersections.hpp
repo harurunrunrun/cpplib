@@ -4,7 +4,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "geometry.hpp"
+#include "geometry_sign.hpp"
+#include "types.hpp"
 
 inline long long count_axis_aligned_segment_intersections(
     const std::vector<Segment>& segments
