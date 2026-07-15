@@ -6,6 +6,8 @@
 
 #include "../2d/types.hpp"
 #include "abs.hpp"
+#include "is_finite.hpp"
+#include "unit.hpp"
 #include "dot.hpp"
 #include "geometry3d_sign.hpp"
 #include "plane_coordinate_system.hpp"
@@ -16,19 +18,36 @@ inline Circle circle3_to_2d(
     const Circle3& circle,
     const PlaneCoordinateSystem3& system
 ){
-    if(circle.radius < 0)[[unlikely]]{
-        throw std::invalid_argument("negative circle radius");
+    geometry3d_validate(circle);
+    if(!geometry3d_is_finite(system.origin) ||
+        !geometry3d_is_finite(system.first_axis) ||
+        !geometry3d_is_finite(system.second_axis) ||
+        !geometry3d_is_finite(system.normal))[[unlikely]]{
+        throw std::invalid_argument("circle conversion requires a finite coordinate system");
     }
-    if(geometry3d_sign(abs(circle.normal)) == 0)[[unlikely]]{
-        throw std::invalid_argument("zero circle normal");
-    }
-    if(!parallel(circle.normal, system.normal))[[unlikely]]{
+    const Point3 first_axis = unit(system.first_axis);
+    const Point3 second_axis = unit(system.second_axis);
+    const Point3 system_normal = unit(system.normal);
+    if(!parallel(circle.normal, system_normal))[[unlikely]]{
         throw std::invalid_argument("circle plane and coordinate system differ");
     }
-    if(std::abs(dot(circle.center - system.origin, system.normal))
-        > GEOMETRY3D_EPS * std::max(1.0L, abs(circle.center - system.origin))
-    )[[unlikely]]{
+    const auto difference = geometry3d_normalized_difference(
+        circle.center, system.origin, {circle.radius}
+    );
+    const long double scale = difference.scale;
+    const Point3 offset = difference.value;
+    const long double offset_length = std::hypot(
+        offset.x, offset.y, offset.z
+    );
+    if(geometry3d_scaled_sign(
+        dot(offset, system_normal), offset_length
+    ) != 0)[[unlikely]]{
         throw std::invalid_argument("circle center is outside the coordinate plane");
     }
-    return {to_plane_coordinates(system, circle.center), circle.radius};
+    const long double x = dot(offset, first_axis) * scale;
+    const long double y = dot(offset, second_axis) * scale;
+    if(!std::isfinite(x) || !std::isfinite(y))[[unlikely]]{
+        throw std::overflow_error("2D circle center is not representable");
+    }
+    return {{x, y}, circle.radius};
 }

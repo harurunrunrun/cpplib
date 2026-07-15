@@ -1,24 +1,22 @@
 #pragma once
 
-#include <algorithm>
-#include <array>
 #include <cmath>
-#include <optional>
 #include <stdexcept>
-#include <utility>
-#include <vector>
 
 #include "base.hpp"
+#include "is_finite.hpp"
 
 inline long double sphere_cap_surface_area(
     const Sphere3& sphere,
     long double height
 ){
-    if(
-        sphere.radius < 0 || height < 0 ||
-        height > 2 * sphere.radius
-    )[[unlikely]]{
+    geometry3d_validate(sphere);
+    if(!std::isfinite(height) || height < 0.0L ||
+        height / 2.0L > sphere.radius)[[unlikely]]{
         throw std::invalid_argument("invalid sphere cap height");
     }
-    return 2 * GEOMETRY3D_PI * sphere.radius * height;
+    return geometry3d_detail::checked_nonnegative_product(
+        {2.0L * GEOMETRY3D_PI, sphere.radius, height},
+        "sphere cap surface area is not representable"
+    );
 }

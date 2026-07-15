@@ -1,26 +1,39 @@
 #pragma once
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <optional>
 #include <stdexcept>
-#include <utility>
 #include <vector>
 
 #include "base.hpp"
+#include "is_finite.hpp"
+#include "geometry3d_sign.hpp"
 #include "line_sphere_intersections.hpp"
-#include "on_ray.hpp"
 
 inline std::vector<Point3> ray_sphere_intersections(
     const Ray3& ray,
     const Sphere3& sphere
 ){
+    geometry3d_validate(sphere);
+    if(!geometry3d_is_finite(ray))[[unlikely]]{
+        throw std::invalid_argument("ray-sphere intersection requires a finite ray");
+    }
+    const geometry3d_detail::LineSphereIntersectionParameters parameters =
+        geometry3d_detail::line_sphere_intersection_parameters(
+            {ray.origin, ray.through}, sphere
+        );
     std::vector<Point3> result;
-    for(const Point3& point: line_sphere_intersections(
-        {ray.origin, ray.through}, sphere
-    )){
-        if(on_ray(ray, point)) result.push_back(point);
+    result.reserve(parameters.signed_distances.size());
+    for(const long double signed_distance: parameters.signed_distances){
+        const int sign = geometry3d_sign(signed_distance);
+        if(sign < 0) continue;
+        if(signed_distance < 0.0L){
+            result.push_back(ray.origin);
+        }else{
+            result.push_back(
+                geometry3d_detail::restore_line_sphere_intersection(
+                    ray.origin, parameters, signed_distance
+                )
+            );
+        }
     }
     return result;
 }

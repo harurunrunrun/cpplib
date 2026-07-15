@@ -4,11 +4,22 @@
 
 #include "abs.hpp"
 #include "base.hpp"
+#include "is_finite.hpp"
 #include "geometry3d_sign.hpp"
 
 inline bool on_sphere(const Sphere3& sphere, const Point3& point){
-    if(sphere.radius < 0)[[unlikely]]{
-        throw std::invalid_argument("negative sphere radius");
+    geometry3d_validate(sphere);
+    if(!geometry3d_is_finite(point))[[unlikely]]{
+        throw std::invalid_argument("on_sphere requires a finite point");
     }
-    return geometry3d_sign(abs(point - sphere.center) - sphere.radius) == 0;
+    const auto difference = geometry3d_normalized_difference(
+        point, sphere.center, {sphere.radius}
+    );
+    const long double center_distance = std::hypot(
+        difference.value.x, difference.value.y, difference.value.z
+    );
+    const long double radius = sphere.radius / difference.scale;
+    return geometry3d_scaled_sign(
+        center_distance - radius, std::max(center_distance, radius)
+    ) == 0;
 }

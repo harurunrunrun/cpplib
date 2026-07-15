@@ -12,5 +12,6 @@ documentation_of: ../src/algorithm/geometry/3d/on_sphere.hpp
 - 時間・追加領域 $O(1)$。
 
 ## 注意点
+Sphere3 は中心・半径が有限かつ半径が非負でなければならず、違反時は std::invalid_argument を送出する。
 
 負半径には `std::invalid_argument` を送出する。半径0の球面は中心1点である。

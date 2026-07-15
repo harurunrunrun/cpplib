@@ -8,8 +8,15 @@
 
 #include "../../src/algorithm/geometry/3d/sphere_sphere_distance.hpp"
 #include "geometry_3d_api_test_common.hpp"
+#include "geometry_3d_circle_sphere_validation_test_common.hpp"
 
 int main(){
+    const Sphere3 valid_sphere{{0, 0, 0}, 1};
+    if(!geometry3d_rejects_invalid_spheres([&](const Sphere3& sphere){
+        (void)sphere_sphere_distance(sphere, valid_sphere);
+    }) || !geometry3d_rejects_invalid_spheres([&](const Sphere3& sphere){
+        (void)sphere_sphere_distance(valid_sphere, sphere);
+    })) return 1;
     return geometry3d_api_test_main([](std::mt19937_64& random, std::size_t rounds){
         const Sphere3 unit{{0, 0, 0}, 1};
         if(!geometry3d_api_close(
@@ -29,6 +36,14 @@ int main(){
             return false;
         }
         if(!geometry3d_api_close(distance({{0, 0, 0}, 5}, {{0, 0, 0}, 2}), 3)){
+            return false;
+        }
+        const long double tiny = 1e-3000L;
+        const long double microscopic = distance(
+            {{0, 0, 1e3000L}, 2 * tiny},
+            {{0, 0, 1e3000L}, tiny}
+        );
+        if(std::abs(microscopic / tiny - 1.0L) > 1e-12L){
             return false;
         }
         if(!geometry3d_api_close(distance({{0, 0, 0}, 0}, {{0, 0, 0}, 0}), 0)){

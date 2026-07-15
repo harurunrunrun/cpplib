@@ -1,10 +1,14 @@
 #pragma once
 
 #include <stdexcept>
+#include <algorithm>
+#include <cmath>
 #include <vector>
 
 #include "base.hpp"
+#include "is_finite.hpp"
 #include "geometry3d_sign.hpp"
+#include "dot.hpp"
 #include "line_circle_intersections.hpp"
 #include "on_plane.hpp"
 #include "parallel.hpp"
@@ -15,15 +19,25 @@ inline std::vector<Point3> circle_plane_intersections(
     const Circle3& circle,
     const Plane3& plane
 ){
-    if(circle.radius < 0)[[unlikely]]{
-        throw std::invalid_argument("negative circle radius");
+    geometry3d_validate(circle);
+    if(!geometry3d_is_finite(plane))[[unlikely]]{
+        throw std::invalid_argument("circle-plane intersection requires a finite plane");
     }
     const Plane3 circle_plane{circle.center, circle.normal};
     const Point3 circle_normal = plane3_unit_normal(circle_plane);
     const Point3 plane_normal = plane3_unit_normal(plane);
     if(parallel(circle_normal, plane_normal)){
-        if(!on_plane(plane, circle.center)) return {};
-        if(geometry3d_sign(circle.radius) == 0) return {circle.center};
+        const auto difference = geometry3d_normalized_difference(
+            circle.center, plane.point, {circle.radius}
+        );
+        const Point3 offset = difference.value;
+        const long double offset_length = std::hypot(
+            offset.x, offset.y, offset.z
+        );
+        if(geometry3d_scaled_sign(
+            dot(offset, plane_normal), offset_length
+        ) != 0) return {};
+        if(circle.radius == 0.0L) return {circle.center};
         throw std::domain_error("circle and plane have infinitely many intersections");
     }
     return line_circle_intersections(

@@ -14,5 +14,6 @@ documentation_of: ../src/algorithm/geometry/3d/contains.hpp
 - 各overload: 時間・追加領域 $O(1)$。
 
 ## 注意点
+Sphere3 は中心・半径が有限かつ半径が非負でなければならず、違反時は std::invalid_argument を送出する。
 
 退化三角形・四面体、または負半径の球には `std::invalid_argument` を送出する。

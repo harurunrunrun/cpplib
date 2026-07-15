@@ -2,8 +2,15 @@
 
 #include "../../src/algorithm/geometry/3d/sphere_surface_area.hpp"
 #include "geometry_3d_test_common.hpp"
+#include "geometry_3d_circle_sphere_validation_test_common.hpp"
 
 int main(){
+    if(!geometry3d_throws<std::overflow_error>([]{
+        (void)sphere_surface_area({{0, 0, 0}, std::numeric_limits<long double>::max()});
+    })) return 1;
+    if(!geometry3d_rejects_invalid_spheres([](const Sphere3& sphere){
+        (void)sphere_surface_area(sphere);
+    })) return 1;
     return geometry3d_test_main([](){
         return geometry3d_close_value(
             sphere_surface_area({{0, 0, 0}, 3}),
