@@ -52,3 +52,5 @@
 #include "angle.hpp"
 #include "rotate_around_axis.hpp"
 #include "plane_orthonormal_basis.hpp"
+#include "matrix3.hpp"
+#include "affine_transform3.hpp"
