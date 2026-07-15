@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cstddef>
+#include <limits>
 #include <random>
 #include <stdexcept>
 

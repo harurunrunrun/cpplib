@@ -54,8 +54,8 @@ inline SymmetricEigen3 symmetric_eigen_3x3(
         matrix[row][row] = input[row][row] / scale;
         for(std::size_t column = row + 1; column < 3; ++column){
             matrix[row][column] = matrix[column][row] =
-                input[row][column] / (2 * scale) +
-                input[column][row] / (2 * scale);
+                input[row][column] / scale / 2 +
+                input[column][row] / scale / 2;
         }
     }
     Matrix3 vectors = Matrix3::identity();

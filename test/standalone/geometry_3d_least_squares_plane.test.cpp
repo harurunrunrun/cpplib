@@ -2,6 +2,8 @@
 
 #include <cmath>
 #include <cstddef>
+#include <limits>
+#include <stdexcept>
 #include <random>
 #include <vector>
 
@@ -27,6 +29,13 @@ int main(){
         }
         if(least_squares_plane({{0, 0, 0}, {1, 1, 1}, {2, 2, 2}})) return false;
         if(least_squares_plane({{0, 0, 0}, {1, 0, 0}})) return false;
+        bool finite_threw = false;
+        try{
+            static_cast<void>(least_squares_plane({
+                {std::numeric_limits<long double>::infinity(), 0, 0}
+            }));
+        }catch(const std::invalid_argument&){ finite_threw = true; }
+        if(!finite_threw) return false;
 
         std::uniform_real_distribution<long double> coordinate(-10, 10);
         std::normal_distribution<long double> noise(0, 1e-3L);

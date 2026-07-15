@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <limits>
 #include <random>
 #include <stdexcept>
 #include <vector>
@@ -27,6 +28,15 @@ int main(){
             static_cast<void>(principal_axes_3d({}));
         }catch(const std::invalid_argument&){ empty_threw = true; }
         if(!empty_threw) return false;
+
+        const long double maximum = std::numeric_limits<long double>::max();
+        bool variance_overflow_threw = false;
+        try{
+            static_cast<void>(principal_axes_3d({
+                {-maximum, 0, 0}, {maximum, 0, 0}
+            }));
+        }catch(const std::overflow_error&){ variance_overflow_threw = true; }
+        if(!variance_overflow_threw) return false;
 
         const Point3 expected_direction{2, -3, 1};
         std::uniform_real_distribution<long double> parameter(-10, 10);
