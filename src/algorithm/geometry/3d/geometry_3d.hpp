@@ -222,3 +222,7 @@
 #include "kd_tree_3d.hpp"
 #include "octree_3d.hpp"
 #include "triangle_bvh_3d.hpp"
+#include "quickhull_3d.hpp"
+#include "divide_and_conquer_convex_hull_3d.hpp"
+#include "convex_polyhedron_counts.hpp"
+#include "convex_polyhedron_face_adjacency.hpp"
