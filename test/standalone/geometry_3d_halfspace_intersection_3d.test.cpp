@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <random>
+#include <string_view>
 #include <vector>
 
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
@@ -51,10 +52,30 @@ int main(){
             unbounded_threw = true;
         }
         if(!unbounded_threw) return false;
+        bool unbounded_plane_threw = false;
+        try{
+            static_cast<void>(halfspace_intersection_3d({
+                {{0, 0, 0}, {1, 1, 1}},
+                {{0, 0, 0}, {-1, -1, -1}},
+            }));
+        }catch(const std::domain_error& error){
+            unbounded_plane_threw = std::string_view(error.what()) ==
+                "3D halfspace intersection is unbounded";
+        }
+        if(!unbounded_plane_threw) return false;
         const auto empty = halfspace_intersection_3d({
             {{0, 0, 0}, {1, 0, 0}}, {{1, 0, 0}, {-1, 0, 0}}
         });
         if(!empty.vertices.empty()) return false;
+        const Point3 anisotropic_normal{1e3000L, 1e-3000L, 0};
+        const auto anisotropic_empty = halfspace_intersection_3d({
+            {{0, 0, 0}, anisotropic_normal},
+            {{0, 1e3000L, 0}, -anisotropic_normal},
+        });
+        if(anisotropic_empty.affine_dimension != -1
+            || !anisotropic_empty.vertices.empty()){
+            return false;
+        }
 
         std::uniform_int_distribution<int> coordinate(-20, 20);
         const std::size_t iterations = std::min<std::size_t>(rounds, 40);

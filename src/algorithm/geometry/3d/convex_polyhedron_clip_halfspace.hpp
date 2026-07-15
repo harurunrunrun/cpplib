@@ -12,25 +12,24 @@ inline ConvexPolyhedron3 convex_polyhedron_clip_halfspace(
 ){
     using namespace convex_polyhedron_plane_section_detail;
     const NormalizedPlaneData data = normalize(polyhedron, boundary);
-    std::vector<long double> values;
+    std::vector<int> values;
     values.reserve(polyhedron.vertices.size());
     std::vector<Point3> points;
     for(const Point3& point: polyhedron.vertices){
-        const long double signed_value = value(data, point);
+        const int signed_value = value(data, point);
         values.push_back(signed_value);
         const bool inside = keep_negative_side
-            ? signed_value <= data.tolerance
-            : signed_value >= -data.tolerance;
+            ? signed_value <= 0
+            : signed_value >= 0;
         if(inside) points.push_back(point);
     }
     for(const auto& edge: convex_polyhedron_edges(polyhedron)){
-        const long double first = values[edge[0]];
-        const long double second = values[edge[1]];
-        if((first < -data.tolerance && second > data.tolerance)
-            || (first > data.tolerance && second < -data.tolerance)){
+        const int first = values[edge[0]];
+        const int second = values[edge[1]];
+        if(first * second < 0){
             points.push_back(interpolate(
-                polyhedron.vertices[edge[0]], polyhedron.vertices[edge[1]],
-                first, second
+                data, polyhedron.vertices[edge[0]],
+                polyhedron.vertices[edge[1]]
             ));
         }
     }

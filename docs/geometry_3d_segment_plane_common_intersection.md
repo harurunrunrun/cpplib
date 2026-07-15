@@ -18,3 +18,5 @@ documentation_of: ../src/algorithm/geometry/3d/segment_plane_common_intersection
 ## 注意点
 
 平面法線は非零でなければならない。非有限入力には `std::invalid_argument` を送出する。
+位置判定と閉区間判定はexact dyadic演算を共有し、表現不能な一意交点には
+`std::overflow_error` を送出する。

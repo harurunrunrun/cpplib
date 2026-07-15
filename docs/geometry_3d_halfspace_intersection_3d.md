@@ -26,3 +26,6 @@ recession coneの座標軸、法線、2法線の外積からextreme directionを
   `std::invalid_argument` を送出する。
 - 空集合と非有界集合を区別する。非有界集合のrayを返すAPIではない。
 - lower-dimensionalな有界交差も、3面交点として列挙した頂点から構成する。
+- 制約は単位法線へ丸めずraw法線のまま保持する。実行可能性とrecession directionは
+  exact dyadic内積で判定するため、成分scaleが大きく異なる法線も扱える。
+- 列挙する頂点が `long double` で表現不能なら `std::overflow_error` を送出する。

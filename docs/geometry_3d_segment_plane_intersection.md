@@ -13,4 +13,6 @@ documentation_of: ../src/algorithm/geometry/3d/segment_plane_intersection.hpp
 
 ## 注意点
 
-平面上の退化線分はその点を返す。零法線には `std::invalid_argument` を送出する。
+平面上の退化線分はその点を返す。零法線・非有限入力には `std::invalid_argument` を送出する。
+閉区間内判定はexact dyadicな両端の符号で行い、表現不能な一意交点には
+`std::overflow_error` を送出する。

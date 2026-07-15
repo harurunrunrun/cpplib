@@ -42,34 +42,46 @@ inline std::vector<Point3> exact_unique_points(std::vector<Point3> points){
 }
 
 inline std::vector<Point3> normalized_points(const std::vector<Point3>& points){
-    long double scale = 0.0L;
+    const Point3 anchor = points.front();
+    std::vector<Geometry3DNormalizedDifference> differences;
+    differences.reserve(points.size());
+    long double local_scale = 0.0L;
     for(const Point3& point: points){
-        scale = std::max({
-            scale, std::abs(point.x), std::abs(point.y), std::abs(point.z)
-        });
+        differences.push_back(geometry3d_normalized_difference(point, anchor));
+        const auto& difference = differences.back();
+        if(difference.value.x != 0.0L || difference.value.y != 0.0L
+            || difference.value.z != 0.0L){
+            local_scale = std::max(local_scale, difference.scale);
+        }
     }
-    if(scale == 0.0L) scale = 1.0L;
-    Point3 minimum{1.0L, 1.0L, 1.0L};
-    Point3 maximum{-1.0L, -1.0L, -1.0L};
+    if(local_scale == 0.0L) local_scale = 1.0L;
+
     std::vector<Point3> scaled;
     scaled.reserve(points.size());
-    for(const Point3& point: points){
-        const Point3 value = point / scale;
-        scaled.push_back(value);
-        minimum.x = std::min(minimum.x, value.x);
-        minimum.y = std::min(minimum.y, value.y);
-        minimum.z = std::min(minimum.z, value.z);
-        maximum.x = std::max(maximum.x, value.x);
-        maximum.y = std::max(maximum.y, value.y);
-        maximum.z = std::max(maximum.z, value.z);
+    for(const auto& difference: differences){
+        scaled.push_back(
+            difference.value * (difference.scale / local_scale)
+        );
+    }
+
+    Point3 minimum = scaled.front();
+    Point3 maximum = scaled.front();
+    for(const Point3& point: scaled){
+        minimum.x = std::min(minimum.x, point.x);
+        minimum.y = std::min(minimum.y, point.y);
+        minimum.z = std::min(minimum.z, point.z);
+        maximum.x = std::max(maximum.x, point.x);
+        maximum.y = std::max(maximum.y, point.y);
+        maximum.z = std::max(maximum.z, point.z);
     }
     const Point3 center{
-        minimum.x / 2.0L + maximum.x / 2.0L,
-        minimum.y / 2.0L + maximum.y / 2.0L,
-        minimum.z / 2.0L + maximum.z / 2.0L,
+        minimum.x / 2 + maximum.x / 2,
+        minimum.y / 2 + maximum.y / 2,
+        minimum.z / 2 + maximum.z / 2,
     };
     long double range = std::max({
-        maximum.x - minimum.x, maximum.y - minimum.y,
+        maximum.x - minimum.x,
+        maximum.y - minimum.y,
         maximum.z - minimum.z,
     });
     if(range == 0.0L) range = 1.0L;
@@ -77,21 +89,56 @@ inline std::vector<Point3> normalized_points(const std::vector<Point3>& points){
     return scaled;
 }
 
+inline bool exactly_non_collinear(
+    const Point3& first,
+    const Point3& second,
+    const Point3& third
+){
+    using namespace geometry3d_adaptive_detail;
+    std::array<ExactDyadic, 3> first_direction{};
+    std::array<ExactDyadic, 3> second_direction{};
+    const std::array<long double, 3> first_coordinates{
+        first.x, first.y, first.z
+    };
+    const std::array<long double, 3> second_coordinates{
+        second.x, second.y, second.z
+    };
+    const std::array<long double, 3> third_coordinates{
+        third.x, third.y, third.z
+    };
+    for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
+        first_direction[coordinate] = subtract(
+            exact_dyadic(second_coordinates[coordinate]),
+            exact_dyadic(first_coordinates[coordinate])
+        );
+        second_direction[coordinate] = subtract(
+            exact_dyadic(third_coordinates[coordinate]),
+            exact_dyadic(first_coordinates[coordinate])
+        );
+    }
+    for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
+        const std::size_t next = (coordinate + 1) % 3;
+        const std::size_t last = (coordinate + 2) % 3;
+        const ExactDyadic component = subtract(
+            multiply(first_direction[next], second_direction[last]),
+            multiply(first_direction[last], second_direction[next])
+        );
+        if(sign(component) != 0) return true;
+    }
+    return false;
+}
+
 inline int affine_dimension(const std::vector<Point3>& points){
     if(points.empty()) return -1;
     if(points.size() == 1) return 0;
-    const std::vector<Point3> normalized = normalized_points(points);
-    std::size_t third = normalized.size();
-    for(std::size_t index = 2; index < normalized.size(); ++index){
-        const Point3 product = cross(
-            normalized[1] - normalized[0], normalized[index] - normalized[0]
-        );
-        if(std::hypot(product.x, product.y, product.z) > GEOMETRY3D_EPS){
+    std::size_t third = points.size();
+    for(std::size_t index = 2; index < points.size(); ++index){
+        if(exactly_non_collinear(points[0], points[1], points[index])){
             third = index;
             break;
         }
     }
-    if(third == normalized.size()) return 1;
+    if(third == points.size()) return 1;
     for(std::size_t index = 0; index < points.size(); ++index){
         if(adaptive_orient3d(
             points[0], points[1], points[third], points[index]

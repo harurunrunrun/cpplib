@@ -9,8 +9,10 @@ documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_plane_section.h
 
 ## API別の時間計算量・空間計算量
 
-- 辺数を $E$、交点数を $K$ として時間 $O(E\log E+K^2)$、領域 $O(E+K)$。
+- 辺数を $E$、交点数を $K$ として時間 $O(E+K\log K)$、領域 $O(E+K)$。
 
 ## 注意点
 
 ゼロ法線と非有限入力を拒否する。共面する三角形分割対角線は辺列挙時に除外する。
+頂点の側判定、辺交点、重複除去、凸順序はraw法線とexact dyadic predicateで処理するため、
+巨大な平行移動に比べて非常に薄い断面も保持する。

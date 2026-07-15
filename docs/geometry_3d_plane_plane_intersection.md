@@ -13,4 +13,7 @@ documentation_of: ../src/algorithm/geometry/3d/plane_plane_intersection.hpp
 
 ## 注意点
 
-平行または一致する平面には `std::domain_error`、零法線には `std::invalid_argument` を送出する。
+平行または一致する平面には `std::domain_error`、零法線・非有限入力には
+`std::invalid_argument` を送出する。平行判定と2元一次方程式はraw法線のexact
+dyadic値で行う。返す2点はいずれも両平面上となる候補を選ぶ。交線を構成する有限な
+2点を `long double` で表現できない場合は `std::overflow_error` を送出する。

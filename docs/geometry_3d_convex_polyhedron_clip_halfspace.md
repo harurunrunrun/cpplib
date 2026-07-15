@@ -14,3 +14,5 @@ documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_clip_halfspace.
 ## 注意点
 
 空の共通部分は `affine_dimension==-1` で返す。境界上の点は両側に含める。
+側判定と交点はraw法線のexact dyadic演算で求め、候補点から凸包を再構成する。
+ゼロ法線・非有限入力を拒否し、表現不能な交点には `std::overflow_error` を送出する。

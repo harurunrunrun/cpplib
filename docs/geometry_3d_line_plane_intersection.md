@@ -13,4 +13,6 @@ documentation_of: ../src/algorithm/geometry/3d/line_plane_intersection.hpp
 
 ## 注意点
 
-平行または直線全体が平面上なら `std::domain_error`、退化直線・零法線には `std::invalid_argument` を送出する。
+平行または直線全体が平面上なら `std::domain_error`、退化直線・零法線・非有限入力には
+`std::invalid_argument` を送出する。交点座標はexact dyadicな分子・分母から一度だけ
+`long double`へ丸める。真の交点を表現できない場合は `std::overflow_error` を送出する。

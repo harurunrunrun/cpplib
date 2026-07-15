@@ -4,6 +4,7 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <limits>
 #include <random>
 #include <vector>
 
@@ -74,6 +75,36 @@ int main(){
             {0, 0, 0}, {1, 2, 3}, {2, 4, 6}
         });
         if(collinear.affine_dimension != 1) return false;
+        const auto thin_tetrahedron = delaunay_tetrahedralization_3d({
+            {0, 0, 0}, {1, 0, 0}, {0.5L, 1e-20L, 0},
+            {0.5L, 0, 1e-20L},
+        });
+        if(thin_tetrahedron.affine_dimension != 3
+            || thin_tetrahedron.tetrahedra.size() != 1
+            || !valid_delaunay(thin_tetrahedron)) return false;
+        const long double translation = 1e3000L;
+        const long double upper = std::nextafter(
+            translation, std::numeric_limits<long double>::infinity()
+        );
+        const auto translated_thin_tetrahedron =
+            delaunay_tetrahedralization_3d({
+                {0, 0, translation},
+                {1, 0, translation},
+                {0, 1, translation},
+                {0, 0, upper},
+            });
+        if(translated_thin_tetrahedron.affine_dimension != 3
+            || translated_thin_tetrahedron.tetrahedra.size() != 1){
+            return false;
+        }
+        const auto& thin_indices =
+            translated_thin_tetrahedron.tetrahedra.front();
+        if(adaptive_orient3d(
+            translated_thin_tetrahedron.vertices[thin_indices[0]],
+            translated_thin_tetrahedron.vertices[thin_indices[1]],
+            translated_thin_tetrahedron.vertices[thin_indices[2]],
+            translated_thin_tetrahedron.vertices[thin_indices[3]]
+        ) <= 0) return false;
         const auto cospherical_cube = delaunay_tetrahedralization_3d({
             {-1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}, {-1, 1, 1},
             {1, -1, -1}, {1, -1, 1}, {1, 1, -1}, {1, 1, 1},

@@ -18,3 +18,5 @@ documentation_of: ../src/algorithm/geometry/3d/line_plane_common_intersection.hp
 ## 注意点
 
 直線は非退化、平面法線は非零でなければならない。非有限入力には `std::invalid_argument` を送出する。
+位置判定と一意な交点はexact dyadic演算を共有する。真の交点が `long double` で
+表現できない場合は `std::overflow_error` を送出する。

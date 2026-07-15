@@ -29,3 +29,5 @@ $O(NT)$、追加領域は $O(T+N)$。三次元Delaunay分割の出力は最悪 $
 - 重複判定は許容誤差ではなく座標の完全一致で行う。
 - 位相判定は適応的精度で行う。表現可能なsuper tetraで境界を覆えないほど
   ill-conditionedな入力では `std::overflow_error` を送出する。
+- affine dimensionはexact dyadic predicateで判定する。構築座標は先頭点をanchorとする
+  局所差分を共通scaleへ正規化するため、巨大な共通移動量と薄い局所形状を同時に扱える。

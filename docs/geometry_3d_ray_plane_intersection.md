@@ -13,4 +13,6 @@ documentation_of: ../src/algorithm/geometry/3d/ray_plane_intersection.hpp
 
 ## 注意点
 
-退化半直線・零法線には `std::invalid_argument` を送出する。始点上の交点を含む。
+退化半直線・零法線・非有限入力には `std::invalid_argument` を送出する。始点上の交点を含む。
+交点の存在範囲はexact dyadicなparameter符号で判定し、表現不能な交点には
+`std::overflow_error` を送出する。
