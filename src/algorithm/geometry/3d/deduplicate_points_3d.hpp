@@ -4,13 +4,14 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <limits>
 #include <map>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../../math/exact_integer.hpp"
 
 #include "base.hpp"
 #include "is_finite.hpp"
@@ -18,7 +19,7 @@
 
 namespace deduplicate_points_3d_detail{
 
-using CellCoordinate = boost::multiprecision::cpp_int;
+using CellCoordinate = ExactInteger;
 using Cell = std::array<CellCoordinate, 3>;
 
 struct CellLess{
@@ -48,12 +49,54 @@ inline ExactDyadic exact_dyadic(long double value){
         fraction = std::ldexp(fraction, 1);
         significand <<= 1;
         if(fraction >= 1.0L){
-            ++significand;
+            significand += 1;
             fraction -= 1.0L;
         }
     }
     if(negative) significand = -significand;
     return {std::move(significand), exponent - digits};
+}
+
+struct PositiveDivision{
+    CellCoordinate quotient;
+    CellCoordinate remainder;
+};
+
+inline PositiveDivision positive_divmod(
+    CellCoordinate numerator,
+    const CellCoordinate& positive_denominator
+){
+    if(positive_denominator <= 0)[[unlikely]]{
+        throw std::domain_error(
+            "3D point cell division requires a positive denominator"
+        );
+    }
+    if(numerator < positive_denominator){
+        return {0, std::move(numerator)};
+    }
+    if(positive_denominator.bit_length()
+        <= std::numeric_limits<std::uint64_t>::digits){
+        const std::uint64_t divisor =
+            positive_denominator.checked_to<std::uint64_t>();
+        auto [quotient, remainder] = numerator.divmod(divisor);
+        return {std::move(quotient), CellCoordinate(remainder)};
+    }
+
+    const std::size_t shift =
+        numerator.bit_length() - positive_denominator.bit_length();
+    CellCoordinate shifted_denominator = positive_denominator << shift;
+    CellCoordinate bit = CellCoordinate(1) << shift;
+    CellCoordinate quotient = 0;
+    for(std::size_t remaining_shift = shift;; --remaining_shift){
+        if(numerator >= shifted_denominator){
+            numerator -= shifted_denominator;
+            quotient += bit;
+        }
+        if(remaining_shift == 0) break;
+        shifted_denominator >>= 1;
+        bit >>= 1;
+    }
+    return {std::move(quotient), std::move(numerator)};
 }
 
 inline CellCoordinate floor_ratio(
@@ -65,16 +108,19 @@ inline CellCoordinate floor_ratio(
     const bool negative = numerator < 0;
     if(negative) numerator = -numerator;
     CellCoordinate denominator = positive_denominator.significand;
-    const int exponent_difference =
-        value.exponent - positive_denominator.exponent;
+    const long long exponent_difference =
+        static_cast<long long>(value.exponent)
+        - positive_denominator.exponent;
     if(exponent_difference >= 0){
-        numerator <<= static_cast<unsigned>(exponent_difference);
+        numerator <<= static_cast<std::size_t>(exponent_difference);
     }else{
-        denominator <<= static_cast<unsigned>(-exponent_difference);
+        denominator <<= static_cast<std::size_t>(-exponent_difference);
     }
-    CellCoordinate quotient = numerator / denominator;
-    if(negative && numerator % denominator != 0) ++quotient;
-    return negative ? -quotient : quotient;
+    PositiveDivision division = positive_divmod(
+        std::move(numerator), denominator
+    );
+    if(negative && !division.remainder.is_zero()) division.quotient += 1;
+    return negative ? -division.quotient : division.quotient;
 }
 
 inline Cell point_cell(const Point3& point, const ExactDyadic& cell_width){

@@ -69,6 +69,19 @@ int main(){
             {0, 0, 0}, {2.0e-10L, 0, 0}, {1, 2, 3}
         };
         if(!same_sequence(result, expected)) return false;
+        using namespace deduplicate_points_3d_detail;
+        const CellCoordinate large_denominator =
+            (CellCoordinate(1) << 80) + 3;
+        const CellCoordinate large_numerator =
+            large_denominator * 17 + 5;
+        const ExactDyadic large_width{large_denominator, 0};
+        if(floor_ratio({large_numerator, 0}, large_width) != 17){
+            return false;
+        }
+        if(floor_ratio({-large_numerator, 0}, large_width) != -18){
+            return false;
+        }
+
 
         const std::vector<Point3> boundary_points{
             {0.0L, 0.0L, 0.0L},

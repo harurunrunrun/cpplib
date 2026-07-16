@@ -9,7 +9,7 @@ documentation_of: ../src/algorithm/geometry/3d/adaptive_insphere.hpp
 int adaptive_insphere(first, second, third, fourth, query)
 ```
 
-四面体の頂点順に依存せず、外接球内なら1、球面上なら0、球外なら-1。正規化 `long double` determinantの誤差上界でfast pathを選び、不確かな場合は入力を正確なdyadic数へ変換した `cpp_int` determinantで符号を確定する。
+四面体の頂点順に依存せず、外接球内なら1、球面上なら0、球外なら-1。正規化 `long double` determinantの誤差上界でfast pathを選び、不確かな場合は入力を正確なdyadic数へ変換したライブラリ内の `ExactInteger` determinantで符号を確定する。
 
 ## API別の時間計算量・空間計算量
 

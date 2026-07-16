@@ -9,7 +9,7 @@ documentation_of: ../src/algorithm/geometry/3d/adaptive_orient3d.hpp
 int adaptive_orient3d(first, second, third, fourth)
 ```
 
-`orient3d` と同じ向きの正確な符号を `-1, 0, 1` で返す。まず正規化した `long double` determinantと誤差上界を評価し、符号が不確かな場合だけexpansion arithmeticと、入力 `long double` を正確なdyadic数へ変換した `cpp_int` 演算へ進む。
+`orient3d` と同じ向きの正確な符号を `-1, 0, 1` で返す。まず正規化した `long double` determinantと誤差上界を評価し、符号が不確かな場合だけexpansion arithmeticと、入力 `long double` を正確なdyadic数へ変換したライブラリ内の `ExactInteger` 演算へ進む。
 
 ## API別の時間計算量・空間計算量
 

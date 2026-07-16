@@ -3,27 +3,26 @@
 #include <array>
 #include <stdexcept>
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../../math/exact_integer.hpp"
 
 #include "exact_orient3d.hpp"
 
 namespace geometry3d_integer_predicate_detail{
 
-inline boost::multiprecision::cpp_int determinant3_exact(
-    const std::array<std::array<boost::multiprecision::cpp_int, 3>, 3>& matrix
+inline ExactInteger determinant3_exact(
+    const std::array<std::array<ExactInteger, 3>, 3>& matrix
 ){
     return matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1])
         - matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0])
         + matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
 }
 
-inline boost::multiprecision::cpp_int determinant4_exact(
-    const std::array<std::array<boost::multiprecision::cpp_int, 4>, 4>& matrix
+inline ExactInteger determinant4_exact(
+    const std::array<std::array<ExactInteger, 4>, 4>& matrix
 ){
-    using boost::multiprecision::cpp_int;
-    cpp_int result = 0;
+    ExactInteger result = 0;
     for(std::size_t column = 0; column < 4; ++column){
-        std::array<std::array<cpp_int, 3>, 3> minor{};
+        std::array<std::array<ExactInteger, 3>, 3> minor{};
         for(std::size_t row = 1; row < 4; ++row){
             std::size_t destination = 0;
             for(std::size_t source = 0; source < 4; ++source){
@@ -31,7 +30,7 @@ inline boost::multiprecision::cpp_int determinant4_exact(
                 minor[row - 1][destination++] = matrix[row][source];
             }
         }
-        const cpp_int term = matrix[0][column] * determinant3_exact(minor);
+        const ExactInteger term = matrix[0][column] * determinant3_exact(minor);
         result += column % 2 == 0 ? term : -term;
     }
     return result;
@@ -50,13 +49,13 @@ inline int exact_insphere(
     if(orientation == 0)[[unlikely]]{
         throw std::invalid_argument("degenerate integer tetrahedron in exact_insphere");
     }
-    using boost::multiprecision::cpp_int;
     const std::array<IntegerPoint3, 4> points{first, second, third, fourth};
-    std::array<std::array<cpp_int, 4>, 4> matrix{};
+    std::array<std::array<ExactInteger, 4>, 4> matrix{};
     for(std::size_t row = 0; row < points.size(); ++row){
-        cpp_int squared_norm = 0;
+        ExactInteger squared_norm = 0;
         for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
-            const cpp_int difference = cpp_int(points[row][coordinate]) - query[coordinate];
+            const ExactInteger difference =
+                ExactInteger(points[row][coordinate]) - query[coordinate];
             matrix[row][coordinate] = difference;
             squared_norm += difference * difference;
         }

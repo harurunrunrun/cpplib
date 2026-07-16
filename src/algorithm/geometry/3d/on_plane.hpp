@@ -3,11 +3,12 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdint>
 #include <initializer_list>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 
-#include <boost/multiprecision/cpp_bin_float.hpp>
 
 #include "adaptive_orient3d.hpp"
 #include "base.hpp"
@@ -185,25 +186,41 @@ struct NormalizedDyadic{
     int exponent = 0;
 };
 
+inline long double exact_integer_leading_value(ExactInteger value){
+    constexpr std::uint64_t base = std::uint64_t{1} << 32;
+    long double result = 0.0L;
+    long double place = 1.0L;
+    while(!value.is_zero()){
+        auto [quotient, remainder] = value.divmod(base);
+        result += place * static_cast<long double>(remainder);
+        value = std::move(quotient);
+        if(!value.is_zero()) place = std::ldexp(place, 32);
+    }
+    return result;
+}
+
 inline NormalizedDyadic normalize_exact_dyadic(
     const geometry3d_adaptive_detail::ExactDyadic& value
 ){
-    using boost::multiprecision::cpp_int;
     if(value.significand == 0) return {};
-    cpp_int magnitude = value.significand;
+    ExactInteger magnitude = value.significand;
     const bool negative = magnitude < 0;
     if(negative) magnitude = -magnitude;
-    const unsigned bit_count =
-        boost::multiprecision::msb(magnitude) + 1U;
-    constexpr unsigned digits =
-        static_cast<unsigned>(std::numeric_limits<long double>::digits);
-    const unsigned discarded = bit_count > digits
-        ? bit_count - digits : 0U;
-    const cpp_int leading = magnitude >> discarded;
-    const long double leading_value = leading.convert_to<long double>();
+    const std::size_t bit_count = magnitude.bit_length();
+    constexpr std::size_t digits =
+        static_cast<std::size_t>(std::numeric_limits<long double>::digits);
+    const std::size_t discarded = bit_count > digits
+        ? bit_count - digits : 0;
+    const ExactInteger leading = magnitude >> discarded;
+    const long double leading_value = exact_integer_leading_value(leading);
     int leading_exponent = 0;
     long double mantissa = std::frexp(leading_value, &leading_exponent);
     if(negative) mantissa = -mantissa;
+    if(discarded > static_cast<std::size_t>(
+        (std::numeric_limits<long long>::max)()
+    ))[[unlikely]]{
+        throw std::overflow_error("exact dyadic exponent is not representable");
+    }
     const long long exponent =
         static_cast<long long>(value.exponent)
         + static_cast<long long>(discarded)
@@ -224,44 +241,19 @@ inline long double exact_ratio(
         throw std::domain_error("exact ratio has zero denominator");
     }
     if(numerator.significand == 0) return 0.0L;
-    using boost::multiprecision::cpp_int;
-    using HighPrecision = boost::multiprecision::number<
-        boost::multiprecision::cpp_bin_float<256>
-    >;
-    struct LeadingValue{
-        HighPrecision value{};
-        unsigned discarded = 0;
-    };
-    const auto leading_value = [](const cpp_int& significand){
-        cpp_int magnitude = significand;
-        const bool negative = magnitude < 0;
-        if(negative) magnitude = -magnitude;
-        const unsigned bit_count =
-            boost::multiprecision::msb(magnitude) + 1U;
-        constexpr unsigned kept_bits = 256;
-        const unsigned discarded = bit_count > kept_bits
-            ? bit_count - kept_bits : 0U;
-        HighPrecision value =
-            (magnitude >> discarded).convert_to<HighPrecision>();
-        if(negative) value = -value;
-        return LeadingValue{value, discarded};
-    };
-    const LeadingValue normalized_numerator =
-        leading_value(numerator.significand);
-    const LeadingValue normalized_denominator =
-        leading_value(denominator.significand);
+    const NormalizedDyadic normalized_numerator =
+        normalize_exact_dyadic(numerator);
+    const NormalizedDyadic normalized_denominator =
+        normalize_exact_dyadic(denominator);
     const long long exponent =
-        static_cast<long long>(numerator.exponent)
-        + static_cast<long long>(normalized_numerator.discarded)
-        - static_cast<long long>(denominator.exponent)
-        - static_cast<long long>(normalized_denominator.discarded);
+        static_cast<long long>(normalized_numerator.exponent)
+        - normalized_denominator.exponent;
     if(exponent < std::numeric_limits<int>::min()
         || exponent > std::numeric_limits<int>::max())[[unlikely]]{
         throw std::overflow_error(overflow_message);
     }
-    const long double quotient = (
-        normalized_numerator.value / normalized_denominator.value
-    ).convert_to<long double>();
+    const long double quotient =
+        normalized_numerator.mantissa / normalized_denominator.mantissa;
     const long double result = std::scalbn(
         quotient,
         static_cast<int>(exponent)

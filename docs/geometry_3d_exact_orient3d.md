@@ -21,4 +21,4 @@ int exact_orient3d(first, second, third, fourth)
 
 ## 注意点
 
-全 `int64_t` 座標域で正確。full-rangeの座標差3個の積は `__int128` に収まらないため、安全な範囲だけ `__int128` を使い、それ以外は `boost::multiprecision::cpp_int` へ切り替える。退化入力は0を返す。
+全 `int64_t` 座標域で正確。full-rangeの座標差3個の積は `__int128` に収まらないため、安全な範囲だけ `__int128` を使い、それ以外はライブラリ内の `ExactInteger` へ切り替える。外部の多倍長整数ライブラリには依存しない。退化入力は0を返す。

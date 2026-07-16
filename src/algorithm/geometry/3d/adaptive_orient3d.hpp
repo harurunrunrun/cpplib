@@ -4,7 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../../math/exact_integer.hpp"
 
 #include "expansion_arithmetic.hpp"
 #include "is_finite.hpp"
@@ -13,7 +13,7 @@
 namespace geometry3d_adaptive_detail{
 
 struct ExactDyadic{
-    boost::multiprecision::cpp_int significand = 0;
+    ExactInteger significand = 0;
     int exponent = 0;
 };
 
@@ -26,12 +26,12 @@ inline ExactDyadic exact_dyadic(long double value){
     int exponent = 0;
     long double fraction = std::frexp(std::abs(value), &exponent);
     constexpr int digits = std::numeric_limits<long double>::digits;
-    boost::multiprecision::cpp_int significand = 0;
+    ExactInteger significand = 0;
     for(int bit = 0; bit < digits; ++bit){
         fraction = std::ldexp(fraction, 1);
         significand <<= 1;
         if(fraction >= 1.0L){
-            ++significand;
+            significand += 1;
             fraction -= 1.0L;
         }
     }
