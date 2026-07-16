@@ -7,6 +7,7 @@
 #include <variant>
 #include <vector>
 
+#include "deduplicate_points_3d.hpp"
 #include "is_finite.hpp"
 #include "line_line_intersection.hpp"
 #include "linear_coincident.hpp"
@@ -29,12 +30,6 @@ inline void add_unique_line(std::vector<Line3>& lines, const Line3& line){
     })) lines.push_back(line);
 }
 
-inline void add_unique_point(std::vector<Point3>& points, const Point3& point){
-    if(std::none_of(points.begin(), points.end(), [&](const Point3& other){
-        return point == other;
-    })) points.push_back(point);
-}
-
 inline std::uint64_t checked_add(std::uint64_t left, std::uint64_t right){
     if(right > std::numeric_limits<std::uint64_t>::max() - left)[[unlikely]]{
         throw std::overflow_error("3D plane arrangement region count overflow");
@@ -53,9 +48,12 @@ inline std::uint64_t line_arrangement_region_count(
                 lines[line_index], lines[previous]
             );
             if(const Point3* point = std::get_if<Point3>(&intersection)){
-                add_unique_point(intersections, *point);
+                intersections.push_back(*point);
             }
         }
+        intersections = deduplicate_points_3d(
+            intersections, 0.0L, GEOMETRY3D_EPS
+        );
         regions = checked_add(
             regions, static_cast<std::uint64_t>(intersections.size()) + 1
         );
@@ -102,16 +100,26 @@ inline PlaneArrangement3 plane_arrangement_3d(
             add_unique_line(result.intersection_lines, plane_plane_intersection(
                 result.planes[first], result.planes[second]
             ));
+        }
+    }
+
+    std::vector<Point3> point_candidates;
+    for(std::size_t first = 0; first < result.planes.size(); ++first){
+        for(std::size_t second = first + 1;
+            second < result.planes.size(); ++second){
             for(std::size_t third = second + 1;
                 third < result.planes.size(); ++third){
                 const ThreePlaneIntersection3 intersection = three_plane_intersection(
                     result.planes[first], result.planes[second], result.planes[third]
                 );
                 if(const Point3* point = std::get_if<Point3>(&intersection)){
-                    add_unique_point(result.intersection_points, *point);
+                    point_candidates.push_back(*point);
                 }
             }
         }
     }
+    result.intersection_points = deduplicate_points_3d(
+        point_candidates, 0.0L, GEOMETRY3D_EPS
+    );
     return result;
 }

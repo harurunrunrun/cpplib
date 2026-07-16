@@ -1,10 +1,12 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <limits>
 #include <numeric>
+#include <optional>
 #include <stdexcept>
 #include <variant>
 #include <vector>
@@ -65,6 +67,57 @@ inline long double nearest_site_distance(
     return result;
 }
 
+inline std::optional<Point3> voronoi_ray_plane_intersection(
+    const VoronoiRay3& ray,
+    const Plane3& plane
+){
+    using namespace geometry3d_adaptive_detail;
+    if(!geometry3d_is_finite(ray.origin)
+        || !geometry3d_is_finite(ray.direction)
+        || !geometry3d_is_finite(plane))[[unlikely]]{
+        throw std::invalid_argument(
+            "Voronoi ray-plane intersection requires finite inputs"
+        );
+    }
+    const std::array<ExactDyadic, 3> direction{
+        exact_dyadic(ray.direction.x),
+        exact_dyadic(ray.direction.y),
+        exact_dyadic(ray.direction.z),
+    };
+    const auto denominator =
+        geometry3d_plane_numeric_detail::exact_dot(plane.normal, direction);
+    const int denominator_sign =
+        geometry3d_plane_numeric_detail::exact_dot_sign(denominator);
+    if(denominator_sign == 0) return std::nullopt;
+    const auto numerator =
+        geometry3d_plane_numeric_detail::exact_dot_difference(
+            plane.normal, plane.point, ray.origin
+        );
+    const int numerator_sign =
+        geometry3d_plane_numeric_detail::exact_dot_sign(numerator);
+    if(numerator_sign != 0
+        && numerator_sign * denominator_sign < 0){
+        return std::nullopt;
+    }
+
+    const std::array<long double, 3> origin{
+        ray.origin.x, ray.origin.y, ray.origin.z,
+    };
+    std::array<long double, 3> point{};
+    for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
+        const ExactDyadic coordinate_numerator = add(
+            multiply(exact_dyadic(origin[coordinate]), denominator.value),
+            multiply(direction[coordinate], numerator.value)
+        );
+        point[coordinate] = geometry3d_plane_numeric_detail::exact_ratio(
+            coordinate_numerator,
+            denominator.value,
+            "Voronoi ray-plane intersection is not representable"
+        );
+    }
+    return Point3{point[0], point[1], point[2]};
+}
+
 }  // namespace maximum_empty_sphere_detail
 
 inline Sphere3 maximum_empty_sphere(
@@ -89,14 +142,18 @@ inline Sphere3 maximum_empty_sphere(
     }
 
     Sphere3 best{{}, -1.0L};
-    const auto consider = [&](const Point3& candidate){
-        if(!geometry3d_is_finite(candidate) || !inside_bounds(bounds, candidate)){
-            return;
-        }
+    const auto consider_inside = [&](const Point3& candidate){
+        if(!geometry3d_is_finite(candidate)) return;
         const long double radius = nearest_site_distance(candidate, sites);
         if(radius > best.radius) best = {candidate, radius};
     };
-    for(const Point3& vertex: bounds.vertices) consider(vertex);
+    const auto consider = [&](const Point3& candidate){
+        if(geometry3d_is_finite(candidate)
+            && inside_bounds(bounds, candidate)){
+            consider_inside(candidate);
+        }
+    };
+    for(const Point3& vertex: bounds.vertices) consider_inside(vertex);
     for(const Point3& vertex: voronoi.finite_vertices) consider(vertex);
 
     const auto edges = convex_polyhedron_edges(bounds);
@@ -104,14 +161,27 @@ inline Sphere3 maximum_empty_sphere(
         const Segment3 segment{
             bounds.vertices[edge[0]], bounds.vertices[edge[1]]
         };
-        for(std::size_t first = 0; first < sites.size(); ++first){
-            for(std::size_t second = first + 1; second < sites.size(); ++second){
-                try{
-                    const auto intersection = segment_plane_intersection(
-                        segment, bisector_plane(sites[first], sites[second])
-                    );
-                    if(intersection) consider(*intersection);
-                }catch(const std::overflow_error&){
+        const auto consider_bisector = [&](std::size_t first,
+                                            std::size_t second){
+            try{
+                const auto intersection = segment_plane_intersection(
+                    segment, bisector_plane(sites[first], sites[second])
+                );
+                if(intersection) consider_inside(*intersection);
+            }catch(const std::overflow_error&){
+            }
+        };
+        if(voronoi.affine_dimension == 3){
+            for(const VoronoiRidge3& ridge: voronoi.ridges){
+                consider_bisector(ridge.sites[0], ridge.sites[1]);
+            }
+        }else{
+            // Lower-dimensional diagrams do not expose their ridge incidence.
+            // Enumerating all pairs preserves the boundary-edge candidates.
+            for(std::size_t first = 0; first < sites.size(); ++first){
+                for(std::size_t second = first + 1;
+                    second < sites.size(); ++second){
+                    consider_bisector(first, second);
                 }
             }
         }
@@ -131,22 +201,48 @@ inline Sphere3 maximum_empty_sphere(
             first_vertex,
             cross(first_direction, second_direction),
         };
-        for(std::size_t first = 0; first < sites.size(); ++first){
-            for(std::size_t second = first + 1; second < sites.size(); ++second){
-                for(std::size_t third = second + 1;
-                    third < sites.size(); ++third){
+        if(voronoi.affine_dimension == 3){
+            for(const VoronoiEdge3& edge: voronoi.edges){
+                if(edge.segment){
                     try{
-                        const ThreePlaneIntersection3 intersection =
-                            three_plane_intersection(
-                                face_plane,
-                                bisector_plane(sites[first], sites[second]),
-                                bisector_plane(sites[first], sites[third])
-                            );
-                        if(const Point3* point =
-                            std::get_if<Point3>(&intersection)){
-                            consider(*point);
-                        }
+                        const auto intersection = segment_plane_intersection(
+                            *edge.segment, face_plane
+                        );
+                        if(intersection) consider(*intersection);
                     }catch(const std::overflow_error&){
+                    }
+                }
+                if(edge.ray){
+                    try{
+                        const auto intersection =
+                            voronoi_ray_plane_intersection(
+                                *edge.ray, face_plane
+                            );
+                        if(intersection) consider(*intersection);
+                    }catch(const std::overflow_error&){
+                    }
+                }
+            }
+        }else{
+            // Lower-dimensional diagrams do not expose Voronoi edges.
+            for(std::size_t first = 0; first < sites.size(); ++first){
+                for(std::size_t second = first + 1;
+                    second < sites.size(); ++second){
+                    for(std::size_t third = second + 1;
+                        third < sites.size(); ++third){
+                        try{
+                            const ThreePlaneIntersection3 intersection =
+                                three_plane_intersection(
+                                    face_plane,
+                                    bisector_plane(sites[first], sites[second]),
+                                    bisector_plane(sites[first], sites[third])
+                                );
+                            if(const Point3* point =
+                                std::get_if<Point3>(&intersection)){
+                                consider(*point);
+                            }
+                        }catch(const std::overflow_error&){
+                        }
                     }
                 }
             }

@@ -4,7 +4,8 @@ documentation_of: ../src/algorithm/geometry/2d/count_points_in_triangles.hpp
 ---
 
 固定された点集合に対し、3頂点が作る三角形の内部にある点数を定数時間で答える。
-三角形の辺上にある点は数えない。頂点組ごとに水平走査線との交差の左右を前計算する。
+三角形の辺上にある点は数えない。各頂点を始点とする半直線を偏角順に並べ、
+高さ方向の走査とFenwick treeで各有向辺の左右・辺上の点数を前計算する。
 
 ## `CountPointsInTriangles`
 
@@ -40,10 +41,14 @@ $N=\lvert\mathrm{vertices}\rvert$、$M=\lvert\mathrm{query\_points}\rvert$とす
 
 | API・操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| constructor | $O(N^2M)$ | $O(N^2)$ |
+| constructor | $O(M\log M+N(N+M)\log(N+M))$ | $O(N^2+N+M)$ |
 | `count` | $O(1)$ | $O(1)$ |
 | `vertex_count` | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。
+- `Coordinate` は整数型でなければならない。
+- 座標差の積と外積は符号付き128-bit整数で計算するため、中間値がその範囲に
+  収まる必要がある。浮動小数点数や許容誤差は使用しない。
+- 点数は `int` で返すため、`query_points.size()` が `int` の上限を超える場合は
+  `length_error` を送出する。

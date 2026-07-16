@@ -13,9 +13,18 @@ documentation_of: ../src/algorithm/geometry/3d/maximum_empty_sphere.hpp
 
 ## API別の時間計算量・空間計算量
 
-重複除去後site数を $S$、境界面数を $F$、境界辺数を $E$、Delaunay四面体数を
-$T$ として、Delaunay構築を除く時間は $O(TS+ES^3+FS^4)$、追加領域は
-$O(S+T+E)$。Delaunay構築の最悪時間は $O(S^3)$。
+重複除去後site数を $S$、境界の頂点数・辺数・面数を $V,E,F$、Delaunay四面体数を
+$T$、Voronoi ridge数・edge数を $R,A$ とする。
+
+| siteのaffine dimension | Voronoi構築後の候補評価時間 | 追加空間計算量 |
+| --- | --- | --- |
+| 3 | $O(VS+T(F+S)+ERS+FA(F+S))$ | $O(S+T+R+A+V+E+F)$ |
+| 2以下 | $O(VS+T(F+S)+ES^3+FS^3(F+S))$ | $O(S+T+V+E+F)$ |
+
+三次元siteではVoronoi incidenceだけを走査し、全site pair・triple列挙を行わない。
+二次元以下のVoronoi incidenceはこのライブラリが保持しないため、正しさを保つ
+fallbackとして境界辺では全pair、境界面では全tripleを列挙する。別途、
+3D Voronoi構築の時間・空間計算量を要する。
 
 ## 注意点
 

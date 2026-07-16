@@ -71,6 +71,30 @@ def write_max(out_dir: Path, index: int) -> None:
         output_file.writelines("0\n" for _ in range(query_count))
 
 
+def write_preprocessing_stress(out_dir: Path, index: int) -> None:
+    vertex_count = 800
+    point_count = 1600
+    with (out_dir / f"case_{index:02d}.in").open(
+        "w", encoding="utf-8", newline="\n"
+    ) as input_file, (out_dir / f"case_{index:02d}.out").open(
+        "w", encoding="utf-8", newline="\n"
+    ) as output_file:
+        input_file.write(f"{vertex_count}\n")
+        for value in range(vertex_count):
+            input_file.write(
+                f"{value - vertex_count // 2} "
+                f"{(value * value * 17 + value * 31) % 1000003}\n"
+            )
+        input_file.write(f"{point_count}\n")
+        for value in range(point_count):
+            input_file.write(
+                f"{point_count // 2 - value} "
+                f"{(value * value * 29 + value * 43) % 1000033}\n"
+            )
+        input_file.write("1\n0 0 0\n")
+        output_file.write("0\n")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True, type=Path)
@@ -110,6 +134,7 @@ def main() -> None:
             random_queries,
         )
     write_max(args.out_dir, 9)
+    write_preprocessing_stress(args.out_dir, 10)
 
 
 if __name__ == "__main__":

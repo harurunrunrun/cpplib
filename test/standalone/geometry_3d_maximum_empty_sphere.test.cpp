@@ -26,6 +26,77 @@ long double nearest_distance(
     }
     return result;
 }
+Sphere3 exhaustive_candidate_sphere(
+    const std::vector<Point3>& input_sites,
+    const ConvexPolyhedron3& bounds
+){
+    const VoronoiDiagram3 voronoi = voronoi_diagram_3d(input_sites);
+    const std::vector<Point3>& sites = voronoi.sites;
+    Sphere3 best{{}, -1.0L};
+    const auto consider = [&](const Point3& point){
+        if(!convex_polyhedron_contains(bounds, point)) return;
+        const long double radius = nearest_distance(point, sites);
+        if(radius > best.radius) best = {point, radius};
+    };
+    for(const Point3& point: bounds.vertices) consider(point);
+    for(const Point3& point: voronoi.finite_vertices) consider(point);
+
+    for(const auto& edge: convex_polyhedron_edges(bounds)){
+        const Segment3 segment{
+            bounds.vertices[edge[0]], bounds.vertices[edge[1]]
+        };
+        for(std::size_t first = 0; first < sites.size(); ++first){
+            for(std::size_t second = first + 1;
+                second < sites.size(); ++second){
+                const auto point = segment_plane_intersection(
+                    segment,
+                    maximum_empty_sphere_detail::bisector_plane(
+                        sites[first], sites[second]
+                    )
+                );
+                if(point) consider(*point);
+            }
+        }
+    }
+
+    for(const auto& face: bounds.faces){
+        const Point3& origin = bounds.vertices[face[0]];
+        const Plane3 plane{
+            origin,
+            cross(
+                geometry3d_normalized_difference(
+                    bounds.vertices[face[1]], origin
+                ).value,
+                geometry3d_normalized_difference(
+                    bounds.vertices[face[2]], origin
+                ).value
+            ),
+        };
+        for(std::size_t first = 0; first < sites.size(); ++first){
+            for(std::size_t second = first + 1;
+                second < sites.size(); ++second){
+                for(std::size_t third = second + 1;
+                    third < sites.size(); ++third){
+                    const ThreePlaneIntersection3 intersection =
+                        three_plane_intersection(
+                            plane,
+                            maximum_empty_sphere_detail::bisector_plane(
+                                sites[first], sites[second]
+                            ),
+                            maximum_empty_sphere_detail::bisector_plane(
+                                sites[first], sites[third]
+                            )
+                        );
+                    if(const Point3* point =
+                        std::get_if<Point3>(&intersection)){
+                        consider(*point);
+                    }
+                }
+            }
+        }
+    }
+    return best;
+}
 
 }  // namespace
 
@@ -96,6 +167,10 @@ int main(){
                 });
             }
             const Sphere3 actual = maximum_empty_sphere(sites, cube);
+            const Sphere3 expected =
+                exhaustive_candidate_sphere(sites, cube);
+            if(!geometry3d_api_close(
+                actual.radius, expected.radius, 2e-7L)) return false;
             if(!convex_polyhedron_contains(cube, actual.center)) return false;
             if(!geometry3d_api_close(
                 actual.radius, nearest_distance(actual.center, sites), 2e-7L
@@ -113,6 +188,28 @@ int main(){
                 }
             }
             if(actual.radius + 2e-7L < grid_lower_bound) return false;
+        }
+        if(rounds == 32){
+            std::vector<Point3> sites;
+            sites.reserve(32);
+            for(std::size_t index = 0; index < 32; ++index){
+                const long double value =
+                    static_cast<long double>(index + 1);
+                sites.push_back({
+                    std::sin(value * 1.731L) * 0.9L,
+                    std::sin(value * value * 0.417L) * 0.9L,
+                    std::cos(value * 2.319L) * 0.9L,
+                });
+            }
+            const Sphere3 stress = maximum_empty_sphere(sites, cube);
+            if(!convex_polyhedron_contains(cube, stress.center)
+                || !geometry3d_api_close(
+                    stress.radius,
+                    nearest_distance(stress.center, sites),
+                    2e-7L
+                )){
+                return false;
+            }
         }
         return true;
     });
