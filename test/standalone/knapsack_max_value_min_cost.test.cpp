@@ -1,12 +1,11 @@
-// competitive-verifier: PROBLEM https://www.spoj.com/problems/PARTY/
+// competitive-verifier: STANDALONE
+
 #include <iostream>
 #include <vector>
 
 #include "../../src/algorithm/other/knapsack_max_value_min_cost.hpp"
 
 int main(){
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
     int capacity;
     int item_count;
     while(std::cin >> capacity >> item_count
