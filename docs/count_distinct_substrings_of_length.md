@@ -8,6 +8,10 @@ documentation_of: ../src/algorithm/string/count_distinct_substrings_of_length.hp
 ## API
 
 ~~~cpp
+long long count_distinct_substrings_of_length(
+    const string& sequence,
+    int length
+)
 template<class Sequence>
 long long count_distinct_substrings_of_length(
     const Sequence& sequence,
@@ -24,9 +28,14 @@ $N$ を列の長さとする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `count_distinct_substrings_of_length(sequence,length)` | $O(N\log N)$ | $O(N)$ |
+| `count_distinct_substrings_of_length(const string&,length)` | $O(N)$ | $O(N)$ |
+| `count_distinct_substrings_of_length(const Sequence&,length)` | $O(N\log N)$ | $O(N)$ |
+
+`string` 版では、suffix automatonの状態 `v` が長さ $L$ の部分文字列を表す条件
+`length[link[v]] < L <= length[v]` を全状態について数える。一般列版はsuffix arrayと
+LCPを使う。
 
 ## 注意点
 
-- `Sequence` は `suffix_array` と `lcp_array` が受理する型でなければならない。
+- 一般列の `Sequence` は `suffix_array` と `lcp_array` が受理する型でなければならない。
 - 戻り値型は `long long` である。

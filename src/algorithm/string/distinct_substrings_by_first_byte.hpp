@@ -2,22 +2,29 @@
 
 #include <array>
 #include <string>
+#include <vector>
 
-#include "suffix_array.hpp"
+#include "suffix_automaton.hpp"
 
 inline std::array<long long, 256>
 distinct_substrings_by_first_byte(const std::string& text){
+    using suffix_automaton_internal::ByteSuffixAutomaton;
     std::array<long long, 256> result{};
-    const std::vector<int> sa = suffix_array(text);
-    const std::vector<int> lcp = lcp_array(text, sa);
-    const int size = static_cast<int>(text.size());
-    for(int rank = 0; rank < size; rank++){
-        const int suffix = sa[static_cast<std::size_t>(rank)];
-        const int duplicated_prefix = rank == 0
-            ? 0
-            : lcp[static_cast<std::size_t>(rank - 1)];
-        result[static_cast<unsigned char>(text[static_cast<std::size_t>(suffix)])]
-            += size - suffix - duplicated_prefix;
+    const ByteSuffixAutomaton automaton(text);
+    const std::vector<int> order = automaton.length_order();
+    std::vector<long long> path_count(
+        static_cast<std::size_t>(automaton.size()), 1
+    );
+    for(std::size_t position = order.size(); position > 1; --position){
+        const int state = order[position - 1];
+        long long& count = path_count[static_cast<std::size_t>(state)];
+        for(const auto& [byte, target]: automaton[state].next){
+            static_cast<void>(byte);
+            count += path_count[static_cast<std::size_t>(target)];
+        }
+    }
+    for(const auto& [byte, target]: automaton[0].next){
+        result[byte] = path_count[static_cast<std::size_t>(target)];
     }
     return result;
 }

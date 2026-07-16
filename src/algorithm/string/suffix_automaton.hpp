@@ -2,10 +2,12 @@
 
 #include <algorithm>
 #include <array>
+#include <cstddef>
 #include <span>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 template<int ALPHABET, int MAX_STATES, char OFFSET = 'a'>
@@ -249,3 +251,117 @@ public:
         return *std::max_element(common.begin(), common.end());
     }
 };
+
+namespace suffix_automaton_internal{
+
+class ByteSuffixAutomaton{
+public:
+    struct State{
+        std::vector<std::pair<unsigned char, int>> next;
+        int link = -1;
+        int length = 0;
+        int first_end = -1;
+    };
+
+private:
+    std::vector<State> states_{{}};
+    int last_ = 0;
+
+    int transition(int state, unsigned char byte) const{
+        for(const auto& [label, target]:
+            states_[static_cast<std::size_t>(state)].next){
+            if(label == byte) return target;
+        }
+        return -1;
+    }
+
+    void set_transition(int state, unsigned char byte, int target){
+        auto& transitions = states_[static_cast<std::size_t>(state)].next;
+        for(auto& [label, destination]: transitions){
+            if(label == byte){
+                destination = target;
+                return;
+            }
+        }
+        transitions.push_back({byte, target});
+    }
+
+public:
+    ByteSuffixAutomaton() = default;
+
+    explicit ByteSuffixAutomaton(std::string_view text){
+        states_.reserve(2 * text.size() + 1);
+        int position = 0;
+        for(const unsigned char byte: text) extend(byte, position++);
+    }
+
+    void extend(unsigned char byte, int position){
+        const int current = static_cast<int>(states_.size());
+        states_.push_back({});
+        states_[static_cast<std::size_t>(current)].length =
+            states_[static_cast<std::size_t>(last_)].length + 1;
+        states_[static_cast<std::size_t>(current)].first_end = position;
+
+        int suffix = last_;
+        while(suffix != -1 && transition(suffix, byte) == -1){
+            set_transition(suffix, byte, current);
+            suffix = states_[static_cast<std::size_t>(suffix)].link;
+        }
+        if(suffix == -1){
+            states_[static_cast<std::size_t>(current)].link = 0;
+        }else{
+            const int target = transition(suffix, byte);
+            if(states_[static_cast<std::size_t>(suffix)].length + 1 ==
+               states_[static_cast<std::size_t>(target)].length){
+                states_[static_cast<std::size_t>(current)].link = target;
+            }else{
+                const int clone = static_cast<int>(states_.size());
+                states_.push_back(states_[static_cast<std::size_t>(target)]);
+                states_[static_cast<std::size_t>(clone)].length =
+                    states_[static_cast<std::size_t>(suffix)].length + 1;
+                while(suffix != -1 && transition(suffix, byte) == target){
+                    set_transition(suffix, byte, clone);
+                    suffix = states_[static_cast<std::size_t>(suffix)].link;
+                }
+                states_[static_cast<std::size_t>(target)].link = clone;
+                states_[static_cast<std::size_t>(current)].link = clone;
+            }
+        }
+        last_ = current;
+    }
+
+    int next(int state, unsigned char byte) const{
+        return transition(state, byte);
+    }
+
+    const State& operator[](int state) const{
+        return states_[static_cast<std::size_t>(state)];
+    }
+
+    int size() const{
+        return static_cast<int>(states_.size());
+    }
+
+    std::vector<int> length_order() const{
+        const int maximum = states_[static_cast<std::size_t>(last_)].length;
+        std::vector<int> count(static_cast<std::size_t>(maximum + 1));
+        std::vector<int> order(states_.size());
+        for(const State& state: states_){
+            ++count[static_cast<std::size_t>(state.length)];
+        }
+        for(int length = 1; length <= maximum; ++length){
+            count[static_cast<std::size_t>(length)] +=
+                count[static_cast<std::size_t>(length - 1)];
+        }
+        for(int state = size() - 1; state >= 0; --state){
+            order[static_cast<std::size_t>(
+                --count[static_cast<std::size_t>(
+                    states_[static_cast<std::size_t>(state)].length
+                )]
+            )] = state;
+        }
+        return order;
+    }
+};
+
+} // namespace suffix_automaton_internal

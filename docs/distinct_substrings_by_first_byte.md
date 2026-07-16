@@ -21,7 +21,11 @@ $N=|text|$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `distinct_substrings_by_first_byte(text)` | $O(N\log N)$ | $O(N)$ |
+| `distinct_substrings_by_first_byte(text)` | $O(N+256)$ | $O(N+256)$ |
+
+byte suffix automatonの遷移DAGを状態長の降順に処理し、各状態から始まるpath数を
+動的計画法で求める。rootからbyte `c` で遷移した先のpath数が、`c` で始まる
+相異なる部分文字列数である。
 
 ## 注意点
 

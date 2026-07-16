@@ -1,6 +1,26 @@
 #pragma once
 
+#include <cstddef>
+#include <string>
+
 #include "suffix_array.hpp"
+#include "suffix_automaton.hpp"
+
+inline long long count_distinct_substrings_of_length(
+    const std::string& sequence,
+    int length
+){
+    if(length <= 0 ||
+       sequence.size() < static_cast<std::size_t>(length)) return 0;
+    const suffix_automaton_internal::ByteSuffixAutomaton automaton(sequence);
+    long long result = 0;
+    for(int state = 1; state < automaton.size(); ++state){
+        const auto& current = automaton[state];
+        if(automaton[current.link].length < length &&
+           length <= current.length) ++result;
+    }
+    return result;
+}
 
 template<class Sequence>
 long long count_distinct_substrings_of_length(
