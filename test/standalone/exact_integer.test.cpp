@@ -160,6 +160,17 @@ int main(){
                 const auto order = left <=> right;
                 std::cout << (order < 0 ? -1 : order > 0 ? 1 : 0) << '\n';
             }
+        }else if(operation == "MUL_POWER"){
+            std::size_t bits;
+            std::cin >> bits;
+            const ExactInteger power = ExactInteger(1) << bits;
+            const ExactInteger product = (power + 1) * (power - 1);
+            constexpr std::uint64_t modulus = 1'000'000'007;
+            const auto [unused_quotient, remainder] =
+                product.divmod(modulus);
+            static_cast<void>(unused_quotient);
+            std::cout << product.bit_length() << ' ' << remainder
+                      << '\n';
         }else if(operation == "SHL" || operation == "SHR"){
             std::string token;
             std::size_t shift;

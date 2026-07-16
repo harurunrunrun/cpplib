@@ -147,6 +147,126 @@ class ExactInteger{
         return result;
     }
 
+    static void trim_magnitude(std::vector<std::uint32_t>& value){
+        while(!value.empty() && value.back() == 0) value.pop_back();
+    }
+
+    static std::vector<std::uint32_t> schoolbook_multiply(
+        const std::vector<std::uint32_t>& left,
+        const std::vector<std::uint32_t>& right
+    ){
+        if(left.empty() || right.empty()) return {};
+        std::vector<std::uint32_t> product(
+            left.size() + right.size(), 0
+        );
+        for(std::size_t left_index = 0;
+            left_index < left.size();
+            ++left_index){
+            std::uint64_t carry = 0;
+            for(std::size_t right_index = 0;
+                right_index < right.size();
+                ++right_index){
+                const std::size_t destination =
+                    left_index + right_index;
+                const std::uint64_t current =
+                    static_cast<std::uint64_t>(left[left_index])
+                        * right[right_index]
+                    + product[destination] + carry;
+                product[destination] =
+                    static_cast<std::uint32_t>(current);
+                carry = current >> 32;
+            }
+            product[left_index + right.size()] =
+                static_cast<std::uint32_t>(carry);
+        }
+        trim_magnitude(product);
+        return product;
+    }
+
+    static std::vector<std::uint32_t> limb_range(
+        const std::vector<std::uint32_t>& value,
+        std::size_t first,
+        std::size_t last
+    ){
+        first = std::min(first, value.size());
+        last = std::min(last, value.size());
+        if(first >= last) return {};
+        return std::vector<std::uint32_t>(
+            value.begin() + static_cast<std::ptrdiff_t>(first),
+            value.begin() + static_cast<std::ptrdiff_t>(last)
+        );
+    }
+
+    static void add_shifted_magnitude(
+        std::vector<std::uint32_t>& destination,
+        const std::vector<std::uint32_t>& addition,
+        std::size_t shift
+    ){
+        if(addition.empty()) return;
+        const std::size_t required = shift + addition.size();
+        if(destination.size() <= required){
+            destination.resize(required + 1, 0);
+        }
+        std::uint64_t carry = 0;
+        for(std::size_t index = 0; index < addition.size(); ++index){
+            const std::size_t position = shift + index;
+            const std::uint64_t sum =
+                static_cast<std::uint64_t>(destination[position])
+                + addition[index] + carry;
+            destination[position] = static_cast<std::uint32_t>(sum);
+            carry = sum >> 32;
+        }
+        std::size_t position = required;
+        while(carry != 0){
+            const std::uint64_t sum =
+                static_cast<std::uint64_t>(destination[position]) + carry;
+            destination[position] = static_cast<std::uint32_t>(sum);
+            carry = sum >> 32;
+            ++position;
+            if(carry != 0 && position == destination.size()){
+                destination.push_back(0);
+            }
+        }
+        trim_magnitude(destination);
+    }
+
+    static std::vector<std::uint32_t> multiply_magnitudes(
+        const std::vector<std::uint32_t>& left,
+        const std::vector<std::uint32_t>& right
+    ){
+        if(left.empty() || right.empty()) return {};
+        constexpr std::size_t karatsuba_threshold = 32;
+        if(std::min(left.size(), right.size()) <= karatsuba_threshold){
+            return schoolbook_multiply(left, right);
+        }
+
+        const std::size_t split =
+            std::max(left.size(), right.size()) / 2;
+        const auto left_low = limb_range(left, 0, split);
+        const auto left_high = limb_range(left, split, left.size());
+        const auto right_low = limb_range(right, 0, split);
+        const auto right_high = limb_range(right, split, right.size());
+
+        const auto low = multiply_magnitudes(left_low, right_low);
+        const auto high = multiply_magnitudes(left_high, right_high);
+        auto left_sum = add_magnitudes(left_low, left_high);
+        auto right_sum = add_magnitudes(right_low, right_high);
+        trim_magnitude(left_sum);
+        trim_magnitude(right_sum);
+        auto middle = multiply_magnitudes(left_sum, right_sum);
+        middle = subtract_magnitudes(middle, low);
+        trim_magnitude(middle);
+        middle = subtract_magnitudes(middle, high);
+        trim_magnitude(middle);
+
+        std::vector<std::uint32_t> result;
+        add_shifted_magnitude(result, low, 0);
+        add_shifted_magnitude(result, middle, split);
+        add_shifted_magnitude(result, high, split * 2);
+        trim_magnitude(result);
+        return result;
+    }
+
     void add_magnitude_one(){
         std::uint64_t carry = 1;
         for(std::uint32_t& limb: limbs_){
@@ -334,23 +454,7 @@ public:
         if(other.limbs_.size() > limbs_.max_size() - limbs_.size()){
             throw std::length_error("ExactInteger multiplication is too large");
         }
-        std::vector<std::uint32_t> product(
-            limbs_.size() + other.limbs_.size(), 0
-        );
-        for(std::size_t left = 0; left < limbs_.size(); ++left){
-            std::uint64_t carry = 0;
-            for(std::size_t right = 0; right < other.limbs_.size(); ++right){
-                const std::size_t destination = left + right;
-                const std::uint64_t current =
-                    static_cast<std::uint64_t>(limbs_[left])
-                        * other.limbs_[right]
-                    + product[destination] + carry;
-                product[destination] = static_cast<std::uint32_t>(current);
-                carry = current >> 32;
-            }
-            product[left + other.limbs_.size()] =
-                static_cast<std::uint32_t>(carry);
-        }
+        auto product = multiply_magnitudes(limbs_, other.limbs_);
         negative_ = negative_ != other.negative_;
         limbs_ = std::move(product);
         normalize();

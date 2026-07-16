@@ -64,6 +64,14 @@ class Case:
             f"{quotient} {remainder}",
         )
 
+    def multiply_power(self, bits: int) -> None:
+        modulus = 1_000_000_007
+        remainder = (pow(2, bits * 2, modulus) - 1) % modulus
+        self.add(
+            f"MUL_POWER {bits}",
+            f"{bits * 2} {remainder}",
+        )
+
 
 def write_case(out_dir: Path, case_id: int, case: Case) -> None:
     (out_dir / f"case_{case_id:02d}.in").write_text(
@@ -154,6 +162,7 @@ def large_case() -> Case:
     for value in (1, -1, (1 << 127) - 1, -(1 << 127)):
         case.shift("SHL", value, 32768)
         case.shift("SHR", value, 32768)
+    case.multiply_power(1_048_576)
     case.meta((1 << 33001) + (1 << 16401) + 1)
     return case
 
