@@ -44,6 +44,33 @@ def write_case(out_dir: Path, idx: int, l: int, r: int, edges: list[tuple[int, i
     (out_dir / f"{name}.out").write_text(f"{size} {cost}\n", encoding="utf-8")
 
 
+def write_self_test_case(out_dir: Path, idx: int) -> None:
+    name = f"case_{idx:02d}"
+    (out_dir / f"{name}.in").write_text("", encoding="utf-8")
+    (out_dir / f"{name}.out").write_text("", encoding="utf-8")
+
+
+def write_long_augmenting_path_case(
+    out_dir: Path,
+    idx: int,
+    size: int,
+) -> None:
+    name = f"case_{idx:02d}"
+    edge_count = 2 * size - 1
+    with (out_dir / f"{name}.in").open(
+        "w", encoding="utf-8", newline="\n"
+    ) as input_file:
+        input_file.write(f"{size} {size} {edge_count}\n")
+        for vertex in range(size):
+            input_file.write(f"{vertex} {vertex} 1\n")
+            if vertex != 0:
+                input_file.write(f"{vertex} {vertex - 1} 0\n")
+    (out_dir / f"{name}.out").write_text(
+        f"{size} {size}\n",
+        encoding="utf-8",
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True)
@@ -68,6 +95,8 @@ def main() -> None:
 
     for i, case in enumerate(cases):
         write_case(out_dir, i, *case)
+    write_self_test_case(out_dir, len(cases))
+    write_long_augmenting_path_case(out_dir, len(cases) + 1, 1_500)
 
 
 if __name__ == "__main__":
