@@ -72,12 +72,24 @@ def main() -> None:
                           (-1.0, 1.0), (-1.0, 5.0), (-5.0, 5.0)]),
         (1, (0.0, 0.0), near_seam),
         (1, (0.0, 0.0), close_angles),
+        (1, (0.0, 0.0), [(-5.0, -5.0), (5.0, -5.0),
+                          (5.0, 5.0), (4.0, 5.0), (2.0, 2.0),
+                          (0.0, 5.0), (-5.0, 5.0)]),
+        (1, (0.0, 0.0), [(-5.0, -5.0), (5.0, -5.0),
+                          (5.0, 5.0), (4.0, 4.0), (2.0, 5.0),
+                          (-5.0, 5.0)]),
+        (1, (100.0, -200.0), [(95.0, -205.0), (105.0, -205.0),
+                                (105.0, -195.0), (101.0, -195.0),
+                                (101.0, -199.0), (99.0, -199.0),
+                                (99.0, -195.0), (95.0, -195.0)]),
         (0, (5.0, 0.0), [(-5.0, -5.0), (5.0, -5.0),
                           (5.0, 5.0), (-5.0, 5.0)]),
         (0, (6.0, 0.0), [(-5.0, -5.0), (5.0, -5.0),
                           (5.0, 5.0), (-5.0, 5.0)]),
         (0, (0.0, 0.0), [(0.0, 0.0), (3.0, 3.0),
                           (0.0, 3.0), (3.0, 0.0)]),
+        (0, (1.5, 1.0), [(0.0, 0.0), (4.0, 0.0),
+                          (1.0, 0.0), (4.0, 4.0), (0.0, 4.0)]),
     ]
     source = random.Random(2026071507)
     for _ in range(120):
@@ -87,6 +99,12 @@ def main() -> None:
             (0.0, 0.0),
             radial_polygon(source, size, source.random()),
         ))
+    for _ in range(80):
+        size = source.randint(6, 24)
+        polygon = radial_polygon(source, size, source.random())
+        anchor = polygon[source.randrange(size)]
+        observer = (0.4 * anchor[0], 0.4 * anchor[1])
+        cases.append((1, observer, polygon))
     write_cases(arguments.out_dir, 0, cases)
 
     size = 800
@@ -100,6 +118,28 @@ def main() -> None:
         for index in range(size)
     ]
     write_cases(arguments.out_dir, 1, [(1, (0.0, 0.0), maximum)])
+
+    size = 20_000
+    radius = 1_000_000.0
+    regular = [
+        (
+            radius * math.cos(2.0 * math.pi * index / size),
+            radius * math.sin(2.0 * math.pi * index / size),
+        )
+        for index in range(size)
+    ]
+    write_cases(arguments.out_dir, 2, [(2, (0.0, 0.0), regular)])
+
+    star_size = 5_001
+    circle = [
+        (
+            10_000.0 * math.cos(2.0 * math.pi * index / star_size),
+            10_000.0 * math.sin(2.0 * math.pi * index / star_size),
+        )
+        for index in range(star_size)
+    ]
+    star = [circle[(2 * index) % star_size] for index in range(star_size)]
+    write_cases(arguments.out_dir, 3, [(0, (0.0, 0.0), star)])
 
 
 if __name__ == "__main__":

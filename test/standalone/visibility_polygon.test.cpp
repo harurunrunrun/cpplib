@@ -25,7 +25,19 @@ long double ray_distance(
         const Point edge = polygon[(index + 1) % polygon.size()] - first;
         const Point offset = first - origin;
         const long double denominator = cross(direction, edge);
-        if(std::fabs(denominator) < 1e-18L) continue;
+        const long double edge_length = std::sqrt(norm(edge));
+        if(std::fabs(denominator)
+            <= 1e-14L * std::max(1.0L, edge_length)){
+            const long double offset_length = std::sqrt(norm(offset));
+            if(std::fabs(cross(offset, direction))
+                <= 1e-12L * std::max(1.0L, offset_length)){
+                for(const Point& point: {polygon[index], polygon[(index + 1) % polygon.size()]}){
+                    const long double distance = dot(point - origin, direction);
+                    if(distance >= -1e-9L) best = std::min(best, std::max(0.0L, distance));
+                }
+            }
+            continue;
+        }
         const long double distance = cross(offset, edge) / denominator;
         const long double position = cross(offset, direction) / denominator;
         if(distance >= -1e-9L
@@ -99,6 +111,43 @@ void validate_result(
     }
 }
 
+void validate_convex_result(
+    const std::vector<Point>& polygon,
+    const Point& observer,
+    const std::vector<Point>& result
+){
+    assert(result.size() == polygon.size());
+    long double scale = 1.0L;
+    for(const Point& point: polygon){
+        scale = std::max(
+            scale, std::max(std::fabs(point.x), std::fabs(point.y))
+        );
+    }
+    const long double tolerance = 2e-7L * scale;
+    std::size_t start = 0;
+    for(std::size_t index = 1; index < result.size(); ++index){
+        if(norm(result[index] - polygon[0])
+            < norm(result[start] - polygon[0])){
+            start = index;
+        }
+    }
+    for(std::size_t index = 0; index < polygon.size(); ++index){
+        assert(std::sqrt(norm(
+            result[(start + index) % result.size()] - polygon[index]
+        )) <= tolerance);
+    }
+
+    const long double turn = 2.0L * std::acos(-1.0L);
+    for(int index = 0; index < 256; ++index){
+        const long double angle = turn * (index + 0.375L) / 256.0L;
+        const long double expected = ray_distance(polygon, observer, angle);
+        const long double actual = ray_distance(result, observer, angle);
+        assert(std::isfinite(expected) && std::isfinite(actual));
+        assert(std::fabs(expected - actual)
+            <= 2e-7L * std::max({1.0L, expected, actual}));
+    }
+}
+
 }
 
 int main(){
@@ -115,8 +164,9 @@ int main(){
         for(Point& point: polygon) std::cin >> point.x >> point.y;
         try{
             const auto result = visibility_polygon(polygon, observer);
-            assert(valid == 1);
-            validate_result(polygon, observer, result);
+            assert(valid != 0);
+            if(valid == 2) validate_convex_result(polygon, observer, result);
+            else validate_result(polygon, observer, result);
             std::cout << "OK\n";
         }catch(const std::invalid_argument&){
             assert(valid == 0);
