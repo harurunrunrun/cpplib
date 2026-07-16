@@ -47,6 +47,18 @@ void self_test(){
         assert(graph.max_flow(0, 3) == 5);
     }
     {
+        FordFulkerson<long long> graph(4);
+        graph.add_edge(0, 1, 3);
+        graph.add_edge(0, 2, 2);
+        graph.add_edge(1, 3, 3);
+        graph.add_edge(2, 3, 2);
+        assert(graph.max_flow(0, 3, 2) == 2);
+        assert(graph.max_flow(0, 3, 10) == 3);
+        assert(graph.max_flow(0, 3) == 0);
+        assert(graph.level.size() == 4);
+        assert(graph.iter.size() == 4);
+    }
+    {
         FordFulkerson<long long> graph(2);
         graph.add_edge(0, 0, 7);
         assert(graph.graph[0].size() == 2);

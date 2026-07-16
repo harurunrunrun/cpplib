@@ -32,6 +32,38 @@ def write_case(out_dir: Path, idx: int, n: int, s: int, t: int, edges: list[tupl
     (out_dir / f"{name}.out").write_text(f"{solve(n, s, t, edges)}\n", encoding="utf-8")
 
 
+def write_self_test_case(out_dir: Path, idx: int) -> None:
+    name = f"case_{idx:02d}"
+    (out_dir / f"{name}.in").write_text("", encoding="utf-8")
+    (out_dir / f"{name}.out").write_text("", encoding="utf-8")
+
+
+def write_large_layered_case(out_dir: Path, idx: int, width: int) -> None:
+    source = 0
+    sink = width + 1
+    capacity = 10**12
+    edges = [
+        edge
+        for vertex in range(1, width + 1)
+        for edge in (
+            (source, vertex, capacity),
+            (vertex, sink, capacity),
+        )
+    ]
+    name = f"case_{idx:02d}"
+    (out_dir / f"{name}.in").write_text(
+        "\n".join([
+            f"{sink + 1} {len(edges)} {source} {sink}",
+            *[f"{u} {v} {cap}" for u, v, cap in edges],
+        ]) + "\n",
+        encoding="utf-8",
+    )
+    (out_dir / f"{name}.out").write_text(
+        f"{width * capacity}\n",
+        encoding="utf-8",
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True)
@@ -57,6 +89,9 @@ def main() -> None:
 
     for i, case in enumerate(cases):
         write_case(out_dir, i, *case)
+    self_test_index = len(cases)
+    write_self_test_case(out_dir, self_test_index)
+    write_large_layered_case(out_dir, self_test_index + 1, 2000)
 
 
 if __name__ == "__main__":
