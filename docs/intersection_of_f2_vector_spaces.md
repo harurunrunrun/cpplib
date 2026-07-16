@@ -22,7 +22,7 @@ std::vector<UInt> basis = intersection_of_f2_vector_spaces(first, second);
 ## API別の時間計算量・空間計算量
 
 $n=\texttt{first.size()}$、$m=\texttt{second.size()}$、
-$W=\texttt{numeric_limits<UInt>::digits}$とする。
+`W = std::numeric_limits<UInt>::digits` とする。
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |

@@ -114,12 +114,12 @@ $D$ を桁数、$K$ を返す要素数とする。固定幅整数の算術を $O
 | API | 時間計算量 |
 | --- | --- |
 | `math::abs_ll(x)` | $O(1)$ |
-| `math::gcd(a,b)` / `ext_gcd(a,b)` / `lcm(a,b)` | $O(\log\max(|a|,|b|))$ |
+| `math::gcd(a,b)` / `ext_gcd(a,b)` / `lcm(a,b)` | $O(\log\max(\lvert a\rvert,\lvert b\rvert))$ |
 | `math::pow_mod(x,n,mod)` | $O(\log(n+1))$ |
-| `math::inv_mod(a,mod)` | $O(\log\max(|a|,mod))$ |
+| `math::inv_mod(a,mod)` | $O(\log\max(\lvert a\rvert,mod))$ |
 | `math::inv_mod_prime(a,mod)` | $O(\log mod)$ |
 | `math::isqrt(n)` | $O(1)$ |
-| `math::divisors(n)` | $O(\sqrt{|n|}+K)$、出力 $O(K)$ |
+| `math::divisors(n)` | $O(\sqrt{\lvert n\rvert}+K)$、出力 $O(K)$ |
 | `math::quotient_ranges(n)` | $O(\sqrt n)$、出力 $O(K)$（$K=O(\sqrt n)$） |
 | `math::to_base_digits(n,base)` | $O(D)$、出力 $O(D)$ |
 | `math::from_base_digits(digits,base)` | $O(D)$ |

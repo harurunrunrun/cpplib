@@ -63,7 +63,7 @@ $N$ を現在長、$V$ を使用node数、$L$ をquery回文長、$D=V-2$、$K$ 
 | API | 時間計算量 |
 | --- | --- |
 | `PalindromicTree()` | $O(MAX_NODES\cdot ALPHABET)$（固定node配列初期化） |
-| `PalindromicTree(s)` | $O(MAX_NODES\cdot ALPHABET+|s|)$ 償却 |
+| `PalindromicTree(s)` | $O(MAX_NODES\cdot ALPHABET+\lvert s\rvert)$ 償却 |
 | `add(c)` | 1回の最悪 $O(N)$、一連の末尾追加全体で償却 $O(1)$ / 文字 |
 | `size()` / `node_count()` / `distinct_palindromes()` / `last()` | $O(1)$ |
 | `operator[]` / `length` / `parent` / `link` / `diff` / `series_link` / `str()` | $O(1)$（参照・metadata） |

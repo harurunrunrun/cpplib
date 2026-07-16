@@ -17,7 +17,7 @@ string gcd_small_huge_integer(uint32_t small, const string& huge);
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `gcd_small_huge_integer` | $O(|huge|+\log small)$ | $O(|huge|)$ |
+| `gcd_small_huge_integer` | $O(\lvert huge\rvert+\log small)$ | $O(\lvert huge\rvert)$ |
 
 ## 注意点
 

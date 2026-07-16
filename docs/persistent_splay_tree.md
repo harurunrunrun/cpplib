@@ -67,7 +67,7 @@ optional<Key> set.max_leq(x, version)
 optional<Key> set.max_less(x, version)
 ~~~
 
-lower_bound と upper_bound は std::set<Key, Compare> と同じ意味。
+`lower_bound` と `upper_bound` は `std::set<Key, Compare>` と同じ意味。
 max_leq は upper_bound(x) の直前、max_less は lower_bound(x) の直前の要素を返す。
 該当する要素がなければ nullopt を返す。
 

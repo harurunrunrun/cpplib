@@ -39,7 +39,7 @@ VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points);
 | --- | --- | --- |
 | `voronoi_diagram(points)` | $O(N\log N)$ | $O(N)$ |
 | `result.vertices` / `result.edges` の全列挙 | $O(N)$ | $O(1)$ |
-| `result.cell_edges[i]` の全列挙 | $O(|cell_edges[i]|)$ | $O(1)$ |
+| `result.cell_edges[i]` の全列挙 | $O(\lvert cell\_edges[i]\rvert)$ | $O(1)$ |
 | `result.representative[i]` / `result.sites[i]` | $O(1)$ | $O(1)$ |
 
 ## 注意点

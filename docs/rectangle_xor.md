@@ -28,7 +28,7 @@ $N$ を入力長方形数とする。
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
 | `rectangle_xor_area(rectangles)` | $O(N\log N)$ | $O(N)$ |
-| `RectangleXorRectangle` の各座標field参照 | $O(1)$ |
+| `RectangleXorRectangle` の各座標field参照 | $O(1)$ | $O(1)$ |
 
 座標圧縮と $2N$ 個以下のevent整列を前処理として行い、各eventを $O(\log N)$ で処理する。
 

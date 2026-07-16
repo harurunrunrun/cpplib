@@ -170,6 +170,8 @@ docs-title-check:
 	$(PYTHON) scripts/docs_problem_tags.py docs test/onlinejudge
 
 docs-coverage-check:
+	$(PYTHON) scripts/test_check_docs_markdown.py
+	$(PYTHON) scripts/check_docs_markdown.py docs
 	$(PYTHON) scripts/check_docs_coverage.py src docs
 
 docs-source: docs-title-check docs-coverage-check docs-verifier-resolve

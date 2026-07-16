@@ -22,7 +22,7 @@ uint64_t affine_recurrence_term(
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `affine_recurrence_term` | $O(|a|+|b|+|n|)$ 回の法演算 | $O(1)$ |
+| `affine_recurrence_term` | $O(\lvert a\rvert+\lvert b\rvert+\lvert n\rvert)$ 回の法演算 | $O(1)$ |
 
 ## 注意点
 

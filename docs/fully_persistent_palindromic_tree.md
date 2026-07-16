@@ -61,7 +61,7 @@ $H_V=\log MAX_VERSIONS$、$H_N=\log MAX_NODES$、`append` がたどるsuffix lin
 | `last` / `distinct_palindromes` / `count_palindromic_substrings` | $O(1)$ |
 | longest系query | $O(1)$ |
 | `node_present(version,node)` | $O(H_N)$ |
-| `find_node(s,version)` / `contains(s,version)` | $O(|s|+H_N)$ |
+| `find_node(s,version)` / `contains(s,version)` | $O(\lvert s\rvert+H_N)$ |
 | `first_occurrence_range(node)` | $O(1)$ |
 | `palindrome(node)` | $O(F)$（node初出versionの長さ $F$ を復元） |
 | `palindrome_nodes(version)` | $O(DH_N)$、出力 $O(D)$ |

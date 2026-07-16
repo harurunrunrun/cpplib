@@ -18,8 +18,8 @@ documentation_of: ../src/structure/types/common_monoids.hpp
 | `MulMonoid<T>` | 積 | `1` | $O(1)$ | $O(1)$ |
 | `MinMonoid<T, Identity>` | min | `Identity`（既定値は `numeric_limits<T>::max()`） | $O(1)$ | $O(1)$ |
 | `MaxMonoid<T, Identity>` | max | `Identity`（既定値は `numeric_limits<T>::lowest()`） | $O(1)$ | $O(1)$ |
-| `GcdMonoid<T>` | gcd | `0` | $O(\log\max(|a|,|b|))$ | $O(1)$ |
-| `LcmMonoid<T>` | lcm | `1` | $O(\log\max(|a|,|b|))$ | $O(1)$ |
+| `GcdMonoid<T>` | gcd | `0` | $O(\log\max(\lvert a\rvert,\lvert b\rvert))$ | $O(1)$ |
+| `LcmMonoid<T>` | lcm | `1` | $O(\log\max(\lvert a\rvert,\lvert b\rvert))$ | $O(1)$ |
 | `XorMonoid<T>` | bitwise xor | `0` | $O(1)$ | $O(1)$ |
 | `BitAndMonoid<T>` | bitwise and | `~T(0)` | $O(1)$ | $O(1)$ |
 | `BitOrMonoid<T>` | bitwise or | `0` | $O(1)$ | $O(1)$ |
@@ -232,8 +232,8 @@ constexpr AddMinMonoidAct<long long, (1LL << 60)> add_min{};
 | `multiply_op(left,right)` | 乗算 | $O(1)$ |
 | `minimum_op(left,right)` | 小さい方 | $O(1)$ |
 | `maximum_op(left,right)` | 大きい方 | $O(1)$ |
-| `gcd_op(left,right)` | 最大公約数 | $O(\log\max(|left|,|right|))$ |
-| `lcm_op(left,right)` | 最小公倍数 | $O(\log\max(|left|,|right|))$ |
+| `gcd_op(left,right)` | 最大公約数 | $O(\log\max(\lvert left\rvert,\lvert right\rvert))$ |
+| `lcm_op(left,right)` | 最小公倍数 | $O(\log\max(\lvert left\rvert,\lvert right\rvert))$ |
 | `xor_op(left,right)` | bitwise xor | $O(1)$ |
 | `bit_and_op(left,right)` | bitwise and | $O(1)$ |
 | `bit_or_op(left,right)` | bitwise or | $O(1)$ |

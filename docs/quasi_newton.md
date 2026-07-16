@@ -4,7 +4,7 @@ documentation_of: ../src/approximate/optimization/quasi_newton.hpp
 ---
 
 滑らかな目的関数を勾配とArmijo backtracking line searchで最小化する準Newton法。
-返却値は [`OptimizationResult<Real>`](optimization_result.md) である。
+返却値は `OptimizationResult<Real>` である。
 
 ## `bfgs`
 
