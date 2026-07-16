@@ -8,14 +8,16 @@
 
 namespace math{
 
-struct PowerTowerLastNine{
-    std::uint32_t value = 0;
+struct TetrationLastDigits{
+    std::uint64_t value = 0;
+    unsigned digit_count = 1;
     bool truncated = false;
 
     std::string to_string() const{
         if(!truncated) return std::to_string(value);
         std::ostringstream stream;
-        stream << "..." << std::setw(9) << std::setfill('0') << value;
+        stream << "..." << std::setw(static_cast<int>(digit_count))
+               << std::setfill('0') << value;
         return stream.str();
     }
 };
@@ -108,15 +110,24 @@ inline ModularTower tower_mod(
 
 } // namespace power_tower_internal
 
-// Computes base tetrated to height. Height zero is one.
-inline PowerTowerLastNine power_tower_last_nine(
+inline TetrationLastDigits tetration_last_digits(
     std::uint64_t base,
-    std::uint64_t height
+    std::uint64_t height,
+    unsigned digit_count
 ){
-    constexpr std::uint64_t modulus = 1'000'000'000ULL;
+    if(digit_count == 0 || digit_count > 19)[[unlikely]]{
+        throw std::invalid_argument(
+            "tetration_last_digits requires 1 <= digit_count <= 19"
+        );
+    }
+    std::uint64_t modulus = 1;
+    for(unsigned digit = 0; digit < digit_count; ++digit){
+        modulus *= 10;
+    }
     const auto result = power_tower_internal::tower_mod(base, height, modulus);
     return {
-        static_cast<std::uint32_t>(result.residue),
+        result.residue,
+        digit_count,
         result.at_least_modulus
     };
 }

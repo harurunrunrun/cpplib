@@ -12,6 +12,8 @@ int main(){
     while(tests--){
         std::uint64_t base, height;
         std::cin >> base >> height;
-        std::cout << math::power_tower_last_nine(base, height).to_string() << '\n';
+        std::cout << math::tetration_last_digits(
+            base, height, 9
+        ).to_string() << '\n';
     }
 }
