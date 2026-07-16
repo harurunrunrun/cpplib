@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/range/maximum_simultaneous_guests.hpp"
+#include "../../src/algorithm/range/maximum_interval_overlap.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -19,6 +19,6 @@ int main(){
             static_cast<std::size_t>(interval_count)
         );
         for(auto& [entry, exit]: intervals) std::cin >> entry >> exit;
-        std::cout << maximum_simultaneous_guests(intervals) << '\n';
+        std::cout << maximum_interval_overlap(intervals) << '\n';
     }
 }

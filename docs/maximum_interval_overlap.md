@@ -1,12 +1,12 @@
 ---
-title: Maximum Interval Overlap (区間最大重複数)
+title: Maximum Interval Overlap (区間最大重複数) [BYTESE2]
 documentation_of: ../src/algorithm/range/maximum_interval_overlap.hpp
 ---
 
 区間列をイベントへ変換して走査し、同じ点を同時に含む区間数の最大値を求める。
 端点が等しいときの重複判定を、半開区間と閉区間から選べる。
 
-# IntervalEndpointPolicy
+## API
 
 ```cpp
 enum class IntervalEndpointPolicy {
@@ -17,8 +17,6 @@ enum class IntervalEndpointPolicy {
 
 - `half_open`: 各入力を $[left,right)$ と扱う。$left=right$ の空区間はどの点も含まない。
 - `closed`: 各入力を $[left,right]$ と扱う。$left=right$ の一点区間もその点を含む。
-
-# maximum_interval_overlap
 
 ```cpp
 template<class T>
