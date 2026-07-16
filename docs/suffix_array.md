@@ -14,9 +14,10 @@ Suffix Array と LCP Array。
 
 ## 計算量の概要
 
-- `suffix_array`: $O(n \log n)$
+- `suffix_array(string)`: $O(n)$
+- `suffix_array(vector<T>)`: $O(n \log n)$
 - `lcp_array(s, sa)`: $O(n)$
-- `lcp_array(s)`: $O(n\log n)$（suffix array構築を含む）
+- `lcp_array(s)`: 文字列なら $O(n)$、一般列なら $O(n\log n)$
 
 ## API別の時間計算量・空間計算量
 
@@ -24,10 +25,11 @@ $N=|s|$ とする。
 
 | API | 時間計算量 | 空間計算量（出力・追加領域） |
 | --- | --- | --- |
-| `suffix_array(const string& s)` | $O(N\log N)$ | $O(N)$ |
+| `suffix_array(const string& s)` | $O(N)$ | $O(N)$ |
 | `suffix_array(const vector<T>& s)` | $O(N\log N)$ | $O(N)$ |
 | `lcp_array(s,sa)` | $O(N)$ | $O(N)$ |
-| `lcp_array(s)` | $O(N\log N)$ | $O(N)$ |
+| `lcp_array(const string& s)` | $O(N)$ | $O(N)$ |
+| `lcp_array(const vector<T>& s)` | $O(N\log N)$ | $O(N)$ |
 
 `lcp_array(s)` は内部でsuffix arrayも構築する。suffix arrayは長さ $N$、
 LCP arrayは長さ最大 $N-1$ の列を返す。
@@ -36,7 +38,9 @@ LCP arrayは長さ最大 $N-1$ の列を返す。
 
 - `suffix_array(s)` は `s[sa[i]:]` が辞書順になる開始位置の置換を返す。
   `string` 版はbyteを符号なしとして比較し、`vector<T>` 版は `T::operator<`
-  と等値関係で座標圧縮する。空列では空を返す。
+  と等値関係で座標圧縮する。空列では空を返す。byte alphabet が定数個である
+  `string` 版は induced sorting と LMS substring の再帰圧縮を行う SA-IS、
+  一般列版は座標圧縮後の doubling 法を使う。
 - `lcp_array(s,sa)` は長さ `max(0,N-1)` の列を返し、
   `lcp[i]` はsuffix `sa[i]` と `sa[i+1]` のLCP長。
   `sa` が長さ `N` の置換でなければ例外を送出する。

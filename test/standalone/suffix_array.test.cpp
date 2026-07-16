@@ -67,6 +67,18 @@ int main(){
         assert(count_distinct_substrings(s) == 15);
     }
 
+    {
+        std::string bytes;
+        for(int repetition = 0; repetition < 3; ++repetition){
+            for(int value = 255; value >= 0; --value){
+                bytes.push_back(static_cast<char>(value));
+            }
+        }
+        const auto expected = naive_suffix_array(bytes);
+        assert(suffix_array(bytes) == expected);
+        assert(lcp_array(bytes) == naive_lcp_array(bytes, expected));
+    }
+
     std::mt19937 rng(20260720);
     for(int n = 0; n <= 80; n++){
         for(int step = 0; step < 40; step++){

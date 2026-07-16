@@ -66,6 +66,188 @@ inline std::vector<int> build_from_ranks(std::vector<int> rank, int classes){
     return sa;
 }
 
+inline std::vector<int> sa_is(const std::vector<int>& sequence, int upper){
+    const int size = static_cast<int>(sequence.size());
+    if(size == 0) return {};
+    if(size == 1) return {0};
+    if(size == 2){
+        return sequence[0] < sequence[1]
+            ? std::vector<int>{0, 1}
+            : std::vector<int>{1, 0};
+    }
+    if(size <= 24){
+        std::vector<int> suffixes(static_cast<std::size_t>(size));
+        std::iota(suffixes.begin(), suffixes.end(), 0);
+        std::sort(suffixes.begin(), suffixes.end(), [&](int left, int right){
+            while(left < size && right < size){
+                if(sequence[static_cast<std::size_t>(left)] !=
+                   sequence[static_cast<std::size_t>(right)]){
+                    return sequence[static_cast<std::size_t>(left)] <
+                        sequence[static_cast<std::size_t>(right)];
+                }
+                ++left;
+                ++right;
+            }
+            return left == size && right != size;
+        });
+        return suffixes;
+    }
+
+    std::vector<int> suffixes(static_cast<std::size_t>(size), -1);
+    std::vector<bool> is_s(static_cast<std::size_t>(size));
+    for(int index = size - 2; index >= 0; --index){
+        is_s[static_cast<std::size_t>(index)] =
+            sequence[static_cast<std::size_t>(index)] ==
+                sequence[static_cast<std::size_t>(index + 1)]
+            ? is_s[static_cast<std::size_t>(index + 1)]
+            : sequence[static_cast<std::size_t>(index)] <
+                sequence[static_cast<std::size_t>(index + 1)];
+    }
+
+    std::vector<int> bucket_l(static_cast<std::size_t>(upper + 1));
+    std::vector<int> bucket_s(static_cast<std::size_t>(upper + 1));
+    for(int index = 0; index < size; ++index){
+        if(is_s[static_cast<std::size_t>(index)]){
+            bucket_l[static_cast<std::size_t>(
+                sequence[static_cast<std::size_t>(index)] + 1
+            )]++;
+        }else{
+            bucket_s[static_cast<std::size_t>(
+                sequence[static_cast<std::size_t>(index)]
+            )]++;
+        }
+    }
+    for(int value = 0; value <= upper; ++value){
+        bucket_s[static_cast<std::size_t>(value)] +=
+            bucket_l[static_cast<std::size_t>(value)];
+        if(value < upper){
+            bucket_l[static_cast<std::size_t>(value + 1)] +=
+                bucket_s[static_cast<std::size_t>(value)];
+        }
+    }
+
+    const auto induce = [&](const std::vector<int>& lms){
+        std::fill(suffixes.begin(), suffixes.end(), -1);
+        std::vector<int> next = bucket_s;
+        for(const int position: lms){
+            if(position < size){
+                suffixes[static_cast<std::size_t>(
+                    next[static_cast<std::size_t>(
+                        sequence[static_cast<std::size_t>(position)]
+                    )]++
+                )] = position;
+            }
+        }
+        next = bucket_l;
+        suffixes[static_cast<std::size_t>(
+            next[static_cast<std::size_t>(
+                sequence[static_cast<std::size_t>(size - 1)]
+            )]++
+        )] = size - 1;
+        for(int index = 0; index < size; ++index){
+            const int position = suffixes[static_cast<std::size_t>(index)];
+            if(position >= 1 && !is_s[static_cast<std::size_t>(position - 1)]){
+                suffixes[static_cast<std::size_t>(
+                    next[static_cast<std::size_t>(
+                        sequence[static_cast<std::size_t>(position - 1)]
+                    )]++
+                )] = position - 1;
+            }
+        }
+        next = bucket_l;
+        for(int index = size - 1; index >= 0; --index){
+            const int position = suffixes[static_cast<std::size_t>(index)];
+            if(position >= 1 && is_s[static_cast<std::size_t>(position - 1)]){
+                suffixes[static_cast<std::size_t>(
+                    --next[static_cast<std::size_t>(
+                        sequence[static_cast<std::size_t>(position - 1)] + 1
+                    )]
+                )] = position - 1;
+            }
+        }
+    };
+
+    std::vector<int> lms_index(static_cast<std::size_t>(size + 1), -1);
+    int lms_count = 0;
+    for(int index = 1; index < size; ++index){
+        if(!is_s[static_cast<std::size_t>(index - 1)] &&
+           is_s[static_cast<std::size_t>(index)]){
+            lms_index[static_cast<std::size_t>(index)] = lms_count++;
+        }
+    }
+    std::vector<int> lms;
+    lms.reserve(static_cast<std::size_t>(lms_count));
+    for(int index = 1; index < size; ++index){
+        if(lms_index[static_cast<std::size_t>(index)] != -1){
+            lms.push_back(index);
+        }
+    }
+    induce(lms);
+
+    if(lms_count != 0){
+        std::vector<int> sorted_lms;
+        sorted_lms.reserve(static_cast<std::size_t>(lms_count));
+        for(const int position: suffixes){
+            if(position >= 0 &&
+               lms_index[static_cast<std::size_t>(position)] != -1){
+                sorted_lms.push_back(position);
+            }
+        }
+        std::vector<int> reduced(static_cast<std::size_t>(lms_count));
+        int reduced_upper = 0;
+        reduced[static_cast<std::size_t>(
+            lms_index[static_cast<std::size_t>(sorted_lms[0])]
+        )] = 0;
+        for(int index = 1; index < lms_count; ++index){
+            int left = sorted_lms[static_cast<std::size_t>(index - 1)];
+            int right = sorted_lms[static_cast<std::size_t>(index)];
+            const int left_end =
+                lms_index[static_cast<std::size_t>(left)] + 1 < lms_count
+                ? lms[static_cast<std::size_t>(
+                    lms_index[static_cast<std::size_t>(left)] + 1
+                )] : size;
+            const int right_end =
+                lms_index[static_cast<std::size_t>(right)] + 1 < lms_count
+                ? lms[static_cast<std::size_t>(
+                    lms_index[static_cast<std::size_t>(right)] + 1
+                )] : size;
+            bool same = left_end - left == right_end - right;
+            if(same){
+                while(left < left_end &&
+                      sequence[static_cast<std::size_t>(left)] ==
+                          sequence[static_cast<std::size_t>(right)] &&
+                      is_s[static_cast<std::size_t>(left)] ==
+                          is_s[static_cast<std::size_t>(right)]){
+                    ++left;
+                    ++right;
+                }
+                if(left != left_end ||
+                   (left_end != size &&
+                    sequence[static_cast<std::size_t>(left)] !=
+                        sequence[static_cast<std::size_t>(right)])){
+                    same = false;
+                }
+            }
+            if(!same) ++reduced_upper;
+            reduced[static_cast<std::size_t>(
+                lms_index[static_cast<std::size_t>(
+                    sorted_lms[static_cast<std::size_t>(index)]
+                )]
+            )] = reduced_upper;
+        }
+        const std::vector<int> reduced_suffixes =
+            sa_is(reduced, reduced_upper);
+        for(int index = 0; index < lms_count; ++index){
+            sorted_lms[static_cast<std::size_t>(index)] =
+                lms[static_cast<std::size_t>(
+                    reduced_suffixes[static_cast<std::size_t>(index)]
+                )];
+        }
+        induce(sorted_lms);
+    }
+    return suffixes;
+}
+
 } // namespace suffix_array_internal
 
 std::vector<int> suffix_array(const std::string& s){
@@ -90,7 +272,7 @@ std::vector<int> suffix_array(const std::string& s){
     for(int i = 0; i < n; i++){
         rank[i] = id[(unsigned char)s[i]];
     }
-    return suffix_array_internal::build_from_ranks(std::move(rank), classes);
+    return suffix_array_internal::sa_is(rank, classes - 1);
 }
 
 template<class T>
