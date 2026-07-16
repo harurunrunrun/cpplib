@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/other/sorted_queue_lengths.hpp"
+#include "../../src/structure/other/threshold_updated_indexed_multiset.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -13,7 +13,7 @@ int main(){
     std::cin >> queue_count >> query_count;
     std::vector<long long> initial(static_cast<std::size_t>(queue_count));
     for(long long& length: initial) std::cin >> length;
-    SortedQueueLengths queues(initial);
+    ThresholdUpdatedIndexedMultiset<> queues(initial);
 
     while(query_count--){
         int type;
