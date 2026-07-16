@@ -17,8 +17,15 @@ unsigned long long count_nondecreasing_digit_sum_partitions(const string& digits
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `count_nondecreasing_digit_sum_partitions` | $O(N^3)$ | $O(N^2)$ |
+| `count_nondecreasing_digit_sum_partitions` | $O(N^2)$ | $O(N^2)$ |
+
+各位置を次の部分列の始点として走査する。直前の部分列の桁和ごとの
+DPを累積和に変換しておくことで、次の桁和以下に対応する遷移を
+$O(1)$ で取得する。すべての終点を列挙する時間と、各DP行の累積和を
+作る時間はいずれも合計 $O(N^2)$ である。
 
 ## 注意点
 
-- 数字以外を含む場合は `runtime_error`、答えが型を超える場合は `overflow_error` となる。
+- 数字以外を含む場合は `runtime_error` となる。
+- 最終的な答えが `unsigned long long` の範囲を超える場合は `overflow_error` となる。
+- 桁和を `int` で表現できない長さの入力では `length_error` となる。
