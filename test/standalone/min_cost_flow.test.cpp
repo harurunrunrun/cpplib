@@ -115,6 +115,30 @@ void self_test(){
         }
         assert(threw);
     }
+    {
+        MinCostFlow<long long> graph(4);
+        graph.add_edge(0, 1, 2, -3);
+        graph.add_edge(1, 3, 2, 5);
+        graph.add_edge(0, 2, 1, 7);
+        graph.add_edge(2, 3, 1, 0);
+        const auto first = graph.min_cost_flow(0, 3, 1);
+        const auto second = graph.min_cost_flow(0, 3, 2);
+        const auto exhausted = graph.min_cost_flow(0, 3);
+        assert(first.flow == 1 && first.cost == 2);
+        assert(second.flow == 2 && second.cost == 9);
+        assert(exhausted.flow == 0 && exhausted.cost == 0);
+    }
+    {
+        MinCostFlow<long long> graph(4);
+        graph.add_edge(0, 1, 1, 0);
+        graph.add_edge(1, 2, 1, -1);
+        graph.add_edge(2, 1, 1, 0);
+        graph.add_edge(2, 3, 1, 0);
+        const auto result = graph.min_cost_flow(0, 3, 0);
+        assert(result.flow == 0);
+        assert(result.cost == 0);
+        assert(graph.edges[0].flow == 0);
+    }
     std::mt19937 rng(20260827);
     for(int n = 2; n <= 5; n++){
         for(int step = 0; step < 80; step++){

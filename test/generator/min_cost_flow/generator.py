@@ -50,6 +50,43 @@ def write_case(out_dir: Path, idx: int, n: int, s: int, t: int, edges: list[tupl
     (out_dir / f"{name}.out").write_text(f"{flow} {cost}\n", encoding="utf-8")
 
 
+def write_self_test_case(out_dir: Path, idx: int) -> None:
+    name = f"case_{idx:02d}"
+    (out_dir / f"{name}.in").write_text("", encoding="utf-8")
+    (out_dir / f"{name}.out").write_text("", encoding="utf-8")
+
+
+def write_deep_paths_case(
+    out_dir: Path,
+    idx: int,
+    width: int,
+    depth: int,
+) -> None:
+    sink = 0
+    source = width * depth + 1
+    vertex_count = source + 1
+    edge_count = width * (depth + 1)
+    name = f"case_{idx:02d}"
+    with (out_dir / f"{name}.in").open(
+        "w", encoding="utf-8", newline="\n"
+    ) as input_file:
+        input_file.write(
+            f"{vertex_count} {edge_count} {source} {sink}\n"
+        )
+        for path in range(width):
+            previous = source
+            base = 1 + path * depth
+            for offset in range(depth):
+                vertex = base + depth - 1 - offset
+                input_file.write(f"{previous} {vertex} 1 0\n")
+                previous = vertex
+            input_file.write(f"{previous} {sink} 1 0\n")
+    (out_dir / f"{name}.out").write_text(
+        f"{width} 0\n",
+        encoding="utf-8",
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True)
@@ -74,6 +111,8 @@ def main() -> None:
 
     for i, case in enumerate(cases):
         write_case(out_dir, i, *case)
+    write_self_test_case(out_dir, len(cases))
+    write_deep_paths_case(out_dir, len(cases) + 1, 180, 180)
 
 
 if __name__ == "__main__":

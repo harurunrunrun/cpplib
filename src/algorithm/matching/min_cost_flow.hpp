@@ -1,9 +1,12 @@
 #pragma once
 
 #include <algorithm>
+#include <functional>
 #include <limits>
 #include <optional>
+#include <queue>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 template<class T>
@@ -57,6 +60,50 @@ struct MinCostFlow{
         return id;
     }
 
+private:
+    std::vector<T> initial_potentials(int source, T inf) const{
+        std::vector<T> distance(static_cast<std::size_t>(n), inf);
+        std::vector<char> reached(static_cast<std::size_t>(n), 0);
+        distance[static_cast<std::size_t>(source)] = T(0);
+        reached[static_cast<std::size_t>(source)] = 1;
+        for(int iteration = 0; iteration < n; ++iteration){
+            bool updated = false;
+            for(int vertex = 0; vertex < n; ++vertex){
+                if(!reached[static_cast<std::size_t>(vertex)]) continue;
+                for(const InternalEdge& edge:
+                    graph[static_cast<std::size_t>(vertex)]){
+                    if(edge.cap <= T(0)) continue;
+                    const T candidate =
+                        distance[static_cast<std::size_t>(vertex)] + edge.cost;
+                    if(reached[static_cast<std::size_t>(edge.to)]
+                        && !(candidate < distance[static_cast<std::size_t>(edge.to)])){
+                        continue;
+                    }
+                    distance[static_cast<std::size_t>(edge.to)] = candidate;
+                    reached[static_cast<std::size_t>(edge.to)] = 1;
+                    updated = true;
+                }
+            }
+            if(!updated) break;
+            if(iteration + 1 == n)[[unlikely]]{
+                throw std::runtime_error(
+                    "library assertion fault: reachable negative cycle "
+                    "(MinCostFlow::min_cost_flow)."
+                );
+            }
+        }
+
+        std::vector<T> potential(static_cast<std::size_t>(n), T(0));
+        for(int vertex = 0; vertex < n; ++vertex){
+            if(reached[static_cast<std::size_t>(vertex)]){
+                potential[static_cast<std::size_t>(vertex)] =
+                    distance[static_cast<std::size_t>(vertex)];
+            }
+        }
+        return potential;
+    }
+
+public:
     MinCostFlowResult<T> min_cost_flow(
         int source,
         int sink,
@@ -67,57 +114,93 @@ struct MinCostFlow{
             throw std::runtime_error("library assertion fault: range violation (MinCostFlow::min_cost_flow).");
         }
         MinCostFlowResult<T> result{T(0), T(0)};
+        if(flow_limit == T(0)) return result;
+        std::vector<T> potential = initial_potentials(source, inf);
+        std::vector<T> distance(static_cast<std::size_t>(n));
+        std::vector<char> reached(static_cast<std::size_t>(n));
+        std::vector<int> parent_vertex(static_cast<std::size_t>(n));
+        std::vector<int> parent_edge(static_cast<std::size_t>(n));
+        using QueueEntry = std::pair<T, int>;
         while(result.flow < flow_limit){
-            std::vector<T> dist(static_cast<std::size_t>(n), inf);
-            std::vector<char> reached(static_cast<std::size_t>(n), 0);
-            std::vector<int> parent_v(static_cast<std::size_t>(n), -1);
-            std::vector<int> parent_e(static_cast<std::size_t>(n), -1);
-            dist[static_cast<std::size_t>(source)] = T(0);
+            std::fill(distance.begin(), distance.end(), inf);
+            std::fill(reached.begin(), reached.end(), 0);
+            std::fill(parent_vertex.begin(), parent_vertex.end(), -1);
+            std::fill(parent_edge.begin(), parent_edge.end(), -1);
+            std::priority_queue<
+                QueueEntry,
+                std::vector<QueueEntry>,
+                std::greater<QueueEntry>
+            > queue;
+            distance[static_cast<std::size_t>(source)] = T(0);
             reached[static_cast<std::size_t>(source)] = 1;
-            bool updated = true;
-            for(int iter = 0; iter < n && updated; iter++){
-                updated = false;
-                for(int v = 0; v < n; v++){
-                    if(!reached[static_cast<std::size_t>(v)]) continue;
-                    for(int i = 0; i < static_cast<int>(graph[static_cast<std::size_t>(v)].size()); i++){
-                        const auto& e = graph[static_cast<std::size_t>(v)][static_cast<std::size_t>(i)];
-                        if(e.cap <= T(0)) continue;
-                        T nd = dist[static_cast<std::size_t>(v)] + e.cost;
-                        if(!reached[static_cast<std::size_t>(e.to)] ||
-                           nd < dist[static_cast<std::size_t>(e.to)]){
-                            dist[static_cast<std::size_t>(e.to)] = nd;
-                            reached[static_cast<std::size_t>(e.to)] = 1;
-                            parent_v[static_cast<std::size_t>(e.to)] = v;
-                            parent_e[static_cast<std::size_t>(e.to)] = i;
-                            updated = true;
-                        }
+            queue.push({T(0), source});
+            while(!queue.empty()){
+                const auto [current_distance, vertex] = queue.top();
+                queue.pop();
+                if(distance[static_cast<std::size_t>(vertex)]
+                    < current_distance){
+                    continue;
+                }
+                const auto& adjacent = graph[static_cast<std::size_t>(vertex)];
+                for(int edge_index = 0;
+                    edge_index < static_cast<int>(adjacent.size());
+                    ++edge_index){
+                    const InternalEdge& edge =
+                        adjacent[static_cast<std::size_t>(edge_index)];
+                    if(edge.cap <= T(0)) continue;
+                    const T reduced_cost = edge.cost
+                        + potential[static_cast<std::size_t>(vertex)]
+                        - potential[static_cast<std::size_t>(edge.to)];
+                    const T candidate = current_distance + reduced_cost;
+                    if(reached[static_cast<std::size_t>(edge.to)]
+                        && !(candidate < distance[static_cast<std::size_t>(edge.to)])){
+                        continue;
                     }
+                    distance[static_cast<std::size_t>(edge.to)] = candidate;
+                    reached[static_cast<std::size_t>(edge.to)] = 1;
+                    parent_vertex[static_cast<std::size_t>(edge.to)] = vertex;
+                    parent_edge[static_cast<std::size_t>(edge.to)] = edge_index;
+                    queue.push({candidate, edge.to});
                 }
             }
-            if(updated)[[unlikely]]{
-                throw std::runtime_error("library assertion fault: reachable negative cycle (MinCostFlow::min_cost_flow).");
-            }
             if(!reached[static_cast<std::size_t>(sink)]) break;
+            for(int vertex = 0; vertex < n; ++vertex){
+                if(reached[static_cast<std::size_t>(vertex)]){
+                    potential[static_cast<std::size_t>(vertex)] +=
+                        distance[static_cast<std::size_t>(vertex)];
+                }
+            }
 
             T add = flow_limit - result.flow;
-            for(int v = sink; v != source; v = parent_v[static_cast<std::size_t>(v)]){
-                const auto& e = graph[static_cast<std::size_t>(parent_v[static_cast<std::size_t>(v)])][static_cast<std::size_t>(parent_e[static_cast<std::size_t>(v)])];
-                add = std::min(add, e.cap);
+            for(int vertex = sink; vertex != source;
+                vertex = parent_vertex[static_cast<std::size_t>(vertex)]){
+                const int previous =
+                    parent_vertex[static_cast<std::size_t>(vertex)];
+                const int edge_index =
+                    parent_edge[static_cast<std::size_t>(vertex)];
+                add = std::min(add, graph[static_cast<std::size_t>(previous)]
+                    [static_cast<std::size_t>(edge_index)].cap);
             }
-            for(int v = sink; v != source; v = parent_v[static_cast<std::size_t>(v)]){
-                int pv = parent_v[static_cast<std::size_t>(v)];
-                int pe = parent_e[static_cast<std::size_t>(v)];
-                auto& e = graph[static_cast<std::size_t>(pv)][static_cast<std::size_t>(pe)];
+            for(int vertex = sink; vertex != source;
+                vertex = parent_vertex[static_cast<std::size_t>(vertex)]){
+                const int previous =
+                    parent_vertex[static_cast<std::size_t>(vertex)];
+                const int edge_index =
+                    parent_edge[static_cast<std::size_t>(vertex)];
+                auto& e = graph[static_cast<std::size_t>(previous)]
+                    [static_cast<std::size_t>(edge_index)];
                 e.cap -= add;
                 graph[static_cast<std::size_t>(e.to)][static_cast<std::size_t>(e.rev)].cap += add;
-                if(edges[static_cast<std::size_t>(e.id)].from == pv){
+                if(edges[static_cast<std::size_t>(e.id)].from == previous){
                     edges[static_cast<std::size_t>(e.id)].flow += add;
                 }else{
                     edges[static_cast<std::size_t>(e.id)].flow -= add;
                 }
             }
             result.flow += add;
-            result.cost += add * dist[static_cast<std::size_t>(sink)];
+            result.cost += add * (
+                potential[static_cast<std::size_t>(sink)]
+                - potential[static_cast<std::size_t>(source)]);
         }
         return result;
     }

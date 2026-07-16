@@ -3,54 +3,96 @@ title: Min Cost Flow (最小費用流) [GRL_6_B]
 documentation_of: ../src/algorithm/matching/min_cost_flow.hpp
 ---
 
-最小費用流。
+負辺を許す有向グラフで、指定量までのフローを最小費用で送る。
+初回だけ Bellman–Ford 法でポテンシャルを作り、その後の各増加路は
+reduced cost に対する Dijkstra 法で求める。
+
+## 型
+
+```cpp
+template<class T>
+struct MinCostFlowEdge {
+    int from;
+    int to;
+    T cap;
+    T flow;
+    T cost;
+};
+
+template<class T>
+struct MinCostFlowResult {
+    T flow;
+    T cost;
+};
+```
+
+`MinCostFlowEdge` の `cap` は追加時の容量、`flow` は現在流れている量。
+`MinCostFlowResult` はその呼出しで新たに送れた流量と追加費用を表す。
 
 ## コンストラクタ
 
 ```cpp
-MinCostFlow<T> graph(n)
+MinCostFlow<T> graph(n);
 ```
 
-## 関数
+頂点数 `n` の残余グラフを作る。
+
+## `add_edge`
 
 ```cpp
-graph.add_edge(from, to, cap, cost)
-graph.min_cost_flow(source, sink, flow_limit, inf)
-graph.min_cost_for_exact_flow(source, sink, required_flow, inf)
+int id = graph.add_edge(from, to, cap, cost);
 ```
 
-`source` と `sink` は異なる頂点、`flow_limit` は非負でなければならない。
-残余グラフで `source` から到達可能な負閉路を検出した場合は `runtime_error` を送出する。
-経路費用と `flow * cost` は `T` の表現範囲内である必要がある。
+容量 `cap`、単位費用 `cost` の有向辺を追加し、publicな `edges` における
+辺番号を返す。`cap` は非負でなければならない。自己ループも追加できる。
 
-`min_cost_for_exact_flow` は要求流量をちょうど流せた場合に最小費用を、流せない場合に `nullopt` を返す。
-`required_flow` は非負でなければならない。
-
-`MinCostFlowResult<T>` は次を持つ。
+## `min_cost_flow`
 
 ```cpp
-T flow;
-T cost;
+MinCostFlowResult<T> result =
+    graph.min_cost_flow(source, sink, flow_limit, inf);
 ```
+
+現在の残余グラフから、最大 `flow_limit` まで追加で流す。
+これ以上流せない場合は送れた量だけを返す。呼出し後は残余グラフ、
+`edges[id].flow` と容量が更新される。複数回呼ぶと前回の状態から続行する。
+
+負費用辺を利用できる。`source` から到達可能な負閉路がある場合は
+`runtime_error` を送出する。`flow_limit == 0` ならグラフを探索せず
+`{0, 0}` を返す。
+
+## `min_cost_for_exact_flow`
+
+```cpp
+std::optional<T> cost =
+    graph.min_cost_for_exact_flow(source, sink, required_flow, inf);
+```
+
+`required_flow` を全て送れた場合は最小追加費用、送れなければ `nullopt` を
+返す。`nullopt` の場合も、送れた分の残余状態と `edges[id].flow` は残る。
 
 ## 時間計算量
 
-$V$ を頂点数、$E$ を追加済み辺数、$A$ を今回成功する増加回数とする。
+頂点数を $V$、追加辺数を $E$、1回の呼出しで成功する増加回数を $A$ とする。
 
 - `MinCostFlow(n)`: $O(V)$
 - `add_edge`: 償却 $O(1)$
-- 1回の最短増加路探索: Bellman--Fordにより $O(VE)$
-- `min_cost_flow`, `min_cost_for_exact_flow`: $O((A+1)(VE+V))$
+- 初期ポテンシャル: $O(VE)$
+- 各増加路: $O((V+E)\log V)$
+- `min_cost_flow`, `min_cost_for_exact_flow`:
+  $O(VE + A(V+E)\log V)$
 
-最後に増加路が存在しないことを確認する探索も含む。整数容量で正の容量が1以上なら $A$ は追加流量 $F$ 以下なので $O((F+1)(VE+V))$ でも上から抑えられる。各増加で残余容量と公開 `edges` のflowを更新する。
+到達部分で $E=\Omega(V)$ なら $O(VE + AE\log V)$ と書ける。
+上界は容量値や総流量の数値の大きさには依存しない。
 
 ## 空間計算量
 
-- 残余グラフ、公開辺列、最短路作業領域を含めて $O(V+E)$
+- グラフ、公開辺列、ポテンシャル、最短路作業領域を合わせて $O(V+E)$
 
 ## 注意点
 
-`add_edge` はpublic `edges` のidを返す。各辺は `from`, `to`, 初期 `cap`, 現在の `flow`, `cost` を持つ。各flow呼出しは今回追加したflowとcostだけを返す。端点、負容量/limit、同一source/sink、到達可能な残余負閉路で `runtime_error`。
-
-`min_cost_for_exact_flow` が `nullopt` を返す場合も、要求量までに送れた流量は残余グラフと公開 `edges` に反映される。
-頂点数は非負、各端点は対応する頂点範囲内でなければならず、違反時は `runtime_error`。容量・cost・総和の演算結果が `T` に収まることを前提とする。記載した計算量には引数検査とResultの構築を含む。
+`source` と `sink` は異なる有効頂点、各流量指定は非負でなければならない。
+`inf` は実際に現れる有限距離より大きい値を指定する。費用加算、
+reduced cost、`flow * cost` が `T` の表現範囲に収まることを前提とする。
+`T` は加減算、乗算、大小比較と優先度付きキューでの順序比較が可能な型とする。
+publicな `graph` は残余辺、`edges` は追加辺と現在流量を保持する。
