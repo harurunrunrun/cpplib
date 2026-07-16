@@ -56,6 +56,18 @@ int main(){
         if(coplanar.affine_dimension != 2 || coplanar.vertices.size() != 4){
             return false;
         }
+        const ConvexPolyhedron3 cube = quickhull_3d({
+            {-1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}, {-1, 1, 1},
+            {1, -1, -1}, {1, -1, 1}, {1, 1, -1}, {1, 1, 1},
+            {-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0},
+            {0, 0, -1}, {0, 0, 1},
+            {-1, -1, 0}, {-1, 1, 0}, {1, -1, 0}, {1, 1, 0},
+            {-1, 0, -1}, {1, 0, 1}, {0, 0, 0},
+        });
+        if(cube.affine_dimension != 3 || cube.vertices.size() != 8
+            || cube.faces.size() != 12){
+            return false;
+        }
         bool rejected = false;
         try{
             static_cast<void>(quickhull_3d({{

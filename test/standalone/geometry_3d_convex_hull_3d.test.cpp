@@ -253,14 +253,21 @@ int main(){
         const std::vector<Point3> cube{
             {-1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}, {-1, 1, 1},
             {1, -1, -1}, {1, -1, 1}, {1, 1, -1}, {1, 1, 1},
-            {0, 0, 0}, {1, 1, 1},
+            // Facet-interior and edge-interior points must not survive as
+            // vertices even if they belonged to an intermediate hull.
+            {-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0},
+            {0, 0, -1}, {0, 0, 1},
+            {-1, -1, 0}, {-1, 1, 0}, {1, -1, 0}, {1, 1, 0},
+            {-1, 0, -1}, {1, 0, 1}, {0, 0, 0}, {1, 1, 1},
         };
         const auto cube_hull = convex_hull_3d(cube);
         if(cube_hull.vertices.size() != 8 || cube_hull.faces.size() != 12
             || !validates_hull(cube_hull, cube)) return false;
         const auto seeded_cube = convex_hull_3d_with_seed(cube, 123456789);
         const auto repeated_cube = convex_hull_3d_with_seed(cube, 123456789);
-        if(seeded_cube.affine_dimension != repeated_cube.affine_dimension
+        if(seeded_cube.vertices.size() != 8
+            || seeded_cube.faces.size() != 12
+            || seeded_cube.affine_dimension != repeated_cube.affine_dimension
             || seeded_cube.vertices != repeated_cube.vertices
             || seeded_cube.faces != repeated_cube.faces){
             return false;

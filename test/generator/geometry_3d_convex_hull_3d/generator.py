@@ -11,6 +11,7 @@ CASES = (
     ("combination_oracle_b", 0x9E3779B97F4A7C15, 96),
     ("random_spatial", 0xD1B54A32D192ED03, 128),
     ("different_shuffle_seed", 0x94D049BB133111EB, 96),
+    ("facet_boundary_cleanup", 0x243F6A8885A308D3, 8),
 )
 
 

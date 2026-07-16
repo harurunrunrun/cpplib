@@ -15,6 +15,7 @@
 #include "../2d/convex_hull.hpp"
 #include "adaptive_orient3d.hpp"
 #include "convex_polyhedron3.hpp"
+#include "convex_polyhedron_facets.hpp"
 #include "cross.hpp"
 #include "dot.hpp"
 #include "geometry3d_sign.hpp"
@@ -391,6 +392,57 @@ inline ConvexPolyhedron3 finish_spatial_hull(
     return {3, std::move(vertices), std::move(result_faces)};
 }
 
+inline ConvexPolyhedron3 canonicalize_spatial_hull(
+    ConvexPolyhedron3 hull
+){
+    std::vector<std::array<std::size_t, 3>> point_faces;
+    for(const ConvexPolyhedronFacet3& facet: convex_polyhedron_facets(hull)){
+        std::vector<std::size_t> boundary;
+        boundary.reserve(facet.boundary.size());
+        for(std::size_t index = 0; index < facet.boundary.size(); ++index){
+            const std::size_t previous = facet.boundary[
+                (index + facet.boundary.size() - 1) % facet.boundary.size()
+            ];
+            const std::size_t current = facet.boundary[index];
+            const std::size_t next =
+                facet.boundary[(index + 1) % facet.boundary.size()];
+            if(exactly_non_collinear(
+                hull.vertices[previous], hull.vertices[current],
+                hull.vertices[next]
+            )){
+                boundary.push_back(current);
+            }
+        }
+        if(boundary.size() < 3)[[unlikely]]{
+            throw std::logic_error(
+                "convex hull geometric facet has no polygon boundary"
+            );
+        }
+        for(std::size_t index = 1; index + 1 < boundary.size(); ++index){
+            point_faces.push_back({
+                boundary[0], boundary[index], boundary[index + 1]
+            });
+        }
+    }
+    std::set<std::size_t> used;
+    for(const auto& face: point_faces) used.insert(face.begin(), face.end());
+    std::vector<std::size_t> remap(hull.vertices.size(), hull.vertices.size());
+    std::vector<Point3> vertices;
+    vertices.reserve(used.size());
+    for(std::size_t vertex: used){
+        remap[vertex] = vertices.size();
+        vertices.push_back(hull.vertices[vertex]);
+    }
+    std::vector<std::array<std::size_t, 3>> faces;
+    faces.reserve(point_faces.size());
+    for(const auto& face: point_faces){
+        faces.push_back({
+            remap[face[0]], remap[face[1]], remap[face[2]]
+        });
+    }
+    return {3, std::move(vertices), std::move(faces)};
+}
+
 inline ConvexPolyhedron3 scan_incremental_spatial_hull(
     const std::vector<Point3>& points,
     const std::array<std::size_t, 4>& interior_witness
@@ -449,7 +501,9 @@ inline ConvexPolyhedron3 scan_incremental_spatial_hull(
             [](const Face& face){ return !face.alive; }
         ), faces.end());
     }
-    return finish_spatial_hull(points, faces);
+    return canonicalize_spatial_hull(
+        finish_spatial_hull(points, faces)
+    );
 }
 
 }  // namespace convex_hull_3d_detail
@@ -647,7 +701,9 @@ inline ConvexPolyhedron3 convex_hull_3d_with_seed(
             visible_mark[face] = false;
         }
     }
-    return finish_spatial_hull(points, faces);
+    return canonicalize_spatial_hull(
+        finish_spatial_hull(points, faces)
+    );
 }
 
 inline ConvexPolyhedron3 convex_hull_3d(std::vector<Point3> input){
