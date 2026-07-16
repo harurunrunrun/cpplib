@@ -1,5 +1,5 @@
 ---
-title: Difference Constraints (差分制約)
+title: Difference Constraints (差分制約、牛ゲー)
 documentation_of: ../src/algorithm/graph/difference_constraints.hpp
 ---
 
@@ -50,6 +50,12 @@ vector<char> bounded;
 
 `bounded[v] == false` の要素では `maximum[v]` の値は未定義。`inf` はその初期値にだけ使われる。
 
+内部表現の全辺で `bound >= 0` なら、負閉路は存在しないため
+実行可能性判定を省略し、Dijkstra法で各上界を求める。
+この高速化条件は追加APIを適用した後の辺に対して判定する。
+たとえば正の下界を追加する `add_difference_at_least` は負辺を生成するため、
+条件を満たすとは限らない。
+
 ## 単一差分の上界
 
 ```cpp
@@ -72,24 +78,32 @@ difference_range<T>(n, reference, variable, constraints, inf)
 
 `has_maximum == false` のとき上に非有界。
 
-差分制約の経路和は `T` の表現範囲内である必要がある。
+整数型 `T` では、緩和で評価する和または下界・下端の符号反転が
+`T` の表現範囲を外れる場合に `overflow_error` を送出する。
+非整数型では、演算結果が `T` の有限な表現範囲内でなければならない。
 
 ## 時間計算量
 
-$M$ を現在の制約数とする。
+$N$ を変数数、$M$ を現在の制約数とする。
+「非負辺」は、内部表現された全制約で `bound >= 0` である場合を指す。
 
 - `add_difference_at_most`: 償却 $O(1)$
 - `add_difference_at_least`: 償却 $O(1)$
 - `add_difference_equal`: 償却 $O(1)$（制約を2本追加）
-- `solve_difference_constraints`: $O(NM+N)$。実行可能性判定と `maximum` / `bounded` の長さ $N$ の出力を含む
+- `solve_difference_constraints`: 一般には $O(NM+N)$、非負辺だけなら
+  Dijkstra法により $O((N+M)\log(N+M))$。
+  実行可能性判定と `maximum` / `bounded` の長さ $N$ の出力を含む
 - `has_finite_difference_upper_bound`: $O(1)$
-- `maximum_difference`: $O(NM+N)$
-- `difference_range`: $O(NM+N)$（`maximum_difference` を2回実行）
+- `maximum_difference`: 一般には $O(NM+N)$、非負辺だけなら
+  $O((N+M)\log(N+M))$
+- `difference_range`: 一般には $O(NM+N)$、非負辺だけなら
+  $O((N+M)\log(N+M))$（`maximum_difference` を2回実行）
 
 ## 空間計算量
 
-- `solve_difference_constraints`: 戻り値を含めて $O(N)$
-- 単一目的・範囲関数も内部結果を含めて $O(N)$
+- `solve_difference_constraints`: 一般経路は戻り値を含めて $O(N)$。
+  非負辺のDijkstra経路は隣接リストを含めて $O(N+M)$
+- 単一目的・範囲関数も同じ
 
 ## 注意点
 

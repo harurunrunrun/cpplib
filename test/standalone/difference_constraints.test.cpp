@@ -125,7 +125,143 @@ void self_test(){
         }
         assert(thrown);
     }
+    {
+        bool thrown = false;
+        try{
+            (void)solve_difference_constraints<long long>(
+                3,
+                0,
+                {
+                    {0, 1, std::numeric_limits<long long>::max() - 1},
+                    {0, 2, 1},
+                    {1, 2, 10},
+                },
+                INF
+            );
+        }catch(const std::overflow_error&){
+            thrown = true;
+        }
+        assert(thrown);
+
+        thrown = false;
+        std::vector<DifferenceConstraint<long long>> constraints = {
+            {0, 0, 0}
+        };
+        const std::size_t original_size = constraints.size();
+        try{
+            add_difference_equal<long long>(
+                constraints, 0, 1, std::numeric_limits<long long>::lowest()
+            );
+        }catch(const std::overflow_error&){
+            thrown = true;
+        }
+        assert(thrown);
+        assert(constraints.size() == original_size);
+    }
+#ifdef __SIZEOF_INT128__
+    {
+        using Int128 = __int128;
+        bool thrown = false;
+        try{
+            (void)solve_difference_constraints<Int128>(
+                3,
+                0,
+                {
+                    {0, 1, std::numeric_limits<Int128>::max() - 1},
+                    {0, 2, 1},
+                    {1, 2, 10},
+                }
+            );
+        }catch(const std::overflow_error&){
+            thrown = true;
+        }
+        assert(thrown);
+
+        thrown = false;
+        try{
+            std::vector<DifferenceConstraint<Int128>> constraints;
+            add_difference_at_least<Int128>(
+                constraints, 0, 1, std::numeric_limits<Int128>::lowest()
+            );
+        }catch(const std::overflow_error&){
+            thrown = true;
+        }
+        assert(thrown);
+    }
+#endif
+    {
+        const std::vector<DifferenceConstraint<long long>> constraints = {
+            {0, 1, 0},
+            {1, 0, 0},
+            {1, 2, 7},
+        };
+        const auto result = solve_difference_constraints<long long>(
+            4, 0, constraints, INF
+        );
+        assert(result.feasible);
+        assert(result.bounded[2]);
+        assert(result.maximum[2] == 7);
+        assert(!result.bounded[3]);
+    }
+    {
+        std::vector<DifferenceConstraint<long long>> constraints;
+        add_difference_at_least<long long>(constraints, 0, 1, 5);
+        add_difference_at_most<long long>(constraints, 0, 1, 4);
+        assert(constraints.front().bound == -5);
+        assert(!solve_difference_constraints<long long>(
+            2, 0, constraints, INF
+        ).feasible);
+    }
+    {
+        constexpr int size = 20000;
+        std::vector<DifferenceConstraint<long long>> constraints;
+        constraints.reserve(size - 1);
+        long long expected = 0;
+        for(int vertex = size - 2; 0 <= vertex; --vertex){
+            const long long bound = vertex % 17 + 1;
+            constraints.push_back({vertex, vertex + 1, bound});
+            expected += bound;
+        }
+        const auto result = solve_difference_constraints<long long>(
+            size, 0, constraints, INF
+        );
+        assert(result.feasible);
+        assert(result.bounded.back());
+        assert(result.maximum.back() == expected);
+    }
+
     std::mt19937 rng(20260821);
+    for(int n = 1; n <= 30; ++n){
+        for(int step = 0; step < 100; ++step){
+            std::vector<DifferenceConstraint<long long>> constraints;
+            for(int from = 0; from < n; ++from){
+                for(int to = 0; to < n; ++to){
+                    if(from != to && rng() % 7 == 0){
+                        constraints.push_back({
+                            from, to, static_cast<long long>(rng() % 21)
+                        });
+                    }
+                }
+            }
+            const int reference = static_cast<int>(rng() % n);
+            const auto result = solve_difference_constraints<long long>(
+                n, reference, constraints, INF
+            );
+            const auto expected = bellman_ford(n, reference, constraints);
+            assert(result.feasible);
+            for(int vertex = 0; vertex < n; ++vertex){
+                const bool bounded =
+                    expected[static_cast<std::size_t>(vertex)] != INF;
+                assert(result.bounded[static_cast<std::size_t>(vertex)] ==
+                    bounded);
+                if(bounded){
+                    assert(result.maximum[static_cast<std::size_t>(vertex)] ==
+                        expected[static_cast<std::size_t>(vertex)]);
+                }
+            }
+        }
+    }
+
     for(int n = 1; n <= 30; n++){
         for(int step = 0; step < 100; step++){
             std::vector<DifferenceConstraint<long long>> constraints;

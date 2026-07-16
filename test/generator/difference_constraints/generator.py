@@ -75,6 +75,34 @@ def write_case(out_dir: Path, idx: int, n: int, constraints: list[tuple[int, int
     (out_dir / f"{name}.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
 
 
+def write_self_test_case(out_dir: Path, idx: int) -> None:
+    name = f"case_{idx:02d}"
+    (out_dir / f"{name}.in").write_text("", encoding="utf-8")
+    (out_dir / f"{name}.out").write_text("", encoding="utf-8")
+
+
+def write_nonnegative_chain_case(out_dir: Path, idx: int, size: int) -> None:
+    name = f"case_{idx:02d}"
+    total = sum(vertex % 17 + 1 for vertex in range(size - 1))
+    input_lines = [f"{size} {size - 1} 2"]
+    input_lines.extend(
+        f"{vertex} {vertex + 1} {vertex % 17 + 1}"
+        for vertex in reversed(range(size - 1))
+    )
+    input_lines.extend([
+        f"MAX 0 {size - 1}",
+        f"RANGE 0 {size - 1}",
+    ])
+    (out_dir / f"{name}.in").write_text(
+        "\n".join(input_lines) + "\n",
+        encoding="utf-8",
+    )
+    (out_dir / f"{name}.out").write_text(
+        f"{total}\n-inf {total}\n",
+        encoding="utf-8",
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True)
@@ -93,6 +121,11 @@ def main() -> None:
             [(0, 1, 5), (1, 0, -5), (2, 1, -2), (1, 2, 4)],
             [("RANGE", 0, 2), ("MAX", 0, 2), ("MAX", 2, 0)],
         ),
+        (
+            4,
+            [(0, 1, 5), (1, 2, 0), (2, 0, 1)],
+            [("MAX", 0, 2), ("RANGE", 0, 2), ("MAX", 0, 3)],
+        ),
     ]
     rng = random.Random(20260821)
     for n in [1, 5, 20, 40]:
@@ -109,6 +142,9 @@ def main() -> None:
 
     for i, case in enumerate(cases):
         write_case(out_dir, i, *case)
+    self_test_index = len(cases)
+    write_self_test_case(out_dir, self_test_index)
+    write_nonnegative_chain_case(out_dir, self_test_index + 1, 50000)
 
 
 if __name__ == "__main__":
