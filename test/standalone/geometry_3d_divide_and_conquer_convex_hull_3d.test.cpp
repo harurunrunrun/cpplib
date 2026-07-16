@@ -1,35 +1,24 @@
 // competitive-verifier: STANDALONE
 
 #include <algorithm>
+#include <array>
 #include <cmath>
+#include <cstddef>
 #include <limits>
+#include <map>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_counts.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
 #include "../../src/algorithm/geometry/3d/divide_and_conquer_convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/quickhull_3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{
 
-bool same_body(
-    const ConvexPolyhedron3& first,
-    const ConvexPolyhedron3& second
-){
-    if(first.affine_dimension != second.affine_dimension) return false;
-    for(const Point3& point: first.vertices){
-        if(!convex_polyhedron_contains(second, point)) return false;
-    }
-    for(const Point3& point: second.vertices){
-        if(!convex_polyhedron_contains(first, point)) return false;
-    }
-    if(first.affine_dimension == 3 && !geometry3d_api_close(
-        convex_polyhedron_volume(first), convex_polyhedron_volume(second), 1e-8L
-    )) return false;
-    return true;
+bool exactly_equal(const Point3& left, const Point3& right){
+    return left.x == right.x && left.y == right.y && left.z == right.z;
 }
 
 bool valid_full_dimensional_hull(
@@ -37,11 +26,42 @@ bool valid_full_dimensional_hull(
     const std::vector<Point3>& input
 ){
     if(hull.affine_dimension != 3) return false;
+    for(const Point3& vertex: hull.vertices){
+        if(std::none_of(input.begin(), input.end(), [&](const Point3& point){
+            return exactly_equal(vertex, point);
+        })) return false;
+    }
+    std::map<std::array<std::size_t, 2>, std::size_t> edge_uses;
+    for(const auto& face: hull.faces){
+        for(std::size_t vertex: face){
+            if(vertex >= hull.vertices.size()) return false;
+        }
+        if(face[0] == face[1] || face[1] == face[2] || face[2] == face[0]){
+            return false;
+        }
+        for(const Point3& point: input){
+            if(adaptive_orient3d(
+                hull.vertices[face[0]], hull.vertices[face[1]],
+                hull.vertices[face[2]], point
+            ) > 0) return false;
+        }
+        for(std::size_t edge = 0; edge < 3; ++edge){
+            std::array<std::size_t, 2> key{
+                face[edge], face[(edge + 1) % 3]
+            };
+            if(key[1] < key[0]) std::swap(key[0], key[1]);
+            ++edge_uses[key];
+        }
+    }
+    for(const auto& [edge, uses]: edge_uses){
+        static_cast<void>(edge);
+        if(uses != 2) return false;
+    }
     for(const Point3& point: input){
         if(!convex_polyhedron_contains(hull, point)) return false;
     }
-    const auto counts = convex_polyhedron_counts(hull);
-    return counts.vertices + counts.facet_count == counts.edges + 2;
+    return hull.vertices.size() + hull.faces.size()
+        == edge_uses.size() + 2;
 }
 
 }  // namespace
@@ -117,8 +137,6 @@ int main(){
                 if(index % 11 == 0) points.push_back(points.back());
             }
             const auto actual = divide_and_conquer_convex_hull_3d(points);
-            const auto reference = quickhull_3d(points);
-            if(!same_body(actual, reference)) return false;
             if(actual.affine_dimension == 3
                 && !valid_full_dimensional_hull(actual, points)) return false;
         }
@@ -132,7 +150,34 @@ int main(){
             });
         }
         const auto many_hull = divide_and_conquer_convex_hull_3d(many_points);
-        return same_body(many_hull, quickhull_3d(many_points))
-            && valid_full_dimensional_hull(many_hull, many_points);
+        if(!valid_full_dimensional_hull(many_hull, many_points)) return false;
+
+        // The generator reserves rounds == 1 for a large input.  All generated
+        // points are strictly inside the cube, so the eight corners form an
+        // independent expected hull while the former cubic merge is infeasible.
+        if(rounds == 1){
+            constexpr long double radius = 1000000.0L;
+            std::vector<Point3> performance;
+            for(int x: {-1, 1}) for(int y: {-1, 1}) for(int z: {-1, 1}){
+                performance.push_back({x * radius, y * radius, z * radius});
+            }
+            for(std::size_t index = 0; index < 50000; ++index){
+                const auto coordinate = [&]{
+                    return static_cast<long double>(
+                        static_cast<long long>(random() % 1999999) - 999999
+                    );
+                };
+                performance.push_back({coordinate(), coordinate(), coordinate()});
+            }
+            const auto large_hull =
+                divide_and_conquer_convex_hull_3d(performance);
+            const auto counts = convex_polyhedron_counts(large_hull);
+            if(counts.vertices != 8 || counts.edges != 12
+                || counts.facet_count != 6
+                || !valid_full_dimensional_hull(large_hull, performance)){
+                return false;
+            }
+        }
+        return true;
     });
 }

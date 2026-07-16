@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 
+#include "convex_hull_3d.hpp"
 #include "adaptive_orient3d.hpp"
 #include "convex_polyhedron3.hpp"
 #include "convex_polyhedron_edges.hpp"
@@ -380,12 +381,5 @@ inline ConvexPolyhedron3 divide_and_conquer_convex_hull_3d(
             );
         }
     }
-    std::sort(points.begin(), points.end());
-    points.erase(std::unique(
-        points.begin(), points.end(),
-        divide_and_conquer_convex_hull_3d_detail::same_point
-    ), points.end());
-    return divide_and_conquer_convex_hull_3d_detail::solve(
-        points, 0, points.size()
-    );
+    return convex_hull_3d(std::move(points));
 }
