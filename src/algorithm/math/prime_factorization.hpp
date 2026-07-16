@@ -12,11 +12,11 @@ namespace math{
 using u64 = unsigned long long;
 using u128 = __uint128_t;
 
-u64 mul_mod_u64(u64 a, u64 b, u64 mod){
+inline u64 mul_mod_u64(u64 a, u64 b, u64 mod){
     return (u64)((u128)a * b % mod);
 }
 
-u64 pow_mod_u64(u64 x, u64 n, u64 mod){
+inline u64 pow_mod_u64(u64 x, u64 n, u64 mod){
     u64 res = 1 % mod;
     while(n > 0){
         if(n & 1){
@@ -28,7 +28,7 @@ u64 pow_mod_u64(u64 x, u64 n, u64 mod){
     return res;
 }
 
-bool miller_rabin_test(u64 n, u64 a, u64 d, int s){
+inline bool miller_rabin_test(u64 n, u64 a, u64 d, int s){
     u64 x = pow_mod_u64(a % n, d, n);
     if(x == 1 || x == n - 1){
         return true;
@@ -42,7 +42,7 @@ bool miller_rabin_test(u64 n, u64 a, u64 d, int s){
     return false;
 }
 
-bool is_prime_miller_rabin(u64 n){
+inline bool is_prime_miller_rabin(u64 n){
     if(n < 2){
         return false;
     }
@@ -94,7 +94,7 @@ bool is_prime_miller_rabin_random(u64 n, int rounds, URBG& rng){
     return true;
 }
 
-u64 pollard_rho(u64 n){
+inline u64 pollard_rho(u64 n){
     if(n <= 1)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (pollard_rho).");
     }
@@ -155,7 +155,7 @@ u64 pollard_rho(u64 n){
     }
 }
 
-void factorize_pollard_rho_rec(u64 n, std::vector<u64>& factors){
+inline void factorize_pollard_rho_rec(u64 n, std::vector<u64>& factors){
     if(n == 1){
         return;
     }
@@ -168,7 +168,7 @@ void factorize_pollard_rho_rec(u64 n, std::vector<u64>& factors){
     factorize_pollard_rho_rec(n / d, factors);
 }
 
-std::vector<std::pair<u64,int>> factorize_pollard_rho(u64 n){
+inline std::vector<std::pair<u64,int>> factorize_pollard_rho(u64 n){
     if(n == 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (factorize_pollard_rho).");
     }
@@ -187,7 +187,7 @@ std::vector<std::pair<u64,int>> factorize_pollard_rho(u64 n){
     return res;
 }
 
-u64 euler_phi(u64 n){
+inline u64 euler_phi(u64 n){
     if(n == 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (euler_phi).");
     }
