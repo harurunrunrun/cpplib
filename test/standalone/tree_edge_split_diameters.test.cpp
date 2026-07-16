@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 
+#include "../../src/algorithm/tree/tree_edge_split_diameters.hpp"
 #include "../../src/algorithm/tree/maximum_product_of_two_vertex_disjoint_tree_paths.hpp"
 
 namespace{
