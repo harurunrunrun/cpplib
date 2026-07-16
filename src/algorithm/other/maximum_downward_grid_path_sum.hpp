@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-inline long long maximum_philosopher_stones(
+inline long long maximum_downward_grid_path_sum(
     const std::vector<std::vector<int>>& grid
 ){
     if(grid.empty()) return 0;
@@ -16,7 +16,7 @@ inline long long maximum_philosopher_stones(
         if(row.size() != width)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: nonrectangular grid "
-                "(maximum_philosopher_stones)."
+                "(maximum_downward_grid_path_sum)."
             );
         }
     }
