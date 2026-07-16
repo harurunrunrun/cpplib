@@ -159,7 +159,7 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
         preflight = workflow["jobs"]["standalone-preflight"]
         shards = workflow["jobs"]["standalone-assets"]
         self.assertEqual(shards["needs"], "standalone-preflight")
-        self.assertEqual(shards["if"], "${{ always() }}")
+        self.assertNotIn("if", shards)
         self.assertEqual(
             named_steps(preflight)["Run standalone preflight"]["run"],
             "make standalone-assets-test",
@@ -171,6 +171,38 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertEqual(source.count("make standalone-assets-test"), 1)
+
+    def test_forbidden_dependency_check_precedes_resolution(self) -> None:
+        command = (
+            "python3 scripts/test_check_no_boost_dependency.py\n"
+            "python3 scripts/check_no_boost_dependency.py src test docs\n"
+        )
+        for workflow_name, job_name in (
+            ("verify.yaml", "resolve"),
+            ("docs.yaml", "docs"),
+        ):
+            with self.subTest(workflow=workflow_name):
+                job = load_workflow(workflow_name)["jobs"][job_name]
+                steps = job["steps"]
+                by_name = named_steps(job)
+                dependency_check = by_name[
+                    "Reject forbidden Boost dependencies"
+                ]
+                self.assertEqual(dependency_check["run"], command)
+                positions = {
+                    step["name"]: index
+                    for index, step in enumerate(steps)
+                    if "name" in step
+                }
+                self.assertLess(
+                    positions["Reject forbidden Boost dependencies"],
+                    positions["Set up competitive-verifier"],
+                )
+
+        makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+        self.assertIn(
+            "standalone-assets-test: no-boost-dependency-check", makefile
+        )
 
     def test_verify_retries_only_with_successful_previous_results(self) -> None:
         workflow = load_workflow("verify.yaml")

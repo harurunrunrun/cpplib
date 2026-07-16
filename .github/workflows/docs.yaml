@@ -152,6 +152,11 @@ jobs:
           fetch-depth: 0
           ref: ${{ needs.route.outputs.head_sha }}
 
+      - name: Reject forbidden Boost dependencies
+        run: |
+          python3 scripts/test_check_no_boost_dependency.py
+          python3 scripts/check_no_boost_dependency.py src test docs
+
       - name: Set up competitive-verifier
         uses: competitive-verifier/actions/setup@v2
         with:
