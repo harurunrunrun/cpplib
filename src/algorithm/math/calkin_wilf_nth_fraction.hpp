@@ -6,11 +6,13 @@
 
 namespace math{
 
-inline std::pair<std::uint64_t, std::uint64_t> fraction_tree_nth(
+inline std::pair<std::uint64_t, std::uint64_t> calkin_wilf_nth_fraction(
     std::uint64_t one_based_index
 ){
     if(one_based_index == 0)[[unlikely]]{
-        throw std::invalid_argument("fraction_tree_nth requires index >= 1");
+        throw std::invalid_argument(
+            "calkin_wilf_nth_fraction requires index >= 1"
+        );
     }
     std::uint64_t highest_bit = 1;
     while(highest_bit <= one_based_index / 2) highest_bit <<= 1;

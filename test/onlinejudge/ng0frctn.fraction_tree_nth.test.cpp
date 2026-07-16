@@ -2,13 +2,13 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/fraction_tree_nth.hpp"
+#include "../../src/algorithm/math/calkin_wilf_nth_fraction.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
     for(std::uint64_t index; std::cin >> index && index != 0;){
-        const auto [numerator, denominator] = math::fraction_tree_nth(index);
+        const auto [numerator, denominator] = math::calkin_wilf_nth_fraction(index);
         std::cout << numerator << '/' << denominator << '\n';
     }
 }
