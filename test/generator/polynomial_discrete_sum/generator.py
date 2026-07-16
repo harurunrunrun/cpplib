@@ -121,10 +121,24 @@ def random_case(out_dir: Path) -> None:
 
 def large_case(out_dir: Path) -> None:
     exponent = 100000
-    prefix_degree = 1500
-    coefficient_count = prefix_degree + 1
-    telescoping = [math.comb(prefix_degree + 1, degree) % MOD
-                   for degree in range(coefficient_count)]
+    antiderivative_degree = 100000
+    coefficient_count = antiderivative_degree
+    inverses = [0] * (antiderivative_degree + 1)
+    inverses[1] = 1
+    for value in range(2, antiderivative_degree + 1):
+        inverses[value] = (
+            MOD - (MOD // value) * inverses[MOD % value] % MOD
+        )
+    telescoping: list[int] = []
+    coefficient = 1
+    for degree in range(coefficient_count):
+        telescoping.append(coefficient)
+        coefficient = (
+            coefficient
+            * (antiderivative_degree - degree)
+            * inverses[degree + 1]
+            % MOD
+        )
     n = 10**18
     coefficient_text = " ".join(map(str, telescoping))
     queries = [
@@ -134,13 +148,13 @@ def large_case(out_dir: Path) -> None:
         f"D {coefficient_count} {coefficient_text}",
         f"S {coefficient_count} {n} {coefficient_text}",
     ]
-    expected_antiderivative = [0] * (prefix_degree + 1) + [1]
+    expected_antiderivative = [0] * antiderivative_degree + [1]
     answers = [
         "0",
         str(power_naive(5, exponent)),
         str(10**18 % MOD),
         " ".join(map(str, expected_antiderivative)),
-        str(pow(n, prefix_degree + 1, MOD)),
+        str(pow(n, antiderivative_degree, MOD)),
     ]
     write_case(out_dir, 2, queries, answers)
 
