@@ -18,8 +18,12 @@ inline __uint128_t lattice_polygon_interior_points(
     const __uint128_t boundary = lattice_polygon_boundary_points(polygon);
     const lattice_polygon_detail::Wide numerator =
         doubled_area - lattice_polygon_detail::Wide(boundary) + 2;
-    if(numerator < 0 || numerator % 2 != 0){
+    if(numerator < 0){
         throw std::invalid_argument("vertices do not form a simple lattice polygon");
     }
-    return lattice_polygon_detail::to_uint128(numerator / 2);
+    auto [interior, remainder] = numerator.divmod(2);
+    if(remainder != 0){
+        throw std::invalid_argument("vertices do not form a simple lattice polygon");
+    }
+    return lattice_polygon_detail::to_uint128(interior);
 }
