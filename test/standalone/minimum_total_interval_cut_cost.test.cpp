@@ -1,12 +1,11 @@
-// competitive-verifier: PROBLEM https://www.spoj.com/problems/BRKSTRNG/
+// competitive-verifier: STANDALONE
+
 #include <iostream>
 #include <vector>
 
 #include "../../src/algorithm/other/minimum_total_interval_cut_cost.hpp"
 
 int main(){
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
     long long interval_length;
     int cut_count;
     while(std::cin >> interval_length >> cut_count){

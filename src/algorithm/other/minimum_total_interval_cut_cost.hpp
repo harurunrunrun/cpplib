@@ -6,36 +6,36 @@
 #include <stdexcept>
 #include <vector>
 
-inline long long minimum_string_break_cost(
-    long long length,
-    const std::vector<long long>& break_positions
+inline long long minimum_total_interval_cut_cost(
+    long long interval_length,
+    const std::vector<long long>& cut_positions
 ){
-    if(length <= 0)[[unlikely]]{
+    if(interval_length <= 0)[[unlikely]]{
         throw std::runtime_error(
-            "library assertion fault: nonpositive length "
-            "(minimum_string_break_cost)."
+            "library assertion fault: nonpositive interval_length "
+            "(minimum_total_interval_cut_cost)."
         );
     }
-    if(!std::is_sorted(break_positions.begin(), break_positions.end()))[[unlikely]]{
+    if(!std::is_sorted(cut_positions.begin(), cut_positions.end()))[[unlikely]]{
         throw std::runtime_error(
             "library assertion fault: positions are not sorted "
-            "(minimum_string_break_cost)."
+            "(minimum_total_interval_cut_cost)."
         );
     }
     std::vector<long long> positions;
-    positions.reserve(break_positions.size() + 2);
+    positions.reserve(cut_positions.size() + 2);
     positions.push_back(0);
-    for(long long position: break_positions){
-        if(position <= 0 || position >= length ||
+    for(long long position: cut_positions){
+        if(position <= 0 || position >= interval_length ||
            (!positions.empty() && positions.back() == position))[[unlikely]]{
             throw std::runtime_error(
-                "library assertion fault: invalid break position "
-                "(minimum_string_break_cost)."
+                "library assertion fault: invalid cut position "
+                "(minimum_total_interval_cut_cost)."
             );
         }
         positions.push_back(position);
     }
-    positions.push_back(length);
+    positions.push_back(interval_length);
     const int size = static_cast<int>(positions.size());
     std::vector<std::vector<long long>> dp(
         static_cast<std::size_t>(size),
