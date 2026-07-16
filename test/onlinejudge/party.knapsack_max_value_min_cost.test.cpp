@@ -7,6 +7,7 @@
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
     int capacity;
     int item_count;
     while(std::cin >> capacity >> item_count
@@ -17,8 +18,9 @@ int main(){
         for(auto& item: items){
             std::cin >> item.cost >> item.value;
         }
-        const auto answer = knapsack_max_value_min_cost(capacity, items);
-        std::cout << answer.minimum_cost << ' '
-                  << answer.maximum_value << '\n';
+        const auto optimum = knapsack_max_value_min_cost(capacity, items);
+        std::cout << optimum.minimum_cost << ' '
+                  << optimum.maximum_value << '\n';
     }
+    return 0;
 }

@@ -29,7 +29,7 @@ inline KnapsackOptimum knapsack_max_value_min_cost(
     for(const auto& item: items){
         if(item.cost < 0 || item.value < 0)[[unlikely]]{
             throw std::runtime_error(
-                "library assertion fault: negative item value "
+                "library assertion fault: negative item cost or value "
                 "(knapsack_max_value_min_cost)."
             );
         }
