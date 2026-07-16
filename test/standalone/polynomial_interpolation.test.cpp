@@ -20,6 +20,8 @@ constexpr std::size_t SMALL_MAX_DEGREE = 64;
 math::PolynomialInterpolation<mint, LARGE_MAX_DEGREE> large_interpolation;
 math::PolynomialInterpolation<mint, SMALL_MAX_DEGREE> small_interpolation;
 math::PolynomialInterpolation<mint, LARGE_MAX_DEGREE>::ValueArray large_values{};
+math::PolynomialInterpolation<mint, LARGE_MAX_DEGREE>::ValueArray large_xs{};
+math::PolynomialInterpolation<mint, LARGE_MAX_DEGREE>::ValueArray large_ys{};
 math::PolynomialInterpolation<mint, SMALL_MAX_DEGREE>::ValueArray small_xs{};
 math::PolynomialInterpolation<mint, SMALL_MAX_DEGREE>::ValueArray small_ys{};
 
@@ -36,6 +38,20 @@ void self_check(){
     assert(fast_interpolation.evaluate_consecutive(
         values, 4, FastModint998244353(9)
     ) == FastModint998244353(100));
+
+    math::PolynomialInterpolation<FastModint998244353, 3>::ValueArray fast_xs{
+        FastModint998244353(0), FastModint998244353(1),
+        FastModint998244353(2), FastModint998244353(3)
+    };
+    math::PolynomialInterpolation<FastModint998244353, 3>::ValueArray fast_ys{
+        FastModint998244353(2), FastModint998244353(9),
+        FastModint998244353(24), FastModint998244353(47)
+    };
+    const auto fast_coefficients =
+        fast_interpolation.interpolate_coefficients(fast_xs, fast_ys, 4);
+    assert(fast_coefficients[0] == FastModint998244353(2));
+    assert(fast_coefficients[1] == FastModint998244353(3));
+    assert(fast_coefficients[2] == FastModint998244353(4));
 
     bool thrown = false;
     try{
@@ -122,6 +138,23 @@ int main(){
             std::cout << small_interpolation.evaluate(
                 small_xs, small_ys, sample_count, mint(x_value)
             ) << '\n';
+        }else if(operation == 'F'){
+            std::size_t sample_count;
+            std::cin >> sample_count;
+            for(std::size_t index = 0; index < sample_count; ++index){
+                std::cin >> large_xs[index];
+            }
+            for(std::size_t index = 0; index < sample_count; ++index){
+                std::cin >> large_ys[index];
+            }
+            const auto coefficients = large_interpolation.interpolate_coefficients(
+                large_xs, large_ys, sample_count
+            );
+            for(std::size_t index = 0; index < sample_count; ++index){
+                if(index != 0) std::cout << ' ';
+                std::cout << coefficients[index];
+            }
+            std::cout << '\n';
         }else{
             throw std::runtime_error("unknown polynomial interpolation operation");
         }

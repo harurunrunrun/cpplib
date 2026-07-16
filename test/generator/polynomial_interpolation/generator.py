@@ -115,6 +115,15 @@ def large_case(out_dir: Path) -> None:
     answer = numerator * pow(denominator, MOD - 2, MOD) % MOD
     write_case(out_dir, 2, [query], [str(answer)])
 
+def large_coefficient_case(out_dir: Path) -> None:
+    sample_count = 32768
+    degree = sample_count - 1
+    xs = list(range(sample_count))
+    ys = [pow(x, degree, MOD) for x in xs]
+    query = " ".join(map(str, ["F", sample_count, *xs, *ys]))
+    answer = " ".join(["0"] * degree + ["1"])
+    write_case(out_dir, 3, [query], [answer])
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -124,6 +133,7 @@ def main() -> None:
     fixed_case(args.out_dir)
     random_case(args.out_dir)
     large_case(args.out_dir)
+    large_coefficient_case(args.out_dir)
 
 
 if __name__ == "__main__":

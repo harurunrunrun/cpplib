@@ -69,8 +69,9 @@ auto coefficients = interpolation.interpolate_coefficients(
 定数項から昇冪順の係数列として返す。使用しない末尾は0になる。
 `xs[0..sample_count)` は相異なる必要がある。
 
-分母 $\prod_{j\ne i}(x_i-x_j)$ は一括逆元で反転するため、`inv()` の呼出しは
-標本数によらず1回である。
+`Mint = Modint<MOD>` では積木による高速補間へ委譲する。それ以外の体要素型では
+汎用的な二次時間Lagrange補間を使い、分母 $\prod_{j\ne i}(x_i-x_j)$ を
+一括逆元で反転するため、`inv()` の呼出しは標本数によらず1回である。
 
 ## 任意点での補間評価
 
@@ -114,8 +115,8 @@ math::Polynomial<MOD> math::polynomial_interpolation(
 | `polynomial_evaluate` | $O(d)$ | $O(1)$ |
 | `evaluate_consecutive` | $O(n)$ | $O(MAX\_DEGREE)$ |
 | `evaluate_equidistant` | $O(n)$ | $O(MAX\_DEGREE)$ |
-| `interpolate_coefficients` | $O(n^2)$ | $O(MAX\_DEGREE)$ |
-| `evaluate` | $O(n^2)$ | $O(MAX\_DEGREE)$ |
+| `interpolate_coefficients` | `Modint<MOD>`: $O(M(n)\log n)$、その他: $O(n^2)$ | `Modint<MOD>`: $O(n\log n+MAX\_DEGREE)$、その他: $O(MAX\_DEGREE)$ |
+| `evaluate` | `Modint<MOD>`: $O(M(n)\log n)$、その他: $O(n^2)$ | `interpolate_coefficients` と同じ |
 | `polynomial_interpolation<MOD>` | $O(M(n)\log n)$ | $O(n\log n)$ |
 
 作業配列にも `std::array` を使うため、追加領域は実際の `n` ではなくテンプレートの
@@ -129,5 +130,6 @@ math::Polynomial<MOD> math::polynomial_interpolation(
 - 任意点補間では各 `xs[i] - xs[j]` が逆元を持つ必要がある。重複点は例外になる。
 - `sample_count == 0` または固定容量を超える指定は例外になる。
 - 高速版の `points` は `Modint<MOD>` 上で相異なる必要がある。
-- 高速版では NTT に必要な2冪変換長が `MOD - 1` を割り切る必要がある。
+- `Modint<MOD>` を使う固定配列APIと高速版では、NTTに必要な2冪変換長が
+  `MOD - 1` を割り切る必要がある。
 - 高速版の $M(n)$ は長さ $n$ の多項式積の計算量で、この実装では $O(n\log n)$ である。

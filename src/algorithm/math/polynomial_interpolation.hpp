@@ -91,6 +91,17 @@ struct ConsecutiveLagrangeTable{
         return result;
     }
 };
+template<class Mint>
+struct StaticModintTraits{
+    static constexpr bool supported = false;
+};
+
+template<int MOD>
+struct StaticModintTraits<::Modint<MOD>>{
+    static constexpr bool supported = true;
+    static constexpr int modulus = MOD;
+};
+
 
 }  // namespace polynomial_interpolation_detail
 
@@ -143,6 +154,27 @@ public:
         std::size_t sample_count
     ) const{
         check_sample_count(sample_count);
+        using traits =
+            polynomial_interpolation_detail::StaticModintTraits<Mint>;
+        if constexpr(traits::supported){
+            try{
+                const auto end = static_cast<std::ptrdiff_t>(sample_count);
+                const std::vector<Mint> points(xs.begin(), xs.begin() + end);
+                const std::vector<Mint> values(ys.begin(), ys.begin() + end);
+                const auto coefficients = polynomial_interpolation<
+                    traits::modulus
+                >(points, values);
+                ValueArray result{};
+                for(std::size_t index = 0;
+                    index < coefficients.size();
+                    ++index){
+                    result[index] = coefficients[index];
+                }
+                return result;
+            }catch(const std::invalid_argument& error){
+                throw std::runtime_error(error.what());
+            }
+        }
 
         ValueArray denominators{};
         for(std::size_t index = 0; index < sample_count; ++index){
