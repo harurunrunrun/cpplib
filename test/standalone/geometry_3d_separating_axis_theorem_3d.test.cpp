@@ -5,6 +5,59 @@
 
 int main(){
     return geometry3d_api_test_main([](std::mt19937_64& random, std::size_t rounds){
+        sat_3d_detail::AxisSet near_antipodal(1.0e-6L);
+        near_antipodal.add({1.0e-8L, 1.0L, 0.0L});
+        near_antipodal.add({1.0e-8L, -1.0L, 0.0L});
+        if(near_antipodal.values().size() != 1) return false;
+        near_antipodal.add({1.0L, 2.0e-6L, 0.0L});
+        if(near_antipodal.values().size() != 2) return false;
+
+        std::mt19937_64 axis_random(20260717);
+        for(const long double tolerance:
+            {1.0e-12L, 1.0e-3L, 0.9L}){
+            sat_3d_detail::AxisSet hashed(tolerance);
+            std::vector<Point3> brute;
+            for(int iteration = 0; iteration < 1500; ++iteration){
+                Point3 candidate = sat_3d_detail::canonical_axis(
+                    sat_3d_detail::normalized_axis(
+                        geometry3d_random_point(axis_random, -1, 1)
+                    )
+                );
+                bool duplicate = false;
+                for(const Point3& axis: brute){
+                    if(sat_3d_detail::parallel_axis(
+                        axis, candidate, tolerance
+                    )){
+                        duplicate = true;
+                        break;
+                    }
+                }
+                if(!duplicate) brute.push_back(candidate);
+                hashed.add(candidate);
+            }
+            if(hashed.values().size() != brute.size()) return false;
+        }
+
+        if(rounds == 128){
+            constexpr std::size_t axis_count = 30000;
+            sat_3d_detail::AxisSet many_axes(1.0e-12L);
+            for(std::size_t index = 0; index < axis_count; ++index){
+                const long double angle = 0.1L
+                    + 1.2L * static_cast<long double>(index)
+                        / static_cast<long double>(axis_count);
+                many_axes.add({std::cos(angle), std::sin(angle), 0.0L});
+            }
+            for(std::size_t index = 0; index < axis_count; ++index){
+                const long double angle = 0.1L
+                    + 1.2L * static_cast<long double>(index)
+                        / static_cast<long double>(axis_count);
+                many_axes.add({
+                    -std::cos(angle), -std::sin(angle), 0.0L
+                });
+            }
+            if(many_axes.values().size() != axis_count) return false;
+        }
+
         const Point3 half{1, 1, 1};
         SATResult3 result = separating_axis_theorem_3d(
             geometry3d_collision_box({}, half),

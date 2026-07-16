@@ -3,8 +3,10 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <functional>
 #include <limits>
 #include <stdexcept>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -40,24 +42,107 @@ inline bool parallel_axis(
     return std::sqrt(dot(product, product)) <= tolerance;
 }
 
-inline void add_axis(
-    std::vector<Point3>& axes,
-    Point3 candidate,
-    long double tolerance
-){
-    candidate = normalized_axis(candidate);
-    if(axis_scale(candidate) == 0.0L) return;
-    for(const Point3& axis: axes){
-        if(parallel_axis(axis, candidate, tolerance)) return;
+inline Point3 canonical_axis(Point3 axis){
+    if(axis.x < 0.0L
+        || (axis.x == 0.0L && axis.y < 0.0L)
+        || (axis.x == 0.0L && axis.y == 0.0L && axis.z < 0.0L)){
+        axis = -axis;
     }
-    axes.push_back(candidate);
+    return axis;
 }
 
-inline std::vector<Point3> face_axes(
+struct AxisGridKey{
+    long double x;
+    long double y;
+    long double z;
+
+    friend bool operator==(const AxisGridKey&, const AxisGridKey&) = default;
+};
+
+struct AxisGridKeyHash{
+    std::size_t operator()(const AxisGridKey& key) const{
+        std::size_t result = std::hash<long double>{}(key.x);
+        const auto combine = [&result](long double value){
+            const std::size_t hashed = std::hash<long double>{}(value);
+            result ^= hashed + static_cast<std::size_t>(0x9e3779b9U)
+                + (result << 6) + (result >> 2);
+        };
+        combine(key.y);
+        combine(key.z);
+        return result;
+    }
+};
+
+class AxisSet{
+    long double tolerance_;
+    long double grid_width_;
+    std::vector<Point3> axes_;
+    std::unordered_map<
+        AxisGridKey,
+        std::vector<std::size_t>,
+        AxisGridKeyHash
+    > buckets_;
+
+    AxisGridKey key(const Point3& axis) const{
+        return {
+            std::floor(axis.x / grid_width_),
+            std::floor(axis.y / grid_width_),
+            std::floor(axis.z / grid_width_)
+        };
+    }
+
+public:
+    explicit AxisSet(long double tolerance):
+        tolerance_(tolerance),
+        grid_width_(std::max(
+            tolerance,
+            std::numeric_limits<long double>::min() * 4.0L
+        ))
+    {}
+
+    void add(Point3 candidate){
+        candidate = canonical_axis(normalized_axis(candidate));
+        if(axis_scale(candidate) == 0.0L) return;
+        if(tolerance_ >= 1.0L){
+            if(axes_.empty()) axes_.push_back(candidate);
+            return;
+        }
+        const AxisGridKey center = key(candidate);
+        const auto has_parallel_near = [&](const AxisGridKey& search_center){
+            for(int dx = -2; dx <= 2; ++dx){
+                for(int dy = -2; dy <= 2; ++dy){
+                    for(int dz = -2; dz <= 2; ++dz){
+                        const AxisGridKey nearby{
+                            search_center.x + static_cast<long double>(dx),
+                            search_center.y + static_cast<long double>(dy),
+                            search_center.z + static_cast<long double>(dz)
+                        };
+                        const auto iterator = buckets_.find(nearby);
+                        if(iterator == buckets_.end()) continue;
+                        for(const std::size_t index: iterator->second){
+                            if(parallel_axis(
+                                axes_[index], candidate, tolerance_
+                            )) return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        };
+        if(has_parallel_near(center)
+            || has_parallel_near(key(-candidate))) return;
+        const std::size_t index = axes_.size();
+        axes_.push_back(candidate);
+        buckets_[center].push_back(index);
+    }
+
+    const std::vector<Point3>& values() const{ return axes_; }
+};
+
+inline void add_face_axes(
     const ConvexPolyhedron3& polyhedron,
-    long double tolerance
+    AxisSet& axes
 ){
-    std::vector<Point3> axes;
     for(const auto& face: polyhedron.faces){
         for(std::size_t index: face){
             if(index >= polyhedron.vertices.size())[[unlikely]]{
@@ -70,9 +155,8 @@ inline std::vector<Point3> face_axes(
             polyhedron.vertices[face[2]] - polyhedron.vertices[face[0]];
         const long double scale = std::max(axis_scale(first), axis_scale(second));
         if(scale == 0.0L) continue;
-        add_axis(axes, cross(first / scale, second / scale), tolerance);
+        axes.add(cross(first / scale, second / scale));
     }
-    return axes;
 }
 
 inline Point3 vertex_average(const ConvexPolyhedron3& polyhedron){
@@ -118,9 +202,9 @@ inline SATResult3 separating_axis_theorem_core(
         throw std::invalid_argument("SAT tolerance must be finite and positive");
     }
 
-    std::vector<Point3> axes = face_axes(first, tolerance);
-    const std::vector<Point3> second_face_axes = face_axes(second, tolerance);
-    for(const Point3& axis: second_face_axes) add_axis(axes, axis, tolerance);
+    AxisSet axis_set(tolerance);
+    add_face_axes(first, axis_set);
+    add_face_axes(second, axis_set);
     const auto first_edges = convex_polyhedron_edges(first);
     const auto second_edges = convex_polyhedron_edges(second);
     for(const auto& first_edge: first_edges){
@@ -135,11 +219,10 @@ inline SATResult3 separating_axis_theorem_core(
             const long double second_scale = axis_scale(second_direction);
             if(second_scale == 0.0L) continue;
             second_direction /= second_scale;
-            add_axis(
-                axes, cross(first_direction, second_direction), tolerance
-            );
+            axis_set.add(cross(first_direction, second_direction));
         }
     }
+    const std::vector<Point3>& axes = axis_set.values();
     if(axes.empty())[[unlikely]]{
         throw std::domain_error("SAT found no nonzero candidate axis");
     }
