@@ -1,8 +1,10 @@
 // competitive-verifier: STANDALONE
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <random>
 #include <variant>
 #include <vector>
@@ -167,6 +169,75 @@ int main(){
         if(parallel.region_count != 4
             || !parallel.intersection_lines.empty()){
             return false;
+        }
+
+        // The exact quotient for x is -3.  Converting its numerator and
+        // denominator separately loses one ulp and makes the line fail the
+        // exact plane-membership check.
+        const Line3 exactly_rounded = plane_plane_intersection(
+            {{-3, -2, -1}, {1, 0, 0}},
+            {{-1, -2, -3}, unit(Point3{0, 2, -3})}
+        );
+        if(exactly_rounded.a.x != -3 || exactly_rounded.b.x != -3
+            || !on_plane(
+                {{-3, -2, -1}, {1, 0, 0}}, exactly_rounded.a
+            )
+            || !on_plane(
+                {{-1, -2, -3}, unit(Point3{0, 2, -3})},
+                exactly_rounded.b
+            )){
+            return false;
+        }
+
+        using geometry3d_adaptive_detail::ExactDyadic;
+        using geometry3d_plane_numeric_detail::exact_ratio;
+        constexpr int precision =
+            std::numeric_limits<long double>::digits;
+        const ExactInteger ratio_scale = ExactInteger(1) << precision;
+        const ExactDyadic ratio_denominator{1, 0};
+        const long double next = std::nextafter(
+            1.0L, std::numeric_limits<long double>::infinity()
+        );
+        const long double next_twice = std::nextafter(
+            next, std::numeric_limits<long double>::infinity()
+        );
+        if(exact_ratio(
+                {ratio_scale + 1, -precision}, ratio_denominator,
+                "exact ratio tie-to-even test overflow"
+            ) != 1.0L
+            || exact_ratio(
+                {ratio_scale + 3, -precision}, ratio_denominator,
+                "exact ratio odd tie test overflow"
+            ) != next_twice
+            || exact_ratio(
+                {ratio_scale + 1, -precision}, {-1, 0},
+                "exact ratio sign test overflow"
+            ) != -1.0L
+            || exact_ratio(
+                {1, std::numeric_limits<long double>::min_exponent - 1},
+                ratio_denominator, "exact ratio minimum test overflow"
+            ) != (std::numeric_limits<long double>::min)()
+            || exact_ratio(
+                {
+                    (ExactInteger(1) << precision) - 1,
+                    std::numeric_limits<long double>::max_exponent - precision,
+                },
+                ratio_denominator, "exact ratio maximum test overflow"
+            ) != (std::numeric_limits<long double>::max)()){
+            return false;
+        }
+        if constexpr(std::numeric_limits<long double>::has_denorm
+            != std::denorm_absent){
+            if(exact_ratio(
+                    {
+                        1,
+                        std::numeric_limits<long double>::min_exponent
+                            - precision,
+                    },
+                    ratio_denominator, "exact ratio subnormal test overflow"
+                ) != (std::numeric_limits<long double>::denorm_min)()){
+                return false;
+            }
         }
 
         const std::size_t iterations = std::min<std::size_t>(rounds, 40);

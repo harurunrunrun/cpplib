@@ -232,6 +232,41 @@ inline NormalizedDyadic normalize_exact_dyadic(
     return {mantissa, static_cast<int>(exponent)};
 }
 
+struct PositiveDivision{
+    ExactInteger quotient;
+    ExactInteger remainder;
+};
+
+inline PositiveDivision positive_divmod(
+    ExactInteger numerator,
+    const ExactInteger& positive_denominator
+){
+    if(numerator < 0 || positive_denominator <= 0)[[unlikely]]{
+        throw std::domain_error(
+            "exact ratio division requires nonnegative numerator and "
+            "positive denominator"
+        );
+    }
+    if(numerator < positive_denominator){
+        return {0, std::move(numerator)};
+    }
+    const std::size_t shift =
+        numerator.bit_length() - positive_denominator.bit_length();
+    ExactInteger shifted_denominator = positive_denominator << shift;
+    ExactInteger bit = ExactInteger(1) << shift;
+    ExactInteger quotient = 0;
+    for(std::size_t remaining_shift = shift;; --remaining_shift){
+        if(numerator >= shifted_denominator){
+            numerator -= shifted_denominator;
+            quotient += bit;
+        }
+        if(remaining_shift == 0) break;
+        shifted_denominator >>= 1;
+        bit >>= 1;
+    }
+    return {std::move(quotient), std::move(numerator)};
+}
+
 inline long double exact_ratio(
     const geometry3d_adaptive_detail::ExactDyadic& numerator,
     const geometry3d_adaptive_detail::ExactDyadic& denominator,
@@ -241,19 +276,67 @@ inline long double exact_ratio(
         throw std::domain_error("exact ratio has zero denominator");
     }
     if(numerator.significand == 0) return 0.0L;
-    const NormalizedDyadic normalized_numerator =
-        normalize_exact_dyadic(numerator);
-    const NormalizedDyadic normalized_denominator =
-        normalize_exact_dyadic(denominator);
+
+    ExactInteger numerator_magnitude = numerator.significand;
+    ExactInteger denominator_magnitude = denominator.significand;
+    const bool negative = (numerator_magnitude < 0)
+        != (denominator_magnitude < 0);
+    if(numerator_magnitude < 0) numerator_magnitude = -numerator_magnitude;
+    if(denominator_magnitude < 0){
+        denominator_magnitude = -denominator_magnitude;
+    }
+
+    const std::size_t numerator_bits = numerator_magnitude.bit_length();
+    const std::size_t denominator_bits = denominator_magnitude.bit_length();
+    if(numerator_bits > static_cast<std::size_t>(
+            (std::numeric_limits<long long>::max)())
+        || denominator_bits > static_cast<std::size_t>(
+            (std::numeric_limits<long long>::max)()))[[unlikely]]{
+        throw std::overflow_error(overflow_message);
+    }
+
+    long long ratio_exponent = static_cast<long long>(numerator_bits)
+        - static_cast<long long>(denominator_bits);
+    if(ratio_exponent >= 0){
+        if(numerator_magnitude
+            < (denominator_magnitude
+                << static_cast<std::size_t>(ratio_exponent))){
+            --ratio_exponent;
+        }
+    }else if((numerator_magnitude
+        << static_cast<std::size_t>(-ratio_exponent))
+        < denominator_magnitude){
+        --ratio_exponent;
+    }
+
+    constexpr long long precision =
+        std::numeric_limits<long double>::digits;
+    const long long quotient_shift = precision - 1 - ratio_exponent;
+    if(quotient_shift >= 0){
+        numerator_magnitude <<= static_cast<std::size_t>(quotient_shift);
+    }else{
+        denominator_magnitude <<=
+            static_cast<std::size_t>(-quotient_shift);
+    }
+    PositiveDivision division = positive_divmod(
+        std::move(numerator_magnitude), denominator_magnitude
+    );
+    const ExactInteger twice_remainder = division.remainder << 1;
+    const bool round_up = twice_remainder > denominator_magnitude
+        || (twice_remainder == denominator_magnitude
+            && division.quotient.divmod(2).second != 0);
+    if(round_up) division.quotient += 1;
+
+    long double quotient = exact_integer_leading_value(division.quotient);
+    if(negative) quotient = -quotient;
     const long long exponent =
-        static_cast<long long>(normalized_numerator.exponent)
-        - normalized_denominator.exponent;
+        static_cast<long long>(numerator.exponent)
+        - static_cast<long long>(denominator.exponent)
+        + ratio_exponent - (precision - 1);
     if(exponent < std::numeric_limits<int>::min()
         || exponent > std::numeric_limits<int>::max())[[unlikely]]{
         throw std::overflow_error(overflow_message);
     }
-    const long double quotient =
-        normalized_numerator.mantissa / normalized_denominator.mantissa;
     const long double result = std::scalbn(
         quotient,
         static_cast<int>(exponent)
