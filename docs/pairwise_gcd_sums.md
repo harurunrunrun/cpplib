@@ -3,17 +3,23 @@ title: Pairwise GCD Sums (ペアごとの最大公約数総和) [GCDEX]
 documentation_of: ../src/algorithm/math/pairwise_gcd_sums.hpp
 ---
 
-複数の上限について、異なる正整数ペアの GCD 総和を一括計算する。
+複数の上限について、異なる正整数ペアの最大公約数の総和を一括計算する。
 
 ## API
 
 ```cpp
-vector<uint64_t> pairwise_gcd_sums(const vector<int>& upper_bounds);
+std::vector<std::uint64_t> pairwise_gcd_sums(
+    const std::vector<int>& upper_bounds
+);
 ```
 
-各 `upper_bound = upper_bounds[i]` に対する
-`sum(gcd(left, right), 1 <= left < right <= upper_bound)` を入力順に返す。
-空の入力には空の配列を返す。
+`upper_bounds[i] = n` ごとに
+
+$$
+\sum_{1 \leq left < right \leq n} \gcd(left, right)
+$$
+
+を入力順に返す。`n = 0, 1` の総和は $0$ であり、空の入力には空の配列を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -26,4 +32,5 @@ vector<uint64_t> pairwise_gcd_sums(const vector<int>& upper_bounds);
 ## 注意点
 
 - `upper_bounds` の要素が負なら `std::invalid_argument` を送出する。
+- 正整数だけをペアの候補とし、同じ整数同士および順序を入れ替えただけのペアは数えない。
 - 戻り値の各要素は `std::uint64_t` に収まる必要がある。

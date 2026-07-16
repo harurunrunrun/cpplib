@@ -8,8 +8,8 @@
 
 namespace math{
 
-// Computes the sum of gcd(left, right) over every positive-integer pair below
-// each requested inclusive upper bound.
+// For every requested n, computes sum(gcd(left, right)) over
+// 1 <= left < right <= n.
 inline std::vector<std::uint64_t> pairwise_gcd_sums(
     const std::vector<int>& upper_bounds
 ){
