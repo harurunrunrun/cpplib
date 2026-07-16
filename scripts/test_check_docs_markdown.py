@@ -56,6 +56,29 @@ class CheckDocsMarkdownTest(unittest.TestCase):
             [],
         )
 
+    def test_liquid_openers_are_rejected_inside_code(self) -> None:
+        tick = chr(96)
+        for body in (
+            f"{tick}HornClause{{{{}}, 0}}{tick}\n",
+            f"{tick * 3}cpp\nHornClause clause{{{{}}, 0}};\n{tick * 3}\n",
+            f"{tick}{{% raw %}}{tick}\n",
+        ):
+            with self.subTest(body=body):
+                errors = self.check(body)
+                self.assertTrue(
+                    any("Liquid opener" in error for error in errors)
+                )
+
+    def test_spaced_nested_cpp_initializers_are_allowed(self) -> None:
+        tick = chr(96)
+        body = (
+            f"{tick * 3}cpp\n"
+            "HornClause clause{.negative_variables = {}, "
+            ".positive_variable = 0};\n"
+            f"{tick * 3}\n"
+        )
+        self.assertEqual(self.check(body), [])
+
     def test_relative_markdown_link_is_rejected(self) -> None:
         errors = self.check("[Result](result.md)\n")
         self.assertTrue(any("relative Markdown link" in error for error in errors))

@@ -109,8 +109,14 @@ void verify_random_state(
             (expected_lower == reference.end()));
         assert((actual_upper == nullptr) ==
             (expected_upper == reference.end()));
-        if(actual_lower != nullptr) assert(*actual_lower == *expected_lower);
-        if(actual_upper != nullptr) assert(*actual_upper == *expected_upper);
+        if(actual_lower != nullptr){
+            assert(actual_lower->first == expected_lower->first);
+            assert(actual_lower->second == expected_lower->second);
+        }
+        if(actual_upper != nullptr){
+            assert(actual_upper->first == expected_upper->first);
+            assert(actual_upper->second == expected_upper->second);
+        }
         assert(tree.order_of_key(lower) ==
             std::distance(reference.begin(), expected_lower));
         assert(tree.order_of_key_inclusive(lower) ==

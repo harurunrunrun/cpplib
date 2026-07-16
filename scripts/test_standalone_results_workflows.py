@@ -166,6 +166,8 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
         )
         shard_run = named_steps(shards)["Verify standalone generated assets"]["run"]
         self.assertIn("python3 scripts/run_standalone_assets.py", shard_run)
+        self.assertIn("command -v g++-13", shard_run)
+        self.assertIn("--cxx g++-13", shard_run)
         self.assertNotIn("make standalone-assets", shard_run)
         source = (ROOT / ".github" / "workflows" / "verify.yaml").read_text(
             encoding="utf-8"
@@ -203,6 +205,26 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
         self.assertIn(
             "standalone-assets-test: no-boost-dependency-check", makefile
         )
+
+    def test_competitive_verifier_version_is_pinned(self) -> None:
+        expected = "competitive-verifier==4.1.2"
+        setups = 0
+        for workflow_name in ("verify.yaml", "docs.yaml"):
+            workflow = load_workflow(workflow_name)
+            for job in workflow["jobs"].values():
+                for step in job.get("steps", []):
+                    if step.get("uses") == "competitive-verifier/actions/setup@v2":
+                        setups += 1
+                        self.assertEqual(step["with"].get("package"), expected)
+        self.assertEqual(setups, 4)
+
+        makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+        self.assertIn("COMPETITIVE_VERIFIER_VERSION ?= 4.1.2", makefile)
+
+    def test_docs_runs_complete_markdown_coverage_check(self) -> None:
+        docs = load_workflow("docs.yaml")["jobs"]["docs"]
+        coverage = named_steps(docs)["Check documentation coverage"]
+        self.assertEqual(coverage["run"], "make docs-coverage-check")
 
     def test_verify_retries_only_with_successful_previous_results(self) -> None:
         workflow = load_workflow("verify.yaml")
@@ -420,7 +442,6 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
         deploy_condition = "${{ needs.route.outputs.deploy == 'true' }}"
         page_steps = (
             "Setup Pages",
-            "Build with Jekyll",
             "Remove unsafe polyfill.io reference",
             "Check generated site for unsafe CDN references",
             "Upload HTML artifact",
@@ -429,6 +450,7 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
         steps = named_steps(docs)
         for name in page_steps:
             self.assertEqual(steps[name]["if"], deploy_condition)
+        self.assertNotIn("if", steps["Build with Jekyll"])
 
         deploy = workflow["jobs"]["deploy"]
         self.assertEqual(deploy["needs"], ["route", "docs"])

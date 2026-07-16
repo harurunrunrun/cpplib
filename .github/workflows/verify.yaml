@@ -74,7 +74,9 @@ jobs:
 
       - name: Verify standalone generated assets
         run: |
+          command -v g++-13
           python3 scripts/run_standalone_assets.py \
+            --cxx g++-13 \
             --split-size 4 \
             --split-index ${{ matrix.index }}
 
@@ -114,6 +116,7 @@ jobs:
         with:
           python-version: "3.12"
           cache-pip: true
+          package: competitive-verifier==4.1.2
 
       - name: Configure competitive-verifier compiler wrapper
         shell: bash
@@ -223,6 +226,7 @@ jobs:
         with:
           python-version: "3.12"
           cache-pip: true
+          package: competitive-verifier==4.1.2
 
       - name: Configure competitive-verifier compiler wrapper
         shell: bash
@@ -460,6 +464,7 @@ jobs:
         with:
           python-version: "3.12"
           cache-pip: true
+          package: competitive-verifier==4.1.2
 
       - name: Download resolved verification files
         id: download_verify_files

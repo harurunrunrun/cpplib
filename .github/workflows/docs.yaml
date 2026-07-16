@@ -162,6 +162,7 @@ jobs:
         with:
           python-version: "3.12"
           cache-pip: true
+          package: competitive-verifier==4.1.2
 
       - name: Resolve documentation files
         uses: competitive-verifier/actions/oj-resolve@v2
@@ -182,7 +183,7 @@ jobs:
         run: make docs-title-check
 
       - name: Check documentation coverage
-        run: python3 scripts/check_docs_coverage.py src docs
+        run: make docs-coverage-check
 
       - name: Prepare cache directory
         run: mkdir -p .competitive-verifier/cache/standalone-results
@@ -265,7 +266,6 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Build with Jekyll
-        if: ${{ needs.route.outputs.deploy == 'true' }}
         uses: actions/jekyll-build-pages@v1
         with:
           source: _jekyll

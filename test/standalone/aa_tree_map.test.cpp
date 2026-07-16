@@ -34,8 +34,14 @@ static void verify(
         const auto* actual_upper = tree.upper_bound(probe);
         assert((actual_lower == nullptr) == (lower == reference.end()));
         assert((actual_upper == nullptr) == (upper == reference.end()));
-        if(actual_lower != nullptr) assert(*actual_lower == *lower);
-        if(actual_upper != nullptr) assert(*actual_upper == *upper);
+        if(actual_lower != nullptr){
+            assert(actual_lower->first == lower->first);
+            assert(actual_lower->second == lower->second);
+        }
+        if(actual_upper != nullptr){
+            assert(actual_upper->first == upper->first);
+            assert(actual_upper->second == upper->second);
+        }
         assert(tree.order_of_key(probe) ==
             std::distance(reference.begin(), lower));
     }
@@ -67,7 +73,9 @@ static void test_random(){
                 const int index = static_cast<int>(rng() % reference.size());
                 auto iterator = reference.begin();
                 std::advance(iterator, index);
-                assert(tree.kth(index) == *iterator);
+                const auto actual = tree.kth(index);
+                assert(actual.first == iterator->first);
+                assert(actual.second == iterator->second);
             }
             if(step % 100 == 0) verify(tree, reference);
         }

@@ -47,6 +47,7 @@ ALLOWED_HTML_TAGS = {
     "tr",
     "ul",
 }
+LIQUID_OPENERS = ("{{", "{%")
 
 
 def strip_inline_code(line: str) -> tuple[str, bool]:
@@ -127,6 +128,19 @@ def check_file(path: Path) -> list[str]:
 
     for line_index, line in enumerate(lines):
         line_number = line_index + 1
+
+        # Jekyll renders Liquid before Markdown, including fenced and inline
+        # code. Documentation in this repository does not intentionally use
+        # Liquid, so reject every opener before the fence handling below can
+        # skip code contents.
+        if line_index >= body_start_index:
+            for opener in LIQUID_OPENERS:
+                if opener in line:
+                    errors.append(
+                        f"{path}:{line_number}: Liquid opener {opener!r} is not "
+                        "allowed; Jekyll evaluates it even inside Markdown code"
+                    )
+
         fence = FENCE.match(line)
         if fence:
             flush_table()
