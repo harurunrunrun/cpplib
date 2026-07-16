@@ -33,12 +33,13 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-wrapper-test test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-wrapper-test test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
 	@echo "make verify LOCAL_VERIFY_JOBS=N  local verifyの並列数を指定 (default: $(LOCAL_VERIFY_JOBS))"
 	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
+	@echo "make standalone-results-prune  削除・改名済みstandaloneの古いmanifestを除去"
 	@echo "make standalone-results-check  standalone全件の最新成功manifestを検査"
 	@echo "make docs-title-check  docsの英日併記タイトルを検査"
 	@echo "make test-coverage-check  全headerに直接対象テストがあることを検査"
@@ -91,14 +92,19 @@ standalone-assets-test: test-coverage-check test-verifier-markers standalone-gen
 	$(PYTHON) scripts/test_competitive_verifier_docs_result.py
 	$(PYTHON) -S scripts/test_standalone_results_workflows.py
 	$(PYTHON) scripts/test_run_standalone_assets.py
+	$(PYTHON) scripts/test_prune_standalone_verification_results.py
 	$(PYTHON) scripts/test_check_unsupported_onlinejudge_assets.py
 	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py
+
+standalone-results-prune:
+	$(PYTHON) scripts/prune_standalone_verification_results.py \
+		--result-dir $(STANDALONE_RESULT_DIR)
 
 standalone-results-check:
 	$(PYTHON) scripts/check_standalone_verification_results.py \
 		--result-dir $(STANDALONE_RESULT_DIR)
 
-standalone-assets: standalone-assets-test
+standalone-assets: standalone-assets-test standalone-results-prune
 	$(PYTHON) scripts/run_standalone_assets.py \
 		--cache-dir $(STANDALONE_ASSET_CACHE) \
 		--result-dir $(STANDALONE_RESULT_DIR) \
@@ -117,22 +123,26 @@ verify:
 	$(MAKE) --no-print-directory verifier-resolve || resolve_status=$$?; \
 	standalone_status=0; \
 	if $(MAKE) --no-print-directory standalone-assets-test; then \
-		standalone_pids=(); \
-		for ((index = 0; index < jobs; ++index)); do \
-			$(PYTHON) scripts/run_standalone_assets.py \
-				--cache-dir $(STANDALONE_ASSET_CACHE) \
-				--result-dir $(STANDALONE_RESULT_DIR) \
-				--cxx "$(CXX)" \
-				--cxxflags "$(CXXFLAGS)" \
-				--split-size "$$jobs" \
-				--split-index "$$index" & \
-			standalone_pids+=("$$!"); \
-		done; \
-		for pid in "$${standalone_pids[@]}"; do \
-			wait "$$pid" || standalone_status=1; \
-		done; \
-		$(PYTHON) scripts/check_standalone_verification_results.py \
-			--result-dir $(STANDALONE_RESULT_DIR) || standalone_status=1; \
+		$(PYTHON) scripts/prune_standalone_verification_results.py \
+			--result-dir $(STANDALONE_RESULT_DIR) || standalone_status=$$?; \
+		if [ $$standalone_status -eq 0 ]; then \
+			standalone_pids=(); \
+			for ((index = 0; index < jobs; ++index)); do \
+				$(PYTHON) scripts/run_standalone_assets.py \
+					--cache-dir $(STANDALONE_ASSET_CACHE) \
+					--result-dir $(STANDALONE_RESULT_DIR) \
+					--cxx "$(CXX)" \
+					--cxxflags "$(CXXFLAGS)" \
+					--split-size "$$jobs" \
+					--split-index "$$index" & \
+				standalone_pids+=("$$!"); \
+			done; \
+			for pid in "$${standalone_pids[@]}"; do \
+				wait "$$pid" || standalone_status=1; \
+			done; \
+			$(PYTHON) scripts/check_standalone_verification_results.py \
+				--result-dir $(STANDALONE_RESULT_DIR) || standalone_status=1; \
+		fi; \
 	else \
 		standalone_status=$$?; \
 	fi; \
