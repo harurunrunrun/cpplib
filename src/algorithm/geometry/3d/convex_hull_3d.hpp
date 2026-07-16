@@ -259,6 +259,13 @@ inline ConvexPolyhedron3 convex_hull_3d(std::vector<Point3> input){
                 interior_witness, points
             ));
         }
+        faces.erase(
+            std::remove_if(
+                faces.begin(), faces.end(),
+                [](const Face& face){ return !face.alive; }
+            ),
+            faces.end()
+        );
     }
 
     std::set<std::size_t> used;

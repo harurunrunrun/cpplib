@@ -74,6 +74,22 @@ int main(){
                     return false;
                 }
             }
+
+            constexpr std::size_t spatial_size = 1000;
+            std::vector<Point3> moment_curve;
+            moment_curve.reserve(spatial_size);
+            for(std::size_t index = 0; index < spatial_size; ++index){
+                const long double value = static_cast<long double>(index);
+                moment_curve.push_back({
+                    value, value * value, value * value * value,
+                });
+            }
+            const auto spatial_hull = convex_hull_3d(moment_curve);
+            if(spatial_hull.affine_dimension != 3
+                || spatial_hull.vertices.size() != spatial_size
+                || spatial_hull.faces.size() != 2 * spatial_size - 4){
+                return false;
+            }
         }
 
         const long double maximum = std::numeric_limits<long double>::max();
