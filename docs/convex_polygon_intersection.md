@@ -11,8 +11,10 @@ documentation_of: ../src/algorithm/geometry/2d/advanced/convex_polygon_intersect
 
 ## API別の時間計算量・空間計算量
 
-- 頂点数を $N,M$ として、通常は時間 $O((N+M)\log(N+M))$、追加領域 $O(N+M)$。
-- どちらかが点または線分なら時間 $O(N+M)$。
+- 頂点数を $N,M$ として、時間 $O(N+M)$、追加領域 $O(N+M)$。
+
+正規化後の2本の辺方向列を線形マージし、角度順になった半平面を
+dequeで一度ずつ処理する。点・線分へ退化した入力も同じ上界に含む。
 
 ## 注意点
 
