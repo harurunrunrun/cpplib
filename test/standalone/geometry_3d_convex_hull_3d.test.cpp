@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdint>
 #include <limits>
 #include <set>
 #include <utility>
@@ -12,6 +13,130 @@
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{
+
+using IntegerPoint3 = std::array<long long, 3>;
+
+int integer_orient3d(
+    const IntegerPoint3& first,
+    const IntegerPoint3& second,
+    const IntegerPoint3& third,
+    const IntegerPoint3& fourth
+){
+    const __int128 ax = second[0] - first[0];
+    const __int128 ay = second[1] - first[1];
+    const __int128 az = second[2] - first[2];
+    const __int128 bx = third[0] - first[0];
+    const __int128 by = third[1] - first[1];
+    const __int128 bz = third[2] - first[2];
+    const __int128 cx = fourth[0] - first[0];
+    const __int128 cy = fourth[1] - first[1];
+    const __int128 cz = fourth[2] - first[2];
+    const __int128 determinant =
+        ax * (by * cz - bz * cy)
+        - ay * (bx * cz - bz * cx)
+        + az * (bx * cy - by * cx);
+    return (determinant > 0) - (determinant < 0);
+}
+
+bool integer_non_collinear(
+    const IntegerPoint3& first,
+    const IntegerPoint3& second,
+    const IntegerPoint3& third
+){
+    const __int128 ax = second[0] - first[0];
+    const __int128 ay = second[1] - first[1];
+    const __int128 az = second[2] - first[2];
+    const __int128 bx = third[0] - first[0];
+    const __int128 by = third[1] - first[1];
+    const __int128 bz = third[2] - first[2];
+    return ay * bz != az * by || az * bx != ax * bz
+        || ax * by != ay * bx;
+}
+
+bool can_append_general_position(
+    const std::vector<IntegerPoint3>& points,
+    const IntegerPoint3& candidate
+){
+    if(std::find(points.begin(), points.end(), candidate) != points.end()){
+        return false;
+    }
+    for(std::size_t first = 0; first < points.size(); ++first){
+        for(std::size_t second = first + 1; second < points.size(); ++second){
+            if(!integer_non_collinear(
+                points[first], points[second], candidate
+            )) return false;
+            for(std::size_t third = second + 1; third < points.size(); ++third){
+                if(integer_orient3d(
+                    points[first], points[second], points[third], candidate
+                ) == 0) return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool agrees_with_combination_oracle(
+    const std::vector<IntegerPoint3>& integer_points,
+    std::uint64_t seed
+){
+    std::set<std::array<std::size_t, 3>> expected;
+    for(std::size_t first = 0; first < integer_points.size(); ++first){
+        for(std::size_t second = first + 1;
+            second < integer_points.size(); ++second){
+            for(std::size_t third = second + 1;
+                third < integer_points.size(); ++third){
+                bool positive = false;
+                bool negative = false;
+                for(std::size_t point = 0; point < integer_points.size(); ++point){
+                    if(point == first || point == second || point == third){
+                        continue;
+                    }
+                    const int side = integer_orient3d(
+                        integer_points[first], integer_points[second],
+                        integer_points[third], integer_points[point]
+                    );
+                    positive = positive || side > 0;
+                    negative = negative || side < 0;
+                }
+                if(!(positive && negative)){
+                    expected.insert({first, second, third});
+                }
+            }
+        }
+    }
+
+    std::vector<Point3> points;
+    points.reserve(integer_points.size());
+    for(const IntegerPoint3& point: integer_points){
+        points.push_back({
+            static_cast<long double>(point[0]),
+            static_cast<long double>(point[1]),
+            static_cast<long double>(point[2]),
+        });
+    }
+    const ConvexPolyhedron3 hull = convex_hull_3d_with_seed(points, seed);
+    if(hull.affine_dimension != 3) return false;
+    std::set<std::array<std::size_t, 3>> actual;
+    for(const auto& face: hull.faces){
+        std::array<std::size_t, 3> source{};
+        for(std::size_t corner = 0; corner < 3; ++corner){
+            source[corner] = integer_points.size();
+            const Point3& vertex = hull.vertices[face[corner]];
+            for(std::size_t point = 0; point < integer_points.size(); ++point){
+                if(vertex.x == integer_points[point][0]
+                    && vertex.y == integer_points[point][1]
+                    && vertex.z == integer_points[point][2]){
+                    source[corner] = point;
+                    break;
+                }
+            }
+            if(source[corner] == integer_points.size()) return false;
+        }
+        std::sort(source.begin(), source.end());
+        if(!actual.insert(source).second) return false;
+    }
+    return actual == expected;
+}
 
 bool validates_hull(
     const ConvexPolyhedron3& hull,
@@ -75,7 +200,7 @@ int main(){
                 }
             }
 
-            constexpr std::size_t spatial_size = 1000;
+            constexpr std::size_t spatial_size = 8000;
             std::vector<Point3> moment_curve;
             moment_curve.reserve(spatial_size);
             for(std::size_t index = 0; index < spatial_size; ++index){
@@ -133,6 +258,42 @@ int main(){
         const auto cube_hull = convex_hull_3d(cube);
         if(cube_hull.vertices.size() != 8 || cube_hull.faces.size() != 12
             || !validates_hull(cube_hull, cube)) return false;
+        const auto seeded_cube = convex_hull_3d_with_seed(cube, 123456789);
+        const auto repeated_cube = convex_hull_3d_with_seed(cube, 123456789);
+        if(seeded_cube.affine_dimension != repeated_cube.affine_dimension
+            || seeded_cube.vertices != repeated_cube.vertices
+            || seeded_cube.faces != repeated_cube.faces){
+            return false;
+        }
+        std::vector<Point3> reversed_cube = cube;
+        std::reverse(reversed_cube.begin(), reversed_cube.end());
+        const auto reordered_cube = convex_hull_3d(reversed_cube);
+        if(cube_hull.affine_dimension != reordered_cube.affine_dimension
+            || cube_hull.vertices != reordered_cube.vertices
+            || cube_hull.faces != reordered_cube.faces){
+            return false;
+        }
+
+        for(std::size_t iteration = 0;
+            iteration < std::min<std::size_t>(rounds, 96); ++iteration){
+            std::vector<IntegerPoint3> integer_points;
+            const std::size_t size = 7 + random() % 5;
+            for(std::size_t attempt = 0;
+                integer_points.size() < size && attempt < 100000; ++attempt){
+                const IntegerPoint3 candidate{
+                    static_cast<long long>(random() % 61) - 30,
+                    static_cast<long long>(random() % 61) - 30,
+                    static_cast<long long>(random() % 61) - 30,
+                };
+                if(can_append_general_position(integer_points, candidate)){
+                    integer_points.push_back(candidate);
+                }
+            }
+            if(integer_points.size() != size
+                || !agrees_with_combination_oracle(integer_points, random())){
+                return false;
+            }
+        }
 
         for(std::size_t iteration = 0; iteration < rounds; ++iteration){
             std::vector<Point3> points;

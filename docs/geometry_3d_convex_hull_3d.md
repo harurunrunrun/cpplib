@@ -7,27 +7,49 @@ documentation_of: ../src/algorithm/geometry/3d/convex_hull_3d.hpp
 
 ```cpp
 ConvexPolyhedron3 convex_hull_3d(vector<Point3> points)
+ConvexPolyhedron3 convex_hull_3d_with_seed(
+    vector<Point3> points,
+    uint64_t random_seed
+)
 ```
 
-点集合の凸包を返す。座標が完全一致する入力点は一つにまとめられる。
+点集合の三次元凸包を返す。座標が完全一致する入力点は一つにまとめられる。
 返り値の `affine_dimension` は、空集合で $-1$、一点で $0$、共線で $1$、
 共面で $2$、三次元の凸包で $3$ となる。`vertices` は凸包を構成する点、
 `faces` は `vertices` の添字からなる三角形面である。共面の場合も境界多角形を
 三角形分割して返す。
 
+`convex_hull_3d_with_seed` は、三次元入力を処理する増分順序のseedを指定する。
+SplitMix64とrejection sampling付きFisher--Yates shuffleを使うため、同じ点集合と
+同じseedからは常に同じ頂点列・面列が得られる。`convex_hull_3d` は
+`0x6a09e667f3bcc909` を既定seedとして呼び出す再現可能な簡略APIである。
+
+三次元の場合、各三角形面と未処理点の可視関係を双方向のconflict graphに保持する。
+点を追加するときは、その点と衝突する面だけを除き、horizon上の各新面について、
+隣接していた可視面・不可視面のconflict listの和だけを再判定する。したがって、
+各追加点から全生存面を走査しない。
+
 ## API別の時間計算量・空間計算量
 
 入力点数を $N$ とする。
 
-- アフィン次元が $2$ 以下の場合は、重複除去、射影後の二次元凸包、元の点への対応付けを
-  すべて含めて時間 $O(N\log N)$、追加領域 $O(N)$。共面境界の頂点数を $H$ として
-  $O(NH)$ の探索は行わない。
-- アフィン次元が $3$ の場合、各点の挿入後に無効面を破棄する。三次元凸多面体の
-  生存三角形面数は $O(N)$ なので、全生存面の可視判定とhorizonのordered map処理を
-  含めた最悪時間は $O(N^2\log N)$、追加領域は $O(N)$。
-  無効面を履歴として蓄積しないため、挿入途中に生成された面の総数には依存しない。
-- いずれも確率的なデータ構造を使わないため、上記は期待計算量ではなく最悪計算量である。
-  exact predicate の多倍長整数演算に掛かるビット計算量は別途必要になる。
+- `convex_hull_3d(points)`
+  - アフィン次元が $2$ 以下: 時間 $O(N\log N)$、追加領域 $O(N)$。
+    重複除去、射影後の二次元凸包、元の点への対応付けを含む。
+  - アフィン次元が $3$: 固定seedを用いるため決定的であり、保証される最悪時間は
+    $O(N^2\log N)$、最悪追加領域は $O(N^2)$。入力が既定seedに合わせて
+    敵対的に構成されていない場合は、下記の期待計算量と同じ挙動になる。
+- `convex_hull_3d_with_seed(points, random_seed)`
+  - アフィン次元が $2$ 以下: seedによらず時間 $O(N\log N)$、追加領域 $O(N)$。
+  - アフィン次元が $3$: seedを入力と独立に一様ランダムに選ぶと期待時間
+    $O(N\log N)$、期待追加領域 $O(N)$。三次元凸包の面数が $O(N)$ であり、
+    randomized incremental constructionのbackward analysisにより構造変更数が
+    期待 $O(N)$、conflict変更数が期待 $O(N\log N)$ となる。ordered mapによる
+    稜線更新も期待 $O(N\log N)$ に収まる。最悪時には時間 $O(N^2\log N)$、追加領域
+    $O(N^2)$。conflict再判定が $32N^2$ 回へ達した場合は走査型増分法で最初から
+    再構築するため、conflict graphの悪い履歴によって三乗時間にはならない。
+
+上記はexact predicateに使う多倍長整数演算のビット計算量を除いた算術演算回数である。
 
 ## 注意点
 
@@ -36,3 +58,7 @@ ConvexPolyhedron3 convex_hull_3d(vector<Point3> points)
 巨大な平行移動量に比べて局所形状が非常に小さくても、`long double` に残っている差を
 使って判定する。共面凸包の射影前には局所差分を正規化する。三次元の面は外向きであり、
 同じ支持平面上の多角形面は複数の三角形として格納される。
+
+期待計算量を敵対的入力に対して利用したい場合は、入力から独立に生成したseedを
+`convex_hull_3d_with_seed` へ渡す。既定APIは実行間の完全な再現性を優先して
+固定seedを使う。
