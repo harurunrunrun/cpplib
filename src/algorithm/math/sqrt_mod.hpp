@@ -32,7 +32,9 @@ inline std::optional<std::uint64_t> sqrt_mod(
     std::uint64_t value,
     std::uint64_t prime
 ){
-    using namespace sqrt_mod_internal;
+    using sqrt_mod_internal::multiply_mod;
+    using sqrt_mod_internal::power_mod;
+    using sqrt_mod_internal::u64;
     if(prime < 2 || value >= prime)[[unlikely]]{
         throw std::invalid_argument("library assertion fault: invalid argument (sqrt_mod). ");
     }
