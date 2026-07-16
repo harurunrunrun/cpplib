@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/bug_interactions_are_consistent.hpp"
+#include "../../src/algorithm/graph/is_bipartite.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -22,7 +22,7 @@ int main(){
             std::cin >> left >> right;
             interactions.emplace_back(left - 1, right - 1);
         }
-        const bool consistent = bug_interactions_are_consistent(
+        const bool consistent = is_bipartite(
             bug_count, interactions
         );
         std::cout << "Scenario #" << scenario << ":\n";

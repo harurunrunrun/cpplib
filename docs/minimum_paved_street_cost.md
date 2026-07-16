@@ -9,7 +9,7 @@ documentation_of: ../src/algorithm/graph/minimum_paved_street_cost.hpp
 long long minimum_paved_street_cost(
     long long unit_price,
     int vertex_count,
-    const vector<MinimumNetworkConnectionEdge>& streets
+    const vector<KruskalEdge<long long>>& streets
 )
 ```
 

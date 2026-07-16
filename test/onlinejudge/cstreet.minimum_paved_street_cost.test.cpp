@@ -15,7 +15,7 @@ int main(){
         long long price;
         int vertex_count, edge_count;
         std::cin >> price >> vertex_count >> edge_count;
-        std::vector<MinimumNetworkConnectionEdge> edges;
+        std::vector<KruskalEdge<long long>> edges;
         edges.reserve(static_cast<std::size_t>(edge_count));
         while(edge_count-- > 0){
             int from, to;

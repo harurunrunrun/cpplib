@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_publicity_contacts.hpp"
+#include "../../src/algorithm/graph/undirected_component_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -22,6 +22,6 @@ int main(){
             std::cin >> left >> right;
             friendships.emplace_back(left, right);
         }
-        std::cout << minimum_publicity_contacts(peer_count, friendships) << '\n';
+        std::cout << undirected_component_count(peer_count, friendships) << '\n';
     }
 }

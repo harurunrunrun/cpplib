@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/words_can_form_chain.hpp"
+#include "../../src/algorithm/graph/can_order_strings_by_matching_endpoints.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -17,7 +17,7 @@ int main(){
         std::cin >> word_count;
         std::vector<std::string> words(static_cast<std::size_t>(word_count));
         for(auto& word: words) std::cin >> word;
-        std::cout << (words_can_form_chain(words)
+        std::cout << (can_order_strings_by_matching_endpoints(words)
             ? "Ordering is possible.\n"
             : "The door cannot be opened.\n");
     }

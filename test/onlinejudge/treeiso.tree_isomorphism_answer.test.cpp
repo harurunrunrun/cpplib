@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/tree/tree_isomorphism_answer.hpp"
+#include "../../src/algorithm/tree/are_unrooted_trees_isomorphic.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -24,6 +24,6 @@ int main(){
                 (*tree)[static_cast<std::size_t>(v)].push_back(u);
             }
         }
-        std::cout << (tree_isomorphism_answer(first, second) ? "YES\n" : "NO\n");
+        std::cout << (are_unrooted_trees_isomorphic(first, second) ? "YES\n" : "NO\n");
     }
 }

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/count_false_food_chain_statements.hpp"
+#include "../../src/algorithm/graph/count_inconsistent_modulo_three_constraints.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -14,15 +14,20 @@ int main(){
     while(test_count--){
         int animal_count, statement_count;
         std::cin >> animal_count >> statement_count;
-        std::vector<FoodChainStatement> statements;
-        statements.reserve(static_cast<std::size_t>(statement_count));
+        std::vector<ModularDifferenceConstraint> constraints;
+        constraints.reserve(static_cast<std::size_t>(statement_count));
         for(int index = 0; index < statement_count; index++){
-            FoodChainStatement statement;
-            std::cin >> statement.relation >> statement.left >> statement.right;
-            statement.left--;
-            statement.right--;
-            statements.push_back(statement);
+            int relation;
+            ModularDifferenceConstraint constraint;
+            std::cin >> relation >> constraint.left >> constraint.right;
+            constraint.difference = relation == 1 ? 0 : 2;
+            --constraint.left;
+            --constraint.right;
+            constraints.push_back(constraint);
         }
-        std::cout << count_false_food_chain_statements(animal_count, statements) << '\n';
+        std::cout << count_inconsistent_modulo_three_constraints(
+            animal_count,
+            constraints
+        ) << '\n';
     }
 }

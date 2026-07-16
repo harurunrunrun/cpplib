@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/capital_candidate_vertices.hpp"
+#include "../../src/algorithm/graph/unique_sink_scc_vertices.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -16,7 +16,7 @@ int main(){
         std::cin >> from >> to;
         graph[static_cast<std::size_t>(from - 1)].push_back(to - 1);
     }
-    const auto answer = capital_candidate_vertices(graph);
+    const auto answer = unique_sink_scc_vertices(graph);
     std::cout << answer.size() << '\n';
     for(const int vertex: answer) std::cout << vertex + 1 << ' ';
     std::cout << '\n';

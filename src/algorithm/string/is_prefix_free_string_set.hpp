@@ -6,10 +6,10 @@
 #include <string_view>
 #include <vector>
 
-inline bool phone_list_is_consistent(const std::vector<std::string>& phone_numbers){
+inline bool is_prefix_free_string_set(const std::vector<std::string>& strings){
     std::vector<std::string_view> ordered;
-    ordered.reserve(phone_numbers.size());
-    for(const auto& phone_number: phone_numbers) ordered.emplace_back(phone_number);
+    ordered.reserve(strings.size());
+    for(const auto& string: strings) ordered.emplace_back(string);
     std::sort(ordered.begin(), ordered.end());
 
     for(std::size_t index = 1; index < ordered.size(); ++index){

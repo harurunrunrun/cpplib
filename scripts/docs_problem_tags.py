@@ -46,6 +46,7 @@ PRIMARY_SOURCE_ALIASES = {
     # the conventional competitive-programming name ``contains``.
     "point_in_polygon": "contains",
     "segment_cross_point": "cross_point",
+    "tree_isomorphism_answer": "are_unrooted_trees_isomorphic",
 }
 
 def problem_url(source: str) -> str | None:

@@ -6,23 +6,23 @@
 #include <utility>
 #include <vector>
 
-inline long long minimum_foxling_crackers(
-    long long foxling_count,
-    const std::vector<std::pair<long long, long long>>& friendships
+inline long long sparse_undirected_component_count(
+    long long vertex_count,
+    const std::vector<std::pair<long long, long long>>& edges
 ){
-    if(foxling_count < 0)[[unlikely]]{
+    if(vertex_count < 0)[[unlikely]]{
         throw std::runtime_error(
-            "library assertion fault: range violation (minimum_foxling_crackers)."
+            "library assertion fault: range violation (sparse_undirected_component_count)."
         );
     }
     std::vector<long long> vertices;
-    vertices.reserve(friendships.size() * 2);
-    for(const auto& [left, right]: friendships){
-        if(left < 0 || foxling_count <= left || right < 0 ||
-           foxling_count <= right)[[unlikely]]{
+    vertices.reserve(edges.size() * 2);
+    for(const auto& [left, right]: edges){
+        if(left < 0 || vertex_count <= left || right < 0 ||
+           vertex_count <= right)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation "
-                "(minimum_foxling_crackers)."
+                "(sparse_undirected_component_count)."
             );
         }
         vertices.push_back(left);
@@ -45,8 +45,8 @@ inline long long minimum_foxling_crackers(
         }
         return root;
     };
-    long long component_count = foxling_count;
-    for(const auto& [left_value, right_value]: friendships){
+    long long component_count = vertex_count;
+    for(const auto& [left_value, right_value]: edges){
         int left = static_cast<int>(
             std::lower_bound(vertices.begin(), vertices.end(), left_value) -
             vertices.begin()

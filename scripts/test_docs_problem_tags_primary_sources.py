@@ -24,6 +24,40 @@ class DocsProblemTagsPrimarySourcesTest(unittest.TestCase):
                 ["heavy_light_decomposition"],
             )
 
+    def test_renamed_answer_api_alias_selects_direct_header(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            wrapper = (
+                root
+                / "test"
+                / "onlinejudge"
+                / "treeiso.tree_isomorphism_answer.test.cpp"
+            )
+            direct = (
+                root
+                / "src"
+                / "algorithm"
+                / "tree"
+                / "are_unrooted_trees_isomorphic.hpp"
+            )
+            backend = direct.parent / "tree_isomorphism.hpp"
+            wrapper.parent.mkdir(parents=True)
+            direct.parent.mkdir(parents=True)
+            direct.write_text(
+                '#include "tree_isomorphism.hpp"\n',
+                encoding="utf-8",
+            )
+            backend.write_text("#pragma once\n", encoding="utf-8")
+            source = (
+                '#include "../../src/algorithm/tree/'
+                'are_unrooted_trees_isomorphic.hpp"\n'
+            )
+
+            self.assertEqual(
+                [path.stem for path in primary_sources(wrapper, source)],
+                ["are_unrooted_trees_isomorphic"],
+            )
+
     def test_helper_is_not_tagged_when_primary_is_unambiguous(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

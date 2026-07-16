@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_foxling_crackers.hpp"
+#include "../../src/algorithm/graph/sparse_undirected_component_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -23,6 +23,6 @@ int main(){
             std::cin >> left >> right;
             friendships.emplace_back(left - 1, right - 1);
         }
-        std::cout << minimum_foxling_crackers(foxling_count, friendships) << '\n';
+        std::cout << sparse_undirected_component_count(foxling_count, friendships) << '\n';
     }
 }

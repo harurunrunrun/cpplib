@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_network_connection_cost.hpp"
+#include "../../src/algorithm/graph/minimum_spanning_tree_cost.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -15,7 +15,7 @@ int main(){
     while(test_count-- > 0){
         int vertex_count;
         std::cin >> vertex_count;
-        std::vector<MinimumNetworkConnectionEdge> edges;
+        std::vector<KruskalEdge<long long>> edges;
         for(int vertex = 0; vertex < vertex_count; vertex++){
             std::string city_name;
             int neighbor_count;
@@ -27,7 +27,7 @@ int main(){
                 edges.push_back({vertex, neighbor - 1, cost});
             }
         }
-        std::cout << minimum_network_connection_cost(vertex_count, edges)
+        std::cout << minimum_spanning_tree_cost(vertex_count, edges)
                   << '\n';
     }
 }

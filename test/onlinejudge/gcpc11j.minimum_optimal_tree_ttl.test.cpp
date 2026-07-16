@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/minimum_optimal_tree_ttl.hpp"
+#include "../../src/algorithm/tree/unweighted_tree_radius.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -22,6 +22,6 @@ int main(){
             std::cin >> left >> right;
             edges.emplace_back(left, right);
         }
-        std::cout << minimum_optimal_tree_ttl(vertex_count, edges) << '\n';
+        std::cout << unweighted_tree_radius(vertex_count, edges) << '\n';
     }
 }

@@ -2,13 +2,24 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <stdexcept>
 #include <vector>
 
 #include "iterative_strongly_connected_components.hpp"
 
-inline std::vector<int> capital_candidate_vertices(
+inline std::vector<int> unique_sink_scc_vertices(
     const std::vector<std::vector<int>>& graph
 ){
+    const int vertex_count = static_cast<int>(graph.size());
+    for(const auto& adjacency: graph){
+        for(const int to: adjacency){
+            if(to < 0 || vertex_count <= to)[[unlikely]]{
+                throw std::out_of_range(
+                    "unique_sink_scc_vertices edge endpoint out of range"
+                );
+            }
+        }
+    }
     const auto components = iterative_strongly_connected_components(graph);
     std::vector<unsigned char> has_outgoing(
         static_cast<std::size_t>(components.count)

@@ -5,17 +5,17 @@
 #include <utility>
 #include <vector>
 
-inline int minimum_publicity_contacts(
-    int peer_count,
-    const std::vector<std::pair<int, int>>& friendships
+inline int undirected_component_count(
+    int vertex_count,
+    const std::vector<std::pair<int, int>>& edges
 ){
-    if(peer_count < 0)[[unlikely]]{
+    if(vertex_count < 0)[[unlikely]]{
         throw std::runtime_error(
-            "library assertion fault: range violation (minimum_publicity_contacts)."
+            "library assertion fault: range violation (undirected_component_count)."
         );
     }
-    std::vector<int> parent(static_cast<std::size_t>(peer_count));
-    std::vector<int> size(static_cast<std::size_t>(peer_count), 1);
+    std::vector<int> parent(static_cast<std::size_t>(vertex_count));
+    std::vector<int> size(static_cast<std::size_t>(vertex_count), 1);
     std::iota(parent.begin(), parent.end(), 0);
     auto leader = [&](int vertex){
         int root = vertex;
@@ -29,13 +29,13 @@ inline int minimum_publicity_contacts(
         }
         return root;
     };
-    int component_count = peer_count;
-    for(const auto& [left_value, right_value]: friendships){
-        if(left_value < 0 || peer_count <= left_value ||
-           right_value < 0 || peer_count <= right_value)[[unlikely]]{
+    int component_count = vertex_count;
+    for(const auto& [left_value, right_value]: edges){
+        if(left_value < 0 || vertex_count <= left_value ||
+           right_value < 0 || vertex_count <= right_value)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation "
-                "(minimum_publicity_contacts)."
+                "(undirected_component_count)."
             );
         }
         int left = leader(left_value);

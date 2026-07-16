@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/phone_list_consistency.hpp"
+#include "../../src/algorithm/string/is_prefix_free_string_set.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -17,6 +17,6 @@ int main(){
         std::cin >> phone_count;
         std::vector<std::string> phone_numbers(static_cast<std::size_t>(phone_count));
         for(auto& phone_number: phone_numbers) std::cin >> phone_number;
-        std::cout << (phone_list_is_consistent(phone_numbers) ? "YES" : "NO") << '\n';
+        std::cout << (is_prefix_free_string_set(phone_numbers) ? "YES" : "NO") << '\n';
     }
 }

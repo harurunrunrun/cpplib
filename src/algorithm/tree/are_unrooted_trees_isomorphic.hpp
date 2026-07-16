@@ -4,7 +4,7 @@
 
 #include "tree_isomorphism.hpp"
 
-inline bool tree_isomorphism_answer(
+inline bool are_unrooted_trees_isomorphic(
     const std::vector<std::vector<int>>& first,
     const std::vector<std::vector<int>>& second
 ){

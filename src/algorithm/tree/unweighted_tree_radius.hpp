@@ -5,18 +5,18 @@
 #include <utility>
 #include <vector>
 
-inline int minimum_optimal_tree_ttl(
+inline int unweighted_tree_radius(
     int vertex_count,
     const std::vector<std::pair<int, int>>& edges
 ){
     if(vertex_count < 0)[[unlikely]]{
         throw std::runtime_error(
-            "library assertion fault: range violation (minimum_optimal_tree_ttl)."
+            "library assertion fault: range violation (unweighted_tree_radius)."
         );
     }
     if(edges.size() != static_cast<std::size_t>(vertex_count == 0 ? 0 : vertex_count - 1))[[unlikely]]{
         throw std::runtime_error(
-            "library assertion fault: not a tree (minimum_optimal_tree_ttl)."
+            "library assertion fault: not a tree (unweighted_tree_radius)."
         );
     }
     if(vertex_count == 0) return 0;
@@ -24,7 +24,7 @@ inline int minimum_optimal_tree_ttl(
     for(const auto& [left, right]: edges){
         if(left < 0 || vertex_count <= left || right < 0 || vertex_count <= right)[[unlikely]]{
             throw std::runtime_error(
-                "library assertion fault: range violation (minimum_optimal_tree_ttl)."
+                "library assertion fault: range violation (unweighted_tree_radius)."
             );
         }
         graph[static_cast<std::size_t>(left)].push_back(right);
@@ -47,7 +47,7 @@ inline int minimum_optimal_tree_ttl(
     }
     if(reached_count != vertex_count)[[unlikely]]{
         throw std::runtime_error(
-            "library assertion fault: not a tree (minimum_optimal_tree_ttl)."
+            "library assertion fault: not a tree (unweighted_tree_radius)."
         );
     }
     auto farthest = [&](int start){
