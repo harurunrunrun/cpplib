@@ -2,47 +2,55 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
-struct RentalOffer {
-    long long start;
-    long long duration;
-    long long profit;
+struct WeightedInterval {
+    long long begin;
+    long long end;
+    long long weight;
 };
 
-inline long long maximum_rental_profit(std::vector<RentalOffer> offers){
-    for(const auto& offer: offers){
-        if(offer.duration <= 0 || offer.profit < 0)[[unlikely]]{
+inline long long maximum_weight_nonoverlapping_intervals(
+    std::vector<WeightedInterval> intervals
+){
+    for(const auto& interval: intervals){
+        if(interval.begin >= interval.end || interval.weight < 0)[[unlikely]]{
             throw std::runtime_error(
-                "library assertion fault: invalid rental offer "
-                "(maximum_rental_profit)."
+                "library assertion fault: invalid weighted interval "
+                "(maximum_weight_nonoverlapping_intervals)."
             );
         }
     }
-    std::sort(offers.begin(), offers.end(), [](const auto& left, const auto& right){
-        const long long left_end = left.start + left.duration;
-        const long long right_end = right.start + right.duration;
-        if(left_end != right_end) return left_end < right_end;
-        return left.start < right.start;
+    std::sort(intervals.begin(), intervals.end(), [](const auto& left, const auto& right){
+        if(left.end != right.end) return left.end < right.end;
+        return left.begin < right.begin;
     });
-    const int n = static_cast<int>(offers.size());
+    const int n = static_cast<int>(intervals.size());
     std::vector<long long> ends(static_cast<std::size_t>(n));
     std::vector<long long> dp(static_cast<std::size_t>(n + 1));
     for(int i = 0; i < n; i++){
-        ends[static_cast<std::size_t>(i)] =
-            offers[static_cast<std::size_t>(i)].start +
-            offers[static_cast<std::size_t>(i)].duration;
+        const auto& interval = intervals[static_cast<std::size_t>(i)];
+        ends[static_cast<std::size_t>(i)] = interval.end;
         const int compatible = static_cast<int>(
             std::upper_bound(
                 ends.begin(), ends.begin() + i,
-                offers[static_cast<std::size_t>(i)].start
+                interval.begin
             ) - ends.begin()
         );
+        const __int128 take =
+            static_cast<__int128>(dp[static_cast<std::size_t>(compatible)]) +
+            static_cast<__int128>(interval.weight);
+        if(take > std::numeric_limits<long long>::max())[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: result overflow "
+                "(maximum_weight_nonoverlapping_intervals)."
+            );
+        }
         dp[static_cast<std::size_t>(i + 1)] = std::max(
             dp[static_cast<std::size_t>(i)],
-            dp[static_cast<std::size_t>(compatible)] +
-                offers[static_cast<std::size_t>(i)].profit
+            static_cast<long long>(take)
         );
     }
     return dp.back();

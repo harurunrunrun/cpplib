@@ -1,32 +1,36 @@
 ---
-title: Maximum Rental Profit (互いに重ならない貸出の最大利益) [RENT]
-documentation_of: ../src/algorithm/other/maximum_rental_profit.hpp
+title: Maximum Weight of Non-overlapping Intervals (互いに重ならない区間の最大重み) [RENT]
+documentation_of: ../src/algorithm/other/maximum_weight_nonoverlapping_intervals.hpp
 ---
 
-時間区間付き依頼から互いに重ならない依頼を選ぶ最大利益を返す。
+重み付き半開区間から互いに重ならない区間を選び、重みの総和を最大化する。
 
-# RentalOffer
-
-```cpp
-struct RentalOffer { long long start, duration, profit; };
-```
-
-開始時刻、正の継続時間、非負の利益を保持する。
-
-# maximum_rental_profit
+## `WeightedInterval`
 
 ```cpp
-long long maximum_rental_profit(vector<RentalOffer> offers);
+struct WeightedInterval { long long begin, end, weight; };
 ```
 
-終了時刻と別依頼の開始時刻が等しい組合せを許す。
+半開区間 $[\mathrm{begin},\mathrm{end})$ と非負の重みを保持する。
+
+## `maximum_weight_nonoverlapping_intervals`
+
+```cpp
+long long maximum_weight_nonoverlapping_intervals(
+    vector<WeightedInterval> intervals
+);
+```
+
+選択した区間の重みの総和の最大値を返す。ある区間の `end` と別の区間の
+`begin` が等しい場合、それらは重ならない。
 
 ## API別の時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `maximum_rental_profit` | $O(N\log N)$ | $O(N)$ |
+| `maximum_weight_nonoverlapping_intervals` | $O(N\log N)$ | $O(N)$ |
 
 ## 注意点
 
-- 不正な継続時間または利益では `runtime_error` を送出する。
+- 各区間は `begin < end`、`weight >= 0` を満たす必要がある。
+- 前提違反または答えが `long long` に収まらない場合は `runtime_error` を送出する。
