@@ -142,4 +142,4 @@ $q(x)=\mathtt{value}$ となる代入数を任意精度整数で返す。
 - 代入の長さが $N$ でなければ `invalid_argument` を送出する。
 - `QuadraticFormGF2Canonical` の公開フィールドを書き換えると、各補助関数の
   前提が失われる。
-- Boostは使用しない。解数には同梱の `BigInteger` を用いる。
+- 解数には同梱の `BigInteger` を用いる。
