@@ -3,24 +3,31 @@ title: 3D Delaunay Tetrahedralization (三次元Delaunay四面体分割)
 documentation_of: ../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d.hpp
 ---
 
-Bowyer--Watson増分法で有限点集合のDelaunay四面体分割を構築する。包含球判定には
-`adaptive_insphere`、向き・最終境界判定には `adaptive_orient3d` を使う。
+ランダム増分 Bowyer--Watson 法で有限点集合の Delaunay 四面体分割を構築する。
+各四面体の隣接関係と未挿入点との conflict graph を保持し、点位置探索後は実際の
+空洞だけを走査する。包含球判定には `adaptive_insphere`、向き判定には
+`adaptive_orient3d` を使う。
 
 ## API
 
 - `delaunay_tetrahedralization_3d(points)`: 完全一致する重複点を除き、
   `DelaunayTetrahedralization3` を返す。共球面では厳密に球内部の四面体だけを空洞から
-  削除するため、可能なDelaunay分割の一つを決定的に返す。
+  削除する。固定された挿入 seed を使うため、同じ入力には決定的に同じ分割を返す。
+- `delaunay_tetrahedralization_3d_randomized(points, seed)`: 指定した `seed` で挿入順を
+  シャッフルして構築する。同じ `points` と `seed` に対する結果は決定的である。
 
-super tetraを除いた後、全入力点が使われ、全boundary faceが入力凸包のsupporting
-faceであることを適応的述語で検査する。有限super tetraの影響が残った場合はscaleを
+super tetra を除いた後、全入力点が使われること、面の接続数、四面体群と入力凸包の
+厳密な体積一致を線形時間で検査する。有限 super tetra の影響が残った場合は scale を
 拡大して再構築する。
 
 ## API別の時間計算量・空間計算量
 
-生成途中を含む四面体数を $T$ として、1回の構築は時間 $O(NT+N\log N)$、境界検査は
-$O(NT)$、追加領域は $O(T+N)$。三次元Delaunay分割の出力は最悪 $O(N^2)$ のため
-最悪時間は $O(N^3)$。super tetra再構築回数は12以下の定数。
+最終出力と増分中に作られる四面体・conflict 関係の総数を $K$ とする。ランダムな
+挿入順と一般位置を仮定すると、`delaunay_tetrahedralization_3d_randomized` は期待
+時間 $O(N\log N+K)$、追加領域 $O(N+K)$。三次元 Delaunay 分割では
+$K=O(N^2)$ になり得る。固定 seed の既定 API を含む任意の挿入順に対しては、検査した
+conflict 組の総数を $C$ として時間 $O(N\log N+K+C)$ であり、最悪 $C=O(NK)$。
+完了検査は凸包構築を含め期待 $O(N\log N+K)$、super tetra 再構築回数は12以下の定数。
 
 ## 注意点
 

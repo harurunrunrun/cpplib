@@ -4,14 +4,19 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
-#include <map>
-#include <set>
+#include <cstdint>
+#include <limits>
+#include <numeric>
+#include <random>
 #include <stdexcept>
+#include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
 #include "adaptive_insphere.hpp"
 #include "adaptive_orient3d.hpp"
+#include "convex_hull_3d.hpp"
 #include "cross.hpp"
 #include "delaunay_tetrahedralization3.hpp"
 #include "is_finite.hpp"
@@ -20,6 +25,13 @@ namespace delaunay_tetrahedralization_3d_detail{
 
 struct TetrahedronIndex{
     std::array<std::size_t, 4> vertices{};
+    std::array<std::size_t, 4> neighbors{
+        std::numeric_limits<std::size_t>::max(),
+        std::numeric_limits<std::size_t>::max(),
+        std::numeric_limits<std::size_t>::max(),
+        std::numeric_limits<std::size_t>::max(),
+    };
+    std::vector<std::size_t> conflicts;
     bool alive = true;
 };
 
@@ -159,19 +171,146 @@ inline std::array<std::size_t, 4> positive_tetrahedron(
     return tetrahedron;
 }
 
-inline std::array<std::size_t, 3> sorted_face(
-    std::size_t first,
-    std::size_t second,
-    std::size_t third
+constexpr std::size_t no_tetrahedron =
+    std::numeric_limits<std::size_t>::max();
+
+struct FaceHash{
+    std::size_t operator()(const std::array<std::size_t, 3>& face) const{
+        std::size_t hash = 0x9e3779b97f4a7c15ULL;
+        for(std::size_t vertex: face){
+            vertex += 0x9e3779b97f4a7c15ULL;
+            vertex = (vertex ^ (vertex >> 30)) * 0xbf58476d1ce4e5b9ULL;
+            vertex = (vertex ^ (vertex >> 27)) * 0x94d049bb133111ebULL;
+            vertex ^= vertex >> 31;
+            hash ^= vertex + 0x9e3779b97f4a7c15ULL
+                + (hash << 6) + (hash >> 2);
+        }
+        return hash;
+    }
+};
+
+struct TetrahedronHash{
+    std::size_t operator()(const std::array<std::size_t, 4>& tetrahedron) const{
+        std::size_t hash = 0x517cc1b727220a95ULL;
+        for(std::size_t vertex: tetrahedron){
+            vertex += 0x9e3779b97f4a7c15ULL;
+            vertex = (vertex ^ (vertex >> 30)) * 0xbf58476d1ce4e5b9ULL;
+            vertex = (vertex ^ (vertex >> 27)) * 0x94d049bb133111ebULL;
+            vertex ^= vertex >> 31;
+            hash ^= vertex + 0x9e3779b97f4a7c15ULL
+                + (hash << 6) + (hash >> 2);
+        }
+        return hash;
+    }
+};
+
+inline std::array<std::size_t, 3> opposite_face(
+    const std::array<std::size_t, 4>& tetrahedron,
+    std::size_t opposite
 ){
-    std::array<std::size_t, 3> face{first, second, third};
+    std::array<std::size_t, 3> face{};
+    for(std::size_t source = 0, target = 0; source < 4; ++source){
+        if(source != opposite) face[target++] = tetrahedron[source];
+    }
     std::sort(face.begin(), face.end());
     return face;
 }
 
+inline int insphere_side(
+    const TetrahedronIndex& tetrahedron,
+    const std::vector<Point3>& points,
+    std::size_t point
+){
+    const auto& v = tetrahedron.vertices;
+    return adaptive_insphere(
+        points[v[0]], points[v[1]], points[v[2]], points[v[3]], points[point]
+    );
+}
+
+inline bool contains_point(
+    const TetrahedronIndex& tetrahedron,
+    const std::vector<Point3>& points,
+    std::size_t point
+){
+    for(std::size_t replaced = 0; replaced < 4; ++replaced){
+        auto vertices = tetrahedron.vertices;
+        vertices[replaced] = point;
+        if(adaptive_orient3d(
+            points[vertices[0]], points[vertices[1]],
+            points[vertices[2]], points[vertices[3]]
+        ) < 0) return false;
+    }
+    return true;
+}
+
+inline std::size_t locate_point(
+    const std::vector<TetrahedronIndex>& tetrahedra,
+    const std::vector<Point3>& points,
+    std::size_t point,
+    std::size_t start
+){
+    std::size_t current = start;
+    for(std::size_t step = 0; step <= tetrahedra.size(); ++step){
+        if(current >= tetrahedra.size() || !tetrahedra[current].alive){
+            throw std::logic_error("Delaunay point-location root is not alive");
+        }
+        const TetrahedronIndex& tetrahedron = tetrahedra[current];
+        bool moved = false;
+        for(std::size_t replaced = 0; replaced < 4; ++replaced){
+            auto vertices = tetrahedron.vertices;
+            vertices[replaced] = point;
+            if(adaptive_orient3d(
+                points[vertices[0]], points[vertices[1]],
+                points[vertices[2]], points[vertices[3]]
+            ) >= 0) continue;
+            const std::size_t next = tetrahedron.neighbors[replaced];
+            if(next == no_tetrahedron){
+                throw std::logic_error("point escaped the Delaunay super tetrahedron");
+            }
+            current = next;
+            moved = true;
+            break;
+        }
+        if(!moved) return current;
+    }
+    throw std::logic_error("Delaunay point-location walk cycled");
+}
+
+inline std::vector<std::size_t> insertion_order(
+    std::size_t size,
+    std::uint64_t seed
+){
+    std::vector<std::size_t> order(size);
+    std::iota(order.begin(), order.end(), 0);
+    std::mt19937_64 random(seed);
+    std::shuffle(order.begin(), order.end(), random);
+    return order;
+}
+
+struct BoundaryFace{
+    std::array<std::size_t, 3> vertices{};
+    std::size_t outside = no_tetrahedron;
+};
+
+inline void connect_across_face(
+    std::vector<TetrahedronIndex>& tetrahedra,
+    std::size_t tetrahedron,
+    const std::array<std::size_t, 3>& face,
+    std::size_t neighbor
+){
+    for(std::size_t opposite = 0; opposite < 4; ++opposite){
+        if(opposite_face(tetrahedra[tetrahedron].vertices, opposite) == face){
+            tetrahedra[tetrahedron].neighbors[opposite] = neighbor;
+            return;
+        }
+    }
+    throw std::logic_error("Delaunay neighboring face is inconsistent");
+}
+
 inline std::vector<std::array<std::size_t, 4>> bowyer_watson(
     const std::vector<Point3>& normalized,
-    long double super_extent
+    long double super_extent,
+    std::uint64_t seed
 ){
     std::vector<Point3> predicates = normalized;
     const std::size_t original_size = predicates.size();
@@ -179,49 +318,170 @@ inline std::vector<std::array<std::size_t, 4>> bowyer_watson(
     predicates.push_back({ super_extent, -super_extent,  super_extent});
     predicates.push_back({-super_extent,  super_extent,  super_extent});
     predicates.push_back({ super_extent,  super_extent, -super_extent});
-    std::vector<TetrahedronIndex> tetrahedra{{positive_tetrahedron({
+
+    TetrahedronIndex initial;
+    initial.vertices = positive_tetrahedron({
         original_size, original_size + 1, original_size + 2, original_size + 3
-    }, predicates), true}};
-
-    for(std::size_t point_index = 0; point_index < original_size; ++point_index){
-        std::vector<std::size_t> bad;
-        for(std::size_t index = 0; index < tetrahedra.size(); ++index){
-            const TetrahedronIndex& tetrahedron = tetrahedra[index];
-            if(!tetrahedron.alive) continue;
-            const auto& v = tetrahedron.vertices;
-            if(adaptive_insphere(
-                predicates[v[0]], predicates[v[1]], predicates[v[2]],
-                predicates[v[3]], predicates[point_index]
-            ) > 0) bad.push_back(index);
+    }, predicates);
+    std::vector<TetrahedronIndex> tetrahedra;
+    tetrahedra.push_back(std::move(initial));
+    std::vector<std::vector<std::size_t>> point_conflicts(original_size);
+    for(std::size_t point = 0; point < original_size; ++point){
+        if(!contains_point(tetrahedra.front(), predicates, point)){
+            throw std::logic_error("Delaunay super tetrahedron is too small");
         }
-        if(bad.empty())[[unlikely]]{
-            throw std::logic_error("Bowyer-Watson cavity is empty");
+        if(insphere_side(tetrahedra.front(), predicates, point) <= 0){
+            throw std::logic_error("Delaunay super sphere does not contain input");
         }
-
-        std::map<std::array<std::size_t, 3>, int> face_count;
-        for(std::size_t index: bad){
-            TetrahedronIndex& tetrahedron = tetrahedra[index];
-            tetrahedron.alive = false;
-            const auto& v = tetrahedron.vertices;
-            ++face_count[sorted_face(v[1], v[2], v[3])];
-            ++face_count[sorted_face(v[0], v[3], v[2])];
-            ++face_count[sorted_face(v[0], v[1], v[3])];
-            ++face_count[sorted_face(v[0], v[2], v[1])];
-        }
-        for(const auto& [face, count]: face_count){
-            if(count != 1) continue;
-            std::array<std::size_t, 4> candidate{
-                face[0], face[1], face[2], point_index
-            };
-            if(adaptive_orient3d(
-                predicates[candidate[0]], predicates[candidate[1]],
-                predicates[candidate[2]], predicates[candidate[3]]
-            ) == 0) continue;
-            tetrahedra.push_back({positive_tetrahedron(candidate, predicates), true});
-        }
+        tetrahedra.front().conflicts.push_back(point);
+        point_conflicts[point].push_back(0);
     }
 
-    std::set<std::array<std::size_t, 4>> seen;
+    std::vector<unsigned char> inserted(original_size, false);
+    std::vector<std::size_t> candidate_stamp(original_size, 0);
+    std::size_t root = 0;
+    std::vector<std::size_t> bad_stamp(1, 0);
+    std::size_t epoch = 0;
+    for(std::size_t point: insertion_order(original_size, seed)){
+        ++epoch;
+        std::vector<std::size_t> bad;
+        for(std::size_t tetrahedron: point_conflicts[point]){
+            if(tetrahedron >= tetrahedra.size()
+                || !tetrahedra[tetrahedron].alive
+                || bad_stamp[tetrahedron] == epoch
+                || insphere_side(tetrahedra[tetrahedron], predicates, point) <= 0){
+                continue;
+            }
+            bad_stamp[tetrahedron] = epoch;
+            bad.push_back(tetrahedron);
+        }
+        if(bad.empty()){
+            const std::size_t located = locate_point(
+                tetrahedra, predicates, point, root
+            );
+            if(insphere_side(tetrahedra[located], predicates, point) <= 0){
+                throw std::logic_error("located tetrahedron does not conflict");
+            }
+            bad_stamp[located] = epoch;
+            bad.push_back(located);
+        }
+        for(std::size_t cursor = 0; cursor < bad.size(); ++cursor){
+            const TetrahedronIndex& tetrahedron = tetrahedra[bad[cursor]];
+            for(std::size_t neighbor: tetrahedron.neighbors){
+                if(neighbor == no_tetrahedron || bad_stamp[neighbor] == epoch
+                    || !tetrahedra[neighbor].alive
+                    || insphere_side(tetrahedra[neighbor], predicates, point) <= 0){
+                    continue;
+                }
+                bad_stamp[neighbor] = epoch;
+                bad.push_back(neighbor);
+            }
+        }
+
+        std::vector<BoundaryFace> boundary;
+        std::vector<std::size_t> candidates;
+        for(std::size_t tetrahedron: bad){
+            const TetrahedronIndex& removed = tetrahedra[tetrahedron];
+            for(std::size_t opposite = 0; opposite < 4; ++opposite){
+                const std::size_t neighbor = removed.neighbors[opposite];
+                if(neighbor == no_tetrahedron || bad_stamp[neighbor] != epoch){
+                    boundary.push_back({
+                        opposite_face(removed.vertices, opposite), neighbor
+                    });
+                }
+            }
+            for(std::size_t candidate: removed.conflicts){
+                if(candidate == point || inserted[candidate]
+                    || candidate_stamp[candidate] == epoch) continue;
+                candidate_stamp[candidate] = epoch;
+                candidates.push_back(candidate);
+            }
+        }
+        for(std::size_t tetrahedron: bad) tetrahedra[tetrahedron].alive = false;
+
+        std::vector<std::size_t> created;
+        created.reserve(boundary.size());
+        std::vector<std::size_t> boundary_slots;
+        boundary_slots.reserve(boundary.size());
+        for(const BoundaryFace& face: boundary){
+            std::array<std::size_t, 4> vertices{
+                face.vertices[0], face.vertices[1], face.vertices[2], point
+            };
+            if(adaptive_orient3d(
+                predicates[vertices[0]], predicates[vertices[1]],
+                predicates[vertices[2]], predicates[vertices[3]]
+            ) == 0){
+                throw std::logic_error("degenerate Delaunay cavity boundary");
+            }
+            TetrahedronIndex tetrahedron;
+            tetrahedron.vertices = positive_tetrahedron(vertices, predicates);
+            const std::size_t identifier = tetrahedra.size();
+            tetrahedra.push_back(std::move(tetrahedron));
+            bad_stamp.push_back(0);
+            created.push_back(identifier);
+            std::size_t boundary_slot = 4;
+            for(std::size_t opposite = 0; opposite < 4; ++opposite){
+                if(opposite_face(tetrahedra[identifier].vertices, opposite)
+                    == face.vertices){
+                    boundary_slot = opposite;
+                    break;
+                }
+            }
+            if(boundary_slot == 4){
+                throw std::logic_error("new Delaunay tetrahedron lost its boundary");
+            }
+            boundary_slots.push_back(boundary_slot);
+            tetrahedra[identifier].neighbors[boundary_slot] = face.outside;
+            if(face.outside != no_tetrahedron){
+                connect_across_face(
+                    tetrahedra, face.outside, face.vertices, identifier
+                );
+            }
+        }
+        if(created.empty()) throw std::logic_error("Delaunay cavity has no boundary");
+
+        std::unordered_map<
+            std::array<std::size_t, 3>,
+            std::pair<std::size_t, std::size_t>,
+            FaceHash
+        > unmatched;
+        unmatched.reserve(created.size() * 3);
+        for(std::size_t index = 0; index < created.size(); ++index){
+            const std::size_t tetrahedron = created[index];
+            for(std::size_t opposite = 0; opposite < 4; ++opposite){
+                if(opposite == boundary_slots[index]) continue;
+                const auto face = opposite_face(
+                    tetrahedra[tetrahedron].vertices, opposite
+                );
+                const auto [iterator, fresh] = unmatched.emplace(
+                    face, std::pair{tetrahedron, opposite}
+                );
+                if(fresh) continue;
+                const auto [other, other_opposite] = iterator->second;
+                tetrahedra[tetrahedron].neighbors[opposite] = other;
+                tetrahedra[other].neighbors[other_opposite] = tetrahedron;
+                unmatched.erase(iterator);
+            }
+        }
+        if(!unmatched.empty()){
+            throw std::logic_error("Delaunay cavity boundary is not a closed ball");
+        }
+
+        for(std::size_t tetrahedron: created){
+            for(std::size_t candidate: candidates){
+                if(insphere_side(
+                    tetrahedra[tetrahedron], predicates, candidate
+                ) <= 0) continue;
+                tetrahedra[tetrahedron].conflicts.push_back(candidate);
+                point_conflicts[candidate].push_back(tetrahedron);
+            }
+        }
+        point_conflicts[point].clear();
+        inserted[point] = true;
+        if(bad_stamp[root] == epoch) root = created.front();
+    }
+
+    std::unordered_set<std::array<std::size_t, 4>, TetrahedronHash> seen;
     std::vector<std::array<std::size_t, 4>> result;
     for(const TetrahedronIndex& tetrahedron: tetrahedra){
         if(!tetrahedron.alive) continue;
@@ -235,14 +495,49 @@ inline std::vector<std::array<std::size_t, 4>> bowyer_watson(
     }
     return result;
 }
+inline geometry3d_adaptive_detail::ExactDyadic exact_tetrahedron_measure(
+    const Point3& first,
+    const Point3& second,
+    const Point3& third,
+    const Point3& fourth
+){
+    using namespace geometry3d_adaptive_detail;
+    const ExactDyadic ux = subtract(exact_dyadic(second.x), exact_dyadic(first.x));
+    const ExactDyadic uy = subtract(exact_dyadic(second.y), exact_dyadic(first.y));
+    const ExactDyadic uz = subtract(exact_dyadic(second.z), exact_dyadic(first.z));
+    const ExactDyadic vx = subtract(exact_dyadic(third.x), exact_dyadic(first.x));
+    const ExactDyadic vy = subtract(exact_dyadic(third.y), exact_dyadic(first.y));
+    const ExactDyadic vz = subtract(exact_dyadic(third.z), exact_dyadic(first.z));
+    const ExactDyadic wx = subtract(exact_dyadic(fourth.x), exact_dyadic(first.x));
+    const ExactDyadic wy = subtract(exact_dyadic(fourth.y), exact_dyadic(first.y));
+    const ExactDyadic wz = subtract(exact_dyadic(fourth.z), exact_dyadic(first.z));
+    return add(
+        subtract(
+            multiply(ux, subtract(multiply(vy, wz), multiply(vz, wy))),
+            multiply(uy, subtract(multiply(vx, wz), multiply(vz, wx)))
+        ),
+        multiply(uz, subtract(multiply(vx, wy), multiply(vy, wx)))
+    );
+}
 
-inline bool covers_convex_hull(
+inline geometry3d_adaptive_detail::ExactDyadic absolute_measure(
+    geometry3d_adaptive_detail::ExactDyadic value
+){
+    if(geometry3d_adaptive_detail::sign(value) < 0){
+        value = geometry3d_adaptive_detail::negate(std::move(value));
+    }
+    return value;
+}
+
+inline bool is_complete_tetrahedralization(
     const std::vector<std::array<std::size_t, 4>>& tetrahedra,
     const std::vector<Point3>& points
 ){
     if(tetrahedra.empty()) return false;
     std::vector<bool> used(points.size(), false);
-    std::map<std::array<std::size_t, 3>, int> face_count;
+    using namespace geometry3d_adaptive_detail;
+    std::unordered_map<std::array<std::size_t, 3>, int, FaceHash> face_count;
+    face_count.reserve(tetrahedra.size() * 2);
     for(const auto& tetrahedron: tetrahedra){
         for(std::size_t vertex: tetrahedron){
             if(vertex >= points.size()) return false;
@@ -252,33 +547,41 @@ inline bool covers_convex_hull(
             points[tetrahedron[0]], points[tetrahedron[1]],
             points[tetrahedron[2]], points[tetrahedron[3]]
         ) <= 0) return false;
-        ++face_count[sorted_face(tetrahedron[1], tetrahedron[2], tetrahedron[3])];
-        ++face_count[sorted_face(tetrahedron[0], tetrahedron[3], tetrahedron[2])];
-        ++face_count[sorted_face(tetrahedron[0], tetrahedron[1], tetrahedron[3])];
-        ++face_count[sorted_face(tetrahedron[0], tetrahedron[2], tetrahedron[1])];
-    }
-    if(std::find(used.begin(), used.end(), false) != used.end()) return false;
-    for(const auto& [face, count]: face_count){
-        if(count > 2) return false;
-        if(count == 2) continue;
-        bool positive = false;
-        bool negative = false;
-        for(const Point3& point: points){
-            const int side = adaptive_orient3d(
-                points[face[0]], points[face[1]], points[face[2]], point
-            );
-            positive = positive || side > 0;
-            negative = negative || side < 0;
-            if(positive && negative) return false;
+        for(std::size_t opposite = 0; opposite < 4; ++opposite){
+            if(++face_count[opposite_face(tetrahedron, opposite)] > 2){
+                return false;
+            }
         }
     }
-    return true;
+    if(std::find(used.begin(), used.end(), false) != used.end()) return false;
+
+    ExactDyadic tetrahedra_measure{};
+    for(const auto& tetrahedron: tetrahedra){
+        tetrahedra_measure = add(tetrahedra_measure, exact_tetrahedron_measure(
+            points[tetrahedron[0]], points[tetrahedron[1]],
+            points[tetrahedron[2]], points[tetrahedron[3]]
+        ));
+    }
+    const ConvexPolyhedron3 hull = convex_hull_3d(points);
+    ExactDyadic hull_measure{};
+    const Point3& anchor = points.front();
+    for(const auto& face: hull.faces){
+        hull_measure = add(hull_measure, absolute_measure(
+            exact_tetrahedron_measure(
+                anchor,
+                hull.vertices[face[0]], hull.vertices[face[1]],
+                hull.vertices[face[2]]
+            )
+        ));
+    }
+    return sign(subtract(tetrahedra_measure, hull_measure)) == 0;
 }
 
 }  // namespace delaunay_tetrahedralization_3d_detail
 
-inline DelaunayTetrahedralization3 delaunay_tetrahedralization_3d(
-    std::vector<Point3> input
+inline DelaunayTetrahedralization3
+delaunay_tetrahedralization_3d_randomized(
+    std::vector<Point3> input, std::uint64_t seed
 ){
     using namespace delaunay_tetrahedralization_3d_detail;
     std::vector<Point3> vertices = exact_unique_points(std::move(input));
@@ -288,8 +591,8 @@ inline DelaunayTetrahedralization3 delaunay_tetrahedralization_3d(
     const std::vector<Point3> normalized = normalized_points(vertices);
     long double super_extent = 16.0L;
     for(int attempt = 0; attempt < 12; ++attempt){
-        auto tetrahedra = bowyer_watson(normalized, super_extent);
-        if(covers_convex_hull(tetrahedra, vertices)){
+        auto tetrahedra = bowyer_watson(normalized, super_extent, seed + attempt);
+        if(is_complete_tetrahedralization(tetrahedra, normalized)){
             return {3, std::move(vertices), std::move(tetrahedra)};
         }
         super_extent *= 256.0L;
@@ -297,5 +600,13 @@ inline DelaunayTetrahedralization3 delaunay_tetrahedralization_3d(
     }
     throw std::overflow_error(
         "could not construct a sufficiently large Delaunay super tetrahedron"
+    );
+}
+
+inline DelaunayTetrahedralization3 delaunay_tetrahedralization_3d(
+    std::vector<Point3> input
+){
+    return delaunay_tetrahedralization_3d_randomized(
+        std::move(input), 0x243f6a8885a308d3ULL
     );
 }
