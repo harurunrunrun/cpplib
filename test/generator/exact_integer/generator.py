@@ -72,6 +72,15 @@ class Case:
             f"{bits * 2} {remainder}",
         )
 
+    def decimal(self, value: int) -> None:
+        self.add(f"DEC {hexadecimal(value)}", value)
+
+    def decimal_power(self, bits: int, offset: int, negative: bool) -> None:
+        value = (1 << bits) + offset
+        if negative:
+            value = -value
+        self.add(f"DEC_POWER {bits} {offset} {int(negative)}", value)
+
 
 def write_case(out_dir: Path, case_id: int, case: Case) -> None:
     (out_dir / f"case_{case_id:02d}.in").write_text(
@@ -197,6 +206,27 @@ def conversion_case() -> Case:
     return case
 
 
+def decimal_conversion_case() -> Case:
+    case = Case()
+    values = {0, 1, -1}
+    for digits in (1, 2, 8, 9, 10, 17, 18, 19, 31, 32, 33,
+                   63, 64, 65, 127, 128, 129, 255, 256, 257, 999, 1000):
+        power = 10**digits
+        for delta in (-1, 0, 1):
+            values.add(power + delta)
+            values.add(-(power + delta))
+    for value in sorted(values):
+        case.decimal(value)
+    return case
+
+
+def large_decimal_conversion_case() -> Case:
+    case = Case()
+    # The dense binary value 2^332192-1 has exactly 100000 decimal digits.
+    case.decimal_power(332_192, -1, True)
+    return case
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True, type=Path)
@@ -209,6 +239,8 @@ def main() -> None:
         random_case(2026071602, 80, 2048),
         large_case(),
         conversion_case(),
+        decimal_conversion_case(),
+        large_decimal_conversion_case(),
     ]
     for case_id, case in enumerate(cases):
         write_case(args.out_dir, case_id, case)

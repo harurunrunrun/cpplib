@@ -68,6 +68,12 @@ void self_test(){
     assert((ExactInteger(-4) >> 1) == -2);
     assert((ExactInteger(-1) >> 1000) == -1);
     assert((ExactInteger(1) >> 1000) == 0);
+    assert(ExactInteger(0).to_string() == "0");
+    assert(ExactInteger(-1).to_string() == "-1");
+    assert(((ExactInteger(1) << 32) - 1).to_string() == "4294967295");
+    assert((ExactInteger(1) << 32).to_string() == "4294967296");
+    assert(((ExactInteger(1) << 64) - 1).to_string()
+        == "18446744073709551615");
 
     ExactInteger small = -5;
     small += std::uint64_t{9};
@@ -133,7 +139,21 @@ int main(){
     while(query_count-- > 0){
         std::string operation;
         std::cin >> operation;
-        if(operation == "META"){
+        if(operation == "DEC"){
+            std::string token;
+            std::cin >> token;
+            std::cout << parse_hex(token).to_string() << '\n';
+        }else if(operation == "DEC_POWER"){
+            std::size_t bits;
+            std::int64_t offset;
+            int negative;
+            std::cin >> bits >> offset >> negative;
+            if(negative != 0 && negative != 1) return 2;
+            ExactInteger value = ExactInteger(1) << bits;
+            value += offset;
+            if(negative != 0) value = -value;
+            std::cout << value.to_string() << '\n';
+        }else if(operation == "META"){
             std::string token;
             std::cin >> token;
             const ExactInteger value = parse_hex(token);

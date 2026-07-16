@@ -52,6 +52,9 @@ using MakeUnsignedT = typename MakeUnsigned<std::remove_cv_t<Integer>>::type;
 
 class ExactInteger{
     static constexpr std::uint64_t limb_base = std::uint64_t{1} << 32;
+    static constexpr std::uint64_t decimal_base = 1'000'000'000;
+
+    using DecimalMagnitude = std::vector<std::uint32_t>;
 
     std::vector<std::uint32_t> limbs_;
     bool negative_ = false;
@@ -264,7 +267,232 @@ class ExactInteger{
         add_shifted_magnitude(result, middle, split);
         add_shifted_magnitude(result, high, split * 2);
         trim_magnitude(result);
+
         return result;
+    }
+
+    static void trim_decimal(DecimalMagnitude& value){
+        while(!value.empty() && value.back() == 0) value.pop_back();
+    }
+
+    static DecimalMagnitude add_decimals(
+        const DecimalMagnitude& left,
+        const DecimalMagnitude& right
+    ){
+        const std::size_t size = std::max(left.size(), right.size());
+        DecimalMagnitude result;
+        if(size == result.max_size()){
+            throw std::length_error(
+                "ExactInteger decimal conversion is too large"
+            );
+        }
+        result.assign(size + 1, 0);
+        std::uint64_t carry = 0;
+        for(std::size_t index = 0; index < size; ++index){
+            const std::uint64_t sum = carry
+                + (index < left.size() ? left[index] : 0)
+                + (index < right.size() ? right[index] : 0);
+            result[index] = static_cast<std::uint32_t>(sum % decimal_base);
+            carry = sum / decimal_base;
+        }
+        result[size] = static_cast<std::uint32_t>(carry);
+        trim_decimal(result);
+        return result;
+    }
+
+    static DecimalMagnitude subtract_decimals(
+        const DecimalMagnitude& larger,
+        const DecimalMagnitude& smaller
+    ){
+        DecimalMagnitude result(larger.size(), 0);
+        std::uint64_t borrow = 0;
+        for(std::size_t index = 0; index < larger.size(); ++index){
+            const std::uint64_t subtrahend = borrow
+                + (index < smaller.size() ? smaller[index] : 0);
+            const std::uint64_t minuend = larger[index];
+            if(minuend < subtrahend){
+                result[index] = static_cast<std::uint32_t>(
+                    minuend + decimal_base - subtrahend
+                );
+                borrow = 1;
+            }else{
+                result[index] = static_cast<std::uint32_t>(
+                    minuend - subtrahend
+                );
+                borrow = 0;
+            }
+        }
+        trim_decimal(result);
+        return result;
+    }
+
+    static DecimalMagnitude schoolbook_multiply_decimals(
+        const DecimalMagnitude& left,
+        const DecimalMagnitude& right
+    ){
+        if(left.empty() || right.empty()) return {};
+        DecimalMagnitude product;
+        if(left.size() >= product.max_size()
+            || right.size() > product.max_size() - left.size() - 1){
+            throw std::length_error(
+                "ExactInteger decimal conversion is too large"
+            );
+        }
+        product.assign(left.size() + right.size() + 1, 0);
+        for(std::size_t left_index = 0;
+            left_index < left.size();
+            ++left_index){
+            std::uint64_t carry = 0;
+            for(std::size_t right_index = 0;
+                right_index < right.size();
+                ++right_index){
+                const std::size_t destination = left_index + right_index;
+                const std::uint64_t current =
+                    static_cast<std::uint64_t>(left[left_index])
+                        * right[right_index]
+                    + product[destination] + carry;
+                product[destination] =
+                    static_cast<std::uint32_t>(current % decimal_base);
+                carry = current / decimal_base;
+            }
+            std::size_t destination = left_index + right.size();
+            while(carry != 0){
+                const std::uint64_t current =
+                    static_cast<std::uint64_t>(product[destination]) + carry;
+                product[destination] =
+                    static_cast<std::uint32_t>(current % decimal_base);
+                carry = current / decimal_base;
+                ++destination;
+            }
+        }
+        trim_decimal(product);
+        return product;
+    }
+
+    static DecimalMagnitude decimal_range(
+        const DecimalMagnitude& value,
+        std::size_t first,
+        std::size_t last
+    ){
+        first = std::min(first, value.size());
+        last = std::min(last, value.size());
+        if(first >= last) return {};
+        return DecimalMagnitude(
+            value.begin() + static_cast<std::ptrdiff_t>(first),
+            value.begin() + static_cast<std::ptrdiff_t>(last)
+        );
+    }
+
+    static void add_shifted_decimal(
+        DecimalMagnitude& destination,
+        const DecimalMagnitude& addition,
+        std::size_t shift
+    ){
+        if(addition.empty()) return;
+        if(shift >= destination.max_size()
+            || addition.size() >= destination.max_size() - shift){
+            throw std::length_error(
+                "ExactInteger decimal conversion is too large"
+            );
+        }
+        const std::size_t required = shift + addition.size();
+        if(destination.size() <= required){
+            destination.resize(required + 1, 0);
+        }
+        std::uint64_t carry = 0;
+        for(std::size_t index = 0; index < addition.size(); ++index){
+            const std::size_t position = shift + index;
+            const std::uint64_t sum =
+                static_cast<std::uint64_t>(destination[position])
+                + addition[index] + carry;
+            destination[position] =
+                static_cast<std::uint32_t>(sum % decimal_base);
+            carry = sum / decimal_base;
+        }
+        std::size_t position = required;
+        while(carry != 0){
+            const std::uint64_t sum =
+                static_cast<std::uint64_t>(destination[position]) + carry;
+            destination[position] =
+                static_cast<std::uint32_t>(sum % decimal_base);
+            carry = sum / decimal_base;
+            ++position;
+            if(carry != 0 && position == destination.size()){
+                destination.push_back(0);
+            }
+        }
+        trim_decimal(destination);
+    }
+
+    static DecimalMagnitude multiply_decimals(
+        const DecimalMagnitude& left,
+        const DecimalMagnitude& right
+    ){
+        if(left.empty() || right.empty()) return {};
+        constexpr std::size_t karatsuba_threshold = 32;
+        const std::size_t shorter = std::min(left.size(), right.size());
+        const std::size_t longer = std::max(left.size(), right.size());
+        if(shorter <= karatsuba_threshold || longer / shorter >= 2){
+            return schoolbook_multiply_decimals(left, right);
+        }
+
+        const std::size_t split = longer / 2;
+        const auto left_low = decimal_range(left, 0, split);
+        const auto left_high = decimal_range(left, split, left.size());
+        const auto right_low = decimal_range(right, 0, split);
+        const auto right_high = decimal_range(right, split, right.size());
+
+        const auto low = multiply_decimals(left_low, right_low);
+        const auto high = multiply_decimals(left_high, right_high);
+        const auto left_sum = add_decimals(left_low, left_high);
+        const auto right_sum = add_decimals(right_low, right_high);
+        auto middle = multiply_decimals(left_sum, right_sum);
+        middle = subtract_decimals(middle, low);
+        middle = subtract_decimals(middle, high);
+
+        DecimalMagnitude result;
+        add_shifted_decimal(result, low, 0);
+        add_shifted_decimal(result, middle, split);
+        add_shifted_decimal(result, high, split * 2);
+        trim_decimal(result);
+        return result;
+    }
+
+    DecimalMagnitude decimal_magnitude() const{
+        std::vector<DecimalMagnitude> blocks;
+        blocks.reserve(limbs_.size());
+        for(const std::uint32_t limb: limbs_){
+            DecimalMagnitude block{
+                static_cast<std::uint32_t>(limb % decimal_base),
+                static_cast<std::uint32_t>(limb / decimal_base)
+            };
+            trim_decimal(block);
+            blocks.push_back(std::move(block));
+        }
+
+        DecimalMagnitude place_value{
+            static_cast<std::uint32_t>(limb_base % decimal_base),
+            static_cast<std::uint32_t>(limb_base / decimal_base)
+        };
+        while(blocks.size() > 1){
+            std::vector<DecimalMagnitude> merged;
+            merged.reserve(
+                blocks.size() / 2 + blocks.size() % 2
+            );
+            for(std::size_t index = 0; index < blocks.size(); index += 2){
+                if(index + 1 == blocks.size()){
+                    merged.push_back(std::move(blocks[index]));
+                    continue;
+                }
+                auto high = multiply_decimals(blocks[index + 1], place_value);
+                merged.push_back(add_decimals(blocks[index], high));
+            }
+            blocks = std::move(merged);
+            if(blocks.size() > 1){
+                place_value = multiply_decimals(place_value, place_value);
+            }
+        }
+        return blocks.empty() ? DecimalMagnitude{} : std::move(blocks.front());
     }
 
     void add_magnitude_one(){
@@ -533,15 +761,12 @@ public:
 
     std::string to_string() const{
         if(is_zero()) return "0";
-        ExactInteger remaining = absolute();
-        std::vector<std::uint32_t> chunks;
-        constexpr std::uint64_t decimal_base = 1'000'000'000;
-        while(!remaining.is_zero()){
-            auto [quotient, remainder] = remaining.divmod(decimal_base);
-            chunks.push_back(static_cast<std::uint32_t>(remainder));
-            remaining = std::move(quotient);
-        }
+        const DecimalMagnitude chunks = decimal_magnitude();
         std::string result = negative_ ? "-" : "";
+        const std::size_t sign_size = static_cast<std::size_t>(negative_);
+        if(chunks.size() <= (result.max_size() - sign_size) / 9){
+            result.reserve(chunks.size() * 9 + sign_size);
+        }
         result += std::to_string(chunks.back());
         for(std::size_t index = chunks.size() - 1; index-- > 0;){
             std::string chunk = std::to_string(chunks[index]);
