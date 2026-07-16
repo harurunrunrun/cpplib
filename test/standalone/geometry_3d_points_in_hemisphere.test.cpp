@@ -77,6 +77,24 @@ int main(){
         }
         if(!zero_rejected) return false;
 
+        const std::vector<Point3> catalogue{
+            {1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0},
+            {0, 0, 1}, {0, 0, -1}, {1, 1, 1}, {1, -1, -1},
+            {-1, 1, -1}, {-1, -1, 1}, {2, 1, -3}, {-2, -1, 3},
+        };
+        for(std::size_t mask = 0;
+            mask < (std::size_t{1} << catalogue.size());
+            ++mask){
+            std::vector<Point3> subset;
+            for(std::size_t index = 0; index < catalogue.size(); ++index){
+                if((mask >> index) % 2 != 0){
+                    subset.push_back(catalogue[index]);
+                }
+            }
+            if(points_in_hemisphere(subset)
+                != brute_points_in_hemisphere(subset)) return false;
+        }
+
         for(std::size_t iteration = 0; iteration < rounds; ++iteration){
             std::vector<Point3> points;
             const std::size_t count = 1 + random() % 11;
@@ -120,7 +138,7 @@ int main(){
                 {-1, 1, -1}, {-1, -1, 1}
             };
             std::vector<Point3> adversarial;
-            constexpr std::size_t size = 1200;
+            constexpr std::size_t size = 100000;
             adversarial.reserve(size);
             for(std::size_t index = 0; index < size; ++index){
                 adversarial.push_back(tetrahedron[index % 4]);
@@ -128,8 +146,8 @@ int main(){
             if(points_in_hemisphere(adversarial)) return false;
 
             std::vector<Point3> upper;
-            upper.reserve(10000);
-            for(std::size_t index = 0; index < 10000; ++index){
+            upper.reserve(size);
+            for(std::size_t index = 0; index < size; ++index){
                 const long double x =
                     static_cast<long double>(index % 101) - 50.0L;
                 const long double y =
