@@ -3,8 +3,6 @@ title: Lenstra ECM Factorization (Lenstra楕円曲線法による素因数分解
 documentation_of: ../src/algorithm/math/lenstra_ecm_factorization.hpp
 ---
 
-# Lenstra ECM Factorization (Lenstra楕円曲線法による素因数分解)
-
 `2^127` 未満の整数から未知の非自明因子を確率的に探索し、また素因数分解する。Suyama の曲線生成、Montgomery 曲線の `x/z` 座標による ladder、prime-power を掛ける Stage 1 と、baby-step/giant-step による Stage 2 を実装している。Pollard 法のラッパーではない。
 
 ## `LenstraEcmParameters` (`Lenstra ECMのパラメータ`)

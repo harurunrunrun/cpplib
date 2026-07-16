@@ -4,8 +4,8 @@ documentation_of: ../src/algorithm/math/gaussian_integer_factorization.hpp
 ---
 
 非零のGauss整数を、単数と正規化されたGauss素数の冪へ分解する。
-`GaussianInteger`の定義とGauss整数上の最大公約数は
-[GCD of Gaussian Integers](gcd_of_gaussian_integers.md)を参照する。
+`GaussianInteger`の定義とGauss整数上の最大公約数`gaussian_gcd`は
+`gaussian_integer.hpp`を参照する。
 
 ## `GaussianPrimePower`
 
