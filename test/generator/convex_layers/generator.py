@@ -70,6 +70,35 @@ def write_max(out_dir: Path, index: int) -> None:
         output_file.write(" ".join(["1"] * size) + "\n")
 
 
+def write_nested_rectangles(
+    out_dir: Path,
+    index: int,
+    layer_count: int,
+) -> None:
+    size = 4 * layer_count
+    with (out_dir / f"case_{index:02d}.in").open(
+        "w", encoding="utf-8", newline="\n"
+    ) as input_file, (out_dir / f"case_{index:02d}.out").open(
+        "w", encoding="utf-8", newline="\n"
+    ) as output_file:
+        input_file.write(f"1\n{size}\n")
+        first_output = True
+        for layer in range(1, layer_count + 1):
+            radius = layer_count + 1 - layer
+            for x, y in (
+                (-radius, -radius),
+                (radius, -radius),
+                (radius, radius),
+                (-radius, radius),
+            ):
+                input_file.write(f"{x} {y}\n")
+                if not first_output:
+                    output_file.write(" ")
+                output_file.write(str(layer))
+                first_output = False
+        output_file.write("\n")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True, type=Path)
@@ -77,11 +106,19 @@ def main() -> None:
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
     basics = [
+        [],
         [(0, 0)],
         [(0, 0), (1, 0), (2, 0), (3, 0)],
         [(0, 0), (2, 0), (2, 2), (0, 2), (1, 1)],
         [(0, 0), (4, 0), (4, 4), (0, 4), (1, 1), (3, 1), (3, 3), (1, 3), (2, 2)],
         [(0, 0), (0, 0), (2, 0), (1, 1)],
+        [
+            (-4_000_000_000_000_000_000, -4_000_000_000_000_000_000),
+            (4_000_000_000_000_000_000, -4_000_000_000_000_000_000),
+            (4_000_000_000_000_000_000, 4_000_000_000_000_000_000),
+            (-4_000_000_000_000_000_000, 4_000_000_000_000_000_000),
+            (0, 0),
+        ],
     ]
     write_batch(args.out_dir, 0, basics)
 
@@ -92,9 +129,14 @@ def main() -> None:
         coordinates: set[Point] = set()
         while len(coordinates) < size:
             coordinates.add((source.randint(-25, 25), source.randint(-25, 25)))
-        random_cases.append(list(coordinates))
+        points = list(coordinates)
+        for _ in range(source.randint(0, 5)):
+            points.append(source.choice(points))
+        source.shuffle(points)
+        random_cases.append(points)
     write_batch(args.out_dir, 1, random_cases)
     write_max(args.out_dir, 2)
+    write_nested_rectangles(args.out_dir, 3, 50_000)
 
 
 if __name__ == "__main__":
