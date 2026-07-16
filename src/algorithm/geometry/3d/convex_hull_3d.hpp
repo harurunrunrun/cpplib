@@ -138,25 +138,26 @@ inline ConvexPolyhedron3 coplanar_hull(
     });
     std::vector<Point> projected;
     projected.reserve(points.size());
-    for(const Point3& point: scaled){
-        projected.push_back(to_plane_coordinates(system, point));
+    std::map<std::pair<long double, long double>, std::size_t> source_indices;
+    for(std::size_t index = 0; index < scaled.size(); ++index){
+        const Point point = to_plane_coordinates(system, scaled[index]);
+        projected.push_back(point);
+        // unique_points sorted points lexicographically. Keeping the first
+        // index preserves the former find_if representative rule even if two
+        // projections happen to be exactly equal.
+        source_indices.try_emplace(
+            std::pair{point.x, point.y}, index
+        );
     }
     const std::vector<Point> boundary = convex_hull(projected);
     std::vector<Point3> vertices;
     vertices.reserve(boundary.size());
     for(const Point& point: boundary){
-        const auto iterator = std::find_if(
-            projected.begin(), projected.end(),
-            [&](const Point& candidate){
-                return candidate.x == point.x && candidate.y == point.y;
-            }
-        );
-        if(iterator == projected.end())[[unlikely]]{
+        const auto iterator = source_indices.find({point.x, point.y});
+        if(iterator == source_indices.end())[[unlikely]]{
             throw std::logic_error("coplanar hull projection mismatch");
         }
-        vertices.push_back(points[static_cast<std::size_t>(
-            iterator - projected.begin()
-        )]);
+        vertices.push_back(points[iterator->second]);
     }
     std::vector<std::array<std::size_t, 3>> faces;
     for(std::size_t index = 1; index + 1 < vertices.size(); ++index){

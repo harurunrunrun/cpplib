@@ -53,6 +53,29 @@ int main(){
         if(square.affine_dimension != 2 || square.vertices.size() != 4
             || square.faces.size() != 2) return false;
 
+        if(rounds == 32){
+            constexpr std::size_t size = 20000;
+            std::vector<Point3> coplanar;
+            coplanar.reserve(size);
+            for(std::size_t index = 0; index < size; ++index){
+                const long double x =
+                    static_cast<long double>(index)
+                    - static_cast<long double>(size / 2);
+                coplanar.push_back({x, x * x, 7.0L});
+            }
+            const auto large_coplanar_hull = convex_hull_3d(coplanar);
+            if(large_coplanar_hull.affine_dimension != 2
+                || large_coplanar_hull.vertices.size() != size
+                || large_coplanar_hull.faces.size() != size - 2){
+                return false;
+            }
+            for(const Point3& vertex: large_coplanar_hull.vertices){
+                if(vertex.z != 7.0L || vertex.y != vertex.x * vertex.x){
+                    return false;
+                }
+            }
+        }
+
         const long double maximum = std::numeric_limits<long double>::max();
         const auto extreme_line = convex_hull_3d({
             {-maximum, 0, 0}, {0, 0, 0}, {maximum, 0, 0}
