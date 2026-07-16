@@ -11,7 +11,8 @@ documentation_of: ../src/algorithm/geometry/2d/polygon_boundary_points/enumerate
 
 ## API別の時間計算量・空間計算量
 
-- 辺数を $N$、点数を $M$、出力長を $K$ として、時間 $O(NM\log M+K)$、追加領域 $O(M+K)$。
+- 辺数を $N$、点数を $M$、出力長を $K$ として、時間
+  $O(NM+K\log(K+1))$、追加領域 $O(M+K)$。
 
 ## 注意点
 

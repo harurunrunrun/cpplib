@@ -27,7 +27,9 @@ documentation_of: ../src/algorithm/geometry/3d/kd_tree_3d.hpp
   （退化時も中央値分割なので木の高さは $O(\log N)$）。
 - `k_nearest`: 平均 $O(\log N + K\log K)$、最悪 $O(N\log K)$ 時間、
   返却値とheapに $O(K)$ 領域。
-- `radius_query`: 平均 $O(\log N + K)$、最悪 $O(N)$ 時間、返却値 $O(K)$。
+- `radius_query`: 空間探索は平均 $O(\log N+K)$、最悪 $O(N)$。返却列を
+  距離、index順へsortするため、全体は平均 $O(\log N+K\log(K+1))$、
+  最悪 $O(N+K\log(K+1))$ 時間、返却値 $O(K)$。
 - `size`, `empty`, `point`: $O(1)$ 時間・追加領域。
 
 ## 注意点

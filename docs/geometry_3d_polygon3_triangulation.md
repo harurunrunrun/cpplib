@@ -10,7 +10,8 @@ documentation_of: ../src/algorithm/geometry/3d/polygon3_triangulation.hpp
 
 ## API別の時間計算量・空間計算量
 
-- 頂点数を$N$として各APIは時間$O(N^2\log N)$、領域$O(N)$。
+- 頂点数を $N$ として各APIは時間 $O(N^2)$、追加領域 $O(N)$。平面への射影は
+  $O(N)$、単純性検査と耳切り法は合わせて $O(N^2)$ である。
 
 ## 注意点
 

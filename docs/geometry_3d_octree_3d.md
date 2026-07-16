@@ -22,7 +22,9 @@ leafの点数が閾値を超えたときだけ子nodeを作る。
 - 構築子、`size`、`empty`、`bounds`、`point`: $O(1)$ 時間。
 - `insert`: 均等分布では平均 $O(D)$、最悪 $O(D+C)$ 時間。`D` は設定した
   最大深さ、`C` は分割不能leafの点数。
-- `range_query`: 平均 $O(D+K)$、最悪 $O(N)$ 時間、返却値 $O(K)$。
+- `range_query`: 空間探索は平均 $O(D+K)$、最悪 $O(N)$。返却indexを昇順へ
+  sortするため、全体は平均 $O(D+K\log(K+1))$、最悪
+  $O(N+K\log(K+1))$ 時間、返却値 $O(K)$。
 - `nearest`: 平均 $O(D)$、最悪 $O(N)$ 時間。探索heapは最悪 $O(N)$ 領域。
 - 木全体は $O(ND)$ nodeになり得るが、通常は $O(N)$ 領域。
 

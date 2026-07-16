@@ -1,12 +1,12 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <limits>
 #include <stdexcept>
 
 #include "adaptive_orient3d.hpp"
-#include "cross.hpp"
 #include "distance.hpp"
 #include "is_finite.hpp"
 #include "polygon3_contains.hpp"
@@ -20,6 +20,35 @@ struct NormalizedInput{
     Point3 point;
     long double local_scale = 1.0L;
 };
+
+inline bool exactly_non_collinear(
+    const Point3& first,
+    const Point3& second,
+    const Point3& third
+){
+    using namespace geometry3d_adaptive_detail;
+    const std::array<ExactDyadic, 3> first_direction{
+        subtract(exact_dyadic(second.x), exact_dyadic(first.x)),
+        subtract(exact_dyadic(second.y), exact_dyadic(first.y)),
+        subtract(exact_dyadic(second.z), exact_dyadic(first.z)),
+    };
+    const std::array<ExactDyadic, 3> second_direction{
+        subtract(exact_dyadic(third.x), exact_dyadic(first.x)),
+        subtract(exact_dyadic(third.y), exact_dyadic(first.y)),
+        subtract(exact_dyadic(third.z), exact_dyadic(first.z)),
+    };
+    for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
+        const std::size_t next = (coordinate + 1) % 3;
+        const std::size_t last = (coordinate + 2) % 3;
+        if(sign(subtract(
+            multiply(first_direction[next], second_direction[last]),
+            multiply(first_direction[last], second_direction[next])
+        )) != 0){
+            return true;
+        }
+    }
+    return false;
+}
 
 inline NormalizedInput normalize(const Polygon3& polygon, const Point3& point){
     if(polygon.size() < 3)[[unlikely]]{
@@ -63,21 +92,27 @@ inline NormalizedInput normalize(const Polygon3& polygon, const Point3& point){
         throw std::overflow_error("normalized polygon distance overflows");
     }
 
-    std::size_t second = 0;
-    std::size_t third = 0;
-    bool found_plane = false;
-    for(std::size_t left = 1; left < normalized.size() && !found_plane; ++left){
-        for(std::size_t right = left + 1; right < normalized.size(); ++right){
-            const Point3 normal = cross(normalized[left], normalized[right]);
-            if(normal.x != 0.0L || normal.y != 0.0L || normal.z != 0.0L){
-                second = left;
-                third = right;
-                found_plane = true;
+    std::size_t second = polygon.size();
+    for(std::size_t index = 1; index < polygon.size(); ++index){
+        if(polygon[index].x != polygon.front().x
+            || polygon[index].y != polygon.front().y
+            || polygon[index].z != polygon.front().z){
+            second = index;
+            break;
+        }
+    }
+    std::size_t third = polygon.size();
+    if(second != polygon.size()){
+        for(std::size_t index = second + 1; index < polygon.size(); ++index){
+            if(exactly_non_collinear(
+                polygon.front(), polygon[second], polygon[index]
+            )){
+                third = index;
                 break;
             }
         }
     }
-    if(!found_plane)[[unlikely]]{
+    if(third == polygon.size())[[unlikely]]{
         throw std::invalid_argument("a polygon needs nonzero area");
     }
     for(const Point3& vertex: normalized){

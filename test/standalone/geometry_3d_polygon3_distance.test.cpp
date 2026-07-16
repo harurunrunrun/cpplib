@@ -106,6 +106,49 @@ int main(){
             1e-5L
         )) return false;
 
+        const long double subnormal =
+            std::numeric_limits<long double>::denorm_min();
+        if(subnormal > 0.0L){
+            const Polygon3 mixed_scale_basis{
+                {0, 0, 0},
+                {subnormal, 0, 0},
+                {1, 0, 0},
+                {0, 0.5L, 0},
+            };
+            if(!geometry3d_api_close(
+                polygon3_distance(mixed_scale_basis, {0.25L, 0.1L, 1}),
+                1.0L
+            )) return false;
+        }
+
+        Polygon3 long_collinear_prefix(512, Point3{0, 0, 0});
+        for(std::size_t index = 1; index <= 512; ++index){
+            long_collinear_prefix.push_back({
+                static_cast<long double>(index), 0, 0
+            });
+        }
+        long_collinear_prefix.push_back({512, 4, 0});
+        long_collinear_prefix.push_back({0, 4, 0});
+        if(!geometry3d_api_close(
+            polygon3_distance(
+                long_collinear_prefix, {256, 2, 3}
+            ),
+            3.0L
+        )) return false;
+
+        Polygon3 collinear;
+        collinear.reserve(1024);
+        for(std::size_t index = 0; index < 1024; ++index){
+            collinear.push_back({
+                static_cast<long double>(index),
+                static_cast<long double>(index) * 2,
+                static_cast<long double>(index) * -3,
+            });
+        }
+        if(!throws_invalid_argument([&collinear](){
+            (void)polygon3_distance(collinear, {0, 1, 0});
+        })) return false;
+
         const long double nan = std::numeric_limits<long double>::quiet_NaN();
         const long double infinity =
             std::numeric_limits<long double>::infinity();

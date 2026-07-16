@@ -17,7 +17,8 @@ documentation_of: ../src/algorithm/geometry/2d/polygon_boundary_points/polygon_b
 - 構築: 辺数を $N$ として時間 $O(N\log N)$、保持領域 $O(N)$。
 - metadata参照: 時間・追加領域 $O(1)$。
 - 凸高速経路: 点数 $M$、出力長 $K$ として時間 $O(M\log N+K\log(K+1))$、追加領域 $O(N+M+K)$。
-- 一般経路: 時間 $O(NM\log M+K)$、追加領域 $O(M+K)$。
+- 一般経路: 時間 $O(NM+K\log(K+1))$、追加領域 $O(M+K)$。
+  各辺と各点の包含判定が $O(NM)$、辺ごとの進行順sortの合計が $O(K\log(K+1))$。
 
 ## 注意点
 

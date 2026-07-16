@@ -17,7 +17,9 @@ documentation_of: ../src/algorithm/geometry/2d/polygon_line_intersections.hpp
 
 ## API別の時間計算量・空間計算量
 
-- `polygon_line_intersections`: 頂点数 $N$、交点数 $K$ として時間 $O(NK+K\log K)$、領域 $O(K)$。
+- `polygon_line_intersections`: 頂点数を $N$、境界辺から得られる交点候補数を
+  $K$ として、時間 $O(N+K\log K)$、追加領域 $O(K)$。候補を直線上の
+  parameter順に一括sortしてから、隣接する重複を除く。
 
 ## 注意点
 

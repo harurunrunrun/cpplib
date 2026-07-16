@@ -17,7 +17,9 @@ documentation_of: ../src/algorithm/geometry/2d/polygon_segment_intersections.hpp
 
 ## API別の時間計算量・空間計算量
 
-- `polygon_segment_intersections`: 頂点数 $N$、交点数 $K$ として時間 $O(NK+K\log K)$、領域 $O(K)$。
+- `polygon_segment_intersections`: 頂点数を $N$、境界辺から得られる交点候補数を
+  $K$ として、時間 $O(N+K\log K)$、追加領域 $O(K)$。重なり区間の端点も
+  候補へ加え、線分parameter順のsort後に隣接重複を除く。
 
 ## 注意点
 
