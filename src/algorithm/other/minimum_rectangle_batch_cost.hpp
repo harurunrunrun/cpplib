@@ -1,7 +1,5 @@
 #pragma once
 
-#include <boost/multiprecision/cpp_int.hpp>
-
 #include <algorithm>
 #include <cstddef>
 #include <limits>
@@ -59,12 +57,14 @@ inline long long minimum_rectangle_batch_cost(
             return static_cast<__int128>(slope) * x + intercept;
         }
     };
-    using Exact = boost::multiprecision::int256_t;
     auto redundant = [](const Line& first, const Line& second, const Line& third){
-        return (Exact(second.intercept) - first.intercept) *
-                   (Exact(second.slope) - third.slope) >=
-               (Exact(third.intercept) - second.intercept) *
-                   (Exact(first.slope) - second.slope);
+        const __int128 left =
+            (static_cast<__int128>(second.intercept) - first.intercept)
+            * (static_cast<__int128>(second.slope) - third.slope);
+        const __int128 right =
+            (static_cast<__int128>(third.intercept) - second.intercept)
+            * (static_cast<__int128>(first.slope) - second.slope);
+        return left >= right;
     };
 
     std::vector<Line> hull;
