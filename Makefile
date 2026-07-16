@@ -33,7 +33,7 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-wrapper-test test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
@@ -41,6 +41,7 @@ help:
 	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
 	@echo "make standalone-results-prune  削除・改名済みstandaloneの古いmanifestを除去"
 	@echo "make standalone-results-check  standalone全件の最新成功manifestを検査"
+	@echo "make no-boost-dependency-check  reject Boost dependencies in src/test/docs"
 	@echo "make docs-title-check  docsの英日併記タイトルを検査"
 	@echo "make test-coverage-check  全headerに直接対象テストがあることを検査"
 	@echo "make docs-coverage-check  全headerのdocsと注意点見出しを検査"
@@ -57,11 +58,15 @@ verifier-setup: $(VERIFIER)
 verifier-wrapper-test:
 	$(PYTHON) scripts/test_competitive_verifier_gcc15_wrapper.py
 
+no-boost-dependency-check:
+	$(PYTHON) scripts/test_check_no_boost_dependency.py
+	$(PYTHON) scripts/check_no_boost_dependency.py src test docs
+
 test-verifier-markers:
 	$(PYTHON) scripts/test_check_test_verifier_markers.py
 	$(PYTHON) scripts/check_test_verifier_markers.py
 
-verifier-resolve: verifier-setup verifier-wrapper-test test-verifier-markers
+verifier-resolve: verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers
 	@mkdir -p $(VERIFIER_CACHE)
 	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge --config config.toml > $(VERIFY_FILES).tmp
 	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py
@@ -71,7 +76,7 @@ verifier-resolve: verifier-setup verifier-wrapper-test test-verifier-markers
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
-docs-verifier-resolve: verifier-setup verifier-wrapper-test test-verifier-markers
+docs-verifier-resolve: verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers
 	@mkdir -p $(VERIFIER_CACHE)
 	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge test/standalone --config config.toml > $(DOCS_VERIFY_FILES).tmp
 	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
@@ -86,7 +91,7 @@ standalone-generator-interface-check:
 	$(PYTHON) scripts/test_check_standalone_generator_interfaces.py
 	$(PYTHON) scripts/check_standalone_generator_interfaces.py
 
-standalone-assets-test: test-coverage-check test-verifier-markers standalone-generator-interface-check
+standalone-assets-test: no-boost-dependency-check test-coverage-check test-verifier-markers standalone-generator-interface-check
 	$(PYTHON) scripts/test_standalone_verification_results.py
 	$(PYTHON) scripts/test_check_standalone_verification_results.py
 	$(PYTHON) scripts/test_competitive_verifier_docs_result.py
@@ -171,7 +176,7 @@ verify:
 		exit 1; \
 	fi
 
-docs-title-check:
+docs-title-check: no-boost-dependency-check
 	$(PYTHON) scripts/test_check_docs_bilingual_titles.py
 	$(PYTHON) scripts/test_check_problem_independent_library_names.py
 	$(PYTHON) scripts/test_docs_problem_tags.py
