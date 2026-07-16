@@ -20,4 +20,5 @@ int main(){
             interval_length, cut_positions
         ) << '\n';
     }
+    return 0;
 }
