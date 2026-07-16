@@ -17,20 +17,6 @@ struct TreeEdgeSplitDiameter{
         default;
 };
 
-struct TreeTwoDisjointPathsResult{
-    long long product;
-    int cut_edge_index;
-    int cut_u;
-    int cut_v;
-    int first_diameter;
-    int second_diameter;
-
-    friend constexpr bool operator==(
-        const TreeTwoDisjointPathsResult&,
-        const TreeTwoDisjointPathsResult&
-    ) = default;
-};
-
 namespace tree_edge_split_diameters_detail{
 
 struct ComponentState{
@@ -268,35 +254,4 @@ std::vector<TreeEdgeSplitDiameter> tree_edge_split_diameters(
         "library assertion fault: range violation (tree_edge_split_diameters).",
         "library assertion fault: graph is not a tree (tree_edge_split_diameters)."
     );
-}
-
-template<int MAX_SIZE>
-TreeTwoDisjointPathsResult maximum_product_of_two_vertex_disjoint_tree_paths(
-    int vertex_count,
-    const std::vector<std::pair<int, int>>& edges
-){
-    const auto split = tree_edge_split_diameters_detail::compute<MAX_SIZE>(
-        vertex_count,
-        edges,
-        "library assertion fault: range violation "
-        "(maximum_product_of_two_vertex_disjoint_tree_paths).",
-        "library assertion fault: graph is not a tree "
-        "(maximum_product_of_two_vertex_disjoint_tree_paths)."
-    );
-    TreeTwoDisjointPathsResult result{0, -1, -1, -1, 0, 0};
-    for(int edge = 0; edge < static_cast<int>(split.size()); ++edge){
-        const TreeEdgeSplitDiameter current = split[static_cast<std::size_t>(edge)];
-        const long long product =
-            static_cast<long long>(current.first_diameter) * current.second_diameter;
-        if(result.cut_edge_index != -1 && product <= result.product) continue;
-        result = {
-            product,
-            edge,
-            edges[static_cast<std::size_t>(edge)].first,
-            edges[static_cast<std::size_t>(edge)].second,
-            current.first_diameter,
-            current.second_diameter
-        };
-    }
-    return result;
 }
