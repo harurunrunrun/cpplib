@@ -28,7 +28,7 @@ void add_edge(std::vector<std::vector<int>>& graph, int u, int v){
     graph[v].push_back(u);
 }
 
-void test_binary_lifting(){
+void test_lca_and_jump(){
     const int n = 17;
     std::vector<int> parent(n, -1), depth(n, 0);
     std::vector<std::vector<int>> graph(n);
@@ -98,8 +98,60 @@ void test_root_change(){
     assert(answers == expected);
 }
 
+void test_degenerate_trees(){
+    LowestCommonAncestor empty;
+    assert(empty.size() == 0);
+    empty.build();
+
+    LowestCommonAncestor singleton(1);
+    singleton.build();
+    assert(singleton.size() == 1);
+    assert(singleton.parent(0) == -1);
+    assert(singleton.depth(0) == 0);
+    assert(singleton.jump(0, 0) == 0);
+    assert(singleton.lca(0, 0) == 0);
+    assert(singleton.dist(0, 0) == 0);
+    assert(singleton.path_vertex_count(0, 0) == 1);
+}
+
+void test_rebuild(){
+    LowestCommonAncestor lca(9);
+    for(int v = 1; v < 9; v++){
+        lca.add_edge(v - 1, v);
+    }
+    lca.build(0);
+    assert(lca.lca(2, 7) == 2);
+    assert(lca.jump(7, 5) == 2);
+
+    lca.build(8);
+    assert(lca.lca(2, 7) == 7);
+    assert(lca.jump(2, 5) == 7);
+    for(int u = 0; u < 9; u++){
+        for(int v = 0; v < 9; v++){
+            assert(lca.dist(u, v) == (u < v ? v - u : u - v));
+        }
+    }
+}
+
 void test_exceptions(){
     bool thrown = false;
+    try{
+        LowestCommonAncestor bad(-1);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
+    try{
+        LowestCommonAncestor unbuilt(1);
+        (void)unbuilt.lca(0, 0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    thrown = false;
     try{
         LowestCommonAncestor bad(3);
         bad.add_edge(0, 1);
@@ -127,9 +179,28 @@ void test_exceptions(){
         thrown = true;
     }
     assert(thrown);
+
+    thrown = false;
+    try{
+        LowestCommonAncestor lca(2);
+        lca.add_edge(0, 1);
+        lca.add_edge(0, 1);
+        lca.build();
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
 }
 
 int main(){
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    test_lca_and_jump();
+    test_root_change();
+    test_degenerate_trees();
+    test_rebuild();
+    test_exceptions();
+
     int input_n, root, q;
     if(std::cin >> input_n >> root >> q){
         LowestCommonAncestor lca(input_n);
@@ -151,8 +222,4 @@ int main(){
         }
         return 0;
     }
-
-    test_binary_lifting();
-    test_root_change();
-    test_exceptions();
 }
