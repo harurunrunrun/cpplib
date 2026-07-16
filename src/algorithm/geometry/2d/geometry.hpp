@@ -31,6 +31,7 @@
 #include "incircle.hpp"
 #include "intersect.hpp"
 #include "intersect_circle_circle.hpp"
+#include "incremental_convex_hull.hpp"
 #include "intersect_circle_line.hpp"
 #include "intersect_circle_segment.hpp"
 #include "intersect_line_line.hpp"
