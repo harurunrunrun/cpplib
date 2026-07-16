@@ -109,6 +109,35 @@ def write_cases(
                                    for first, second in edges)
 
 
+def write_complete_convex_case(
+    output_directory: Path,
+    index: int,
+    polygon: list[Point],
+) -> None:
+    """Write the analytically known complete graph of a strict convex polygon."""
+
+    size = len(polygon)
+    turns = [
+        cross(polygon[i], polygon[(i + 1) % size], polygon[(i + 2) % size])
+        for i in range(size)
+    ]
+    assert all(turn > 0 for turn in turns) or all(turn < 0 for turn in turns)
+    name = f"case_{index:02d}"
+    with (output_directory / f"{name}.in").open(
+        "w", encoding="utf-8", newline="\n"
+    ) as input_file, (output_directory / f"{name}.out").open(
+        "w", encoding="utf-8", newline="\n"
+    ) as output_file:
+        input_file.write(f"1\n{size}\n")
+        input_file.writelines(f"{x} {y}\n" for x, y in polygon)
+        output_file.write(f"{size * (size - 1) // 2}\n")
+        output_file.writelines(
+            f"{first} {second}\n"
+            for first in range(size)
+            for second in range(first + 1, size)
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True, type=Path)
@@ -121,8 +150,29 @@ def main() -> None:
         [(0, 0), (10, 0), (10, 10), (7, 10),
          (7, 4), (3, 4), (3, 10), (0, 10)],
         [(0, 0), (8, 0), (8, 8), (4, 4), (0, 8)],
+        [(0, 0), (5, 0), (10, 0), (10, 5),
+         (10, 10), (5, 10), (0, 10), (0, 5)],
+        [(0, 0), (4, 0), (8, 0), (8, 8), (6, 8),
+         (6, 3), (4, 3), (2, 3), (2, 8), (0, 8)],
+        [(0, 0), (12, 0), (12, 12), (9, 12), (9, 4),
+         (7, 4), (7, 10), (5, 10), (5, 4), (3, 4),
+         (3, 12), (0, 12)],
     ]
     source = random.Random(2026071508)
+    for case_index in range(80):
+        size = source.randint(6, 30)
+        offset = source.random() * 2.0 * math.pi
+        radial = []
+        for vertex in range(size):
+            angle = offset + 2.0 * math.pi * vertex / size
+            radius = source.randint(20_000, 100_000)
+            radial.append((
+                round(radius * math.cos(angle)),
+                round(radius * math.sin(angle)),
+            ))
+        if case_index % 2 != 0:
+            radial.reverse()
+        cases.append(radial)
     for _ in range(100):
         width = source.randint(20, 100)
         height = source.randint(20, 100)
@@ -149,6 +199,21 @@ def main() -> None:
         for index in range(size)
     ]
     write_cases(arguments.out_dir, 1, [maximum])
+
+    performance_size = 800
+    performance_radius = 1_000_000_000
+    performance = [
+        (
+            round(performance_radius * math.cos(
+                2.0 * math.pi * index / performance_size
+            )),
+            round(performance_radius * math.sin(
+                2.0 * math.pi * index / performance_size
+            )),
+        )
+        for index in range(performance_size)
+    ]
+    write_complete_convex_case(arguments.out_dir, 2, performance)
 
 
 if __name__ == "__main__":
