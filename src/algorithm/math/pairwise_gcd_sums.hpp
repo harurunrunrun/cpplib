@@ -8,16 +8,19 @@
 
 namespace math{
 
-// Answers G(n) = sum_{1 <= i < j <= n} gcd(i, j) for a batch of n's.
-inline std::vector<std::uint64_t> gcd_extreme(
-    const std::vector<int>& queries
+// Computes the sum of gcd(left, right) over every positive-integer pair below
+// each requested inclusive upper bound.
+inline std::vector<std::uint64_t> pairwise_gcd_sums(
+    const std::vector<int>& upper_bounds
 ){
     int limit = 0;
-    for(const int n: queries){
-        if(n < 0)[[unlikely]]{
-            throw std::invalid_argument("gcd_extreme requires non-negative n");
+    for(const int upper_bound: upper_bounds){
+        if(upper_bound < 0)[[unlikely]]{
+            throw std::invalid_argument(
+                "pairwise_gcd_sums requires non-negative upper bounds"
+            );
         }
-        limit = std::max(limit, n);
+        limit = std::max(limit, upper_bound);
     }
 
     std::vector<std::uint32_t> phi(static_cast<std::size_t>(limit) + 1);
@@ -42,17 +45,19 @@ inline std::vector<std::uint64_t> gcd_extreme(
                 coefficient * static_cast<std::uint64_t>(value / quotient);
         }
     }
-    for(int n = 1; n <= limit; ++n){
-        prefix[static_cast<std::size_t>(n)] +=
-            prefix[static_cast<std::size_t>(n - 1)];
+    for(int upper_bound = 1; upper_bound <= limit; ++upper_bound){
+        prefix[static_cast<std::size_t>(upper_bound)] +=
+            prefix[static_cast<std::size_t>(upper_bound - 1)];
     }
 
-    std::vector<std::uint64_t> result;
-    result.reserve(queries.size());
-    for(const int n: queries){
-        result.push_back(prefix[static_cast<std::size_t>(n)]);
+    std::vector<std::uint64_t> answers;
+    answers.reserve(upper_bounds.size());
+    for(const int upper_bound: upper_bounds){
+        answers.push_back(
+            prefix[static_cast<std::size_t>(upper_bound)]
+        );
     }
-    return result;
+    return answers;
 }
 
 } // namespace math
