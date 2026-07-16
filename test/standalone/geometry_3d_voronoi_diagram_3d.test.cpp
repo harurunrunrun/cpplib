@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
+#include <map>
 #include <random>
 #include <vector>
 
@@ -17,6 +18,120 @@ long double point_distance(const Point3& first, const Point3& second){
     return std::hypot(
         first.x - second.x, first.y - second.y, first.z - second.z
     );
+}
+
+bool exact_same_point(const Point3& first, const Point3& second){
+    return first.x == second.x && first.y == second.y
+        && first.z == second.z;
+}
+
+std::size_t legacy_find_or_add_finite_vertex(
+    std::vector<Point3>& vertices,
+    const Point3& center
+){
+    const auto existing = std::find_if(
+        vertices.begin(), vertices.end(), [&](const Point3& other){
+            const Point3 difference =
+                geometry3d_normalized_difference(center, other).value;
+            return std::hypot(
+                difference.x, difference.y, difference.z
+            ) <= 64.0L * GEOMETRY3D_EPS;
+        }
+    );
+    if(existing != vertices.end()){
+        return static_cast<std::size_t>(existing - vertices.begin());
+    }
+    vertices.push_back(center);
+    return vertices.size() - 1;
+}
+
+std::vector<Point3> legacy_finite_vertices(
+    const std::vector<Point3>& sites
+){
+    const DelaunayTetrahedralization3 delaunay =
+        delaunay_tetrahedralization_3d(sites);
+    std::vector<Point3> result;
+    for(const auto& tetrahedron: delaunay.tetrahedra){
+        legacy_find_or_add_finite_vertex(
+            result,
+            voronoi_diagram_3d_detail::tetrahedron_circumcenter(
+                tetrahedron, delaunay.vertices
+            )
+        );
+    }
+    return result;
+}
+
+bool exact_same_points(
+    const std::vector<Point3>& first,
+    const std::vector<Point3>& second
+){
+    if(first.size() != second.size()) return false;
+    for(std::size_t index = 0; index < first.size(); ++index){
+        if(!exact_same_point(first[index], second[index])) return false;
+    }
+    return true;
+}
+
+bool matches_legacy_finite_vertices(
+    const std::vector<Point3>& sites,
+    const VoronoiDiagram3& diagram
+){
+    return exact_same_points(
+        diagram.finite_vertices, legacy_finite_vertices(sites)
+    );
+}
+
+template<class Random>
+bool validate_finite_vertex_index(Random& random){
+    std::uniform_int_distribution<long long> coordinate(
+        -1000000000LL, 1000000000LL
+    );
+    std::map<Point3, std::size_t> indices;
+    std::vector<Point3> indexed_vertices;
+    std::vector<Point3> legacy_vertices;
+    std::vector<Point3> centers{{0.0L, -0.0L, 0.0L}};
+    for(std::size_t index = 0; index < 2000; ++index){
+        if(index % 7 == 0){
+            centers.push_back(centers[random() % centers.size()]);
+        }else{
+            centers.push_back({
+                static_cast<long double>(coordinate(random)),
+                static_cast<long double>(coordinate(random)),
+                static_cast<long double>(coordinate(random)),
+            });
+        }
+    }
+    for(const Point3& center: centers){
+        const std::size_t indexed =
+            voronoi_diagram_3d_detail::find_or_add_finite_vertex(
+                indices, indexed_vertices, center
+            );
+        const std::size_t legacy =
+            legacy_find_or_add_finite_vertex(legacy_vertices, center);
+        if(indexed != legacy) return false;
+    }
+    if(!exact_same_points(indexed_vertices, legacy_vertices)) return false;
+
+    constexpr std::size_t large_size = 50000;
+    std::map<Point3, std::size_t> large_indices;
+    std::vector<Point3> large_vertices;
+    for(std::size_t index = 0; index < large_size; ++index){
+        const Point3 center{
+            static_cast<long double>(index),
+            static_cast<long double>((index * 1000003ULL) % 1000033ULL),
+            -static_cast<long double>((index * 1000037ULL) % 1000211ULL),
+        };
+        if(voronoi_diagram_3d_detail::find_or_add_finite_vertex(
+            large_indices, large_vertices, center
+        ) != index) return false;
+    }
+    for(std::size_t index = large_size; index-- > 0;){
+        if(voronoi_diagram_3d_detail::find_or_add_finite_vertex(
+            large_indices, large_vertices, large_vertices[index]
+        ) != index) return false;
+    }
+    return large_vertices.size() == large_size;
 }
 
 bool validate_voronoi(const VoronoiDiagram3& diagram){
@@ -78,6 +193,19 @@ bool validate_voronoi(const VoronoiDiagram3& diagram){
         if(ridge.sites[0] >= diagram.sites.size()) return false;
         if(ridge.sites[1] >= diagram.sites.size()) return false;
         if(ridge.unbounded != !ridge.unbounded_rays.empty()) return false;
+        std::vector<std::size_t> legacy_edge_indices;
+        for(std::size_t edge_index = 0;
+            edge_index < diagram.edges.size(); ++edge_index){
+            const auto& sites = diagram.edges[edge_index].sites;
+            if(std::find(
+                sites.begin(), sites.end(), ridge.sites[0]
+            ) != sites.end() && std::find(
+                sites.begin(), sites.end(), ridge.sites[1]
+            ) != sites.end()){
+                legacy_edge_indices.push_back(edge_index);
+            }
+        }
+        if(ridge.edge_indices != legacy_edge_indices) return false;
         for(std::size_t vertex: ridge.finite_vertices){
             if(vertex >= diagram.finite_vertices.size()) return false;
             const Point3& center = diagram.finite_vertices[vertex];
@@ -104,11 +232,13 @@ bool validate_voronoi(const VoronoiDiagram3& diagram){
 
 int main(){
     return geometry3d_api_test_main([](auto& random, std::size_t rounds){
+        if(!validate_finite_vertex_index(random)) return false;
         const std::vector<Point3> sites{
             {0, 0, 0}, {2, 0, 0}, {0, 2, 0}, {0, 0, 2}, {0.4L, 0.4L, 0.4L}
         };
         const VoronoiDiagram3 diagram = voronoi_diagram_3d(sites);
         if(diagram.affine_dimension != 3 || !validate_voronoi(diagram)) return false;
+        if(!matches_legacy_finite_vertices(sites, diagram)) return false;
         if(std::none_of(diagram.cells.begin(), diagram.cells.end(), [](const auto& cell){
             return cell.bounded_polyhedron.has_value();
         })) return false;
@@ -119,6 +249,9 @@ int main(){
         });
         if(!validate_voronoi(cospherical_cube)) return false;
         if(cospherical_cube.finite_vertices.size() != 1) return false;
+        if(!matches_legacy_finite_vertices(
+            cospherical_cube.sites, cospherical_cube
+        )) return false;
 
         const long double translation = 1e3000L;
         const long double ulp = std::nextafter(
@@ -172,6 +305,9 @@ int main(){
                 voronoi_diagram_3d(random_sites);
             if(random_diagram.affine_dimension != 3) return false;
             if(!validate_voronoi(random_diagram)) return false;
+            if(!matches_legacy_finite_vertices(
+                random_sites, random_diagram
+            )) return false;
         }
         return true;
     });

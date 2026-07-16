@@ -142,22 +142,17 @@ inline Point3 scaled_difference(const Point3& first, const Point3& second){
 
 
 inline std::size_t find_or_add_finite_vertex(
+    std::map<Point3, std::size_t>& indices,
     std::vector<Point3>& vertices,
     const Point3& center
 ){
-    const auto existing = std::find_if(
-        vertices.begin(), vertices.end(), [&](const Point3& other){
-            const Point3 difference = scaled_difference(center, other);
-            return std::hypot(
-                difference.x, difference.y, difference.z
-            ) <= 64.0L * GEOMETRY3D_EPS;
-        }
-    );
-    if(existing != vertices.end()){
-        return static_cast<std::size_t>(existing - vertices.begin());
+    const std::size_t next_index = vertices.size();
+    const auto [iterator, inserted] =
+        indices.try_emplace(center, next_index);
+    if(inserted){
+        vertices.push_back(center);
     }
-    vertices.push_back(center);
-    return vertices.size() - 1;
+    return iterator->second;
 }
 
 inline VoronoiRay3 outward_voronoi_ray(
@@ -279,11 +274,13 @@ inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
     std::map<std::array<std::size_t, 3>, std::vector<std::size_t>> face_tetrahedra;
     std::map<std::array<std::size_t, 2>, std::vector<std::size_t>> edge_tetrahedra;
     std::vector<std::size_t> tetrahedron_vertices;
+    std::map<Point3, std::size_t> finite_vertex_indices;
     tetrahedron_vertices.reserve(delaunay.tetrahedra.size());
     for(std::size_t tetrahedron_index = 0;
         tetrahedron_index < delaunay.tetrahedra.size(); ++tetrahedron_index){
         const auto& tetrahedron = delaunay.tetrahedra[tetrahedron_index];
         const std::size_t voronoi_vertex = find_or_add_finite_vertex(
+            finite_vertex_indices,
             result.finite_vertices,
             tetrahedron_circumcenter(tetrahedron, result.sites)
         );
@@ -308,7 +305,8 @@ inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
         }
     }
 
-    std::map<std::array<std::size_t, 3>, std::size_t> face_edge_index;
+    std::map<
+        std::array<std::size_t, 2>, std::vector<std::size_t>> edge_face_indices;
     for(auto& [face, incident]: face_tetrahedra){
         sort_unique(incident);
         VoronoiEdge3 edge;
@@ -330,7 +328,15 @@ inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
                 result.finite_vertices[edge.finite_vertices[1]],
             };
         }
-        face_edge_index[face] = result.edges.size();
+        const std::size_t edge_index = result.edges.size();
+        for(std::size_t first = 0; first < face.size(); ++first){
+            for(std::size_t second = first + 1;
+                second < face.size(); ++second){
+                edge_face_indices[sorted_indices(
+                    std::array<std::size_t, 2>{face[first], face[second]}
+                )].push_back(edge_index);
+            }
+        }
         result.edges.push_back(std::move(edge));
     }
 
@@ -344,12 +350,14 @@ inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
         sort_unique(incident_vertices);
         VoronoiRidge3 ridge;
         ridge.sites = delaunay_edge;
-        for(const auto& [face, edge_index]: face_edge_index){
-            if(std::find(face.begin(), face.end(), delaunay_edge[0]) != face.end()
-                && std::find(face.begin(), face.end(), delaunay_edge[1]) != face.end()){
-                ridge.edge_indices.push_back(edge_index);
+        const auto face_indices = edge_face_indices.find(delaunay_edge);
+        if(face_indices != edge_face_indices.end()){
+            ridge.edge_indices = face_indices->second;
+            for(std::size_t edge_index: ridge.edge_indices){
                 if(result.edges[edge_index].ray){
-                    ridge.unbounded_rays.push_back(*result.edges[edge_index].ray);
+                    ridge.unbounded_rays.push_back(
+                        *result.edges[edge_index].ray
+                    );
                 }
             }
         }
