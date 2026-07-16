@@ -1,0 +1,206 @@
+// competitive-verifier: STANDALONE
+
+#include <cassert>
+#include <compare>
+#include <cstddef>
+#include <cstdint>
+#include <iostream>
+#include <limits>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+
+#include "../../src/algorithm/math/exact_integer.hpp"
+
+namespace{
+
+ExactInteger parse_hex(const std::string& token){
+    if(token.empty()) throw std::invalid_argument("empty hexadecimal integer");
+    std::size_t position = 0;
+    bool negative = false;
+    if(token[position] == '-' || token[position] == '+'){
+        negative = token[position] == '-';
+        ++position;
+    }
+    if(position == token.size()){
+        throw std::invalid_argument("missing hexadecimal digits");
+    }
+    ExactInteger result = 0;
+    for(; position < token.size(); ++position){
+        const char digit = token[position];
+        unsigned value = 0;
+        if('0' <= digit && digit <= '9'){
+            value = static_cast<unsigned>(digit - '0');
+        }else if('a' <= digit && digit <= 'f'){
+            value = static_cast<unsigned>(digit - 'a' + 10);
+        }else if('A' <= digit && digit <= 'F'){
+            value = static_cast<unsigned>(digit - 'A' + 10);
+        }else{
+            throw std::invalid_argument("invalid hexadecimal digit");
+        }
+        result <<= 4;
+        result += value;
+    }
+    return negative ? -result : result;
+}
+
+template<class Integer>
+void print_conversion(const ExactInteger& value){
+    try{
+        const Integer converted = value.checked_to<Integer>();
+        std::cout << "OK " << ExactInteger(converted) << '\n';
+    }catch(const std::overflow_error&){
+        std::cout << "OVERFLOW\n";
+    }
+}
+
+void self_test(){
+    assert(ExactInteger().is_zero());
+    assert(!ExactInteger().is_negative());
+    assert(ExactInteger(0).bit_length() == 0);
+    assert(ExactInteger(1).bit_length() == 1);
+    assert(ExactInteger(-1).bit_length() == 1);
+    assert(ExactInteger(-7).absolute() == 7);
+    assert(abs(ExactInteger(-9)) == 9);
+    assert(-ExactInteger(0) == 0);
+    assert((ExactInteger(1) << 100).bit_length() == 101);
+    assert((ExactInteger(-3) >> 1) == -2);
+    assert((ExactInteger(-4) >> 1) == -2);
+    assert((ExactInteger(-1) >> 1000) == -1);
+    assert((ExactInteger(1) >> 1000) == 0);
+
+    ExactInteger small = -5;
+    small += std::uint64_t{9};
+    assert(small == 4);
+    small *= -3;
+    small -= 2;
+    assert(small == -14);
+
+    const auto [negative_quotient, negative_remainder] =
+        ExactInteger(-17).divmod(5);
+    assert(negative_quotient == -3 && negative_remainder == 2);
+    const auto [large_divisor_quotient, large_divisor_remainder] =
+        (ExactInteger(1) << 127).divmod(
+            (std::numeric_limits<std::uint64_t>::max)()
+        );
+    assert(large_divisor_quotient == (ExactInteger(1) << 63));
+    assert(large_divisor_remainder == (std::uint64_t{1} << 63));
+
+    assert(ExactInteger(-128).checked_to<std::int8_t>() == -128);
+    assert(ExactInteger(255).checked_to<std::uint8_t>() == 255);
+    assert(!ExactInteger(0).checked_to<bool>());
+    assert(ExactInteger(1).checked_to<bool>());
+    bool conversion_thrown = false;
+    try{
+        static_cast<void>(ExactInteger(256).checked_to<std::uint8_t>());
+    }catch(const std::overflow_error&){
+        conversion_thrown = true;
+    }
+    assert(conversion_thrown);
+
+    bool zero_division_thrown = false;
+    try{
+        static_cast<void>(ExactInteger(1).divmod(0));
+    }catch(const std::domain_error&){
+        zero_division_thrown = true;
+    }
+    assert(zero_division_thrown);
+
+#if defined(__SIZEOF_INT128__)
+    const __uint128_t unsigned_maximum = ~__uint128_t{0};
+    const __int128_t signed_minimum =
+        -static_cast<__int128_t>(unsigned_maximum >> 1) - 1;
+    assert(ExactInteger(unsigned_maximum).checked_to<__uint128_t>()
+        == unsigned_maximum);
+    assert(ExactInteger(signed_minimum).checked_to<__int128_t>()
+        == signed_minimum);
+#endif
+
+    std::ostringstream stream;
+    stream << ((ExactInteger(1) << 130) + 12345);
+    assert(stream.str() == "1361129467683753853853498429727072858169");
+}
+
+}  // namespace
+
+int main(){
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    self_test();
+
+    int query_count;
+    if(!(std::cin >> query_count)) return 0;
+    while(query_count-- > 0){
+        std::string operation;
+        std::cin >> operation;
+        if(operation == "META"){
+            std::string token;
+            std::cin >> token;
+            const ExactInteger value = parse_hex(token);
+            std::cout << value << ' ' << value.bit_length() << ' '
+                      << value.is_negative() << ' ' << value.absolute() << '\n';
+        }else if(operation == "NEG" || operation == "ABS"){
+            std::string token;
+            std::cin >> token;
+            const ExactInteger value = parse_hex(token);
+            std::cout << (operation == "NEG" ? -value : value.absolute()) << '\n';
+        }else if(operation == "ADD" || operation == "SUB"
+            || operation == "MUL" || operation == "CMP"){
+            std::string left_token, right_token;
+            std::cin >> left_token >> right_token;
+            const ExactInteger left = parse_hex(left_token);
+            const ExactInteger right = parse_hex(right_token);
+            if(operation == "ADD"){
+                std::cout << left + right << '\n';
+            }else if(operation == "SUB"){
+                std::cout << left - right << '\n';
+            }else if(operation == "MUL"){
+                std::cout << left * right << '\n';
+            }else{
+                const auto order = left <=> right;
+                std::cout << (order < 0 ? -1 : order > 0 ? 1 : 0) << '\n';
+            }
+        }else if(operation == "SHL" || operation == "SHR"){
+            std::string token;
+            std::size_t shift;
+            std::cin >> token >> shift;
+            const ExactInteger value = parse_hex(token);
+            std::cout << (operation == "SHL" ? value << shift : value >> shift)
+                      << '\n';
+        }else if(operation == "ADD_SMALL"){
+            std::string token;
+            std::uint64_t increment;
+            std::cin >> token >> increment;
+            ExactInteger value = parse_hex(token);
+            value += increment;
+            std::cout << value << '\n';
+        }else if(operation == "DIV"){
+            std::string token;
+            std::uint64_t divisor;
+            std::cin >> token >> divisor;
+            const auto [quotient, remainder] = parse_hex(token).divmod(divisor);
+            std::cout << quotient << ' ' << remainder << '\n';
+        }else if(operation == "CONVERT"){
+            std::string type, token;
+            std::cin >> type >> token;
+            const ExactInteger value = parse_hex(token);
+            if(type == "I8") print_conversion<std::int8_t>(value);
+            else if(type == "U8") print_conversion<std::uint8_t>(value);
+            else if(type == "I16") print_conversion<std::int16_t>(value);
+            else if(type == "U16") print_conversion<std::uint16_t>(value);
+            else if(type == "I32") print_conversion<std::int32_t>(value);
+            else if(type == "U32") print_conversion<std::uint32_t>(value);
+            else if(type == "I64") print_conversion<std::int64_t>(value);
+            else if(type == "U64") print_conversion<std::uint64_t>(value);
+            else if(type == "BOOL") print_conversion<bool>(value);
+#if defined(__SIZEOF_INT128__)
+            else if(type == "I128") print_conversion<__int128_t>(value);
+            else if(type == "U128") print_conversion<__uint128_t>(value);
+#endif
+            else return 2;
+        }else{
+            return 2;
+        }
+    }
+    return 0;
+}
