@@ -4,9 +4,10 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
-#include <map>
+#include <limits>
 #include <set>
 #include <stdexcept>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -19,8 +20,16 @@
 
 namespace quickhull_3d_detail{
 
+inline constexpr std::size_t no_index =
+    std::numeric_limits<std::size_t>::max();
+
 struct Face{
     std::array<std::size_t, 3> vertices{};
+    std::array<std::size_t, 3> neighbors{no_index, no_index, no_index};
+    std::vector<std::size_t> outside;
+    std::size_t farthest = no_index;
+    long double farthest_magnitude = 0.0L;
+    std::size_t visit_stamp = 0;
     bool alive = true;
 };
 
@@ -34,7 +43,9 @@ inline Face outward(
     if(adaptive_orient3d(
         points[first], points[second], points[third], interior
     ) > 0) std::swap(second, third);
-    return {{{first, second, third}}, true};
+    Face result;
+    result.vertices = {first, second, third};
+    return result;
 }
 
 inline long double magnitude(
@@ -48,6 +59,98 @@ inline long double magnitude(
         point - scaled[face.vertices[0]]
     ));
 }
+
+inline std::array<std::size_t, 2> edge_key(
+    std::size_t first,
+    std::size_t second
+){
+    if(second < first) std::swap(first, second);
+    return {first, second};
+}
+
+struct EdgeHash{
+    std::size_t operator()(
+        const std::array<std::size_t, 2>& edge
+    ) const noexcept{
+        std::size_t result = edge[0] + 0x9e3779b97f4a7c15ULL;
+        result ^= edge[1] + 0x9e3779b97f4a7c15ULL
+            + (result << 6) + (result >> 2);
+        return result;
+    }
+};
+
+struct OpenEdge{
+    std::size_t face = no_index;
+    std::size_t edge = no_index;
+};
+
+inline void link_open_edges(
+    std::vector<Face>& faces,
+    const std::vector<std::size_t>& face_indices
+){
+    std::unordered_map<std::array<std::size_t, 2>, OpenEdge, EdgeHash> open;
+    open.reserve(face_indices.size() * 2 + 1);
+    for(const std::size_t face_index: face_indices){
+        for(std::size_t edge = 0; edge < 3; ++edge){
+            if(faces[face_index].neighbors[edge] != no_index) continue;
+            const auto key = edge_key(
+                faces[face_index].vertices[edge],
+                faces[face_index].vertices[(edge + 1) % 3]
+            );
+            const auto [iterator, inserted] = open.emplace(
+                key, OpenEdge{face_index, edge}
+            );
+            if(inserted) continue;
+            const OpenEdge other = iterator->second;
+            faces[face_index].neighbors[edge] = other.face;
+            faces[other.face].neighbors[other.edge] = face_index;
+            open.erase(iterator);
+        }
+    }
+    if(!open.empty())[[unlikely]]{
+        throw std::logic_error("quickhull_3d produced an open surface");
+    }
+}
+
+inline bool sees(
+    const Face& face,
+    std::size_t point,
+    const std::vector<Point3>& points
+){
+    return adaptive_orient3d(
+        points[face.vertices[0]], points[face.vertices[1]],
+        points[face.vertices[2]], points[point]
+    ) > 0;
+}
+
+inline void refresh_candidate(
+    std::vector<Face>& faces,
+    std::size_t face_index,
+    const std::vector<Point3>& scaled,
+    std::vector<std::size_t>& candidates
+){
+    Face& face = faces[face_index];
+    face.farthest = no_index;
+    face.farthest_magnitude = 0.0L;
+    for(const std::size_t point: face.outside){
+        const long double value = magnitude(face, scaled[point], scaled);
+        if(face.farthest == no_index || value > face.farthest_magnitude
+            || (value == face.farthest_magnitude && point < face.farthest)){
+            face.farthest = point;
+            face.farthest_magnitude = value;
+        }
+    }
+    if(face.farthest != no_index){
+        candidates.push_back(face_index);
+    }
+}
+
+struct HorizonEdge{
+    std::size_t first = no_index;
+    std::size_t second = no_index;
+    std::size_t neighbor = no_index;
+    std::size_t neighbor_edge = no_index;
+};
 
 }  // namespace quickhull_3d_detail
 
@@ -120,53 +223,133 @@ inline ConvexPolyhedron3 quickhull_3d(std::vector<Point3> input){
         outward(first, third, fourth, interior, input),
         outward(second, fourth, third, interior, input),
     };
+    link_open_edges(faces, {0, 1, 2, 3});
 
-    while(true){
-        std::size_t expansion_point = input.size();
-        long double farthest = 0.0L;
-        for(const Face& face: faces){
-            if(!face.alive) continue;
-            for(std::size_t index = 0; index < input.size(); ++index){
-                if(adaptive_orient3d(
-                    input[face.vertices[0]], input[face.vertices[1]],
-                    input[face.vertices[2]], input[index]
-                ) <= 0) continue;
-                const long double value = magnitude(face, scaled[index], scaled);
-                if(expansion_point == input.size() or value > farthest){
-                    farthest = value;
-                    expansion_point = index;
+    const std::set<std::size_t> initial{first, second, third, fourth};
+    std::vector<std::size_t> owner(input.size(), no_index);
+    for(std::size_t point = 0; point < input.size(); ++point){
+        if(initial.contains(point)) continue;
+        for(std::size_t face = 0; face < 4; ++face){
+            if(sees(faces[face], point, input)){
+                // Keeping one conflict owner per point bounds the total size
+                // of all outside sets by the number of input points.
+                faces[face].outside.push_back(point);
+                owner[point] = face;
+                break;
+            }
+        }
+    }
+
+    std::vector<std::size_t> candidate_faces;
+    for(std::size_t face = 0; face < 4; ++face){
+        refresh_candidate(faces, face, scaled, candidate_faces);
+    }
+    std::size_t candidate_head = 0;
+    std::size_t visit_stamp = 0;
+
+    while(candidate_head < candidate_faces.size()){
+        const std::size_t selected_face = candidate_faces[candidate_head++];
+        if(!faces[selected_face].alive
+            || faces[selected_face].farthest == no_index) continue;
+        const std::size_t expansion_point = faces[selected_face].farthest;
+
+        ++visit_stamp;
+        std::vector<std::size_t> visible{selected_face};
+        faces[selected_face].visit_stamp = visit_stamp;
+        for(std::size_t head = 0; head < visible.size(); ++head){
+            const std::size_t face_index = visible[head];
+            for(const std::size_t neighbor: faces[face_index].neighbors){
+                if(neighbor == no_index || !faces[neighbor].alive
+                    || faces[neighbor].visit_stamp == visit_stamp) continue;
+                if(sees(faces[neighbor], expansion_point, input)){
+                    faces[neighbor].visit_stamp = visit_stamp;
+                    visible.push_back(neighbor);
                 }
             }
         }
-        if(expansion_point == input.size()) break;
 
-        std::map<std::array<std::size_t, 2>, std::array<std::size_t, 3>> horizon;
-        for(Face& face: faces){
-            if(!face.alive || adaptive_orient3d(
-                input[face.vertices[0]], input[face.vertices[1]],
-                input[face.vertices[2]], input[expansion_point]
-            ) <= 0) continue;
+        std::vector<HorizonEdge> horizon;
+        for(const std::size_t face_index: visible){
+            const Face& face = faces[face_index];
+            for(std::size_t edge = 0; edge < 3; ++edge){
+                const std::size_t neighbor = face.neighbors[edge];
+                if(neighbor == no_index)[[unlikely]]{
+                    throw std::logic_error("quickhull_3d lost a face neighbor");
+                }
+                if(faces[neighbor].visit_stamp == visit_stamp) continue;
+                std::size_t neighbor_edge = no_index;
+                for(std::size_t index = 0; index < 3; ++index){
+                    if(faces[neighbor].neighbors[index] == face_index){
+                        neighbor_edge = index;
+                        break;
+                    }
+                }
+                if(neighbor_edge == no_index)[[unlikely]]{
+                    throw std::logic_error(
+                        "quickhull_3d has asymmetric adjacency"
+                    );
+                }
+                horizon.push_back({
+                    face.vertices[edge], face.vertices[(edge + 1) % 3],
+                    neighbor, neighbor_edge,
+                });
+            }
+        }
+        if(horizon.size() < 3)[[unlikely]]{
+            throw std::logic_error("quickhull_3d produced an invalid horizon");
+        }
+
+        std::vector<std::size_t> candidates;
+        for(const std::size_t face_index: visible){
+            Face& face = faces[face_index];
+            for(const std::size_t point: face.outside){
+                if(owner[point] != face_index) continue;
+                owner[point] = no_index;
+                if(point == expansion_point) continue;
+                candidates.push_back(point);
+            }
+            face.outside.clear();
             face.alive = false;
-            for(std::size_t edge_index = 0; edge_index < 3; ++edge_index){
-                const std::size_t edge_first = face.vertices[edge_index];
-                const std::size_t edge_second = face.vertices[(edge_index + 1) % 3];
-                std::array<std::size_t, 2> key{edge_first, edge_second};
-                if(key[1] < key[0]) std::swap(key[0], key[1]);
-                auto& record = horizon[key];
-                if(record[2] == 0){
-                    record[0] = edge_first;
-                    record[1] = edge_second;
+        }
+
+        std::vector<std::size_t> new_faces;
+        new_faces.reserve(horizon.size());
+        for(const HorizonEdge& edge: horizon){
+            const std::size_t face_index = faces.size();
+            faces.push_back(outward(
+                edge.first, edge.second, expansion_point, interior, input
+            ));
+            new_faces.push_back(face_index);
+
+            std::size_t horizon_edge = no_index;
+            for(std::size_t index = 0; index < 3; ++index){
+                if(edge_key(
+                    faces[face_index].vertices[index],
+                    faces[face_index].vertices[(index + 1) % 3]
+                ) == edge_key(edge.first, edge.second)){
+                    horizon_edge = index;
+                    break;
                 }
-                ++record[2];
+            }
+            if(horizon_edge == no_index)[[unlikely]]{
+                throw std::logic_error("quickhull_3d lost a horizon edge");
+            }
+            faces[face_index].neighbors[horizon_edge] = edge.neighbor;
+            faces[edge.neighbor].neighbors[edge.neighbor_edge] = face_index;
+        }
+        link_open_edges(faces, new_faces);
+
+        for(const std::size_t point: candidates){
+            for(const std::size_t face_index: new_faces){
+                if(sees(faces[face_index], point, input)){
+                    faces[face_index].outside.push_back(point);
+                    owner[point] = face_index;
+                    break;
+                }
             }
         }
-        for(const auto& [key, edge]: horizon){
-            static_cast<void>(key);
-            if(edge[2] == 1){
-                faces.push_back(outward(
-                    edge[0], edge[1], expansion_point, interior, input
-                ));
-            }
+        for(const std::size_t face_index: new_faces){
+            refresh_candidate(faces, face_index, scaled, candidate_faces);
         }
     }
 
