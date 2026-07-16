@@ -74,7 +74,7 @@ template<
 bool infer_previous_carry(
     const std::array<UInt, LongLag + 1>& observations
 ){
-    using wide_type = unsigned __int128;
+    using wide_type = __uint128_t;
     const wide_type modulus = wide_type(1) << WordSize;
     const wide_type short_value = observations[LongLag - ShortLag];
     const wide_type long_value = observations[0];
@@ -273,6 +273,111 @@ void test_seed_candidate_boundaries(){
     expect_logic_error([&]{ (void)ambiguous.next(); });
 }
 
+template<class Engine, std::size_t Count, class Recover>
+void check_standard_seed_recovery(
+    typename Engine::result_type seed,
+    Recover&& recover
+){
+    Engine source(seed);
+    std::array<typename Engine::result_type, Count> observations{};
+    for(auto& value: observations) value = source();
+
+    auto recovery = recover(observations);
+    assert(recovery.predictor.has_value());
+    assert(recovery.unique_seed_class());
+    assert(recovery.seed_class_count == 1);
+    assert(recovery.contains_seed(seed));
+    assert(recovery.canonical_seed().has_value());
+    assert(
+        recovery.seed_classes[0].contains(
+            *recovery.canonical_seed()
+        )
+    );
+    for(int index = 0; index < 128; ++index){
+        assert(recovery.next() == source());
+    }
+}
+
+void test_direct_standard_seed_recovery(){
+    using Seed24 = std::ranlux24_base::result_type;
+    using Seed48 = std::ranlux48_base::result_type;
+    constexpr std::uint64_t lcg_modulus = 2147483563ULL;
+
+    const std::array<Seed24, 7> seeds24{
+        0,
+        1,
+        19780503,
+        static_cast<Seed24>(lcg_modulus),
+        static_cast<Seed24>(lcg_modulus * 2),
+        std::numeric_limits<Seed24>::max(),
+        static_cast<Seed24>(123456789),
+    };
+    for(const Seed24 seed: seeds24){
+        check_standard_seed_recovery<std::ranlux24_base, 40>(
+            seed,
+            [](const auto& outputs){
+                return recover_ranlux24_base_standard_seed(outputs);
+            }
+        );
+    }
+
+    const std::array<Seed48, 7> seeds48{
+        0,
+        1,
+        19780503,
+        static_cast<Seed48>(lcg_modulus),
+        static_cast<Seed48>(lcg_modulus * 2),
+        std::numeric_limits<Seed48>::max(),
+        static_cast<Seed48>(987654321012345678ULL),
+    };
+    for(const Seed48 seed: seeds48){
+        check_standard_seed_recovery<std::ranlux48_base, 29>(
+            seed,
+            [](const auto& outputs){
+                return recover_ranlux48_base_standard_seed(outputs);
+            }
+        );
+    }
+
+    std::mt19937_64 engine(2026071607ULL);
+    for(int iteration = 0; iteration < 512; ++iteration){
+        const Seed24 seed24 = static_cast<Seed24>(engine());
+        check_standard_seed_recovery<std::ranlux24_base, 40>(
+            seed24,
+            [](const auto& outputs){
+                return recover_ranlux24_base_standard_seed(outputs);
+            }
+        );
+        const Seed48 seed48 = static_cast<Seed48>(engine());
+        check_standard_seed_recovery<std::ranlux48_base, 29>(
+            seed48,
+            [](const auto& outputs){
+                return recover_ranlux48_base_standard_seed(outputs);
+            }
+        );
+    }
+}
+
+template<class Engine, std::size_t ObservationCount, class Recover>
+void print_standard_seed_recovery(
+    typename Engine::result_type seed,
+    std::size_t prediction_count,
+    Recover&& recover
+){
+    Engine source(seed);
+    std::array<typename Engine::result_type, ObservationCount> observations{};
+    for(auto& value: observations) value = source();
+    auto recovery = recover(observations);
+
+    std::cout
+        << recovery.seed_class_count << ' '
+        << recovery.contains_seed(seed);
+    for(std::size_t index = 0; index < prediction_count; ++index){
+        std::cout << ' ' << recovery.next();
+    }
+    std::cout << '\n';
+}
+
 template<
     std::size_t LongLag,
     std::size_t ObservationCount,
@@ -302,6 +407,7 @@ int main(){
     test_minimum_extra_and_carry_observations();
     test_corrupted_observations();
     test_seed_candidate_boundaries();
+    test_direct_standard_seed_recovery();
 
     int test_count;
     if(!(std::cin >> test_count)) return 0;
@@ -326,6 +432,24 @@ int main(){
                 12, 13, std::ranlux48_base, Ranlux48BaseCracker
             >(static_cast<std::ranlux48_base::result_type>(seed),
               skip, prediction_count);
+        }else if(mode == "ranlux24_seed"){
+            assert(skip == 0);
+            print_standard_seed_recovery<std::ranlux24_base, 40>(
+                static_cast<std::ranlux24_base::result_type>(seed),
+                prediction_count,
+                [](const auto& outputs){
+                    return recover_ranlux24_base_standard_seed(outputs);
+                }
+            );
+        }else if(mode == "ranlux48_seed"){
+            assert(skip == 0);
+            print_standard_seed_recovery<std::ranlux48_base, 29>(
+                static_cast<std::ranlux48_base::result_type>(seed),
+                prediction_count,
+                [](const auto& outputs){
+                    return recover_ranlux48_base_standard_seed(outputs);
+                }
+            );
         }else{
             assert(mode == "ranlux48_extra");
             print_predictions<

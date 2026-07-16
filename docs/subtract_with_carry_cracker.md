@@ -4,7 +4,8 @@ documentation_of: ../src/algorithm/random/subtract_with_carry_cracker.hpp
 ---
 
 <code>std::subtract_with_carry_engine</code> の加工されていない連続出力から、
-carryを含む内部状態を復元する。整数seedを有限候補集合から全探索するAPIも備える。
+carryを含む内部状態と将来列を直接復元する。標準ranlux baseについては、
+整数seedの全域を走査せず、標準初期化が作るseed同値類も逆算する。
 
 ## SubtractWithCarryCracker
 
@@ -38,6 +39,75 @@ $0<\mathtt{ShortLag}<\mathtt{LongLag}$ を満たす。
 <code>Ranlux48BaseCracker</code> は
 <code>SubtractWithCarryCracker&lt;std::uint_fast64_t, 48, 5, 12&gt;</code>
 の型別名。
+
+## StandardSubtractWithCarrySeedClass
+
+~~~cpp
+StandardSubtractWithCarrySeedClass<SeedUInt>
+~~~
+
+標準の整数seed初期化が内部で使う
+<code>linear_congruential_engine&lt;uint_least32_t, 40014, 0, 2147483563&gt;</code>
+の初期状態1個を、同じ生成列を作る整数seedの同値類として表す。
+
+- <code>seed_type</code>：整数seedの型。
+- <code>lcg_modulus</code> / <code>lcg_default_seed</code>：標準初期化の定数。
+- <code>lcg_state</code>：最初のLCG呼出し直前の正規化済み状態。
+- <code>contains(seed)</code>：<code>seed</code> がこの同値類に属するかを返す。
+- <code>contains_zero_seed()</code>：引数0の特別なdefault seedが属するかを返す。
+- <code>canonical_seed()</code>：同値類の代表値を返す。0を含む類では0、
+  それ以外では <code>lcg_state</code> を返す。
+
+0以外の整数seedはLCG modulusで剰余を取り、剰余0を1へ直す。
+したがって異なる整数seedが同じ同値類に属し得る。
+
+## StandardSubtractWithCarrySeedRecovery
+
+~~~cpp
+StandardSubtractWithCarrySeedRecovery<Cracker, SeedUInt>
+~~~
+
+- <code>cracker_type</code> / <code>result_type</code> /
+  <code>seed_type</code> / <code>seed_class_type</code>：対応する型。
+- <code>maximum_seed_classes</code>：返し得る同値類数の上限512。
+  4個以下の初期状態それぞれで、24bit構成のLCG出力liftを最大128個調べる。
+- <code>seed_classes</code> / <code>seed_class_count</code>：
+  観測に一致する全seed同値類と有効要素数。
+- <code>predictor</code>：全観測を消費した直後の状態cracker。
+- <code>unique_seed_class()</code>：同値類が1個かを返す。
+- <code>canonical_seed()</code>：同値類が1個なら代表seed、それ以外は
+  <code>std::nullopt</code>。
+- <code>contains_seed(seed)</code>：いずれかの同値類に属するかを返す。
+- <code>next()</code>：観測直後の次出力を返す。
+
+<code>unique_seed_class()</code> は数値seedそのものが一意という意味ではない。
+同じLCG状態へ正規化されるすべての整数seedを
+<code>seed_classes</code> が表す。
+
+## 標準ranlux baseの直接seed復元
+
+~~~cpp
+recover_ranlux24_base_standard_seed(outputs)
+recover_ranlux48_base_standard_seed(outputs)
+~~~
+
+<code>std::ranlux24_base</code> または <code>std::ranlux48_base</code> を
+整数seedで初期化した直後から始まる連続生出力を受け取る。
+前者は25語以上、後者は13語以上必要である。
+
+最初のlag区間をcarryの境界条件から最大4状態へ直接逆算し、
+標準LCGの最初の出力から乗数40014のmodular inverseを使って初期LCG状態を得る。
+<code>ranlux24_base</code> では24bit語からLCG出力の上位bitを最大128通りliftし、
+全初期状態と照合する。<code>ranlux48_base</code> では先頭状態語の下位32bitが
+LCG出力を完全に保持する。整数seed区間は走査しない。
+
+返り値の型別名は
+<code>Ranlux24BaseStandardSeedRecovery</code> と
+<code>Ranlux48BaseStandardSeedRecovery</code>。
+観測が有効な漸化式なら、標準seed同値類が0個でも
+<code>predictor</code> と <code>next()</code> による将来予測は利用できる。
+観測開始が初期出力であるという前提に一致しない場合、
+<code>seed_classes</code> はそのずれた列を初期列として説明する同値類だけを返す。
 
 ## SubtractWithCarrySeedRecoveryStatus
 
@@ -112,6 +182,15 @@ recover_subtract_with_carry_seed_in_range<Engine>(
 - <code>min()</code> / <code>max()</code>：$O(1)$
 - <code>unique()</code> / <code>recovered_seed()</code> /
   <code>SubtractWithCarrySeedRecovery::next()</code>：$O(1)$
+- <code>recover_ranlux24_base_standard_seed</code> /
+  <code>recover_ranlux48_base_standard_seed</code>：
+  $O(Count+\mathtt{LongLag})$ 時間・
+  $O(\mathtt{LongLag})$ 追加領域。
+  固定パラメータ内では前者が最大128個、後者が1個のLCG出力候補を照合する
+- <code>StandardSubtractWithCarrySeedClass</code> の各操作、
+  <code>unique_seed_class</code> / <code>canonical_seed</code> /
+  直接復元結果の <code>next</code>：$O(1)$。
+  <code>contains_seed</code>：$O(C)$、$C$ は返した同値類数で $C\leq512$
 - 公開型別名・enum値・データメンバの参照：$O(1)$
 - <code>recover_subtract_with_carry_seed_candidates</code> /
   <code>recover_subtract_with_carry_seed_in_range</code>：
@@ -119,6 +198,12 @@ recover_subtract_with_carry_seed_in_range<Engine>(
   $O(\mathtt{LongLag})$ 追加領域
 
 ## 注意点
+
+- 直接seed復元APIは、整数seed初期化直後の第1出力から観測する。
+  skip後の列でも状態と将来列は <code>SubtractWithCarryCracker</code> で復元できるが、
+  初期seed同値類の判定には開始位置の情報が必要。
+- 標準初期化は整数seedをLCG modulusで正規化するため、一般に数値seedは一意でない。
+  <code>seed_classes</code> と <code>contains_seed</code> で同値類全体を扱う。
 
 - 復元には最低 <code>LongLag + 1</code> 個の、同じ生成器から得た連続生出力が必要。
   追加観測を渡すと誤った列を早期に検出し、復元後の位置もその分だけ進む。

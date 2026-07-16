@@ -43,7 +43,7 @@ private:
     using wide_type = std::conditional_t<
         (WordSize <= 32),
         std::uint64_t,
-        unsigned __int128
+        __uint128_t
     >;
 
     inline static constexpr std::array<result_type, WordCount>

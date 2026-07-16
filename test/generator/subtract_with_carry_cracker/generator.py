@@ -13,6 +13,8 @@ PARAMETERS = {
     "ranlux24_extra": (24, 10, 24, 40),
     "ranlux48_min": (48, 5, 12, 13),
     "ranlux48_extra": (48, 5, 12, 29),
+    "ranlux24_seed": (24, 10, 24, 40),
+    "ranlux48_seed": (48, 5, 12, 29),
 }
 
 
@@ -71,7 +73,12 @@ def expected(case: Case) -> str:
     engine = SubtractWithCarry(seed, word_size, short_lag, long_lag)
     for _ in range(skip + observation_count):
         engine.next()
-    return " ".join(str(engine.next()) for _ in range(prediction_count))
+    predictions = " ".join(
+        str(engine.next()) for _ in range(prediction_count)
+    )
+    if mode.endswith("_seed"):
+        return "1 1" + (" " + predictions if predictions else "")
+    return predictions
 
 
 def write_case(output_directory: Path, name: str, cases: list[Case]) -> None:
@@ -128,19 +135,54 @@ def main() -> None:
 
     rng = random.Random(20260714)
     random_cases: list[Case] = []
-    modes = list(PARAMETERS)
-    for index in range(512):
+    modes = tuple(PARAMETERS)
+    for index in range(1024):
         mode = modes[index % len(modes)]
         seed_bits = 32 if mode.startswith("ranlux24") else 64
         random_cases.append(
             (
                 mode,
                 rng.getrandbits(seed_bits),
-                rng.randrange(0, 4096),
+                0 if mode.endswith("_seed") else rng.randrange(0, 4096),
                 rng.randrange(1, 97),
             )
         )
     write_case(output_directory, "case_02_random", random_cases)
+
+    lcg_modulus = 2147483563
+    boundary_seeds = (
+        0,
+        1,
+        19780503,
+        lcg_modulus,
+        2 * lcg_modulus,
+        (1 << 32) - 1,
+    )
+    direct_boundaries: list[Case] = [
+        (mode, seed, 0, 128)
+        for mode in ("ranlux24_seed", "ranlux48_seed")
+        for seed in boundary_seeds
+    ]
+    direct_boundaries.extend(
+        [
+            ("ranlux48_seed", (1 << 63), 0, 128),
+            ("ranlux48_seed", (1 << 64) - 1, 0, 128),
+        ]
+    )
+    write_case(
+        output_directory,
+        "case_03_direct_boundaries",
+        direct_boundaries,
+    )
+
+    direct_large: list[Case] = []
+    for index in range(4096):
+        mode = "ranlux24_seed" if index % 2 == 0 else "ranlux48_seed"
+        seed_bits = 32 if mode == "ranlux24_seed" else 64
+        direct_large.append(
+            (mode, rng.getrandbits(seed_bits), 0, 8)
+        )
+    write_case(output_directory, "case_04_direct_large", direct_large)
 
 
 if __name__ == "__main__":
