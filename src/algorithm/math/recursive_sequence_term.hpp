@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include "linear_recurrence.hpp"
+
 namespace math{
 
 namespace recursive_sequence_internal{
@@ -48,7 +50,7 @@ inline std::uint64_t recursive_sequence_term(
     const std::vector<std::uint64_t>& initial,
     const std::vector<std::uint64_t>& coefficient,
     std::uint64_t one_based_index,
-    std::uint64_t modulus = 1'000'000'000ULL
+    std::uint64_t modulus
 ){
     if(initial.empty() || initial.size() != coefficient.size() ||
         one_based_index == 0 || modulus == 0
@@ -91,6 +93,53 @@ inline std::uint64_t recursive_sequence_term(
         );
     }
     return answer;
+}
+
+template<int MOD>
+std::uint64_t recursive_sequence_term_static_modulus(
+    const std::vector<std::uint64_t>& initial,
+    const std::vector<std::uint64_t>& coefficient,
+    std::uint64_t one_based_index
+){
+    static_assert(MOD >= 1);
+    if(initial.empty() || initial.size() != coefficient.size()
+        || one_based_index == 0)[[unlikely]]{
+        throw std::invalid_argument(
+            "invalid recursive_sequence_term_static_modulus arguments"
+        );
+    }
+    if(one_based_index <= initial.size()){
+        return initial[static_cast<std::size_t>(one_based_index - 1)]
+            % static_cast<std::uint64_t>(MOD);
+    }
+    using Mint = Modint<MOD>;
+    std::vector<Mint> reduced_initial;
+    std::vector<Mint> reduced_coefficient;
+    reduced_initial.reserve(initial.size());
+    reduced_coefficient.reserve(coefficient.size());
+    for(const std::uint64_t value: initial){
+        reduced_initial.emplace_back(static_cast<long long>(
+            value % static_cast<std::uint64_t>(MOD)
+        ));
+    }
+    for(const std::uint64_t value: coefficient){
+        reduced_coefficient.emplace_back(static_cast<long long>(
+            value % static_cast<std::uint64_t>(MOD)
+        ));
+    }
+    return static_cast<std::uint64_t>(bostan_mori<MOD>(
+        reduced_initial, reduced_coefficient, one_based_index - 1
+    ).val());
+}
+
+inline std::uint64_t recursive_sequence_term(
+    const std::vector<std::uint64_t>& initial,
+    const std::vector<std::uint64_t>& coefficient,
+    std::uint64_t one_based_index
+){
+    return recursive_sequence_term_static_modulus<1'000'000'000>(
+        initial, coefficient, one_based_index
+    );
 }
 
 } // namespace math
