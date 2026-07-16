@@ -6,7 +6,7 @@
 
 #include "iterative_strongly_connected_components.hpp"
 
-inline std::vector<int> bottom_vertices(
+inline std::vector<int> sink_scc_vertices(
     const std::vector<std::vector<int>>& graph
 ){
     const auto components = iterative_strongly_connected_components(graph);
@@ -22,13 +22,13 @@ inline std::vector<int> bottom_vertices(
             }
         }
     }
-    std::vector<int> answer;
+    std::vector<int> vertices;
     for(int vertex = 0; vertex < static_cast<int>(graph.size()); ++vertex){
         if(has_outgoing[static_cast<std::size_t>(
             components.id[static_cast<std::size_t>(vertex)]
         )] == 0){
-            answer.push_back(vertex);
+            vertices.push_back(vertex);
         }
     }
-    return answer;
+    return vertices;
 }

@@ -65,4 +65,7 @@ Modint<MOD> math::sum_totient(std::uint64_t n);
 
 ## 注意点
 
-法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
+- `MOD >= 1` が必要である。
+- `n` は `sum_totient_function_max_n` 以下でなければならない。
+- 返り値は数学的な総和を `MOD` で割った剰余である。
+- 内部のメモ化にhash tableを使うため、計算量は期待計算量である。

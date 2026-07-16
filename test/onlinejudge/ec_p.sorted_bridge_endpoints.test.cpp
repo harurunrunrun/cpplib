@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/critical_edges.hpp"
+#include "../../src/algorithm/graph/sorted_bridge_endpoints.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -21,7 +21,7 @@ int main(){
             std::cin >> left >> right;
             edges.emplace_back(left - 1, right - 1);
         }
-        const auto answer = critical_edges(size, edges);
+        const auto answer = sorted_bridge_endpoints(size, edges);
         std::cout << "Caso #" << test << '\n';
         if(answer.empty()){
             std::cout << "Sin bloqueos\n";

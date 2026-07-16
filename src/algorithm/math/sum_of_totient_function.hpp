@@ -116,7 +116,7 @@ Modint<MOD> sum_of_totient_function(std::uint64_t n){
     if(n == 0) return Modint<MOD>(0);
     if(n > sum_totient_function_max_n)[[unlikely]]{
         throw std::invalid_argument(
-            "sum_of_totient_function follows the Library Checker n <= 10^10 constraint"
+            "sum_of_totient_function: n exceeds sum_totient_function_max_n"
         );
     }
     return sum_totient_function_internal::Calculator<MOD>(n).calculate();

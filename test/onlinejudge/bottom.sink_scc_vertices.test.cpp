@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/bottom_vertices.hpp"
+#include "../../src/algorithm/graph/sink_scc_vertices.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -17,7 +17,7 @@ int main(){
             std::cin >> from >> to;
             graph[static_cast<std::size_t>(from - 1)].push_back(to - 1);
         }
-        const auto answer = bottom_vertices(graph);
+        const auto answer = sink_scc_vertices(graph);
         for(std::size_t index = 0; index < answer.size(); ++index){
             if(index != 0) std::cout << ' ';
             std::cout << answer[index] + 1;

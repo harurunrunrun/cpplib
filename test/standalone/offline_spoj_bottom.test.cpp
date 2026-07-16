@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/bottom.bottom_vertices.test.cpp"
+#include "../onlinejudge/bottom.sink_scc_vertices.test.cpp"

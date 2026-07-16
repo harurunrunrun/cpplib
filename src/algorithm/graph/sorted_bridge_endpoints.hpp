@@ -7,7 +7,7 @@
 
 #include "lowlink.hpp"
 
-inline std::vector<std::pair<int, int>> critical_edges(
+inline std::vector<std::pair<int, int>> sorted_bridge_endpoints(
     int vertex_count,
     const std::vector<std::pair<int, int>>& edges
 ){
