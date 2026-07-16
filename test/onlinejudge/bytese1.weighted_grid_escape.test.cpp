@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/weighted_grid_escape.hpp"
+#include "../../src/algorithm/graph/weighted_grid_shortest_path.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -21,11 +21,11 @@ int main(){
         int target_row, target_column;
         long long budget;
         std::cin >> target_row >> target_column >> budget;
-        const auto remaining = weighted_grid_escape(
-            cost, target_row - 1, target_column - 1, budget
+        const long long distance = weighted_grid_shortest_path(
+            cost, 0, 0, target_row - 1, target_column - 1
         );
-        if(remaining){
-            std::cout << "YES\n" << *remaining << '\n';
+        if(distance <= budget){
+            std::cout << "YES\n" << budget - distance << '\n';
         }else{
             std::cout << "NO\n";
         }
