@@ -27,11 +27,13 @@ long long count_directed_spanning_arborescences(
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `count_directed_spanning_arborescences` | $O(N^4)$ | $O(N^2)$ |
+| `count_directed_spanning_arborescences` | $O(N^3)$ | $O(N^2)$ |
 
 ## 注意点
 
 - 頂点数は $1$ 以上 $8$ 以下で、隣接行列は正方、各要素は `'0'` または `'1'` でなければならない。
 - 自己ループは数えない。
+- 有向行列木定理と rank-one 更新
+  $\det(L+\boldsymbol{1}\boldsymbol{1}^{\mathsf T})/N$ により、全ての根に対する余因子の和を1回の行列式計算で求める。
 - 行列式は符号付き128 bitのBareiss法で厳密に計算する。
 - 答えが `long long` を越える場合は `overflow_error`、入力前提に違反する場合は `runtime_error` を送出する。

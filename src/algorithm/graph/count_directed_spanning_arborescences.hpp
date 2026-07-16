@@ -105,27 +105,22 @@ inline long long count_directed_spanning_arborescences(
         }
     }
 
-    __int128_t answer = 0;
-    for(int root = 0; root < vertex_count; root++){
-        std::vector<std::vector<__int128_t>> minor;
-        minor.reserve(static_cast<std::size_t>(vertex_count - 1));
-        for(int row = 0; row < vertex_count; row++){
-            if(row == root) continue;
-            std::vector<__int128_t> minor_row;
-            minor_row.reserve(static_cast<std::size_t>(vertex_count - 1));
-            for(int column = 0; column < vertex_count; column++){
-                if(column != root){
-                    minor_row.push_back(
-                        laplacian[static_cast<std::size_t>(row)]
-                                 [static_cast<std::size_t>(column)]
-                    );
-                }
-            }
-            minor.push_back(std::move(minor_row));
-        }
-        answer += count_directed_spanning_arborescences_internal::
-            exact_determinant(std::move(minor));
+    // L * 1 = 0.  The adjugate of L therefore has identical rows, and its
+    // diagonal entries are the directed Matrix-Tree cofactors.  Consequently
+    //
+    //   det(L + 1 1^T) = 1^T adj(L) 1
+    //                    = n * sum_root cofactor(root).
+    //
+    // This evaluates the sum for every root with one determinant instead of
+    // evaluating n different minors.
+    for(auto& row: laplacian){
+        for(auto& value: row) value++;
     }
+    const __int128_t determinant =
+        count_directed_spanning_arborescences_internal::exact_determinant(
+            std::move(laplacian)
+        );
+    const __int128_t answer = determinant / vertex_count;
     if(answer < 0 || answer > std::numeric_limits<long long>::max())[[unlikely]]{
         throw std::overflow_error(
             "count_directed_spanning_arborescences overflow"
