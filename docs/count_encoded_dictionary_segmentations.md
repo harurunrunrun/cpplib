@@ -32,11 +32,19 @@ long long count_encoded_dictionary_segmentations(
 ## API別の時間計算量・空間計算量
 
 $S=|encoded\_text|$、辞書要素の総長を $D$、最大長を $L$、
-1ノードから出る異なる記号数の最大値を $\sigma$ とします。
+byte alphabetの大きさを $\sigma\le 256$、辞書要素がtext中に現れる総数を $z$ とします。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `count_encoded_dictionary_segmentations` | $O(D\sigma+SL\log(\sigma+1))$ | $O(D+S)$ |
+| `count_encoded_dictionary_segmentations` | 固定byte alphabetで $O(D+S+z)$ | $O(D+S)$ |
+
+一般の $\sigma$ も変数として数えると、疎な遷移表とmemoized failure遷移の構築・検索を
+含めて時間 $O(\sigma(D+S)+z)$、空間 $O(\sigma D+S)$ である。各
+`(trie node, byte)` のfailure遷移は初回だけ計算し、以後cacheする。
+
+Aho--Corasick automatonで全辞書要素の出現を終端位置順に列挙し、各出現
+`[start,end)` に対して `ways[end] += ways[start] * multiplicity` を行う。
+開始位置ごとにtrieを最長要素長まで再走査することはない。
 
 ## 注意点
 
