@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../../math/exact_integer.hpp"
 
 #include <algorithm>
 #include <concepts>
@@ -13,7 +13,7 @@
 struct ClosestPairResult{
     std::size_t first = std::numeric_limits<std::size_t>::max();
     std::size_t second = std::numeric_limits<std::size_t>::max();
-    boost::multiprecision::uint256_t squared_distance = 0;
+    ExactInteger squared_distance = 0;
 
     bool exists() const{
         return first != std::numeric_limits<std::size_t>::max();
@@ -34,18 +34,16 @@ struct IndexedPoint{
 };
 
 template<std::integral Coordinate>
-boost::multiprecision::uint256_t square_difference(
+ExactInteger square_difference(
     Coordinate first,
     Coordinate second
 ){
-    using boost::multiprecision::int256_t;
-    using boost::multiprecision::uint256_t;
-    const int256_t difference = int256_t(first) - int256_t(second);
-    return uint256_t(difference * difference);
+    const ExactInteger difference = ExactInteger(first) - ExactInteger(second);
+    return difference * difference;
 }
 
 template<std::integral Coordinate>
-boost::multiprecision::uint256_t squared_distance(
+ExactInteger squared_distance(
     const IndexedPoint<Coordinate>& first,
     const IndexedPoint<Coordinate>& second
 ){
@@ -57,7 +55,7 @@ inline void update(
     ClosestPairResult& result,
     std::size_t first,
     std::size_t second,
-    const boost::multiprecision::uint256_t& distance
+    const ExactInteger& distance
 ){
     if(first > second) std::swap(first, second);
     if(!result.exists() || distance < result.squared_distance

@@ -20,9 +20,9 @@ int main(){
 
     const long long minimum = std::numeric_limits<long long>::min();
     const long long maximum = std::numeric_limits<long long>::max();
-    const boost::multiprecision::uint256_t full_difference =
+    const ExactInteger full_difference =
         std::numeric_limits<unsigned long long>::max();
-    const boost::multiprecision::uint256_t full_squared_distance =
+    const ExactInteger full_squared_distance =
         2 * full_difference * full_difference;
     const FurthestPairResult signed_boundary = furthest_pair(
         std::vector<std::pair<long long, long long>>{

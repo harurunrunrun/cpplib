@@ -1,7 +1,5 @@
 // competitive-verifier: STANDALONE
 
-#include <boost/multiprecision/cpp_int.hpp>
-
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -38,17 +36,16 @@ bool in_circumcircle_exact(
     const IntegerPoint& third,
     const IntegerPoint& query
 ){
-    using boost::multiprecision::int256_t;
-    const int256_t first_x = int256_t(first.first) - query.first;
-    const int256_t first_y = int256_t(first.second) - query.second;
-    const int256_t second_x = int256_t(second.first) - query.first;
-    const int256_t second_y = int256_t(second.second) - query.second;
-    const int256_t third_x = int256_t(third.first) - query.first;
-    const int256_t third_y = int256_t(third.second) - query.second;
-    const int256_t first_norm = first_x * first_x + first_y * first_y;
-    const int256_t second_norm = second_x * second_x + second_y * second_y;
-    const int256_t third_norm = third_x * third_x + third_y * third_y;
-    const int256_t determinant =
+    const __int128 first_x = static_cast<__int128>(first.first) - query.first;
+    const __int128 first_y = static_cast<__int128>(first.second) - query.second;
+    const __int128 second_x = static_cast<__int128>(second.first) - query.first;
+    const __int128 second_y = static_cast<__int128>(second.second) - query.second;
+    const __int128 third_x = static_cast<__int128>(third.first) - query.first;
+    const __int128 third_y = static_cast<__int128>(third.second) - query.second;
+    const __int128 first_norm = first_x * first_x + first_y * first_y;
+    const __int128 second_norm = second_x * second_x + second_y * second_y;
+    const __int128 third_norm = third_x * third_x + third_y * third_y;
+    const __int128 determinant =
         (second_x * third_y - second_y * third_x) * first_norm
         + (third_x * first_y - third_y * first_x) * second_norm
         + (first_x * second_y - first_y * second_x) * third_norm;

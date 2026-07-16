@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../math/exact_integer.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -28,7 +28,7 @@ inline long long minimum_weighted_left_endpoint_partition_cost(
     }
 
     using Wide = __int128_t;
-    using Exact = boost::multiprecision::int256_t;
+    using Exact = ExactInteger;
     const std::size_t state_count = weights.size() + 1;
     std::vector<Wide> prefix_weight(state_count);
     std::vector<Wide> prefix_moment(state_count);

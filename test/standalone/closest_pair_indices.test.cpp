@@ -22,9 +22,9 @@ int main(){
 
     const long long minimum = std::numeric_limits<long long>::min();
     const long long maximum = std::numeric_limits<long long>::max();
-    const boost::multiprecision::uint256_t full_difference =
+    const ExactInteger full_difference =
         std::numeric_limits<unsigned long long>::max();
-    const boost::multiprecision::uint256_t full_squared_distance =
+    const ExactInteger full_squared_distance =
         2 * full_difference * full_difference;
     const ClosestPairResult signed_boundary = closest_pair_indices(
         std::vector<std::pair<long long, long long>>{
@@ -54,7 +54,7 @@ int main(){
     assert(overflow_order.first == 0 && overflow_order.second == 2);
     assert(
         overflow_order.squared_distance
-        == (boost::multiprecision::uint256_t(1) << 68)
+        == (ExactInteger(1) << 68)
     );
 
     int test_count;

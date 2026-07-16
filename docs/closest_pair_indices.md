@@ -17,7 +17,7 @@ ClosestPairResult result = closest_pair_indices(points);
 同じ座標を持つ異なる入力点も区別する。
 
 0点または1点では組が存在しない。64-bit以下の整数座標を対象とし、
-座標差の二乗和はunsigned 256-bit整数で正確に計算する。
+座標差の二乗和は `ExactInteger` で正確に計算する。
 
 ## `ClosestPairResult`
 
@@ -25,7 +25,7 @@ ClosestPairResult result = closest_pair_indices(points);
 struct ClosestPairResult {
     std::size_t first;
     std::size_t second;
-    boost::multiprecision::uint256_t squared_distance;
+    ExactInteger squared_distance;
     bool exists() const;
 };
 ```
@@ -45,5 +45,5 @@ $N$を点数とする。
 ## 注意点
 
 `Coordinate`は符号付き・符号なしのどちらでもよいが、幅は64-bit以下とする。
-`squared_distance`はBoost.Multiprecisionの固定幅整数であり、64-bit座標の
-二次元平方距離の最大値もoverflowせず保持する。
+`squared_distance`は任意精度整数 `ExactInteger` で、値は常に非負である。
+64-bit座標の二次元平方距離の最大値もoverflowせず保持する。

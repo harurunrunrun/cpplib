@@ -18,8 +18,8 @@ FurthestPairResult result = furthest_pair(points);
 座標が重複する場合も異なる入力添字を区別する。
 
 0点または1点では組が存在しない。2点以上がすべて同一点なら`(0, 1)`を返す。
-64-bit以下の整数座標を対象とし、外積はsigned 256-bit整数、距離平方は
-unsigned 256-bit整数で正確に計算する。
+64-bit以下の整数座標を対象とし、外積と距離平方は `ExactInteger` で
+正確に計算する。
 
 ## `FurthestPairResult`
 
@@ -27,7 +27,7 @@ unsigned 256-bit整数で正確に計算する。
 struct FurthestPairResult {
     std::size_t first;
     std::size_t second;
-    boost::multiprecision::uint256_t squared_distance;
+    ExactInteger squared_distance;
     bool exists() const;
 };
 ```
@@ -48,5 +48,5 @@ $N$を点数とする。
 ## 注意点
 
 `Coordinate`は符号付き・符号なしのどちらでもよいが、幅は64-bit以下とする。
-`squared_distance`はBoost.Multiprecisionの固定幅整数であり、64-bit座標の
-二次元平方距離の最大値もoverflowせず保持する。
+`squared_distance`は任意精度整数 `ExactInteger` で、値は常に非負である。
+64-bit座標の二次元平方距離の最大値もoverflowせず保持する。

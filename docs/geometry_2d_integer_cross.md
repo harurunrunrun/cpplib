@@ -13,11 +13,11 @@ documentation_of: ../src/algorithm/geometry/2d/integer_cross.hpp
 
 ## 戻り値
 
-正確な外積を `boost::multiprecision::int256_t` で返す。
+正確な外積を `GeometryIntegerWide`（`ExactInteger`）で返す。
 
 ## API別の時間計算量・空間計算量
 
-- `integer_cross`: 固定256 bit演算で時間 $O(1)$、追加領域 $O(1)$。
+- `integer_cross`: 64-bit以下の座標では時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 

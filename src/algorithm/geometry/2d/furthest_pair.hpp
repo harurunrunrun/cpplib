@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../../math/exact_integer.hpp"
 
 #include <algorithm>
 #include <concepts>
@@ -13,7 +13,7 @@
 struct FurthestPairResult{
     std::size_t first = std::numeric_limits<std::size_t>::max();
     std::size_t second = std::numeric_limits<std::size_t>::max();
-    boost::multiprecision::uint256_t squared_distance = 0;
+    ExactInteger squared_distance = 0;
 
     bool exists() const{
         return first != std::numeric_limits<std::size_t>::max();
@@ -34,29 +34,26 @@ struct IndexedPoint{
 };
 
 template<std::integral Coordinate>
-boost::multiprecision::int256_t cross(
+ExactInteger cross(
     const IndexedPoint<Coordinate>& first,
     const IndexedPoint<Coordinate>& second,
     const IndexedPoint<Coordinate>& third
 ){
-    using boost::multiprecision::int256_t;
-    const int256_t first_x = int256_t(second.x) - int256_t(first.x);
-    const int256_t first_y = int256_t(second.y) - int256_t(first.y);
-    const int256_t second_x = int256_t(third.x) - int256_t(first.x);
-    const int256_t second_y = int256_t(third.y) - int256_t(first.y);
+    const ExactInteger first_x = ExactInteger(second.x) - ExactInteger(first.x);
+    const ExactInteger first_y = ExactInteger(second.y) - ExactInteger(first.y);
+    const ExactInteger second_x = ExactInteger(third.x) - ExactInteger(first.x);
+    const ExactInteger second_y = ExactInteger(third.y) - ExactInteger(first.y);
     return first_x * second_y - first_y * second_x;
 }
 
 template<std::integral Coordinate>
-boost::multiprecision::uint256_t squared_distance(
+ExactInteger squared_distance(
     const IndexedPoint<Coordinate>& first,
     const IndexedPoint<Coordinate>& second
 ){
-    using boost::multiprecision::int256_t;
-    using boost::multiprecision::uint256_t;
-    const int256_t dx = int256_t(first.x) - int256_t(second.x);
-    const int256_t dy = int256_t(first.y) - int256_t(second.y);
-    return uint256_t(dx * dx + dy * dy);
+    const ExactInteger dx = ExactInteger(first.x) - ExactInteger(second.x);
+    const ExactInteger dy = ExactInteger(first.y) - ExactInteger(second.y);
+    return dx * dx + dy * dy;
 }
 
 }  // namespace furthest_pair_detail
@@ -116,7 +113,7 @@ FurthestPairResult furthest_pair(
     FurthestPairResult result;
     const auto update = [&result](const IndexedPoint& first, const IndexedPoint& second){
         if(first.index == second.index) return;
-        const boost::multiprecision::uint256_t distance =
+        const ExactInteger distance =
             furthest_pair_detail::squared_distance(first, second);
         const std::size_t first_index = std::min(first.index, second.index);
         const std::size_t second_index = std::max(first.index, second.index);
@@ -139,10 +136,10 @@ FurthestPairResult furthest_pair(
         const std::size_t next_index = (index + 1) % size;
         while(true){
             const std::size_t next_opposite = (opposite + 1) % size;
-            const boost::multiprecision::int256_t current_area = furthest_pair_detail::cross(
+            const ExactInteger current_area = furthest_pair_detail::cross(
                 hull[index], hull[next_index], hull[opposite]
             );
-            const boost::multiprecision::int256_t next_area = furthest_pair_detail::cross(
+            const ExactInteger next_area = furthest_pair_detail::cross(
                 hull[index], hull[next_index], hull[next_opposite]
             );
             if(next_area <= current_area) break;
@@ -152,10 +149,10 @@ FurthestPairResult furthest_pair(
         update(hull[next_index], hull[opposite]);
 
         const std::size_t next_opposite = (opposite + 1) % size;
-        const boost::multiprecision::int256_t current_area = furthest_pair_detail::cross(
+        const ExactInteger current_area = furthest_pair_detail::cross(
             hull[index], hull[next_index], hull[opposite]
         );
-        const boost::multiprecision::int256_t next_area = furthest_pair_detail::cross(
+        const ExactInteger next_area = furthest_pair_detail::cross(
             hull[index], hull[next_index], hull[next_opposite]
         );
         if(next_area == current_area){

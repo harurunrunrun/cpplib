@@ -1,10 +1,10 @@
 #pragma once
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../../math/exact_integer.hpp"
 
 #include "integer_point.hpp"
 
-using GeometryIntegerWide = boost::multiprecision::int256_t;
+using GeometryIntegerWide = ExactInteger;
 
 template<std::integral Coordinate>
 inline GeometryIntegerWide integer_dot(

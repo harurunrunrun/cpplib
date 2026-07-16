@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../../math/exact_integer.hpp"
 #include <concepts>
 #include <limits>
 #include <stdexcept>
@@ -11,7 +11,7 @@
 
 namespace lattice_polygon_detail{
 
-using Wide = boost::multiprecision::int256_t;
+using Wide = ExactInteger;
 
 template<std::integral Coordinate>
 inline __uint128_t unsigned_difference(Coordinate first, Coordinate second){
@@ -53,7 +53,7 @@ inline __uint128_t to_uint128(const Wide& value){
     if(value < 0 || value > Wide((std::numeric_limits<__uint128_t>::max)())){
         throw std::overflow_error("lattice point count does not fit __uint128_t");
     }
-    return value.convert_to<__uint128_t>();
+    return value.checked_to<__uint128_t>();
 }
 
 } // namespace lattice_polygon_detail

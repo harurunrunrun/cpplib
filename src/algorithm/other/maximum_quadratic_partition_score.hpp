@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "../math/exact_integer.hpp"
 
 #include <cstddef>
 #include <limits>
@@ -19,8 +19,8 @@ inline long long maximum_quadratic_partition_score(
             "(maximum_quadratic_partition_score)."
         );
     }
-    using Wide = boost::multiprecision::int256_t;
-    using Cross = boost::multiprecision::int512_t;
+    using Wide = ExactInteger;
+    using Cross = ExactInteger;
     struct Line {
         Wide slope;
         Wide intercept;
@@ -62,7 +62,7 @@ inline long long maximum_quadratic_partition_score(
                 "(maximum_quadratic_partition_score)."
             );
         }
-        answer = best.convert_to<long long>();
+        answer = best.checked_to<long long>();
         const Wide intercept = best +
             Wide(quadratic_coefficient) * prefix * prefix -
             Wide(linear_coefficient) * prefix;
