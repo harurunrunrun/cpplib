@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/can_feed_all_cats.hpp"
+#include "../../src/algorithm/graph/spanning_tree_budget_feasible.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -17,15 +17,19 @@ int main(){
         int cat_count;
         std::cin >> milk >> cat_count;
         const int edge_count = cat_count * (cat_count - 1) / 2;
-        std::vector<CatFeastDistance> distances;
-        distances.reserve(static_cast<std::size_t>(edge_count));
-        for(int index = 0; index < edge_count; index++){
+        std::vector<KruskalEdge<long long>> edges;
+        edges.reserve(static_cast<std::size_t>(edge_count));
+        for(int index = 0; index < edge_count; ++index){
             int first, second;
             long long distance;
             std::cin >> first >> second >> distance;
-            distances.push_back({first, second, distance});
+            edges.push_back({first, second, distance});
         }
-        std::cout << (can_feed_all_cats(milk, cat_count, distances)
-            ? "yes\n" : "no\n");
+        const bool feasible =
+            milk >= cat_count &&
+            spanning_tree_budget_feasible(
+                cat_count, edges, milk - cat_count
+            );
+        std::cout << (feasible ? "yes\n" : "no\n");
     }
 }
