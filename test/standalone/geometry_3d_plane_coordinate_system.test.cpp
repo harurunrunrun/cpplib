@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include "../../src/algorithm/geometry/3d/plane_coordinate_system.hpp"
+#include "../../src/algorithm/geometry/3d/cross.hpp"
+#include "../../src/algorithm/geometry/3d/dot.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){
