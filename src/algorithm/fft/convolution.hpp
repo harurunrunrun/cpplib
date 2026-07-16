@@ -17,9 +17,13 @@ inline long long pow_mod_long(long long x, long long n, int mod){
     long long res = 1 % mod;
     while(n > 0){
         if(n & 1){
-            res = (__int128)res * x % mod;
+            res = static_cast<long long>(
+                static_cast<__int128>(res) * x % mod
+            );
         }
-        x = (__int128)x * x % mod;
+        x = static_cast<long long>(
+            static_cast<__int128>(x) * x % mod
+        );
         n >>= 1;
     }
     return res;
@@ -44,7 +48,7 @@ inline int primitive_root(int mod){
 
     int x = mod - 1;
     std::vector<int> factors;
-    for(long long p = 2; p * p <= x; p++){
+    for(int p = 2; static_cast<long long>(p) * p <= x; ++p){
         if(x % p == 0){
             factors.push_back((int)p);
             while(x % p == 0){
@@ -210,7 +214,9 @@ std::vector<Modint<MOD>> arbitrary_mod_convolution(const std::vector<Modint<MOD>
             }
             t2 = t2 * inv_m1_mod_m2 % M2;
 
-            const long long x12_mod_m3 = (x1 + (__int128)m1_mod_m3 * t2) % M3;
+            const long long x12_mod_m3 = static_cast<long long>(
+                (x1 + static_cast<__int128>(m1_mod_m3) * t2) % M3
+            );
             long long t3 = (c3[i].val() - x12_mod_m3) % M3;
             if(t3 < 0){
                 t3 += M3;
