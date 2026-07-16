@@ -54,6 +54,20 @@ def main() -> None:
                     phi = phi // prime * (prime - 1)
                 outputs.append(str(phi))
 
+    commands.append("STEP 123456789 18446744073709551555 18446744073709551557")
+    outputs.append("15241578750190519")
+    near_u64_maximum = 18_446_743_979_220_271_189
+    commands.extend([
+        f"PRIME {near_u64_maximum}",
+        f"FACT {near_u64_maximum}",
+        f"PHI {near_u64_maximum}",
+    ])
+    outputs.extend([
+        "0",
+        "2 4294967279 1 4294967291 1",
+        "18446743970630336620",
+    ])
+
     (out_dir / "case_00.in").write_text(str(len(commands)) + "\n" + "\n".join(commands) + "\n", encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
 

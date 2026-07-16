@@ -7,6 +7,15 @@
 
 namespace math{
 
+namespace basic_number_theory_internal{
+
+constexpr bool square_less_equal(long long value, long long limit){
+    return value >= 0 && limit >= 0
+        && (value == 0 || value <= limit / value);
+}
+
+} // namespace basic_number_theory_internal
+
 struct ExtGcdResult{
     long long g;
     long long x;
@@ -131,7 +140,9 @@ std::vector<long long> divisors(long long n){
     }
     n = abs_ll(n);
     std::vector<long long> small, large;
-    for(long long d = 1; d * d <= n; d++){
+    for(long long d = 1;
+        basic_number_theory_internal::square_less_equal(d, n);
+        d++){
         if(n % d == 0){
             small.push_back(d);
             if(d * d != n){

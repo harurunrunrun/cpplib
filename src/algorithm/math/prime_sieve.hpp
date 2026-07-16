@@ -7,6 +7,15 @@
 
 namespace math{
 
+namespace prime_sieve_internal{
+
+constexpr bool square_less_equal(long long value, long long limit){
+    return value >= 0 && limit >= 0
+        && (value == 0 || value <= limit / value);
+}
+
+} // namespace prime_sieve_internal
+
 bool is_prime_sqrt(long long n){
     if(n <= 1){
         return false;
@@ -14,7 +23,9 @@ bool is_prime_sqrt(long long n){
     if(n % 2 == 0){
         return n == 2;
     }
-    for(long long d = 3; d * d <= n; d += 2){
+    for(long long d = 3;
+        prime_sieve_internal::square_less_equal(d, n);
+        d += 2){
         if(n % d == 0){
             return false;
         }

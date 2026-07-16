@@ -27,6 +27,12 @@ void test_divisors_and_quotients(){
     assert(ranges[2].l == 3 && ranges[2].r == 4 && ranges[2].value == 3);
     assert(ranges[3].l == 4 && ranges[3].r == 6 && ranges[3].value == 2);
     assert(ranges[4].l == 6 && ranges[4].r == 11 && ranges[4].value == 1);
+
+    constexpr long long maximum = 9'223'372'036'854'775'807LL;
+    static_assert(math::basic_number_theory_internal::square_less_equal(
+        3'037'000'499LL, maximum));
+    static_assert(!math::basic_number_theory_internal::square_less_equal(
+        3'037'000'500LL, maximum));
 }
 
 void test_gcd_lcm_extgcd(){
@@ -97,7 +103,14 @@ int main(){
         while(q--){
             std::string type;
             std::cin >> type;
-            if(type == "GCD" || type == "LCM" || type == "EXT"){
+            if(type == "SQLE"){
+                long long value, limit;
+                std::cin >> value >> limit;
+                std::cout
+                    << math::basic_number_theory_internal::square_less_equal(
+                        value, limit)
+                    << '\n';
+            }else if(type == "GCD" || type == "LCM" || type == "EXT"){
                 long long a, b;
                 std::cin >> a >> b;
                 if(type == "GCD") std::cout << math::gcd(a, b) << '\n';

@@ -23,6 +23,11 @@ void test_miller_rabin(){
     assert(math::pow_mod_u64(2, 10, 1000) == 24);
     assert(math::miller_rabin_test(17, 3, 1, 4));
     assert(!math::miller_rabin_test(21, 2, 5, 2));
+    assert(math::prime_factorization_internal::pollard_step(
+        123'456'789ULL,
+        18'446'744'073'709'551'555ULL,
+        18'446'744'073'709'551'557ULL
+    ) == 15'241'578'750'190'519ULL);
 
     std::vector<u64> recursive_factors;
     math::factorize_pollard_rho_rec(60, recursive_factors);
@@ -53,6 +58,10 @@ void test_factorize(){
     assert((math::factorize_pollard_rho(600851475143ULL) == std::vector<std::pair<u64,int>>{{71, 1}, {839, 1}, {1471, 1}, {6857, 1}}));
     assert((math::factorize_pollard_rho(1000000007ULL * 1000000009ULL) == std::vector<std::pair<u64,int>>{{1000000007ULL, 1}, {1000000009ULL, 1}}));
     assert((math::factorize_pollard_rho(2305843009213693951ULL) == std::vector<std::pair<u64,int>>{{2305843009213693951ULL, 1}}));
+    assert((math::factorize_pollard_rho(18'446'743'979'220'271'189ULL) ==
+        std::vector<std::pair<u64, int>>{
+            {4'294'967'279ULL, 1}, {4'294'967'291ULL, 1}
+        }));
 }
 
 void test_phi(){
@@ -97,7 +106,12 @@ int main(){
             std::string type;
             u64 n;
             std::cin >> type >> n;
-            if(type == "PRIME"){
+            if(type == "STEP"){
+                u64 constant, modulus;
+                std::cin >> constant >> modulus;
+                std::cout << math::prime_factorization_internal::pollard_step(
+                    n, constant, modulus) << '\n';
+            }else if(type == "PRIME"){
                 std::cout << math::is_prime_miller_rabin(n) << '\n';
             }else if(type == "PHI"){
                 std::cout << math::euler_phi(n) << '\n';

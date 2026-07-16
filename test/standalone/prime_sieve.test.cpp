@@ -16,6 +16,13 @@ void test_is_prime_sqrt(){
     assert(math::is_prime_sqrt(2));
     assert(math::is_prime_sqrt(99991));
     assert(!math::is_prime_sqrt(99991LL * 99991));
+    assert(!math::is_prime_sqrt(9'223'372'036'854'775'807LL));
+
+    constexpr long long maximum = 9'223'372'036'854'775'807LL;
+    static_assert(math::prime_sieve_internal::square_less_equal(
+        3'037'000'499LL, maximum));
+    static_assert(!math::prime_sieve_internal::square_less_equal(
+        3'037'000'500LL, maximum));
 }
 
 void test_sieve(){
@@ -88,7 +95,12 @@ int main(){
             }
             long long value;
             std::cin >> value;
-            if(type == "SQRT"){
+            if(type == "BOUND"){
+                long long limit_value;
+                std::cin >> limit_value;
+                std::cout << math::prime_sieve_internal::square_less_equal(
+                    value, limit_value) << '\n';
+            }else if(type == "SQRT"){
                 std::cout << math::is_prime_sqrt(value) << '\n';
             }else if(type == "IS"){
                 std::cout << sieve.is_prime(static_cast<int>(value)) << '\n';

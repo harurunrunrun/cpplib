@@ -59,6 +59,8 @@ def main() -> None:
         commands.append(command)
         outputs.append(str(output))
 
+    add("SQLE 3037000499 9223372036854775807", 1)
+    add("SQLE 3037000500 9223372036854775807", 0)
     add("GCD -18 24", 6)
     add("LCM 0 10", 0)
     add("EXT 30 18", "6 6")

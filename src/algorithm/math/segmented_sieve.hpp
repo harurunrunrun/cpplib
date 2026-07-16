@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include "prime_factorization.hpp"
+
 namespace math{
 
 long long segmented_sieve_isqrt(long long n){
@@ -27,6 +29,18 @@ std::vector<char> segmented_sieve(long long l, long long r){
     }
 
     const long long limit = r <= 1 ? 1 : segmented_sieve_isqrt(r - 1) + 1;
+    // A base sieve up to sqrt(r) is not practical close to the signed
+    // 64-bit limit. For such ranges, deterministic Miller--Rabin keeps the
+    // memory proportional to the requested interval and also avoids forming
+    // overflowing ceil-division intermediates.
+    constexpr long long base_sieve_limit = 5'000'000;
+    if(limit > base_sieve_limit){
+        for(long long value = l; value < r; ++value){
+            is_prime[static_cast<std::size_t>(value - l)] =
+                is_prime_miller_rabin(static_cast<u64>(value));
+        }
+        return is_prime;
+    }
     std::vector<char> small((size_t)limit + 1, true);
     small[0] = false;
     if(limit >= 1){
@@ -43,7 +57,13 @@ std::vector<char> segmented_sieve(long long l, long long r){
             }
         }
 
-        __int128 start = std::max<__int128>((__int128)p * p, ((l + p - 1) / p) * (__int128)p);
+        const __int128 wide_l = static_cast<__int128>(l);
+        const __int128 start_from_left =
+            ((wide_l + p - 1) / p) * static_cast<__int128>(p);
+        __int128 start = std::max<__int128>(
+            static_cast<__int128>(p) * p,
+            start_from_left
+        );
         for(; start < r; start += p){
             is_prime[(size_t)(start - l)] = false;
         }

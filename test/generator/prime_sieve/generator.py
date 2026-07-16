@@ -50,8 +50,23 @@ def main() -> None:
         return result
 
     rng = random.Random(20260713)
-    commands = ["SQRT -1", "SQRT 99991", "IS 0", f"IS {limit}", "MIN 1", "KTH 0", "COUNT", "FACT 1"]
-    outputs = ["0", "1", "0", str(int(minimum[limit] == limit)), "1", "2", str(len(primes)), "0"]
+    commands = [
+        "BOUND 3037000499 9223372036854775807",
+        "BOUND 3037000500 9223372036854775807",
+        "SQRT -1",
+        "SQRT 99991",
+        "SQRT 9223372036854775807",
+        "IS 0",
+        f"IS {limit}",
+        "MIN 1",
+        "KTH 0",
+        "COUNT",
+        "FACT 1",
+    ]
+    outputs = [
+        "1", "0", "0", "1", "0", "0",
+        str(int(minimum[limit] == limit)), "1", "2", str(len(primes)), "0",
+    ]
     kinds = ["SQRT", "IS", "MIN", "KTH", "COUNT", "FACT"]
     for _ in range(1600):
         kind = rng.choice(kinds)

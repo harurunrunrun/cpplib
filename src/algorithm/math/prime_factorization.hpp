@@ -16,6 +16,17 @@ inline u64 mul_mod_u64(u64 a, u64 b, u64 mod){
     return (u64)((u128)a * b % mod);
 }
 
+namespace prime_factorization_internal{
+
+inline u64 pollard_step(u64 value, u64 constant, u64 modulus){
+    return static_cast<u64>(
+        (static_cast<u128>(mul_mod_u64(value, value, modulus)) + constant)
+        % modulus
+    );
+}
+
+} // namespace prime_factorization_internal
+
 inline u64 pow_mod_u64(u64 x, u64 n, u64 mod){
     u64 res = 1 % mod;
     while(n > 0){
@@ -121,7 +132,7 @@ inline u64 pollard_rho(u64 n){
         u64 ys = 0;
 
         auto f = [&](u64 v){
-            return (mul_mod_u64(v, v, n) + c) % n;
+            return prime_factorization_internal::pollard_step(v, c, n);
         };
 
         constexpr u64 m = 128;
