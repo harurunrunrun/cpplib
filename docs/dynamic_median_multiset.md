@@ -1,5 +1,5 @@
 ---
-title: Dynamic Median Multiset (動的中央値multiset) [dynamic_median_multiset]
+title: Dynamic Median Multiset (動的中央値multiset)
 documentation_of: ../src/structure/other/dynamic_median_multiset.hpp
 ---
 

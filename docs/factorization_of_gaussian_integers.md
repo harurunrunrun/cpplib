@@ -1,5 +1,5 @@
 ---
-title: Factorization of Gaussian Integers (ガウス整数の素因数分解) [factorization_of_gaussian_integers]
+title: Factorization of Gaussian Integers (ガウス整数の素因数分解)
 documentation_of: ../src/algorithm/math/gaussian_integer_factorization.hpp
 ---
 

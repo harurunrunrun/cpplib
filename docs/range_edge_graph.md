@@ -1,5 +1,5 @@
 ---
-title: Range Edge Graph (区間辺グラフ) [range_edge_graph]
+title: Range Edge Graph (区間辺グラフ)
 documentation_of: ../src/algorithm/graph/range_edge_graph.hpp
 ---
 
