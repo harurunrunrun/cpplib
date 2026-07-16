@@ -1,5 +1,5 @@
 ---
-title: Minimum Spanning Tree Cost (最小全域木コスト) [BLINNET]
+title: Minimum Spanning Tree Cost (最小全域木コスト) [BLINNET] [CSTREET]
 documentation_of: ../src/algorithm/graph/minimum_spanning_tree_cost.hpp
 ---
 
@@ -18,7 +18,7 @@ struct KruskalEdge {
 
 辺の両端と重みを表す。`minimum_spanning_tree_cost` では `T = long long` を使用する。
 
-## minimum_spanning_tree_cost
+## `minimum_spanning_tree_cost`
 
 ```cpp
 long long minimum_spanning_tree_cost(
@@ -27,14 +27,8 @@ long long minimum_spanning_tree_cost(
 );
 ```
 
-## 引数
-
-- `vertex_count`: 頂点数。
-- `edges`: 重み付き無向辺列。負の重みも許す。
-
-## 戻り値
-
-最小全域木の重み総和。`vertex_count` が0または1なら0を返す。
+`vertex_count` 頂点の重み付き無向グラフについて、最小全域木の重み総和を返す。
+`vertex_count` が0または1なら0を返す。辺重みは負でもよい。
 
 ## API別の時間計算量・空間計算量
 

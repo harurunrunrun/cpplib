@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/roadnet.neighboring_town_pairs.test.cpp"
+#include "../onlinejudge/roadnet.irreducible_pairs_from_distance_matrix.test.cpp"

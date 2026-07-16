@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/taxi.maximum_taxi_pickups.test.cpp"
+#include "../onlinejudge/taxi.maximum_manhattan_threshold_matching.test.cpp"

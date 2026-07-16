@@ -6,7 +6,7 @@
 #include <vector>
 
 template<class T>
-struct MaximumProbabilityPathEdge{
+struct ProbabilityEdge{
     int to;
     T probability;
 };
@@ -20,7 +20,7 @@ struct MaximumProbabilityPathResult{
 
 template<class T>
 MaximumProbabilityPathResult<T> maximum_probability_path(
-    const std::vector<std::vector<MaximumProbabilityPathEdge<T>>>& graph,
+    const std::vector<std::vector<ProbabilityEdge<T>>>& graph,
     int source
 ){
     const int n = static_cast<int>(graph.size());

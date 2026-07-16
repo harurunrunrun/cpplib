@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/herding.minimum_herding_traps.test.cpp"
+#include "../onlinejudge/herding.functional_grid_cycle_count.test.cpp"

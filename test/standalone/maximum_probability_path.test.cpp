@@ -9,7 +9,7 @@
 int main(){
     int vertex_count, edge_count, source;
     if(!(std::cin >> vertex_count >> edge_count >> source)) return 0;
-    std::vector<std::vector<MaximumProbabilityPathEdge<double>>> graph(
+    std::vector<std::vector<ProbabilityEdge<double>>> graph(
         static_cast<std::size_t>(vertex_count)
     );
     while(edge_count--){

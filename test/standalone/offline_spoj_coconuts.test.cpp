@@ -1,3 +1,3 @@
 // competitive-verifier: STANDALONE
 
-#include "../onlinejudge/coconuts.minimum_opinion_disagreement.test.cpp"
+#include "../onlinejudge/coconuts.minimum_binary_labeling_cost.test.cpp"
