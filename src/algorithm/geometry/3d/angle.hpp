@@ -1,22 +1,18 @@
 #pragma once
 
-#include <algorithm>
-#include <array>
 #include <cmath>
-#include <optional>
-#include <stdexcept>
-#include <utility>
-#include <vector>
 
 #include "base.hpp"
-#include "abs.hpp"
+#include "cross.hpp"
 #include "dot.hpp"
-#include "geometry3d_sign.hpp"
+#include "unit.hpp"
 
 inline long double angle(const Point3& first, const Point3& second){
-    const long double denominator = abs(first) * abs(second);
-    if(geometry3d_sign(denominator) == 0)[[unlikely]]{
-        throw std::invalid_argument("angle with zero 3D vector");
-    }
-    return std::acos(std::clamp(dot(first, second) / denominator, -1.0L, 1.0L));
+    const Point3 first_unit = unit(first);
+    const Point3 second_unit = unit(second);
+    const Point3 product = cross(first_unit, second_unit);
+    return std::atan2(
+        std::hypot(product.x, product.y, product.z),
+        dot(first_unit, second_unit)
+    );
 }

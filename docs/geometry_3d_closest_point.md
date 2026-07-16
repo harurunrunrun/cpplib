@@ -15,4 +15,7 @@ documentation_of: ../src/algorithm/geometry/3d/closest_point.hpp
 
 ## 注意点
 
-退化線分には対応する。退化半直線または退化三角形には `std::invalid_argument` を送出する。
+退化線分には対応する。退化半直線・退化三角形・非有限入力には
+`std::invalid_argument` を送出する。半直線・線分は共通の局所座標ソルバ、三角形は
+辺scaleで正規化したVoronoi領域判定を使い、FMAで最近点を復元する。結果を表現できない
+場合は `std::overflow_error` を送出する。

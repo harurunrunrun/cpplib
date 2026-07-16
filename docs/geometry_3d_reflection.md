@@ -14,4 +14,6 @@ documentation_of: ../src/algorithm/geometry/3d/reflection.hpp
 
 ## 注意点
 
-退化直線または零法線の平面には `std::invalid_argument` を送出する。
+退化直線、零法線、非有限入力には `std::invalid_argument` を送出する。射影点との差を
+局所scaleへ正規化し、FMAで鏡映点を一度に復元する。結果を `long double` で
+表現できない場合は `std::overflow_error` を送出する。

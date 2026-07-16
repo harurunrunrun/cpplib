@@ -13,4 +13,6 @@ documentation_of: ../src/algorithm/geometry/3d/line_ray_distance.hpp
 
 ## 注意点
 
-交差または重なる場合は0を返す。退化した直線・半直線または零法線の平面には `std::invalid_argument` を送出し、退化線分には対応する。
+交差または重なる場合は0を返す。退化した直線・半直線・非有限入力には
+`std::invalid_argument` を送出する。最近点対を局所座標で求め、距離を表現できない
+場合は `std::overflow_error` を送出する。

@@ -14,4 +14,7 @@ documentation_of: ../src/algorithm/geometry/3d/projection.hpp
 
 ## 注意点
 
-退化直線または零法線の平面には `std::invalid_argument` を送出する。
+退化直線、零法線、非有限入力には `std::invalid_argument` を送出する。anchorからの
+差分を局所scaleへ正規化し、直線では専用の $O(1)$ 式、平面では単位法線を用いて
+FMAで射影点を復元する。射影係数が厳密に0なら入力上の点をそのまま返す。結果または
+局所正規化差分を `long double` で表現できない場合は `std::overflow_error` を送出する。

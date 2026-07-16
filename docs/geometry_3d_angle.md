@@ -13,4 +13,6 @@ documentation_of: ../src/algorithm/geometry/3d/angle.hpp
 
 ## 注意点
 
-いずれかが零ベクトルなら `std::invalid_argument` を送出する。
+零ベクトルまたは非有限ベクトルには `std::invalid_argument` を送出する。両ベクトルを
+overflow・underflowしない方法で単位化し、`atan2(abs(cross), dot)` から角度を求める。
+このため一様な巨大・微小scaleでも積のoverflowや `acos` の範囲外丸めを避ける。

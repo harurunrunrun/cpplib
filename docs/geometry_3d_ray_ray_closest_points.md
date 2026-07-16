@@ -13,4 +13,6 @@ documentation_of: ../src/algorithm/geometry/3d/ray_ray_closest_points.hpp
 
 ## 注意点
 
-最近点対が複数ある場合はそのうち1組を返す。退化した直線・半直線または零法線の平面には `std::invalid_argument` を送出し、退化線分には対応する。
+最近点対が複数ある場合はそのうち1組を返す。退化半直線・非有限入力には
+`std::invalid_argument` を送出する。共通anchorの局所座標とparameter区間で解き、
+結果を表現できない場合は `std::overflow_error` を送出する。

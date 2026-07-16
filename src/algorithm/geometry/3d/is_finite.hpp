@@ -67,10 +67,16 @@ inline long double geometry3d_safe_normalized_difference(
             "normalized difference requires finite values and a positive scale"
         );
     }
-    if(std::signbit(left) == std::signbit(right)){
-        return (left - right) / positive_scale;
+    const long double result =
+        std::signbit(left) == std::signbit(right)
+        ? (left - right) / positive_scale
+        : left / positive_scale - right / positive_scale;
+    if(result == 0.0L && left != right)[[unlikely]]{
+        throw std::overflow_error(
+            "normalized difference is not representable"
+        );
     }
-    return left / positive_scale - right / positive_scale;
+    return result;
 }
 
 inline Point3 geometry3d_safe_normalized_difference(
@@ -142,6 +148,12 @@ inline Geometry3DNormalizedDifference geometry3d_normalized_difference(
     for(std::size_t index = 0; index < 3; ++index){
         if(raw_is_safe[index]){
             *coordinates[index] = raw[index] / scale;
+            if(*coordinates[index] == 0.0L && raw[index] != 0.0L)
+                [[unlikely]]{
+                throw std::overflow_error(
+                    "normalized point difference is not representable"
+                );
+            }
         }else{
             *coordinates[index] = geometry3d_safe_normalized_difference(
                 left_values[index], right_values[index], scale

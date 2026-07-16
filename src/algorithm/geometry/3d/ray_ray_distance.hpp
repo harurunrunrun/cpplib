@@ -6,5 +6,7 @@
 
 inline long double distance(const Ray3& first, const Ray3& second){
     const auto points = closest_points(first, second);
-    return abs(points.first - points.second);
+    return geometry3d_linear_closest_detail::checked_distance(
+        points.first, points.second
+    );
 }

@@ -6,7 +6,9 @@
 
 inline long double distance(const Line3& line, const Segment3& segment){
     const auto points = closest_points(line, segment);
-    return abs(points.first - points.second);
+    return geometry3d_linear_closest_detail::checked_distance(
+        points.first, points.second
+    );
 }
 
 inline long double distance(const Segment3& segment, const Line3& line){
