@@ -5,13 +5,13 @@ documentation_of: ../src/structure/segtree/bitoverwrite_rangesum.hpp
 
 $0,1$ のみの列に対して、区間を $1$ で上書き と 区間和取得を SIMDとbitset高速化で定数倍を削ったデータ構造。
 
-# 時間計算量
+## 時間計算量
 
 - `WideSetSum(n)`, `init`: $O(N/64)$
 - `set`, `sum`: $O(B\log_B(N/64+1))$
 - `all_sum`: $O(1)$
 
-# API
+## API
 
 ```cpp
 WideSetSum(size_t n)

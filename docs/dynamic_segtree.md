@@ -7,7 +7,7 @@ documentation_of: ../src/structure/segtree/dynamic_segtree.hpp
 
 indexはすべて0-indexed。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 DynamicSegtree<auto Monoid, long long MAX_SIZE>()
@@ -34,9 +34,10 @@ constexpr Monoid<op,e> monoid;
 ```
 
 ## 時間計算量
+
 - $O(1)$
 
-# set
+## set
 
 ```cpp
 void set(long long k, const S& x)
@@ -45,12 +46,13 @@ void set(long long k, const S& x)
 `k` 番目の要素を `x` に変更する。
 
 ## 時間計算量
+
 - $O(\log {MAX}\_{SIZE})$
 
 新規に確保するnode数も $O(\log {MAX}\_{SIZE})$。
 
 
-# get
+## get
 
 ```cpp
 S get(long long k)
@@ -59,9 +61,10 @@ S get(long long k)
 `k` 番目の要素を取得する。
 
 ## 時間計算量
+
 - $O(\log {MAX}\_{SIZE})$
 
-# prod
+## prod
 
 ```cpp
 S prod(long long l, long long r)
@@ -70,9 +73,10 @@ S prod(long long l, long long r)
 区間 `[l,r)` の演算結果を返す。
 
 ## 時間計算量
+
 - $O(\log {MAX}\_{SIZE})$
 
-# all_prod
+## all_prod
 
 ```cpp
 S all_prod()
@@ -81,9 +85,10 @@ S all_prod()
 区間 `[0,MAX_SIZE)`の演算結果を返す。
 
 ## 時間計算量
+
 - $O(1)$
 
-# max_right
+## max_right
 
 ```cpp
 long long max_right(long long l, auto f, auto&&... args)
@@ -98,9 +103,11 @@ long long max_right(long long l, auto f, auto&&... args)
 `f(Monoid.e(), args...) = true` が必要。
 
 ## 時間計算量
+
 - $O(\log {MAX}\_{SIZE})$
 
-# min_left
+## min_left
+
 ```cpp
 long long min_left(long long r, auto f, auto&&... args)
 ```
@@ -114,6 +121,7 @@ long long min_left(long long r, auto f, auto&&... args)
 `f(Monoid.e(), args...) = true` が必要。
 
 ## 時間計算量
+
 - $O(\log {MAX}\_{SIZE})$
 
 ## 注意点

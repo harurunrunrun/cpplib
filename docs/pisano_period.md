@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/pisano_period.hpp
 
 Fibonacci列を法で見たときの最小正周期を返す。
 
-# `pisano_period`
+## `pisano_period`
 
 ```cpp
 uint64_t pisano_period(uint64_t modulus);

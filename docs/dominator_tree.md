@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/dominator_tree.hpp
 
 Lengauer–Tarjan法により有向グラフのdominator treeを構築する。DFSとunion-findのpath compressionは反復処理で実装し、深いグラフでも再帰stackを使用しない。
 
-# API
+## API
 
 ```cpp
 DominatorTreeResult dominator_tree(

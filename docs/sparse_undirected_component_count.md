@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/sparse_undirected_component_count.hpp
 
 頂点数に対して辺に現れる頂点が少ない無向グラフの連結成分数を、出現頂点だけを保持して求める。
 
-# sparse_undirected_component_count
+## sparse_undirected_component_count
 
 ```cpp
 long long sparse_undirected_component_count(

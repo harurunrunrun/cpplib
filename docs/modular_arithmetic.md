@@ -38,6 +38,7 @@ auto generator = math::primitive_root(prime);
 | `primitive_root(prime)` | Pollard--Rho素因数分解 + $O(GF\log prime)$ | 素因数分解に依存 |
 
 Miller--Rabinによる素数判定とPollard--Rhoによる素因数分解を内部で行う。
+
 ## API詳細
 
 ### `ChineseRemainderResult`

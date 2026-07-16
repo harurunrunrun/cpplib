@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/undirected_cycle_certificate.hpp
 
 無向グラフから、頂点列と入力辺番号列を対応させた閉路を1つ取得する。
 
-# `undirected_cycle_certificate`
+## `undirected_cycle_certificate`
 
 ```cpp
 CycleDetectionResult undirected_cycle_certificate(

@@ -7,13 +7,13 @@ documentation_of: ../src/algorithm/other/dynamic_point_add_rectangle_sum.hpp
 
 更新に現れる点を `reserve_point` で登録してから `build` する。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 DynamicPointAddRectangleSum<T, Coordinate> seg
 ```
 
-# 関数
+## 関数
 
 ```cpp
 seg.reserve_point(x, y)
@@ -45,6 +45,7 @@ $N$ を `reserve_point` した点数とする。
 | `sum(x1,y1,x2,y2)` | $O(\log^2 N)$ |
 
 `sum` は4回のprefix queryを行う。`build` 後の保持領域は $O(N\log N)$。
+
 ## 注意点
 
 - `reserve_point(x,y)` は将来 `add` する座標を登録する。重複登録してよい。

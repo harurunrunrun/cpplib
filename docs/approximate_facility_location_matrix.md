@@ -3,7 +3,7 @@ title: Distance-Matrix Facility Location Heuristics (距離行列による施設
 documentation_of: ../src/approximate/facility/facility_location.hpp
 ---
 
-# 施設配置ヒューリスティック（距離行列API）
+## 施設配置ヒューリスティック（距離行列API）
 
 既存の `approximate::clustering` の施設配置実装を、`distance[facility][client]` の行列から呼び出すadapter。アルゴリズム本体は重複実装しない。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/count_decreasing_triplets.hpp
 
 列中の添字 $i<j<k$ かつ $a_i>a_j>a_k$ を満たす三つ組の個数を返す。
 
-# count_decreasing_triplets
+## count_decreasing_triplets
 
 ```cpp
 template<class T, int MAX_SIZE = 100000>

@@ -7,7 +7,7 @@ documentation_of: ../src/structure/dsu/partially_persistent_dsu.hpp
 
 更新は最新状態にのみ行える。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PartiallyPersistentDSU<MAX_SIZE, MAX_UPDATE>
@@ -16,7 +16,7 @@ PartiallyPersistentDSU<MAX_SIZE, MAX_UPDATE>
 - 頂点数の上限 `MAX_SIZE`
 - 更新回数の上限 `MAX_UPDATE`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 PartiallyPersistentDSU(int n = MAX_SIZE)
@@ -28,7 +28,7 @@ version 0 として `n` 頂点の集合を作る。
 
 - $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_UPDATE})$
 
-# merge
+## merge
 
 ```cpp
 int merge(int u, int v)
@@ -42,7 +42,7 @@ int merge(int u, int v)
 
 - $O(\log N)$
 
-# same / leader / component_size
+## same / leader / component_size
 
 ```cpp
 bool same(int version, int u, int v)
@@ -59,7 +59,7 @@ int groups(int version)
 - `component_size`: $O(\log N + \log \mathrm{MAX\_UPDATE})$
 - `groups`: $O(1)$
 
-# version
+## version
 
 ```cpp
 int versions()

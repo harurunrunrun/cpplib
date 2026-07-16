@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/maximum_histogram_perimeter_permutation
 
 異なる高さの棒を並べたヒストグラムの最大周長と達成順列数を返す。
 
-# HistogramPerimeterPermutations
+## HistogramPerimeterPermutations
 
 ```cpp
 struct HistogramPerimeterPermutations {
@@ -14,7 +14,7 @@ struct HistogramPerimeterPermutations {
 };
 ```
 
-# maximum_histogram_perimeter_permutations
+## maximum_histogram_perimeter_permutations
 
 ```cpp
 HistogramPerimeterPermutations maximum_histogram_perimeter_permutations(

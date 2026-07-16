@@ -3,7 +3,7 @@ title: Strong Component Count (強連結成分数) [TJALG]
 documentation_of: ../src/algorithm/graph/strong_component_count.hpp
 ---
 
-# strong_component_count
+## strong_component_count
 
 ```cpp
 int strong_component_count(const vector<vector<int>>& graph)

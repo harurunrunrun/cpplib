@@ -7,7 +7,7 @@ documentation_of: ../src/algorithm/matching/minimum_weight_general_matching.hpp
 
 まずマッチング数を最大化し、その中で重み和を最小化する。Edmondsのblossom algorithmをprimal-dual法で重み付きへ拡張している。
 
-# 関数
+## 関数
 
 ```cpp
 minimum_weight_general_matching<T>(n, edges, inf)

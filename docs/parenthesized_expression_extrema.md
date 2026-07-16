@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/parenthesized_expression_extrema.hpp
 
 非負整数、`+`、`*` からなる式の括弧付けで得られる最小値と最大値を返す。
 
-# ParenthesizedExpressionExtrema
+## ParenthesizedExpressionExtrema
 
 ```cpp
 struct ParenthesizedExpressionExtrema {
@@ -13,7 +13,7 @@ struct ParenthesizedExpressionExtrema {
 };
 ```
 
-# parenthesized_expression_extrema
+## parenthesized_expression_extrema
 
 ```cpp
 ParenthesizedExpressionExtrema parenthesized_expression_extrema(const string& expression);

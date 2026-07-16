@@ -5,7 +5,7 @@ documentation_of: ../src/structure/bbst/lazy_reversible_splay_tree.hpp
 
 Splay Tree による列。区間反転、区間作用、区間積を行う。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 LazyReversibleSplayTree<MonoidActLen, MAX_SIZE>
@@ -26,14 +26,14 @@ T id()
 
 非可換モノイドにも対応する。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 LazyReversibleSplayTree()
 LazyReversibleSplayTree(const vector<S>& values)
 ```
 
-# insert / erase / set / get
+## insert / erase / set / get
 
 ```cpp
 void insert(int p, const S& x)
@@ -48,7 +48,7 @@ S get(int p)
 
 - amortized $O(\log N)$
 
-# 区間操作
+## 区間操作
 
 ```cpp
 void apply(int l, int r, const T& f)
@@ -63,7 +63,7 @@ S all_prod()
 
 - amortized $O(\log N)$
 
-# API別計算量
+## API別計算量
 
 $N$ を操作前の列長とし、モノイド演算・作用を $O(1)$ とする。
 

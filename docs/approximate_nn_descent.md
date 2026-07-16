@@ -3,7 +3,7 @@ title: NN-Descent (近似近傍グラフ構築)
 documentation_of: ../src/approximate/nearest_neighbor/nn_descent.hpp
 ---
 
-# NN-Descent (近似近傍グラフ構築)
+## NN-Descent (近似近傍グラフ構築)
 
 ランダム近傍グラフを、近傍の近傍と逆辺候補で反復改善する近似k近傍グラフである。点は `std::array<Real, Dimension>`。固定seedの乱数器と距離・添字によるtie-breakにより結果を再現できる。
 返値の要素型は `AnnNeighbor` で、`index` は登録時の添字、`squared_distance` は `long double` の二乗距離である。

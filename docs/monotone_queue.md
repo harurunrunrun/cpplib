@@ -5,7 +5,7 @@ documentation_of: ../src/structure/other/monotone_queue.hpp
 
 単調deque。添字を単調増加で追加し、期限切れ要素を先頭から除去する。
 
-# queue
+## queue
 
 ~~~cpp
 MonotoneQueue<T, MAX_SIZE, Compare>
@@ -28,7 +28,7 @@ long long best_index() const
 
 `push` の添字は、それまでに追加した添字より大きくなければならない。
 
-# sliding window
+## sliding window
 
 ~~~cpp
 vector<T> sliding_window_extreme<T, MAX_WINDOW>(values, window, compare)
@@ -37,7 +37,7 @@ vector<T> sliding_window_min<T, MAX_WINDOW>(values, window)
 
 長さ `window` の各連続部分列に対する `Compare` 上の最良値を、左から順に返す。
 
-# 時間計算量
+## 時間計算量
 
 $N$ を入力列長、$K$ をwindow幅とする。比較を $O(1)$ とする。
 
@@ -47,7 +47,7 @@ $N$ を入力列長、$K$ をwindow幅とする。比較を $O(1)$ とする。
 - `push`: 1回ではqueue sizeに対して線形、追加列全体では各候補を高々1回除去するため償却 $O(1)$
 - 各 sliding window関数: 戻り値 $N-K+1$ 個の構築を含めて $O(N)$
 
-# 空間計算量
+## 空間計算量
 
 - queue: $O(\mathrm{MAX\_SIZE})$
 - sliding window関数: queueと戻り値を含めて $O(\mathrm{MAX\_WINDOW}+N-K+1)$

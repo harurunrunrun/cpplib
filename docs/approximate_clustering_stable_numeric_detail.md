@@ -3,7 +3,7 @@ title: Stable Numeric Helpers (安定数値計算補助)
 documentation_of: ../src/approximate/clustering/detail/stable_numeric.hpp
 ---
 
-# Stable Numeric Helpers (安定数値計算補助)
+## Stable Numeric Helpers (安定数値計算補助)
 
 クラスタリング実装で、巨大な有限値を扱う距離・積・和を検査付きで計算する内部API。
 

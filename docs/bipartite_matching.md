@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/matching/bipartite_matching.hpp
 
 二部グラフの最大マッチング。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 BipartiteMatching graph(left_size, right_size)
 ```
 
-# 関数
+## 関数
 
 ```cpp
 graph.add_edge(left, right)

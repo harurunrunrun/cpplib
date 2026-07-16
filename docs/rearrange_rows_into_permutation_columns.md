@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/rearrange_rows_into_permutation_columns
 
 各行の要素を行内だけで並べ替え、すべての列を `0,1,...,N-1` の置換にする。
 
-# `rearrange_rows_into_permutation_columns`
+## `rearrange_rows_into_permutation_columns`
 
 ```cpp
 vector<vector<int>> rearrange_rows_into_permutation_columns(

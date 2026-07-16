@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/wavelet_matrix_2d_weighted.hpp
 
 重み付き点集合に対する静的2次元wavelet matrix。矩形内の点数と重みの総和を求める。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 WaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH>
@@ -17,7 +17,7 @@ WaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH>
 - 点数の上限 `MAX_SIZE`
 - y座標に使用するbit数 `Y_BIT_WIDTH`。省略時は `Y` のbit数
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 WaveletMatrix2DWeighted(
@@ -34,7 +34,7 @@ WaveletMatrix2DWeighted(const vector<tuple<X, Y, W>>& points)
 
 - $O(N\log N+\mathrm{Y\_BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
 
-# 矩形内の点数
+## 矩形内の点数
 
 ```cpp
 int rectangle_count(X xl, X xr, Y yl, Y yr) const
@@ -47,7 +47,7 @@ int range_freq(X xl, X xr, Y yl, Y yr) const
 
 - $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
 
-# 矩形内の重みの総和
+## 矩形内の重みの総和
 
 ```cpp
 W rectangle_sum(X xl, X xr, Y yl, Y yr) const
@@ -60,7 +60,7 @@ W range_sum(X xl, X xr, Y yl, Y yr) const
 
 - $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $H=\mathtt{Y\_BIT\_WIDTH}$ とする。
 

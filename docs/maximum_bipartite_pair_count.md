@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/matching/maximum_bipartite_pair_count.hpp
 
 許可された組だけを使う一対一対応の最大数を返す。
 
-# maximum_bipartite_pair_count
+## maximum_bipartite_pair_count
 
 ```cpp
 int maximum_bipartite_pair_count(

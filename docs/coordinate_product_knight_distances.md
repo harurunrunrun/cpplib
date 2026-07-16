@@ -5,7 +5,7 @@ documentation_of: ../src/structure/graph/coordinate_product_knight_distances.hpp
 
 正方形盤上のナイト移動について、移動前後の座標積をコストとする最短距離を問い合わせる。
 
-# CoordinateProductKnightDistances
+## CoordinateProductKnightDistances
 
 ```cpp
 class CoordinateProductKnightDistances {

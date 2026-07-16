@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/cycle_detection.hpp
 
 有向・無向グラフから閉路を1つ検出する。探索は反復DFSで行うため、長い一本道でも再帰スタックを消費しない。
 
-# 型
+## 型
 
 ```cpp
 struct CycleDetectionResult {
@@ -16,7 +16,7 @@ struct CycleDetectionResult {
 
 `vertices[i]` から `vertices[(i + 1) % L]` へ進む辺の入力番号が `edges[i]` である。閉路がない場合は両方とも空になる。
 
-# 関数
+## 関数
 
 ## `directed_cycle_with_edges`
 
@@ -82,6 +82,6 @@ vector<int> undirected_cycle(
 - 時間計算量: $O(N+M)$
 - 空間計算量: 戻り値を含めて $O(N+M)$
 
-# 注意点
+## 注意点
 
 頂点数は非負で、すべての辺端点・隣接先は $[0,N)$ に含まれなければならない。違反時や辺数を `int` で表せない場合は `runtime_error` を送出する。返る閉路の開始位置と向きは未規定である。

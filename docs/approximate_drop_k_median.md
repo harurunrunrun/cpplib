@@ -3,7 +3,7 @@ title: DROP k-Median (DROP法によるk-メディアン)
 documentation_of: ../src/approximate/facility/drop_k_median.hpp
 ---
 
-# DROP法によるk-median
+## DROP法によるk-median
 
 全候補を開いた状態から、削除後の距離和が最小となる施設を1個ずつ除く。
 

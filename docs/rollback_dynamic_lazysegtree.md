@@ -23,7 +23,7 @@ void rollback(Snapshot snapshot)
 
 `MAX_CHANGES`はノード状態と疎な子リンクの変更履歴数の上限。
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES})$
 - `set`, 1点`apply`, 区間`apply`, `get`, `prod`, `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$

@@ -5,11 +5,11 @@ documentation_of: ../src/approximate/graph/community_detection.hpp
 
 `approximate::graph` 名前空間のcommunity detectionで共通に使う結果型とmodularity計算である。自己辺を無視し、平行辺の重みを加算する。
 
-# CommunityResult
+## CommunityResult
 
 `label[v]` は頂点 `v` のcommunity番号である。番号は頂点番号順の初出が0, 1, ...となるよう正規化される。`community_count`、重み付きundirected modularity `modularity`、アルゴリズムが実行した反復数 `iterations` を返す。
 
-# canonical_community_labels
+## canonical_community_labels
 
 ~~~cpp
 vector<size_t> canonical_community_labels(const vector<size_t>& labels)
@@ -20,7 +20,7 @@ vector<size_t> canonical_community_labels(const vector<size_t>& labels)
 - 時間計算量: $O(N\log N)$
 - 追加空間計算量: $O(N)$
 
-# community_modularity
+## community_modularity
 
 ~~~cpp
 long double community_modularity(

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/dualsegtree.hpp
 
 作用付きモノイドに対する区間作用・一点取得。
 
-# API
+## API
 
 ```cpp
 DualSegtree<Monoid, MAX_SIZE>(int n = MAX_SIZE)
@@ -23,7 +23,7 @@ void apply(int l, int r, const F& action)
 `0 <= n <= MAX_SIZE`、`0 <= k < n`、`0 <= l <= r <= n` が必要である。
 範囲外または容量超過では `runtime_error` を送出する。
 
-# 時間計算量
+## 時間計算量
 
 - `DualSegtree(int)`, `DualSegtree(vector)`: $O(\mathtt{MAX\_SIZE})$
 - `set`, `get`, `apply`: $O(\log \mathtt{MAX\_SIZE})$

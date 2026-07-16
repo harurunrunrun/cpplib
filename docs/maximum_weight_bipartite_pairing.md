@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/matching/maximum_weight_bipartite_pairing.hpp
 
 左右の各要素を高々1回ずつ使用する対応について、重み和の最大値を返す。
 
-# MaximumWeightBipartitePairingEdge
+## MaximumWeightBipartitePairingEdge
 
 ```cpp
 struct MaximumWeightBipartitePairingEdge {
@@ -17,7 +17,7 @@ struct MaximumWeightBipartitePairingEdge {
 
 左側の添字、右側の添字、対応させたときの非負重みを表す。添字は0始まり。
 
-# maximum_weight_bipartite_pairing
+## maximum_weight_bipartite_pairing
 
 ```cpp
 long long maximum_weight_bipartite_pairing(

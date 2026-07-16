@@ -3,7 +3,7 @@ title: MaxRects Rectangle Packing (MaxRects長方形packing)
 documentation_of: ../src/approximate/packing/maxrects_packing.hpp
 ---
 
-# MaxRects Rectangle Packing (MaxRects長方形packing)
+## MaxRects Rectangle Packing (MaxRects長方形packing)
 
 重なりを許す自由長方形集合を分割・包含除去しながら配置するMaxRects heuristic。
 

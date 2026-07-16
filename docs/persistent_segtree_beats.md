@@ -42,7 +42,7 @@ int nodes_used() const
 
 区間は0-indexed半開区間。
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `range_chmin`, `range_chmax`: amortized $O(\log^2 N)$

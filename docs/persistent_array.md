@@ -7,7 +7,7 @@ documentation_of: ../src/structure/array/persistent_array.hpp
 
 状態は0から始まるversionで指定する。version 0は初期状態。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentArray<T, MAX_SIZE, MAX_VERSION>
@@ -19,7 +19,7 @@ PersistentArray<T, MAX_SIZE, MAX_VERSION>
 
 オブジェクト自体のcopy/moveはできない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) PersistentArray(int n = MAX_SIZE)
@@ -39,7 +39,7 @@ PersistentArray<T, MAX_SIZE, MAX_VERSION>
 
 固定長の初期値・更新値・version管理領域を構築した後、使用する $n$ 要素を初期化する。
 
-# set
+## set
 
 ```cpp
 int set(int version, int k, const T& x)
@@ -51,7 +51,7 @@ int set(int version, int k, const T& x)
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# fork
+## fork
 
 ```cpp
 int fork(int version)
@@ -63,7 +63,7 @@ int fork(int version)
 
 - $O(1)$
 
-# get
+## get
 
 ```cpp
 const T& get(int version, int k) const
@@ -75,7 +75,7 @@ const T& get(int version, int k) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# size
+## size
 
 ```cpp
 int size() const
@@ -87,7 +87,7 @@ int size() const
 
 - $O(1)$
 
-# versions
+## versions
 
 ```cpp
 int versions() const
@@ -99,7 +99,7 @@ int versions() const
 
 - $O(1)$
 
-# latest_version
+## latest_version
 
 ```cpp
 int latest_version() const

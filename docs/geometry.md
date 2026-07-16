@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/geometry/2d/geometry.hpp
 
 Two-dimensional geometry with `long double` coordinates. Comparisons use the absolute tolerance `GEOMETRY_EPS = 1e-10` unless otherwise noted. `Point::operator<` is exact lexicographical order so that it can be used by standard sorting algorithms.
 
-# Types
+## Types
 
 ```cpp
 Point
@@ -16,7 +16,7 @@ Circle
 
 `Segment` is an alias of `Line`. A line passed to a line operation must have distinct endpoints. A circle radius must be nonnegative.
 
-# Points and vectors
+## Points and vectors
 
 ```cpp
 dot(a, b)
@@ -44,7 +44,7 @@ ONLINE_FRONT = -2
 ON_SEGMENT = 0
 ```
 
-# Lines and segments
+## Lines and segments
 
 ```cpp
 projection(line, p)
@@ -68,7 +68,7 @@ segment_intersection(a, b)
 
 `cross_point` and `line_intersection` return the unique intersection of two lines. They throw `std::domain_error` for parallel or coincident lines. `segment_intersection` returns the unique common point and throws `std::domain_error` if there is no intersection or the intersection is a segment. A degenerate segment is treated as a point; a degenerate line passed to a line operation causes `std::invalid_argument`.
 
-# Polygons
+## Polygons
 
 ```cpp
 area(polygon)
@@ -87,7 +87,7 @@ closest_pair(points)
 
 `is_convex` and `convex_diameter` accept either orientation. `convex_diameter` supports collinear and repeated consecutive vertices. `convex_hull` returns a counterclockwise hull without intermediate collinear points. `convex_cut` keeps the left side of the directed line.
 
-# Circles
+## Circles
 
 ```cpp
 circle_relation(a, b)

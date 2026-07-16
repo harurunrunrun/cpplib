@@ -7,7 +7,7 @@ documentation_of: ../src/algorithm/graph/kth_shortest_path.hpp
 
 同じ頂点列は1つのパスとして扱う。
 
-# 関数
+## 関数
 
 ```cpp
 kth_shortest_paths<T>(graph, source, target, k, inf)

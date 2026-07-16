@@ -7,7 +7,7 @@ documentation_of: ../src/structure/convex_hull_trick/persistent_dynamic_li_chao_
 
 整数座標の閉区間 `[X_MIN, X_MAX]` 上で、指定したバージョンに直線を追加した新しいバージョンを作る。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentDynamicLiChaoTree<X_MIN, X_MAX, MAX_VERSION>
@@ -17,7 +17,7 @@ PersistentDynamicLiChaoTree<X_MIN, X_MAX, MAX_VERSION>
 - 座標の上限 `X_MAX`
 - 追加できるバージョン数の上限 `MAX_VERSION`
 
-# add_line / fork
+## add_line / fork
 
 ```cpp
 int add_line(int version, long long a, long long b)
@@ -33,7 +33,7 @@ int fork(int version)
 - `add_line`: $O(\log (X\_MAX - X\_MIN + 1))$
 - `fork`: $O(1)$
 
-# query
+## query
 
 ```cpp
 long long query(int version, long long x)
@@ -49,7 +49,7 @@ long long query(int version, long long x)
 
 - $O(\log (X\_MAX - X\_MIN + 1))$
 
-# その他
+## その他
 
 ```cpp
 bool empty(int version)
@@ -62,7 +62,7 @@ int nodes_used()
 
 - $O(1)$
 
-# API別計算量
+## API別計算量
 
 $W=X\_MAX-X\_MIN+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間treeの最大level数とする。
 

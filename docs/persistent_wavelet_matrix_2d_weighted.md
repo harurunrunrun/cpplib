@@ -12,14 +12,15 @@ wm.set_weight(version, k, weight)
 wm.rectangle_count(version, xl, xr, yl, yr)
 wm.rectangle_sum(version, xl, xr, yl, yr)
 ```
-# 時間計算量
+
+## 時間計算量
 
 x 座標の範囲取得に $O(\log N)$、以降は
 `PersistentWeightedWaveletMatrix` と同じ。
 `set`, `set_y`, `set_weight` は $O(B\log B + \log M)$、
 `fork` は $O(1)$。
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$M=\lceil N/B\rceil$、
 $M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$ とする。
@@ -42,7 +43,7 @@ $Q(L)=B+C(\log B+\log(M+1))$ とおく。
 `runtime_error`。失敗時にversionと使用量は増えない。copyは禁止、moveは可能。
 各APIの計算量は上記表の通り。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PersistentWaveletMatrix2DWeighted()

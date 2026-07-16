@@ -3,7 +3,7 @@ title: 2D RANSAC Line Fitting (2次元RANSAC直線推定)
 documentation_of: ../src/approximate/geometry/ransac_line.hpp
 ---
 
-# RANSACによる直線推定
+## RANSACによる直線推定
 
 2点を無作為抽出して直線候補を作り、外れ値を含む2次元点群から支持点の多い直線を選ぶ。垂直線も方向ベクトルで表すため特別扱いしない。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/persistent_weighted_wavelet_ma
 
 完全永続の重み付きwavelet matrix。任意のバージョンから値と重みを更新できる。
 
-# 更新
+## 更新
 
 ```cpp
 wm.set(version, k, value, weight)
@@ -14,7 +14,7 @@ wm.set_weight(version, k, weight)
 wm.fork(version)
 ```
 
-# 和
+## 和
 
 ```cpp
 wm.sum(version, l, r)
@@ -24,7 +24,7 @@ wm.sum_k_smallest(version, l, r, k)
 wm.sum_k_largest(version, l, r, k)
 ```
 
-# 時間計算量
+## 時間計算量
 
 `PersistentWaveletMatrix` と同じ永続ブロック参照を使う。
 `set` は $O(B\log B + \log M)$、`fork` は $O(1)$。
@@ -34,7 +34,7 @@ wm.sum_k_largest(version, l, r, k)
 $B = BLOCK\_SIZE$、$M = \lceil N / B \rceil$、
 $C$ は区間が触れるブロック数とする。
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $D=\mathtt{BIT\_WIDTH}$、$M=\lceil N/B\rceil$、
 $M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$、
@@ -63,7 +63,7 @@ version 0が初期列。`set` は指定versionから1点を置換した新versio
 `set` は値と重み、`set_value/set_weight` は片方を更新する。`weight` は1点の重み、
 `sum/range_sum` は全値域・指定値域、`sum_k_smallest/sum_k_largest` は順序先頭の重みを返す。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PersistentWeightedWaveletMatrix()

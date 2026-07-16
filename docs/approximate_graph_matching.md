@@ -5,14 +5,14 @@ documentation_of: ../src/approximate/graph/matching.hpp
 
 `approximate::graph` 名前空間にある無向グラフの貪欲matching。自己ループは選ばない。
 
-# greedy_matching
+## greedy_matching
 
 入力順に、両端が未使用の辺を選ぶ。極大matchingを返し、最大matchingの半分以上の辺数を持つ。
 
 - 時間計算量: $O(N+E)$
 - 追加空間計算量: $O(N+E)$（返却値を含む）
 
-# greedy_weighted_matching
+## greedy_weighted_matching
 
 ~~~cpp
 template<class Weight>

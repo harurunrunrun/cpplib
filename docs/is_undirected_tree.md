@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/is_undirected_tree.hpp
 
 無向グラフが木であるかを判定する。
 
-# is_undirected_tree
+## is_undirected_tree
 
 ```cpp
 bool is_undirected_tree(

@@ -6,7 +6,7 @@ documentation_of: ../src/algorithm/other/time_segment_tree.hpp
 時刻区間 $[l,r)$ で有効なイベントを、rollback できる状態へ適用するオフライン時間軸 segment tree。
 各時刻を独立に作り直さず、segment tree の DFS と rollback によって処理する。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 TimeSegmentTree<Event, MAX_TIME, MAX_EVENTS>
@@ -19,7 +19,7 @@ OfflineIntervalEvents<Event, MAX_TIME, MAX_EVENTS>
 
 `OfflineIntervalEvents` は同じ型の別名。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 explicit TimeSegmentTree(int time_count = MAX_TIME)
@@ -33,7 +33,7 @@ $O(\mathtt{MAX\_TIME}+\mathtt{MAX\_EVENTS})$。
 
 範囲外の `time_count` は固定長空間計算量を確保する前に検査する。
 
-# 区間イベントの追加
+## 区間イベントの追加
 
 ```cpp
 void add_interval(int left, int right, const Event& event)
@@ -50,7 +50,7 @@ void emplace_interval(int left, int right, Args&&... args)
 
 1 回につき $O(\log(\mathtt{MAX\_TIME}+1))$。このほかに `Event` のコピー、move、または構築の計算量がかかる。
 
-# 実行
+## 実行
 
 ```cpp
 events.run(
@@ -92,7 +92,7 @@ $$
 `rollback` の計算量が取り消すイベント数に比例する場合、全 node を通した
 取り消し回数は $P$ 回である。
 
-# 初期化
+## 初期化
 
 ```cpp
 void clear()

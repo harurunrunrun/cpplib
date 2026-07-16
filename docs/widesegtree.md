@@ -7,7 +7,7 @@ documentation_of: ../src/structure/segtree/widesegtree.hpp
 
 値は `long long`、演算は和。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 Wide_Segtree<MAX_SIZE>
@@ -15,7 +15,7 @@ Wide_Segtree<MAX_SIZE>
 
 `[0, MAX_SIZE)` を扱う。
 
-# point update
+## point update
 
 ```cpp
 void set(idx, x)
@@ -27,7 +27,7 @@ long long get(idx)
 
 - `set`, `add`, `get`: $O(\log_B \mathtt{MAX\_SIZE})$
 
-# range product
+## range product
 
 ```cpp
 long long prod(l, r)
@@ -41,7 +41,7 @@ long long all_prod()
 - `prod`: $O(\log_B \mathtt{MAX\_SIZE})$
 - `all_prod`: $O(1)$
 
-# 構築とcopy
+## 構築とcopy
 
 - default constructor: $O(1)$
 - copy constructor, copy assignment: $O(U)$

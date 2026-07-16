@@ -5,7 +5,7 @@ documentation_of: ../src/structure/array/rollback_array.hpp
 
 1点更新を取り消せる配列。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 RollbackArray<T, MAX_SIZE, MAX_UPDATE>
@@ -17,7 +17,7 @@ RollbackArray<T, MAX_SIZE, MAX_UPDATE>
 
 オブジェクト自体のcopy/moveはできない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) RollbackArray(int n = MAX_SIZE)
@@ -37,7 +37,7 @@ RollbackArray<T, MAX_SIZE, MAX_UPDATE>
 
 固定長の初期値・更新値・履歴領域を構築した後、使用する $n$ 要素を初期化する。
 
-# set
+## set
 
 ```cpp
 void set(int k, const T& x)
@@ -49,7 +49,7 @@ void set(int k, const T& x)
 
 - $O(1)$
 
-# get
+## get
 
 ```cpp
 const T& get(int k) const
@@ -61,7 +61,7 @@ const T& get(int k) const
 
 - $O(1)$
 
-# snapshot
+## snapshot
 
 ```cpp
 using Snapshot = int;
@@ -77,7 +77,7 @@ Snapshot snapshot() const
 
 - $O(1)$
 
-# rollback
+## rollback
 
 ```cpp
 void rollback(Snapshot s)
@@ -91,7 +91,7 @@ void rollback(Snapshot s)
 
 - 戻す更新数を $k$ として $O(k)$
 
-# undo
+## undo
 
 ```cpp
 void undo()
@@ -103,7 +103,7 @@ void undo()
 
 - $O(1)$
 
-# can_undo
+## can_undo
 
 ```cpp
 bool can_undo() const
@@ -115,7 +115,7 @@ bool can_undo() const
 
 - $O(1)$
 
-# history_size
+## history_size
 
 ```cpp
 int history_size() const
@@ -127,7 +127,7 @@ int history_size() const
 
 - $O(1)$
 
-# size
+## size
 
 ```cpp
 int size() const

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/functional_wavelet_matrix.hpp
 
 座標圧縮版wavelet matrixに、値そのものの区間和を重みとして持たせたもの。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 FunctionalWaveletMatrix<T, MAX_SIZE, Sum, ID_BIT_WIDTH>
@@ -18,7 +18,7 @@ FunctionalWaveletMatrix<T, MAX_SIZE, Sum, ID_BIT_WIDTH>
 
 `T` から `Sum` へ変換できる必要がある。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 FunctionalWaveletMatrix(const vector<T>& values)
@@ -26,7 +26,7 @@ FunctionalWaveletMatrix(const vector<T>& values)
 
 各要素の重みをその要素自身として構築する。
 
-# 主な操作
+## 主な操作
 
 ```cpp
 T kth_smallest(int l, int r, int k) const
@@ -47,7 +47,7 @@ T median_ceil(int l, int r) const
 - 構築: $O(N\log N+\mathrm{ID\_BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
 - クエリ: $O(\log N + \mathrm{ID\_BIT\_WIDTH})$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$ とする。
 

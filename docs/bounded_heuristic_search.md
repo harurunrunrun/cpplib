@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/search/bounded_heuristic_search.hpp
 
 探索幅またはメモリを抑えるヒューリスティック探索。
 
-# `beam_search`
+## `beam_search`
 
 ```cpp
 beam_search(start, goal, neighbors, heuristic,
@@ -16,7 +16,7 @@ beam_search(start, goal, neighbors, heuristic,
 
 分岐数の最大を $b$、幅を $B$、深さ上限を $D$ とすると、候補のソートを含む時間計算量は $O(DBb\log(Bb))$。復元用に発見した状態を残すため、空間計算量は $O(DBb)$。
 
-# `ida_star_search`
+## `ida_star_search`
 
 ```cpp
 ida_star_search(start, goal, neighbors, heuristic,

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/geometry/2d/minimum_circle_interval_cover.hpp
 
 円周上の候補区間から、全周を覆う最小本数を求める。
 
-# API
+## API
 
 ~~~cpp
 int minimum_circle_interval_cover(
@@ -15,11 +15,11 @@ int minimum_circle_interval_cover(
 
 各pairはstartからendへ反時計回りに進む半開区間を表す。全周を覆えない場合は-1、覆える場合は必要な候補区間の最小本数を返す。同じ候補を複数回選ぶことはできない。
 
-# 時間計算量
+## 時間計算量
 
 候補数をNとするとO(N log(N+1))。区間を二重化してsortし、貪欲遷移をbinary liftingする。
 
-# 空間計算量
+## 空間計算量
 
 O(N log(N+1))。
 

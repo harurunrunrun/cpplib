@@ -5,7 +5,7 @@ documentation_of: ../src/structure/bbst/persistent_lazy_reversible_splay_tree.hp
 
 path copying を行う完全永続 implicit splay tree。列の挿入、削除、区間反転、区間作用、区間積を扱う。更新元の version は変更しない。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentLazyReversibleSplayTree<MonoidActLen, MAX_NODE, MAX_VERSION>
@@ -27,7 +27,7 @@ T id();
 
 `MAX_NODE` は初期列と全versionの path copy が共有する node 数、`MAX_VERSION` は version 0 を含む version 数の上限である。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 PersistentLazyReversibleSplayTree()
@@ -36,7 +36,7 @@ PersistentLazyReversibleSplayTree(const vector<S>& values)
 
 空、または `values` を初期列とする version 0 を作る。
 
-# 更新
+## 更新
 
 ```cpp
 int insert(int p, const S& x, int version = 0)
@@ -50,7 +50,7 @@ int reverse(int l, int r, int version = 0)
 
 node または version の容量を超えた場合は例外を送出し、version 数、使用 node 数、既存versionを更新前の状態に保つ。
 
-# 取得
+## 取得
 
 ```cpp
 int versions() const
@@ -64,7 +64,7 @@ vector<S> to_vector(int version = 0) const
 
 取得では splay せず、新しい version も作らない。
 
-# 時間計算量
+## 時間計算量
 
 対象versionの木の高さを $H$、列長を $N$ とする。$H$ は worst-case $N$。モノイド演算・作用は $O(1)$ とする。
 

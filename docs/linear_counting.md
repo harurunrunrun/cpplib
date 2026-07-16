@@ -3,7 +3,7 @@ title: Linear Counting (線形カウンティング)
 documentation_of: ../src/approximate/streaming/linear_counting.hpp
 ---
 
-# Linear Counting (線形カウンティング)
+## Linear Counting (線形カウンティング)
 
 distinct key を bit map に写し、空 bit 数から cardinality を推定する。
 

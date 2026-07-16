@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/bfs.hpp
 
 重みなし有向グラフの最短路を幅優先探索で求める。無向グラフは各辺を両方向に追加する。
 
-# 関数
+## 関数
 
 ```cpp
 BFSResult bfs(graph, source)

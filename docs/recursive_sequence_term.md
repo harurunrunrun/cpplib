@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/recursive_sequence_term.hpp
 
 係数が一定の線形漸化式について、1始まりの指定項を法付きで求める。
 
-# `recursive_sequence_term`
+## `recursive_sequence_term`
 
 ```cpp
 uint64_t recursive_sequence_term(

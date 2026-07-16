@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/matrix_power_entry_queries.hpp
 
 固定された正方行列について、64 bit 非負整数乗の指定要素を繰り返し求める。
 
-# `MatrixPowerEntryQueries`
+## `MatrixPowerEntryQueries`
 
 ```cpp
 template<uint32_t Modulus = 1'000'000'007>

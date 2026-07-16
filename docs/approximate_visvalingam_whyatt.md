@@ -3,7 +3,7 @@ title: Visvalingam–Whyatt Algorithm (Visvalingam–Whyatt法)
 documentation_of: ../src/approximate/geometry/visvalingam_whyatt.hpp
 ---
 
-# Visvalingam–Whyatt法
+## Visvalingam–Whyatt法
 
 隣接する3点が作る三角形の面積が最小の内点を順に除き、2次元折れ線を指定頂点数まで簡略化する。両端点は削除しない。
 

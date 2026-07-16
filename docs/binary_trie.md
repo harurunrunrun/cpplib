@@ -5,7 +5,7 @@ documentation_of: ../src/structure/trie/binary_trie.hpp
 
 整数の Binary Trie。重複を持つ。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 BinaryTrie<T, BIT, MAX_NODES>
@@ -15,7 +15,7 @@ BinaryTrie<T, BIT, MAX_NODES>
 - bit 数 `BIT`
 - ノード数の上限 `MAX_NODES`
 
-# insert / erase
+## insert / erase
 
 ```cpp
 void insert(T x)
@@ -24,7 +24,7 @@ bool erase(T x)
 
 `erase` は値が存在しない場合 `false` を返す。
 
-# count
+## count
 
 ```cpp
 int count(T x)
@@ -32,7 +32,7 @@ bool contains(T x)
 int size()
 ```
 
-# 順序
+## 順序
 
 ```cpp
 optional<T> kth(int k, T xor_value = 0)

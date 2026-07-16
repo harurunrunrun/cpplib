@@ -3,7 +3,7 @@ title: k-Median Common API (k-メディアン共通API)
 documentation_of: ../src/approximate/facility/common.hpp
 ---
 
-# k-median共通API
+## k-median共通API
 
 ## `KMedianResult`
 

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/bellman_ford.hpp
 
 単一始点最短路。負辺に対応する。
 
-# 関数
+## 関数
 
 ```cpp
 bellman_ford<T>(int n, vector<BellmanFordEdge<T>> edges, int source, T inf)

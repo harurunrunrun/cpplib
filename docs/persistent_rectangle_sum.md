@@ -6,7 +6,7 @@ documentation_of: ../src/structure/wavelet_matrix/persistent_rectangle_sum.hpp
 `PersistentWaveletMatrix2DWeighted` の矩形和用の別名。
 更新・クエリ・メモリ計算量は `PersistentWaveletMatrix2DWeighted` と同じ。
 
-# 時間計算量（公開操作別）
+## 時間計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$M=\lceil N/B\rceil$、
 $M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$ とする。

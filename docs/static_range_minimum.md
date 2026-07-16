@@ -5,7 +5,7 @@ documentation_of: ../src/structure/other/static_range_minimum.hpp
 
 静的列の半開区間最小値を返す。
 
-# StaticRangeMinimum
+## StaticRangeMinimum
 
 ```cpp
 template<class T, int MAX_SIZE>

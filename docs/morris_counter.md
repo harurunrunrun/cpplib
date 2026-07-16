@@ -3,7 +3,7 @@ title: Morris Counter (Morris確率カウンタ)
 documentation_of: ../src/approximate/streaming/morris_counter.hpp
 ---
 
-# Morris Counter (Morris確率カウンタ)
+## Morris Counter (Morris確率カウンタ)
 
 counter の指数だけを保持する近似加算器。
 

@@ -7,7 +7,7 @@ documentation_of: ../src/structure/matrix/square_matrix.hpp
 
 実際のサイズは実行時に持つ。保存領域は `MAX_SIZE * MAX_SIZE` 個。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 SquareMatrix<T, MAX_SIZE>
@@ -16,7 +16,7 @@ SquareMatrix<T, MAX_SIZE>
 - 要素型 `T`
 - サイズの上限 `MAX_SIZE`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 SquareMatrix()
@@ -36,7 +36,7 @@ SquareMatrix(vector<vector<T>> values)
 | `SquareMatrix(values)` | $O(C+n^2)$ |
 | コピー・move構築、コピー・move代入 | $O(C)$ |
 
-# identity
+## identity
 
 ```cpp
 SquareMatrix::identity(int n)
@@ -52,7 +52,7 @@ SquareMatrix::zero(int n)
 | `zero(n)` | $O(C)$ |
 | `identity(n)` | $O(C+n)=O(C)$ |
 
-# 要素アクセス
+## 要素アクセス
 
 ```cpp
 T& operator()(int i, int j)
@@ -65,7 +65,7 @@ const T& operator()(int i, int j)
 | --- | --- |
 | `operator()(i, j)` | $O(1)$ |
 
-# size / empty / comparison
+## size / empty / comparison
 
 ```cpp
 A.size()
@@ -79,7 +79,7 @@ A != B
 | `size()`, `empty()` | $O(1)$ |
 | `operator==`, `operator!=` | $O(n^2)$（不一致時は途中で終了） |
 
-# 演算
+## 演算
 
 ```cpp
 A + B
@@ -107,7 +107,7 @@ A.pow(k)
 | `A *= B`, `A * B` | $O(C+n^3)$ |
 | `A.pow(k)` | $O(C+(C+n^3)\log(k+1))$ |
 
-# transposed
+## transposed
 
 ```cpp
 A.transposed()

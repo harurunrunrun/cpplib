@@ -3,7 +3,7 @@ title: Approximate Nearest Neighbor Common API (近似近傍探索共通API)
 documentation_of: ../src/approximate/nearest_neighbor/ann_common.hpp
 ---
 
-# Approximate Nearest Neighbor Common API (近似近傍探索共通API)
+## Approximate Nearest Neighbor Common API (近似近傍探索共通API)
 
 近似近傍探索indexが共有する返値型と内部補助関数。
 

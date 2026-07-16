@@ -7,7 +7,7 @@ documentation_of: ../src/structure/segtree/persistent_lazysegtree.hpp
 
 状態は0から始まるversionで指定する。version 0は初期状態。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentLazySegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
@@ -19,7 +19,7 @@ PersistentLazySegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 
 オブジェクト自体のcopy/moveはできない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) PersistentLazySegtree(int n = MAX_SIZE)
@@ -35,7 +35,7 @@ PersistentLazySegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_VERSION}\log \mathrm{MAX\_SIZE})$
 
-# 更新
+## 更新
 
 ```cpp
 (1) int set(int version, int k, const S& x)
@@ -56,7 +56,7 @@ PersistentLazySegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 - (1), (2), (3): $O(\log \mathrm{MAX\_SIZE})$
 - (4): $O(1)$
 
-# 区間取得
+## 区間取得
 
 ```cpp
 (1) S get(int version, int k) const
@@ -73,7 +73,7 @@ PersistentLazySegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 - (1), (2): $O(\log \mathrm{MAX\_SIZE})$
 - (3): $O(1)$
 
-# 二分探索
+## 二分探索
 
 ```cpp
 (1) int max_right(int version, int l, auto f, auto&&... args) const
@@ -89,7 +89,7 @@ PersistentLazySegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# version情報
+## version情報
 
 ```cpp
 (1) int size() const

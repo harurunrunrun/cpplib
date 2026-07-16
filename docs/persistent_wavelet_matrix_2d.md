@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/persistent_wavelet_matrix_2d.h
 
 x座標を固定し、y座標を完全永続に更新できる2次元wavelet matrix。
 
-# 更新
+## 更新
 
 ```cpp
 wm.set_y(version, k, y)
@@ -14,7 +14,7 @@ wm.fork(version)
 
 元の点番号 `k` のy座標を更新する。x座標は変えない。
 
-# クエリ
+## クエリ
 
 ```cpp
 wm.rectangle_count(version, xl, xr, yl, yr)
@@ -23,12 +23,13 @@ wm.kth_smallest_y(version, xl, xr, k)
 wm.prev_y(version, xl, xr, upper)
 wm.next_y(version, xl, xr, lower)
 ```
-# 時間計算量
+
+## 時間計算量
 
 x 座標の範囲取得に $O(\log N)$、以降は `PersistentWaveletMatrix` と同じ。
 `set_y` は $O(B\log B + \log M)$、`fork` は $O(1)$。
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$D=\mathtt{Y\_BIT\_WIDTH}$、$M=\lceil N/B\rceil$、
 $M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$ とする。
@@ -52,7 +53,7 @@ $Q(L)=B+C(\log B+\log(M+1))$ とおく。
 `runtime_error`。失敗した更新はversionと使用量を戻す。copyは禁止、moveは可能。
 各APIの計算量は上記表の通り。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PersistentWaveletMatrix2D()

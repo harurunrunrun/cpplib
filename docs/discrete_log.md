@@ -26,6 +26,7 @@ documentation_of: ../src/algorithm/math/discrete_log.hpp
 | `math::discrete_log(a,b,mod)` | 期待 $O(\sqrt{mod}+\log mod)$ | $O(\sqrt{mod})$ |
 
 baby-step giant-step の表に `unordered_map` を使うため、表の検索・挿入を期待 $O(1)$ とした計算量である。衝突が偏る場合の最悪計算量は保証しない。非互いに素な場合の前処理は $O(\log mod)$。
+
 ## 注意点
 
 - 両APIとも `a`, `b` を $[0,mod)$ に正規化し、

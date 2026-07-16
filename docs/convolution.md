@@ -33,6 +33,7 @@ $A=|a|$, $B=|b|$、$Z$ を $A+B-1$ 以上の最小の2冪とする。
 畳み込みは $A+B-1$ 要素を列挙して返す。既知のNTT-friendly法以外では3回のNTTとCRTを行うが、漸近計算量は同じ。
 
 `MOD` の原始根が既知でない場合、最初の変換時だけ `MOD-1` の試し割りと原始根探索を行う。一度得た根はtemplate実体ごとのstatic値として再利用され、2回目以降の前処理は不要。
+
 ## 注意点
 
 - `number_theoretic_transform<MOD>(a,inverse)` はvectorをin-placeで変換する。

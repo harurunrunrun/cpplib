@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/rollback_lazysegtree.hpp
 
 1点更新と区間作用を取り消せるlazy segment tree。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 RollbackLazySegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
@@ -17,7 +17,7 @@ RollbackLazySegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 
 オブジェクト自体のcopy/moveはできない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) RollbackLazySegtree(int n = MAX_SIZE)
@@ -33,7 +33,7 @@ RollbackLazySegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
 
-# 更新
+## 更新
 
 ```cpp
 (1) void set(int k, const S& x)
@@ -51,7 +51,7 @@ RollbackLazySegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# 区間取得
+## 区間取得
 
 ```cpp
 (1) S get(int k) const
@@ -68,7 +68,7 @@ RollbackLazySegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 - (1), (2): $O(\log \mathrm{MAX\_SIZE})$
 - (3): $O(1)$
 
-# 二分探索
+## 二分探索
 
 ```cpp
 (1) int max_right(int l, auto f, auto&&... args) const
@@ -84,7 +84,7 @@ RollbackLazySegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# snapshot
+## snapshot
 
 ```cpp
 using Snapshot = int;
@@ -100,7 +100,7 @@ Snapshot snapshot() const
 
 - $O(1)$
 
-# rollback
+## rollback
 
 ```cpp
 void rollback(Snapshot s)
@@ -112,7 +112,7 @@ void rollback(Snapshot s)
 
 - 戻す更新数を $k$ として $O(k \log \mathrm{MAX\_SIZE})$
 
-# undo
+## undo
 
 ```cpp
 void undo()
@@ -124,7 +124,7 @@ void undo()
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# 履歴情報
+## 履歴情報
 
 ```cpp
 (1) bool can_undo() const

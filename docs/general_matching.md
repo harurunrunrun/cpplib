@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/matching/general_matching.hpp
 
 一般グラフの最大マッチング。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 GeneralMatching graph(n)
 ```
 
-# 関数
+## 関数
 
 ```cpp
 graph.add_edge(u, v)

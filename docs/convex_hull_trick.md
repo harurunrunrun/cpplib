@@ -7,7 +7,7 @@ documentation_of: ../src/structure/convex_hull_trick/convex_hull_trick.hpp
 
 傾きは単調非増加で追加する。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 ConvexHullTrick<MAX_LINE>
@@ -15,7 +15,7 @@ ConvexHullTrick<MAX_LINE>
 
 - 保持する直線数の上限 `MAX_LINE`
 
-# add_line
+## add_line
 
 ```cpp
 void add_line(long long a, long long b)
@@ -27,7 +27,7 @@ void add_line(long long a, long long b)
 
 - amortized $O(1)$
 
-# query
+## query
 
 ```cpp
 long long query(long long x)
@@ -41,7 +41,7 @@ long long query(long long x)
 
 - $O(\log N)$
 
-# query_monotone_inc
+## query_monotone_inc
 
 ```cpp
 long long query_monotone_inc(long long x)
@@ -53,7 +53,7 @@ long long query_monotone_inc(long long x)
 
 - amortized $O(1)$
 
-# その他
+## その他
 
 ```cpp
 int size()
@@ -64,7 +64,7 @@ bool empty()
 
 - $O(1)$
 
-# API別計算量
+## API別計算量
 
 $N$ を現在のhullの直線数とする。
 

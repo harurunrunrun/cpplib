@@ -7,7 +7,7 @@ documentation_of: ../src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp
 
 整数座標の閉区間 `[X_MIN, X_MAX]` 上で直線を追加し、各点での最小値を求める。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 DynamicLiChaoTree<X_MIN, X_MAX, MAX_NODE>
@@ -19,7 +19,7 @@ DynamicLiChaoTree<X_MIN, X_MAX, MAX_NODE>
 
 直線追加だけなら、必要なノード数は追加した直線数以下。
 
-# add_line
+## add_line
 
 ```cpp
 void add_line(long long a, long long b)
@@ -32,7 +32,7 @@ void add_line(Line line)
 
 - $O(\log (X\_MAX - X\_MIN + 1))$
 
-# query
+## query
 
 ```cpp
 long long query(long long x)
@@ -48,7 +48,7 @@ long long query(long long x)
 
 - $O(\log (X\_MAX - X\_MIN + 1))$
 
-# その他
+## その他
 
 ```cpp
 bool empty()
@@ -59,7 +59,7 @@ int nodes_used()
 
 - $O(1)$
 
-# API別計算量
+## API別計算量
 
 $W=X\_MAX-X\_MIN+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間treeの最大level数とする。
 

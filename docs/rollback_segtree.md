@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/rollback_segtree.hpp
 
 1点更新を取り消せるsegment tree。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 RollbackSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
@@ -17,7 +17,7 @@ RollbackSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
 
 オブジェクト自体のcopy/moveはできない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) RollbackSegtree(int n = MAX_SIZE)
@@ -33,7 +33,7 @@ RollbackSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
 
-# set
+## set
 
 ```cpp
 void set(int k, const S& x)
@@ -45,7 +45,7 @@ void set(int k, const S& x)
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# get
+## get
 
 ```cpp
 S get(int k) const
@@ -57,7 +57,7 @@ S get(int k) const
 
 - $O(1)$
 
-# prod
+## prod
 
 ```cpp
 S prod(int l, int r) const
@@ -69,7 +69,7 @@ S prod(int l, int r) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# all_prod
+## all_prod
 
 ```cpp
 S all_prod() const
@@ -81,7 +81,7 @@ S all_prod() const
 
 - $O(1)$
 
-# max_right
+## max_right
 
 ```cpp
 int max_right(int l, auto f, auto&&... args) const
@@ -93,7 +93,7 @@ int max_right(int l, auto f, auto&&... args) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# min_left
+## min_left
 
 ```cpp
 int min_left(int r, auto f, auto&&... args) const
@@ -105,7 +105,7 @@ int min_left(int r, auto f, auto&&... args) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# snapshot
+## snapshot
 
 ```cpp
 using Snapshot = int;
@@ -121,7 +121,7 @@ Snapshot snapshot() const
 
 - $O(1)$
 
-# rollback
+## rollback
 
 ```cpp
 void rollback(Snapshot s)
@@ -135,7 +135,7 @@ void rollback(Snapshot s)
 
 - 戻す更新数を $k$ として $O(k \log \mathrm{MAX\_SIZE})$
 
-# undo
+## undo
 
 ```cpp
 void undo()
@@ -147,7 +147,7 @@ void undo()
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# can_undo
+## can_undo
 
 ```cpp
 bool can_undo() const
@@ -159,7 +159,7 @@ bool can_undo() const
 
 - $O(1)$
 
-# history_size
+## history_size
 
 ```cpp
 int history_size() const
@@ -171,7 +171,7 @@ int history_size() const
 
 - $O(1)$
 
-# size
+## size
 
 ```cpp
 int size() const

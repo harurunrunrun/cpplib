@@ -46,7 +46,7 @@ int operations() const
 int changes_used() const
 ```
 
-# 計算量
+## 計算量
 
 - constructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_CHANGES}+\mathtt{MAX\_OPERATIONS})$
 - `range_chmin`, `range_chmax`: amortized $O(\log^2 N)$

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/offline_dynamic_range_count_at_least.hp
 
 点代入と区間内の下限以上の要素数問い合わせを、操作列が事前に分かる場合に処理する。
 
-# OfflineDynamicRangeCountAtLeast
+## OfflineDynamicRangeCountAtLeast
 
 ```cpp
 class OfflineDynamicRangeCountAtLeast {

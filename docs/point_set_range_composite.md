@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/point_set_range_composite.hpp
 
 affine関数列の一点変更と、半開区間内の関数を添字順に適用した値の取得を行う。
 
-# PointSetRangeComposite
+## PointSetRangeComposite
 
 ```cpp
 template<class T, int MAX_SIZE>

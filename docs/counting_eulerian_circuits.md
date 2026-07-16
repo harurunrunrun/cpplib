@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/counting_eulerian_circuits.hpp
 
 BEST theoremと有向Matrix-Tree theoremで、有向多重グラフのEuler circuit数を体 `T` 上で求める。辺はラベル付きとして区別し、巡回列のcyclic shiftは同一視する。すなわち、入力の0番目の辺を先頭に固定したEuler tour数を返す。
 
-# Euler circuit数
+## Euler circuit数
 
 ```cpp
 template<class T, size_t MAX_VERTEX>

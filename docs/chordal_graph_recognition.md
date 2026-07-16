@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/chordal_graph_recognition.hpp
 
 単純無向グラフがchordal graphかをMaximum Cardinality Searchで判定し、判定結果に対応するcertificateを返す。
 
-# 結果
+## 結果
 
 ```cpp
 struct ChordalGraphRecognitionResult {
@@ -18,7 +18,7 @@ struct ChordalGraphRecognitionResult {
 - `chordal == true` のとき、`perfect_elimination_order` はperfect elimination orderingであり、`induced_cycle` は空。
 - `chordal == false` のとき、`induced_cycle` は長さ4以上のchordless cycleを巡回順に並べた頂点列であり、`perfect_elimination_order` は空。
 
-# chordal graph判定
+## chordal graph判定
 
 ```cpp
 ChordalGraphRecognitionResult chordal_graph_recognition(

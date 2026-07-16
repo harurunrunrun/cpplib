@@ -14,7 +14,7 @@ void rollback(int version)
 
 `RollbackDynamicBitAssignRangeSumRangeFlip` という同じAPIの別名も定義される。
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
 - `assign`, `flip`, `set`, `sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$

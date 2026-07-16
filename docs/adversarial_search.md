@@ -16,7 +16,7 @@ struct GameTreeSearchResult {
 
 `principal_variation` は根から選択した葉までを含む。評価値が同じ子では `children` の先頭を選ぶ。
 
-# `minimax_search`
+## `minimax_search`
 
 ```cpp
 minimax_search(root, depth, evaluate, children,
@@ -27,7 +27,7 @@ minimax_search(root, depth, evaluate, children,
 
 分岐数を $b$、深さを $d$ とすると時間計算量は $O(b^d)$、再帰スタックは $O(d)$。主変化列の構築を含む追加空間計算量の最大は $O(d^2)$。
 
-# `alpha_beta_search`
+## `alpha_beta_search`
 
 ```cpp
 alpha_beta_search(root, depth, evaluate, children,
@@ -36,7 +36,7 @@ alpha_beta_search(root, depth, evaluate, children,
 
 Minimax と同じ値を alpha-beta 枝刈りで求める。最良順序の時間計算量は $O(b^{d/2})$、最悪は $O(b^d)$。追加空間計算量は $O(d^2)$。
 
-# `negamax_search`
+## `negamax_search`
 
 ```cpp
 negamax_search(root, depth, evaluate, children)
@@ -45,7 +45,7 @@ negamax_search(root, depth, evaluate, children)
 `max(a,b)=-min(-a,-b)` を利用した Minimax の対称形。`evaluate(state)` は、その状態で手番を持つプレイヤーから見た値を返す。時間計算量は $O(b^d)$、追加空間計算量は $O(d^2)$。
 評価値型は符号付き数値型でなければならない。
 
-# `principal_variation_search` / `negascout_search`
+## `principal_variation_search` / `negascout_search`
 
 ```cpp
 principal_variation_search(root, depth, evaluate, children)

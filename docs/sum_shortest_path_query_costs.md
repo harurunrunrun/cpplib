@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/sum_shortest_path_query_costs.hpp
 
 静的な重み付き有向グラフについて、指定された頂点対の最短距離の総和を求める。
 
-# ShortestPathCostQuery
+## ShortestPathCostQuery
 
 ```cpp
 struct ShortestPathCostQuery {
@@ -16,7 +16,7 @@ struct ShortestPathCostQuery {
 
 総和に加える最短路の始点と終点を表す。
 
-# sum_shortest_path_query_costs
+## sum_shortest_path_query_costs
 
 ```cpp
 template<class T>

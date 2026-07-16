@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/xor_decoded_range_greater_quer
 
 直前の答えとのXORで復号するオンライン区間queryについて、閾値より大きい要素数を管理する。
 
-# XorDecodedRangeGreaterQuery
+## XorDecodedRangeGreaterQuery
 
 ```cpp
 template<integral T, int MAX_SIZE, int ID_BIT_WIDTH = ...>

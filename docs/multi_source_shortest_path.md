@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/multi_source_shortest_path.hpp
 
 複数始点からの単一最短路。辺の重みは非負である必要がある。
 
-# 関数
+## 関数
 
 ```cpp
 multi_source_shortest_path<T>(graph, sources, inf)

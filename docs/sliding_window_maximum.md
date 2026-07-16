@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/range/sliding_window_maximum.hpp
 
 固定長の各連続部分列について最大値を返す。
 
-# API
+## API
 
 ~~~cpp
 template<class T>

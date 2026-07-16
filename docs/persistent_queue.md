@@ -6,7 +6,7 @@ documentation_of: ../src/structure/other/persistent_queue.hpp
 任意の過去versionを保ったまま、末尾への追加または先頭の削除を行った新しいversionを作るqueue。
 version 0は空queueであり、更新に成功するたびに連番のversionを1つ生成する。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 template<class PersistentStorage, int MAX_VERSION>
@@ -29,7 +29,7 @@ queueはsegment積を使わないが、`Monoid`は通常どおり結合則と単
 `MAX_SIZE`は同時に保持できる要素数、`MAX_VERSION`は`push`と`pop`で生成できる
 version数の合計上限である。
 
-# 構築
+## 構築
 
 ```cpp
 Queue queue(int capacity)
@@ -43,7 +43,7 @@ aliasを使う場合は`0 <= capacity <= MAX_SIZE`を要求する。
 - `PersistentArrayQueue`: $O(MAX\_SIZE + MAX\_VERSION)$
 - `PersistentSegtreeQueue`: $O(MAX\_SIZE + MAX\_VERSION\log MAX\_SIZE)$
 
-# versionと大きさ
+## versionと大きさ
 
 ```cpp
 int capacity() const
@@ -60,7 +60,7 @@ bool empty(int version) const
 
 すべて$O(1)$。
 
-# 先頭要素
+## 先頭要素
 
 ```cpp
 value_type front(int version) const
@@ -73,7 +73,7 @@ value_type front(int version) const
 `PersistentStorage::get`の時間計算量。2つのaliasでは
 $O(\log MAX\_SIZE)$。
 
-# 末尾への追加
+## 末尾への追加
 
 ```cpp
 int push(int version, const value_type& value)
@@ -88,7 +88,7 @@ int push(int version, const value_type& value)
 
 - 時間・新しく使用するnode: $O(\log MAX\_SIZE)$
 
-# 先頭の削除
+## 先頭の削除
 
 ```cpp
 int pop(int version)
@@ -101,13 +101,13 @@ int pop(int version)
 
 $O(1)$。storageの新versionは作らず、queueのversion metadataだけを追加する。
 
-# 空間計算量
+## 空間計算量
 
 2つのaliasはmetadataに$O(MAX\_VERSION)$を予約する。storageを含む予約領域全体は
 $O(MAX\_SIZE + MAX\_VERSION\log MAX\_SIZE)$である。
 `push`が実際に使用状態へ移すnode数は1versionあたり$O(\log MAX\_SIZE)$。
 
-# 注意点
+## 注意点
 
 versionは0から始まり、成功した`push`または`pop`が返す番号は常に
 直前の`latest_version() + 1`である。`front`、`size`、`empty`はversionを生成しない。

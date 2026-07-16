@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/partially_persistent_segtree.hpp
 
 過去の状態を参照でき、最新の状態のみ更新できるsegment tree。状態は0から始まるversionで指定する。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PartiallyPersistentSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
@@ -17,7 +17,7 @@ PartiallyPersistentSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
 
 オブジェクト自体のcopy/moveはできない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) PartiallyPersistentSegtree(int n = MAX_SIZE)
@@ -33,7 +33,7 @@ PartiallyPersistentSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
 
-# set
+## set
 
 ```cpp
 int set(int k, const S& x)
@@ -45,7 +45,7 @@ int set(int k, const S& x)
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# 区間取得
+## 区間取得
 
 ```cpp
 S get(int version, int k) const
@@ -65,7 +65,7 @@ versionを指定した場合はその状態、指定しない場合は最新vers
 - 過去versionの `all_prod`: $O(\log \mathrm{MAX\_UPDATE})$
 - 最新versionでは順に $O(1)$, $O(\log \mathrm{MAX\_SIZE})$, $O(1)$
 
-# 二分探索
+## 二分探索
 
 ```cpp
 int max_right(int version, int l, auto f, auto&&... args) const
@@ -81,7 +81,7 @@ int min_left(int r, auto f, auto&&... args) const
 - 過去version: $O(\log \mathrm{MAX\_SIZE}\log \mathrm{MAX\_UPDATE})$
 - 最新version: $O(\log \mathrm{MAX\_SIZE})$
 
-# version情報
+## version情報
 
 ```cpp
 int size() const
@@ -93,7 +93,7 @@ int latest_version() const
 
 - $O(1)$
 
-# 空間計算量
+## 空間計算量
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
 

@@ -22,7 +22,7 @@ long long min_left(int version, long long r, F f)
 
 `MAX_NODES`は疎ノード数、`MAX_CHANGES`は値と遅延作用をまとめた変更履歴数の上限。
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
 - `set`, 1点`apply`, 区間`apply`: $O(\log \mathtt{MAX\_SIZE})$
@@ -43,7 +43,7 @@ version 0が初期状態で、queryは `0 <= version < versions()` の任意vers
 不正なversion・点・区間・predicate、version/node/change容量超過では `runtime_error`。
 失敗した更新はversion・node・履歴使用量を更新前へ戻す。各APIの計算量は上記表の通り。
 
-# 状態API
+## 状態API
 
 ```cpp
 long long size() const

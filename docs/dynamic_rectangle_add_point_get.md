@@ -7,13 +7,13 @@ documentation_of: ../src/algorithm/other/dynamic_rectangle_add_point_get.hpp
 
 更新に現れる長方形を `reserve_rectangle` で登録してから `build` する。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 DynamicRectangleAddPointGet<T, Coordinate> seg
 ```
 
-# 関数
+## 関数
 
 ```cpp
 seg.reserve_rectangle(x1, y1, x2, y2)
@@ -42,6 +42,7 @@ $R$ を `reserve_rectangle` した非退化長方形数とする。
 | `get(x,y)` | $O(\log^2 R)$ |
 
 `build` 後の保持領域は $O(R\log R)$。空の長方形の予約・更新は $O(1)$。
+
 ## 注意点
 
 - `reserve_rectangle(x1,y1,x2,y2)` は将来更新する半開矩形を登録する。

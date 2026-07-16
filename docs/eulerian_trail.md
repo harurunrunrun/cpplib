@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/eulerian_trail.hpp
 
 全辺をちょうど1回ずつ通るEulerian trailをHierholzer法で求める。有向・無向の両方で多重辺と自己loopを扱える。
 
-# 関数
+## 関数
 
 ```cpp
 optional<EulerianTrailResult> directed_eulerian_trail(n, edges, start = -1)

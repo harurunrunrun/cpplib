@@ -5,7 +5,7 @@ documentation_of: ../src/structure/bbst/red_black_tree.hpp
 
 Red Black Tree による集合。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 RedBlackSet<Key, MAX_SIZE, Compare>
@@ -17,7 +17,7 @@ RedBlackSet<Key, MAX_SIZE, Compare>
 
 同じキーは 1 個だけ保持する。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 RedBlackSet(const Compare& compare = Compare())
@@ -27,7 +27,7 @@ RedBlackSet(const Compare& compare = Compare())
 
 - $O(\mathrm{MAX\_SIZE})$
 
-# insert / erase / contains
+## insert / erase / contains
 
 ```cpp
 bool insert(const Key& x)
@@ -43,7 +43,7 @@ bool contains(const Key& x)
 
 - $O(\log N)$
 
-# 順序
+## 順序
 
 ```cpp
 int order_of_key(const Key& x)
@@ -61,7 +61,7 @@ optional<Key> kth(int k)
 
 - $O(\log N)$
 
-# 探索
+## 探索
 
 ```cpp
 optional<Key> lower_bound(const Key& x)
@@ -76,7 +76,7 @@ optional<Key> max_less(const Key& x)
 
 - $O(\log N)$
 
-# API別計算量
+## API別計算量
 
 $N$ を現在の要素数とする。比較と `Key` のコピーは $O(1)$ とする。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/incremental_scc.hpp
 
 空の有向グラフへ辺を順に追加するとき、追加した各辺について、その時点以降に両端が初めて同じstrongly connected componentへ入る時刻をofflineで求める。時刻区間をdivide and conquerし、中央時刻のSCCで後半を縮約する。
 
-# merge時刻
+## merge時刻
 
 ```cpp
 vector<int> incremental_scc(

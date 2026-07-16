@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/euler_totient_value.hpp
 
 正整数の Euler totient を64 bit素因数分解から求める。
 
-# `euler_totient_value`
+## `euler_totient_value`
 
 ```cpp
 uint64_t euler_totient_value(uint64_t n);

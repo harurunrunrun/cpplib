@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/power_tower_last_digits.hpp
 
 同じ底を右結合で繰り返す累乗塔について、9桁超過の有無と末尾9桁を求める。
 
-# `PowerTowerLastNine`
+## `PowerTowerLastNine`
 
 ```cpp
 struct PowerTowerLastNine {
@@ -17,7 +17,7 @@ struct PowerTowerLastNine {
 
 `value` は末尾9桁、`truncated` は真の値が9桁を超えるかを表す。`to_string()` は超過時に `...` と0埋め9桁を返す。
 
-# `power_tower_last_nine`
+## `power_tower_last_nine`
 
 ```cpp
 PowerTowerLastNine power_tower_last_nine(uint64_t base, uint64_t height);

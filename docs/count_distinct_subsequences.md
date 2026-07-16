@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/count_distinct_subsequences.hpp
 
 空部分列を含む相異なる部分列の個数を法付きで返す。
 
-# count_distinct_subsequences
+## count_distinct_subsequences
 
 ```cpp
 long long count_distinct_subsequences(const string& text,

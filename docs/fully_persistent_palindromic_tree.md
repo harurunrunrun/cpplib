@@ -9,7 +9,7 @@ documentation_of: ../src/algorithm/string/fully_persistent_palindromic_tree.hpp
 FullyPersistentPalindromicTree<ALPHABET, MAX_NODES, MAX_VERSIONS, OFFSET>
 ```
 
-# update
+## update
 
 ```cpp
 int append(int version, char c)
@@ -18,7 +18,7 @@ int add(int version, char c)
 
 `version` の文字列末尾へ `c` を追加し、新しいversionを返す。
 
-# query
+## query
 
 ```cpp
 int versions()
@@ -69,6 +69,7 @@ $H_V=\log MAX_VERSIONS$、$H_N=\log MAX_NODES$、`append` がたどるsuffix lin
 | `suffix_palindrome_nodes(version)` / `suffix_palindrome_lengths(version)` | $O(K)$ |
 
 constructorはbinary-lifting表と永続set領域も初期化する。`append` はbranch間で償却せず、その呼出しでたどる $K$ を明示する。保持領域は $O(MAX_NODES\cdot ALPHABET+MAX_VERSIONS(H_N+H_V))$。
+
 ## 注意点
 
 - version 0は空文字列。`versions()` は存在version数、

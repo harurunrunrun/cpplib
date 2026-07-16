@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/compressed_weighted_wavelet_ma
 
 値を座標圧縮して扱う重み付きwavelet matrix。任意の比較可能な型を値として使える。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 CompressedWeightedWaveletMatrix<T, W, MAX_SIZE, ID_BIT_WIDTH>
@@ -16,7 +16,7 @@ CompressedWeightedWaveletMatrix<T, W, MAX_SIZE, ID_BIT_WIDTH>
 - 配列長の上限 `MAX_SIZE`
 - 圧縮後のidに使用するbit数 `ID_BIT_WIDTH`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 CompressedWeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
@@ -28,7 +28,7 @@ CompressedWeightedWaveletMatrix(const vector<T>& values, const vector<W>& weight
 
 - $O(N\log N+\mathrm{ID\_BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
 
-# 頻度 / 重みの総和
+## 頻度 / 重みの総和
 
 ```cpp
 int range_freq(int l, int r, const T& upper) const
@@ -42,7 +42,7 @@ W sum_k_largest(int l, int r, int k) const
 
 `sum_k_smallest` は区間 $[l,r)$ の小さい方から `k` 個の重みの総和を返す。
 
-# k番目 / 中央値
+## k番目 / 中央値
 
 ```cpp
 T kth_smallest(int l, int r, int k) const
@@ -57,7 +57,7 @@ T median_ceil(int l, int r) const
 
 - 構築以外: $O(\log N + \mathrm{ID\_BIT\_WIDTH})$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$ とする。
 

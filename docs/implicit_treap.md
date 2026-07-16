@@ -5,7 +5,7 @@ documentation_of: ../src/structure/tree/implicit_treap.hpp
 
 乱択平衡二分探索木による列。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 ImplicitTreap<Monoid, MAX_SIZE>
@@ -16,7 +16,7 @@ ImplicitTreap<Monoid, MAX_SIZE>
 
 `Monoid` は `S op(S, S)` と `S e()` を持つ。反転を扱うため、非可換モノイドでも使える。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 ImplicitTreap(uint64_t seed = ...)
@@ -32,7 +32,7 @@ ImplicitTreap(const vector<S>& values, uint64_t seed = ...)
 
 固定容量の値・集約値・node領域を構築する。
 
-# insert / erase
+## insert / erase
 
 ```cpp
 void insert(int p, const S& x)
@@ -49,7 +49,7 @@ void erase(int p)
 
 - expected $O(\log N)$
 
-# set / get
+## set / get
 
 ```cpp
 void set(int p, const S& x)
@@ -62,7 +62,7 @@ S get(int p)
 
 - expected $O(\log N)$
 
-# reverse
+## reverse
 
 ```cpp
 void reverse(int l, int r)
@@ -74,7 +74,7 @@ void reverse(int l, int r)
 
 - expected $O(\log N)$
 
-# prod
+## prod
 
 ```cpp
 S prod(int l, int r)

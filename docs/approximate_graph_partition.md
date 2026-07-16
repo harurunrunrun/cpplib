@@ -5,11 +5,11 @@ documentation_of: ../src/approximate/graph/graph_partition.hpp
 
 `approximate::graph` 名前空間で重み付き無向グラフの2分割を扱う。
 
-# BipartitionResult
+## BipartitionResult
 
 `side[v]` は頂点 `v` の所属する側を0または1で表す。`cut_weight` は両端のsideが異なる辺の重み和である。
 
-# weighted_cut_weight
+## weighted_cut_weight
 
 ~~~cpp
 long double weighted_cut_weight(
@@ -24,7 +24,7 @@ long double weighted_cut_weight(
 - 時間計算量: $O(E \log E + N)$
 - 追加空間計算量: $O(N+E)$
 
-# balanced_bipartition
+## balanced_bipartition
 
 ~~~cpp
 vector<unsigned char> balanced_bipartition(size_t vertex_count)

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/other/sorted_queue_lengths.hpp
 
 識別番号を持つ整数長の列を値の昇順に管理し、1点加算、閾値以上の個数、閾値以上への一括減算を行う。
 
-# SortedQueueLengths
+## SortedQueueLengths
 
 ```cpp
 template<int MAX_SIZE = 100000>

@@ -67,6 +67,24 @@ class CheckDocsMarkdownTest(unittest.TestCase):
         errors = self.check(f"{tick * 3}cpp\nint value;\n")
         self.assertTrue(any("fenced code block" in error for error in errors))
 
+    def test_level_two_heading_with_blank_lines_is_valid(self) -> None:
+        body = "---\ntitle: Sample\n---\n\n## API\n\nDescription.\n"
+        self.assertEqual(self.check(body), [])
+
+    def test_body_level_one_heading_is_rejected(self) -> None:
+        errors = self.check("# Duplicate page title\n\nDescription.\n")
+        self.assertTrue(any("must start at level 2" in error for error in errors))
+
+    def test_heading_requires_surrounding_blank_lines(self) -> None:
+        errors = self.check("Description.\n## API\nDetails.\n")
+        self.assertTrue(any("blank line before" in error for error in errors))
+        self.assertTrue(any("blank line after" in error for error in errors))
+
+    def test_heading_like_text_in_fenced_code_is_allowed(self) -> None:
+        tick = chr(96)
+        body = f"{tick * 3}markdown\n# Example\n{tick * 3}\n"
+        self.assertEqual(self.check(body), [])
+
 
 if __name__ == "__main__":
     unittest.main()

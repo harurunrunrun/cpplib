@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/distinct_substrings_by_first_byte.hpp
 
 先頭バイトごとに、空でない相異なる部分文字列数を集計する。
 
-# API
+## API
 
 ~~~cpp
 array<long long, 256>

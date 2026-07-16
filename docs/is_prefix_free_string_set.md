@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/is_prefix_free_string_set.hpp
 
 文字列列の異なる2要素について、一方が他方の接頭辞にならないかを判定する。
 
-# is_prefix_free_string_set
+## is_prefix_free_string_set
 
 ```cpp
 bool is_prefix_free_string_set(

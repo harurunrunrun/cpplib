@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/gondor_spark_lighting_times.hpp
 
 各烽火台の座標・矢数・射撃優先順から、全烽火台が初めて点火する時刻を返す。
 
-# GondorSpark
+## GondorSpark
 
 ```cpp
 struct GondorSpark{
@@ -18,7 +18,7 @@ struct GondorSpark{
 
 烽火台の座標、点火直後に射てる矢数、ほかの烽火台を検討する順序を保持する。
 
-# gondor_spark_lighting_times
+## gondor_spark_lighting_times
 
 ```cpp
 vector<double> gondor_spark_lighting_times(

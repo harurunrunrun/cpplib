@@ -3,7 +3,7 @@ title: Teitz–Bart k-Median (Teitz–Bart法によるk-メディアン)
 documentation_of: ../src/approximate/facility/teitz_bart.hpp
 ---
 
-# Teitz–Bart法
+## Teitz–Bart法
 
 現在開いている施設1個と閉じている施設1個を交換し、距離和が最も減る交換を反復するVertex Substitution法。
 

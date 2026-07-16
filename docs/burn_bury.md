@@ -7,13 +7,13 @@ documentation_of: ../src/algorithm/matching/burn_bury.hpp
 
 二値変数のsubmodularなコストを最小カットで最小化する。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 BurnBury<T> graph(n)
 ```
 
-# 関数
+## 関数
 
 ```cpp
 graph.add_one_cost(v, zero_cost, one_cost)

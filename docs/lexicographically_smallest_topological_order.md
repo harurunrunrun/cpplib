@@ -3,7 +3,7 @@ title: Lexicographically Smallest Topological Order (辞書順最小トポロジ
 documentation_of: ../src/algorithm/graph/lexicographically_smallest_topological_order.hpp
 ---
 
-# lexicographically_smallest_topological_order
+## lexicographically_smallest_topological_order
 
 ```cpp
 optional<vector<int>> lexicographically_smallest_topological_order(

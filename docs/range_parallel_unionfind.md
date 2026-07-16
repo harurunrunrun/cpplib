@@ -5,7 +5,7 @@ documentation_of: ../src/structure/dsu/range_parallel_unionfind.hpp
 
 同じ長さの2区間を位置ごとに対応させ、対応する頂点をUnionfindで併合する。長さ$2^k$の区間ごとに補助Unionfindを持ち、一度処理した区間対を再帰しない。
 
-# テンプレート引数・構築
+## テンプレート引数・構築
 
 ```cpp
 RangeParallelUnionFind<MAX_SIZE> dsu(n)
@@ -17,7 +17,7 @@ RangeParallelUnionFind<MAX_SIZE> dsu(n)
 
 - $O(N\log N)$
 
-# 1組の併合
+## 1組の併合
 
 ```cpp
 int merge(int u, int v)
@@ -26,7 +26,7 @@ int merge(int u, int v, MergeCallback callback)
 
 頂点`u`, `v`を併合し、新しく起きた頂点成分の併合回数を返す。実際に異なる成分を併合したとき、`callback(new_root, absorbed_root)`を1回呼ぶ。callback呼び出し時点で`new_root`がleaderになっている。
 
-# 区間のparallel併合
+## 区間のparallel併合
 
 ```cpp
 int merge_ranges(int l1, int r1, int l2, int r2)
@@ -43,7 +43,7 @@ $$O((N\log N+Q)\alpha(N))$$
 
 1回の操作では新しく展開される補助区間数に比例する。
 
-# 検索
+## 検索
 
 ```cpp
 int leader(int v)
@@ -58,7 +58,7 @@ int size() const
 - `leader`, `same`, `component_size`: amortized $O(\alpha(N))$
 - `groups`, `size`: $O(1)$
 
-# 空間計算量
+## 空間計算量
 
 - $O(N\log N)$
 

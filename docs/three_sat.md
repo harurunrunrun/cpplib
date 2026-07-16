@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/three_sat.hpp
 
 3-SAT。
 
-# 関数
+## 関数
 
 ```cpp
 three_sat(n, clauses)

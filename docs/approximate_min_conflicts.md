@@ -11,13 +11,13 @@ callback `conflict_count(variable, candidate_value, assignment)` は変数を候
 置換したとき、その変数に接続する違反制約数を非負整数で返す。合計は制約
 incidenceなので二項制約を通常2回数えるが、0と全制約充足は一致させる。
 
-# `MinConflictsResult`
+## `MinConflictsResult`
 
 `assignment`、`conflict_incidence`、更新数 `steps`、初期化数 `restarts`、
 衝突0を示す `found` を保持する。負の戻り値、`size_t` に収まらない戻り値、
 合計overflowには例外を送出する。
 
-# `is_valid_min_conflicts_result` / `validate_min_conflicts_result`
+## `is_valid_min_conflicts_result` / `validate_min_conflicts_result`
 
 値域、衝突合計、`found` を再計算する。前者はbool、後者は不整合なら
 `std::invalid_argument` を送出する。
@@ -25,7 +25,7 @@ incidenceなので二項制約を通常2回数えるが、0と全制約充足は
 - 時間計算量: $O(VQ)$
 - 追加空間計算量: $O(1)$
 
-# `min_conflicts`
+## `min_conflicts`
 
 ```cpp
 auto result = min_conflicts(
@@ -41,7 +41,7 @@ auto result = min_conflicts(
 - 時間計算量: $O(VQ+R(VQ+S(V+D_{max})Q))$
 - 追加空間計算量: $O(V)$
 
-# `randomized_min_conflicts`
+## `randomized_min_conflicts`
 
 random move確率を必須にした `min_conflicts` の同値wrapperである。
 

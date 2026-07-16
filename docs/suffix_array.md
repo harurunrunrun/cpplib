@@ -31,6 +31,7 @@ $N=|s|$ とする。
 
 `lcp_array(s)` は内部でsuffix arrayも構築する。suffix arrayは長さ $N$、
 LCP arrayは長さ最大 $N-1$ の列を返す。
+
 ## API詳細
 
 - `suffix_array(s)` は `s[sa[i]:]` が辞書順になる開始位置の置換を返す。

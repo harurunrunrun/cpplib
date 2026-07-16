@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/matrix_tree_theorem.hpp
 
 Matrix-Tree theoremで、重み付き全域木および有向全域木の重み総和を求める。各木の重みは、選んだ辺の `weight` の積である。多重辺は別々の辺として数え、自己loopはどのAPIでも無視する。
 
-# 辺
+## 辺
 
 ~~~cpp
 MatrixTreeEdge<T>{from, to, weight}
@@ -13,7 +13,7 @@ MatrixTreeEdge<T>{from, to, weight}
 
 無向版では `from` と `to` を辺の両端、有向版では `from -> to` と解釈する。`weight` は負でもよく、符号を含めて体 `T` 上で加算する。
 
-# 固定容量行列と行列式
+## 固定容量行列と行列式
 
 ~~~cpp
 MatrixTreeFixedMatrix<T, MAX_SIZE>
@@ -22,7 +22,7 @@ matrix_tree_determinant<T, MAX_SIZE>(matrix, n)
 
 `MatrixTreeFixedMatrix` は `std::array<std::array<T, MAX_SIZE>, MAX_SIZE>` の別名。先頭 `n x n` 成分の行列式をGaussian eliminationで求める。pivot行を交換するたびに符号を反転する。`n == 0` の行列式は `T(1)`。
 
-# 重み付き無向全域木
+## 重み付き無向全域木
 
 ~~~cpp
 count_weighted_undirected_spanning_trees<T, MAX_VERTEX>(n, edges)
@@ -39,7 +39,7 @@ L_{v,u} \mathrel{-}= w
 
 から1行1列を除いたcofactorの行列式を返す。非連結なら `T()`。0頂点グラフは空の全域木を1個と数えて `T(1)`、1頂点グラフも `T(1)` を返す。
 
-# rootから外向きの有向全域木
+## rootから外向きの有向全域木
 
 ~~~cpp
 count_weighted_directed_out_arborescences<T, MAX_VERTEX>(
@@ -58,7 +58,7 @@ L_{to,from} \mathrel{-}= w
 
 として作り、`root` の行と列を除いた行列式を返す。API名の「out」は辺がrootから外向きであることを表す。
 
-# rootへ内向きの有向全域木
+## rootへ内向きの有向全域木
 
 ~~~cpp
 count_weighted_directed_in_arborescences<T, MAX_VERTEX>(
@@ -77,7 +77,7 @@ L_{from,to} \mathrel{-}= w
 
 として作り、`root` の行と列を除いた行列式を返す。API名の「in」は辺がrootへ内向きであることを表す。
 
-# 時間・空間計算量
+## 時間・空間計算量
 
 `N=n`、`M=edges.size()`、`C=MAX_VERTEX^2` とする。`T` の各演算を `O(1)` とした計算量である。
 

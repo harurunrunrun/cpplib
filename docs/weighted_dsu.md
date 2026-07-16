@@ -5,7 +5,7 @@ documentation_of: ../src/structure/dsu/weighted_dsu.hpp
 
 差分制約付き素集合データ構造。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 WeightedDSU<T, MAX_SIZE>
@@ -16,7 +16,7 @@ WeightedDSU<T, MAX_SIZE>
 
 `T` は `+`, `-`, `==`, `T()` を持つ。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 WeightedDSU(int n = MAX_SIZE)
@@ -28,7 +28,7 @@ WeightedDSU(int n = MAX_SIZE)
 
 - $O(\mathtt{MAX\_SIZE})$
 
-# merge / diff
+## merge / diff
 
 ```cpp
 bool merge(int u, int v, T w)
@@ -50,7 +50,7 @@ optional<T> diff_if_connected(int u, int v)
 
 `diff_if_connected`, `weight`, `component_size` も amortized $O(\alpha(N))$、`size`, `groups` は $O(1)$。
 
-# same / leader
+## same / leader
 
 ```cpp
 bool same(int u, int v)

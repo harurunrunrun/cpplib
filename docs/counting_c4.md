@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/counting_c4.hpp
 
 自己loopを含まない無向多重グラフで、4つの異なる頂点を巡る長さ4のcycleを数える。多重辺はラベル付きの別々の辺として区別する。
 
-# 各辺を含むC4数
+## 各辺を含むC4数
 
 ```cpp
 vector<long long> count_c4_per_edge(
@@ -26,7 +26,7 @@ vector<long long> count_c4_per_edge(
 
 - `O(N+M)`
 
-# C4総数
+## C4総数
 
 ```cpp
 __int128_t count_c4(

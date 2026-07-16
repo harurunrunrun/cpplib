@@ -6,7 +6,7 @@ documentation_of: ../src/structure/segtree/residue_count_range_tree.hpp
 整数列の区間一様インクリメントと、指定した剰余を持つ要素数の区間queryを扱う。
 内部では剰余別個数を集約するlazy segment treeを用いる。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) ResidueCountRangeTree<Count, MOD, MAX_SIZE>(int size = MAX_SIZE)
@@ -21,7 +21,7 @@ documentation_of: ../src/structure/segtree/residue_count_range_tree.hpp
 時間計算量は $O(\mathtt{MAX\_SIZE}\,MOD)$、オブジェクトが保持する空間は
 $O(\mathtt{MAX\_SIZE}\,MOD)$ である。
 
-# `size`
+## `size`
 
 ```cpp
 int size() const
@@ -29,7 +29,7 @@ int size() const
 
 列長を返す。時間計算量と追加空間計算量は $O(1)$。
 
-# `increment`
+## `increment`
 
 ```cpp
 void increment(int left, int right)
@@ -38,7 +38,7 @@ void increment(int left, int right)
 半開区間 `[left, right)` の各要素へ1を加える。時間計算量は
 $O(MOD\log n)$、追加空間計算量は $O(MOD)$。
 
-# `count_residue`
+## `count_residue`
 
 ```cpp
 Count count_residue(int left, int right, long long residue)

@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/spectral_bisection.hpp
 
 重み付きLaplacianのFiedler vectorを反復法で近似し、成分の中央値で頂点数が平衡な2分割を作る。密行列を構築しない。固有値の重複や反復回数により結果が変わり得るheuristicであり、最小cutを保証しない。
 
-# spectral_bisection
+## spectral_bisection
 
 ~~~cpp
 BipartitionResult spectral_bisection(

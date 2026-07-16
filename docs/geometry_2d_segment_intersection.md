@@ -1,5 +1,5 @@
 ---
-title: 2D Segment Intersection Point (二次元線分交点) [CGL_2_B]
+title: 2D Segment Intersection Point (二次元線分交点)
 documentation_of: ../src/algorithm/geometry/2d/segment_intersection.hpp
 ---
 

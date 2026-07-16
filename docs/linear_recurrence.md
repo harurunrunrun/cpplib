@@ -55,6 +55,7 @@ $M(d)$ を次数 $d$ の多項式乗算時間とする。
 | `bostan_mori(initial, coefficient, k)` | $O(M(d)\log(k+1))$ | $O(d)$ |
 
 次数0は零列を表す。`k` は0-indexed。
+
 ## 注意点
 
 - default constructorは次数0の零列。`degree()` は次数 $d$ を返す。

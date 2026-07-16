@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/minimum_lsort_cost.hpp
 
 元列から要素を取り出して昇順列の左右へ追加する操作の最小総費用を返す。
 
-# minimum_lsort_cost
+## minimum_lsort_cost
 
 ```cpp
 long long minimum_lsort_cost(const vector<int>& permutation);

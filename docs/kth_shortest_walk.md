@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/kth_shortest_walk.hpp
 
 非負重み有向グラフで、頂点と辺の再訪を許す walk の距離を小さい順に求める。
 
-# 辺
+## 辺
 
 ~~~cpp
 KthShortestWalkEdge<T>{to, cost}
@@ -13,7 +13,7 @@ KthShortestWalkEdge<T>{to, cost}
 
 `to` は行き先、`cost` は非負の辺重み。
 
-# 列挙
+## 列挙
 
 ~~~cpp
 vector<T> kth_shortest_walks<T>(graph, source, target, k)
@@ -23,7 +23,7 @@ vector<T> kth_shortest_walks<T>(graph, source, target, k)
 
 戻り値は `source` から `target` への walk の距離を小さい順に最大 `k` 個並べた列。walk が `k` 個未満しか存在しない場合は存在する分だけ返す。`source == target` のときは空 walk の距離 `0` も含む。`k == 0` なら空列を返す。
 
-# 指定順位の値
+## 指定順位の値
 
 ~~~cpp
 optional<T> kth_shortest_walk<T>(graph, source, target, k)
@@ -36,13 +36,13 @@ optional<T> kth_shortest_walk_1indexed<T>(graph, source, target, k)
 
 指定順位までwalkが存在しない場合は `nullopt` を返す。全距離列を保持せず、指定順位が確定した時点で終了する。
 
-# walkの数え方
+## walkの数え方
 
 通る辺の列が異なるwalkは別に数える。多重辺を選び分けた場合も別walkであり、距離が同じでもそれぞれ順位を持つ。
 
 重み0の閉路も許す。このとき同じ距離のwalkが複数回、または任意個数現れることがある。`source == target` では空walkが最初の候補になる。
 
-# アルゴリズム
+## アルゴリズム
 
 逆グラフ上のDijkstraで各頂点から `target` までの最短距離と最短路木を求める。木に選ばれなかった各辺をsidetrackとし、
 

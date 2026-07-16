@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/diff.hpp
 
 2 つの列の差分を LCS に基づいて求める。
 
-# 関数
+## 関数
 
 ```cpp
 vector<DiffOp<T>> diff_sequence(a, b)

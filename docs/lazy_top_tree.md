@@ -7,7 +7,7 @@ documentation_of: ../src/structure/tree/lazy_top_tree.hpp
 
 各頂点には単位元を持つ補助葉を1つ接続する。これにより孤立頂点を含め、各連結成分を1つの Top Tree として扱う。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 LazyTopTree<MonoidActLen, MAX_SIZE>
@@ -25,7 +25,7 @@ T id()
 
 非可換モノイドに対応する。`MAX_SIZE` は頂点数の上限。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 LazyTopTree(int n = MAX_SIZE)
@@ -40,7 +40,7 @@ LazyTopTree(const vector<S>& values)
 
 固定容量のcluster領域を構築し、$N$ 個の頂点clusterを初期化する。
 
-# link / cut
+## link / cut
 
 ```cpp
 bool link(int u, int v)
@@ -55,7 +55,7 @@ bool cut(int u, int v)
 
 - amortized $O(\log N)$
 
-# 根と連結判定
+## 根と連結判定
 
 ```cpp
 void evert(int v)
@@ -69,7 +69,7 @@ bool connected(int u, int v)
 
 - amortized $O(\log N)$
 
-# 頂点値
+## 頂点値
 
 ```cpp
 void set(int v, const S& x)
@@ -80,7 +80,7 @@ S get(int v)
 
 - amortized $O(\log N)$
 
-# パス作用
+## パス作用
 
 ```cpp
 void path_apply(int u, int v, const T& f)
@@ -92,7 +92,7 @@ void path_apply(int u, int v, const T& f)
 
 - amortized $O(\log N)$
 
-# パス積
+## パス積
 
 ```cpp
 S path_prod(int u, int v)
@@ -104,7 +104,7 @@ S path_prod(int u, int v)
 
 - amortized $O(\log N)$
 
-# cluster 情報
+## cluster 情報
 
 ```cpp
 ClusterStatistics cluster_statistics(int v)
@@ -116,7 +116,7 @@ ClusterStatistics cluster_statistics(int v)
 
 - $O(N)$
 
-# 空間計算量
+## 空間計算量
 
 - $O(\mathtt{MAX\_SIZE})$
 

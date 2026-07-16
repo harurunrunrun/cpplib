@@ -7,7 +7,7 @@ documentation_of: ../src/algorithm/other/rectangle_xor.hpp
 
 奇数個の長方形に含まれる領域の面積を返す。
 
-# 関数
+## 関数
 
 ```cpp
 rectangle_xor_area<T>(rectangles)

@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/kernighan_lin.hpp
 
 重み付き無向グラフのcut重みを局所的に小さくするKernighan–Lin法である。最適解を保証しない。
 
-# kernighan_lin
+## kernighan_lin
 
 ~~~cpp
 BipartitionResult kernighan_lin(

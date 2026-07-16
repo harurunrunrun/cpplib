@@ -6,7 +6,7 @@ documentation_of: ../src/algorithm/fft/min_plus_convolution_smawk.hpp
 離散凸な符号付き整数列と任意の符号付き整数列のmin-plus convolutionを
 SMAWK法で計算する。
 
-# `min_plus_convolution_convex_arbitrary_smawk`
+## `min_plus_convolution_convex_arbitrary_smawk`
 
 ```cpp
 template<std::signed_integral T>

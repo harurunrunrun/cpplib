@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/count_bipartite_edge_crossings.hpp
 
 左右2列の頂点を各番号順に並べたとき、二部グラフの辺同士が内部で交差する組数を返す。
 
-# count_bipartite_edge_crossings
+## count_bipartite_edge_crossings
 
 ```cpp
 long long count_bipartite_edge_crossings(

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/range_set_range_composite.hpp
 
 affine関数列への区間一様代入と、区間内の関数を添字順に適用した値の取得を行う。
 
-# RangeSetRangeComposite
+## RangeSetRangeComposite
 
 ```cpp
 template<class T, int MAX_SIZE>

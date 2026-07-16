@@ -7,7 +7,7 @@ documentation_of: ../src/structure/types/residue_count_monoid.hpp
 モノイド。`AddResidueCountMonoidAct<Count, MOD>` は独自containerではなく、既存の
 `Monoid_Act` のaliasである。
 
-# `ResidueShift<MOD>`
+## `ResidueShift<MOD>`
 
 ```cpp
 template<int MOD>
@@ -26,7 +26,7 @@ constructorは正負の値を数学的なmodで正規化し、公開field `shift
 
 constructor、field参照、比較はいずれも $O(1)$ 時間、$O(1)$ 追加空間である。
 
-# `ResidueCountAggregate<Count, MOD>`
+## `ResidueCountAggregate<Count, MOD>`
 
 ```cpp
 template<class Count, int MOD>
@@ -43,7 +43,7 @@ struct ResidueCountAggregate {
 field 1個の参照は $O(1)$、aggregate全体のdefault構築と比較は $O(MOD)$ 時間、
 $O(1)$ 追加空間である。本体の保存領域は $O(MOD)$。
 
-# `residue_count_singleton`
+## `residue_count_singleton`
 
 ```cpp
 template<class Count, int MOD>
@@ -56,7 +56,7 @@ residue_count_singleton(long long value);
 
 時間計算量は $O(MOD)$、返値を除く追加空間計算量は $O(1)$。
 
-# `AddResidueCountMonoidAct<Count, MOD>`
+## `AddResidueCountMonoidAct<Count, MOD>`
 
 ```cpp
 template<class Count, int MOD>
@@ -86,7 +86,7 @@ tree.apply(left, right, ResidueShift<3>{-1000000000000LL});
 int divisible_by_three = tree.prod(left, right).count[0];
 ```
 
-# 実装用関数
+## 実装用関数
 
 aliasは `residue_count_monoid_internal` の次の関数から構成される。
 

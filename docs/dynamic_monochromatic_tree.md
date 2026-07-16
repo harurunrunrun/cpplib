@@ -6,7 +6,7 @@ documentation_of: ../src/structure/tree/dynamic_monochromatic_tree.hpp
 2色で塗られた静的な木について、頂点色の変更、頂点値の変更、指定頂点を含む同色連結成分の
 Monoid積を処理する。同色連結成分とは、両端を含むパス上の全頂点が同じ色である頂点集合をいう。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 DynamicMonochromaticTree<Monoid, MAX_SIZE>
@@ -23,7 +23,7 @@ S Monoid.e();
 連結成分は頂点集合なので、`Monoid.op` は結合的かつ可換でなければならない。
 `Monoid.e()` は単位元を返す。
 
-# 構築
+## 構築
 
 ```cpp
 DynamicMonochromaticTree(int n = MAX_SIZE)
@@ -43,7 +43,7 @@ void build(int root = 0)
 `root` は内部の根付き木の根であり、答えには影響しない。`build` は現在の色と値を使って
 再実行できる。オブジェクトはcopyできず、moveできる。
 
-# 頂点数と根
+## 頂点数と根
 
 ```cpp
 int size() const
@@ -53,7 +53,7 @@ int root() const
 `size` は頂点数を返す。`root` は最後の `build` で指定した根を返す。
 空の木を `build()` した後の `root()` は `-1`。
 
-# 色
+## 色
 
 ```cpp
 bool color(int v) const
@@ -64,7 +64,7 @@ bool toggle(int v)
 `color` は現在の色を返す。`set_color` は色が変化したときtrue、既に同じ色ならfalseを返す。
 `toggle` は色を反転し、反転後の色を返す。これらは `build` 前にも呼べる。
 
-# 頂点値
+## 頂点値
 
 ```cpp
 void set(int v, const S& value)
@@ -73,7 +73,7 @@ S get(int v) const
 
 `set` は頂点値を変更し、`get` は現在の値を返す。どちらも `build` 前にも呼べる。
 
-# 同色連結成分積
+## 同色連結成分積
 
 ```cpp
 S component_prod(int v)
@@ -82,7 +82,7 @@ S component_prod(int v)
 `v` と同じ同色連結成分に属する全頂点の値を、各頂点ちょうど1回ずつ `Monoid.op` で
 まとめた値を返す。
 
-# アルゴリズム
+## アルゴリズム
 
 木を `root` で根付ける。色 `c` ごとに、根から頂点 `x` までのパスにある
 `c` 以外の頂点数を `h_c(x)` とする。頂点 `u` の色変更は、`u` の部分木全体に対する
@@ -96,7 +96,7 @@ HLDで `b` を求め、区間最小値と最小値を取る頂点のMonoid積を
 答えを求める。色ごとにsegment treeを1本ずつ持つため、星形の中心を変更しても隣接辺を
 列挙しない。
 
-# 時間計算量
+## 時間計算量
 
 `Monoid.op` とcopyを $O(1)$ とする。
 
@@ -108,7 +108,7 @@ HLDで `b` を求め、区間最小値と最小値を取る頂点のMonoid積を
 - `set_color`, `toggle`: `build` 前は $O(1)$、`build` 後は $O(\log N)$
 - `component_prod`: $O(\log^2 N)$
 
-# 空間計算量
+## 空間計算量
 
 objectの保存領域は $O(\mathtt{MAX\_SIZE})$。
 
@@ -121,7 +121,7 @@ objectの保存領域は $O(\mathtt{MAX\_SIZE})$。
 | `component_prod` | call stack $O(\log N)$ |
 | copy構築、copy代入 | 使用不可 |
 
-# 注意点
+## 注意点
 
 - `component_prod` と `root` は `build` 後に呼ぶ。
 - `build` 後に辺は追加できない。

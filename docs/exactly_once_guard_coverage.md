@@ -3,7 +3,7 @@ title: Exactly Once Guard Coverage (警備範囲一意被覆判定) [AKBAR]
 documentation_of: ../src/algorithm/graph/exactly_once_guard_coverage.hpp
 ---
 
-# has_exactly_once_guard_coverage
+## has_exactly_once_guard_coverage
 
 ```cpp
 bool has_exactly_once_guard_coverage(

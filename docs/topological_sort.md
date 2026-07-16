@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/topological_sort.hpp
 
 有向グラフをトポロジカルソートする。
 
-# 関数
+## 関数
 
 ```cpp
 topological_sort(graph)

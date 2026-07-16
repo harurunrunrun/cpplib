@@ -3,7 +3,7 @@ title: Evolutionary Objective Helper (進化計算の目的関数補助)
 documentation_of: ../src/approximate/evolutionary/detail/objective.hpp
 ---
 
-# Evolutionary Objective Helper (進化計算の目的関数補助)
+## Evolutionary Objective Helper (進化計算の目的関数補助)
 
 進化計算の目的関数を検査付きで評価する内部API。
 

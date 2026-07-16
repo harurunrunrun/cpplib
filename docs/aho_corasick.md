@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/aho_corasick.hpp
 
 複数パターンマッチング。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 AhoCorasick<ALPHABET, MAX_NODES, OFFSET>
@@ -15,7 +15,7 @@ AhoCorasick<ALPHABET, MAX_NODES, OFFSET>
 - ノード数の上限 `MAX_NODES`
 - 先頭文字 `OFFSET`
 
-# add / build
+## add / build
 
 ```cpp
 int add(string_view pattern)
@@ -25,7 +25,7 @@ void clear()
 
 パターンを追加してから `build` する。
 
-# query
+## query
 
 ```cpp
 long long count_matches(string_view text)
@@ -65,6 +65,7 @@ $V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHAB
 | `count_matches(text)` | $O(T)$ |
 
 `add` で新規nodeを作ると長さ $\Sigma$ の遷移表を初期化する。保持領域は $O(MAX_NODES\cdot\Sigma)$。`count_matches` は一致位置を列挙せず総数だけを返す。
+
 ## 注意点
 
 - constructorはroot node 0だけを作る。`node_count()` は使用node数、

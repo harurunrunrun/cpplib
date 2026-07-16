@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/gf2_matrix_rank.hpp
 
 `0` と `1` の文字列で与えた行列の $\mathbb{F}_2$ 上の階数を求める。
 
-# `gf2_matrix_rank`
+## `gf2_matrix_rank`
 
 ```cpp
 size_t gf2_matrix_rank(

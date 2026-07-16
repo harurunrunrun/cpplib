@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/complement_shortest_path_count.hpp
 
 無向単純グラフの辺集合を除外辺として、その補グラフ上の最短路数を数える。
 
-# `complement_shortest_path_count`
+## `complement_shortest_path_count`
 
 ```cpp
 long long complement_shortest_path_count(

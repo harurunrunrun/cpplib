@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/search/monte_carlo_tree_search.hpp
 
 UCT による二人零和ゲーム向け Monte Carlo Tree Search。
 
-# API
+## API
 
 ```cpp
 monte_carlo_tree_search(root, iterations,
@@ -35,7 +35,7 @@ struct MonteCarloTreeSearchResult {
 
 合法手がない、または展開される前に反復が終わった場合は `move == nullopt`。`visits` と `average_reward` は選択手の統計、`tree_nodes` は根を含む構築ノード数。
 
-# 計算量
+## 計算量
 
 反復回数を $I$、木選択の最大深さを $D$、ロールアウト上限を $L$、合法手生成と遷移の1回のコストをそれぞれ $G,T$ とする。子選択で全子を走査する実装なので、展開済み分岐数の最大を $b$ とすると時間計算量は $O(I(D(b+G)+L(G+T)))$。
 

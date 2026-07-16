@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/vertex_cover.hpp
 
 `approximate::graph` 名前空間にある無向グラフの頂点被覆2近似。
 
-# maximal_matching_vertex_cover / two_approximate_vertex_cover
+## maximal_matching_vertex_cover / two_approximate_vertex_cover
 
 ~~~cpp
 VertexCoverResult maximal_matching_vertex_cover(

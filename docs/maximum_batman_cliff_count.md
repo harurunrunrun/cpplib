@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/maximum_batman_cliff_count.hpp
 
 高さ列を右へ進む降下部分列の最大長を返す。
 
-# maximum_batman_cliff_count
+## maximum_batman_cliff_count
 
 ```cpp
 int maximum_batman_cliff_count(const vector<int>& heights, int robin_index);

@@ -6,18 +6,18 @@ documentation_of: ../src/structure/wavelet_matrix/partially_persistent_fully_ind
 部分永続の完備辞書。更新は最新バージョンに対してのみ行う。
 過去のバージョンは `rank` / `select` / `get` で参照できる。
 
-# 更新
+## 更新
 
 ```cpp
 int nv = fid.set(k, value)
 int nv = fid.flip(k)
 ```
 
-# 時間計算量
+## 時間計算量
 
 `PersistentFullyIndexableDictionary` と同じ。
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $W=\lceil\mathtt{MAX\_SIZE}/64\rceil$、$H=\lceil\log_2\max(1,W)\rceil$ とする。
 
@@ -46,7 +46,7 @@ int select(int version, bool value, int k) const
 `select` は0-indexedで該当なしなら `size()`。不正なversion・点・区間・出現番号、
 version/node容量超過では `runtime_error`。各APIの計算量は上記表の通り。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PartiallyPersistentFullyIndexableDictionary(int n = 0)

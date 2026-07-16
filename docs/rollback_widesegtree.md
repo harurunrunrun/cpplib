@@ -20,7 +20,7 @@ void undo()
 void rollback(Snapshot snapshot)
 ```
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES})$
 - `set`, `add`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$

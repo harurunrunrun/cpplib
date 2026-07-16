@@ -7,7 +7,7 @@ documentation_of: ../src/structure/dsu/persistent_dsu.hpp
 
 各バージョンの `parent_or_size` を永続配列で持つ。`merge` は指定したバージョンから新しいバージョンを作る。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentDSU<MAX_SIZE, MAX_VERSION>
@@ -16,7 +16,7 @@ PersistentDSU<MAX_SIZE, MAX_VERSION>
 - 頂点数の上限 `MAX_SIZE`
 - 追加できるバージョン数の上限 `MAX_VERSION`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 PersistentDSU(int n = MAX_SIZE)
@@ -28,7 +28,7 @@ PersistentDSU(int n = MAX_SIZE)
 
 - $O(\mathtt{MAX\_VERSION})$
 
-# merge / fork
+## merge / fork
 
 ```cpp
 int merge(int version, int u, int v)
@@ -45,7 +45,7 @@ int fork(int version)
 - `merge`: $O(\log N\log \mathtt{MAX\_SIZE})$
 - `fork`: $O(1)$
 
-# same / leader / component_size
+## same / leader / component_size
 
 ```cpp
 bool same(int version, int u, int v)
@@ -61,7 +61,7 @@ int groups(int version)
 - `same`, `leader`, `component_size`: $O(\log N\log \mathtt{MAX\_SIZE})$
 - `groups`: $O(1)$
 
-# versions
+## versions
 
 ```cpp
 int versions()

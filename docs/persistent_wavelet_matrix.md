@@ -6,20 +6,20 @@ documentation_of: ../src/structure/wavelet_matrix/persistent_wavelet_matrix.hpp
 完全永続の点更新wavelet matrix。
 任意のバージョンから分岐して `set` できる。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentWaveletMatrix<T, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>
 ```
 
-# 更新
+## 更新
 
 ```cpp
 int nv = wm.set(version, k, value)
 int nv = wm.fork(version)
 ```
 
-# クエリ
+## クエリ
 
 ```cpp
 wm.access(version, k)
@@ -33,7 +33,7 @@ wm.prev_value(version, l, r, upper)
 wm.next_value(version, l, r, lower)
 ```
 
-# 時間計算量
+## 時間計算量
 
 $B = BLOCK\_SIZE$、$M = \lceil N / B \rceil$ とする。
 区間が触れるブロック数を $C$ とする。
@@ -51,7 +51,7 @@ $B = BLOCK\_SIZE$、$M = \lceil N / B \rceil$ とする。
 更新を行ったバージョン数を $U$、全バージョン数を $V$ とした追加メモリは
 $O(N + U(B + \log M) + V)$。
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $D=\mathtt{BIT\_WIDTH}$、$M=\lceil N/B\rceil$、
 $M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$ とする。
@@ -77,7 +77,7 @@ version 0が初期列。`set` は指定versionから1点を置換した新versio
 不正なversion・点・区間・順序・値域、bit幅、列長/version/block node容量超過では
 `runtime_error`。失敗した更新は使用量を戻す。各APIの計算量は上記表の通り。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PersistentWaveletMatrix()

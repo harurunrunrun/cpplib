@@ -3,7 +3,7 @@ title: Best-Bin-First KD-Tree (最良ビン優先KD木)
 documentation_of: ../src/approximate/nearest_neighbor/best_bin_first_kd_tree.hpp
 ---
 
-# Best-Bin-First KD-tree
+## Best-Bin-First KD-tree
 
 部分木の軸平行包囲箱と問い合わせ点の距離が小さい順に探索する静的KD-tree。調べる点数を制限すると近似最近傍探索、制限しなければ厳密最近傍探索になる。
 

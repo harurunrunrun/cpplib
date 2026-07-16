@@ -3,7 +3,7 @@ title: Scheduling Common Helpers (schedule共通補助)
 documentation_of: ../src/approximate/scheduling/scheduling_common.hpp
 ---
 
-# Scheduling Common Helpers (schedule共通補助)
+## Scheduling Common Helpers (schedule共通補助)
 
 schedule heuristicで時刻・処理時間を検査する内部API。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/weighted_wavelet_matrix.hpp
 
 各要素に重みを持つ静的wavelet matrix。値で絞り込んだ重みの総和を求める。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 WeightedWaveletMatrix<T, W, MAX_SIZE, BIT_WIDTH>
@@ -18,7 +18,7 @@ WeightedWaveletMatrix<T, W, MAX_SIZE, BIT_WIDTH>
 
 符号付き整数では `BIT_WIDTH` を省略する。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 WeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
@@ -30,7 +30,7 @@ WeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
 
 - $O(\mathrm{BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
 
-# 要素取得
+## 要素取得
 
 ```cpp
 T access(int k) const
@@ -41,7 +41,7 @@ T operator[](int k) const
 
 - $O(\mathrm{BIT\_WIDTH})$
 
-# rank / k番目
+## rank / k番目
 
 ```cpp
 int rank(T value, int r) const
@@ -56,7 +56,7 @@ T kth_largest(int l, int r, int k) const
 
 - $O(\mathrm{BIT\_WIDTH})$
 
-# 頻度
+## 頻度
 
 ```cpp
 int range_freq(int l, int r, T upper) const
@@ -69,7 +69,7 @@ int range_freq(int l, int r, T lower, T upper) const
 
 - $O(\mathrm{BIT\_WIDTH})$
 
-# 重みの総和
+## 重みの総和
 
 ```cpp
 W sum(int l, int r) const
@@ -88,7 +88,7 @@ W sum_k_largest(int l, int r, int k) const
 - `sum`: $O(1)$
 - それ以外: $O(\mathrm{BIT\_WIDTH})$
 
-# 前後の値
+## 前後の値
 
 ```cpp
 optional<T> prev_value(int l, int r, T upper) const
@@ -101,7 +101,7 @@ optional<T> next_value(int l, int r, T lower) const
 
 - $O(\mathrm{BIT\_WIDTH})$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $D=\mathtt{BIT\_WIDTH}$ とする。重み用固定長配列も各levelに保持する。
 

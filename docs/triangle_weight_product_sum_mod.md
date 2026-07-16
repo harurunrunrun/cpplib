@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/triangle_weight_product_sum_mod.hpp
 
 頂点重み付き無向単純グラフの全三角形について、3頂点の重みの積を加算する。
 
-# `triangle_weight_product_sum_mod`
+## `triangle_weight_product_sum_mod`
 
 ```cpp
 long long triangle_weight_product_sum_mod(

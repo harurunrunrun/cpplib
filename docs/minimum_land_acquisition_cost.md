@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/minimum_land_acquisition_cost.hpp
 
 複数の長方形をグループ単位で購入するときの最小総費用を返す。
 
-# LandPlotDimensions
+## LandPlotDimensions
 
 ```cpp
 struct LandPlotDimensions { long long width, height; };
@@ -13,7 +13,7 @@ struct LandPlotDimensions { long long width, height; };
 
 回転できない土地の幅と高さを表す。
 
-# minimum_land_acquisition_cost
+## minimum_land_acquisition_cost
 
 ```cpp
 long long minimum_land_acquisition_cost(vector<LandPlotDimensions> plots);

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/geometry/3d/geometry_3d.hpp
 
 `long double` を用いる3次元幾何の基本型、距離、交差、三角形、四面体、球をまとめる。判定には `GEOMETRY3D_EPS = 1e-10L` を使う。
 
-# header
+## header
 
 `geometry_3d.hpp` は後方互換用の umbrella header であり、下記の個別 header を
 include するだけである。必要な API だけを使う場合は
@@ -57,7 +57,7 @@ include するだけである。必要な API だけを使う場合は
 重複して include しても定義は一度だけ読み込まれる。
 
 
-# 基本型
+## 基本型
 
 ~~~cpp
 Point3{x, y, z}
@@ -75,7 +75,7 @@ Tetrahedron3{a, b, c, d}
 
 `Point3` は単項符号、加減算、scalar倍・除算、複合代入、誤差付き等値比較、辞書順比較を持つ。各演算は `O(1)` 時間計算量・空間計算量。
 
-# ベクトル
+## ベクトル
 
 | API | 説明 |
 | --- | --- |
@@ -95,7 +95,7 @@ Tetrahedron3{a, b, c, d}
 
 すべて `O(1)` 時間計算量・空間計算量。
 
-# 所属、射影、鏡映
+## 所属、射影、鏡映
 
 | API | 説明 |
 | --- | --- |
@@ -116,7 +116,7 @@ Tetrahedron3{a, b, c, d}
 
 すべて `O(1)` 時間計算量・空間計算量。
 
-# 距離と最近点対
+## 距離と最近点対
 
 ~~~cpp
 distance(Point3, Point3)
@@ -134,7 +134,7 @@ distance(Triangle3, Point3)
 
 `closest_points` は2つの図形上で距離を最小にする点のpairを返す。平行直線では一意でない最近点対のうち1組を返す。退化線分にも対応する。各APIは `O(1)` 時間計算量・空間計算量。
 
-# 平面との交差
+## 平面との交差
 
 | API | 戻り値・条件 |
 | --- | --- |
@@ -145,7 +145,7 @@ distance(Triangle3, Point3)
 
 すべて `O(1)` 時間計算量・空間計算量。
 
-# 球との交差
+## 球との交差
 
 | API | 説明 | 戻り値の最大要素数 |
 | --- | --- | --- |
@@ -157,7 +157,7 @@ distance(Triangle3, Point3)
 
 各APIは返す `vector` の確保を含めて `O(1)` 時間計算量・空間計算量。負の半径では `invalid_argument`。
 
-# 三角形
+## 三角形
 
 | API | 説明 |
 | --- | --- |
@@ -172,7 +172,7 @@ distance(Triangle3, Point3)
 
 すべて `O(1)` 時間計算量・空間計算量。
 
-# 四面体
+## 四面体
 
 | API | 説明 |
 | --- | --- |
@@ -185,7 +185,7 @@ distance(Triangle3, Point3)
 
 すべて `O(1)` 時間計算量・空間計算量。
 
-# 球と円
+## 球と円
 
 | API | 説明 |
 | --- | --- |

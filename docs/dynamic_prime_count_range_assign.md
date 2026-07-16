@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/dynamic_prime_count_range_assign.hpp
 
 整数列への区間一括代入と区間内の素数個数問い合わせを処理する。
 
-# DynamicPrimeCountRangeAssign
+## DynamicPrimeCountRangeAssign
 
 ```cpp
 template<int MAX_SIZE, int MAX_VALUE>

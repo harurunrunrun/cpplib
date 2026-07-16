@@ -7,7 +7,7 @@ documentation_of: ../src/structure/segtree/segtree_beats.hpp
 
 indexはすべて0-indexed。区間は半開区間 `[l,r)`。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 SegmentTreeBeats<T, MAX_SIZE>
@@ -20,7 +20,7 @@ SegmentTreeBeats<T, MAX_SIZE>
 
 オブジェクト自体のcopy/moveはできない。大きい `MAX_SIZE` ではstatic領域かheapに置く。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) SegmentTreeBeats(int n = MAX_SIZE)
@@ -38,7 +38,7 @@ SegmentTreeBeats<T, MAX_SIZE>
 
 - $O(\mathrm{MAX\_SIZE})$
 
-# range_chmin
+## range_chmin
 
 ```cpp
 void range_chmin(int l, int r, const T& x)
@@ -50,7 +50,7 @@ void range_chmin(int l, int r, const T& x)
 
 - amortized $O(\log^2 n)$
 
-# range_chmax
+## range_chmax
 
 ```cpp
 void range_chmax(int l, int r, const T& x)
@@ -62,7 +62,7 @@ void range_chmax(int l, int r, const T& x)
 
 - amortized $O(\log^2 n)$
 
-# range_add
+## range_add
 
 ```cpp
 void range_add(int l, int r, const T& x)
@@ -74,7 +74,7 @@ void range_add(int l, int r, const T& x)
 
 - $O(\log n)$
 
-# range_sum
+## range_sum
 
 ```cpp
 T range_sum(int l, int r)
@@ -86,7 +86,7 @@ $\sum_{i=l}^{r-1} a_i$ を返す。
 
 - $O(\log n)$
 
-# range_min
+## range_min
 
 ```cpp
 T range_min(int l, int r)
@@ -98,7 +98,7 @@ $[l,r)$ の最小値を返す。`l < r` が必要。
 
 - $O(\log n)$
 
-# range_max
+## range_max
 
 ```cpp
 T range_max(int l, int r)
@@ -110,7 +110,7 @@ $[l,r)$ の最大値を返す。`l < r` が必要。
 
 - $O(\log n)$
 
-# set
+## set
 
 ```cpp
 void set(int k, const T& x)
@@ -122,7 +122,7 @@ void set(int k, const T& x)
 
 - $O(\log n)$
 
-# get
+## get
 
 ```cpp
 T get(int k)
@@ -134,7 +134,7 @@ T get(int k)
 
 - $O(\log n)$
 
-# all_sum
+## all_sum
 
 ```cpp
 T all_sum() const
@@ -146,7 +146,7 @@ $[0,n)$ の和を返す。`n = 0` のときは `T{}`。
 
 - $O(1)$
 
-# all_min
+## all_min
 
 ```cpp
 T all_min() const
@@ -158,7 +158,7 @@ $[0,n)$ の最小値を返す。`n > 0` が必要。
 
 - $O(1)$
 
-# all_max
+## all_max
 
 ```cpp
 T all_max() const
@@ -170,7 +170,7 @@ $[0,n)$ の最大値を返す。`n > 0` が必要。
 
 - $O(1)$
 
-# size
+## size
 
 ```cpp
 int size() const

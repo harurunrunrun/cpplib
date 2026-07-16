@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/maximum_potholer_count.hpp
 
 最上部と最下部に接続する通路だけを共有できない有向洞窟で、同時に踏破できる人数を返す。
 
-# maximum_potholer_count
+## maximum_potholer_count
 
 ```cpp
 int maximum_potholer_count(

@@ -3,7 +3,7 @@ title: KLL Sketch (KLLスケッチ)
 documentation_of: ../src/approximate/streaming/kll_sketch.hpp
 ---
 
-# KLL Sketch (KLLスケッチ)
+## KLL Sketch (KLLスケッチ)
 
 各 level に最大 `K` 個を置き、sort 後の偶数番または奇数番をランダムに次 level へ
 昇格する固定容量 quantile sketch。`K` は 2 以上の偶数。

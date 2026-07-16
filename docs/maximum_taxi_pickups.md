@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/matching/maximum_taxi_pickups.hpp
 
 格子状道路上の乗客とタクシーについて、制限時間内に迎えに行ける一対一対応の最大数を返す。
 
-# maximum_taxi_pickups
+## maximum_taxi_pickups
 
 ```cpp
 int maximum_taxi_pickups(

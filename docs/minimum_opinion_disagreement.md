@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/minimum_opinion_disagreement.hpp
 
 二値の投票を行う人々について、信念に反する投票数と友人間の不一致数の和の最小値を返す。
 
-# minimum_opinion_disagreement
+## minimum_opinion_disagreement
 
 ```cpp
 int minimum_opinion_disagreement(

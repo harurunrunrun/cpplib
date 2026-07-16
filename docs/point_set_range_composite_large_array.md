@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/point_set_range_composite_large_array
 
 巨大な添字範囲のaffine関数列を疎に保持し、一点変更と区間合成値の評価を行う。
 
-# PointSetRangeCompositeLargeArray
+## PointSetRangeCompositeLargeArray
 
 ```cpp
 template<class T, long long MAX_SIZE>

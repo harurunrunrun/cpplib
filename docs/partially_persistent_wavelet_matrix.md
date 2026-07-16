@@ -6,7 +6,7 @@ documentation_of: ../src/structure/wavelet_matrix/partially_persistent_wavelet_m
 点更新できる部分永続 Wavelet Matrix。
 更新対象は最新バージョンに限る。過去のバージョンはクエリで参照できる。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 PartiallyPersistentWaveletMatrix<T, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE> wm(a)
@@ -15,7 +15,7 @@ PartiallyPersistentWaveletMatrix<T, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE
 初期状態のバージョンは `0`。
 `MAX_VERSION` 回まで更新できる。
 
-# 更新
+## 更新
 
 ```cpp
 int version = wm.set(k, value)
@@ -23,14 +23,14 @@ int version = wm.set(k, value)
 
 最新版の `a[k]` を `value` に変更し、新しいバージョン番号を返す。
 
-# バージョン
+## バージョン
 
 ```cpp
 int count = wm.versions()
 int version = wm.latest_version()
 ```
 
-# クエリ
+## クエリ
 
 ```cpp
 T value = wm.access(version, k)
@@ -47,7 +47,7 @@ std::optional<T> value = wm.next_value(version, l, r, lower)
 区間は半開区間 `[l, r)`。
 `select` は `value` の `k` 番目の位置を返し、存在しなければ `size()` を返す。
 
-# 時間計算量と追加メモリ
+## 時間計算量と追加メモリ
 
 `B = BLOCK_SIZE`、区間が触れるブロック数を `C`、バージョン数を `V` とする。
 
@@ -83,7 +83,7 @@ queryは先頭のversion引数で任意の有効versionを参照する。
 不正なversion・点・区間・順序・値域、bit幅、容量超過では `runtime_error`。
 各APIの計算量は上記表の通り。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PartiallyPersistentWaveletMatrix()

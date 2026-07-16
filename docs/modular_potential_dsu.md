@@ -5,7 +5,7 @@ documentation_of: ../src/structure/dsu/modular_potential_dsu.hpp
 
 ポテンシャル差を法 `MOD` で管理する重み付きDSU。剰余型と頂点順序の変換を構造体内に持つ。
 
-# 構築
+## 構築
 
 ```cpp
 ModularPotentialDSU<MOD, MAX_SIZE> dsu(n)
@@ -16,7 +16,7 @@ ModularPotentialDSU<MOD, MAX_SIZE> dsu(n)
 - 時間計算量: $O(MAX\_SIZE)$
 - 保存領域: $O(MAX\_SIZE)$
 
-# merge
+## merge
 
 ```cpp
 bool merge(int u, int v, long long difference)
@@ -27,7 +27,7 @@ bool merge(int u, int v, long long difference)
 - 時間計算量: 償却 $O(\alpha(N))$
 - 追加空間計算量: 代表探索のstackを含め最悪 $O(\log N)$
 
-# difference
+## difference
 
 ```cpp
 optional<int> difference(int u, int v)
@@ -38,7 +38,7 @@ optional<int> difference(int u, int v)
 - 時間計算量: 償却 $O(\alpha(N))$
 - 追加空間計算量: 最悪 $O(\log N)$
 
-# その他
+## その他
 
 ```cpp
 int size() const

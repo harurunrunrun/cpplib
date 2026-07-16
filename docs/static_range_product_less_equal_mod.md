@@ -5,7 +5,7 @@ documentation_of: ../src/structure/other/static_range_product_less_equal_mod.hpp
 
 静的な整数列について、指定区間内で上限以下の要素のみを法 `MOD` で乗算する。
 
-# StaticRangeProductLessEqualMod
+## StaticRangeProductLessEqualMod
 
 ```cpp
 template<int MOD, int MAX_SIZE>

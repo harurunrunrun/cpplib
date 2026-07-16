@@ -3,7 +3,7 @@ title: Cartesian Tree (カーテシアン木)
 documentation_of: ../src/algorithm/tree/cartesian_tree.hpp
 ---
 
-# Cartesian Tree
+## Cartesian Tree
 
 列の添字順を中間順巡回の順序として保つ Cartesian Tree を構築する。
 既定の `std::less<T>` では min Cartesian Tree、`std::greater<T>` では max Cartesian Tree になる。

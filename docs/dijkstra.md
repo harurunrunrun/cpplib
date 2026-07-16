@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/dijkstra.hpp
 
 単一始点最短路。辺の重みは非負である必要がある。
 
-# 関数
+## 関数
 
 ```cpp
 dijkstra<T>(graph, source, inf)

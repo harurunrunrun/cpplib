@@ -3,7 +3,7 @@ title: Maximum Route Success Percent (最大経路成功率) [CHICAGO]
 documentation_of: ../src/algorithm/graph/maximum_route_success_percent.hpp
 ---
 
-# RouteSuccessPercentEdge
+## RouteSuccessPercentEdge
 
 ```cpp
 struct RouteSuccessPercentEdge {
@@ -15,7 +15,7 @@ struct RouteSuccessPercentEdge {
 
 無向路と、その路を通過できる確率（百分率）を表す。
 
-# maximum_route_success_percent
+## maximum_route_success_percent
 
 ```cpp
 double maximum_route_success_percent(

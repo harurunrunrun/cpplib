@@ -5,7 +5,7 @@ documentation_of: ../src/structure/trie/persistent_binary_trie.hpp
 
 永続 Binary Trie。重複を持つ。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentBinaryTrie<T, BIT, MAX_NODES, MAX_VERSIONS>
@@ -13,7 +13,7 @@ PersistentBinaryTrie<T, BIT, MAX_NODES, MAX_VERSIONS>
 
 BIT は T のビット幅以下とする。更新が容量不足で失敗した場合、version と node は消費されない。
 
-# version
+## version
 
 ```cpp
 int fork(int version)
@@ -28,7 +28,7 @@ int size(int version)
 `versions`はversion数、`node_count`は使用node数、`root`はroot node番号、
 `size`は重複込み要素数を返す。version範囲外は例外。
 
-# count
+## count
 
 ```cpp
 int count(int version, T value) const
@@ -37,7 +37,7 @@ bool contains(int version, T value) const
 
 指定versionでの個数と存在有無を返す。どちらも$O(BIT)$。
 
-# insert / erase
+## insert / erase
 
 ```cpp
 int insert(int version, T x)
@@ -46,7 +46,7 @@ int erase(int version, T x)
 
 新しい version を返す。`erase` は値が存在しない場合、同じ内容の新しい version を返す。
 
-# 順序
+## 順序
 
 ```cpp
 optional<T> kth(int version, int k, T xor_value = 0)

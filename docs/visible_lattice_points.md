@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/visible_lattice_points.hpp
 
 立方格子の原点から、途中に別の格子点を挟まず見える点を数える前計算表。
 
-# `VisibleLatticePointsTable`
+## `VisibleLatticePointsTable`
 
 ```cpp
 explicit VisibleLatticePointsTable(int limit);
@@ -13,7 +13,7 @@ explicit VisibleLatticePointsTable(int limit);
 
 `1..limit` の Möbius 関数累積和を構築する。
 
-# `limit`
+## `limit`
 
 ```cpp
 int limit() const;
@@ -21,7 +21,7 @@ int limit() const;
 
 表の上限を返す。
 
-# `value`
+## `value`
 
 ```cpp
 uint64_t value(int n) const;

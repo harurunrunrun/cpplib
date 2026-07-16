@@ -7,7 +7,7 @@ documentation_of: ../src/structure/modint/fast_modint.hpp
 
 乗算に Barrett reduction を使う。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 FastModint<mod>
@@ -15,7 +15,7 @@ FastModint<mod>
 
 `mod >= 1`が必要。値は常に`[0,mod)`に正規化される。
 
-# 関数
+## 関数
 
 ```cpp
 FastModint()
@@ -37,14 +37,14 @@ FastModint inv() const
 stream入力は符号付き64bit整数を読み、入力に失敗すると例外。
 stream出力は`val()`を10進出力する。
 
-# 演算
+## 演算
 
 ```cpp
 単項 +, 単項 -, ++, --, +, -, *, /,
 +=, -=, *=, /=, ==, !=, operator>>, operator<<
 ```
 
-# エイリアス
+## エイリアス
 
 ```cpp
 FastModint998244353

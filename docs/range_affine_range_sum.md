@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/range_affine_range_sum.hpp
 
 値列への区間affine作用と区間和取得を行う。
 
-# RangeAffineRangeSum
+## RangeAffineRangeSum
 
 ```cpp
 template<class T, int MAX_SIZE>

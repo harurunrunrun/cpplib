@@ -7,13 +7,13 @@ documentation_of: ../src/algorithm/matching/bipartite_flow.hpp
 
 `source -> left -> right -> sink` の形のネットワークを作って最大流を流す。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 BipartiteFlow<T> graph(left_size, right_size)
 ```
 
-# 関数
+## 関数
 
 ```cpp
 graph.add_left_capacity(left, cap)

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/geometry/2d/view_cone_contains.hpp
 
 観測点から方向vectorを中心に広がる対称な視野角に、点が入るかを判定する。
 
-# API
+## API
 
 ~~~cpp
 bool view_cone_contains(
@@ -19,11 +19,11 @@ bool view_cone_contains(
 
 apertureは視野全体の角度であり、中心方向から左右へaperture / 2ずつ広がる。include_boundaryがtrueなら両境界rayを含み、falseなら除く。観測点自身は常に含む。
 
-# 時間計算量
+## 時間計算量
 
 O(1)。
 
-# 空間計算量
+## 空間計算量
 
 O(1)。
 

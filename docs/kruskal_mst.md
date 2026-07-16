@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/kruskal_mst.hpp
 
 Kruskal法で最小全域木を求める。
 
-# 関数
+## 関数
 
 ```cpp
 kruskal_mst<T>(n, edges)

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/can_order_strings_by_matching_endpoints
 
 各文字列をちょうど1回ずつ使用し、直前の文字列の末尾文字と次の文字列の先頭文字が一致する順序を作れるかを判定する。
 
-# can_order_strings_by_matching_endpoints
+## can_order_strings_by_matching_endpoints
 
 ```cpp
 bool can_order_strings_by_matching_endpoints(

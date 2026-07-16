@@ -6,7 +6,7 @@ documentation_of: ../src/approximate/routing/tour_cost.hpp
 距離行列上の巡回路・経路のコストを求める。APIは `approximate::routing` 名前空間にある。
 巡回路は始点を末尾に重複して持たない頂点列で表す。
 
-# `tour_cost`
+## `tour_cost`
 
 ~~~cpp
 template<class DistanceMatrix>
@@ -19,7 +19,7 @@ Cost tour_cost(const DistanceMatrix& distance, const vector<int>& tour)
 - 時間計算量: 行列検査を含めて $O(N+K)$
 - 追加空間計算量: $O(1)$
 
-# `path_cost`
+## `path_cost`
 
 ~~~cpp
 template<class DistanceMatrix>

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/three_edge_connected_components.hpp
 
 無向多重グラフを3-edge-connected componentsへ線形時間で分解する。2頂点は、任意の高々2辺を削除しても同じconnected componentに残るとき、同じ3-edge-connected componentに属する。
 
-# 結果
+## 結果
 
 ```cpp
 struct ThreeEdgeConnectedComponentsResult {
@@ -19,7 +19,7 @@ struct ThreeEdgeConnectedComponentsResult {
 - `id[v]` は頂点 `v` が属するcomponent番号。
 - `groups[c]` はcomponent `c` の全頂点。全頂点を重複なく分割する。
 
-# 3-edge-connected components
+## 3-edge-connected components
 
 ```cpp
 ThreeEdgeConnectedComponentsResult three_edge_connected_components(

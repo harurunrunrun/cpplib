@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/range_affine_range_sum_large_array.hp
 
 巨大な零初期化配列を疎に保持し、区間affine作用と区間和取得を行う。
 
-# RangeAffineRangeSumLargeArray
+## RangeAffineRangeSumLargeArray
 
 ```cpp
 template<class T, long long MAX_SIZE>

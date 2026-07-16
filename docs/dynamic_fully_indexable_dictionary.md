@@ -5,13 +5,13 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_fully_indexable_dictio
 
 bitの変更に対応したrank/select辞書。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 DynamicFullyIndexableDictionary<MAX_SIZE>
 ```
 
-# 更新
+## 更新
 
 ```cpp
 void set(int k, bool value)
@@ -24,7 +24,7 @@ void flip(int k)
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# rank / select
+## rank / select
 
 ```cpp
 int rank(bool value, int r) const
@@ -39,7 +39,7 @@ int select(bool value, int k) const
 - `rank`: $O(\log \mathrm{MAX\_SIZE})$
 - `select`: $O(\log^2 \mathrm{MAX\_SIZE})$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 

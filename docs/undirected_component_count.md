@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/undirected_component_count.hpp
 
 無向グラフの連結成分数を求める。
 
-# undirected_component_count
+## undirected_component_count
 
 ```cpp
 int undirected_component_count(

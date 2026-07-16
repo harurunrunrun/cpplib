@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/longest_common_subsequence.hpp
 
 最長共通部分列。
 
-# 関数
+## 関数
 
 ```cpp
 int longest_common_subsequence_length(a, b)

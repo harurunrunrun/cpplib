@@ -6,7 +6,7 @@ documentation_of: ../src/structure/dsu/offline_persistent_unionfind_queries.hpp
 各操作が過去の操作直後の状態を参照するUnion-Findクエリを登録し、連結性の答えを
 まとめて計算する。操作番号は追加順の0始まりで、`-1` は初期状態を表す。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 OfflinePersistentUnionFindQueries<MAX_SIZE, MAX_OPERATION, MAX_QUERY>
@@ -15,7 +15,7 @@ OfflinePersistentUnionFindQueries<MAX_SIZE, MAX_OPERATION, MAX_QUERY>
 `MAX_SIZE` は頂点数、`MAX_OPERATION` は操作数、`MAX_QUERY` は `same` の
 呼び出し回数の上限。copyはできず、moveはできる。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 OfflinePersistentUnionFindQueries(int size = MAX_SIZE)
@@ -27,7 +27,7 @@ OfflinePersistentUnionFindQueries(int size = MAX_SIZE)
 
 $O(MAX\_SIZE+MAX\_OPERATION)$。
 
-# `merge`
+## `merge`
 
 ```cpp
 void merge(int base_operation, int left, int right)
@@ -40,7 +40,7 @@ void merge(int base_operation, int left, int right)
 
 amortized $O(1)$。
 
-# `same`
+## `same`
 
 ```cpp
 int same(int base_operation, int left, int right)
@@ -53,7 +53,7 @@ int same(int base_operation, int left, int right)
 
 amortized $O(1)$。
 
-# `solve`
+## `solve`
 
 ```cpp
 vector<int> solve()
@@ -67,7 +67,7 @@ vector<int> solve()
 操作数を $M$、`same` の個数を $Q$、頂点数を $N$ として
 $O((M+Q)\log N)$。
 
-# `size` / `operations` / `query_count`
+## `size` / `operations` / `query_count`
 
 ```cpp
 int size() const
@@ -81,11 +81,11 @@ int query_count() const
 
 すべて $O(1)$。
 
-# 空間計算量
+## 空間計算量
 
 $O(MAX\_SIZE+MAX\_OPERATION+MAX\_QUERY)$。
 
-# 注意点
+## 注意点
 
 `base_operation` は `-1` または追加済み操作の番号でなければならない。
 頂点、操作番号、固定容量の範囲外では `out_of_range` または `length_error` を

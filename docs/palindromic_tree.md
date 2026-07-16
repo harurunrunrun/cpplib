@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/string/palindromic_tree.hpp
 
 Palindromic Tree。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PalindromicTree<ALPHABET, MAX_NODES, OFFSET>
 ```
 
-# construct
+## construct
 
 ```cpp
 PalindromicTree()
@@ -19,7 +19,7 @@ PalindromicTree(string_view s)
 int add(char c)
 ```
 
-# query
+## query
 
 ```cpp
 int distinct_palindromes()
@@ -80,6 +80,7 @@ $N$ を現在長、$V$ を使用node数、$L$ をquery回文長、$D=V-2$、$K$ 
 | `longest_palindrome_node()` / `longest_palindrome_length()` | $O(V)$ |
 
 `Node` の各field参照は $O(1)$。保持領域は $O(MAX_NODES\cdot ALPHABET+N)$。
+
 ## API詳細
 
 ### `Node`

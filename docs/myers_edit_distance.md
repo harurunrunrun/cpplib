@@ -10,7 +10,7 @@ Myers の bit-vector 法で、2つの byte 文字列の Levenshtein 距離を求
 pattern 長が64を超える場合も同じ API を使用できる。
 任意コストや byte 文字列以外の列には `edit_distance` を使用する。
 
-# API
+## API
 
 ~~~cpp
 size_t myers_bit_parallel_edit_distance(

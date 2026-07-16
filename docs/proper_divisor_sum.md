@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/proper_divisor_sum.hpp
 
 64 bit 整数を素因数分解し、自分自身を除く正の約数の総和を返す。
 
-# `proper_divisor_sum`
+## `proper_divisor_sum`
 
 ```cpp
 uint64_t proper_divisor_sum(uint64_t n);

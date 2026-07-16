@@ -61,6 +61,7 @@ $P=\pi(n)$、素因数の種類数を $K$ とする。
 | `factorize(n)` | $O(\log n+K)$（出力サイズ $K$） |
 
 `build` は線形篩部分が $O(n)$ だが、固定長 `min_factor_data` の初期化に $O(MAX_N)$ かかる。保持領域は $O(MAX_N)$。
+
 ## 注意点
 
 - `is_prime_sqrt(n)` は $n\le1$ で `false`。例外は送出しない。

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/persistent_fully_indexable_dic
 
 完全永続の完備辞書。任意のバージョンから分岐してbitを更新できる。
 
-# 更新
+## 更新
 
 ```cpp
 int nv = fid.set(version, k, value)
@@ -13,7 +13,7 @@ int nv = fid.flip(version, k)
 int nv = fid.fork(version)
 ```
 
-# クエリ
+## クエリ
 
 ```cpp
 fid.get(version, k)
@@ -22,13 +22,13 @@ fid.rank(version, value, l, r)
 fid.select(version, value, k)
 ```
 
-# 時間計算量
+## 時間計算量
 
 - 更新: $O(\log (MAX\_SIZE / 64))$
 - `rank`: $O(\log (MAX\_SIZE / 64))$
 - `select`: `rank` に追加で二分探索
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $W=\lceil\mathtt{MAX\_SIZE}/64\rceil$、$H=\lceil\log_2\max(1,W)\rceil$ とする。
 
@@ -60,7 +60,7 @@ int select(int version, bool value, int k) const
 不正なversion・点・区間・負の出現番号、`MAX_VERSION`またはnode容量超過では
 `runtime_error`。失敗時にversion/node使用量は増えない。各APIの計算量は上記表の通り。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PersistentFullyIndexableDictionary(int n = 0)

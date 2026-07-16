@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/two_sat_assignment.hpp
 
 構築済みの2-SAT制約について、充足可能性と充足割当を1つの返り値で取得する。
 
-# `two_sat_assignment`
+## `two_sat_assignment`
 
 ```cpp
 optional<vector<int>> two_sat_assignment(TwoSat& solver)
@@ -23,7 +23,7 @@ optional<vector<int>> two_sat_assignment(TwoSat& solver)
 
 SCCの作業領域と返り値を含めて $O(N+M)$。
 
-# 注意点
+## 注意点
 
 - 返されたvectorの長さは `solver.n`。
 - `solver.satisfiable()` を実行するため、`solver.answer` も更新される。

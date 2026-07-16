@@ -3,7 +3,7 @@ title: Optimization Common Helpers (最適化共通補助)
 documentation_of: ../src/approximate/optimization/detail/common.hpp
 ---
 
-# Optimization Common Helpers (最適化共通補助)
+## Optimization Common Helpers (最適化共通補助)
 
 連続最適化で共有する入力検査、評価、射影、反復処理の内部API。
 

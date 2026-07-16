@@ -3,7 +3,7 @@ title: Shelf Rectangle Packing (棚型長方形packing)
 documentation_of: ../src/approximate/packing/shelf_packing.hpp
 ---
 
-# Shelf Rectangle Packing (棚型長方形packing)
+## Shelf Rectangle Packing (棚型長方形packing)
 
 binを水平なshelfへ分け、各長方形をいずれかのshelfへ配置するheuristic。
 

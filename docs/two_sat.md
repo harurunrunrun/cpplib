@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/graph/two_sat.hpp
 
 2-SAT。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 TwoSat ts(n)
 ```
 
-# 関数
+## 関数
 
 ```cpp
 ts.add_clause(i, f, j, g)

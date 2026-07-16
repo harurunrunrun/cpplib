@@ -19,7 +19,7 @@ x86環境では実行時にAVX-512、AVX2の順に利用可能か判定し、ど
 
 default constructorとmove constructorは $O(1)$ です。
 
-# insert
+## insert
 
 ```cpp
 void insert(L x)
@@ -29,7 +29,7 @@ void insert(L x)
 
 計算量: $O(h)$
 
-# erase
+## erase
 
 ```cpp
 void erase(L x)
@@ -39,7 +39,7 @@ void erase(L x)
 
 計算量: $O(h)$
 
-# contain
+## contain
 
 ```cpp
 bool contain(L x)
@@ -49,7 +49,7 @@ bool contain(L x)
 
 計算量: $O(h)$
 
-# range_sum
+## range_sum
 
 ```cpp
 L range_sum(L l, L r)
@@ -59,7 +59,7 @@ L range_sum(L l, L r)
 
 計算量: $O(h)$
 
-# least / more
+## least / more
 
 ```cpp
 std::optional<L> least(L x)
@@ -71,7 +71,7 @@ std::optional<L> more(L x)
 
 計算量: $O(h)$
 
-# most / less
+## most / less
 
 ```cpp
 std::optional<L> most(L x)
@@ -83,7 +83,7 @@ std::optional<L> less(L x)
 
 計算量: $O(h)$
 
-# kth_ge / kth_gt
+## kth_ge / kth_gt
 
 ```cpp
 std::optional<L> kth_ge(L x, L k)
@@ -95,7 +95,7 @@ std::optional<L> kth_gt(L x, L k)
 
 計算量: $O(16h)$
 
-# kth_le / kth_lt
+## kth_le / kth_lt
 
 ```cpp
 std::optional<L> kth_le(L x, L k)
@@ -109,7 +109,7 @@ std::optional<L> kth_lt(L x, L k)
 
 `kth_*` には符号付きの `x` と `k` を受け取るオーバーロードもあります。負の `k` に対しては `std::nullopt` を返します。
 
-# min / max / empty
+## min / max / empty
 
 ```cpp
 std::optional<L> min()
@@ -119,7 +119,7 @@ bool empty()
 
 最小要素、最大要素、集合が空かを返します。`min` と `max` は $O(h)$、`empty` は $O(1)$ です。
 
-# list
+## list
 
 ```cpp
 std::vector<L> list()
@@ -129,7 +129,7 @@ std::vector<L> list()
 
 計算量: $O(ノード数 + 要素数)$
 
-# clear
+## clear
 
 ```cpp
 void clear()
@@ -139,7 +139,7 @@ void clear()
 
 計算量: $O(ノード数)$
 
-# copy / move
+## copy / move
 
 コピー後の集合は元の集合と独立です。copy constructorは $O(コピー元のノード数)$、copy assignmentは $O(コピー元と代入先のノード数の合計)$ です。move constructorは $O(1)$、move assignmentは代入先の旧ノード数に線形で、移動元は空集合になります。
 

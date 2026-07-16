@@ -3,7 +3,7 @@ title: Vertex Substitution k-Median (頂点置換法によるk-メディアン)
 documentation_of: ../src/approximate/facility/vertex_substitution.hpp
 ---
 
-# Vertex Substitution法
+## Vertex Substitution法
 
 ## `vertex_substitution_k_median(distance, initial_facilities, maximum_iterations)`
 

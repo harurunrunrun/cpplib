@@ -3,7 +3,7 @@ title: Cuckoo Filter (カッコウフィルタ)
 documentation_of: ../src/approximate/streaming/cuckoo_filter.hpp
 ---
 
-# Cuckoo Filter (カッコウフィルタ)
+## Cuckoo Filter (カッコウフィルタ)
 
 各 key の短い fingerprint を 2 候補 bucket のどちらかに置く固定容量 filter。
 `BucketCount` は 2 の冪、fingerprint は 1--16 bit。

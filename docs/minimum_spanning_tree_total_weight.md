@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/minimum_spanning_tree_total_weight.hpp
 
 重み付き無向グラフの最小全域木の総重みを返す。
 
-# minimum_spanning_tree_total_weight
+## minimum_spanning_tree_total_weight
 
 ```cpp
 long long minimum_spanning_tree_total_weight(

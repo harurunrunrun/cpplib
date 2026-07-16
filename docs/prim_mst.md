@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/prim_mst.hpp
 
 Prim法で最小全域木を求める。
 
-# 関数
+## 関数
 
 ```cpp
 prim_mst<T>(graph)

@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/label_propagation.hpp
 
 重み付きlabel propagationによるcommunity detection heuristicである。正解communityや最大modularityを保証しない。
 
-# label_propagation
+## label_propagation
 
 ~~~cpp
 CommunityResult label_propagation(

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/dsu/rollback_dsu.hpp
 
 rollback 可能な素集合データ構造。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 RollbackDSU<MAX_SIZE, MAX_HISTORY>
@@ -14,7 +14,7 @@ RollbackDSU<MAX_SIZE, MAX_HISTORY>
 - 頂点数の上限 `MAX_SIZE`
 - 履歴数の上限 `MAX_HISTORY`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 RollbackDSU(int n = MAX_SIZE)
@@ -26,7 +26,7 @@ RollbackDSU(int n = MAX_SIZE)
 
 - $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_HISTORY})$
 
-# merge / same
+## merge / same
 
 ```cpp
 bool merge(int u, int v)
@@ -41,7 +41,7 @@ bool same(int u, int v)
 
 `size`, `groups` は $O(1)$。
 
-# snapshot / rollback
+## snapshot / rollback
 
 ```cpp
 int snapshot()
@@ -61,7 +61,7 @@ void undo()
 - `rollback`: 戻す `merge` 1 個あたり $O(1)$
 - `undo`: $O(1)$
 
-# leader / component_size
+## leader / component_size
 
 ```cpp
 int leader(int v)

@@ -3,7 +3,7 @@ title: SimHash (類似度ハッシュ)
 documentation_of: ../src/approximate/streaming/simhash.hpp
 ---
 
-# SimHash (類似度ハッシュ)
+## SimHash (類似度ハッシュ)
 
 重み付き feature vector の cosine 類似度を bit signature に圧縮する。
 

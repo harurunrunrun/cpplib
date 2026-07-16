@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/round_robin_completion_times.hpp
 
 各タスクを添字順に1単位ずつ処理するラウンドロビン方式について、各タスクが完了する時刻を返す。
 
-# round_robin_completion_times
+## round_robin_completion_times
 
 ```cpp
 template<int MAX_TASKS = 50000>

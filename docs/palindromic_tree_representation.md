@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/palindromic_tree_representation.hpp
 
 文字列の相異なる非空回文と、各prefixの最長回文suffixを回文木のnode番号で表す。
 
-# `PalindromicTreeRelation`
+## `PalindromicTreeRelation`
 
 ```cpp
 struct PalindromicTreeRelation {
@@ -17,7 +17,7 @@ struct PalindromicTreeRelation {
 `parent` は両端を1文字ずつ除いた回文、`suffix_link` は最長の真の回文suffixを
 表すnode番号である。長さ0のrootは `0`、長さ-1のrootは `-1` とする。
 
-# `PalindromicTreeRepresentation`
+## `PalindromicTreeRepresentation`
 
 ```cpp
 struct PalindromicTreeRepresentation {
@@ -29,7 +29,7 @@ struct PalindromicTreeRepresentation {
 - `nodes[i]` はnode `i+1` の関係を持つ。nodeは対応回文が初めて現れた順である。
 - `longest_suffix[i]` は `text[0, i+1)` の最長回文suffixのnode番号である。
 
-# `palindromic_tree_representation`
+## `palindromic_tree_representation`
 
 ```cpp
 template<int MAX_LENGTH, int ALPHABET = 26, char OFFSET = 'a'>

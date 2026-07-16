@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/edit_distance.hpp
 
 最小編集距離。
 
-# 関数
+## 関数
 
 ```cpp
 int edit_distance(a, b, insert_cost = 1, erase_cost = 1, replace_cost = 1)
@@ -26,6 +26,7 @@ $N=|a|$, $M=|b|$ とする。
 | `edit_distance(a,b,...)` | $O(NM)$ | $O(M)$ |
 
 各挿入・削除・置換候補の評価は $O(1)$ とする。
+
 ## API詳細
 
 `edit_distance(a,b,insert_cost,erase_cost,replace_cost)` は列 `a` を `b` へ

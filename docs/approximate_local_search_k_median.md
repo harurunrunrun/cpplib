@@ -3,7 +3,7 @@ title: Local Search k-Median (局所探索k-メディアン)
 documentation_of: ../src/approximate/facility/local_search_k_median.hpp
 ---
 
-# Local Search k-Median
+## Local Search k-Median
 
 ## `local_search_k_median(distance, k, maximum_iterations)`
 

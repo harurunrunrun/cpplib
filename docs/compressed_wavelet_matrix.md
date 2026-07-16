@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/compressed_wavelet_matrix.hpp
 
 値を座標圧縮して扱う静的wavelet matrix。任意の比較可能な型を値として使える。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 CompressedWaveletMatrix<T, MAX_SIZE, ID_BIT_WIDTH>
@@ -20,7 +20,7 @@ CompressedWaveletMatrix<T, MAX_SIZE, ID_BIT_WIDTH>
 圧縮idは内部では符号なし整数として保持するため、たとえば15 bitならid `0` から
 `32767` まで、すなわち32768種類の値を表現できる。配列長はこの種類数を超えてもよい。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 CompressedWaveletMatrix(const vector<T>& values)
@@ -32,14 +32,14 @@ CompressedWaveletMatrix(const vector<T>& values)
 
 - $O(N\log N+\mathtt{MAX\_SIZE}+\mathrm{ID\_BIT\_WIDTH}(N+\lceil\mathtt{MAX\_SIZE}/64\rceil))$
 
-# 要素取得
+## 要素取得
 
 ```cpp
 T access(int k) const
 T operator[](int k) const
 ```
 
-# rank / select
+## rank / select
 
 ```cpp
 int rank(const T& value, int r) const
@@ -49,7 +49,7 @@ int select(const T& value, int k) const
 
 `select` は存在しない場合 `size()` を返す。
 
-# k番目 / 中央値
+## k番目 / 中央値
 
 ```cpp
 T kth_smallest(int l, int r, int k) const
@@ -63,7 +63,7 @@ T median_ceil(int l, int r) const
 
 `k` は0-indexed。
 
-# 頻度
+## 頻度
 
 ```cpp
 int range_freq(int l, int r, const T& upper) const
@@ -74,7 +74,7 @@ int count_greater(int l, int r, const T& value) const
 区間 $[l,r)$ にある `upper` 未満、または `[lower, upper)` の値の個数を返す。
 `count_greater` は同じ区間にある `value` より大きい値の個数を返す。
 
-# 前後の値
+## 前後の値
 
 ```cpp
 optional<T> prev_value(int l, int r, const T& upper) const
@@ -85,7 +85,7 @@ optional<T> next_value(int l, int r, const T& lower) const
 
 - 構築以外: $O(\log N + \mathrm{ID\_BIT\_WIDTH})$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/letter_pipe_max_flow.hpp
 
 英大文字・英小文字で識別される無向配管網について、`A` から `Z` への最大流量を返す。
 
-# LetterPipe
+## LetterPipe
 
 ```cpp
 template<class T>
@@ -18,7 +18,7 @@ struct LetterPipe {
 
 英字名 `from` と `to` を結ぶ容量 `capacity` の無向配管を表す。
 
-# letter_pipe_max_flow
+## letter_pipe_max_flow
 
 ```cpp
 template<class T>

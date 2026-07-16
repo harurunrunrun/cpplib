@@ -3,7 +3,7 @@ title: Count Sketch (Countスケッチ)
 documentation_of: ../src/approximate/streaming/count_sketch.hpp
 ---
 
-# Count Sketch (Countスケッチ)
+## Count Sketch (Countスケッチ)
 
 正負の更新を許す turnstile stream の点頻度を、符号付き hash と median で近似する。
 

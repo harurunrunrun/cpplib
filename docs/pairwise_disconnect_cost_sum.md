@@ -8,7 +8,7 @@ documentation_of: ../src/algorithm/graph/pairwise_disconnect_cost_sum.hpp
 頂点対 $(u,v)$ が最初から非連結ならコストは0とする。
 連結なら、$u,v$ が非連結になるまでに削除した全辺の重みの総和をその頂点対のコストとする。
 
-# PairwiseDisconnectCostEdge
+## PairwiseDisconnectCostEdge
 
 ```cpp
 template<class T>
@@ -17,7 +17,7 @@ using PairwiseDisconnectCostEdge = KruskalEdge<T>;
 
 `PairwiseDisconnectCostEdge<T>{from, to, cost}` で無向辺を表す。
 
-# pairwise_disconnect_cost_sum
+## pairwise_disconnect_cost_sum
 
 ```cpp
 template<class T>

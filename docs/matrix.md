@@ -7,7 +7,7 @@ documentation_of: ../src/structure/matrix/matrix.hpp
 
 実際の行数・列数は実行時に持つ。保存領域は `MAX_ROW * MAX_COL` 個。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 Matrix<T, MAX_ROW, MAX_COL>
@@ -17,7 +17,7 @@ Matrix<T, MAX_ROW, MAX_COL>
 - 行数の上限 `MAX_ROW`
 - 列数の上限 `MAX_COL`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 Matrix()
@@ -37,7 +37,7 @@ Matrix(vector<vector<T>> values)
 | `Matrix(values)` | $O(C+rows+rows\cdot cols)$ |
 | コピー・move構築、コピー・move代入 | $O(C)$ |
 
-# 要素アクセス
+## 要素アクセス
 
 ```cpp
 T& operator()(int i, int j)
@@ -50,7 +50,7 @@ const T& operator()(int i, int j)
 | --- | --- |
 | `operator()(i, j)` | $O(1)$ |
 
-# rows / cols
+## rows / cols
 
 ```cpp
 int rows()
@@ -66,7 +66,7 @@ bool empty()
 | `cols()` | $O(1)$ |
 | `empty()` | $O(1)$ |
 
-# zero / comparison
+## zero / comparison
 
 ```cpp
 Matrix::zero(rows, cols)
@@ -79,7 +79,7 @@ A != B
 | `zero(rows, cols)` | $O(C)$ |
 | `operator==`, `operator!=` | $O(rows\cdot cols)$（不一致時は途中で終了） |
 
-# 演算
+## 演算
 
 ```cpp
 A + B
@@ -106,7 +106,7 @@ A / scalar
 | 単項 `-A` | $O(C+rk)$ |
 | `A * B` | $O(MAX\_ROW\cdot RHS\_MAX\_COL+rkc)$ |
 
-# transposed
+## transposed
 
 ```cpp
 A.transposed()
@@ -120,7 +120,7 @@ A.transposed()
 | --- | --- |
 | `transposed()` | $O(C+rows\cdot cols)=O(C)$ |
 
-# pow_entry_bmbm
+## pow_entry_bmbm
 
 ```cpp
 A.pow_entry_bmbm(m, i, j)

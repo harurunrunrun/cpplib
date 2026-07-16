@@ -3,7 +3,7 @@ title: Bottom Vertices (有向グラフの底頂点) [BOTTOM]
 documentation_of: ../src/algorithm/graph/bottom_vertices.hpp
 ---
 
-# bottom_vertices
+## bottom_vertices
 
 ```cpp
 vector<int> bottom_vertices(const vector<vector<int>>& graph)

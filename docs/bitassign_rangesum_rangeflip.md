@@ -5,13 +5,13 @@ documentation_of: ../src/structure/segtree/bitassign_rangesum_rangeflip.hpp
 
 $0,1$ のみの列に対して、区間更新 と 区間和取得、区間反転を SIMDとbitset高速化で定数倍を削ったデータ構造。
 
-# 時間計算量
+## 時間計算量
 
 - `Bit01WST(n)`, `Bit01WST(vector)`, `init`, `build`: $O(N)$
 - `assign`, `flip`, `sum`, `get`: $O(\log N)$
 - `size`: $O(1)$
 
-# API
+## API
 
 ```cpp
 Bit01WST(size_t n)

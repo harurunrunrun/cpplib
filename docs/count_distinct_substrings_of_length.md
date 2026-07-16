@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/count_distinct_substrings_of_length.hp
 
 指定した長さの相異なる連続部分列数を返す。
 
-# API
+## API
 
 ~~~cpp
 template<class Sequence>

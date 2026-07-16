@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/partially_persistent_rectangle
 
 `PartiallyPersistentWaveletMatrix2DWeighted` の矩形和用の別名。
 
-# 時間計算量（公開操作別）
+## 時間計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$V$ を現在のversion数、x範囲に入る点数を $L$、触れるblock数を $C$ とし、
 $Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。

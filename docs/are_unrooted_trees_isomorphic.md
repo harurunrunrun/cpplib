@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/tree/are_unrooted_trees_isomorphic.hpp
 
 2本の無根無向木が、頂点番号の付け替えによって一致するかを判定する。
 
-# are_unrooted_trees_isomorphic
+## are_unrooted_trees_isomorphic
 
 ```cpp
 bool are_unrooted_trees_isomorphic(

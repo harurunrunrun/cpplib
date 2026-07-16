@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/chinese_whispers.hpp
 
 重み付きChinese Whispersによるcommunity detection heuristicである。正解communityや最大modularityを保証しない。
 
-# chinese_whispers
+## chinese_whispers
 
 ~~~cpp
 CommunityResult chinese_whispers(

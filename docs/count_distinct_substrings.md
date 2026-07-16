@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/count_distinct_substrings.hpp
 
 空でない相異なる連続部分列の個数を返す。
 
-# API
+## API
 
 ~~~cpp
 template<class Sequence>

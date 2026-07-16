@@ -5,13 +5,13 @@ documentation_of: ../src/structure/wavelet_matrix/fully_indexable_dictionary.hpp
 
 固定bit列に対するrank/select辞書。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 FullyIndexableDictionary<MAX_SIZE>
 ```
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) FullyIndexableDictionary(int n = 0)
@@ -21,7 +21,7 @@ FullyIndexableDictionary<MAX_SIZE>
 1. 長さ `n` の0列を作る。`set` の後に `build` を呼ぶ。
 2. `v` から構築する。
 
-# set / build
+## set / build
 
 ```cpp
 void set(int k, bool value = true)
@@ -35,7 +35,7 @@ void build()
 - `set`: $O(1)$
 - `build`: $O(\mathrm{MAX\_SIZE}/64)$
 
-# rank
+## rank
 
 ```cpp
 int rank(bool value, int r) const
@@ -48,7 +48,7 @@ int rank(bool value, int l, int r) const
 
 - $O(1)$
 
-# select
+## select
 
 ```cpp
 int select(bool value, int k) const
@@ -60,7 +60,7 @@ int select(bool value, int k) const
 
 - $O(\log (\lceil N/64 \rceil + 1) + 64)$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 

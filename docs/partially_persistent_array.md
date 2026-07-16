@@ -7,7 +7,7 @@ documentation_of: ../src/structure/array/partially_persistent_array.hpp
 
 状態は0から始まるversionで指定する。version 0は初期状態。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PartiallyPersistentArray<T, MAX_SIZE, MAX_UPDATE>
@@ -19,7 +19,7 @@ PartiallyPersistentArray<T, MAX_SIZE, MAX_UPDATE>
 
 オブジェクト自体のcopy/moveはできない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) PartiallyPersistentArray(int n = MAX_SIZE)
@@ -39,7 +39,7 @@ PartiallyPersistentArray<T, MAX_SIZE, MAX_UPDATE>
 
 固定長の値領域と各indexの履歴列を構築した後、使用する $n$ 要素を初期化する。
 
-# set
+## set
 
 ```cpp
 int set(int k, const T& x)
@@ -51,7 +51,7 @@ int set(int k, const T& x)
 
 - 償却 $O(1)$
 
-# get
+## get
 
 ```cpp
 (1) const T& get(int version, int k) const
@@ -68,7 +68,7 @@ int set(int k, const T& x)
 
 ここで $U_k$ は添字 `k` の変更回数。
 
-# version情報
+## version情報
 
 ```cpp
 int size() const
@@ -82,7 +82,7 @@ int latest_version() const
 
 - $O(1)$
 
-# 空間計算量
+## 空間計算量
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE})$
 

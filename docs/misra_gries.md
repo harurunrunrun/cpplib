@@ -3,7 +3,7 @@ title: Misra–Gries Algorithm (Misra–Griesアルゴリズム)
 documentation_of: ../src/approximate/streaming/misra_gries.hpp
 ---
 
-# Misra–Gries Algorithm (Misra–Griesアルゴリズム)
+## Misra–Gries Algorithm (Misra–Griesアルゴリズム)
 
 頻出候補を `Capacity` 個の counter で保持する。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/binomial_prefix_sum.hpp
 
 二項係数とその prefix sum を前計算する。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 BinomialPrefixSum<Mint, MAX_N>
@@ -14,7 +14,7 @@ BinomialPrefixSum<Mint, MAX_N>
 - modint などの型 `Mint`
 - 最大 `n`
 
-# query
+## query
 
 ```cpp
 Mint combination(int n, int k)
@@ -40,6 +40,7 @@ Mint prefix_sum(int n, int k)
 | 公開表 `comb` / `prefix` の1要素参照 | $O(1)$ |
 
 保持領域は $O(MAX_N^2)$。
+
 ## 注意点
 
 - `comb[n][k]` は $\binom nk$、`prefix[n][k]` は

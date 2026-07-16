@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/named_shortest_paths.hpp
 
 文字列名で識別される静的な非負重み有向グラフに対し、頂点間の最短距離を問い合わせる。
 
-# NamedShortestPaths
+## NamedShortestPaths
 
 ```cpp
 template<class T>

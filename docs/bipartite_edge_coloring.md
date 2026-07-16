@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/bipartite_edge_coloring.hpp
 
 無向二部多重グラフを、辺彩色数と等しい最小色数でproper edge coloringする。Kőnigのline coloring theoremにより、必要な色数は最大次数 `Delta` である。
 
-# 辺
+## 辺
 
 ```cpp
 struct BipartiteEdgeColoringEdge {
@@ -16,7 +16,7 @@ struct BipartiteEdgeColoringEdge {
 
 `left` は左側頂点番号、`right` は右側頂点番号。異なる入力要素は、端点が同じでも別の辺として扱う。
 
-# 結果
+## 結果
 
 ```cpp
 struct BipartiteEdgeColoringResult {
@@ -29,7 +29,7 @@ struct BipartiteEdgeColoringResult {
 - `color[i]` は入力の `edges[i]` に対応する色。入力順を保ち、辺が存在すれば `0 <= color[i] < color_count`。
 - 同じ頂点に接続する2辺の色は常に異なる。
 
-# 二部グラフの辺彩色
+## 二部グラフの辺彩色
 
 ```cpp
 BipartiteEdgeColoringResult bipartite_edge_coloring(

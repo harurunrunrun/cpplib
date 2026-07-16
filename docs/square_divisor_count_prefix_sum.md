@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/square_divisor_count_prefix_sum.hpp
 
 各正整数の平方が持つ約数の個数について、累積和を複数回求める。
 
-# `SquareDivisorCountPrefixSum`
+## `SquareDivisorCountPrefixSum`
 
 ```cpp
 explicit SquareDivisorCountPrefixSum(uint64_t maximum_query);
@@ -17,7 +17,7 @@ explicit SquareDivisorCountPrefixSum(uint64_t maximum_query);
 
 - `maximum_query`: 以後の `query` で指定する最大値。
 
-# `query`
+## `query`
 
 ```cpp
 uint64_t query(uint64_t n) const;
@@ -33,7 +33,7 @@ uint64_t query(uint64_t n) const;
 
 各 `i^2` の正の約数の個数を合計した値。
 
-# `query_all`
+## `query_all`
 
 ```cpp
 vector<uint64_t> query_all(const vector<uint64_t>& queries) const;
@@ -49,7 +49,7 @@ vector<uint64_t> query_all(const vector<uint64_t>& queries) const;
 
 各問い合わせの答え。
 
-# `square_divisor_count_prefix_sums`
+## `square_divisor_count_prefix_sums`
 
 ```cpp
 vector<uint64_t> square_divisor_count_prefix_sums(

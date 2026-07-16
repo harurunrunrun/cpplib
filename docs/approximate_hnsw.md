@@ -3,7 +3,7 @@ title: HNSW (階層的近似近傍探索)
 documentation_of: ../src/approximate/nearest_neighbor/hnsw.hpp
 ---
 
-# HNSW (階層的近似近傍探索)
+## HNSW (階層的近似近傍探索)
 
 確率的な階層近傍グラフで近似最近傍を探索する。点は `std::array<Real, Dimension>`。同じseed、挿入順、引数なら結果は決定的で、同距離は添字順に処理する。重複点を許す。
 

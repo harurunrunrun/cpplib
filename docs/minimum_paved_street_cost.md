@@ -3,7 +3,7 @@ title: Minimum Paved Street Cost (最小道路舗装費) [CSTREET]
 documentation_of: ../src/algorithm/graph/minimum_paved_street_cost.hpp
 ---
 
-# minimum_paved_street_cost
+## minimum_paved_street_cost
 
 ```cpp
 long long minimum_paved_street_cost(

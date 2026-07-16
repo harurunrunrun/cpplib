@@ -7,7 +7,7 @@ documentation_of: ../src/structure/dsu/edge_count_dsu.hpp
 
 各連結成分について、頂点数と辺数を持つ。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 EdgeCountDSU<MAX_SIZE>
@@ -15,7 +15,7 @@ EdgeCountDSU<MAX_SIZE>
 
 - 頂点数の上限 `MAX_SIZE`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 EdgeCountDSU(int n = MAX_SIZE)
@@ -27,7 +27,7 @@ EdgeCountDSU(int n = MAX_SIZE)
 
 - $O(\mathtt{MAX\_SIZE})$
 
-# add_edge
+## add_edge
 
 ```cpp
 bool add_edge(int u, int v)
@@ -42,7 +42,7 @@ bool add_edge(int u, int v)
 
 `size`, `groups` は $O(1)$。
 
-# same / leader
+## same / leader
 
 ```cpp
 bool same(int u, int v)
@@ -53,7 +53,7 @@ int leader(int v)
 
 - amortized $O(\alpha(N))$
 
-# 成分情報
+## 成分情報
 
 ```cpp
 int component_size(int v)

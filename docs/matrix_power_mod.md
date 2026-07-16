@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/matrix_power_mod.hpp
 
 実行時サイズの正方行列を、指定した法の下で整数乗する。
 
-# `DynamicModMatrix`
+## `DynamicModMatrix`
 
 ```cpp
 using DynamicModMatrix = vector<vector<int64_t>>;
@@ -13,7 +13,7 @@ using DynamicModMatrix = vector<vector<int64_t>>;
 
 行列の入出力型。
 
-# `matrix_power_mod`
+## `matrix_power_mod`
 
 ```cpp
 DynamicModMatrix matrix_power_mod(

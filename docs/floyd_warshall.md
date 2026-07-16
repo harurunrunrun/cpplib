@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/floyd_warshall.hpp
 
 全点対最短路。負辺を扱える。
 
-# 関数
+## 関数
 
 ```cpp
 floyd_warshall<T>(dist, inf)

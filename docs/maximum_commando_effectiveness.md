@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/maximum_commando_effectiveness.hpp
 
 正の値の列を連続区間へ分割したときの評価値合計の最大値を返す。
 
-# maximum_commando_effectiveness
+## maximum_commando_effectiveness
 
 ```cpp
 long long maximum_commando_effectiveness(

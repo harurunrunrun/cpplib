@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/set_cover/greedy_set_cover.hpp
 
 集合族から未被覆要素を最も効率よく覆う集合を反復して選ぶ。`approximate::set_cover` 名前空間にある。各集合内の重複要素は1個として扱う。
 
-# greedy_set_cover
+## greedy_set_cover
 
 ~~~cpp
 SetCoverResult greedy_set_cover(size_t universe_size, const vector<vector<size_t>>& sets)
@@ -18,7 +18,7 @@ SetCoverResult greedy_set_cover(size_t universe_size, const vector<vector<size_t
 - 時間計算量: $O(L\log L + L\log M + U)$
 - 追加空間計算量: $O(U+M+L)$
 
-# greedy_weighted_set_cover
+## greedy_weighted_set_cover
 
 ~~~cpp
 template<class Weight>
@@ -34,7 +34,7 @@ SetCoverResult greedy_weighted_set_cover(
 - 時間計算量: $O(L\log L + L\log M + U)$
 - 追加空間計算量: $O(U+M+L)$
 
-# SetCoverResult
+## SetCoverResult
 
 `selected_sets` は選択順、`uncovered_elements` は被覆不能だった要素の昇順列である。`covers_universe()` は後者が空かを返し、時間計算量 $O(1)$、追加空間計算量は $O(1)$。
 

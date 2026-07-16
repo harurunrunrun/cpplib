@@ -53,6 +53,7 @@ mint x = comb.combination(n, k);
 | 公開配列 `fact` / `inv_fact` / `inv` の1要素参照 | $O(1)$ |
 
 保持領域は $O(MAX_N)$。`bell_number` の呼出しごとの一時領域は $O(MAX_N)$。
+
 ## 注意点
 
 - `fact[n]`, `inv_fact[n]`, `inv[n]` はそれぞれ $n!$、$(n!)^{-1}$、

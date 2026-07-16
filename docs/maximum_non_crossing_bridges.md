@@ -3,7 +3,7 @@ title: Maximum Non-Crossing Bridges (最大非交差橋数) [BRIDGE]
 documentation_of: ../src/algorithm/other/maximum_non_crossing_bridges.hpp
 ---
 
-# maximum_non_crossing_bridges
+## maximum_non_crossing_bridges
 
 ```cpp
 int maximum_non_crossing_bridges(

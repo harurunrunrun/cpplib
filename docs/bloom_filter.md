@@ -3,7 +3,7 @@ title: Bloom Filter (ブルームフィルタ)
 documentation_of: ../src/approximate/streaming/bloom_filter.hpp
 ---
 
-# Bloom Filter (ブルームフィルタ)
+## Bloom Filter (ブルームフィルタ)
 
 集合への所属を固定長 bit 列で近似する `BloomFilter` と、削除・多重度推定に対応する
 `CountingBloomFilter`。hash の seed は constructor で指定する。

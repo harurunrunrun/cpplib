@@ -5,7 +5,7 @@ documentation_of: ../src/structure/bbst/persistent_lazy_weighted_balanced_tree.h
 
 重みを部分木サイズとする平衡条件を保ち、path copying を行う完全永続 implicit weight-balanced tree。列の挿入、削除、区間反転、区間作用、区間積を扱う。更新元の version は変更しない。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentLazyWeightedBalancedTree<MonoidActLen, MAX_NODE, MAX_VERSION>
@@ -27,7 +27,7 @@ T id();
 
 `MAX_NODE` は初期列と全versionの path copy が共有する node 数、`MAX_VERSION` は version 0 を含む version 数の上限である。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 PersistentLazyWeightedBalancedTree()
@@ -36,7 +36,7 @@ PersistentLazyWeightedBalancedTree(const vector<S>& values)
 
 空、または `values` を初期列とする version 0 を作る。
 
-# 更新
+## 更新
 
 ```cpp
 int insert(int p, const S& x, int version = 0)
@@ -50,7 +50,7 @@ int reverse(int l, int r, int version = 0)
 
 node または version の容量を超えた場合は例外を送出し、version 数、使用 node 数、既存versionを更新前の状態に保つ。
 
-# 取得
+## 取得
 
 ```cpp
 int versions() const
@@ -64,7 +64,7 @@ vector<S> to_vector(int version = 0) const
 
 取得は木を変更せず、新しい version も作らない。
 
-# 時間計算量
+## 時間計算量
 
 $N$ を対象versionの列長とし、モノイド演算・作用を $O(1)$ とする。
 

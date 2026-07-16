@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/range/range_dsu.hpp
 
 点同士の併合に加えて、区間内のすべての点を1点に併合できる DSU。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 RangeDSU dsu(n)
 ```
 
-# 関数
+## 関数
 
 ```cpp
 dsu.leader(x)
@@ -48,6 +48,7 @@ $I$ を現在の区間数、$K$ を対象範囲と交差して走査・削除す
 | `same_range(l,r)` | $O((K+1)\log n+\log I)$ |
 
 構築後の保持領域は $O(n+I)=O(n)$。`unite_range` と `same_range` の $K$ は、その呼出しで実際に走査する区間数である。
+
 ## 注意点
 
 - `RangeDSU(n)` は $0,\ldots,n-1$ を別成分で初期化する。`n<0` は例外。

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/neighboring_town_pairs.hpp
 
 全頂点対最短距離表から、ほかの町を経由する最短路を持たない町の組を列挙する。
 
-# neighboring_town_pairs
+## neighboring_town_pairs
 
 ```cpp
 vector<pair<int, int>> neighboring_town_pairs(

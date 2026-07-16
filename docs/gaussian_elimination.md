@@ -18,7 +18,7 @@ bitset 版を提供する。
 以下、行数を $R$、列数を $C$、$K=\min(R,C)$ とする。
 また `Matrix` 版では $R_{max}=MAX\_ROW$、$C_{max}=MAX\_COL$ とする。
 
-# gaussian_rank
+## gaussian_rank
 
 ```cpp
 int gaussian_rank(matrix)
@@ -33,7 +33,7 @@ int gaussian_rank(matrix)
 | `vector<vector<T>>` | $O(RCK)$ | $O(RC)$ |
 | `Matrix<T, R_MAX, C_MAX>` | $O(R_{max}C_{max}+RCK)$ | $O(R_{max}C_{max})$ |
 
-# gaussian_determinant
+## gaussian_determinant
 
 ```cpp
 T gaussian_determinant(matrix)
@@ -51,7 +51,7 @@ T gaussian_determinant(matrix)
 | `vector<vector<T>>` | $O(N^3)$ | $O(N^2)$ |
 | `Matrix<T, R_MAX, C_MAX>` | $O(R_{max}C_{max}+N^3)$ | $O(R_{max}C_{max})$ |
 
-# solve_linear_system
+## solve_linear_system
 
 ```cpp
 GaussianLinearSystemSolution<T> solve_linear_system(matrix, rhs)
@@ -78,7 +78,7 @@ $Ax=b$ を解く。`rhs.size()` は行数と一致する必要がある。
 | `vector<vector<T>>` | $O(RCK+C^2)$ | $O(R(C+1)+CD)$ |
 | `Matrix<T, R_MAX, C_MAX>` | $O(R_{max}(C_{max}+1)+RCK+C^2)$ | $O(R_{max}(C_{max}+1)+CD)$ |
 
-# gaussian_inverse
+## gaussian_inverse
 
 ```cpp
 optional<Matrix<T, R_MAX, C_MAX>> gaussian_inverse(matrix)
@@ -97,7 +97,7 @@ $0\times0$ 行列には空の行列を返す。正方行列でない場合は例
 | `vector<vector<T>>` | $O(N^3)$ | $O(N^2)$ |
 | `Matrix<T, R_MAX, C_MAX>` | $O(R_{max}C_{max}+N^3)$ | $O(R_{max}C_{max})$ |
 
-# GF2LinearSystemSolution
+## GF2LinearSystemSolution
 
 ```cpp
 GF2LinearSystemSolution<MAX_COL>
@@ -107,7 +107,7 @@ GF2LinearSystemSolution<MAX_COL>
 通常版の `GaussianLinearSystemSolution` と同じ意味で、ベクトルは
 `bitset<MAX_COL>` で保存される。
 
-# gf2_rank
+## gf2_rank
 
 ```cpp
 int gf2_rank(vector<bitset<MAX_COL>> matrix, int columns)
@@ -124,7 +124,7 @@ $W=\lceil MAX\_COL / w\rceil$、$w$ は機械語の bit 数とする。
 | --- | --- | --- |
 | `gf2_rank` | $O(RC+RKW)$ | $O(RW)$ machine words |
 
-# gf2_solve_linear_system
+## gf2_solve_linear_system
 
 ```cpp
 GF2LinearSystemSolution<MAX_COL> gf2_solve_linear_system(

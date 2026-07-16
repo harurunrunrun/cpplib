@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/count_vertices_reaching_target_within.h
 
 非負重み有向グラフで、指定した距離以内に目標頂点へ到達できる始点の個数を求める。
 
-# ReachingTargetEdge
+## ReachingTargetEdge
 
 ```cpp
 template<class T>
@@ -18,7 +18,7 @@ struct ReachingTargetEdge {
 
 有向辺 `from -> to` とその非負コストを表す。
 
-# count_vertices_reaching_target_within
+## count_vertices_reaching_target_within
 
 ```cpp
 template<class T>

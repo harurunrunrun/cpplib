@@ -3,7 +3,7 @@ title: Skyline Rectangle Packing (skyline長方形packing)
 documentation_of: ../src/approximate/packing/skyline_packing.hpp
 ---
 
-# Skyline Rectangle Packing (skyline長方形packing)
+## Skyline Rectangle Packing (skyline長方形packing)
 
 各binの上端を区分一定なskylineとして管理し、候補位置へ長方形を配置するheuristic。
 

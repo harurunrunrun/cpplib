@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/minimum_leftward_leaf_gathering_cost.hp
 
 一直線上の重み付き要素を左向きに移動して指定個数の山へ集める最小費用を返す。
 
-# minimum_leftward_leaf_gathering_cost
+## minimum_leftward_leaf_gathering_cost
 
 ```cpp
 long long minimum_leftward_leaf_gathering_cost(

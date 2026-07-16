@@ -7,7 +7,7 @@ documentation_of: ../src/algorithm/graph/shortest_path_edge_usage.hpp
 
 辺の重みは非負である必要がある。
 
-# 関数
+## 関数
 
 ```cpp
 shortest_path_edge_usage<T>(n, edges, source, target, inf)

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/minimum_herding_traps.hpp
 
 各マスから移動方向が一意に決まる格子で、どの開始マスからも最終的に捕獲するために必要な罠の最小数を返す。
 
-# minimum_herding_traps
+## minimum_herding_traps
 
 ```cpp
 int minimum_herding_traps(const vector<string>& directions);

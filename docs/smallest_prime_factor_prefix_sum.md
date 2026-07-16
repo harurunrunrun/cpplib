@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/smallest_prime_factor_prefix_sum.hpp
 
 `2..n` の各整数の最小素因数を合計する前計算表。
 
-# `SmallestPrimeFactorPrefixSum`
+## `SmallestPrimeFactorPrefixSum`
 
 ```cpp
 explicit SmallestPrimeFactorPrefixSum(int limit);
@@ -13,7 +13,7 @@ explicit SmallestPrimeFactorPrefixSum(int limit);
 
 上限までの最小素因数と累積和を構築する。
 
-# `limit`
+## `limit`
 
 ```cpp
 int limit() const;
@@ -21,7 +21,7 @@ int limit() const;
 
 表の上限を返す。
 
-# `value`
+## `value`
 
 ```cpp
 uint64_t value(int n) const;

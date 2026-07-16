@@ -5,11 +5,11 @@ documentation_of: ../src/approximate/graph/multilevel_partitioning.hpp
 
 heavy-edge matchingによるcoarsening、spectral bisection、uncoarsening時のFiduccia–Mattheyses refinementを組み合わせた重み付きグラフ分割heuristicである。最適解を保証しない。
 
-# MultilevelPartitionResult
+## MultilevelPartitionResult
 
 `side` と `cut_weight` に加え、実際に縮約した `coarsening_levels` を返す。
 
-# multilevel_graph_partitioning
+## multilevel_graph_partitioning
 
 ~~~cpp
 MultilevelPartitionResult multilevel_graph_partitioning(

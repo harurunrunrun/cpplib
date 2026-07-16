@@ -6,7 +6,7 @@ documentation_of: ../src/algorithm/graph/incremental_scc_pair_product_sums.hpp
 有向辺を順に追加した各時点について、同じ強連結成分に属する相異なる2頂点の
 重み積を加算した値を返す。
 
-# `incremental_scc_pair_product_sums`
+## `incremental_scc_pair_product_sums`
 
 ```cpp
 template<class T>

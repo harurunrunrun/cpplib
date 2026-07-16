@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/other/minimum_fishmonger_toll.hpp
 
 時間制限内に頂点0から末尾頂点へ着く経路の最小通行料を返す。
 
-# FishmongerRouteCost
+## FishmongerRouteCost
 
 ```cpp
 struct FishmongerRouteCost { int toll, travel_time; };
 ```
 
-# minimum_fishmonger_toll
+## minimum_fishmonger_toll
 
 ```cpp
 FishmongerRouteCost minimum_fishmonger_toll(

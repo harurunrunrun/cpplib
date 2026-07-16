@@ -6,7 +6,7 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix.hpp
 点更新できる整数列。API は `WaveletMatrix` に近い。
 内部はブロックごとにソート列を持つ。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 DynamicWaveletMatrix<T, MAX_SIZE, BIT_WIDTH, BLOCK_SIZE>
@@ -19,7 +19,7 @@ DynamicWaveletMatrix<T, MAX_SIZE, BIT_WIDTH, BLOCK_SIZE>
 
 符号付き整数では `BIT_WIDTH` を省略する。
 
-# set
+## set
 
 ```cpp
 wm.set(k, value)
@@ -31,7 +31,7 @@ wm.set(k, value)
 
 - $O(BLOCK\_SIZE \log BLOCK\_SIZE)$
 
-# 要素取得
+## 要素取得
 
 ```cpp
 wm.access(k)
@@ -42,7 +42,7 @@ wm[k]
 
 - $O(1)$
 
-# rank / select
+## rank / select
 
 ```cpp
 wm.rank(value, r)
@@ -58,7 +58,7 @@ wm.select(value, k)
 - `rank`: $O(BLOCK\_SIZE + \frac{N}{BLOCK\_SIZE}\log BLOCK\_SIZE)$
 - `select`: `rank` に追加で二分探索
 
-# k番目
+## k番目
 
 ```cpp
 wm.kth_smallest(l, r, k)
@@ -71,7 +71,7 @@ wm.kth_largest(l, r, k)
 
 - $O(BIT\_WIDTH \cdot (BLOCK\_SIZE + \frac{N}{BLOCK\_SIZE}\log BLOCK\_SIZE))$
 
-# 頻度
+## 頻度
 
 ```cpp
 wm.range_freq(l, r, upper)
@@ -84,7 +84,7 @@ wm.range_freq(l, r, lower, upper)
 
 - $O(BLOCK\_SIZE + \frac{N}{BLOCK\_SIZE}\log BLOCK\_SIZE)$
 
-# 前後の値
+## 前後の値
 
 ```cpp
 wm.prev_value(l, r, upper)
@@ -97,7 +97,7 @@ wm.next_value(l, r, lower)
 
 - `kth_smallest` と同じ
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$D=\mathtt{BIT\_WIDTH}$ とし、長さ $L$ の区間について
 $Q(L)=B+\lceil L/B\rceil\log B$ とおく。

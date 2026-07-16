@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/wavelet_matrix.hpp
 
 整数列に対する静的wavelet matrix。符号付き整数にも対応する。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 WaveletMatrix<T, MAX_SIZE, BIT_WIDTH>
@@ -17,7 +17,7 @@ WaveletMatrix<T, MAX_SIZE, BIT_WIDTH>
 
 符号付き整数では `BIT_WIDTH` を省略する。
 
-# 要素取得
+## 要素取得
 
 ```cpp
 T access(int k) const
@@ -28,7 +28,7 @@ T operator[](int k) const
 
 - $O(\mathrm{BIT\_WIDTH})$
 
-# rank / select
+## rank / select
 
 ```cpp
 int rank(T value, int r) const
@@ -43,7 +43,7 @@ int select(T value, int k) const
 - `rank`: $O(\mathrm{BIT\_WIDTH})$
 - `select`: $O(\mathrm{BIT\_WIDTH}\log \mathrm{MAX\_SIZE})$
 
-# k番目
+## k番目
 
 ```cpp
 T kth_smallest(int l, int r, int k) const
@@ -56,7 +56,7 @@ T kth_largest(int l, int r, int k) const
 
 - $O(\mathrm{BIT\_WIDTH})$
 
-# 頻度
+## 頻度
 
 ```cpp
 int range_freq(int l, int r, T upper) const
@@ -69,7 +69,7 @@ int range_freq(int l, int r, T lower, T upper) const
 
 - $O(\mathrm{BIT\_WIDTH})$
 
-# 前後の値
+## 前後の値
 
 ```cpp
 optional<T> prev_value(int l, int r, T upper) const
@@ -82,7 +82,7 @@ optional<T> next_value(int l, int r, T lower) const
 
 - $O(\mathrm{BIT\_WIDTH})$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $N$ を列長、$D=\mathtt{BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 

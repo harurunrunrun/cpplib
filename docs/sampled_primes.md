@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/sampled_primes.hpp
 
 上限未満の素数列から、素数添字が一定合同類にある要素を返す。
 
-# `sampled_primes`
+## `sampled_primes`
 
 ```cpp
 vector<int> sampled_primes(int exclusive_limit, int stride = 100);

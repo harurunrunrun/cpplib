@@ -7,7 +7,7 @@ documentation_of: ../src/structure/wavelet_matrix/persistent_functional_wavelet_
 更新・クエリ・メモリ計算量は `PersistentWeightedWaveletMatrix` と同じ。
 `fork` は $O(1)$。
 
-# 時間計算量（公開操作別）
+## 時間計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$D=\mathtt{BIT\_WIDTH}$、$M=\lceil N/B\rceil$、区間が触れるblock数を $C$、
 $M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$、
@@ -31,7 +31,7 @@ int set(int version, int k, T value)
 `PersistentWeightedWaveletMatrix` から継承する。`set_value/set_weight` を単独使用すると
 「重み=値」は保たれない。version・点・半開区間・bit幅・容量・例外契約は基底型と同じ。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PersistentFunctionalWaveletMatrix()

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/steiner_tree.hpp
 
 無向重み付きグラフの最小シュタイナー木。
 
-# 関数
+## 関数
 
 ```cpp
 steiner_tree<T>(graph, terminals, inf)

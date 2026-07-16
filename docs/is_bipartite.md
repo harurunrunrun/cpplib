@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/is_bipartite.hpp
 
 無向グラフを2色で矛盾なく彩色できるかを判定する。
 
-# is_bipartite
+## is_bipartite
 
 ```cpp
 bool is_bipartite(

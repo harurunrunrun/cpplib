@@ -3,7 +3,7 @@ title: Streaming Hash Helpers (streaming hash補助)
 documentation_of: ../src/approximate/streaming/hash.hpp
 ---
 
-# Streaming Hash Helpers (streaming hash補助)
+## Streaming Hash Helpers (streaming hash補助)
 
 streaming sketchが共有する64-bit hashと一様乱数変換の内部API。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/matching/unicyclic_matching.hpp
 
 各連結成分が木または $N$ 頂点 $N$ 辺の無向グラフである場合の最大マッチング。
 
-# 関数
+## 関数
 
 ```cpp
 unicyclic_matching(n, edges)

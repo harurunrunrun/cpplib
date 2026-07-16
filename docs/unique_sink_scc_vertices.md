@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/unique_sink_scc_vertices.hpp
 
 有向グラフの強連結成分を縮約したDAGで、出次数0の成分がただ1つだけ存在するとき、その成分の頂点を返す。
 
-# unique_sink_scc_vertices
+## unique_sink_scc_vertices
 
 ```cpp
 vector<int> unique_sink_scc_vertices(

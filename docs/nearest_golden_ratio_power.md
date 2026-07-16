@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/nearest_golden_ratio_power.hpp
 
 黄金比の非負整数冪に最も近い整数を、指定した法で求める。
 
-# `nearest_golden_ratio_power_mod`
+## `nearest_golden_ratio_power_mod`
 
 ```cpp
 uint64_t nearest_golden_ratio_power_mod(

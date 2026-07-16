@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/affine_recurrence_term.hpp
 
 係数と添字を十進文字列で受け取り、一次漸化式の値を法付きで返す。
 
-# `affine_recurrence_term`
+## `affine_recurrence_term`
 
 ```cpp
 uint64_t affine_recurrence_term(

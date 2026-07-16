@@ -3,7 +3,7 @@ title: Weighted Grid Escape (重み付き格子脱出判定) [BYTESE1]
 documentation_of: ../src/algorithm/graph/weighted_grid_escape.hpp
 ---
 
-# weighted_grid_escape
+## weighted_grid_escape
 
 ```cpp
 optional<long long> weighted_grid_escape(

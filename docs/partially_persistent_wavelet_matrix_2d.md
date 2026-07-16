@@ -9,7 +9,7 @@ x座標を固定し、y座標を部分永続に更新できる2次元wavelet mat
 wm.set_y(k, y)
 ```
 
-# 時間計算量（公開操作別）
+## 時間計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$V$ を現在のversion数、x範囲に入る点数を $L$、触れるblock数を $C$ とし、
 $Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
@@ -30,7 +30,7 @@ $Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
 不正なversion・点・矩形・順序、vector長不一致、容量、yのbit幅では `runtime_error`。
 copyは禁止、moveは可能。各APIの計算量は上記表の通り。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PartiallyPersistentWaveletMatrix2D()

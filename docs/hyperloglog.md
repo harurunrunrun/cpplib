@@ -3,7 +3,7 @@ title: HyperLogLog (基数推定)
 documentation_of: ../src/approximate/streaming/hyperloglog.hpp
 ---
 
-# HyperLogLog (基数推定)
+## HyperLogLog (基数推定)
 
 stream の distinct key 数を $2^{Precision}$ 個の register で推定する。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/undirected_shortest_path_distance.hpp
 
 非負重み無向グラフの指定した2頂点間の最短距離を求める。
 
-# UndirectedShortestPathEdge
+## UndirectedShortestPathEdge
 
 ```cpp
 template<class T>
@@ -18,7 +18,7 @@ struct UndirectedShortestPathEdge {
 
 無向辺とその非負コストを表す。
 
-# undirected_shortest_path_distance
+## undirected_shortest_path_distance
 
 ```cpp
 template<class T>

@@ -7,7 +7,7 @@ documentation_of: ../src/structure/segtree/segtree.hpp
 
 indexはすべて0-indexed。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) Segtree<auto Monoid, int MAX_SIZE>(int n = MAX_SIZE)
@@ -37,11 +37,12 @@ constexpr Monoid<op,e> monoid;
 ```
 
 ## 時間計算量
+
 - $O(\mathtt{MAX\_SIZE})$
 
 固定容量のtree配列全体を単位元で初期化する。
 
-# set
+## set
 
 ```cpp
 void set(int k, const S& x)
@@ -50,10 +51,11 @@ void set(int k, const S& x)
 `k` 番目の要素を `x` に変更する。
 
 ## 時間計算量
+
 - $O(\log n)$
 
 
-# get
+## get
 
 ```cpp
 S get(int k)
@@ -62,9 +64,10 @@ S get(int k)
 `k` 番目の要素を取得する。
 
 ## 時間計算量
+
 - $O(1)$
 
-# prod
+## prod
 
 ```cpp
 S prod(int l, int r)
@@ -73,9 +76,10 @@ S prod(int l, int r)
 区間 `[l,r)` の演算結果を返す。
 
 ## 時間計算量
+
 - $O(\log n)$
 
-# all_prod
+## all_prod
 
 ```cpp
 S all_prod()
@@ -84,9 +88,10 @@ S all_prod()
 区間 `[0,n)`の演算結果を返す。
 
 ## 時間計算量
+
 - $O(1)$
 
-# max_right
+## max_right
 
 ```cpp
 int max_right(int l, auto f, auto&&... args)
@@ -101,9 +106,11 @@ int max_right(int l, auto f, auto&&... args)
 `f(Monoid.e(), args...) = true` が必要。
 
 ## 時間計算量
+
 - $O(\log n)$
 
-# min_left
+## min_left
+
 ```cpp
 int min_left(int r, auto f, auto&&... args)
 ```
@@ -117,6 +124,7 @@ int min_left(int r, auto f, auto&&... args)
 `f(Monoid.e(), args...) = true` が必要。
 
 ## 時間計算量
+
 - $O(\log n)$
 
 ## 注意点

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/whole_string_repetition_count.hpp
 
 列全体を同じ非空ブロックの反復として表すときの最大反復回数を返す。
 
-# API
+## API
 
 ~~~cpp
 template<class Sequence>

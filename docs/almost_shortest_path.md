@@ -6,7 +6,7 @@ documentation_of: ../src/algorithm/graph/almost_shortest_path.hpp
 非負重み有向グラフで、`source` から `target` へのいずれかの最短路に含まれる辺をすべて除き、残ったグラフの最短距離を求める。
 辺は入力位置で区別するため、同じ端点を持つ並列辺も個別に判定する。
 
-# AlmostShortestPathEdge
+## AlmostShortestPathEdge
 
 ```cpp
 template<class T>
@@ -15,7 +15,7 @@ using AlmostShortestPathEdge = ShortestPathEdgeUsageEdge<T>;
 
 `AlmostShortestPathEdge<T>{from, to, cost}` で有向辺を表す。
 
-# AlmostShortestPathResult
+## AlmostShortestPathResult
 
 ```cpp
 template<class T>
@@ -30,7 +30,7 @@ struct AlmostShortestPathResult {
 - `distance`: `reachable` なら残ったグラフの最短距離、偽なら引数 `inf`。
 - `removed[i]`: 入力辺 `edges[i]` が元のグラフの最短路のいずれかに含まれ、除外されたなら真。
 
-# almost_shortest_path
+## almost_shortest_path
 
 ```cpp
 template<class T>

@@ -6,7 +6,7 @@ documentation_of: ../src/algorithm/string/dfa_minimization.hpp
 完全決定性有限オートマトン (DFA) の状態同値類と最小 DFA を Hopcroft 法で求める。
 遷移の各行の添字をアルファベットの記号とみなし、受理状態は 0 以外の値で指定する。
 
-# 入力の表現
+## 入力の表現
 
 ~~~cpp
 vector<vector<int>> transition;
@@ -17,7 +17,7 @@ vector<char> accepting;
 全状態で記号数が等しく、各遷移先が `[0, N)` に入る完全 DFA を渡す。
 不完全 DFA は、呼び出す前に非受理の sink 状態を追加して完全化する。
 
-# 型
+## 型
 
 ## `DfaEquivalenceClasses`
 
@@ -55,7 +55,7 @@ struct DfaMinimizationResult {
 各フィールドの `size()`、`operator[]` と `initial_state` の参照は時間 `O(1)`。
 格納済みの配列全体を走査する時間は要素数に比例する。
 
-# API
+## API
 
 ## `hopcroft_dfa_equivalence_classes`
 

@@ -3,7 +3,7 @@ title: Iterative Strongly Connected Components (反復強連結成分分解)
 documentation_of: ../src/algorithm/graph/iterative_strongly_connected_components.hpp
 ---
 
-# iterative_strongly_connected_components
+## iterative_strongly_connected_components
 
 ```cpp
 StronglyConnectedComponentsResult iterative_strongly_connected_components(

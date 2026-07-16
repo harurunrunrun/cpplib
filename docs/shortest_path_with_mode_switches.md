@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/shortest_path_with_mode_switches.hpp
 
 二つのモードを持つ無向グラフで、頂点上のモード切替を許した最短辺数を返す。
 
-# ModeSwitchEdge
+## ModeSwitchEdge
 
 ```cpp
 struct ModeSwitchEdge {
@@ -17,7 +17,7 @@ struct ModeSwitchEdge {
 
 辺は `mode` が現在モードと一致するときだけ、両方向へ移動できる。
 
-# shortest_path_with_mode_switches
+## shortest_path_with_mode_switches
 
 ```cpp
 int shortest_path_with_mode_switches(

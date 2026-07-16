@@ -25,7 +25,7 @@ long long min_left(int version, long long r, F f)
 
 更新は指定versionから分岐し、新しいversion番号を返す。
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `set`, 1点`apply`, 区間`apply`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$

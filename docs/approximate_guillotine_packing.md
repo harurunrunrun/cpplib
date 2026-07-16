@@ -3,7 +3,7 @@ title: Guillotine Rectangle Packing (guillotine長方形packing)
 documentation_of: ../src/approximate/packing/guillotine_packing.hpp
 ---
 
-# Guillotine Rectangle Packing (guillotine長方形packing)
+## Guillotine Rectangle Packing (guillotine長方形packing)
 
 自由長方形を水平または垂直に二分しながらbest-area-fitで配置するheuristic。
 

@@ -3,7 +3,7 @@ title: Random Projection Forest (ランダム射影森)
 documentation_of: ../src/approximate/nearest_neighbor/random_projection_forest.hpp
 ---
 
-# Random Projection Forest (ランダム射影森)
+## Random Projection Forest (ランダム射影森)
 
 ランダムな超平面で点集合を再帰的に二分した木を複数構築し、同じ葉に到達した点を近傍候補にする。座標型と次元はテンプレート引数で、点は `std::array<Real, Dimension>` で渡す。法線の各座標には乱数器出力の下位bitから得た `-1` または `1` を使う。乱数器の状態が同じなら結果と同距離時の添字順は決定的である。
 

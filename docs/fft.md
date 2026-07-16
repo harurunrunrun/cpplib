@@ -29,6 +29,7 @@ $A=|a|$, $B=|b|$、$Z$ を $A+B-1$ 以上の最小の2冪とする。
 | `convolution_ll(a,b)` | $O(Z\log Z)$ | $O(Z)$ |
 
 畳み込みの戻り値列挙は $O(A+B)$ で、上表の時間に含まれる。`convolution_ll` はFFT結果の全要素を丸める $O(A+B)$ 処理も含む。
+
 ## 注意点
 
 - `fast_fourier_transform(a,inverse)` は複素数vectorをin-placeで変換する。

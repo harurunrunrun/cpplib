@@ -8,13 +8,13 @@ documentation_of: ../src/approximate/constraint/sat_local_search.hpp
 指定する。`found == false` は上限内で未発見という意味で充足不能の証明では
 ない。同じ型・状態のURBGで再現できる。
 
-# `SatSearchResult`
+## `SatSearchResult`
 
 最良 `assignment`、`satisfied_clauses`、flip総数 `steps`、開始した初期化数
 `restarts` を保持する。`found` は返却代入が全節を満たす場合だけ真になる。
 カウンタoverflowの直前には `std::overflow_error` を送出する。
 
-# `is_valid_sat_search_result` / `validate_sat_search_result`
+## `is_valid_sat_search_result` / `validate_sat_search_result`
 
 代入、充足節数、`found` の整合性を再計算する。前者はbool、後者は不整合
 なら `std::invalid_argument` を送出する。
@@ -22,7 +22,7 @@ documentation_of: ../src/approximate/constraint/sat_local_search.hpp
 - 時間計算量: $O(V+L)$
 - 追加空間計算量: $O(1)$
 
-# `gsat`
+## `gsat`
 
 ```cpp
 auto result = gsat(formula, rng, steps_per_restart, restart_limit);
@@ -33,7 +33,7 @@ auto result = gsat(formula, rng, steps_per_restart, restart_limit);
 - 時間計算量: $O(V+L+R(V+L+SV(V+L)))$
 - 追加空間計算量: $O(V)$
 
-# `walksat`
+## `walksat`
 
 ```cpp
 auto result = walksat(formula, rng, steps_per_restart, restart_limit, probability);
@@ -45,7 +45,7 @@ break count最小（同数なら変数番号最小）を選ぶ。確率は有限
 - 時間計算量: $O(V+L+R(V+L+S(V+KL)))$
 - 追加空間計算量: $O(V+C+K)$
 
-# `probsat`
+## `probsat`
 
 ```cpp
 auto result = probsat(formula, rng, steps_per_restart, restart_limit, base);

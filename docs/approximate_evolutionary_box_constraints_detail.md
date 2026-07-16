@@ -3,7 +3,7 @@ title: Evolutionary Box Constraints (進化計算の箱型制約補助)
 documentation_of: ../src/approximate/evolutionary/detail/box_constraints.hpp
 ---
 
-# Evolutionary Box Constraints (進化計算の箱型制約補助)
+## Evolutionary Box Constraints (進化計算の箱型制約補助)
 
 進化計算で個体を箱型制約に検査・射影する内部API。
 

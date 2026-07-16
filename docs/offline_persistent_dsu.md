@@ -6,7 +6,7 @@ documentation_of: ../src/structure/dsu/offline_persistent_dsu.hpp
 version treeを先に構築し、rollbackによる1回の走査で各versionの連結性queryを
 まとめて処理する完全永続Union-Find。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 OfflinePersistentDSU<MAX_SIZE, MAX_VERSION, MAX_QUERY>
@@ -16,7 +16,7 @@ OfflinePersistentDSU<MAX_SIZE, MAX_VERSION, MAX_QUERY>
 `MAX_QUERY` は登録query数の上限。copyはできず、moveはできる。
 `MAX_VERSION <= INT_MAX / 2`、`MAX_QUERY < INT_MAX` が必要。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 OfflinePersistentDSU(int size = MAX_SIZE)
@@ -28,7 +28,7 @@ OfflinePersistentDSU(int size = MAX_SIZE)
 
 $O(MAX\_SIZE+MAX\_VERSION)$。
 
-# `merge` / `fork`
+## `merge` / `fork`
 
 ```cpp
 int merge(int version, int left, int right)
@@ -42,7 +42,7 @@ int fork(int version)
 
 各呼び出しamortized $O(1)$。
 
-# `query_same`
+## `query_same`
 
 ```cpp
 int query_same(int version, int left, int right)
@@ -54,7 +54,7 @@ int query_same(int version, int left, int right)
 
 amortized $O(1)$。
 
-# `solve`
+## `solve`
 
 ```cpp
 vector<int> solve()
@@ -73,7 +73,7 @@ $O((V+Q)\log N)$。
 本体は $O(MAX\_SIZE+MAX\_VERSION+MAX\_QUERY)$、`solve` の返り値と
 走査stackは $O(V+Q)$。
 
-# `size` / `versions` / `query_count`
+## `size` / `versions` / `query_count`
 
 ```cpp
 int size() const

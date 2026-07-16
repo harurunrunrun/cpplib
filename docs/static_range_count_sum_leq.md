@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/static_range_count_sum_leq.hpp
 
 静的な値列について、半開区間内で指定上限以下の値の個数と総和を同時に返す。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 StaticRangeCountSumLeq<T, W, MAX_SIZE, BIT_WIDTH>
@@ -14,7 +14,7 @@ StaticRangeCountSumLeq<T, W, MAX_SIZE, BIT_WIDTH>
 `T` は整数の値型、`W` は重みと総和の型、`MAX_SIZE` は列長上限。
 `BIT_WIDTH` は内部wavelet matrixが使用するbit数であり、省略時は `T` の全bit数。
 
-# 結果型
+## 結果型
 
 ```cpp
 template<class W>
@@ -24,7 +24,7 @@ struct StaticRangeCountSumResult {
 };
 ```
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 explicit StaticRangeCountSumLeq(const vector<T>& values)
@@ -38,7 +38,7 @@ StaticRangeCountSumLeq(const vector<T>& values, const vector<W>& weights)
 
 $D=BIT\_WIDTH$ として $O(D\cdot MAX\_SIZE)$。
 
-# `query`
+## `query`
 
 ```cpp
 StaticRangeCountSumResult<W> query(int left, int right, T upper) const
@@ -56,7 +56,7 @@ StaticRangeCountSumResult<W> query(int left, int right, T upper) const
 
 queryごとの追加領域は $O(1)$。本体は $O(D\cdot MAX\_SIZE)$。
 
-# 注意点
+## 注意点
 
 - `0 <= left <= right <= values.size()` が必要。空区間も許可する。
 - 値列と重み列の長さは一致しなければならない。

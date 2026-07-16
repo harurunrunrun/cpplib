@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/other/minimum_pilot_salary.hpp
 
 年齢順の操縦士を機長と副操縦士のペアへ割り当てる最小給与を返す。
 
-# PilotSalaries
+## PilotSalaries
 
 ```cpp
 struct PilotSalaries { long long captain, assistant; };
 ```
 
-# minimum_pilot_salary
+## minimum_pilot_salary
 
 ```cpp
 long long minimum_pilot_salary(const vector<PilotSalaries>& pilots_by_increasing_age);

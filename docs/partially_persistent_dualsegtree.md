@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/partially_persistent_dualsegtree.hpp
 
 過去の状態を参照でき、最新の状態のみ更新できるdual segment tree。状態は0から始まるversionで指定する。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PartiallyPersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
@@ -15,7 +15,7 @@ PartiallyPersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 - 配列長の上限 `MAX_SIZE`
 - 更新回数の上限 `MAX_UPDATE`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) PartiallyPersistentDualSegtree(int n = MAX_SIZE)
@@ -27,7 +27,7 @@ PartiallyPersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
 
-# 更新
+## 更新
 
 ```cpp
 int set(int k, const S& x)
@@ -40,7 +40,7 @@ int apply(int l, int r, const T& f)
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# get
+## get
 
 ```cpp
 S get(int version, int k) const
@@ -55,7 +55,7 @@ S get(int k) const
 - (1): $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
 - (2): $O(\log \mathrm{MAX\_SIZE})$
 
-# version情報
+## version情報
 
 ```cpp
 int size() const
@@ -67,7 +67,7 @@ int latest_version() const
 
 - $O(1)$
 
-# 空間計算量
+## 空間計算量
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
 

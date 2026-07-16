@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/maximum_clique.hpp
 
 無向グラフの最大クリークを1つ求める。
 
-# 関数
+## 関数
 
 ```cpp
 maximum_clique(graph)

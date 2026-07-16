@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/wavelet_matrix_2d.hpp
 
 点集合に対する静的2次元wavelet matrix。矩形内の点数を求める。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 WaveletMatrix2D<X, Y, MAX_SIZE, Y_BIT_WIDTH>
@@ -16,7 +16,7 @@ WaveletMatrix2D<X, Y, MAX_SIZE, Y_BIT_WIDTH>
 - 点数の上限 `MAX_SIZE`
 - y座標に使用するbit数 `Y_BIT_WIDTH`。省略時は `Y` のbit数
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 WaveletMatrix2D(const vector<X>& xs, const vector<Y>& ys)
@@ -29,7 +29,7 @@ WaveletMatrix2D(const vector<pair<X, Y>>& points)
 
 - $O(N\log N+\mathtt{MAX\_SIZE}+\mathrm{Y\_BIT\_WIDTH}(N+\lceil\mathtt{MAX\_SIZE}/64\rceil))$
 
-# 矩形内の点数
+## 矩形内の点数
 
 ```cpp
 int rectangle_count(X xl, X xr, Y yl, Y yr) const
@@ -42,7 +42,7 @@ int range_freq(X xl, X xr, Y yl, Y yr) const
 
 - $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
 
-# x範囲内のy座標
+## x範囲内のy座標
 
 ```cpp
 Y kth_smallest_y(X xl, X xr, int k) const
@@ -56,7 +56,7 @@ optional<Y> next_y(X xl, X xr, Y lower) const
 
 - $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $H=\mathtt{Y\_BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
 

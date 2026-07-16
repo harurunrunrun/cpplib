@@ -32,7 +32,7 @@ long long max_right(int version, long long l, F f)
 long long min_left(int version, long long r, F f)
 ```
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `set`, `get`, `prod`, `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$

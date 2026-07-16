@@ -29,6 +29,7 @@ documentation_of: ../src/algorithm/math/basic_number_theory.hpp
     - `mod` が素数でなくてもよい場合の逆元を返す。
 - `math::inv_mod_prime(a, mod)`
     - `mod` が素数の場合の逆元を返す。
+
 ## 戻り値型
 
 ### `ExtGcdResult`

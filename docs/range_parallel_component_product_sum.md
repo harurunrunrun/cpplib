@@ -6,7 +6,7 @@ documentation_of: ../src/structure/dsu/range_parallel_component_product_sum.hpp
 各Union-Find成分に頂点重みの総和を持ち、異なる2成分の併合ごとに両成分の
 重み和の積を累積する区間並列Union-Find。
 
-# テンプレート引数・コンストラクタ
+## テンプレート引数・コンストラクタ
 
 ```cpp
 RangeParallelComponentProductSum<MAX_SIZE, T> dsu(vertex_weights)
@@ -20,7 +20,7 @@ RangeParallelComponentProductSum<MAX_SIZE, T> dsu(vertex_weights)
 構築は $O(MAX\_SIZE\log MAX\_SIZE)$、本体の固定保存領域も
 $O(MAX\_SIZE\log MAX\_SIZE)$。
 
-# `merge_ranges`
+## `merge_ranges`
 
 ```cpp
 T merge_ranges(int l1, int r1, int l2, int r2)
@@ -34,7 +34,7 @@ T merge_ranges(int l1, int r1, int l2, int r2)
 $Q$ 回の呼び出し全体で
 $O((N\log N+Q)\alpha(N))$。1回では新しく展開した補助区間数に比例する。
 
-# `product_sum`
+## `product_sum`
 
 ```cpp
 T product_sum() const
@@ -42,7 +42,7 @@ T product_sum() const
 
 現在の累積値を返す。時間計算量 $O(1)$。
 
-# `component_sum` / `same`
+## `component_sum` / `same`
 
 ```cpp
 T component_sum(int vertex)
@@ -52,7 +52,7 @@ bool same(int left, int right)
 頂点が属する成分の重み和、2頂点が同じ成分かを返す。
 時間計算量はamortized $O(\alpha(N))$。
 
-# `size` / `groups`
+## `size` / `groups`
 
 ```cpp
 int size() const

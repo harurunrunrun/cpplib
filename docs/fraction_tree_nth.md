@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/fraction_tree_nth.hpp
 
 Calkin-Wilf型の二分木を幅優先順に番号付けし、指定頂点の既約分数を返す。
 
-# `fraction_tree_nth`
+## `fraction_tree_nth`
 
 ```cpp
 pair<uint64_t,uint64_t> fraction_tree_nth(uint64_t one_based_index);

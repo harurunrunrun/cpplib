@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/independent_set.hpp
 
 無向グラフの極大独立集合を `approximate::graph` 名前空間で求める。自己ループを持つ頂点は選ばない。
 
-# maximal_independent_set
+## maximal_independent_set
 
 ~~~cpp
 vector<size_t> maximal_independent_set(
@@ -20,7 +20,7 @@ vector<size_t> maximal_independent_set(
 - 時間計算量: $O(N + E\log N)$
 - 追加空間計算量: $O(N+E)$
 
-# greedy_minimum_degree_independent_set
+## greedy_minimum_degree_independent_set
 
 現在の誘導部分グラフで次数最小の頂点を選び、その頂点と近傍を削除する。同次数なら頂点番号が小さい方を選ぶ。
 

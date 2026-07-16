@@ -5,7 +5,7 @@ documentation_of: ../src/structure/tree/treap.hpp
 
 乱択平衡二分探索木による集合。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 TreapSet<Key, MAX_SIZE, Compare>
@@ -17,7 +17,7 @@ TreapSet<Key, MAX_SIZE, Compare>
 
 同じキーは 1 個だけ保持する。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 TreapSet(uint64_t seed = ..., const Compare& compare = Compare())
@@ -31,7 +31,7 @@ TreapSet(uint64_t seed = ..., const Compare& compare = Compare())
 
 固定容量のkey・node領域を構築する。
 
-# insert / erase / contains
+## insert / erase / contains
 
 ```cpp
 bool insert(const Key& x)
@@ -47,7 +47,7 @@ bool contains(const Key& x)
 
 - expected $O(\log N)$
 
-# 順序
+## 順序
 
 ```cpp
 int order_of_key(const Key& x)
@@ -65,7 +65,7 @@ optional<Key> kth(int k)
 
 - expected $O(\log N)$
 
-# 探索
+## 探索
 
 ```cpp
 optional<Key> lower_bound(const Key& x)
@@ -80,7 +80,7 @@ optional<Key> max_less(const Key& x)
 
 - expected $O(\log N)$
 
-# 状態情報
+## 状態情報
 
 `size`, `empty`, `clear` は $O(1)$。
 

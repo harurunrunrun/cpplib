@@ -3,7 +3,7 @@ title: Advanced Optimization Helpers (高度最適化補助)
 documentation_of: ../src/approximate/optimization/detail/advanced_common.hpp
 ---
 
-# Advanced Optimization Helpers (高度最適化補助)
+## Advanced Optimization Helpers (高度最適化補助)
 
 勾配法・直線探索で共有する評価回数管理とArmijo探索の内部API。
 

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/undirected_max_flow.hpp
 
 容量付き無向グラフの2頂点間最大流を返す。
 
-# UndirectedFlowEdge
+## UndirectedFlowEdge
 
 ```cpp
 template<class T>
@@ -18,7 +18,7 @@ struct UndirectedFlowEdge {
 
 `from` と `to` を結ぶ容量 `capacity` の無向辺を表す。
 
-# undirected_max_flow
+## undirected_max_flow
 
 ```cpp
 template<class T>

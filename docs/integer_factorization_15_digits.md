@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/integer_factorization_15_digits.hpp
 
 15桁未満の正整数を素因数と指数の昇順列へ分解する。
 
-# `integer_factorization_15_digits`
+## `integer_factorization_15_digits`
 
 ```cpp
 vector<pair<uint64_t,int>> integer_factorization_15_digits(uint64_t value);

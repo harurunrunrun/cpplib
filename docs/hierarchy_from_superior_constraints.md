@@ -3,7 +3,7 @@ title: Hierarchy from Superior Constraints (上位関係制約からの階層構
 documentation_of: ../src/algorithm/graph/hierarchy_from_superior_constraints.hpp
 ---
 
-# hierarchy_from_superior_constraints
+## hierarchy_from_superior_constraints
 
 ```cpp
 vector<int> hierarchy_from_superior_constraints(

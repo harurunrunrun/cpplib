@@ -3,7 +3,7 @@ title: Directed Spanning Arborescence Count (有向全域有向木数) [DAGCNT]
 documentation_of: ../src/algorithm/graph/count_directed_spanning_arborescences.hpp
 ---
 
-# count_directed_spanning_arborescences
+## count_directed_spanning_arborescences
 
 ```cpp
 long long count_directed_spanning_arborescences(

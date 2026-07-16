@@ -3,7 +3,7 @@ title: Cat Feast Milk Feasibility (猫の宴の牛乳充足判定)
 documentation_of: ../src/algorithm/graph/can_feed_all_cats.hpp
 ---
 
-# CatFeastDistance
+## CatFeastDistance
 
 ```cpp
 struct CatFeastDistance {
@@ -15,7 +15,7 @@ struct CatFeastDistance {
 
 2匹の猫と、その間を移動すると失われる牛乳量を表す。
 
-# can_feed_all_cats
+## can_feed_all_cats
 
 ```cpp
 bool can_feed_all_cats(

@@ -3,7 +3,7 @@ title: ADD k-Median (ADD法によるk-メディアン)
 documentation_of: ../src/approximate/facility/add_k_median.hpp
 ---
 
-# ADD法によるk-median
+## ADD法によるk-median
 
 候補施設を1個ずつ追加し、各段階で全需要点への距離和が最小になる施設を選ぶ。距離行列は `distance[facility][client]` とする。
 

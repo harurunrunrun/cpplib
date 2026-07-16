@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/longest_common_substring_multiple_leng
 
 複数の文字列すべてに共通する連続部分文字列の最大長を求める。
 
-# longest_common_substring_multiple_length
+## longest_common_substring_multiple_length
 
 ```cpp
 template<int MAX_LENGTH, int ALPHABET = 26, char OFFSET = 'a'>

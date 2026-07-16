@@ -5,7 +5,7 @@ documentation_of: ../src/structure/other/static_interval_maximum_overlap.hpp
 
 静的な閉区間集合について、問い合わせ閉区間内の点で重なる区間数の最大値を返す。
 
-# StaticIntervalMaximumOverlap
+## StaticIntervalMaximumOverlap
 
 ```cpp
 template<class Coordinate, int MAX_ENDPOINTS>

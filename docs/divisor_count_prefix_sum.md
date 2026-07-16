@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/divisor_count_prefix_sum.hpp
 
 正整数の約数個数の累積和を、128 bit 整数で厳密に返す。
 
-# `divisor_count_prefix_sum`
+## `divisor_count_prefix_sum`
 
 ```cpp
 divisor_count_prefix_sum_value divisor_count_prefix_sum(uint64_t n);

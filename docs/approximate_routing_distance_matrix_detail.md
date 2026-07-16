@@ -3,7 +3,7 @@ title: Routing Distance Matrix Helpers (経路距離行列補助)
 documentation_of: ../src/approximate/routing/distance_matrix.hpp
 ---
 
-# Routing Distance Matrix Helpers (経路距離行列補助)
+## Routing Distance Matrix Helpers (経路距離行列補助)
 
 巡回路heuristicで距離行列と頂点番号を検査する内部API。
 

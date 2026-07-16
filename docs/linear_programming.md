@@ -17,7 +17,7 @@ LinearProgramming<MAX_CONSTRAINT, MAX_VARIABLE> problem(variable_count);
 
 `variable_count` は `[0, MAX_VARIABLE]`。object本体に係数行列を持つため、大容量ではstatic storageまたはheap上へ置く。
 
-# 結果
+## 結果
 
 ~~~cpp
 enum LinearProgrammingStatus {
@@ -41,7 +41,7 @@ struct LinearProgrammingResult {
 
 `solution` の容量外部分は0。各field参照は `O(1)` 時間・空間。
 
-# 状態の参照
+## 状態の参照
 
 ~~~cpp
 problem.variable_count()
@@ -50,7 +50,7 @@ problem.constraint_count()
 
 変数数と追加済み制約数を返す。ともに `O(1)` 時間・空間。
 
-# 目的関数
+## 目的関数
 
 ~~~cpp
 problem.set_objective(coefficients)
@@ -61,7 +61,7 @@ problem.set_objective(coefficients)
 - 時間計算量: `O(MAX_VARIABLE)`
 - 追加空間: `O(1)`
 
-# 制約の追加
+## 制約の追加
 
 ~~~cpp
 problem.add_less_equal(coefficients, bound)
@@ -79,7 +79,7 @@ problem.add_equal(coefficients, bound)
 
 容量超過では `runtime_error`。係数または右辺にNaN/Infinityがあれば `invalid_argument`。失敗時に制約は追加されない。
 
-# 最大化・最小化
+## 最大化・最小化
 
 ~~~cpp
 problem.maximize()
@@ -99,7 +99,7 @@ Phase I で人工変数を使って初期実行可能基底を求め、Phase II 
 
 simplex法のpivot回数には一般の多項式上界がなく、最悪時間は指数的である。通常の非病的な競技プログラミング入力を対象とする。
 
-# 標準形への変換
+## 標準形への変換
 
 - `a^T x >= b` と等式は対応APIが変換する。
 - 上限 `x_i <= u` は係数が `i` だけ1の制約として追加する。

@@ -3,7 +3,7 @@ title: ADD-DROP k-Median (ADD-DROP法によるk-メディアン)
 documentation_of: ../src/approximate/facility/add_drop_k_median.hpp
 ---
 
-# ADD-DROP法によるk-median
+## ADD-DROP法によるk-median
 
 ADD法で初期解を作り、閉施設を1個追加して開施設を1個除く交換を反復する。
 

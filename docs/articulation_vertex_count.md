@@ -3,7 +3,7 @@ title: Articulation Vertex Count (関節点数) [SUBMERGE]
 documentation_of: ../src/algorithm/graph/articulation_vertex_count.hpp
 ---
 
-# articulation_vertex_count
+## articulation_vertex_count
 
 ```cpp
 int articulation_vertex_count(

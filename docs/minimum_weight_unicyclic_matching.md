@@ -7,7 +7,7 @@ documentation_of: ../src/algorithm/matching/minimum_weight_unicyclic_matching.hp
 
 まずマッチング数を最大化し、その中で重み和を最小化する。
 
-# 関数
+## 関数
 
 ```cpp
 minimum_weight_unicyclic_matching<T>(n, edges)

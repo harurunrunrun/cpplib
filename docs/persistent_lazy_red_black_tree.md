@@ -9,7 +9,7 @@ path-copy left-leaning red-black tree による完全永続構造。
 
 キーの半開区間 `[l,r)` に対して、値の作用、値の積を行う。更新は元の version を変更せず、新しい version を返す。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentLazyRedBlackTree<Key, MonoidActLen, MAX_NODE, MAX_VERSION, Compare>
@@ -33,7 +33,7 @@ T id()
 
 version `0` は空列。
 
-# insert / erase / contains
+## insert / erase / contains
 
 ```cpp
 int insert(const Key& key, const S& value, int version = 0)
@@ -45,7 +45,7 @@ bool contains(const Key& key, int version = 0)
 
 同じキーの重複は保持しない。`insert` で同じキーが存在する場合、値は変更せずに新しい version を返す。
 
-# get / set
+## get / set
 
 ```cpp
 optional<S> get(const Key& key, int version = 0)
@@ -56,7 +56,7 @@ int set(const Key& key, const S& value, int version = 0)
 
 `set` は更新後の version を返す。キーが存在しない場合、内容は変更しない。
 
-# 区間操作
+## 区間操作
 
 ```cpp
 int apply(const Key& l, const Key& r, const T& f, int version = 0)
@@ -69,7 +69,7 @@ S all_prod(int version = 0)
 
 `apply` と `all_apply` は更新後の version を返す。
 
-# 順序
+## 順序
 
 ```cpp
 int order_of_key(const Key& key, int version = 0)
@@ -83,7 +83,7 @@ vector<pair<Key, S>> to_vector(int version = 0)
 
 `to_vector` は `(key, value)` をキー昇順で返す。
 
-# API別の時間計算量
+## API別の時間計算量
 
 $N$ を対象versionの要素数とし、比較・モノイド演算・作用を $O(1)$ とする。
 

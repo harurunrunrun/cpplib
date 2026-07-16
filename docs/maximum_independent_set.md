@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/maximum_independent_set.hpp
 
 無向グラフの最大独立集合を1つ求める。
 
-# 関数
+## 関数
 
 ```cpp
 maximum_independent_set(graph)

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/convex_hull_trick/segment_li_chao_tree.hpp
 
 追加した直線または定義域付き線分のうち、指定した$x$で最小となる値を求める。query座標を構築時に圧縮するため、座標の大きさには依存しない。
 
-# 構築
+## 構築
 
 ```cpp
 SegmentLiChaoTree tree(vector<long long> query_coordinates)
@@ -19,7 +19,7 @@ queryに使う全$x$座標を渡す。重複や未整列の入力を許す。
 
 $K$は異なるquery座標数。
 
-# Line
+## Line
 
 ```cpp
 struct Line {
@@ -44,7 +44,7 @@ void add_line(Line line)
 
 - $O(\log K)$
 
-# 線分追加
+## 線分追加
 
 ```cpp
 void add_segment(long long l, long long r, long long slope, long long intercept)
@@ -57,7 +57,7 @@ void add_segment(long long l, long long r, Line line)
 
 - $O(\log^2 K)$
 
-# 最小値query
+## 最小値query
 
 ```cpp
 optional<long long> query(long long x) const
@@ -69,7 +69,7 @@ optional<long long> query(long long x) const
 
 - $O(\log K)$
 
-# その他
+## その他
 
 ```cpp
 int size() const
@@ -79,7 +79,7 @@ const vector<long long>& coordinates() const
 
 すべて$O(1)$。`empty`は有効な追加が一度もないかを返す。
 
-# 空間計算量
+## 空間計算量
 
 - $O(K)$
 

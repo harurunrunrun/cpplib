@@ -3,7 +3,7 @@ title: Critical Edges (切断辺列挙) [EC_P]
 documentation_of: ../src/algorithm/graph/critical_edges.hpp
 ---
 
-# critical_edges
+## critical_edges
 
 ```cpp
 vector<pair<int, int>> critical_edges(

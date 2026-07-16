@@ -3,7 +3,7 @@ title: Minimum Grid Character Changes (グリッド最小文字変更回数) [KA
 documentation_of: ../src/algorithm/graph/minimum_grid_character_changes.hpp
 ---
 
-# minimum_grid_character_changes
+## minimum_grid_character_changes
 
 ```cpp
 int minimum_grid_character_changes(const vector<string>& grid)

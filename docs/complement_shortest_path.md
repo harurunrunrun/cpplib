@@ -7,7 +7,7 @@ documentation_of: ../src/algorithm/graph/complement_shortest_path.hpp
 
 `graph[v]` に元のグラフの辺を入れる。補グラフでは、`v != u` かつ `v -> u` が元のグラフに存在しないときに辺がある。
 
-# 関数
+## 関数
 
 ```cpp
 complement_shortest_path(graph, source)

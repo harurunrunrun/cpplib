@@ -3,7 +3,7 @@ title: Lexicographical Distinct Substrings (辞書順相異部分文字列) [SUB
 documentation_of: ../src/structure/string/lexicographical_distinct_substrings.hpp
 ---
 
-# LexicographicalDistinctSubstrings
+## LexicographicalDistinctSubstrings
 
 ```cpp
 class LexicographicalDistinctSubstrings {

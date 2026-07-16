@@ -3,7 +3,7 @@ title: AMS Sketch (AMSスケッチ)
 documentation_of: ../src/approximate/streaming/ams_sketch.hpp
 ---
 
-# AMS Sketch (AMSスケッチ)
+## AMS Sketch (AMSスケッチ)
 
 turnstile stream の第 2 周波数モーメント $F_2=\sum_x f_x^2$ を推定する。
 各標本は 4-wise independent な符号和の二乗、group 内は平均、group 間は median を使う。

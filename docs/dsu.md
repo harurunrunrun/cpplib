@@ -5,7 +5,7 @@ documentation_of: ../src/structure/dsu/dsu.hpp
 
 素集合データ構造。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 DSU<MAX_SIZE>
@@ -13,7 +13,7 @@ DSU<MAX_SIZE>
 
 - 頂点数の上限 `MAX_SIZE`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 DSU(int n = MAX_SIZE)
@@ -25,7 +25,7 @@ DSU(int n = MAX_SIZE)
 
 - $O(\mathtt{MAX\_SIZE})$
 
-# merge / same
+## merge / same
 
 ```cpp
 bool merge(int u, int v)
@@ -40,7 +40,7 @@ bool same(int u, int v)
 
 `size`, `groups` は $O(1)$。
 
-# leader / component_size
+## leader / component_size
 
 ```cpp
 int leader(int v)

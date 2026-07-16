@@ -39,7 +39,7 @@ int latest_version() const
 int changes_used() const
 ```
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
 - `range_chmin`, `range_chmax`: amortized $O(\log^2 N)$

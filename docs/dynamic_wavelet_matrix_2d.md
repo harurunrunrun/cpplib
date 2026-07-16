@@ -5,7 +5,7 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix_2d.hpp
 
 x座標を固定し、y座標を点更新できる2次元wavelet matrix。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 DynamicWaveletMatrix2D(xs, ys)
@@ -13,7 +13,7 @@ DynamicWaveletMatrix2D()
 DynamicWaveletMatrix2D(points)
 ```
 
-# 更新
+## 更新
 
 ```cpp
 wm.set_y(k, y)
@@ -21,7 +21,7 @@ wm.set_y(k, y)
 
 元の点番号 `k` のy座標を更新する。x座標は変えない。
 
-# クエリ
+## クエリ
 
 ```cpp
 wm.rectangle_count(xl, xr, yl, yr)
@@ -31,11 +31,11 @@ wm.prev_y(xl, xr, upper)
 wm.next_y(xl, xr, lower)
 ```
 
-# 時間計算量
+## 時間計算量
 
 `DynamicWaveletMatrix` のクエリに、x範囲の二分探索が加わる。
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$D=\mathtt{Y\_BIT\_WIDTH}$ とし、x範囲に入る点数を $L$、
 $Q(L)=B+\lceil L/B\rceil\log B$ とする。

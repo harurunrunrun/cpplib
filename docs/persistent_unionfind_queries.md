@@ -6,7 +6,7 @@ documentation_of: ../src/structure/dsu/persistent_unionfind_queries.hpp
 各操作の番号をversion識別子として扱う完全永続Union-Find。
 更新を行わない連結性queryも履歴へ登録するため、呼び出し側で内部version番号を管理する必要がない。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentUnionFindQueries<MAX_SIZE, MAX_QUERY>
@@ -15,7 +15,7 @@ PersistentUnionFindQueries<MAX_SIZE, MAX_QUERY>
 `MAX_SIZE` は頂点数の上限、`MAX_QUERY` は登録できる操作数の上限である。
 固定長の永続データはheapに確保されるため、wrapperをlocal変数として構築しても巨大な配列をstackへ置かない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 explicit PersistentUnionFindQueries(int n = MAX_SIZE)
@@ -27,7 +27,7 @@ explicit PersistentUnionFindQueries(int n = MAX_SIZE)
 
 $O(MAX\_QUERY)$。
 
-# `processed_queries`
+## `processed_queries`
 
 ```cpp
 int processed_queries() const
@@ -39,7 +39,7 @@ int processed_queries() const
 
 $O(1)$。
 
-# `merge`
+## `merge`
 
 ```cpp
 void merge(int base_query, int u, int v)
@@ -51,7 +51,7 @@ void merge(int base_query, int u, int v)
 
 頂点数を $N$ として $O(\log N\log MAX\_SIZE)$。
 
-# `same`
+## `same`
 
 ```cpp
 bool same(int base_query, int u, int v)
@@ -64,11 +64,11 @@ bool same(int base_query, int u, int v)
 
 $O(\log N\log MAX\_SIZE)$。
 
-# 空間計算量
+## 空間計算量
 
 予約領域は $O(MAX\_QUERY\log MAX\_SIZE)$。wrapper本体は $O(1)$ であり、予約領域はheapに置かれる。
 
-# 注意点
+## 注意点
 
 - `base_query == -1` は初期状態を表す。それ以外は `[0, processed_queries())` が必要。
 - 頂点は `[0,n)`、操作数は `MAX_QUERY` 以下でなければならない。

@@ -7,7 +7,7 @@ documentation_of: ../src/structure/segtree/persistent_segtree.hpp
 
 状態は0から始まるversionで指定する。version 0は初期状態。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentSegtree<Monoid, MAX_SIZE, MAX_VERSION>
@@ -19,7 +19,7 @@ PersistentSegtree<Monoid, MAX_SIZE, MAX_VERSION>
 
 オブジェクト自体のcopy/moveはできない。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) PersistentSegtree(int n = MAX_SIZE)
@@ -35,7 +35,7 @@ PersistentSegtree<Monoid, MAX_SIZE, MAX_VERSION>
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_VERSION}\log \mathrm{MAX\_SIZE})$
 
-# set
+## set
 
 ```cpp
 int set(int version, int k, const S& x)
@@ -47,7 +47,7 @@ int set(int version, int k, const S& x)
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# fork
+## fork
 
 ```cpp
 int fork(int version)
@@ -59,7 +59,7 @@ int fork(int version)
 
 - $O(1)$
 
-# get
+## get
 
 ```cpp
 S get(int version, int k) const
@@ -71,7 +71,7 @@ S get(int version, int k) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# prod
+## prod
 
 ```cpp
 S prod(int version, int l, int r) const
@@ -83,7 +83,7 @@ S prod(int version, int l, int r) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# all_prod
+## all_prod
 
 ```cpp
 S all_prod(int version) const
@@ -95,7 +95,7 @@ S all_prod(int version) const
 
 - $O(1)$
 
-# max_right
+## max_right
 
 ```cpp
 int max_right(int version, int l, auto f, auto&&... args) const
@@ -107,7 +107,7 @@ int max_right(int version, int l, auto f, auto&&... args) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# min_left
+## min_left
 
 ```cpp
 int min_left(int version, int r, auto f, auto&&... args) const
@@ -119,7 +119,7 @@ int min_left(int version, int r, auto f, auto&&... args) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# size
+## size
 
 ```cpp
 int size() const
@@ -131,7 +131,7 @@ int size() const
 
 - $O(1)$
 
-# versions
+## versions
 
 ```cpp
 int versions() const
@@ -143,7 +143,7 @@ int versions() const
 
 - $O(1)$
 
-# latest_version
+## latest_version
 
 ```cpp
 int latest_version() const

@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/louvain.hpp
 
 local movingとcommunity縮約を反復する重み付きLouvain法である。最大modularityや一意なcommunityを保証しない。
 
-# louvain_communities
+## louvain_communities
 
 ~~~cpp
 CommunityResult louvain_communities(

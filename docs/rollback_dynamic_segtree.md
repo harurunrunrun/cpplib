@@ -21,7 +21,7 @@ void rollback(Snapshot snapshot)
 
 `MAX_NODES`は疎ノード数、`MAX_CHANGES`はノード変更履歴数の上限。
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES})$
 - `set`, `get`, `prod`, `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$

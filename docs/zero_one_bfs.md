@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/zero_one_bfs.hpp
 
 辺重みが $0$ または $1$ の有向グラフの最短路をdequeで求める。無向グラフは各辺を両方向に追加する。
 
-# 関数
+## 関数
 
 ```cpp
 struct ZeroOneBFSEdge { int to; int cost; };

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/other/range_add_point_get.hpp
 
 零初期化された列への区間加算と一点取得を行う。
 
-# RangeAddPointGet
+## RangeAddPointGet
 
 ```cpp
 template<class T, int MAX_SIZE>

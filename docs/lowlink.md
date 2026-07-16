@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/lowlink.hpp
 
 無向グラフの関節点と橋を求める。
 
-# 関数
+## 関数
 
 ```cpp
 lowlink(n, edges)

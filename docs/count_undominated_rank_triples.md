@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/count_undominated_rank_triples.hpp
 
 3種類の順位を持つ要素のうち、3順位すべてがより小さい別要素を持たない要素数を返す。
 
-# count_undominated_rank_triples
+## count_undominated_rank_triples
 
 ```cpp
 template<int MAX_SIZE = 100000>

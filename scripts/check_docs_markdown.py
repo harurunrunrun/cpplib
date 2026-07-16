@@ -13,6 +13,7 @@ BACKTICK = chr(96)
 FENCE = re.compile(
     rf"^\s*([{re.escape(BACKTICK)}~]{{3,}})"
 )
+HEADING = re.compile(r"^(#{1,6})[ \t]+\S")
 UNESCAPED_PIPE = re.compile(r"(?<!\\)\|")
 RAW_TAG = re.compile(
     r"<\s*/?\s*([A-Za-z][A-Za-z0-9:_-]*)\b(?=[\s,/>])[^<>]*>"
@@ -112,12 +113,20 @@ def check_file(path: Path) -> list[str]:
     fence_length = 0
     fence_line = 0
 
+    body_start_index = 0
+    if lines and lines[0].strip() == "---":
+        for index, line in enumerate(lines[1:], start=1):
+            if line.strip() == "---":
+                body_start_index = index + 1
+                break
+
     def flush_table() -> None:
         nonlocal table_rows
         errors.extend(table_errors(path, table_rows))
         table_rows = []
 
-    for line_number, line in enumerate(lines, start=1):
+    for line_index, line in enumerate(lines):
+        line_number = line_index + 1
         fence = FENCE.match(line)
         if fence:
             flush_table()
@@ -142,6 +151,22 @@ def check_file(path: Path) -> list[str]:
 
         if line.startswith("    "):
             continue
+
+        heading = HEADING.match(line)
+        if line_index >= body_start_index and heading:
+            if len(heading.group(1)) == 1:
+                errors.append(
+                    f"{path}:{line_number}: body heading must start at level 2; "
+                    "the generated page already supplies its level-1 title"
+                )
+            if line_index > 0 and lines[line_index - 1].strip():
+                errors.append(
+                    f"{path}:{line_number}: heading must have a blank line before it"
+                )
+            if line_index + 1 < len(lines) and lines[line_index + 1].strip():
+                errors.append(
+                    f"{path}:{line_number}: heading must have a blank line after it"
+                )
 
         prose, inline_balanced = strip_inline_code(line)
         if not inline_balanced:

@@ -5,7 +5,7 @@ documentation_of: ../src/structure/bbst/lazy_red_black_tree.hpp
 
 Red Black Tree によるキー付き列。キーの半開区間に対して、値の作用、値の積を行う。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 LazyRedBlackTree<Key, MonoidActLen, MAX_SIZE, Compare>
@@ -26,7 +26,7 @@ T composition(T f, T g)
 T id()
 ```
 
-# insert / erase
+## insert / erase
 
 ```cpp
 bool insert(const Key& key, const S& value)
@@ -42,7 +42,7 @@ bool contains(const Key& key)
 
 - $O(\log N)$
 
-# get / set
+## get / set
 
 ```cpp
 optional<S> get(const Key& key)
@@ -57,7 +57,7 @@ bool set(const Key& key, const S& value)
 
 - $O(\log N)$
 
-# 区間操作
+## 区間操作
 
 ```cpp
 void apply(const Key& l, const Key& r, const T& f)
@@ -72,7 +72,7 @@ S all_prod()
 
 - $O(\log N)$
 
-# 順序
+## 順序
 
 ```cpp
 int order_of_key(const Key& key)
@@ -83,7 +83,7 @@ optional<Key> kth_key(int k)
 
 - $O(\log N)$
 
-# API別計算量
+## API別計算量
 
 $N$ を現在の要素数とし、比較・モノイド演算・作用を $O(1)$ とする。
 

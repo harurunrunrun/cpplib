@@ -3,7 +3,7 @@ title: Count-Min Sketch (Count-Minスケッチ)
 documentation_of: ../src/approximate/streaming/count_min_sketch.hpp
 ---
 
-# Count-Min Sketch (Count-Minスケッチ)
+## Count-Min Sketch (Count-Minスケッチ)
 
 非負の頻度を `Width * Depth` 個の固定長 counter で近似する。
 

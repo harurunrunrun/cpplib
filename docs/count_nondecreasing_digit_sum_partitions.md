@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/count_nondecreasing_digit_sum_partitio
 
 数字列を各部分の桁和が非減少になるよう分割する方法数を返す。
 
-# count_nondecreasing_digit_sum_partitions
+## count_nondecreasing_digit_sum_partitions
 
 ```cpp
 unsigned long long count_nondecreasing_digit_sum_partitions(const string& digits);

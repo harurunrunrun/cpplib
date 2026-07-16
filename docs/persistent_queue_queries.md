@@ -6,7 +6,7 @@ documentation_of: ../src/structure/other/persistent_queue_queries.hpp
 各操作の番号をversion識別子として扱う完全永続queue wrapper。
 先頭の取得と削除を1回の `pop` にまとめ、呼び出し側で内部version番号を管理しない。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentQueueQueries<Queue, MAX_QUERY>
@@ -16,7 +16,7 @@ PersistentQueueQueries<Queue, MAX_QUERY>
 `pop(version)` を持ち、更新ごとに連番のversionを作る完全永続queueとする。
 `MAX_QUERY` は登録できる操作数の上限。backendはheapに確保される。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 explicit PersistentQueueQueries(int capacity)
@@ -28,7 +28,7 @@ explicit PersistentQueueQueries(int capacity)
 
 使用する `Queue` の構築時間。
 
-# `processed_queries`
+## `processed_queries`
 
 ```cpp
 int processed_queries() const
@@ -40,7 +40,7 @@ int processed_queries() const
 
 $O(1)$。
 
-# `push`
+## `push`
 
 ```cpp
 void push(int base_query, const value_type& value)
@@ -53,7 +53,7 @@ void push(int base_query, const value_type& value)
 `Queue::push` と同じ。`PersistentArrayQueue` と `PersistentSegtreeQueue` では
 $O(\log MAX\_SIZE)$。
 
-# `pop`
+## `pop`
 
 ```cpp
 value_type pop(int base_query)
@@ -66,11 +66,11 @@ value_type pop(int base_query)
 `Queue::front` と `Queue::pop` の和。上記2つのqueue aliasでは
 $O(\log MAX\_SIZE)$。
 
-# 空間計算量
+## 空間計算量
 
 wrapper本体は $O(1)$。backendの固定長予約領域はheapに置かれ、その空間量は `Queue` に従う。
 
-# 注意点
+## 注意点
 
 - `base_query == -1` は初期状態を表す。それ以外は `[0, processed_queries())` が必要。
 - 空queueへの `pop`、要素容量・操作容量・backend version容量の超過、範囲違反では `runtime_error`。

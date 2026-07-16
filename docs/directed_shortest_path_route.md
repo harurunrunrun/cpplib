@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/directed_shortest_path_route.hpp
 
 非負重み有向グラフの2頂点間について、最短距離と最短路を取得する。
 
-# `DirectedShortestPathRouteEdge`
+## `DirectedShortestPathRouteEdge`
 
 ```cpp
 template<class T>
@@ -18,7 +18,7 @@ struct DirectedShortestPathRouteEdge {
 
 `from` から `to` への有向辺と、その非負コストを表す。
 
-# `DirectedShortestPathRouteResult`
+## `DirectedShortestPathRouteResult`
 
 ```cpp
 template<class T>
@@ -33,7 +33,7 @@ struct DirectedShortestPathRouteResult {
 最短路の有向辺列を保持する。到達不能なら `reachable` は偽、`distance` は
 `T(0)`、`edges` は空になる。
 
-# `directed_shortest_path_route`
+## `directed_shortest_path_route`
 
 ```cpp
 template<class T>

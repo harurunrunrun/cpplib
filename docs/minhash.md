@@ -3,7 +3,7 @@ title: MinHash (最小ハッシュ)
 documentation_of: ../src/approximate/streaming/minhash.hpp
 ---
 
-# MinHash (最小ハッシュ)
+## MinHash (最小ハッシュ)
 
 集合の Jaccard 類似度を固定長 signature で推定する。
 

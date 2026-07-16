@@ -3,7 +3,7 @@ title: Undirected Graph Normalization (無向グラフ正規化)
 documentation_of: ../src/approximate/graph/detail/undirected_graph.hpp
 ---
 
-# Undirected Graph Normalization (無向グラフ正規化)
+## Undirected Graph Normalization (無向グラフ正規化)
 
 辺列から重複のない隣接リストと自己loop情報を作る内部API。
 

@@ -17,7 +17,7 @@ long long prod(int version, long long l, long long r)
 long long all_prod(int version)
 ```
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES}\log \mathtt{MAX\_CHANGES})$
 - `set`, `add`: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
@@ -37,7 +37,7 @@ version 0が初期状態で、queryは `0 <= version < versions()` の任意vers
 不正なversion・点・区間・predicate、version/node/change容量超過では `runtime_error`。
 失敗した更新はversion・node・履歴使用量を更新前へ戻す。各APIの計算量は上記表の通り。
 
-# 状態API
+## 状態API
 
 ```cpp
 int versions() const

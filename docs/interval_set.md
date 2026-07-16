@@ -7,13 +7,13 @@ documentation_of: ../src/algorithm/range/interval_set.hpp
 
 区間は常に互いに素で、隣接する区間は併合される。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 IntervalSet<T> intervals
 ```
 
-# 関数
+## 関数
 
 ```cpp
 intervals.add(l, r)
@@ -137,6 +137,7 @@ $M$ を現在のnode数、$K$ をその操作で削除・走査・出力するno
 | `all_prod()` | $O(M C_{op}+C_e)$ |
 
 保持領域はmap本体が $O(M)$、列挙の戻り値が出力node数に比例する。
+
 ## `IntervalSet` API詳細
 
 - `empty()` は保存区間がないか、`size()` は互いに素な保存区間数。

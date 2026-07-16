@@ -3,7 +3,7 @@ title: Random Hyperplane LSH (ランダム超平面LSH)
 documentation_of: ../src/approximate/nearest_neighbor/random_hyperplane_lsh.hpp
 ---
 
-# Random Hyperplane LSH (ランダム超平面LSH)
+## Random Hyperplane LSH (ランダム超平面LSH)
 
 無作為な超平面のどちら側にあるかをbit列にし、cosine類似度が高いベクトルを同じbucketへ集める。各表の超平面は独立な標準正規乱数から作る。
 

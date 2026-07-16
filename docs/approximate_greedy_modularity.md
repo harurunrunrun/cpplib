@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/greedy_modularity.hpp
 
 modularity増分が最大の隣接community対を反復してmergeするagglomerative heuristicである。最大modularityを保証しない。
 
-# greedy_modularity
+## greedy_modularity
 
 ~~~cpp
 CommunityResult greedy_modularity(

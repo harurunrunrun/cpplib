@@ -5,14 +5,14 @@ documentation_of: ../src/algorithm/string/rolling_hash.hpp
 
 mod $2^{61}-1$ の Rolling Hash。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 RollingHash()
 RollingHash(const string& s, uint64_t base = ...)
 ```
 
-# hash
+## hash
 
 ```cpp
 uint64_t get(int l, int r)
@@ -21,7 +21,7 @@ uint64_t all()
 
 半開区間 `[l,r)` の hash を返す。
 
-# lcp
+## lcp
 
 ```cpp
 int lcp(const RollingHash& other, int l1, int l2)
@@ -50,6 +50,7 @@ $N$ を構築文字列長、$L$ を比較可能なsuffix長の小さい方とす
 | static metadata `mod` / `default_base` の参照 | $O(1)$ |
 
 構築後の保持領域は $O(N)$。hash比較には衝突可能性があるが、計算量は入力内容に依存しない。
+
 ## 注意点
 
 - default constructorは空文字列を表し、`size()==0`、`all()==0`。

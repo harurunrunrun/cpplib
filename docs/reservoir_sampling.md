@@ -3,7 +3,7 @@ title: Reservoir Sampling (リザーバサンプリング)
 documentation_of: ../src/approximate/streaming/reservoir_sampling.hpp
 ---
 
-# Reservoir Sampling (リザーバサンプリング)
+## Reservoir Sampling (リザーバサンプリング)
 
 長さ不明の stream から固定個数を抽出する。
 

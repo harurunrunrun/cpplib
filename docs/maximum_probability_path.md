@@ -6,7 +6,7 @@ documentation_of: ../src/algorithm/graph/maximum_probability_path.hpp
 各辺の成功確率が $[0,1]$ にあるグラフで、始点から各頂点までの経路上の確率の積を最大化する。
 通常のDijkstra法で距離を小さい順に確定する代わりに、確率を大きい順に確定する。
 
-# MaximumProbabilityPathEdge
+## MaximumProbabilityPathEdge
 
 ```cpp
 template<class T>
@@ -18,7 +18,7 @@ struct MaximumProbabilityPathEdge {
 
 `to` を終点、`probability` を辺の成功確率とする有向辺を表す。無向辺は両方向に追加する。
 
-# MaximumProbabilityPathResult
+## MaximumProbabilityPathResult
 
 ```cpp
 template<class T>
@@ -33,7 +33,7 @@ struct MaximumProbabilityPathResult {
 - `parent[v]`: 最大成功確率を更新した直前の頂点。始点と到達不能な頂点では `-1`。
 - `reachable[v]`: 始点から `v` へ到達できるなら真。確率 $0$ の経路も到達可能として区別する。
 
-# maximum_probability_path
+## maximum_probability_path
 
 ```cpp
 template<class T>

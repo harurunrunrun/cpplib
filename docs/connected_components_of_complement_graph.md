@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/connected_components_of_complement_grap
 
 無向グラフの補グラフを連結成分分解する。未所属頂点を保持し、BFS中の頂点と元のグラフで隣接しない頂点を同じ補グラフ成分へ移す。
 
-# API
+## API
 
 ```cpp
 ComplementConnectedComponentsResult

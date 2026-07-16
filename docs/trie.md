@@ -5,7 +5,7 @@ documentation_of: ../src/structure/trie/trie.hpp
 
 文字列の Trie。重複を持つ。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 Trie<ALPHABET, MAX_NODES, OFFSET>
@@ -15,7 +15,7 @@ Trie<ALPHABET, MAX_NODES, OFFSET>
 - ノード数の上限 `MAX_NODES`
 - 先頭文字 `OFFSET`
 
-# insert / erase
+## insert / erase
 
 ```cpp
 void insert(string_view s)
@@ -24,7 +24,7 @@ bool erase(string_view s)
 
 `erase` は文字列が存在しない場合 `false` を返す。
 
-# count
+## count
 
 ```cpp
 int count(string_view s)
@@ -39,7 +39,7 @@ int node(string_view s)
 
 `node` は対応するノード番号を返す。存在しない場合 `-1` を返す。
 
-# ノード遷移
+## ノード遷移
 
 ```cpp
 int next_node(int state, char c)
@@ -50,7 +50,7 @@ int terminal_count(int state)
 
 `terminal_count` はノード `state` で終わる文字列の登録個数を返す。
 
-# clear
+## clear
 
 ```cpp
 void clear()
@@ -58,7 +58,7 @@ void clear()
 
 登録済みの文字列とノードをすべて破棄し、空の Trie に戻す。
 
-# is_prefix_free
+## is_prefix_free
 
 ```cpp
 bool is_prefix_free() const

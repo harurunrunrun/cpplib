@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/count_four_row_domino_tilings.hpp
 
 4行の長方形を $1\times2$ ドミノで敷き詰める方法数を返す。
 
-# count_four_row_domino_tilings
+## count_four_row_domino_tilings
 
 ```cpp
 uint64_t count_four_row_domino_tilings(int width);

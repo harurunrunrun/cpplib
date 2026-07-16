@@ -5,7 +5,7 @@ documentation_of: ../src/structure/other/static_interval_coverage.hpp
 
 整数座標上の閉区間集合を構築し、各座標を含む区間数を返す。
 
-# StaticIntervalCoverage
+## StaticIntervalCoverage
 
 ```cpp
 template<int MAX_COORDINATE = 1000000>

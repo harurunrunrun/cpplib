@@ -5,7 +5,7 @@ documentation_of: ../src/structure/hash/associative_array.hpp
 
 Robin Hood法によるopen addressing hash table。bucket数は`MAX_SIZE`の2倍以上となる2冪で、領域は構築時に確保する。削除ではbackward shiftを行うためtombstoneを残さない。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 AssociativeArray<Key, T, MAX_SIZE, Hash, KeyEqual>
@@ -19,7 +19,7 @@ AssociativeArray<Key, T, MAX_SIZE, Hash, KeyEqual>
 
 hash値にはSplitMix64によるmixを行う。
 
-# 構築
+## 構築
 
 ```cpp
 AssociativeArray(std::uint64_t seed = ..., Hash hash = {}, KeyEqual equal = {})
@@ -31,7 +31,7 @@ AssociativeArray(std::uint64_t seed = ..., Hash hash = {}, KeyEqual equal = {})
 
 - $O(\mathtt{capacity})$
 
-# 検索
+## 検索
 
 ```cpp
 T* find(const Key& key)
@@ -48,7 +48,7 @@ const T& at(const Key& key) const
 - expected $O(1)$
 - worst $O(\mathtt{MAX\_SIZE})$
 
-# 追加・更新
+## 追加・更新
 
 ```cpp
 bool insert_or_assign(Key key, T value)
@@ -63,7 +63,7 @@ T& operator[](Key&& key)
 - expected $O(1)$
 - worst $O(\mathtt{MAX\_SIZE})$
 
-# 削除
+## 削除
 
 ```cpp
 bool erase(const Key& key)
@@ -77,7 +77,7 @@ void clear()
 - `erase`: expected $O(1)$、worst $O(\mathtt{MAX\_SIZE})$
 - `clear`: $O(\mathtt{capacity})$
 
-# 要素数
+## 要素数
 
 ```cpp
 int size() const
@@ -90,13 +90,14 @@ static constexpr std::size_t capacity()
 
 - すべて $O(1)$
 
-# 空間計算量
+## 空間計算量
 
 - $O(\mathtt{MAX\_SIZE})$
 
 copyは無効で、moveに対応する。
 
 ## 注意点
+
 nconstructor、clear、find、contains、at、insert_or_assign、operator[]、erase、size、empty、max_size、capacityはいずれも追加空間計算量 O(1)。新規要素のkey/valueは本体保存領域として別に数える。
 
 `MAX_SIZE > 0` が必要。`Hash` と `KeyEqual` は、等しいkeyに同じhash値を与える必要がある。

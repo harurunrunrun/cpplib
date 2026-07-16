@@ -1,5 +1,5 @@
 ---
-title: 2D Intersection Test (二次元交差判定)
+title: 2D Intersection Test (二次元交差判定) [CGL_2_B]
 documentation_of: ../src/algorithm/geometry/2d/intersect.hpp
 ---
 

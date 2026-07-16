@@ -5,7 +5,7 @@ documentation_of: ../src/structure/bbst/reversible_splay_tree.hpp
 
 Splay Tree による列。区間反転、区間積を行う。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 ReversibleSplayTree<Monoid, MAX_SIZE>
@@ -16,14 +16,14 @@ ReversibleSplayTree<Monoid, MAX_SIZE>
 
 `Monoid` は `S op(S, S)` と `S e()` を持つ。非可換モノイドにも対応する。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 ReversibleSplayTree()
 ReversibleSplayTree(const vector<S>& values)
 ```
 
-# insert / erase / set / get
+## insert / erase / set / get
 
 ```cpp
 void insert(int p, const S& x)
@@ -38,7 +38,7 @@ S get(int p)
 
 - amortized $O(\log N)$
 
-# 区間操作
+## 区間操作
 
 ```cpp
 void reverse(int l, int r)
@@ -52,7 +52,7 @@ S all_prod()
 
 - amortized $O(\log N)$
 
-# API別計算量
+## API別計算量
 
 $N$ を操作前の列長とし、モノイド演算を $O(1)$ とする。
 

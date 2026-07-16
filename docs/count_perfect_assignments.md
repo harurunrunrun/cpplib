@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/count_perfect_assignments.hpp
 
 二値選好行列を満たす全単射割当ての個数を返す。
 
-# count_perfect_assignments
+## count_perfect_assignments
 
 ```cpp
 long long count_perfect_assignments(const vector<vector<int>>& preferences);

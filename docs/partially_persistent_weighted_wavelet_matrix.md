@@ -6,7 +6,7 @@ documentation_of: ../src/structure/wavelet_matrix/partially_persistent_weighted_
 各要素に重みを持つ、点更新可能な部分永続 Wavelet Matrix。
 更新対象は最新バージョンに限る。過去のバージョンはクエリで参照できる。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 PartiallyPersistentWeightedWaveletMatrix<
@@ -17,7 +17,7 @@ PartiallyPersistentWeightedWaveletMatrix<
 初期状態のバージョンは `0`。
 `MAX_VERSION` 回まで更新できる。
 
-# 更新
+## 更新
 
 ```cpp
 int version = wm.set(k, value, weight)
@@ -27,14 +27,14 @@ int version = wm.set_weight(k, weight)
 
 最新版を更新し、新しいバージョン番号を返す。
 
-# バージョン
+## バージョン
 
 ```cpp
 int count = wm.versions()
 int version = wm.latest_version()
 ```
 
-# クエリ
+## クエリ
 
 ```cpp
 T value = wm.access(version, k)
@@ -54,7 +54,7 @@ std::optional<T> value = wm.next_value(version, l, r, lower)
 区間は半開区間 `[l, r)`。
 `range_sum` は値が `[lower, upper)` に入る要素の重みの総和を返す。
 
-# 時間計算量と追加メモリ
+## 時間計算量と追加メモリ
 
 `B = BLOCK_SIZE`、区間が触れるブロック数を `C`、バージョン数を `V` とする。
 
@@ -96,7 +96,7 @@ queryは先頭のversion引数で任意の有効versionを参照する。
 `set` は値と重み、`set_value/set_weight` は片方を更新する。`weight` は1点の重み、
 重みqueryの区間と値域も半開区間である。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 PartiallyPersistentWeightedWaveletMatrix()

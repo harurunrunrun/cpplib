@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/graph/fiduccia_mattheyses.hpp
 
 重み付きグラフ用のFiduccia–Mattheyses局所探索である。最適解を保証しない。
 
-# fiduccia_mattheyses
+## fiduccia_mattheyses
 
 ~~~cpp
 BipartitionResult fiduccia_mattheyses(

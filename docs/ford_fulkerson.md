@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/matching/ford_fulkerson.hpp
 
 Ford-Fulkerson法による最大流。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 FordFulkerson<T> graph(n)
 ```
 
-# 関数
+## 関数
 
 ```cpp
 graph.add_edge(from, to, cap)

@@ -3,7 +3,7 @@ title: Rectangle Packing Common API (長方形packing共通API)
 documentation_of: ../src/approximate/packing/rectangle_packing_common.hpp
 ---
 
-# Rectangle Packing Common API (長方形packing共通API)
+## Rectangle Packing Common API (長方形packing共通API)
 
 2次元bin packing heuristicが共有する入力型・配置型・返値型。
 

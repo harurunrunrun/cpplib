@@ -6,7 +6,7 @@ documentation_of: ../src/structure/segtree/persistent_point_add_range_sum.hpp
 任意の過去versionを残したまま、一点へ値を加えた新しいversionを作る。
 各versionに対する区間和queryを扱う。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) PersistentPointAddRangeSum<T, MAX_SIZE, MAX_VERSION>(
@@ -28,7 +28,7 @@ documentation_of: ../src/structure/segtree/persistent_point_add_range_sum.hpp
 $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSION}\log\mathtt{MAX\_SIZE})$、
 オブジェクトが保持する空間も同じorderである。
 
-# `size`
+## `size`
 
 ```cpp
 int size() const
@@ -36,7 +36,7 @@ int size() const
 
 列長を返す。時間計算量と追加空間計算量は $O(1)$。
 
-# `versions`
+## `versions`
 
 ```cpp
 int versions() const
@@ -44,7 +44,7 @@ int versions() const
 
 存在するversion数を返す。時間計算量と追加空間計算量は $O(1)$。
 
-# `latest_version`
+## `latest_version`
 
 ```cpp
 int latest_version() const
@@ -52,7 +52,7 @@ int latest_version() const
 
 最後に作ったversion番号を返す。時間計算量と追加空間計算量は $O(1)$。
 
-# `add`
+## `add`
 
 ```cpp
 int add(int version, int position, const T& delta)
@@ -63,7 +63,7 @@ int add(int version, int position, const T& delta)
 $O(\log\mathtt{MAX\_SIZE})$、更新で保持する追加空間は
 $O(\log\mathtt{MAX\_SIZE})$。
 
-# `sum`
+## `sum`
 
 ```cpp
 T sum(int version, int left, int right) const

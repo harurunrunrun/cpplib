@@ -5,7 +5,7 @@ documentation_of: ../src/structure/dsu/rollback_weighted_dsu.hpp
 
 rollback 可能な差分制約付き素集合データ構造。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 RollbackWeightedDSU<T, MAX_SIZE, MAX_HISTORY>
@@ -17,11 +17,11 @@ RollbackWeightedDSU<T, MAX_SIZE, MAX_HISTORY>
 
 `T` は `+`, `-`, `==`, `T()` を持つ。
 
-# コンストラクタ
+## コンストラクタ
 
 - $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_HISTORY})$
 
-# merge / diff
+## merge / diff
 
 ```cpp
 bool merge(int u, int v, T w)
@@ -36,7 +36,7 @@ T diff(int u, int v)
 
 - `merge`, `diff`: $O(\log N)$
 
-# rollback
+## rollback
 
 ```cpp
 int snapshot()
@@ -54,7 +54,7 @@ void rollback(int snapshot_id)
 - `undo`: $O(1)$
 - `rollback`: 取り消す履歴数を $K$ として $O(K)$
 
-# same / leader
+## same / leader
 
 ```cpp
 bool same(int u, int v)

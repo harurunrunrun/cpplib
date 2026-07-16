@@ -3,7 +3,7 @@ title: Space-Saving (頻出要素推定)
 documentation_of: ../src/approximate/streaming/space_saving.hpp
 ---
 
-# Space-Saving (頻出要素推定)
+## Space-Saving (頻出要素推定)
 
 頻出候補を推定値と誤差上界付きで保持する。
 

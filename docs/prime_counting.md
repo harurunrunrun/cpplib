@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/prime_counting.hpp
 
 素数の個数を数える。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PrimeCounting<MAX_N>
@@ -13,7 +13,7 @@ PrimeCounting<MAX_N>
 
 - 前計算する最大値 `MAX_N`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 PrimeCounting(int n = MAX_N)
@@ -25,7 +25,7 @@ PrimeCounting(int n = MAX_N)
 
 - $O(N \log \log N)$
 
-# query
+## query
 
 ```cpp
 bool is_prime(int n)
@@ -41,7 +41,7 @@ int count_primes_less(int n)
 
 - $O(1)$
 
-# 大きな範囲の素数計数
+## 大きな範囲の素数計数
 
 ```cpp
 long long prime_count(long long n)

@@ -3,7 +3,7 @@ title: t-digest (tダイジェストによる分位点スケッチ)
 documentation_of: ../src/approximate/streaming/tdigest.hpp
 ---
 
-# t-digest (tダイジェストによる分位点スケッチ)
+## t-digest (tダイジェストによる分位点スケッチ)
 
 近い値を weighted centroid にまとめる分位点 sketch。中央より tail の centroid を
 細かく残す scale を使う。乱数を使わず決定的。

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/range/count_unblocked_height_queries.hpp
 
 高さ列上の有向な2点問い合わせのうち、始点より高い内部要素が存在しない問い合わせ数を返す。
 
-# count_unblocked_height_queries
+## count_unblocked_height_queries
 
 ```cpp
 template<int MAX_SIZE = 50000>

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/grid_square_count.hpp
 
 正方格子に含まれる軸平行な正方形の総数を返す。
 
-# grid_square_count
+## grid_square_count
 
 ```cpp
 long long grid_square_count(long long side_length);

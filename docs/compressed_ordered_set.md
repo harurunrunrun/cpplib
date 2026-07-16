@@ -5,7 +5,7 @@ documentation_of: ../src/structure/tree/compressed_ordered_set.hpp
 
 任意の値を座標圧縮し、重複を持たない順序付き集合として管理する。圧縮後の添字管理には `Int_Set` を使う。
 
-# 構築
+## 構築
 
 ```cpp
 CompressedOrderedSet<Value, MAX_UNIQUE> set(universe, initial)
@@ -16,7 +16,7 @@ CompressedOrderedSet<Value, MAX_UNIQUE> set(universe, initial)
 - 時間計算量: $O((U+I)\log(U+I)+I\log MAX\_UNIQUE)$
 - 空間計算量: 座標列 $O(U+I)$ と `Int_Set` が生成するnode
 
-# 更新
+## 更新
 
 ```cpp
 void insert(const Value& value)
@@ -27,7 +27,7 @@ void erase(const Value& value)
 
 - 時間計算量: $O(\log U+\log MAX\_UNIQUE)$
 
-# 順序query
+## 順序query
 
 ```cpp
 optional<Value> kth_smallest(int index)
@@ -43,7 +43,7 @@ optional<Value> successor_or_equal(const Value& value)
 - `kth_smallest`, `kth_smallest_one_based`: $O(\log U+16\log_{16} MAX\_UNIQUE)$
 - その他: $O(\log U+\log_{16} MAX\_UNIQUE)$
 
-# その他
+## その他
 
 ```cpp
 int size()

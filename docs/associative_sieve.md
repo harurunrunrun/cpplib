@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/associative_sieve.hpp
 
 4状態の可換モノイド上に値を持つ乗法的関数について、`floor(n / i)` ごとの冪和をまとめて求める。
 
-# `AssociativeSieveOperation`
+## `AssociativeSieveOperation`
 
 ```cpp
 using AssociativeSieveOperation = array<array<uint8_t, 4>, 4>;
@@ -13,7 +13,7 @@ using AssociativeSieveOperation = array<array<uint8_t, 4>, 4>;
 
 状態の二項演算表を表す。状態0が単位元であり、演算は可換かつ結合的でなければならない。
 
-# `AssociativeSieveValue`
+## `AssociativeSieveValue`
 
 ```cpp
 using AssociativeSieveValue = array<Modint998244353, 4>;
@@ -21,7 +21,7 @@ using AssociativeSieveValue = array<Modint998244353, 4>;
 
 添字 `r` の要素が状態 `r` に属する整数の冪和を表す。
 
-# `associative_sieve_summatory_quotients`
+## `associative_sieve_summatory_quotients`
 
 ```cpp
 vector<AssociativeSieveValue> associative_sieve_summatory_quotients(

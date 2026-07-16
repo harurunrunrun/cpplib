@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/rectangle_union.hpp
 
 軸平行長方形の和集合の面積。
 
-# 関数
+## 関数
 
 ```cpp
 rectangle_union_area<T>(rectangles)

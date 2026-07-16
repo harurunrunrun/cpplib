@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/matching/assignment.hpp
 
 Hungarian法により長方形cost matrixの最小費用assignmentを求める。各rowへ互いに異なるcolumnを1つずつ割り当てる。
 
-# API
+## API
 
 ```cpp
 AssignmentResult<T> minimum_cost_assignment(

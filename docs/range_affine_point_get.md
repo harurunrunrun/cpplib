@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/range_affine_point_get.hpp
 
 値列への区間affine作用と一点取得を行う。
 
-# RangeAffinePointGet
+## RangeAffinePointGet
 
 ```cpp
 template<class T, int MAX_SIZE>

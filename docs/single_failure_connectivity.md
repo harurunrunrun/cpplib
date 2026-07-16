@@ -6,7 +6,7 @@ documentation_of: ../src/algorithm/graph/single_failure_connectivity.hpp
 連結な無向グラフを前処理し、辺を1本または頂点を1個だけ削除した後の2頂点の連結性を答える。
 辺は入力順の0始まりIDで指定する。平行辺と自己ループも扱える。
 
-# クラス
+## クラス
 
 ```cpp
 template<size_t MAX_VERTEX_COUNT, size_t MAX_EDGE_COUNT>
@@ -72,12 +72,12 @@ $O(1)$
 
 `removed` のDFS木上の子の数を $d$ として $O(\log(d+1))$。
 
-# 空間計算量
+## 空間計算量
 
 固定容量の作業領域として $O(\mathtt{MAX\_VERTEX\_COUNT}+\mathtt{MAX\_EDGE\_COUNT})$ を使う。
 入力グラフの前処理済み部分は $O(N+M)$ である。
 
-# 注意点
+## 注意点
 
 - 入力グラフは1頂点以上の連結な無向グラフでなければならない。
 - 頂点は $[0,N)$、辺IDは $[0,M)$ で指定する。

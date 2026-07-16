@@ -5,13 +5,13 @@ documentation_of: ../src/algorithm/matching/min_cost_flow.hpp
 
 最小費用流。
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 MinCostFlow<T> graph(n)
 ```
 
-# 関数
+## 関数
 
 ```cpp
 graph.add_edge(from, to, cap, cost)

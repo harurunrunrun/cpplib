@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/two_vertex_connected_components.hpp
 
 無向グラフの二重頂点連結成分分解。
 
-# 関数
+## 関数
 
 ```cpp
 two_vertex_connected_components(n, edges)

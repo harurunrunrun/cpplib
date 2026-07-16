@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/maximum_disjoint_equal_pair_counts.hpp
 
 複数の半開区間ごとに、値が等しい二要素から作れる互いに素なペアの最大個数を返す。
 
-# maximum_disjoint_equal_pair_counts
+## maximum_disjoint_equal_pair_counts
 
 ```cpp
 template<class T>

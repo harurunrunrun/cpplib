@@ -7,7 +7,7 @@ documentation_of: ../src/structure/graph/offline_dynamic_connectivity.hpp
 
 時間 `t` の状態で callback を呼び出す。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 OfflineDynamicConnectivity<MAX_SIZE, MAX_TIME, MAX_HISTORY>
@@ -17,7 +17,7 @@ OfflineDynamicConnectivity<MAX_SIZE, MAX_TIME, MAX_HISTORY>
 - 時刻数の上限 `MAX_TIME`
 - rollback DSU の履歴数の上限 `MAX_HISTORY`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 OfflineDynamicConnectivity(int n = MAX_SIZE, int time_size = MAX_TIME)
@@ -31,7 +31,7 @@ OfflineDynamicConnectivity(int n = MAX_SIZE, int time_size = MAX_TIME)
 
 区間segment treeの各nodeに対応する空の辺列を構築する。
 
-# 辺の追加削除
+## 辺の追加削除
 
 ```cpp
 void add_edge(int time, int u, int v)
@@ -47,7 +47,7 @@ void erase_edge(int time, int u, int v)
 - `add_edge`: 辺種数を $E$ として amortized $O(\log E)$
 - `erase_edge`: $O(\log E+\log Q)$
 
-# 実行
+## 実行
 
 ```cpp
 dc.run([&](int time, const auto& dsu){
@@ -63,7 +63,7 @@ dc.run([&](int time, const auto& dsu){
 
 `M` は辺が有効な区間数、$C_t$ は時刻 $t$ のcallback実行時間。初回`run`のbuildは $O(M\log Q)$ で、この式に含まれる。
 
-# 状態情報
+## 状態情報
 
 `size`, `time_size` は $O(1)$。
 

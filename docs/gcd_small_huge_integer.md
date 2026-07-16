@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/gcd_small_huge_integer.hpp
 
 機械語整数と十進文字列整数の最大公約数を求める。
 
-# `gcd_small_huge_integer`
+## `gcd_small_huge_integer`
 
 ```cpp
 string gcd_small_huge_integer(uint32_t small, const string& huge);

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/zip_unzip.hpp
 
 配列をソースコードに埋め込みやすい形にするための run-length zip/unzip。
 
-# 関数
+## 関数
 
 ```cpp
 run_length_zip(data)

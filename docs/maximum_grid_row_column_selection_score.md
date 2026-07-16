@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/matching/maximum_grid_row_column_selection_sc
 
 符号付き重み行列に対する、行と列の選択制約付き最大得点を返す。
 
-# maximum_grid_row_column_selection_score
+## maximum_grid_row_column_selection_score
 
 ```cpp
 long long maximum_grid_row_column_selection_score(

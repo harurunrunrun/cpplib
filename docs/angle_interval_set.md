@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/geometry/2d/angle_interval_set.hpp
 
 角度を2π周期で管理し、円周上の半開区間の和集合を保持する。
 
-# 構築
+## 構築
 
 ~~~cpp
 AngleIntervalSet()
@@ -13,7 +13,7 @@ AngleIntervalSet()
 
 空の集合を構築する。
 
-# 更新
+## 更新
 
 ~~~cpp
 void add(long double start, long double end)
@@ -23,7 +23,7 @@ void clear()
 
 addはstartからendへ反時計回りに進む半開区間を追加する。removeは同じ規約の区間を削除する。clearは全区間を削除する。
 
-# 問い合わせ
+## 問い合わせ
 
 ~~~cpp
 bool contains(long double angle) const
@@ -42,7 +42,7 @@ vector<pair<long double, long double>> intervals() const
 - empty, full: それぞれ空集合・全周被覆かを返す。
 - intervals: 0以上2π未満へ分割した、互いに交わらない半開区間を左端順で返す。
 
-# 時間計算量
+## 時間計算量
 
 Mを更新前の線形区間数、Kを更新で併合または分割される区間数とする。
 
@@ -52,7 +52,7 @@ Mを更新前の線形区間数、Kを更新で併合または分割される区
 - intervals: O(M)
 - clear: O(M)
 
-# 空間計算量
+## 空間計算量
 
 保持する区間にO(M)、intervalsの戻り値にO(M)。
 

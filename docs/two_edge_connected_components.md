@@ -7,7 +7,7 @@ documentation_of: ../src/algorithm/graph/two_edge_connected_components.hpp
 
 橋を取り除いた後の連結成分を求める。
 
-# 関数
+## 関数
 
 ```cpp
 two_edge_connected_components(n, edges)

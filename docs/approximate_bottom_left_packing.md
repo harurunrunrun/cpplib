@@ -3,7 +3,7 @@ title: Bottom-Left Rectangle Packing (左下詰め長方形packing)
 documentation_of: ../src/approximate/packing/bottom_left_packing.hpp
 ---
 
-# Bottom-Left Rectangle Packing (左下詰め長方形packing)
+## Bottom-Left Rectangle Packing (左下詰め長方形packing)
 
 入力順に各長方形を既存bin内の最も下、同じ高さなら最も左の候補へ配置するheuristic。
 

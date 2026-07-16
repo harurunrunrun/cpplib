@@ -3,7 +3,7 @@ title: Safe Count Arithmetic (安全な個数演算)
 documentation_of: ../src/approximate/evolutionary/detail/safe_count.hpp
 ---
 
-# Safe Count Arithmetic (安全な個数演算)
+## Safe Count Arithmetic (安全な個数演算)
 
 `std::size_t` の加算・乗算をoverflow検査付きで行う内部API。
 

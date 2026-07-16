@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/minimum_spanning_tree_cost.hpp
 
 重み付き無向グラフの最小全域木の重み総和を返す。
 
-# `KruskalEdge<long long>`
+## `KruskalEdge<long long>`
 
 ```cpp
 template<class T>
@@ -18,7 +18,7 @@ struct KruskalEdge {
 
 辺の両端と重みを表す。`minimum_spanning_tree_cost` では `T = long long` を使用する。
 
-# minimum_spanning_tree_cost
+## minimum_spanning_tree_cost
 
 ```cpp
 long long minimum_spanning_tree_cost(

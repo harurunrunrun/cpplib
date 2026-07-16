@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/directed_mst.hpp
 
 最小有向全域木。rootから全頂点へ到達する有向木の最小コストを求める。
 
-# 関数
+## 関数
 
 ```cpp
 directed_mst<T>(n, root, edges, inf)

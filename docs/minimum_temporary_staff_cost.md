@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/minimum_temporary_staff_cost.hpp
 
 月ごとの必要人数を満たす雇用計画の最小費用を返す。
 
-# minimum_temporary_staff_cost
+## minimum_temporary_staff_cost
 
 ```cpp
 long long minimum_temporary_staff_cost(

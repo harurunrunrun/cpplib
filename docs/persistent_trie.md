@@ -5,13 +5,13 @@ documentation_of: ../src/structure/trie/persistent_trie.hpp
 
 永続 Trie。重複を持つ。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentTrie<ALPHABET, MAX_NODES, MAX_VERSIONS, OFFSET>
 ```
 
-# version
+## version
 
 ```cpp
 int fork(int version)
@@ -29,7 +29,7 @@ int root(int version)
 `version`が`[0,versions())`の範囲外なら例外。
 `fork`、`insert`、`erase`でversion数が`MAX_VERSIONS`を超える場合も例外。
 
-# node
+## node
 
 ```cpp
 int node(int version, string_view s) const
@@ -39,7 +39,7 @@ int node(int version, string_view s) const
 文字は`[OFFSET, OFFSET + ALPHABET)`に含まれる必要があり、範囲外なら例外。
 
 
-# insert / erase
+## insert / erase
 
 ```cpp
 int insert(int version, string_view s)
@@ -48,7 +48,7 @@ int erase(int version, string_view s)
 
 新しい version を返す。`erase` は文字列が存在しない場合、同じ内容の新しい version を返す。
 
-# count
+## count
 
 ```cpp
 int count(int version, string_view s)

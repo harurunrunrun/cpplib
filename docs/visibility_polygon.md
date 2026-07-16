@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/geometry/2d/visibility_polygon.hpp
 
 単純多角形の内部にある観測点から、遮られずに見える領域の境界を求める。
 
-# API
+## API
 
 ~~~cpp
 vector<Point> visibility_polygon(
@@ -16,11 +16,11 @@ vector<Point> visibility_polygon(
 
 多角形の各頂点方向と、その直前・直後のrayについて最初に当たる境界点を求め、観測点まわりの反時計回り順で返す。入力polygonは時計回り・反時計回りのどちらでもよい。境界は不透明で、最初の交点より奥は遮蔽される。
 
-# 時間計算量
+## 時間計算量
 
 頂点数をNとするとO(N^2)。単純性検査がO(N^2)、高々3N本のrayと全辺の交差がO(N^2)、角度sortがO(N log(N+1))。
 
-# 空間計算量
+## 空間計算量
 
 O(N)。
 

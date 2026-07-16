@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/gf2_determinant.hpp
 
 文字列で与えたbinary正方行列の行列式を $\mathrm{GF}(2)$ 上で求める。
 
-# `gf2_determinant`
+## `gf2_determinant`
 
 ```cpp
 int gf2_determinant(const vector<string>& matrix)

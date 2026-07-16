@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/other/relative_order_inversion_count.hpp
 
 キーの基準順序に対する別の列の転倒数を返す。
 
-# relative_order_inversion_count
+## relative_order_inversion_count
 
 ```cpp
 template<class Key>

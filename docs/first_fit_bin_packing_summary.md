@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/packing/first_fit_bin_packing_summary.hpp
 
 First-Fit法でビン詰めした結果の使用ビン数と未使用容量の総和を返す。
 
-# FirstFitBinPackingSummary
+## FirstFitBinPackingSummary
 
 ```cpp
 struct FirstFitBinPackingSummary {
@@ -14,7 +14,7 @@ struct FirstFitBinPackingSummary {
 };
 ```
 
-# first_fit_bin_packing_summary
+## first_fit_bin_packing_summary
 
 ```cpp
 FirstFitBinPackingSummary first_fit_bin_packing_summary(

@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/graph/functional_graph.hpp
 
 各頂点からちょうど1本の有向辺が出るfunctional graphを、cycleとcycleへ向かう木に分解する。
 
-# 構築
+## 構築
 
 ```cpp
 FunctionalGraph<MAX_SIZE> graph(successor)
@@ -16,7 +16,7 @@ graph.build(successor)
 
 64段のdoubling tableを構築するため、前処理は $O(64N)$ 時間、$O(64\,\mathrm{MAX\_SIZE})$ 空間を使う。cycle分解自体は $O(N)$ 時間である。
 
-# 基本操作
+## 基本操作
 
 ```cpp
 int graph.size()
@@ -27,7 +27,7 @@ int graph.successor(v)
 
 - `size`, `empty`, `component_count`, `successor`: $O(1)$
 
-# 分解結果
+## 分解結果
 
 ```cpp
 int graph.component_id(v)
@@ -46,7 +46,7 @@ int graph.orbit_size(v)
 
 - 上記の全操作: $O(1)$
 
-# componentとcycle
+## componentとcycle
 
 ```cpp
 int graph.component_size(id)
@@ -59,7 +59,7 @@ span<const int> graph.cycle(id)
 - `component_size`, `cycle_size`: $O(1)$
 - `cycle`: $O(1)$、返すviewの長さはcycle長
 
-# 移動
+## 移動
 
 ```cpp
 int graph.jump(v, unsigned long long k)
@@ -72,6 +72,7 @@ long long graph.steps_to(from, to)
 
 - `jump`: $O(64)$
 - `steps_to`: $O(64)$
+
 ## 注意点
 
 - default constructorは頂点数0の空graph。`build(successor)` は以前の内容を破棄して

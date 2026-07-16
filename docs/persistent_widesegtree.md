@@ -18,7 +18,7 @@ long long prod(int version, long long l, long long r)
 long long all_prod(int version)
 ```
 
-# 時間計算量
+## 時間計算量
 
 - constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
 - `set`, `add`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$

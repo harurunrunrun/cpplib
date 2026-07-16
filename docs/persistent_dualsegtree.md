@@ -7,7 +7,7 @@ documentation_of: ../src/structure/segtree/persistent_dualsegtree.hpp
 
 version 0は初期状態。
 
-# テンプレート引数
+## テンプレート引数
 
 ```cpp
 PersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
@@ -17,7 +17,7 @@ PersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 - 配列長の上限 `MAX_SIZE`
 - 追加できるversion数の上限 `MAX_VERSION`
 
-# コンストラクタ
+## コンストラクタ
 
 ```cpp
 (1) PersistentDualSegtree(int n = MAX_SIZE)
@@ -29,7 +29,7 @@ PersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 
 - $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_VERSION}\log \mathrm{MAX\_SIZE})$
 
-# 更新
+## 更新
 
 ```cpp
 (1) int set(int version, int k, const S& x)
@@ -44,7 +44,7 @@ PersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_VERSION>
 - (1), (2): $O(\log \mathrm{MAX\_SIZE})$
 - (3): $O(1)$
 
-# get
+## get
 
 ```cpp
 S get(int version, int k) const
@@ -56,7 +56,7 @@ S get(int version, int k) const
 
 - $O(\log \mathrm{MAX\_SIZE})$
 
-# version情報
+## version情報
 
 ```cpp
 int size() const

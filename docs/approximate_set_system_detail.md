@@ -3,7 +3,7 @@ title: Set System Helpers (集合系補助)
 documentation_of: ../src/approximate/set_cover/detail/set_system.hpp
 ---
 
-# Set System Helpers (集合系補助)
+## Set System Helpers (集合系補助)
 
 set cover heuristicが共有する集合系正規化とgain更新の内部API。
 

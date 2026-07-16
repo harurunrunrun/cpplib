@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/tree/unweighted_tree_radius.hpp
 
 重みなし無向木について、各頂点から最遠頂点までの距離の最小値である木の半径を返す。
 
-# unweighted_tree_radius
+## unweighted_tree_radius
 
 ```cpp
 int unweighted_tree_radius(

@@ -3,7 +3,7 @@ title: Polyline Geometry Helpers (折れ線幾何補助)
 documentation_of: ../src/approximate/geometry/detail/polyline_common.hpp
 ---
 
-# Polyline Geometry Helpers (折れ線幾何補助)
+## Polyline Geometry Helpers (折れ線幾何補助)
 
 折れ線簡略化で共有する検査・距離・面積の内部API。
 

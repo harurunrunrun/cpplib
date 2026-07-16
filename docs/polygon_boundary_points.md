@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/geometry/2d/polygon_boundary_points.hpp
 
 Enumerates the given points that lie on the boundary of a polygon.
 
-# Function
+## Function
 
 ```cpp
 enumerate_points_on_polygon_boundary(polygon, points, unique)

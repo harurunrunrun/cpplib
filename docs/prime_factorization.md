@@ -41,6 +41,7 @@ documentation_of: ../src/algorithm/math/prime_factorization.hpp
 | `math::euler_phi(n)` | 素因数分解と同じ期待計算量 |
 
 `pollard_rho` は再試行を行うため決定的な反復回数上界を置かない。`is_prime_miller_rabin_random` の誤判定確率は `rounds` に依存する。
+
 ## 注意点
 
 - `u64`, `u128` は内部計算にも使う64/128 bit符号なし整数alias。

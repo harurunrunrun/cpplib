@@ -3,7 +3,7 @@ title: Douglas–Peucker Algorithm (Douglas–Peucker法)
 documentation_of: ../src/approximate/geometry/douglas_peucker.hpp
 ---
 
-# Douglas–Peucker法
+## Douglas–Peucker法
 
 折れ線を、元の折れ線からの距離が指定値以下になるように簡略化する。始点と終点は必ず残り、入力順序も保存される。
 

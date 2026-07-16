@@ -12,14 +12,14 @@ documentation_of: ../src/approximate/graph/max_cut.hpp
 
 各member参照の時間計算量・追加空間計算量は $O(1)$、`side` 全体の列挙は時間計算量 $O(N)$、追加空間計算量 $O(1)$ である。
 
-# cut_edge_count
+## cut_edge_count
 
 指定した0/1割当てが切る辺数を数える。
 
 - 時間計算量: $O(N+E)$
 - 追加空間計算量: $O(1)$
 
-# random_cut
+## random_cut
 
 ~~~cpp
 template<class URBG>
@@ -36,7 +36,7 @@ MaxCutResult random_cut(
 - 時間計算量: $O(N+E)$
 - 追加空間計算量: $O(N)$
 
-# greedy_max_cut
+## greedy_max_cut
 
 頂点番号順に、既に割り当てた隣接辺を多く切る側へ置く。同数ならside 0を選ぶ。自己ループを除く辺の半分以上を決定的に切る。
 

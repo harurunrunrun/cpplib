@@ -5,7 +5,7 @@ documentation_of: ../src/approximate/routing/local_moves.hpp
 
 TSP/VRPの局所探索で使う基本近傍操作。すべて `approximate::routing` 名前空間にあり、区間は半開区間 `[first,last)` で指定する。
 
-# segment reversal / 2-opt
+## segment reversal / 2-opt
 
 ~~~cpp
 void reverse_segment(vector<int>& route, size_t first, size_t last)
@@ -32,7 +32,7 @@ Cost two_opt_symmetric_delta(
 - 時間計算量: $O(1)$
 - 追加空間計算量: $O(1)$
 
-# 2-opt star
+## 2-opt star
 
 ~~~cpp
 void apply_two_opt_star(
@@ -64,7 +64,7 @@ Cost two_opt_star_delta(
 - 時間計算量: $O(1)$
 - 追加空間計算量: $O(1)$
 
-# 3-opt
+## 3-opt
 
 ~~~cpp
 enum class ThreeOptPattern {
@@ -87,7 +87,7 @@ void apply_three_opt(
 - 時間計算量: 2区間の合計長を $B$ として $O(B)$
 - 追加空間計算量: $O(B)$
 
-# relocate / Or-opt
+## relocate / Or-opt
 
 ~~~cpp
 void relocate_segment(
@@ -114,7 +114,7 @@ void apply_or_opt(
 - 各APIの時間計算量: route長を $L$ として $O(L)$
 - `relocate_segment`, `relocate_vertex`, `apply_or_opt` の追加空間計算量: 移動長を $B$ として $O(B)$
 
-# swap / segment exchange
+## swap / segment exchange
 
 ~~~cpp
 void swap_vertices(vector<int>& route, size_t first, size_t second)

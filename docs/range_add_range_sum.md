@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/range_add_range_sum.hpp
 
 零初期化された列への区間加算と区間和を管理する。
 
-# RangeAddRangeSum
+## RangeAddRangeSum
 
 ```cpp
 template<class T, int MAX_SIZE>

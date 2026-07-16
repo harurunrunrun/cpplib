@@ -6,7 +6,7 @@ documentation_of: ../src/algorithm/graph/minimum_forward_or_jump_cost.hpp
 各頂点から次頂点への前進辺と任意頂点への跳躍辺を1本ずつ持つグラフの最小費用を
 求める。
 
-# `minimum_forward_or_jump_cost`
+## `minimum_forward_or_jump_cost`
 
 ```cpp
 template<class Cost>

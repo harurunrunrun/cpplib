@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/math/squarefree_integer_count.hpp
 
 正の square-free integer が上限以下にいくつあるかを数える。
 
-# `squarefree_integer_count`
+## `squarefree_integer_count`
 
 ```cpp
 uint64_t squarefree_integer_count(uint64_t n);

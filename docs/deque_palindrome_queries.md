@@ -5,7 +5,7 @@ documentation_of: ../src/algorithm/string/deque_palindrome_queries.hpp
 
 両端回文木の更新と、更新直後の回文統計取得を1回のmethodで行う。
 
-# 構築
+## 構築
 
 ```cpp
 DequePalindromeQueries<ALPHABET, MAX_NODES, MAX_LENGTH, OFFSET> queries
@@ -16,7 +16,7 @@ DequePalindromeQueries<ALPHABET, MAX_NODES, MAX_LENGTH, OFFSET> queries
 - 時間計算量: $O(MAX\_NODES\cdot ALPHABET+MAX\_LENGTH)$
 - 保存領域: $O(MAX\_NODES\cdot ALPHABET+MAX\_LENGTH)$
 
-# 更新と結果
+## 更新と結果
 
 ```cpp
 DequePalindromeStatistics push_front(char character)
@@ -31,7 +31,7 @@ DequePalindromeStatistics pop_back()
 - `pop_front`, `pop_back`: 最悪 $O(1)$
 - 戻り値構築の追加時間・空間: $O(1)$
 
-# その他
+## その他
 
 ```cpp
 int size() const

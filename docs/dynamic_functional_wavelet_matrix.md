@@ -6,11 +6,11 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_functional_wavelet_mat
 `DynamicWeightedWaveletMatrix` の重みを値自身にしたもの。
 `set(k, value)` で値と重みの両方を更新する。
 
-# 時間計算量
+## 時間計算量
 
 `DynamicWeightedWaveletMatrix` と同じ。
 
-# 計算量（公開操作別）
+## 計算量（公開操作別）
 
 $B=\mathtt{BLOCK\_SIZE}$、$D=\mathtt{BIT\_WIDTH}$、
 $Q(L)=B+\lceil L/B\rceil\log B$、$S(L)=B+\lceil L/B\rceil$ とする。
@@ -35,7 +35,7 @@ void set(int k, T value)
 単独使用すると「重み=値」の不変条件は保たれない。点・半開区間・bit幅・容量・例外契約は
 基底型と同じで、各APIの計算量は上記表の通り。
 
-# Constructor signature
+## Constructor signature
 
 ```cpp
 DynamicFunctionalWaveletMatrix()

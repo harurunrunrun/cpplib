@@ -5,7 +5,7 @@ documentation_of: ../src/structure/tree/implicit_treap_deque.hpp
 
 `ImplicitTreap` を両端キューとして使うための専用interface。
 
-# 構築
+## 構築
 
 ```cpp
 ImplicitTreapDeque<Monoid, MAX_SIZE> deque
@@ -16,7 +16,7 @@ ImplicitTreapDeque<Monoid, MAX_SIZE> deque
 - 時間計算量: $O(MAX\_SIZE)$
 - 保存領域: $O(MAX\_SIZE)$
 
-# 更新
+## 更新
 
 ```cpp
 void push_front(const value_type& value)
@@ -30,7 +30,7 @@ void pop_back()
 - 時間計算量: 期待 $O(\log N)$
 - 追加空間計算量: 期待 $O(\log N)$ の再帰stack
 
-# query
+## query
 
 ```cpp
 value_type get(int index)

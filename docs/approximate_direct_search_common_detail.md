@@ -3,7 +3,7 @@ title: Direct Search Common Helpers (直接探索共通補助)
 documentation_of: ../src/approximate/optimization/detail/direct_search_common.hpp
 ---
 
-# Direct Search Common Helpers (直接探索共通補助)
+## Direct Search Common Helpers (直接探索共通補助)
 
 Powell法などの方向探索で共有する内部API。
 

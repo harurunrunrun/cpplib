@@ -5,7 +5,7 @@ documentation_of: ../src/structure/segtree/dynamic_parentheses_sequence.hpp
 
 丸括弧列の1点反転と、列全体が正しい括弧列かの判定を行う。
 
-# DynamicParenthesesSequence
+## DynamicParenthesesSequence
 
 ```cpp
 template<int MAX_SIZE>
