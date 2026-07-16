@@ -163,10 +163,12 @@ verify:
 
 docs-title-check:
 	$(PYTHON) scripts/test_check_docs_bilingual_titles.py
+	$(PYTHON) scripts/test_check_problem_independent_library_names.py
 	$(PYTHON) scripts/test_docs_problem_tags.py
 	$(PYTHON) scripts/test_docs_problem_tags_primary_sources.py
 	$(PYTHON) scripts/test_docs_problem_tags_transitive_sources.py
 	$(PYTHON) scripts/check_docs_bilingual_titles.py docs
+	$(PYTHON) scripts/check_problem_independent_library_names.py src docs
 	$(PYTHON) scripts/docs_problem_tags.py docs test/onlinejudge
 
 docs-coverage-check:
