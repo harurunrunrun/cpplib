@@ -50,8 +50,14 @@ bool same(const ClosestPair3DResult& left, const ClosestPair3DResult& right){
 
 int main(){
     std::uint64_t seed;
-    std::size_t rounds;
-    if(!(std::cin >> seed >> rounds) || rounds == 0 || rounds > 10000) return 2;
+    std::size_t rounds, performance_size = 0;
+    if(!(std::cin >> seed >> rounds) || rounds > 10000) return 2;
+    if(std::cin >> performance_size){
+        if(performance_size > 300000) return 2;
+    }else{
+        std::cin.clear();
+    }
+    if(rounds == 0 && performance_size == 0) return 2;
     if(closest_pair_3d({}) || closest_pair_3d({{1, 2, 3}})) return 1;
 
     const std::vector<Point3> duplicate{{
@@ -81,6 +87,29 @@ int main(){
     }
     if(!nonfinite_threw) return 1;
 
+    const auto tied = closest_pair_3d({
+        {0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {0, 0, 1},
+    });
+    if(!tied || tied->first != 0 || tied->second != 1 ||
+       tied->distance != 1) return 1;
+
+    const long double huge = std::ldexp(
+        0.75L, std::numeric_limits<long double>::max_exponent - 1
+    );
+    const std::vector<Point3> extreme{{
+        {huge, huge, huge}, {-huge, -huge, -huge},
+        {0, 0, 0}, {1, 0, 0}, {10, 0, 0},
+    }};
+    const auto extreme_result = closest_pair_3d(extreme);
+    if(!extreme_result || extreme_result->first != 2 ||
+       extreme_result->second != 3 || extreme_result->distance != 1) return 1;
+    const auto overflowing_distance = closest_pair_3d({
+        {huge, huge, huge}, {-huge, -huge, -huge},
+    });
+    if(!overflowing_distance || overflowing_distance->first != 0 ||
+       overflowing_distance->second != 1 ||
+       !std::isinf(overflowing_distance->distance)) return 1;
+
     std::mt19937_64 random(seed);
     std::uniform_int_distribution<int> coordinate(-1000, 1000);
     for(std::size_t iteration = 0; iteration < rounds; ++iteration){
@@ -97,6 +126,18 @@ int main(){
         }
         const std::optional<ClosestPair3DResult> actual = closest_pair_3d(points);
         if(!actual || !same(*actual, brute(points))) return 1;
+    }
+
+    if(performance_size != 0){
+        std::vector<Point3> points;
+        points.reserve(performance_size);
+        for(std::size_t index = 0; index < performance_size; ++index){
+            const long double value = static_cast<long double>(index);
+            points.push_back({3 * value, 4 * value, 12 * value});
+        }
+        const auto result = closest_pair_3d(points);
+        if(!result || result->first != 0 || result->second != 1 ||
+           result->distance != 13) return 1;
     }
     std::cout << "OK\n";
     return 0;
