@@ -6,6 +6,7 @@
 #include <optional>
 #include <queue>
 #include <stdexcept>
+#include <set>
 #include <utility>
 #include <vector>
 
@@ -41,15 +42,14 @@ std::optional<ChinesePostmanResult<T>> undirected_chinese_postman(
     }
     using Wide = minimum_weight_general_matching_internal::Wide;
     constexpr Wide infinity = Wide(1) << 120;
-    std::vector<std::vector<Wide>> distance(
-        static_cast<std::size_t>(vertex_count),
-        std::vector<Wide>(static_cast<std::size_t>(vertex_count), infinity)
+    struct AdjacencyEdge{
+        int to;
+        Wide cost;
+    };
+    std::vector<std::vector<AdjacencyEdge>> graph(
+        static_cast<std::size_t>(vertex_count)
     );
-    std::vector<std::vector<int>> graph(static_cast<std::size_t>(vertex_count));
     std::vector<int> degree(static_cast<std::size_t>(vertex_count));
-    for(int vertex = 0; vertex < vertex_count; ++vertex){
-        distance[static_cast<std::size_t>(vertex)][static_cast<std::size_t>(vertex)] = 0;
-    }
 
     Wide base_cost = 0;
     for(const auto& edge: edges){
@@ -63,14 +63,9 @@ std::optional<ChinesePostmanResult<T>> undirected_chinese_postman(
         base_cost += static_cast<Wide>(edge.cost);
         ++degree[static_cast<std::size_t>(edge.from)];
         ++degree[static_cast<std::size_t>(edge.to)];
-        graph[static_cast<std::size_t>(edge.from)].push_back(edge.to);
-        graph[static_cast<std::size_t>(edge.to)].push_back(edge.from);
-        Wide& forward = distance[static_cast<std::size_t>(edge.from)]
-                                [static_cast<std::size_t>(edge.to)];
-        Wide& backward = distance[static_cast<std::size_t>(edge.to)]
-                                 [static_cast<std::size_t>(edge.from)];
         const Wide cost = static_cast<Wide>(edge.cost);
-        if(cost < forward) forward = backward = cost;
+        graph[static_cast<std::size_t>(edge.from)].push_back({edge.to, cost});
+        graph[static_cast<std::size_t>(edge.to)].push_back({edge.from, cost});
     }
 
     int start = -1;
@@ -88,10 +83,10 @@ std::optional<ChinesePostmanResult<T>> undirected_chinese_postman(
         while(!queue.empty()){
             const int vertex = queue.front();
             queue.pop();
-            for(int next: graph[static_cast<std::size_t>(vertex)]){
-                if(!visited[static_cast<std::size_t>(next)]){
-                    visited[static_cast<std::size_t>(next)] = 1;
-                    queue.push(next);
+            for(const auto& edge: graph[static_cast<std::size_t>(vertex)]){
+                if(!visited[static_cast<std::size_t>(edge.to)]){
+                    visited[static_cast<std::size_t>(edge.to)] = 1;
+                    queue.push(edge.to);
                 }
             }
         }
@@ -103,43 +98,71 @@ std::optional<ChinesePostmanResult<T>> undirected_chinese_postman(
         }
     }
 
-    for(int middle = 0; middle < vertex_count; ++middle){
-        for(int from = 0; from < vertex_count; ++from){
-            const Wide left = distance[static_cast<std::size_t>(from)]
-                                      [static_cast<std::size_t>(middle)];
-            if(left == infinity) continue;
-            for(int to = 0; to < vertex_count; ++to){
-                const Wide right = distance[static_cast<std::size_t>(middle)]
-                                           [static_cast<std::size_t>(to)];
-                if(right == infinity) continue;
-                Wide& current = distance[static_cast<std::size_t>(from)]
-                                        [static_cast<std::size_t>(to)];
-                if(left + right < current) current = left + right;
-            }
-        }
-    }
-
     std::vector<int> odd_vertices;
     for(int vertex = 0; vertex < vertex_count; ++vertex){
         if(degree[static_cast<std::size_t>(vertex)] & 1){
             odd_vertices.push_back(vertex);
         }
     }
+    const int odd_count = static_cast<int>(odd_vertices.size());
+    std::vector<std::vector<Wide>> odd_distance(
+        static_cast<std::size_t>(odd_count),
+        std::vector<Wide>(static_cast<std::size_t>(odd_count), infinity)
+    );
+    std::vector<int> odd_index(static_cast<std::size_t>(vertex_count), -1);
+    for(int index = 0; index < odd_count; ++index){
+        odd_index[static_cast<std::size_t>(
+            odd_vertices[static_cast<std::size_t>(index)]
+        )] = index;
+    }
+    using QueueEntry = std::pair<Wide, int>;
+    for(int source_index = 0; source_index < odd_count; ++source_index){
+        const int source = odd_vertices[static_cast<std::size_t>(source_index)];
+        std::vector<Wide> distance(static_cast<std::size_t>(vertex_count), infinity);
+        std::set<QueueEntry> heap;
+        distance[static_cast<std::size_t>(source)] = 0;
+        heap.insert({0, source});
+        int remaining = odd_count;
+        while(!heap.empty() && remaining != 0){
+            const auto iterator = heap.begin();
+            const auto [current_distance, vertex] = *iterator;
+            heap.erase(iterator);
+            const int target_index = odd_index[static_cast<std::size_t>(vertex)];
+            if(target_index != -1){
+                odd_distance[static_cast<std::size_t>(source_index)]
+                            [static_cast<std::size_t>(target_index)] = current_distance;
+                --remaining;
+            }
+            for(const auto& edge: graph[static_cast<std::size_t>(vertex)]){
+                const Wide candidate = current_distance <= infinity - edge.cost
+                                     ? current_distance + edge.cost
+                                     : infinity;
+                Wide& next_distance = distance[static_cast<std::size_t>(edge.to)];
+                if(candidate < next_distance){
+                    if(next_distance != infinity){
+                        heap.erase({next_distance, edge.to});
+                    }
+                    next_distance = candidate;
+                    heap.insert({candidate, edge.to});
+                }
+            }
+        }
+    }
     std::vector<MinimumWeightGeneralMatchingEdge<T>> matching_edges;
     const Wide maximum = static_cast<Wide>(std::numeric_limits<T>::max());
-    for(int left = 0; left < static_cast<int>(odd_vertices.size()); ++left){
-        for(int right = left + 1; right < static_cast<int>(odd_vertices.size()); ++right){
-            const Wide cost = distance[static_cast<std::size_t>(odd_vertices[left])]
-                                      [static_cast<std::size_t>(odd_vertices[right])];
+    for(int left = 0; left < odd_count; ++left){
+        for(int right = left + 1; right < odd_count; ++right){
+            const Wide cost = odd_distance[static_cast<std::size_t>(left)]
+                                          [static_cast<std::size_t>(right)];
             if(cost <= maximum){
                 matching_edges.push_back({left, right, static_cast<T>(cost)});
             }
         }
     }
     const auto matching = minimum_weight_general_matching<T>(
-        static_cast<int>(odd_vertices.size()), matching_edges
+        odd_count, matching_edges
     );
-    if(matching.size * 2 != static_cast<int>(odd_vertices.size()))[[unlikely]]{
+    if(matching.size * 2 != odd_count)[[unlikely]]{
         throw std::overflow_error("Chinese postman shortest-path cost exceeds the value type");
     }
 
@@ -149,7 +172,7 @@ std::optional<ChinesePostmanResult<T>> undirected_chinese_postman(
     }
     ChinesePostmanResult<T> result{static_cast<T>(total), {}};
     result.paired_odd_vertices.reserve(odd_vertices.size() / 2);
-    for(int vertex = 0; vertex < static_cast<int>(odd_vertices.size()); ++vertex){
+    for(int vertex = 0; vertex < odd_count; ++vertex){
         const int other = matching.match[static_cast<std::size_t>(vertex)];
         if(vertex < other){
             result.paired_odd_vertices.push_back({

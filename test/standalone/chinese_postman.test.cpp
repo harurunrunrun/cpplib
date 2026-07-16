@@ -97,7 +97,60 @@ void check_case(
     const auto expected = brute_chinese_postman(vertex_count, edges);
     const auto actual = undirected_chinese_postman<long long>(vertex_count, edges);
     assert(static_cast<bool>(actual) == static_cast<bool>(expected));
-    if(actual) assert(actual->cost == *expected);
+    if(!actual) return;
+    assert(actual->cost == *expected);
+    std::vector<int> degree(static_cast<std::size_t>(vertex_count));
+    constexpr long long infinity = std::numeric_limits<long long>::max() / 4;
+    std::vector<std::vector<long long>> distance(
+        static_cast<std::size_t>(vertex_count),
+        std::vector<long long>(static_cast<std::size_t>(vertex_count), infinity)
+    );
+    for(int vertex = 0; vertex < vertex_count; ++vertex){
+        distance[static_cast<std::size_t>(vertex)][static_cast<std::size_t>(vertex)] = 0;
+    }
+    long long base = 0;
+    for(const auto& edge: edges){
+        base += edge.cost;
+        ++degree[static_cast<std::size_t>(edge.from)];
+        ++degree[static_cast<std::size_t>(edge.to)];
+        auto& forward = distance[static_cast<std::size_t>(edge.from)]
+                                [static_cast<std::size_t>(edge.to)];
+        forward = std::min(forward, edge.cost);
+        distance[static_cast<std::size_t>(edge.to)]
+                [static_cast<std::size_t>(edge.from)] = forward;
+    }
+    for(int middle = 0; middle < vertex_count; ++middle){
+        for(int from = 0; from < vertex_count; ++from){
+            for(int to = 0; to < vertex_count; ++to){
+                auto& value = distance[static_cast<std::size_t>(from)]
+                                      [static_cast<std::size_t>(to)];
+                value = std::min(
+                    value,
+                    distance[static_cast<std::size_t>(from)][static_cast<std::size_t>(middle)]
+                    + distance[static_cast<std::size_t>(middle)][static_cast<std::size_t>(to)]
+                );
+            }
+        }
+    }
+    std::vector<char> paired(static_cast<std::size_t>(vertex_count));
+    long long duplicated_cost = 0;
+    for(const auto& [left, right]: actual->paired_odd_vertices){
+        assert(0 <= left && left < vertex_count);
+        assert(0 <= right && right < vertex_count);
+        assert((degree[static_cast<std::size_t>(left)] & 1) != 0);
+        assert((degree[static_cast<std::size_t>(right)] & 1) != 0);
+        assert(!paired[static_cast<std::size_t>(left)]);
+        assert(!paired[static_cast<std::size_t>(right)]);
+        paired[static_cast<std::size_t>(left)] = 1;
+        paired[static_cast<std::size_t>(right)] = 1;
+        duplicated_cost += distance[static_cast<std::size_t>(left)]
+                                   [static_cast<std::size_t>(right)];
+    }
+    assert(actual->cost == base + duplicated_cost);
+    for(int vertex = 0; vertex < vertex_count; ++vertex){
+        assert(static_cast<bool>(paired[static_cast<std::size_t>(vertex)])
+               == static_cast<bool>(degree[static_cast<std::size_t>(vertex)] & 1));
+    }
 }
 
 void self_test(){
@@ -106,8 +159,13 @@ void self_test(){
     check_case(4, {{0, 1, 1}, {0, 2, 2}, {1, 3, 3}, {2, 3, 4}});
     check_case(2, {{0, 1, 1}, {0, 1, 2}, {0, 1, 3}});
     check_case(3, {{0, 0, 7}, {0, 1, 2}, {1, 2, 3}, {2, 0, 4}});
+    check_case(4, {{0, 1, 0}, {1, 2, 0}, {2, 3, 0}});
     assert(!undirected_chinese_postman<long long>(
         4, {{0, 1, 1}, {2, 3, 1}}
+    ));
+    assert(!undirected_chinese_postman<long long>(
+        6, {{0, 1, 1}, {1, 2, 1}, {2, 0, 1},
+            {3, 4, 1}, {4, 5, 1}, {5, 3, 1}}
     ));
 
     bool thrown = false;
@@ -117,6 +175,24 @@ void self_test(){
         thrown = true;
     }
     assert(thrown);
+    bool overflowed = false;
+    try{
+        (void)undirected_chinese_postman<int>(2, {{0, 1, 1500000000}});
+    }catch(const std::overflow_error&){
+        overflowed = true;
+    }
+    assert(overflowed);
+
+    overflowed = false;
+    try{
+        (void)undirected_chinese_postman<int>(
+            3, {{0, 1, 1500000000}, {1, 2, 1500000000}}
+        );
+    }catch(const std::overflow_error&){
+        overflowed = true;
+    }
+    assert(overflowed);
+
 
     std::mt19937 random(2026071312);
     for(int vertex_count = 1; vertex_count <= 9; ++vertex_count){
@@ -142,6 +218,17 @@ void self_test(){
     for(int vertex = 1; vertex < size; ++vertex) star.push_back({0, vertex, 1});
     const auto result = undirected_chinese_postman<long long>(size, star);
     assert(result && result->cost == 2 * (size - 1));
+
+    constexpr int sparse_size = 100000;
+    std::vector<ChinesePostmanEdge<long long>> path;
+    path.reserve(sparse_size - 1);
+    for(int vertex = 1; vertex < sparse_size; ++vertex){
+        path.push_back({vertex - 1, vertex, 1000000000LL});
+    }
+    const auto sparse_result = undirected_chinese_postman<long long>(sparse_size, path);
+    assert(sparse_result);
+    assert(sparse_result->cost == 2LL * (sparse_size - 1) * 1000000000LL);
+    assert(sparse_result->paired_odd_vertices.size() == 1);
 }
 
 int main(){
@@ -150,6 +237,7 @@ int main(){
         self_test();
         return 0;
     }
+
     std::vector<ChinesePostmanEdge<long long>> edges;
     edges.reserve(static_cast<std::size_t>(edge_count));
     for(int index = 0; index < edge_count; ++index){

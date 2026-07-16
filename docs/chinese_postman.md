@@ -28,19 +28,19 @@ optional<ChinesePostmanResult<T>> undirected_chinese_postman(
 )
 ```
 
-全辺の重み和へ、奇数次数頂点間の最短距離に対する最小重み完全マッチングの重みを加える。全点対最短路はFloyd--Warshall、完全マッチングはweighted blossomで求める。
+全辺の重み和へ、奇数次数頂点間の最短距離に対する最小重み完全マッチングの重みを加える。奇数次数頂点を始点とするDijkstraだけを実行し、完全マッチングはweighted blossomで求める。全点対距離表は構築しない。
 
 次数が正の頂点が複数の連結成分に分かれている場合、1つのclosed walkでは全辺を通れないため `nullopt`。孤立頂点は通るべき辺を持たないので無視する。辺が0本なら距離0。
 
-頂点数、端点、負の辺重みが不正なら `invalid_argument`。最短路または答えが `T` に収まらない場合は `overflow_error`。`T` はbool以外の符号付き整数型とする。
+頂点数、端点、負の辺重みが不正なら `invalid_argument`。Dijkstraを用いるため辺重みは0以上に限り、負辺対応の暗黙な切り替えは行わない。最短路または答えが `T` に収まらない場合は `overflow_error`。`T` はbool以外の符号付き整数型とする。
 
 ## API別の時間計算量・空間計算量
 
-$V$ を頂点数、$E$ を辺数、$K$ を奇数次数頂点数とする。
+$V$ を頂点数、$E$ を辺数、$K$ を奇数次数頂点数、$B(K)$ を$K$頂点の最小重み一般マッチングの計算量とする。現在のweighted blossomでは$B(K)=O(K^3)$。
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| `undirected_chinese_postman` | $O(V^3+K^3+E)$ | $O(V^2+K^2+E)$ |
+| `undirected_chinese_postman` | $O(E+V+K(E+V)\log V+B(K))$ | $O(V+E+K^2)$ |
 
 返すpair数は $K/2$。実際に重複する辺列が必要な場合は、各pair間の最短路を別途復元する。
 
