@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/string/perfect_rhyme_dictionary.hpp"
+#include "../../src/algorithm/string/longest_common_suffix_dictionary.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -19,10 +19,10 @@ int main(){
         dictionary_words.push_back(line);
     }
 
-    PerfectRhymeDictionary dictionary(std::move(dictionary_words));
+    LongestCommonSuffixDictionary dictionary(std::move(dictionary_words));
     while(std::getline(std::cin, line)){
         if(!line.empty() && line.back() == '\r') line.pop_back();
         if(line.empty()) continue;
-        std::cout << dictionary.perfect_rhyme(line).value() << '\n';
+        std::cout << dictionary.best_match(line).value() << '\n';
     }
 }

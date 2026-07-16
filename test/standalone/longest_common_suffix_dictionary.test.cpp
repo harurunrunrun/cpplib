@@ -8,44 +8,44 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/string/perfect_rhyme_dictionary.hpp"
+#include "../../src/algorithm/string/longest_common_suffix_dictionary.hpp"
 
 template<class Function>
-void expect_rhyme_error(Function&& function){
+void expect_dictionary_error(Function&& function){
     bool thrown = false;
     try{
         function();
-    }catch(const std::runtime_error&){
+    }catch(const std::invalid_argument&){
         thrown = true;
     }
     assert(thrown);
 }
 
 void test_api(){
-    PerfectRhymeDictionary empty;
+    LongestCommonSuffixDictionary empty;
     assert(empty.empty());
     assert(empty.size() == 0);
-    assert(!empty.perfect_rhyme("anything"));
+    assert(!empty.best_match("anything"));
 
-    PerfectRhymeDictionary dictionary({"perfect", "rhyme", "crime", "time"});
+    LongestCommonSuffixDictionary dictionary({"perfect", "rhyme", "crime", "time"});
     assert(!dictionary.empty());
     assert(dictionary.size() == 4);
-    assert(dictionary.perfect_rhyme("crime") == "time");
-    assert(dictionary.perfect_rhyme("rhyme") == "crime");
-    assert(dictionary.perfect_rhyme("dime") == "crime");
-    assert(dictionary.perfect_rhyme("perfect") == "crime");
-    assert(dictionary.perfect_rhyme("zzz") == "crime");
+    assert(dictionary.best_match("crime") == "time");
+    assert(dictionary.best_match("rhyme") == "crime");
+    assert(dictionary.best_match("dime") == "crime");
+    assert(dictionary.best_match("perfect") == "crime");
+    assert(dictionary.best_match("zzz") == "crime");
 
     dictionary.build({"a", "ba", "cba"});
-    assert(dictionary.perfect_rhyme("a") == "ba");
-    assert(dictionary.perfect_rhyme("ba") == "cba");
-    assert(dictionary.perfect_rhyme("cba") == "ba");
+    assert(dictionary.best_match("a") == "ba");
+    assert(dictionary.best_match("ba") == "cba");
+    assert(dictionary.best_match("cba") == "ba");
 
     dictionary.build({""});
-    assert(!dictionary.perfect_rhyme(""));
-    assert(dictionary.perfect_rhyme("x") == "");
+    assert(!dictionary.best_match(""));
+    assert(dictionary.best_match("x") == "");
 
-    expect_rhyme_error([&]{ dictionary.build({"same", "same"}); });
+    expect_dictionary_error([&]{ dictionary.build({"same", "same"}); });
 }
 
 int main(){
@@ -58,11 +58,11 @@ int main(){
         std::cin >> dictionary_size >> query_count;
         std::vector<std::string> words(dictionary_size);
         for(std::string& word: words) std::cin >> word;
-        PerfectRhymeDictionary dictionary(std::move(words));
+        LongestCommonSuffixDictionary dictionary(std::move(words));
         while(query_count-- > 0){
             std::string query;
             std::cin >> query;
-            const auto answer = dictionary.perfect_rhyme(query);
+            const auto answer = dictionary.best_match(query);
             std::cout << (answer ? *answer : std::string_view("NONE")) << '\n';
         }
     }

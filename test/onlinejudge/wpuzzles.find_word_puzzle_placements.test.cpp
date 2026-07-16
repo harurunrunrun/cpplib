@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/find_word_puzzle_placements.hpp"
+#include "../../src/algorithm/string/find_grid_pattern_placements.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -20,7 +20,7 @@ int main(){
         std::vector<std::string> words(static_cast<std::size_t>(word_count));
         for(auto& word: words) std::cin >> word;
 
-        const auto answer = find_word_puzzle_placements(grid, words);
+        const auto answer = find_grid_pattern_placements(grid, words);
         if(test_index != 0) std::cout << '\n';
         for(const auto& placement: answer){
             std::cout << placement.row << ' ' << placement.column << ' '

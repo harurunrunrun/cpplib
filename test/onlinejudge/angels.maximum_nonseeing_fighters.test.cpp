@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/matching/maximum_nonseeing_fighters.hpp"
+#include "../../src/algorithm/matching/maximum_nonattacking_rooks_with_blockers.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -22,6 +22,6 @@ int main(){
         for(auto& row: rooms){
             for(char& room: row) std::cin >> room;
         }
-        std::cout << maximum_nonseeing_fighters(rooms) << '\n';
+        std::cout << maximum_nonattacking_rooks_with_blockers(rooms, 'H', 'A') << '\n';
     }
 }

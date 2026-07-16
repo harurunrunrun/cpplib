@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/maximum_labyrinth_rope_length.hpp"
+#include "../../src/algorithm/graph/grid_forest_diameter.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -18,6 +18,6 @@ int main(){
         std::vector<std::string> labyrinth(static_cast<std::size_t>(row_count));
         for(auto& row: labyrinth) std::cin >> row;
         std::cout << "Maximum rope length is "
-                  << maximum_labyrinth_rope_length(labyrinth) << ".\n";
+                  << grid_forest_diameter(labyrinth) << ".\n";
     }
 }

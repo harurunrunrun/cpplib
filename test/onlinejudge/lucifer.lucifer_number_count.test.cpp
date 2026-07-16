@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/lucifer_number_count.hpp"
+#include "../../src/algorithm/math/count_prime_alternating_digit_sum_numbers.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -12,6 +12,6 @@ int main(){
     while(tests--){
         std::uint64_t left, right;
         std::cin >> left >> right;
-        std::cout << math::lucifer_number_count(left, right) << '\n';
+        std::cout << math::count_prime_alternating_digit_sum_numbers(left, right) << '\n';
     }
 }

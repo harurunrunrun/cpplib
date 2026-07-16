@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../src/algorithm/graph/maximum_fun_walk.hpp"
+#include "../../src/algorithm/graph/maximum_distinct_vertex_weight_walk.hpp"
 #include "../../src/structure/other/fastio.hpp"
 
 namespace{
@@ -15,8 +15,8 @@ int main(){
     io.readint(edge_count);
     io.readint(start);
     io.readint(goal);
-    std::vector<long long> fun(static_cast<std::size_t>(size));
-    for(long long& value: fun) io.readll(value);
+    std::vector<long long> vertex_weight(static_cast<std::size_t>(size));
+    for(long long& value: vertex_weight) io.readll(value);
     std::vector<std::vector<int>> graph(static_cast<std::size_t>(size));
     while(edge_count--){
         int from, to;
@@ -24,6 +24,6 @@ int main(){
         io.readint(to);
         graph[static_cast<std::size_t>(from - 1)].push_back(to - 1);
     }
-    io.writell(maximum_fun_walk(graph, fun, start - 1, goal - 1).value());
+    io.writell(maximum_distinct_vertex_weight_walk(graph, vertex_weight, start - 1, goal - 1).value());
     io.write('\n');
 }

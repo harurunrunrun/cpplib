@@ -8,35 +8,35 @@
 #include <string>
 #include <vector>
 
-struct WordPuzzlePlacement{
+struct GridPatternPlacement{
     int row = -1;
     int column = -1;
     int direction = -1;
 };
 
-inline std::vector<WordPuzzlePlacement> find_word_puzzle_placements(
+inline std::vector<GridPatternPlacement> find_grid_pattern_placements(
     const std::vector<std::string>& grid,
-    const std::vector<std::string>& words
+    const std::vector<std::string>& patterns
 ){
     if(grid.empty() || grid.front().empty())[[unlikely]]{
-        throw std::invalid_argument("word puzzle grid is empty");
+        throw std::invalid_argument("grid pattern search grid is empty");
     }
     if(grid.size() > static_cast<std::size_t>(
            std::numeric_limits<int>::max()
        ) || grid.front().size() > static_cast<std::size_t>(
            std::numeric_limits<int>::max()
        ))[[unlikely]]{
-        throw std::length_error("word puzzle grid is too large");
+        throw std::length_error("grid pattern search grid is too large");
     }
     const int row_count = static_cast<int>(grid.size());
     const int column_count = static_cast<int>(grid.front().size());
     for(const auto& row: grid){
         if(static_cast<int>(row.size()) != column_count)[[unlikely]]{
-            throw std::invalid_argument("word puzzle grid is ragged");
+            throw std::invalid_argument("grid pattern search grid is ragged");
         }
         for(const char character: row){
             if(character < 'A' || 'Z' < character)[[unlikely]]{
-                throw std::invalid_argument("word puzzle invalid grid character");
+                throw std::invalid_argument("grid pattern search invalid grid character");
             }
         }
     }
@@ -44,27 +44,27 @@ inline std::vector<WordPuzzlePlacement> find_word_puzzle_placements(
         std::array<int, 26> next{};
         int link = 0;
         int output = -1;
-        std::vector<int> word_ids;
+        std::vector<int> pattern_ids;
 
         Node(){
             next.fill(-1);
         }
     };
     std::vector<Node> nodes(1);
-    if(words.size() > static_cast<std::size_t>(
+    if(patterns.size() > static_cast<std::size_t>(
         std::numeric_limits<int>::max()
     ))[[unlikely]]{
-        throw std::length_error("word puzzle word count is too large");
+        throw std::length_error("grid pattern search pattern count is too large");
     }
-    for(int word_id = 0; word_id < static_cast<int>(words.size()); ++word_id){
-        const auto& word = words[static_cast<std::size_t>(word_id)];
-        if(word.empty())[[unlikely]]{
-            throw std::invalid_argument("word puzzle contains empty word");
+    for(int pattern_id = 0; pattern_id < static_cast<int>(patterns.size()); ++pattern_id){
+        const auto& pattern = patterns[static_cast<std::size_t>(pattern_id)];
+        if(pattern.empty())[[unlikely]]{
+            throw std::invalid_argument("grid pattern search contains empty pattern");
         }
         int state = 0;
-        for(const char character: word){
+        for(const char character: pattern){
             if(character < 'A' || 'Z' < character)[[unlikely]]{
-                throw std::invalid_argument("word puzzle invalid word character");
+                throw std::invalid_argument("grid pattern search invalid pattern character");
             }
             const std::size_t letter = static_cast<std::size_t>(character - 'A');
             int& to = nodes[static_cast<std::size_t>(state)].next[letter];
@@ -72,7 +72,7 @@ inline std::vector<WordPuzzlePlacement> find_word_puzzle_placements(
                 if(nodes.size() >= static_cast<std::size_t>(
                     std::numeric_limits<int>::max()
                 ))[[unlikely]]{
-                    throw std::length_error("word puzzle dictionary too large");
+                    throw std::length_error("grid pattern search dictionary too large");
                 }
                 const int created = static_cast<int>(nodes.size());
                 to = created;
@@ -82,7 +82,7 @@ inline std::vector<WordPuzzlePlacement> find_word_puzzle_placements(
                 state = to;
             }
         }
-        nodes[static_cast<std::size_t>(state)].word_ids.push_back(word_id);
+        nodes[static_cast<std::size_t>(state)].pattern_ids.push_back(pattern_id);
     }
 
     std::queue<int> queue;
@@ -99,7 +99,7 @@ inline std::vector<WordPuzzlePlacement> find_word_puzzle_placements(
         queue.pop();
         Node& node = nodes[static_cast<std::size_t>(vertex)];
         const Node& failure = nodes[static_cast<std::size_t>(node.link)];
-        node.output = !failure.word_ids.empty() ? node.link : failure.output;
+        node.output = !failure.pattern_ids.empty() ? node.link : failure.output;
         for(std::size_t letter = 0; letter < 26; ++letter){
             int& to = node.next[letter];
             if(to == -1){
@@ -111,17 +111,17 @@ inline std::vector<WordPuzzlePlacement> find_word_puzzle_placements(
         }
     }
 
-    std::vector<WordPuzzlePlacement> answer(words.size());
+    std::vector<GridPatternPlacement> answer(patterns.size());
     std::vector<int> active_parent(nodes.size(), -1);
     for(std::size_t state = 0; state < nodes.size(); ++state){
-        if(!nodes[state].word_ids.empty()){
+        if(!nodes[state].pattern_ids.empty()){
             active_parent[state] = static_cast<int>(state);
         }
     }
     const auto find_active = [&](int state) {
         int current = state;
         while(current != -1 &&
-              nodes[static_cast<std::size_t>(current)].word_ids.empty()){
+              nodes[static_cast<std::size_t>(current)].pattern_ids.empty()){
             current = active_parent[static_cast<std::size_t>(current)];
         }
         const int root = current;
@@ -134,7 +134,7 @@ inline std::vector<WordPuzzlePlacement> find_word_puzzle_placements(
         return root;
     };
     for(std::size_t state = 0; state < nodes.size(); ++state){
-        if(nodes[state].word_ids.empty()){
+        if(nodes[state].pattern_ids.empty()){
             active_parent[state] = nodes[state].output;
         }
     }
@@ -162,16 +162,16 @@ inline std::vector<WordPuzzlePlacement> find_word_puzzle_placements(
                         )
                     ];
                     int output = !nodes[static_cast<std::size_t>(state)]
-                        .word_ids.empty() ? state
+                        .pattern_ids.empty() ? state
                         : nodes[static_cast<std::size_t>(state)].output;
                     while((output = find_active(output)) != -1){
                         auto& ids = nodes[static_cast<std::size_t>(output)]
-                            .word_ids;
-                        for(const int word_id: ids){
+                            .pattern_ids;
+                        for(const int pattern_id: ids){
                             const int offset = static_cast<int>(
-                                words[static_cast<std::size_t>(word_id)].size()
+                                patterns[static_cast<std::size_t>(pattern_id)].size()
                             ) - 1;
-                            answer[static_cast<std::size_t>(word_id)] = {
+                            answer[static_cast<std::size_t>(pattern_id)] = {
                                 row - offset * dr,
                                 column - offset * dc,
                                 direction,
