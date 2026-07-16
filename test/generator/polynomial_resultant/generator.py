@@ -90,9 +90,10 @@ def main() -> None:
     write_case(args.out_dir, 1, [0, 1], [-5, 1])
     write_case(args.out_dir, 2, [3], [7])
     write_case(args.out_dir, 3, [0, 0], [1, 2])
+    write_case(args.out_dir, 4, [-2, 1, 1], [-1, 1, -1, 1], 0)
 
     rng = random.Random(2026071321)
-    for index in range(4, 34):
+    for index in range(5, 35):
         left_count = rng.randint(1, 8)
         right_count = rng.randint(1, 8)
         left = [rng.randrange(MOD) for _ in range(left_count)]
@@ -108,7 +109,7 @@ def main() -> None:
     left[0] = 3
     left[-1] = 7
     right[-1] = 1
-    write_case(args.out_dir, 34, left, right, pow(3, 15000, MOD))
+    write_case(args.out_dir, 35, left, right, pow(3, 15000, MOD))
 
 
 if __name__ == "__main__":

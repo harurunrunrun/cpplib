@@ -36,9 +36,18 @@ auto remainder = polynomial_remainder(
 T value = polynomial_resultant(left, left_count, right, right_count);
 ```
 
-Euclidの互除法に基づいて2多項式の終結式を返す。どちらかが0多項式なら0を返す。
+2多項式の終結式を返す。どちらかが0多項式なら0を返す。
 両方が定数多項式なら、0次のSylvester行列の行列式として1を返す。
 係数数が`CAPACITY`を超える場合は`std::runtime_error`を送出する。
+
+`T = Modint<MOD>`であり、`MOD`が素数かつ必要な2冪長のNTTを
+持つ場合は、half-GCDでEuclid変換をまとめて適用する高速経路を使う。
+各変換について、先頭係数の冪と次数交換による符号を同時に集約するため、
+終結式の値は通常のEuclid法と一致する。例えば`Modint998244353`では、
+有効係数数が$2^{22}$以下ならこの条件を満たす。
+
+上記の積を利用できない係数型・法・入力長では、同じAPIが通常の
+多項式除算による互換経路を使う。
 
 ## `polynomial_discriminant`
 
@@ -52,16 +61,24 @@ T value = polynomial_discriminant(coefficients, coefficient_count);
 
 ## API別の時間計算量・空間計算量
 
-有効な被除数次数を$M$、除数次数を$N$、判別式の入力次数を$D$とする。
+有効な被除数次数を$A$、除数次数を$B$、終結式・判別式の最大入力次数を
+$D$とする。$mathcal M(D)$を、係数体上で次数$D$以下の多項式を
+乗算する時間とする。この実装のNTT経路では
+$mathcal M(D)=O(D\log D)$である。
 
 | API・操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `PolynomialRemainderResult`の初期化 | $O(\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
-| `polynomial_remainder` | $O((M-N+1)N+\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
-| `polynomial_resultant` | $O(MN+\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
-| `polynomial_discriminant` | $O(D^2+\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
+| `polynomial_remainder` | $O((A-B+1)B+\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
+| `polynomial_resultant`（高速経路） | $O(\mathcal M(D)\log D)$ | $O(D)$ |
+| `polynomial_resultant`（互換経路） | $O(D^2+\mathrm{CAPACITY})$ | $O(\mathrm{CAPACITY})$ |
+| `polynomial_discriminant` | 高速経路では$O(\mathcal M(D)\log D+\mathrm{CAPACITY})$、互換経路では$O(D^2+\mathrm{CAPACITY})$ | $O(D+\mathrm{CAPACITY})$ |
 | member参照 | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
+係数型は体でなければならない。特に0でない除数の先頭係数が逆元を
+持たない場合、結果は定義されないか、係数型の除算が例外を送出する。
+高速経路は素数法であることも検査する。入力係数数は`CAPACITY`以下で
+なければならない。整数型を係数に使う場合、除算の切り捨てや中間値の
+overflowをこのライブラリは補償しない。

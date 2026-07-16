@@ -110,6 +110,20 @@ void self_test(){
         assert(polynomial_discriminant(constant, 1) == mint(1));
     }
     {
+        std::array<mint, 8> left{-2, 1, 1};
+        std::array<mint, 8> right{-1, 1, -1, 1};
+        assert(polynomial_resultant(left, 3, right, 4) == mint(0));
+    }
+    {
+        using fallback_mint = Modint<1000000007>;
+        std::array<fallback_mint, 8> left{-1, 0, 1};
+        std::array<fallback_mint, 8> right{-2, 1};
+        assert(
+            polynomial_resultant(left, 3, right, 2) ==
+            fallback_mint(3)
+        );
+    }
+    {
         std::array<mint, 8> zero{};
         std::array<mint, 8> constant{3};
         assert(polynomial_resultant(zero, 0, constant, 1) == mint(0));
@@ -133,6 +147,32 @@ void self_test(){
         }
         for(std::size_t degree = 0; degree <= right_degree; ++degree){
             right[degree] = mint(static_cast<long long>(random() % 101) - 50);
+        }
+        if(left[left_degree] == mint(0)) left[left_degree] = 1;
+        if(right[right_degree] == mint(0)) right[right_degree] = 1;
+        const mint expected = sylvester_resultant(
+            left, left_degree + 1, right, right_degree + 1
+        );
+        const mint actual = polynomial_resultant(
+            left, left_degree + 1, right, right_degree + 1
+        );
+        assert(actual == expected);
+    }
+
+    for(int iteration = 0; iteration < 500; ++iteration){
+        const std::size_t left_degree = 1 + random() % 20;
+        const std::size_t right_degree = 1 + random() % 20;
+        std::array<mint, 24> left{};
+        std::array<mint, 24> right{};
+        for(std::size_t degree = 0; degree <= left_degree; ++degree){
+            left[degree] = mint(
+                static_cast<long long>(random() % 1001) - 500
+            );
+        }
+        for(std::size_t degree = 0; degree <= right_degree; ++degree){
+            right[degree] = mint(
+                static_cast<long long>(random() % 1001) - 500
+            );
         }
         if(left[left_degree] == mint(0)) left[left_degree] = 1;
         if(right[right_degree] == mint(0)) right[right_degree] = 1;
