@@ -16,13 +16,14 @@ DOCS_OUTPUT := $(VERIFIER_ROOT)/site
 BUNDLE_PATH := $(VERIFIER_ROOT)/vendor/bundle
 STANDALONE_ASSET_CACHE := $(VERIFIER_CACHE)/standalone-assets
 STANDALONE_RESULT_DIR := $(VERIFIER_CACHE)/standalone-results
-CXX ?= g++
+GXX13 ?= g++-13
+CXX := $(GXX13)
 CXXFLAGS ?= -std=c++20 -O2 -Wall -Wextra
 STANDALONE_SPLIT_SIZE ?= 1
 STANDALONE_SPLIT_INDEX ?= 0
 LOCAL_VERIFY_JOBS ?= 4
 VERIFIER_GXX_WRAPPER_DIR := $(CURDIR)/scripts/competitive_verifier_gcc13
-VERIFIER_REAL_GXX := $(shell command -v g++ 2>/dev/null)
+VERIFIER_REAL_GXX := $(shell command -v $(GXX13) 2>/dev/null)
 VERIFIER_COMMAND_ENV := COMPETITIVE_VERIFIER_REAL_GXX="$(VERIFIER_REAL_GXX)" PATH="$(VERIFIER_GXX_WRAPPER_DIR):$(PATH)"
 
 COMMA := ,
@@ -33,7 +34,7 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-wrapper-test header-guard-check no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help gcc13-check verifier-setup verifier-wrapper-test header-guard-check no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
@@ -49,6 +50,20 @@ help:
 	@echo "make docs    testを実行せずHTMLを$(DOCS_OUTPUT)へ生成"
 	@echo "make docs-serve  HTMLを生成してlocalhost:4000で配信"
 	@echo "make verifier-clean  ローカル生成物とvenvを削除"
+
+gcc13-check:
+	@if ! compiler="$$(command -v "$(GXX13)" 2>/dev/null)"; then \
+		echo "GCC 13 is required: $(GXX13) was not found" >&2; \
+		exit 1; \
+	fi; \
+	version="$$("$$compiler" -dumpfullversion -dumpversion 2>/dev/null)" || { \
+		echo "failed to query GCC version: $$compiler" >&2; \
+		exit 1; \
+	}; \
+	case "$$version" in 13|13.*) ;; *) \
+		echo "GCC 13 is required, but $$compiler is $$version" >&2; \
+		exit 1; \
+	esac
 
 $(VERIFIER):
 	$(PYTHON) -m venv $(VERIFIER_VENV)
@@ -71,7 +86,7 @@ test-verifier-markers:
 	$(PYTHON) scripts/test_check_test_verifier_markers.py
 	$(PYTHON) scripts/check_test_verifier_markers.py
 
-verifier-resolve: verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers
+verifier-resolve: gcc13-check verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers
 	@mkdir -p $(VERIFIER_CACHE)
 	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge --config config.toml > $(VERIFY_FILES).tmp
 	$(PYTHON) scripts/check_unsupported_onlinejudge_assets.py
@@ -81,7 +96,7 @@ verifier-resolve: verifier-setup verifier-wrapper-test no-boost-dependency-check
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
-docs-verifier-resolve: verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers
+docs-verifier-resolve: gcc13-check verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers
 	@mkdir -p $(VERIFIER_CACHE)
 	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge test/standalone --config config.toml > $(DOCS_VERIFY_FILES).tmp
 	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
@@ -114,7 +129,7 @@ standalone-results-check:
 	$(PYTHON) scripts/check_standalone_verification_results.py \
 		--result-dir $(STANDALONE_RESULT_DIR)
 
-standalone-assets: standalone-assets-test standalone-results-prune
+standalone-assets: gcc13-check standalone-assets-test standalone-results-prune
 	$(PYTHON) scripts/run_standalone_assets.py \
 		--cache-dir $(STANDALONE_ASSET_CACHE) \
 		--result-dir $(STANDALONE_RESULT_DIR) \

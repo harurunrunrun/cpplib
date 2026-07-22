@@ -34,7 +34,7 @@ concurrency:
 
 jobs:
   standalone-preflight:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
@@ -53,7 +53,7 @@ jobs:
 
   standalone-assets:
     needs: standalone-preflight
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     strategy:
@@ -91,7 +91,7 @@ jobs:
           include-hidden-files: true
 
   resolve:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     outputs:
@@ -208,7 +208,7 @@ jobs:
   verify:
     if: ${{ needs.resolve.result == 'success' && needs.resolve.outputs.shard_count != '0' }}
     needs: resolve
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
 
     strategy:
@@ -452,7 +452,7 @@ jobs:
     needs:
       - resolve
       - verify
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
 
     steps:

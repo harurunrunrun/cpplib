@@ -285,6 +285,26 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
         self.assertLessEqual(int(plan["env"]["TARGET_FILES_PER_SHARD"]), 12)
         self.assertEqual(source.count("command -v g++-13"), 3)
 
+    def test_gcc13_is_the_local_default_and_runner_is_pinned(self) -> None:
+        makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+        self.assertIn("GXX13 ?= g++-13", makefile)
+        self.assertIn("CXX := $(GXX13)", makefile)
+        self.assertIn(
+            "VERIFIER_REAL_GXX := $(shell command -v $(GXX13)", makefile
+        )
+        self.assertNotIn("command -v g++ 2>/dev/null", makefile)
+        self.assertIn("gcc13-check:", makefile)
+        self.assertIn("-dumpfullversion -dumpversion", makefile)
+        self.assertIn("verifier-resolve: gcc13-check", makefile)
+        self.assertIn("docs-verifier-resolve: gcc13-check", makefile)
+        self.assertIn("standalone-assets: gcc13-check", makefile)
+
+        for workflow_name in ("verify.yaml", "docs.yaml"):
+            workflow = load_workflow(workflow_name)
+            for job_name, job in workflow["jobs"].items():
+                with self.subTest(workflow=workflow_name, job=job_name):
+                    self.assertEqual(job["runs-on"], "ubuntu-24.04")
+
     def test_merge_reports_details_and_caches_only_successes(self) -> None:
         workflow = load_workflow("verify.yaml")
         steps = named_steps(workflow["jobs"]["merge-and-check"])
