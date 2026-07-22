@@ -1,159 +1,82 @@
 #pragma once
 
-#include <algorithm>
-#include <array>
-#include <cstddef>
 #include <limits>
-#include <memory>
-#include <numeric>
 #include <optional>
-#include <stdexcept>
+#include <tuple>
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "dynamic_wavelet_matrix.hpp"
+#include "dynamic_wavelet_matrix_2d_weighted.hpp"
 
-template<
-    class X,
-    class Y,
-    int MAX_SIZE,
-    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits,
-    int BLOCK_SIZE = 512
->
+template<class X, class Y, int MAX_SIZE,
+         int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits,
+         int BLOCK_SIZE = 512>
 struct DynamicWaveletMatrix2D{
-    static_assert(std::is_integral_v<X>);
-    static_assert(std::is_integral_v<Y>);
-    static_assert(MAX_SIZE >= 0);
-
 private:
-    struct State{
-        std::array<X, MAX_SIZE> x{};
-        std::array<X, MAX_SIZE> original_x{};
-        std::array<int, MAX_SIZE> original_to_sorted{};
-        std::unique_ptr<DynamicWaveletMatrix<Y, MAX_SIZE, Y_BIT_WIDTH, BLOCK_SIZE>> matrix;
-    };
-
-    int _n = 0;
-    std::unique_ptr<State> state;
-
-    void check_index(int k, const char* message) const{
-        if(k < 0 || _n <= k)[[unlikely]] throw std::runtime_error(message);
-    }
-
-    void check_rect(X xl, X xr, Y yl, Y yr, const char* message) const{
-        if(xr < xl || yr < yl)[[unlikely]] throw std::runtime_error(message);
-    }
-
-    std::pair<int, int> x_range(X xl, X xr) const{
-        const auto first = state->x.begin();
-        int l = static_cast<int>(std::lower_bound(first, first + _n, xl) - first);
-        int r = static_cast<int>(std::lower_bound(first, first + _n, xr) - first);
-        return {l, r};
-    }
-
-    void build(const std::vector<X>& xs, const std::vector<Y>& ys){
-        _n = static_cast<int>(xs.size());
-        if(xs.size() != ys.size())[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (constructor).");
-        }
-        if(xs.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (constructor).");
-        }
-        state = std::make_unique<State>();
-        std::vector<int> order(static_cast<std::size_t>(_n));
-        std::iota(order.begin(), order.end(), 0);
-        std::sort(order.begin(), order.end(), [&](int lhs, int rhs){
-            if(xs[static_cast<std::size_t>(lhs)] != xs[static_cast<std::size_t>(rhs)]){
-                return xs[static_cast<std::size_t>(lhs)] < xs[static_cast<std::size_t>(rhs)];
-            }
-            if(ys[static_cast<std::size_t>(lhs)] != ys[static_cast<std::size_t>(rhs)]){
-                return ys[static_cast<std::size_t>(lhs)] < ys[static_cast<std::size_t>(rhs)];
-            }
-            return lhs < rhs;
-        });
-
-        std::vector<Y> sorted_y(static_cast<std::size_t>(_n));
-        for(int i = 0; i < _n; i++){
-            int index = order[static_cast<std::size_t>(i)];
-            state->x[static_cast<std::size_t>(i)] = xs[static_cast<std::size_t>(index)];
-            state->original_x[static_cast<std::size_t>(index)] = xs[static_cast<std::size_t>(index)];
-            state->original_to_sorted[static_cast<std::size_t>(index)] = i;
-            sorted_y[static_cast<std::size_t>(i)] = ys[static_cast<std::size_t>(index)];
-        }
-        state->matrix =
-            std::make_unique<DynamicWaveletMatrix<Y, MAX_SIZE, Y_BIT_WIDTH, BLOCK_SIZE>>(
-                sorted_y);
-    }
+    using Base = DynamicWaveletMatrix2DWeighted<
+        X, Y, int, MAX_SIZE, Y_BIT_WIDTH, BLOCK_SIZE
+    >;
+    Base base_;
 
 public:
+    static_assert(std::is_integral_v<X> && std::is_integral_v<Y>);
+
     DynamicWaveletMatrix2D() = default;
-
-    DynamicWaveletMatrix2D(const std::vector<X>& xs, const std::vector<Y>& ys){
-        build(xs, ys);
-    }
-
+    DynamicWaveletMatrix2D(const std::vector<X>& xs, const std::vector<Y>& ys)
+        : base_(xs, ys, std::vector<int>(xs.size(), 0)){}
     explicit DynamicWaveletMatrix2D(const std::vector<std::pair<X, Y>>& points){
-        std::vector<X> xs(points.size());
-        std::vector<Y> ys(points.size());
-        for(std::size_t i = 0; i < points.size(); i++){
-            xs[i] = points[i].first;
-            ys[i] = points[i].second;
+        std::vector<std::tuple<X, Y, int>> weighted_points;
+        weighted_points.reserve(points.size());
+        for(const auto& [x_value, y_value] : points){
+            weighted_points.emplace_back(x_value, y_value, 0);
         }
-        build(xs, ys);
+        base_ = Base(weighted_points);
     }
 
     DynamicWaveletMatrix2D(const DynamicWaveletMatrix2D&) = delete;
     DynamicWaveletMatrix2D& operator=(const DynamicWaveletMatrix2D&) = delete;
-    DynamicWaveletMatrix2D(DynamicWaveletMatrix2D&&) = default;
-    DynamicWaveletMatrix2D& operator=(DynamicWaveletMatrix2D&&) = default;
+    DynamicWaveletMatrix2D(DynamicWaveletMatrix2D&&) noexcept = default;
+    DynamicWaveletMatrix2D& operator=(DynamicWaveletMatrix2D&&) noexcept = default;
 
-    int size() const{ return _n; }
+    int size() const{ return base_.size(); }
+    bool empty() const{ return base_.empty(); }
+    X x(int index) const{ return base_.x(index); }
+    Y y(int index) const{ return base_.y(index); }
 
-    X x(int k) const{
-        check_index(k, "library assertion fault: range violation (x).");
-        return state->original_x[static_cast<std::size_t>(k)];
+    void insert(int index, X x_value, Y y_value){
+        base_.insert(index, x_value, y_value, 0);
+    }
+    void push_back(X x_value, Y y_value){ base_.push_back(x_value, y_value, 0); }
+    std::pair<X, Y> erase(int index){
+        const auto [x_value, y_value, ignored] = base_.erase(index);
+        (void)ignored;
+        return {x_value, y_value};
+    }
+    std::pair<X, Y> pop_back(){
+        const auto [x_value, y_value, ignored] = base_.pop_back();
+        (void)ignored;
+        return {x_value, y_value};
     }
 
-    Y y(int k) const{
-        check_index(k, "library assertion fault: range violation (y).");
-        int sorted_index = state->original_to_sorted[static_cast<std::size_t>(k)];
-        return state->matrix->access(sorted_index);
-    }
-
-    void set_y(int k, Y value){
-        check_index(k, "library assertion fault: range violation (set_y).");
-        int sorted_index = state->original_to_sorted[static_cast<std::size_t>(k)];
-        state->matrix->set(sorted_index, value);
+    void set_y(int index, Y value){ base_.set_y(index, value); }
+    void set_x(int index, X value){ base_.set_x(index, value); }
+    void set(int index, X x_value, Y y_value){
+        base_.set_point(index, x_value, y_value, 0);
     }
 
     int rectangle_count(X xl, X xr, Y yl, Y yr) const{
-        check_rect(xl, xr, yl, yr, "library assertion fault: range violation (rectangle_count).");
-        auto [l, r] = x_range(xl, xr);
-        return state->matrix->range_freq(l, r, yl, yr);
+        return base_.rectangle_count(xl, xr, yl, yr);
     }
     int range_freq(X xl, X xr, Y yl, Y yr) const{
         return rectangle_count(xl, xr, yl, yr);
     }
-
     Y kth_smallest_y(X xl, X xr, int k) const{
-        if(xr < xl)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (kth_smallest_y).");
-        }
-        auto [l, r] = x_range(xl, xr);
-        return state->matrix->kth_smallest(l, r, k);
+        return base_.kth_smallest_y(xl, xr, k);
     }
     std::optional<Y> prev_y(X xl, X xr, Y upper) const{
-        if(xr < xl)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (prev_y).");
-        }
-        auto [l, r] = x_range(xl, xr);
-        return state->matrix->prev_value(l, r, upper);
+        return base_.prev_y(xl, xr, upper);
     }
     std::optional<Y> next_y(X xl, X xr, Y lower) const{
-        if(xr < xl)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (next_y).");
-        }
-        auto [l, r] = x_range(xl, xr);
-        return state->matrix->next_value(l, r, lower);
+        return base_.next_y(xl, xr, lower);
     }
 };
