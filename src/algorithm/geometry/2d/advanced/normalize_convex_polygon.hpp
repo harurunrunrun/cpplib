@@ -73,6 +73,18 @@ inline std::vector<Point> normalize_convex_polygon(std::vector<Point> polygon){
         result.push_back(point);
     }
     if(!result.empty()) result.pop_back();
+    std::size_t direction_wraps = 0;
+    for(std::size_t index = 0; index < result.size(); ++index){
+        const Point current_direction =
+            result[(index + 1) % result.size()] - result[index];
+        const Point next_direction =
+            result[(index + 2) % result.size()]
+            - result[(index + 1) % result.size()];
+        if(direction_less(next_direction, current_direction)) ++direction_wraps;
+    }
+    if(direction_wraps != 1){
+        throw std::invalid_argument("the polygon boundary winds more than once");
+    }
     canonicalize_start(result);
     return result;
 }

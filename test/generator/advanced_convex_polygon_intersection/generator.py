@@ -171,6 +171,37 @@ def fixed_boundary_case():
     return "\n".join(input_lines) + "\n", "\n".join(output_lines) + "\n"
 
 
+def boundary_validation_case():
+    containing = [(-10, -10), (10, -10), (10, 10), (-10, 10)]
+    pairs = [
+        (
+            [(0, 3), (2, -3), (-3, 1), (3, 1), (-2, -3)],
+            containing,
+            "ERR",
+        ),
+        (
+            [
+                (0, 0), (2, 0), (2, 2), (0, 2),
+                (0, 0), (2, 0), (2, 2), (0, 2),
+            ],
+            containing,
+            "ERR",
+        ),
+        (
+            [(0, 0), (0, 1), (0, 2), (2, 2), (2, 0), (0, 0), (0, 0)],
+            containing,
+            encode_polygon([(0, 0), (2, 0), (2, 2), (0, 2)]),
+        ),
+    ]
+    input_lines = [str(len(pairs))]
+    output_lines = []
+    for first, second, expected in pairs:
+        input_lines.extend([str(len(first)), *[f"{x} {y}" for x, y in first]])
+        input_lines.extend([str(len(second)), *[f"{x} {y}" for x, y in second]])
+        output_lines.append(expected)
+    return "\n".join(input_lines) + "\n", "\n".join(output_lines) + "\n"
+
+
 def large_identical_case(radius):
     polygon = [(x, x * x) for x in range(-radius, radius + 1)]
     input_lines = ["1", str(len(polygon))]
@@ -183,6 +214,7 @@ def large_identical_case(radius):
 
 if __name__ == "__main__":
     CASES.append(fixed_boundary_case())
+    CASES.append(boundary_validation_case())
     CASES.extend(random_case(seed, 100) for seed in (20260717, 20260718, 20260719))
     CASES.append(large_identical_case(2500))
     generate(CASES)
