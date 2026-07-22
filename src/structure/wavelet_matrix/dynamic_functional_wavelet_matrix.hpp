@@ -3,6 +3,7 @@
 #include <array>
 #include <cstddef>
 #include <limits>
+#include <stdexcept>
 #include <type_traits>
 #include <vector>
 #include "dynamic_weighted_wavelet_matrix.hpp"
@@ -42,5 +43,24 @@ public:
 
     void set(int k, T value){
         Base::set(k, value, static_cast<Sum>(value));
+    }
+
+    void set_value(int k, T value){ set(k, value); }
+
+    void insert(int position, T value){
+        Base::insert(position, value, static_cast<Sum>(value));
+    }
+
+    T erase(int position){ return Base::erase(position).first; }
+
+    void push_back(T value){ insert(this->size(), value); }
+
+    T pop_back(){
+        if(this->size() == 0)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (pop_back)."
+            );
+        }
+        return erase(this->size() - 1);
     }
 };

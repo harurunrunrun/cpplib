@@ -26,39 +26,70 @@ def main() -> None:
     initial_values, initial_weights = values[:], weights[:]
     commands: list[str] = []
     outputs: list[str] = []
-    kinds = ["SET", "SETV", "SETW", "GET", "SUM", "FREQ", "RSUM", "KTH", "KLARG", "KSMALL", "KLARGE", "PREV", "NEXT"]
+    kinds = [
+        "SET", "SETV", "SETW", "INSERT", "ERASE", "PUSH", "POP",
+        "GET", "SUM", "FREQ", "RSUM", "KTH", "KLARG", "KSMALL",
+        "KLARGE", "PREV", "NEXT",
+    ]
 
     for _ in range(1500):
         kind = rng.choice(kinds)
+        current_n = len(values)
+        if kind in {"ERASE", "POP"} and current_n <= 1:
+            kind = "GET"
+        if kind in {"INSERT", "PUSH"} and current_n >= 500:
+            kind = "GET"
         if kind == "SET":
-            k, value, weight = rng.randrange(n), rng.randrange(-350, 351), rng.randrange(-1200, 1201)
+            k, value, weight = rng.randrange(current_n), rng.randrange(-350, 351), rng.randrange(-1200, 1201)
             commands.append(f"SET {k} {value} {weight}")
             values[k], weights[k] = value, weight
+        elif kind == "INSERT":
+            k = rng.randrange(current_n + 1)
+            value, weight = rng.randrange(-350, 351), rng.randrange(-1200, 1201)
+            commands.append(f"INSERT {k} {value} {weight}")
+            values.insert(k, value)
+            weights.insert(k, weight)
+        elif kind == "ERASE":
+            k = rng.randrange(current_n)
+            commands.append(f"ERASE {k}")
+            outputs.append(f"{values[k]} {weights[k]}")
+            values.pop(k)
+            weights.pop(k)
+        elif kind == "PUSH":
+            value, weight = rng.randrange(-350, 351), rng.randrange(-1200, 1201)
+            commands.append(f"PUSH {value} {weight}")
+            values.append(value)
+            weights.append(weight)
+        elif kind == "POP":
+            commands.append("POP")
+            outputs.append(f"{values[-1]} {weights[-1]}")
+            values.pop()
+            weights.pop()
         elif kind == "SETV":
-            k, value = rng.randrange(n), rng.randrange(-350, 351)
+            k, value = rng.randrange(current_n), rng.randrange(-350, 351)
             commands.append(f"SETV {k} {value}")
             values[k] = value
         elif kind == "SETW":
-            k, weight = rng.randrange(n), rng.randrange(-1200, 1201)
+            k, weight = rng.randrange(current_n), rng.randrange(-1200, 1201)
             commands.append(f"SETW {k} {weight}")
             weights[k] = weight
         elif kind == "GET":
-            k = rng.randrange(n)
+            k = rng.randrange(current_n)
             commands.append(f"GET {k}")
             outputs.append(f"{values[k]} {weights[k]}")
         elif kind == "SUM":
-            l, r = sorted((rng.randrange(n + 1), rng.randrange(n + 1)))
+            l, r = sorted((rng.randrange(current_n + 1), rng.randrange(current_n + 1)))
             commands.append(f"SUM {l} {r}")
             outputs.append(str(sum(weights[l:r])))
         elif kind in {"FREQ", "RSUM"}:
-            l, r = sorted((rng.randrange(n + 1), rng.randrange(n + 1)))
+            l, r = sorted((rng.randrange(current_n + 1), rng.randrange(current_n + 1)))
             lower, upper = sorted((rng.randrange(-400, 401), rng.randrange(-400, 401)))
             commands.append(f"{kind} {l} {r} {lower} {upper}")
             indices = [i for i in range(l, r) if lower <= values[i] < upper]
             outputs.append(str(len(indices) if kind == "FREQ" else sum(weights[i] for i in indices)))
         elif kind in {"KTH", "KLARG", "KSMALL", "KLARGE"}:
-            l = rng.randrange(n)
-            r = rng.randrange(l + 1, n + 1)
+            l = rng.randrange(current_n)
+            r = rng.randrange(l + 1, current_n + 1)
             order = sorted(range(l, r), key=lambda i: values[i])
             if kind in {"KTH", "KLARG"}:
                 k = rng.randrange(len(order))
@@ -70,7 +101,7 @@ def main() -> None:
                 chosen = order[:k] if kind == "KSMALL" else order[len(order) - k :]
                 outputs.append(str(sum(weights[i] for i in chosen)))
         else:
-            l, r = sorted((rng.randrange(n + 1), rng.randrange(n + 1)))
+            l, r = sorted((rng.randrange(current_n + 1), rng.randrange(current_n + 1)))
             value = rng.randrange(-400, 401)
             commands.append(f"{kind} {l} {r} {value}")
             candidates = [item for item in values[l:r] if item < value] if kind == "PREV" else [item for item in values[l:r] if item >= value]

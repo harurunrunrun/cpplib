@@ -45,6 +45,20 @@ int main(){
                 int k;
                 std::cin >> k;
                 dynamic.flip(k);
+            }else if(type == "DINSERT"){
+                int k, value;
+                std::cin >> k >> value;
+                dynamic.insert(k, value != 0);
+            }else if(type == "DERASE"){
+                int k;
+                std::cin >> k;
+                std::cout << dynamic.erase(k) << '\n';
+            }else if(type == "DPUSH"){
+                int value;
+                std::cin >> value;
+                dynamic.push_back(value != 0);
+            }else if(type == "DPOP"){
+                std::cout << dynamic.pop_back() << '\n';
             }
         }
         return 0;
@@ -119,6 +133,61 @@ int main(){
             bool value = rng() & 1;
             assert(dynamic.rank(value, r) ==
                 std::count(values.begin(), values.begin() + r, value));
+        }
+    }
+
+    std::vector<bool> changing(values.begin(), values.begin() + 41);
+    DynamicFullyIndexableDictionary<512> sequence(changing);
+    for(int step = 0; step < 5000; step++){
+        const int operation = static_cast<int>(rng() % 6);
+        if(operation == 0 && changing.size() < 500){
+            const int position = static_cast<int>(rng() % (changing.size() + 1));
+            const bool value = (rng() & 1U) != 0;
+            changing.insert(changing.begin() + position, value);
+            sequence.insert(position, value);
+        }else if(operation == 1 && !changing.empty()){
+            const int position = static_cast<int>(rng() % changing.size());
+            const bool expected = changing[static_cast<std::size_t>(position)];
+            changing.erase(changing.begin() + position);
+            assert(sequence.erase(position) == expected);
+        }else if(operation == 2 && changing.size() < 500){
+            const bool value = (rng() & 1U) != 0;
+            changing.push_back(value);
+            sequence.push_back(value);
+        }else if(operation == 3 && !changing.empty()){
+            const bool expected = changing.back();
+            changing.pop_back();
+            assert(sequence.pop_back() == expected);
+        }else if(operation == 4 && !changing.empty()){
+            const int position = static_cast<int>(rng() % changing.size());
+            changing[static_cast<std::size_t>(position)] =
+                !changing[static_cast<std::size_t>(position)];
+            sequence.flip(position);
+        }else if(operation == 5 && !changing.empty()){
+            const int position = static_cast<int>(rng() % changing.size());
+            const bool value = (rng() & 1U) != 0;
+            changing[static_cast<std::size_t>(position)] = value;
+            sequence.set(position, value);
+        }
+        assert(sequence.size() == static_cast<int>(changing.size()));
+        for(int query = 0; query < 4; query++){
+            const int r = static_cast<int>(rng() % (changing.size() + 1));
+            const bool value = (rng() & 1U) != 0;
+            assert(sequence.rank(value, r) ==
+                std::count(changing.begin(), changing.begin() + r, value));
+            const int occurrence = static_cast<int>(
+                rng() % (changing.size() + 1)
+            );
+            int expected = static_cast<int>(changing.size());
+            int seen = 0;
+            for(int i = 0; i < static_cast<int>(changing.size()); i++){
+                if(changing[static_cast<std::size_t>(i)] == value &&
+                   seen++ == occurrence){
+                    expected = i;
+                    break;
+                }
+            }
+            assert(sequence.select(value, occurrence) == expected);
         }
     }
 }

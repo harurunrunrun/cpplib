@@ -28,7 +28,7 @@ def main() -> None:
     outputs: list[str] = []
 
     for _ in range(1400):
-        kind = rng.randrange(10)
+        kind = rng.randrange(14)
         if kind == 0:
             index = rng.randrange(n)
             commands.append(f"FGET {index}")
@@ -44,29 +44,51 @@ def main() -> None:
             commands.append(f"FSELECT {value} {occurrence}")
             outputs.append(str(select(fixed, value, occurrence)))
         elif kind == 3:
-            index = rng.randrange(n)
+            index = rng.randrange(len(dynamic))
             commands.append(f"DGET {index}")
             outputs.append(str(dynamic[index]))
         elif kind in {4, 5}:
             value = rng.randrange(2)
-            l, r = sorted((rng.randrange(n + 1), rng.randrange(n + 1)))
+            l, r = sorted((
+                rng.randrange(len(dynamic) + 1),
+                rng.randrange(len(dynamic) + 1),
+            ))
             commands.append(f"DRANK {value} {l} {r}")
             outputs.append(str(dynamic[l:r].count(value)))
         elif kind == 6:
             value = rng.randrange(2)
-            occurrence = rng.randrange(n + 20)
+            occurrence = rng.randrange(len(dynamic) + 20)
             commands.append(f"DSELECT {value} {occurrence}")
             outputs.append(str(select(dynamic, value, occurrence)))
         elif kind < 9:
-            index = rng.randrange(n)
+            index = rng.randrange(len(dynamic))
             value = rng.randrange(2)
             commands.append(f"DSET {index} {value}")
             dynamic[index] = value
-        else:
-            index = rng.randrange(n)
+        elif kind == 9:
+            index = rng.randrange(len(dynamic))
             commands.append(f"DFLIP {index}")
             dynamic[index] ^= 1
-
+        elif kind == 10 and len(dynamic) < 500:
+            index = rng.randrange(len(dynamic) + 1)
+            value = rng.randrange(2)
+            commands.append(f"DINSERT {index} {value}")
+            dynamic.insert(index, value)
+        elif kind == 11 and len(dynamic) > 1:
+            index = rng.randrange(len(dynamic))
+            commands.append(f"DERASE {index}")
+            outputs.append(str(dynamic.pop(index)))
+        elif kind == 12 and len(dynamic) < 500:
+            value = rng.randrange(2)
+            commands.append(f"DPUSH {value}")
+            dynamic.append(value)
+        elif kind == 13 and len(dynamic) > 1:
+            commands.append("DPOP")
+            outputs.append(str(dynamic.pop()))
+        else:
+            index = rng.randrange(len(dynamic))
+            commands.append(f"DGET {index}")
+            outputs.append(str(dynamic[index]))
     input_text = (
         f"{n} {len(commands)}\n"
         + " ".join(map(str, fixed))

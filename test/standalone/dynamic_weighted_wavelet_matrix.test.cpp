@@ -33,6 +33,24 @@ int main(){
                 long long weight_value;
                 std::cin >> k >> value >> weight_value;
                 matrix.set(k, value, weight_value);
+            }else if(type == "INSERT"){
+                int k, value;
+                long long weight_value;
+                std::cin >> k >> value >> weight_value;
+                matrix.insert(k, value, weight_value);
+            }else if(type == "ERASE"){
+                int k;
+                std::cin >> k;
+                auto [value, weight_value] = matrix.erase(k);
+                std::cout << value << ' ' << weight_value << '\n';
+            }else if(type == "PUSH"){
+                int value;
+                long long weight_value;
+                std::cin >> value >> weight_value;
+                matrix.push_back(value, weight_value);
+            }else if(type == "POP"){
+                auto [value, weight_value] = matrix.pop_back();
+                std::cout << value << ' ' << weight_value << '\n';
             }else if(type == "SETV"){
                 int k, value;
                 std::cin >> k >> value;
@@ -155,6 +173,126 @@ int main(){
         }
     }
 
+    std::vector<int> dynamic_values(values.begin(), values.begin() + 37);
+    std::vector<long long> dynamic_weights(weights.begin(), weights.begin() + 37);
+    DynamicWeightedWaveletMatrix<int, long long, 320, 32, 8> dynamic_matrix(
+        dynamic_values, dynamic_weights
+    );
+    for(int step = 0; step < 3500; step++){
+        const int operation = static_cast<int>(rng() % 7);
+        if(operation <= 1 && dynamic_values.size() < 300){
+            const int position = static_cast<int>(
+                rng() % (dynamic_values.size() + 1)
+            );
+            const int value = static_cast<int>(rng() % 401) - 200;
+            const long long weight_value =
+                static_cast<long long>(static_cast<int>(rng() % 3001) - 1500);
+            dynamic_values.insert(dynamic_values.begin() + position, value);
+            dynamic_weights.insert(dynamic_weights.begin() + position, weight_value);
+            dynamic_matrix.insert(position, value, weight_value);
+        }else if(operation == 2 && !dynamic_values.empty()){
+            const int position = static_cast<int>(rng() % dynamic_values.size());
+            auto erased = dynamic_matrix.erase(position);
+            assert(erased.first == dynamic_values[static_cast<std::size_t>(position)]);
+            assert(erased.second == dynamic_weights[static_cast<std::size_t>(position)]);
+            dynamic_values.erase(dynamic_values.begin() + position);
+            dynamic_weights.erase(dynamic_weights.begin() + position);
+        }else if(operation == 3 && !dynamic_values.empty()){
+            const int position = static_cast<int>(rng() % dynamic_values.size());
+            const int value = static_cast<int>(rng() % 401) - 200;
+            const long long weight_value =
+                static_cast<long long>(static_cast<int>(rng() % 3001) - 1500);
+            dynamic_values[static_cast<std::size_t>(position)] = value;
+            dynamic_weights[static_cast<std::size_t>(position)] = weight_value;
+            dynamic_matrix.set(position, value, weight_value);
+        }else if(operation == 4 && !dynamic_values.empty()){
+            const int position = static_cast<int>(rng() % dynamic_values.size());
+            const long long weight_value =
+                static_cast<long long>(static_cast<int>(rng() % 3001) - 1500);
+            dynamic_weights[static_cast<std::size_t>(position)] = weight_value;
+            dynamic_matrix.set_weight(position, weight_value);
+        }else if(operation == 5 && dynamic_values.size() < 300){
+            const int value = static_cast<int>(rng() % 401) - 200;
+            const long long weight_value =
+                static_cast<long long>(static_cast<int>(rng() % 3001) - 1500);
+            dynamic_values.push_back(value);
+            dynamic_weights.push_back(weight_value);
+            dynamic_matrix.push_back(value, weight_value);
+        }else if(operation == 6 && !dynamic_values.empty()){
+            auto erased = dynamic_matrix.pop_back();
+            assert(erased.first == dynamic_values.back());
+            assert(erased.second == dynamic_weights.back());
+            dynamic_values.pop_back();
+            dynamic_weights.pop_back();
+        }
+
+        assert(dynamic_matrix.size() == static_cast<int>(dynamic_values.size()));
+        const int current_n = static_cast<int>(dynamic_values.size());
+        int l = static_cast<int>(rng() % (dynamic_values.size() + 1));
+        int r = static_cast<int>(rng() % (dynamic_values.size() + 1));
+        if(l > r) std::swap(l, r);
+        const int lower = static_cast<int>(rng() % 501) - 250;
+        const int upper = lower + static_cast<int>(rng() % 250);
+        long long expected_sum = 0;
+        long long expected_range_sum = 0;
+        int expected_frequency = 0;
+        for(int i = l; i < r; i++){
+            expected_sum += dynamic_weights[static_cast<std::size_t>(i)];
+            if(lower <= dynamic_values[static_cast<std::size_t>(i)] &&
+               dynamic_values[static_cast<std::size_t>(i)] < upper){
+                expected_frequency++;
+                expected_range_sum += dynamic_weights[static_cast<std::size_t>(i)];
+            }
+        }
+        assert(dynamic_matrix.sum(l, r) == expected_sum);
+        assert(dynamic_matrix.range_freq(l, r, lower, upper) == expected_frequency);
+        assert(dynamic_matrix.range_sum(l, r, lower, upper) == expected_range_sum);
+        if(l < r){
+            std::vector<int> order(static_cast<std::size_t>(r - l));
+            std::iota(order.begin(), order.end(), l);
+            std::stable_sort(order.begin(), order.end(), [&](int lhs, int rhs){
+                return dynamic_values[static_cast<std::size_t>(lhs)] <
+                    dynamic_values[static_cast<std::size_t>(rhs)];
+            });
+            const int k = static_cast<int>(rng() % order.size());
+            assert(dynamic_matrix.kth_smallest(l, r, k) ==
+                dynamic_values[static_cast<std::size_t>(order[static_cast<std::size_t>(k)])]);
+        }
+        if(current_n != 0){
+            const int position = static_cast<int>(rng() % dynamic_values.size());
+            const int value = dynamic_values[static_cast<std::size_t>(position)];
+            const int occurrence = static_cast<int>(std::count(
+                dynamic_values.begin(), dynamic_values.begin() + position, value
+            ));
+            assert(dynamic_matrix.select(value, occurrence) == position);
+        }
+    }
+
+    {
+        constexpr int performance_n = 40000;
+        std::vector<unsigned> performance_values(
+            static_cast<std::size_t>(performance_n)
+        );
+        std::vector<int> performance_weights(
+            static_cast<std::size_t>(performance_n), 1
+        );
+        for(int i = 0; i < performance_n; i++){
+            performance_values[static_cast<std::size_t>(i)] =
+                static_cast<unsigned>((i * 11939) & 65535);
+        }
+        DynamicWeightedWaveletMatrix<unsigned, int, 50000, 16, 64> performance(
+            performance_values, performance_weights
+        );
+        long long checksum = 0;
+        for(int step = 0; step < 5000; step++){
+            const int position = (step * 7919) % performance.size();
+            performance.erase(position);
+            performance.insert(position, static_cast<unsigned>((step * 31337) & 65535), 1);
+            checksum += performance.range_freq(0, performance.size(), 32768U);
+        }
+        assert(checksum > 0);
+    }
+
     std::vector<int> functional_values = {3, -1, 4, 1, 5, -9, 2};
     DynamicFunctionalWaveletMatrix<int, 16, long long> functional(functional_values);
     assert(functional.sum(0, 7) == 5);
@@ -164,6 +302,20 @@ int main(){
     assert(functional[1] == 6);
     assert(functional.weight(1) == 6);
     assert(functional.sum(0, 7) == 12);
+
+    functional.insert(3, -7);
+    functional_values.insert(functional_values.begin() + 3, -7);
+    assert(functional[3] == -7);
+    assert(functional.weight(3) == -7);
+    assert(functional.erase(5) == functional_values[5]);
+    functional_values.erase(functional_values.begin() + 5);
+    functional.push_back(11);
+    functional_values.push_back(11);
+    assert(functional.pop_back() == 11);
+    functional_values.pop_back();
+    assert(functional.size() == static_cast<int>(functional_values.size()));
+    assert(functional.sum(0, functional.size()) ==
+        std::accumulate(functional_values.begin(), functional_values.end(), 0LL));
 
     bool thrown = false;
     try{
