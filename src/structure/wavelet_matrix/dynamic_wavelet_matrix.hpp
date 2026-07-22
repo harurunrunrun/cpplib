@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_WAVELET_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_WAVELET_MATRIX_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -1021,8 +1022,6 @@ private:
     };
 
     int _n = 0;
-    std::vector<U> encoded_values;
-    std::vector<T> original_values;
     std::array<DynamicBitVector, static_cast<std::size_t>(BIT_WIDTH)> bit_vectors{};
     std::array<int, static_cast<std::size_t>(BIT_WIDTH)> zero_count{};
     std::map<T, int> global_frequency;
@@ -1343,6 +1342,23 @@ private:
     sum_type sum_all_unchecked(int l, int r) const{
         if(_n == 0) return 0;
         return bit_vectors[0].sum_all(l, r);
+    }
+
+    U encoded_access_unchecked(int position) const{
+        U value = 0;
+        for(int level = 0; level < BIT_WIDTH; level++){
+            const auto& bits = bit_vectors[static_cast<std::size_t>(level)];
+            int ones_before = bits.rank1(position);
+            bool bit = bits.access(position);
+            if(bit){
+                value |= U{1} << (BIT_WIDTH - 1 - level);
+                position = zero_count[static_cast<std::size_t>(level)] + ones_before;
+            }
+            else{
+                position -= ones_before;
+            }
+        }
+        return value;
     }
 
     void rebuild_distinct_cache() const{
@@ -1785,9 +1801,7 @@ public:
     DynamicWaveletMatrix() = default;
 
     explicit DynamicWaveletMatrix(const std::vector<T>& sequence):
-        _n(static_cast<int>(sequence.size())),
-        encoded_values(sequence.size()),
-        original_values(sequence){
+        _n(static_cast<int>(sequence.size())){
         if(sequence.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
@@ -1800,7 +1814,6 @@ public:
                 sequence[static_cast<std::size_t>(i)],
                 "library assertion fault: bit width violation (constructor)."
             );
-            encoded_values[static_cast<std::size_t>(i)] = value;
             current[static_cast<std::size_t>(i)] = value;
             global_frequency[sequence[static_cast<std::size_t>(i)]]++;
         }
@@ -1877,11 +1890,45 @@ public:
 
     T access(int k) const{
         check_index(k, "library assertion fault: range violation (access).");
-        return original_values[static_cast<std::size_t>(k)];
+        return decode(encoded_access_unchecked(k));
     }
 
     T operator[](int k) const{
         return access(k);
+    }
+
+    void insert(int k, T value){
+        if(k < 0 || _n < k || _n == MAX_SIZE)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (insert)."
+            );
+        }
+        U encoded = encode_checked(
+            value,
+            "library assertion fault: bit width violation (insert)."
+        );
+
+        insert_encoded(k, encoded);
+        _n++;
+        global_frequency[value]++;
+        distinct_cache_dirty = true;
+    }
+
+    T erase(int k){
+        check_index(k, "library assertion fault: range violation (erase).");
+        U encoded = encoded_access_unchecked(k);
+        T value = decode(encoded);
+
+        erase_encoded(k, encoded);
+        _n--;
+
+        auto iterator = global_frequency.find(value);
+        if(iterator == global_frequency.end()){
+            throw std::logic_error("DynamicWaveletMatrix frequency inconsistency.");
+        }
+        if(--iterator->second == 0) global_frequency.erase(iterator);
+        distinct_cache_dirty = true;
+        return value;
     }
 
     void set(int k, T value){
@@ -1890,14 +1937,12 @@ public:
             value,
             "library assertion fault: bit width violation (set)."
         );
-        U old = encoded_values[static_cast<std::size_t>(k)];
+        U old = encoded_access_unchecked(k);
         if(old == encoded) return;
 
-        T old_value = original_values[static_cast<std::size_t>(k)];
+        T old_value = decode(old);
         erase_encoded(k, old);
         insert_encoded(k, encoded);
-        encoded_values[static_cast<std::size_t>(k)] = encoded;
-        original_values[static_cast<std::size_t>(k)] = value;
 
         auto iterator = global_frequency.find(old_value);
         if(iterator == global_frequency.end()){
@@ -2664,7 +2709,7 @@ public:
         BitwiseOperation operation
     ) const{
         check_index(i, "library assertion fault: range violation (access_bitwise).");
-        return apply_bitwise_value(static_cast<U>(original_values[static_cast<std::size_t>(i)]), mask, operation);
+        return apply_bitwise_value(static_cast<U>(access(i)), mask, operation);
     }
 
     int rank_bitwise(
@@ -3607,3 +3652,5 @@ public:
 };
 
 #undef DYNAMIC_WAVELET_MATRIX_X86
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_WAVELET_MATRIX_HPP_INCLUDED

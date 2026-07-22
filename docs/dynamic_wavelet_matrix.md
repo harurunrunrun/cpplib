@@ -5,11 +5,11 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix.hpp
 
 # Dynamic Wavelet Matrix
 
-点更新に対応した整数列向け Wavelet Matrix。
+要素の挿入・削除・置換に対応した整数列向け Wavelet Matrix。
 
 各ビット階層は B+ 木型の動的ビットベクトルで管理され、次の操作を提供する。
 
-- 点更新
+- 要素の挿入・削除・置換
 - `rank` / `select`
 - 順序統計
 - 値域頻度
@@ -18,7 +18,7 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix.hpp
 - 頻度列挙
 - XOR / OR / AND 変換後の検索
 
-列長を変更する `insert` / `erase` は提供しない。更新は既存要素を置換する `set` のみ。
+各ビット階層をB+木型の動的ビットベクトルで保持するため、列長の変更でも全体を再構築しない。
 
 ## テンプレート引数
 
@@ -95,7 +95,7 @@ XORでは各階層の状態数は高々1つなので `M_op = O(W)`。OR / ANDで
 - `select` 系は対象が存在しない場合 `-1`。
 - `min_value`、`max_value`、中央値、前後探索、`mode` は対象が存在しない場合 `std::nullopt`。
 - `kth_smallest` / `kth_largest` / `quantile` は値を返す。内部要素への参照は返さない。
-- `values()` もコピーを返すため、後続の `set` で戻り値が無効になることはない。
+- `values()` もコピーを返すため、後続の `insert` / `erase` / `set` で戻り値が無効になることはない。
 
 ## 構築・コピー・再構築
 
@@ -113,7 +113,7 @@ XORでは各階層の状態数は高々1つなので `M_op = O(W)`。OR / ANDで
 
 デストラクタは保持するB+木、配列、頻度表を破棄するため、概ね `O(WN + σ)`。
 
-## 基本操作・メタ情報・点更新
+## 基本操作・メタ情報・動的更新
 
 | API | 説明 | 時間計算量 |
 |---|---|---|
@@ -124,12 +124,14 @@ XORでは各階層の状態数は高々1つなので `M_op = O(W)`。OR / ANDで
 | `std::vector<T> values() const` | 列全体に現れる異なる元値を昇順で返す。戻り値はコピー。 | $O(\sigma)$ |
 | `bool contains(const T& value) const` | 列全体に `value` が存在するかを返す。 | $O(\log\sigma)$ |
 | `int index_of(const T& value) const` | `values()` が返す昇順列における `value` の添字。存在しなければ `-1`。 | 通常 $O(\log\sigma)$、更新後の初回は $O(\sigma)$ |
-| `T access(int k) const` | `a[k]` を値で返す。 | $O(1)$ |
-| `T operator[](int k) const` | `access(k)` の別名。 | $O(1)$ |
+| `T access(int k) const` | `a[k]` を値で返す。 | $O(WP(N))$ |
+| `T operator[](int k) const` | `access(k)` の別名。 | $O(WP(N))$ |
+| `void insert(int k, T value)` | `a[k]` の直前へ `value` を挿入する。`k == N` なら末尾へ挿入する。 | $O(WU(N)+\log\sigma)$ |
+| `T erase(int k)` | `a[k]` を削除し、削除した値を返す。 | $O(WU(N)+\log\sigma)$ |
 | `void set(int k, T value)` | `a[k] = value` に点更新する。列長は変化しない。 | $O(WU(N)+\log\sigma)$ |
 
 
-`values()` は常に戻り値のコピーに `O(σ)` を要する。`index_of()` は `set()` 後の最初の呼び出しで内部キャッシュを再構築するため `O(σ)`、キャッシュが有効な間は `O(log σ)`。
+`values()` は常に戻り値のコピーに `O(σ)` を要する。`index_of()` は動的更新後の最初の呼び出しで内部キャッシュを再構築するため `O(σ)`、キャッシュが有効な間は `O(log σ)`。
 
 ## 出現回数・順序統計・範囲カウント・前後探索
 
@@ -254,7 +256,7 @@ y = operation(x, mask)
 | `sum_type sum_range_bitwise( int l, int r, unsigned long long mask, unsigned long long lower, unsigned long long upper, BitwiseOperation operation ) const` | `lower <= y < upper` を満たす元の `x` の総和。 | $O(M_{op}S(N))$ |
 | `sum_type sum_greater_bitwise( int l, int r, unsigned long long mask, unsigned long long lower, BitwiseOperation operation ) const` | `y > lower` を満たす元の `x` の総和。 | $O(M_{op}S(N))$ |
 | `sum_type sum_greater_equal_bitwise( int l, int r, unsigned long long mask, unsigned long long lower, BitwiseOperation operation ) const` | `y >= lower` を満たす元の `x` の総和。 | $O(M_{op}S(N))$ |
-| `unsigned long long access_bitwise( int i, unsigned long long mask, BitwiseOperation operation ) const` | `i` 番目の変換後の値 `y` を返す。 | $O(1)$ |
+| `unsigned long long access_bitwise( int i, unsigned long long mask, BitwiseOperation operation ) const` | `i` 番目の変換後の値 `y` を返す。 | $O(WP(N))$ |
 | `int rank_bitwise( unsigned long long value, int r, unsigned long long mask, BitwiseOperation operation ) const` | 区間 `[0,r)` で変換後の値が `value` である個数。 | $O(M_{op}S(N))$ |
 | `int rank_bitwise( unsigned long long value, int l, int r, unsigned long long mask, BitwiseOperation operation ) const` | 区間 `[l,r)` で変換後の値が `value` である個数。 | $O(M_{op}S(N))$ |
 | `int count_bitwise( unsigned long long value, unsigned long long mask, BitwiseOperation operation ) const` | 列全体で変換後の値が `value` である個数。 | $O(M_{op}S(N))$ |
@@ -312,7 +314,7 @@ y = operation(x, mask)
 | `sum_type sum_range_xor(int l, int r, unsigned long long mask, unsigned long long lower, unsigned long long upper) const` | `x ^ mask` を `y` とする。`lower <= y < upper` の元値の総和。 | $O(WS(N))$ |
 | `sum_type sum_greater_xor(int l, int r, unsigned long long mask, unsigned long long lower) const` | `x ^ mask` を `y` とする。`y > lower` の元値の総和。 | $O(WS(N))$ |
 | `sum_type sum_greater_equal_xor(int l, int r, unsigned long long mask, unsigned long long lower) const` | `x ^ mask` を `y` とする。`y >= lower` の元値の総和。 | $O(WS(N))$ |
-| `unsigned long long access_xor(int i, unsigned long long mask) const` | `x ^ mask` を `y` とする。`i` 番目の変換後の値。 | $O(1)$ |
+| `unsigned long long access_xor(int i, unsigned long long mask) const` | `x ^ mask` を `y` とする。`i` 番目の変換後の値。 | $O(WP(N))$ |
 | `int rank_xor(unsigned long long value, int r, unsigned long long mask) const` | `x ^ mask` を `y` とする。区間 `[0,r)` における変換後値 `value` の個数。 | $O(WP(N))$ |
 | `int rank_xor(unsigned long long value, int l, int r, unsigned long long mask) const` | `x ^ mask` を `y` とする。区間 `[l,r)` における変換後値 `value` の個数。 | $O(WP(N))$ |
 | `int count_xor(unsigned long long value, unsigned long long mask) const` | `x ^ mask` を `y` とする。列全体における変換後値 `value` の個数。 | $O(WP(N))$ |
@@ -368,7 +370,7 @@ y = operation(x, mask)
 | `sum_type sum_range_or(int l, int r, unsigned long long mask, unsigned long long lower, unsigned long long upper) const` | `x \| mask` を `y` とする。`lower <= y < upper` の元値の総和。 | $O(M_{op}S(N))$ |
 | `sum_type sum_greater_or(int l, int r, unsigned long long mask, unsigned long long lower) const` | `x \| mask` を `y` とする。`y > lower` の元値の総和。 | $O(M_{op}S(N))$ |
 | `sum_type sum_greater_equal_or(int l, int r, unsigned long long mask, unsigned long long lower) const` | `x \| mask` を `y` とする。`y >= lower` の元値の総和。 | $O(M_{op}S(N))$ |
-| `unsigned long long access_or(int i, unsigned long long mask) const` | `x \| mask` を `y` とする。`i` 番目の変換後の値。 | $O(1)$ |
+| `unsigned long long access_or(int i, unsigned long long mask) const` | `x \| mask` を `y` とする。`i` 番目の変換後の値。 | $O(WP(N))$ |
 | `int rank_or(unsigned long long value, int r, unsigned long long mask) const` | `x \| mask` を `y` とする。区間 `[0,r)` における変換後値 `value` の個数。 | $O(M_{op}S(N))$ |
 | `int rank_or(unsigned long long value, int l, int r, unsigned long long mask) const` | `x \| mask` を `y` とする。区間 `[l,r)` における変換後値 `value` の個数。 | $O(M_{op}S(N))$ |
 | `int count_or(unsigned long long value, unsigned long long mask) const` | `x \| mask` を `y` とする。列全体における変換後値 `value` の個数。 | $O(M_{op}S(N))$ |
@@ -422,7 +424,7 @@ y = operation(x, mask)
 | `sum_type sum_range_and(int l, int r, unsigned long long mask, unsigned long long lower, unsigned long long upper) const` | `x & mask` を `y` とする。`lower <= y < upper` の元値の総和。 | $O(M_{op}S(N))$ |
 | `sum_type sum_greater_and(int l, int r, unsigned long long mask, unsigned long long lower) const` | `x & mask` を `y` とする。`y > lower` の元値の総和。 | $O(M_{op}S(N))$ |
 | `sum_type sum_greater_equal_and(int l, int r, unsigned long long mask, unsigned long long lower) const` | `x & mask` を `y` とする。`y >= lower` の元値の総和。 | $O(M_{op}S(N))$ |
-| `unsigned long long access_and(int i, unsigned long long mask) const` | `x & mask` を `y` とする。`i` 番目の変換後の値。 | $O(1)$ |
+| `unsigned long long access_and(int i, unsigned long long mask) const` | `x & mask` を `y` とする。`i` 番目の変換後の値。 | $O(WP(N))$ |
 | `int rank_and(unsigned long long value, int r, unsigned long long mask) const` | `x & mask` を `y` とする。区間 `[0,r)` における変換後値 `value` の個数。 | $O(M_{op}S(N))$ |
 | `int rank_and(unsigned long long value, int l, int r, unsigned long long mask) const` | `x & mask` を `y` とする。区間 `[l,r)` における変換後値 `value` の個数。 | $O(M_{op}S(N))$ |
 | `int count_and(unsigned long long value, unsigned long long mask) const` | `x & mask` を `y` とする。列全体における変換後値 `value` の個数。 | $O(M_{op}S(N))$ |
@@ -478,20 +480,19 @@ y = operation(x, mask)
 ## 空間計算量
 
 - 各要素は `W` 階層の動的ビットベクトルにビットと重みを保持する
-- 元列と符号化列も保持する
-- 列全体の頻度表を保持する
+- 列全体の異なる値と頻度を平衡木で保持する
 
 したがって全体は概ね、
 
 ```text
-O(WN + N + σ)
+O(WN + σ)
 ```
 
 要素分の管理領域を使用する。各階層では1要素につき1ビットに加え、総和計算用の `T` 型重みを保持するため、ビットのみのWavelet Matrixよりメモリ使用量が大きい。
 
-## 例外・制約
+## 注意点
 
-### コンパイル時エラー
+### コンパイル時の制約
 
 次の場合は `static_assert` に失敗する。
 
@@ -503,19 +504,21 @@ O(WN + N + σ)
 - `LEAF_WORDS <= 0`
 - `SUM_TYPE` が総和を安全に表現できない
 
-### `runtime_error`
+### エラー処理
 
 次の場合に送出する。
 
 - コンストラクタまたは `build` の列長が `MAX_SIZE` を超える
 - 値が指定した `BIT_WIDTH` に収まらない
-- 点添字が範囲外
+- `insert` の位置が `0 <= k <= N` を満たさない、または列長が `MAX_SIZE` に達している
+- `erase` / `set` / `access` の添字が `0 <= k < N` を満たさない
+- `insert` / `set` の値が指定した `BIT_WIDTH` に収まらない
 - 区間が `0 <= l <= r <= N` を満たさない
 - `kth_*` の `k` が範囲外
 - `sum_k_*` の `k` が `0 <= k <= r-l` を満たさない
 - 値域APIで `upper < lower`
 
-### 失敗時に例外を送出しないAPI
+### 戻り値で失敗を表すAPI
 
 - `select` / `select_bitwise` / `select_xor` / `select_or` / `select_and`: `-1`
 - `top_k_frequent` 系で `k <= 0`: 空vector
@@ -531,8 +534,8 @@ O(WN + N + σ)
 |---|---|
 | コンストラクタによる構築 | `O(WN + N log σ)` |
 | `build` | 新旧データを含め `O(W(N+N_old) + N log σ + σ_old)` |
-| `access` / `operator[]` | `O(1)` |
-| `set` | `O(W log N + log σ)` |
+| `access` / `operator[]` | `O(W log N)` |
+| `insert` / `erase` / `set` | `O(W log N + log σ)` |
 | 通常の `rank` / `select` / 順序統計 / 値域頻度 | `O(W log N)` |
 | 通常の条件付き総和 | `O(W log N)` |
 | `sum_all` | `O(log N)` |
