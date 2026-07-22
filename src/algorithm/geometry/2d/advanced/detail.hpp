@@ -139,6 +139,10 @@ inline long double direction_angle(const Point& direction){
 inline bool on_segment_scaled(const Segment& segment, const Point& point){
     if(point_equal(segment.a, segment.b)) return point_equal(segment.a, point);
     if(side_sign(segment, point) != 0) return false;
+    // A line intersection can round just beyond its shared endpoint.
+    if(point_equal(segment.a, point) || point_equal(segment.b, point)){
+        return true;
+    }
     const long double product = dot(point - segment.a, point - segment.b);
     const long double scale = length(point - segment.a) * length(point - segment.b);
     return scaled_sign(product, scale) <= 0;

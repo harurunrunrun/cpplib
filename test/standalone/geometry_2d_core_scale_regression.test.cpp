@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include "../../src/algorithm/geometry/2d/advanced/detail.hpp"
 #include "../../src/algorithm/geometry/2d/abs.hpp"
 #include "../../src/algorithm/geometry/2d/angle_bisectors.hpp"
 #include "../../src/algorithm/geometry/2d/circumcircle.hpp"
@@ -63,6 +64,14 @@ bool polygon_validation_rejects(const std::vector<Point>& polygon){
         return true;
     }
     return false;
+}
+
+void check_scaled_segment_endpoint_filter(){
+    const long double offset = 1e18L;
+    const Segment segment{{offset, 0.0L}, {offset + 1e9L, 0.0L}};
+    assert(!advanced_geometry_detail::on_segment_scaled(
+        segment, {offset, 1.0L}
+    ));
 }
 
 void check_visibility_polygon_validation(){
@@ -503,6 +512,7 @@ int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
+    check_scaled_segment_endpoint_filter();
     check_visibility_polygon_validation();
     check_large_translation();
     check_elongated_geometry();
