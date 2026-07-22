@@ -12,4 +12,13 @@ inline std::optional<PointSetDiameter3DResult> convex_polyhedron_diameter(
     return point_set_diameter_3d(polyhedron.vertices);
 }
 
+inline std::optional<PointSetDiameter3DResult>
+convex_polyhedron_diameter_aabb_branch_and_bound(
+    const ConvexPolyhedron3& polyhedron
+){
+    return point_set_diameter_3d_aabb_branch_and_bound(
+        polyhedron.vertices
+    );
+}
+
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_DIAMETER_HPP_INCLUDED
