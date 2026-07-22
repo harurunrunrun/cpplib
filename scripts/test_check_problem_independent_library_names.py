@@ -35,7 +35,7 @@ class CheckProblemIndependentLibraryNamesTest(unittest.TestCase):
         return (
             "---\n"
             f"title: {title}\n"
-            "documentation_of: ../src/algorithm/graph/is_bipartite.hpp\n"
+            "documentation_of: ../src/algorithm/graph/constraints/is_bipartite.hpp\n"
             "---\n\n"
             "無向グラフが二部グラフかを判定する。\n"
         )
@@ -243,7 +243,7 @@ class CheckProblemIndependentLibraryNamesTest(unittest.TestCase):
         path = self.write(
             "docs/generic_matching.md",
             self.valid_doc().replace(
-                "../src/algorithm/graph/is_bipartite.hpp",
+                "../src/algorithm/graph/constraints/is_bipartite.hpp",
                 "../src/algorithm/matching/maximum_taxi_pickups.hpp",
             ),
         )
