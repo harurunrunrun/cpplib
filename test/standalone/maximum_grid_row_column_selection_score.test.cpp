@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/matching/maximum_grid_row_column_selection_score.hpp"
+#include "../../src/algorithm/matching/bipartite/maximum_grid_row_column_selection_score.hpp"
 
 void self_test(){
     assert(maximum_grid_row_column_selection_score({}) == 0);

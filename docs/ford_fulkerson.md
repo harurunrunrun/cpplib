@@ -1,6 +1,6 @@
 ---
 title: Ford Fulkerson (フォード・ファルカーソン法)
-documentation_of: ../src/algorithm/matching/ford_fulkerson.hpp
+documentation_of: ../src/algorithm/matching/flow/ford_fulkerson.hpp
 ---
 
 `FordFulkerson` という既存APIを保った最大流。

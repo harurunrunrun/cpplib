@@ -1,6 +1,6 @@
 ---
 title: Bipartite Matching (二部マッチング) [bipartitematching] [GRL_7_A]
-documentation_of: ../src/algorithm/matching/bipartite_matching.hpp
+documentation_of: ../src/algorithm/matching/bipartite/bipartite_matching.hpp
 ---
 
 二部グラフの最大マッチング。

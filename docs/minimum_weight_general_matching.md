@@ -1,6 +1,6 @@
 ---
 title: Minimum-Weight Maximum-Cardinality Matching in General Graphs (一般グラフの最小重み最大マッチング)
-documentation_of: ../src/algorithm/matching/minimum_weight_general_matching.hpp
+documentation_of: ../src/algorithm/matching/general/minimum_weight_general_matching.hpp
 ---
 
 一般グラフの最小重み最大マッチング。

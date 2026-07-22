@@ -1,6 +1,6 @@
 ---
 title: Bipartite Flow (二部グラフフロー)
-documentation_of: ../src/algorithm/matching/bipartite_flow.hpp
+documentation_of: ../src/algorithm/matching/flow/bipartite_flow.hpp
 ---
 
 二部グラフのフロー。

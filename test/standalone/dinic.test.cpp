@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/matching/dinic.hpp"
+#include "../../src/algorithm/matching/flow/dinic.hpp"
 
 long long brute_min_cut(
     int n,

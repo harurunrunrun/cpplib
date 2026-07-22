@@ -1,6 +1,6 @@
 ---
 title: Maximum Nonattacking Rooks with Blockers (障害物付き非攻撃rook最大配置) [ANGELS]
-documentation_of: ../src/algorithm/matching/maximum_nonattacking_rooks_with_blockers.hpp
+documentation_of: ../src/algorithm/matching/bipartite/maximum_nonattacking_rooks_with_blockers.hpp
 ---
 
 障害物で視線が遮られる格子へ、互いに攻撃しないrookを置ける最大数を求めます。

@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/matching/min_cost_flow.hpp"
+#include "../../src/algorithm/matching/flow/min_cost_flow.hpp"
 
 std::pair<long long, long long> brute(
     int n,

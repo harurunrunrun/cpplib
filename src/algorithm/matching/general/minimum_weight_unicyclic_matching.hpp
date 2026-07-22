@@ -1,5 +1,5 @@
-#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_UNICYCLIC_MATCHING_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_MATCHING_UNICYCLIC_MATCHING_HPP_INCLUDED
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_GENERAL_MINIMUM_WEIGHT_UNICYCLIC_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_GENERAL_MINIMUM_WEIGHT_UNICYCLIC_MATCHING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -8,27 +8,65 @@
 #include <utility>
 #include <vector>
 
-struct UnicyclicMatchingEdge{
+template<class T>
+struct MinimumWeightUnicyclicMatchingEdge{
     int from;
     int to;
+    T cost;
 };
 
-struct UnicyclicMatchingResult{
+template<class T>
+struct MinimumWeightUnicyclicMatchingResult{
     int size;
+    T cost;
     std::vector<int> match;
 };
 
-namespace unicyclic_matching_internal{
+namespace minimum_weight_unicyclic_matching_internal{
 
-struct PathResult{
+template<class T>
+struct Score{
     int size = -1;
+    T cost = T(0);
+};
+
+template<class T>
+bool valid(const Score<T>& score){
+    return score.size >= 0;
+}
+
+template<class T>
+bool better(const Score<T>& lhs, const Score<T>& rhs){
+    if(!valid(lhs)) return false;
+    if(!valid(rhs)) return true;
+    if(lhs.size != rhs.size) return lhs.size > rhs.size;
+    return lhs.cost < rhs.cost;
+}
+
+template<class T>
+Score<T> add(const Score<T>& lhs, const Score<T>& rhs){
+    if(!valid(lhs) || !valid(rhs)) return {};
+    return {lhs.size + rhs.size, lhs.cost + rhs.cost};
+}
+
+template<class T>
+Score<T> sub(const Score<T>& lhs, const Score<T>& rhs){
+    if(!valid(lhs) || !valid(rhs)) return {};
+    return {lhs.size - rhs.size, lhs.cost - rhs.cost};
+}
+
+template<class T>
+struct PathResult{
+    Score<T> score;
     std::vector<int> selected_edges;
 };
 
+template<class T>
 class Solver{
     struct Edge{
         int from;
         int to;
+        T cost;
     };
 
     int n;
@@ -38,8 +76,8 @@ class Solver{
     std::vector<int> parent;
     std::vector<int> parent_edge;
     std::vector<std::vector<int>> children;
-    std::vector<int> dp0;
-    std::vector<int> dp1;
+    std::vector<Score<T>> dp0;
+    std::vector<Score<T>> dp1;
     std::vector<int> choice_child;
     std::vector<int> best_state;
     std::vector<char> visited;
@@ -48,8 +86,18 @@ class Solver{
     std::vector<char> removed;
     std::vector<int> degree;
 
-    int best_tree_size(int v) const{
-        return std::max(dp0[static_cast<std::size_t>(v)], dp1[static_cast<std::size_t>(v)]);
+    Score<T> zero() const{
+        return {0, T(0)};
+    }
+
+    Score<T> edge_score(int edge_id) const{
+        return {1, edges[static_cast<std::size_t>(edge_id)].cost};
+    }
+
+    Score<T> best_tree_score(int v) const{
+        return better(dp1[static_cast<std::size_t>(v)], dp0[static_cast<std::size_t>(v)])
+                   ? dp1[static_cast<std::size_t>(v)]
+                   : dp0[static_cast<std::size_t>(v)];
     }
 
     void collect_component(int root, std::vector<int>& vertices, std::vector<int>& component_edges){
@@ -103,22 +151,24 @@ class Solver{
     void compute_tree_dp(const std::vector<int>& order){
         for(auto it = order.rbegin(); it != order.rend(); ++it){
             int v = *it;
-            int base = 0;
+            Score<T> base = zero();
             for(int to: children[static_cast<std::size_t>(v)]){
-                base += best_tree_size(to);
+                base = add(base, best_tree_score(to));
             }
             dp0[static_cast<std::size_t>(v)] = base;
-            dp1[static_cast<std::size_t>(v)] = -1;
+            dp1[static_cast<std::size_t>(v)] = {};
             choice_child[static_cast<std::size_t>(v)] = -1;
             for(int to: children[static_cast<std::size_t>(v)]){
-                int candidate = base - best_tree_size(to) + dp0[static_cast<std::size_t>(to)] + 1;
-                if(candidate > dp1[static_cast<std::size_t>(v)]){
+                Score<T> candidate = sub(base, best_tree_score(to));
+                candidate = add(candidate, dp0[static_cast<std::size_t>(to)]);
+                candidate = add(candidate, edge_score(parent_edge[static_cast<std::size_t>(to)]));
+                if(better(candidate, dp1[static_cast<std::size_t>(v)])){
                     dp1[static_cast<std::size_t>(v)] = candidate;
                     choice_child[static_cast<std::size_t>(v)] = to;
                 }
             }
             best_state[static_cast<std::size_t>(v)] =
-                dp1[static_cast<std::size_t>(v)] > dp0[static_cast<std::size_t>(v)] ? 1 : 0;
+                better(dp1[static_cast<std::size_t>(v)], dp0[static_cast<std::size_t>(v)]) ? 1 : 0;
         }
     }
 
@@ -143,34 +193,40 @@ class Solver{
         }
     }
 
-    PathResult solve_path(int left, int right, const std::vector<int>& free_size, const std::vector<int>& best_size) const{
+    PathResult<T> solve_path(
+        int left,
+        int right,
+        const std::vector<Score<T>>& free_score,
+        const std::vector<Score<T>>& best_score,
+        const std::vector<Score<T>>& cycle_edge_score
+    ) const{
         int length = right - left;
-        std::vector<int> dp(static_cast<std::size_t>(length + 1), -1);
+        std::vector<Score<T>> dp(static_cast<std::size_t>(length + 1));
         std::vector<int> previous(static_cast<std::size_t>(length + 1), -1);
         std::vector<int> action(static_cast<std::size_t>(length + 1), -2);
-        dp[0] = 0;
+        dp[0] = zero();
         for(int i = 0; i < length; i++){
-            if(dp[static_cast<std::size_t>(i)] < 0) continue;
+            if(!valid(dp[static_cast<std::size_t>(i)])) continue;
             int vertex = left + i;
-            int leave = dp[static_cast<std::size_t>(i)] + best_size[static_cast<std::size_t>(vertex)];
-            if(leave > dp[static_cast<std::size_t>(i + 1)]){
+            Score<T> leave = add(dp[static_cast<std::size_t>(i)], best_score[static_cast<std::size_t>(vertex)]);
+            if(better(leave, dp[static_cast<std::size_t>(i + 1)])){
                 dp[static_cast<std::size_t>(i + 1)] = leave;
                 previous[static_cast<std::size_t>(i + 1)] = i;
                 action[static_cast<std::size_t>(i + 1)] = -1;
             }
             if(i + 1 < length){
-                int take = dp[static_cast<std::size_t>(i)] +
-                           free_size[static_cast<std::size_t>(vertex)] +
-                           free_size[static_cast<std::size_t>(vertex + 1)] + 1;
-                if(take > dp[static_cast<std::size_t>(i + 2)]){
+                Score<T> take = add(dp[static_cast<std::size_t>(i)], free_score[static_cast<std::size_t>(vertex)]);
+                take = add(take, free_score[static_cast<std::size_t>(vertex + 1)]);
+                take = add(take, cycle_edge_score[static_cast<std::size_t>(vertex)]);
+                if(better(take, dp[static_cast<std::size_t>(i + 2)])){
                     dp[static_cast<std::size_t>(i + 2)] = take;
                     previous[static_cast<std::size_t>(i + 2)] = i;
                     action[static_cast<std::size_t>(i + 2)] = vertex;
                 }
             }
         }
-        PathResult result;
-        result.size = dp[static_cast<std::size_t>(length)];
+        PathResult<T> result;
+        result.score = dp[static_cast<std::size_t>(length)];
         for(int current = length; current > 0; current = previous[static_cast<std::size_t>(current)]){
             int chosen = action[static_cast<std::size_t>(current)];
             if(chosen >= 0) result.selected_edges.push_back(chosen);
@@ -178,25 +234,34 @@ class Solver{
         return result;
     }
 
-    PathResult solve_cycle(const std::vector<int>& free_size, const std::vector<int>& best_size) const{
-        int k = static_cast<int>(free_size.size());
-        PathResult best = solve_path(0, k, free_size, best_size);
-        PathResult use_last = solve_path(1, k - 1, free_size, best_size);
-        use_last.size += free_size[static_cast<std::size_t>(k - 1)] + free_size[0] + 1;
+    PathResult<T> solve_cycle(
+        const std::vector<Score<T>>& free_score,
+        const std::vector<Score<T>>& best_score,
+        const std::vector<Score<T>>& cycle_edge_score
+    ) const{
+        int k = static_cast<int>(free_score.size());
+        PathResult<T> best = solve_path(0, k, free_score, best_score, cycle_edge_score);
+        PathResult<T> use_last = solve_path(1, k - 1, free_score, best_score, cycle_edge_score);
+        Score<T> last = add(free_score[static_cast<std::size_t>(k - 1)], free_score[0]);
+        last = add(last, cycle_edge_score[static_cast<std::size_t>(k - 1)]);
+        use_last.score = add(last, use_last.score);
         use_last.selected_edges.push_back(k - 1);
-        if(use_last.size > best.size) return use_last;
+        if(better(use_last.score, best.score)) return use_last;
         return best;
     }
 
-    int solve_tree_component(const std::vector<int>& vertices){
+    Score<T> solve_tree_component(const std::vector<int>& vertices){
         std::vector<int> order = build_forest({vertices[0]}, vertices);
         compute_tree_dp(order);
         int state = best_state[static_cast<std::size_t>(vertices[0])];
         restore_tree(vertices[0], state);
-        return best_tree_size(vertices[0]);
+        return best_tree_score(vertices[0]);
     }
 
-    int solve_unicyclic_component(const std::vector<int>& vertices, const std::vector<int>& component_edges){
+    Score<T> solve_unicyclic_component(
+        const std::vector<int>& vertices,
+        const std::vector<int>& component_edges
+    ){
         for(int v: vertices){
             degree[static_cast<std::size_t>(v)] = 0;
             removed[static_cast<std::size_t>(v)] = 0;
@@ -237,12 +302,14 @@ class Solver{
         }
         int k = static_cast<int>(cycle_vertices.size());
         if(k < 2 || static_cast<int>(cycle_edges.size()) != k)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: graph is not unicyclic (unicyclic_matching).");
+            throw std::runtime_error("library assertion fault: graph is not unicyclic (minimum_weight_unicyclic_matching).");
         }
 
         std::vector<int> cycle;
+        std::vector<int> ordered_cycle_edges;
         if(k == 2){
             cycle = cycle_vertices;
+            ordered_cycle_edges = cycle_edges;
         }else{
             int start = cycle_vertices[0];
             int current = start;
@@ -257,29 +324,33 @@ class Solver{
                     break;
                 }
                 if(chosen_edge == -1)[[unlikely]]{
-                    throw std::runtime_error("library assertion fault: graph is not unicyclic (unicyclic_matching).");
+                    throw std::runtime_error("library assertion fault: graph is not unicyclic (minimum_weight_unicyclic_matching).");
                 }
+                ordered_cycle_edges.push_back(chosen_edge);
                 const Edge& edge = edges[static_cast<std::size_t>(chosen_edge)];
                 int next = edge.from ^ edge.to ^ current;
                 previous_edge = chosen_edge;
                 current = next;
             }while(current != start);
-            if(static_cast<int>(cycle.size()) != k)[[unlikely]]{
-                throw std::runtime_error("library assertion fault: graph is not unicyclic (unicyclic_matching).");
+            if(static_cast<int>(cycle.size()) != k || static_cast<int>(ordered_cycle_edges.size()) != k)[[unlikely]]{
+                throw std::runtime_error("library assertion fault: graph is not unicyclic (minimum_weight_unicyclic_matching).");
             }
         }
 
         std::vector<int> order = build_forest(cycle, vertices);
         compute_tree_dp(order);
 
-        std::vector<int> free_size(static_cast<std::size_t>(k));
-        std::vector<int> best_size(static_cast<std::size_t>(k));
+        std::vector<Score<T>> free_score(static_cast<std::size_t>(k));
+        std::vector<Score<T>> best_score(static_cast<std::size_t>(k));
+        std::vector<Score<T>> cycle_edge_score(static_cast<std::size_t>(k));
         for(int i = 0; i < k; i++){
             int v = cycle[static_cast<std::size_t>(i)];
-            free_size[static_cast<std::size_t>(i)] = dp0[static_cast<std::size_t>(v)];
-            best_size[static_cast<std::size_t>(i)] = best_tree_size(v);
+            free_score[static_cast<std::size_t>(i)] = dp0[static_cast<std::size_t>(v)];
+            best_score[static_cast<std::size_t>(i)] = best_tree_score(v);
+            cycle_edge_score[static_cast<std::size_t>(i)] =
+                edge_score(ordered_cycle_edges[static_cast<std::size_t>(i)]);
         }
-        PathResult cycle_result = solve_cycle(free_size, best_size);
+        PathResult<T> cycle_result = solve_cycle(free_score, best_score, cycle_edge_score);
         std::vector<char> matched_on_cycle(static_cast<std::size_t>(k), 0);
         for(int edge_index: cycle_result.selected_edges){
             int left = edge_index;
@@ -296,14 +367,14 @@ class Solver{
             int state = matched_on_cycle[static_cast<std::size_t>(i)] ? 0 : best_state[static_cast<std::size_t>(v)];
             restore_tree(v, state);
         }
-        return cycle_result.size;
+        return cycle_result.score;
     }
 
 public:
-    Solver(int n_, const std::vector<UnicyclicMatchingEdge>& input_edges)
+    Solver(int n_, const std::vector<MinimumWeightUnicyclicMatchingEdge<T>>& input_edges)
         : n(n_ < 0
             ? throw std::runtime_error(
-                "library assertion fault: range violation (unicyclic_matching)."
+                "library assertion fault: range violation (minimum_weight_unicyclic_matching)."
             )
             : n_),
           graph(static_cast<std::size_t>(n)),
@@ -323,39 +394,45 @@ public:
         edges.reserve(input_edges.size());
         for(const auto& edge: input_edges){
             if(edge.from < 0 || n <= edge.from || edge.to < 0 || n <= edge.to || edge.from == edge.to)[[unlikely]]{
-                throw std::runtime_error("library assertion fault: range violation (unicyclic_matching).");
+                throw std::runtime_error("library assertion fault: range violation (minimum_weight_unicyclic_matching).");
             }
             int edge_id = static_cast<int>(edges.size());
-            edges.push_back({edge.from, edge.to});
+            edges.push_back({edge.from, edge.to, edge.cost});
             graph[static_cast<std::size_t>(edge.from)].push_back({edge.to, edge_id});
             graph[static_cast<std::size_t>(edge.to)].push_back({edge.from, edge_id});
         }
     }
 
-    UnicyclicMatchingResult run(){
-        int total = 0;
+    MinimumWeightUnicyclicMatchingResult<T> run(){
+        Score<T> total = zero();
         for(int root = 0; root < n; root++){
             if(visited[static_cast<std::size_t>(root)]) continue;
             std::vector<int> vertices;
             std::vector<int> component_edges;
             collect_component(root, vertices, component_edges);
+            Score<T> current;
             if(component_edges.size() + 1 == vertices.size()){
-                total += solve_tree_component(vertices);
+                current = solve_tree_component(vertices);
             }else if(component_edges.size() == vertices.size()){
-                total += solve_unicyclic_component(vertices, component_edges);
+                current = solve_unicyclic_component(vertices, component_edges);
             }else{
-                throw std::runtime_error("library assertion fault: graph is not a forest or unicyclic graph (unicyclic_matching).");
+                throw std::runtime_error("library assertion fault: graph is not a forest or unicyclic graph (minimum_weight_unicyclic_matching).");
             }
+            total = add(total, current);
         }
-        return {total, match};
+        return {total.size, total.cost, match};
     }
 };
 
-} // namespace unicyclic_matching_internal
+} // namespace minimum_weight_unicyclic_matching_internal
 
-inline UnicyclicMatchingResult unicyclic_matching(int n, const std::vector<UnicyclicMatchingEdge>& edges){
-    unicyclic_matching_internal::Solver solver(n, edges);
+template<class T>
+MinimumWeightUnicyclicMatchingResult<T> minimum_weight_unicyclic_matching(
+    int n,
+    const std::vector<MinimumWeightUnicyclicMatchingEdge<T>>& edges
+){
+    minimum_weight_unicyclic_matching_internal::Solver<T> solver(n, edges);
     return solver.run();
 }
 
-#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_UNICYCLIC_MATCHING_HPP_INCLUDED
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_GENERAL_MINIMUM_WEIGHT_UNICYCLIC_MATCHING_HPP_INCLUDED

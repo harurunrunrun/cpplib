@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/general_matching
 
 #include <iostream>
-#include "../../src/algorithm/matching/general_matching.hpp"
+#include "../../src/algorithm/matching/general/general_matching.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

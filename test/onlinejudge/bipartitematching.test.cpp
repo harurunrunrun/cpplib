@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/bipartitematching
 
 #include <iostream>
-#include "../../src/algorithm/matching/bipartite_matching.hpp"
+#include "../../src/algorithm/matching/bipartite/bipartite_matching.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

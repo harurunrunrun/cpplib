@@ -1,6 +1,6 @@
 ---
 title: Maximum Bipartite Pair Count (二部グラフ最大ペア数) [MATCHING]
-documentation_of: ../src/algorithm/matching/maximum_bipartite_pair_count.hpp
+documentation_of: ../src/algorithm/matching/bipartite/maximum_bipartite_pair_count.hpp
 ---
 
 許可された組だけを使う一対一対応の最大数を返す。

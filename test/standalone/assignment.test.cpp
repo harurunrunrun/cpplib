@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/matching/assignment.hpp"
+#include "../../src/algorithm/matching/bipartite/assignment.hpp"
 
 long long brute_assignment(const std::vector<std::vector<long long>>& cost){
     const int rows = static_cast<int>(cost.size());

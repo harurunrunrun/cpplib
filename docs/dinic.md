@@ -1,6 +1,6 @@
 ---
 title: Dinic (Dinic法) [GRL_6_A]
-documentation_of: ../src/algorithm/matching/dinic.hpp
+documentation_of: ../src/algorithm/matching/flow/dinic.hpp
 ---
 
 Dinic法による最大流。

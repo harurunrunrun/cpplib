@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/matching/bipartite_flow.hpp"
+#include "../../src/algorithm/matching/flow/bipartite_flow.hpp"
 
 long long brute(
     int left_size,

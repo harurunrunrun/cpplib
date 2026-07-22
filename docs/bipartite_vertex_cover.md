@@ -1,6 +1,6 @@
 ---
 title: Bipartite Vertex Cover / Independent Set / Edge Cover (二部グラフの頂点被覆・独立集合・辺被覆)
-documentation_of: ../src/algorithm/matching/bipartite_vertex_cover.hpp
+documentation_of: ../src/algorithm/matching/bipartite/bipartite_vertex_cover.hpp
 ---
 
 `BipartiteMatching::solve()` の最大マッチングから、Kőnigの定理に基づく頂点集合と最小辺被覆を構成する。

@@ -6,7 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/matching/unicyclic_matching.hpp"
+#include "../../src/algorithm/matching/general/unicyclic_matching.hpp"
 
 int brute(int n, const std::vector<UnicyclicMatchingEdge>& edges){
     std::vector<char> used(static_cast<std::size_t>(n), 0);

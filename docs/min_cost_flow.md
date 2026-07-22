@@ -1,6 +1,6 @@
 ---
 title: Min Cost Flow (最小費用流) [GRL_6_B]
-documentation_of: ../src/algorithm/matching/min_cost_flow.hpp
+documentation_of: ../src/algorithm/matching/flow/min_cost_flow.hpp
 ---
 
 負辺を許す有向グラフで、指定量までのフローを最小費用で送る。

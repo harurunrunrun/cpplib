@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/matching/burn_bury.hpp"
+#include "../../src/algorithm/matching/flow/burn_bury.hpp"
 
 struct PairCost{
     int i;

@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../matching/dinic.hpp"
+#include "../../matching/flow/dinic.hpp"
 
 struct BinaryLabelUnaryCost{
     long long cost_if_zero;

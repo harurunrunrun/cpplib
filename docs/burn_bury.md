@@ -1,6 +1,6 @@
 ---
 title: Binary Submodular Optimization (燃やす埋める)
-documentation_of: ../src/algorithm/matching/burn_bury.hpp
+documentation_of: ../src/algorithm/matching/flow/burn_bury.hpp
 ---
 
 燃やす埋める。

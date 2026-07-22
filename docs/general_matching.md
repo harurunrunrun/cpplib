@@ -1,6 +1,6 @@
 ---
 title: General Matching (一般グラフのマッチング) [general_matching]
-documentation_of: ../src/algorithm/matching/general_matching.hpp
+documentation_of: ../src/algorithm/matching/general/general_matching.hpp
 ---
 
 一般グラフの最大マッチング。

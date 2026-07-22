@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/matching/maximum_bipartite_pair_count.hpp"
+#include "../../src/algorithm/matching/bipartite/maximum_bipartite_pair_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

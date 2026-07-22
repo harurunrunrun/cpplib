@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/matching/maximum_nonattacking_rooks_with_blockers.hpp"
+#include "../../src/algorithm/matching/bipartite/maximum_nonattacking_rooks_with_blockers.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

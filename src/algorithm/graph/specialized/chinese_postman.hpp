@@ -15,7 +15,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
-#include "../../matching/minimum_weight_general_matching.hpp"
+#include "../../matching/general/minimum_weight_general_matching.hpp"
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
 #endif

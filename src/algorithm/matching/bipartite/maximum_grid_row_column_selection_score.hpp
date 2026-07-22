@@ -1,12 +1,12 @@
-#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
 #include <vector>
 
-#include "burn_bury.hpp"
+#include "../flow/burn_bury.hpp"
 
 inline long long maximum_grid_row_column_selection_score(
     const std::vector<std::vector<long long>>& grid
@@ -72,4 +72,4 @@ inline long long maximum_grid_row_column_selection_score(
     return -solver.solve().cost;
 }
 
-#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED

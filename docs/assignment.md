@@ -1,6 +1,6 @@
 ---
 title: Assignment Problem (割当問題) [assignment]
-documentation_of: ../src/algorithm/matching/assignment.hpp
+documentation_of: ../src/algorithm/matching/bipartite/assignment.hpp
 ---
 
 Hungarian法により長方形cost matrixの最小費用assignmentを求める。各rowへ互いに異なるcolumnを1つずつ割り当てる。

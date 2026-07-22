@@ -1,6 +1,6 @@
 ---
 title: Weighted Blossom Internals (重み付きBlossom法の内部実装)
-documentation_of: ../src/algorithm/matching/minimum_weight_general_matching_internal.hpp
+documentation_of: ../src/algorithm/matching/general/minimum_weight_general_matching_internal.hpp
 ---
 
 一般グラフの重み付き最大matchingに用いる内部primal-dual実装。

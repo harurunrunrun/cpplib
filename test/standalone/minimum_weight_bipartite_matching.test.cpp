@@ -6,7 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/matching/minimum_weight_bipartite_matching.hpp"
+#include "../../src/algorithm/matching/bipartite/minimum_weight_bipartite_matching.hpp"
 
 std::pair<int, long long> brute(
     int left_size,

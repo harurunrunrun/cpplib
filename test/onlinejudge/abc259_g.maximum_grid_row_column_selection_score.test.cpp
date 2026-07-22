@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/matching/maximum_grid_row_column_selection_score.hpp"
+#include "../../src/algorithm/matching/bipartite/maximum_grid_row_column_selection_score.hpp"
 
 int main(){
     int height, width;

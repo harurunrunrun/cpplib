@@ -1,6 +1,6 @@
 ---
 title: Maximum Grid Row and Column Selection Score (格子の行・列選択最大得点) [ABC259_G]
-documentation_of: ../src/algorithm/matching/maximum_grid_row_column_selection_score.hpp
+documentation_of: ../src/algorithm/matching/bipartite/maximum_grid_row_column_selection_score.hpp
 ---
 
 符号付き重み行列に対する、行と列の選択制約付き最大得点を返す。

@@ -1,6 +1,6 @@
 ---
 title: Minimum-Weight Maximum Unicyclic Matching (単一閉路グラフの最小重み最大マッチング)
-documentation_of: ../src/algorithm/matching/minimum_weight_unicyclic_matching.hpp
+documentation_of: ../src/algorithm/matching/general/minimum_weight_unicyclic_matching.hpp
 ---
 
 各連結成分が木または $N$ 頂点 $N$ 辺の無向グラフである場合の最小重み最大マッチング。

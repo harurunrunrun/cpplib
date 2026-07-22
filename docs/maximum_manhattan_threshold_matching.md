@@ -1,6 +1,6 @@
 ---
 title: Maximum Manhattan Threshold Matching (Manhattan距離閾値最大マッチング) [TAXI]
-documentation_of: ../src/algorithm/matching/maximum_manhattan_threshold_matching.hpp
+documentation_of: ../src/algorithm/matching/bipartite/maximum_manhattan_threshold_matching.hpp
 ---
 
 2つの二次元点集合について、Manhattan距離が指定値以下の点同士だけを対応させる二部マッチングの最大サイズを返す。

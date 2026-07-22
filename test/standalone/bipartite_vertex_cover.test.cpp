@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/matching/bipartite_vertex_cover.hpp"
+#include "../../src/algorithm/matching/bipartite/bipartite_vertex_cover.hpp"
 
 int brute_minimum_vertex_cover(
     int left_size,

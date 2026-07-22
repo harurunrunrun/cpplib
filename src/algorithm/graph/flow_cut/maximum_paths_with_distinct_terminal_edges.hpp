@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../matching/dinic.hpp"
+#include "../../matching/flow/dinic.hpp"
 
 inline long long maximum_paths_with_distinct_terminal_edges(
     int vertex_count,

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/matching/min_cost_flow.hpp"
+#include "../../src/algorithm/matching/flow/min_cost_flow.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

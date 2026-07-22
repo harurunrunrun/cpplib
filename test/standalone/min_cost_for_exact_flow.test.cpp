@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/matching/min_cost_flow.hpp"
+#include "../../src/algorithm/matching/flow/min_cost_flow.hpp"
 
 void self_test(){
     {

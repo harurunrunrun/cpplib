@@ -6,7 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/matching/bipartite_matching.hpp"
+#include "../../src/algorithm/matching/bipartite/bipartite_matching.hpp"
 
 int brute(int left_size, int right_size, const std::vector<std::pair<int, int>>& edges){
     std::vector<std::vector<int>> graph(static_cast<std::size_t>(left_size));

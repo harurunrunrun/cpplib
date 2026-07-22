@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/matching/maximum_weight_general_matching.hpp"
+#include "../../src/algorithm/matching/general/maximum_weight_general_matching.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

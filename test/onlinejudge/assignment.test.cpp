@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/matching/assignment.hpp"
+#include "../../src/algorithm/matching/bipartite/assignment.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

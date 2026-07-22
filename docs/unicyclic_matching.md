@@ -1,6 +1,6 @@
 ---
 title: Unicyclic Matching (単一閉路グラフのマッチング)
-documentation_of: ../src/algorithm/matching/unicyclic_matching.hpp
+documentation_of: ../src/algorithm/matching/general/unicyclic_matching.hpp
 ---
 
 各連結成分が木または $N$ 頂点 $N$ 辺の無向グラフである場合の最大マッチング。

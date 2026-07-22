@@ -1,6 +1,6 @@
 ---
 title: Maximum-Weight Matching in General Graphs (一般グラフの最大重みマッチング) [general_weighted_matching]
-documentation_of: ../src/algorithm/matching/maximum_weight_general_matching.hpp
+documentation_of: ../src/algorithm/matching/general/maximum_weight_general_matching.hpp
 ---
 
 一般グラフ上で辺重みの総和が最大となるマッチングを、重み付きEdmondsのblossom algorithmで求める。マッチングの辺数は優先しない。

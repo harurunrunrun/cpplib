@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/matching/dinic.hpp"
+#include "../../src/algorithm/matching/flow/dinic.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

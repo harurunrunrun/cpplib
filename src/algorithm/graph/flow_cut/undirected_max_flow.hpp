@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../matching/dinic.hpp"
+#include "../../matching/flow/dinic.hpp"
 
 template<class T>
 struct UndirectedFlowEdge{

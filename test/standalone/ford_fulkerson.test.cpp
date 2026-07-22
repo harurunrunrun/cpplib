@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/matching/ford_fulkerson.hpp"
+#include "../../src/algorithm/matching/flow/ford_fulkerson.hpp"
 
 long long brute_min_cut(
     int n,

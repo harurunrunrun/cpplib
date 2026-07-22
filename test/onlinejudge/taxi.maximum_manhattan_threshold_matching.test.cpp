@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/matching/maximum_manhattan_threshold_matching.hpp"
+#include "../../src/algorithm/matching/bipartite/maximum_manhattan_threshold_matching.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
