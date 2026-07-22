@@ -8,7 +8,6 @@
 #include <limits>
 #include <set>
 #include <stdexcept>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -68,18 +67,6 @@ inline std::array<std::size_t, 2> edge_key(
     if(second < first) std::swap(first, second);
     return {first, second};
 }
-
-struct EdgeHash{
-    std::size_t operator()(
-        const std::array<std::size_t, 2>& edge
-    ) const noexcept{
-        std::size_t result = edge[0] + 0x9e3779b97f4a7c15ULL;
-        result ^= edge[1] + 0x9e3779b97f4a7c15ULL
-            + (result << 6) + (result >> 2);
-        return result;
-    }
-};
-
 struct OpenEdge{
     std::size_t face = no_index;
     std::size_t edge = no_index;
@@ -89,8 +76,8 @@ inline void link_open_edges(
     std::vector<Face>& faces,
     const std::vector<std::size_t>& face_indices
 ){
-    std::unordered_map<std::array<std::size_t, 2>, OpenEdge, EdgeHash> open;
-    open.reserve(face_indices.size() * 2 + 1);
+    std::vector<std::pair<std::array<std::size_t, 2>, OpenEdge>> open;
+    open.reserve(face_indices.size() * 3);
     for(const std::size_t face_index: face_indices){
         for(std::size_t edge = 0; edge < 3; ++edge){
             if(faces[face_index].neighbors[edge] != no_index) continue;
@@ -98,15 +85,28 @@ inline void link_open_edges(
                 faces[face_index].vertices[edge],
                 faces[face_index].vertices[(edge + 1) % 3]
             );
-            const auto [iterator, inserted] = open.emplace(
-                key, OpenEdge{face_index, edge}
-            );
-            if(inserted) continue;
-            const OpenEdge other = iterator->second;
-            faces[face_index].neighbors[edge] = other.face;
-            faces[other.face].neighbors[other.edge] = face_index;
-            open.erase(iterator);
+            open.emplace_back(key, OpenEdge{face_index, edge});
         }
+    }
+    std::sort(
+        open.begin(), open.end(),
+        [](const auto& lhs, const auto& rhs){
+            if(lhs.first[0] != rhs.first[0]) return lhs.first[0] < rhs.first[0];
+            return lhs.first[1] < rhs.first[1];
+        }
+    );
+    while(open.size() >= 2){
+        auto current = open.back();
+        open.pop_back();
+        auto next = open.back();
+        open.pop_back();
+        if(current.first != next.first)[[unlikely]]{
+            open.push_back(current);
+            open.push_back(next);
+            break;
+        }
+        faces[current.second.face].neighbors[current.second.edge] = next.second.face;
+        faces[next.second.face].neighbors[next.second.edge] = current.second.face;
     }
     if(!open.empty())[[unlikely]]{
         throw std::logic_error("quickhull_3d produced an open surface");
