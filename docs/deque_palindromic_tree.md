@@ -1,6 +1,6 @@
 ---
 title: Deque Palindromic Tree (両端回文木)
-documentation_of: ../src/algorithm/string/deque_palindromic_tree.hpp
+documentation_of: ../src/algorithm/string/palindrome/deque_palindromic_tree.hpp
 ---
 
 文字列の両端への追加・削除を行いながら、異なる非空回文部分文字列の個数、

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-#include "../../src/algorithm/tree/tree_diameter.hpp"
+#include "../../src/algorithm/tree/dynamic_programming/tree_diameter.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -1,6 +1,6 @@
 ---
 title: Maximum Consecutive Repetitions (最大連続反復回数) [REPEATS]
-documentation_of: ../src/algorithm/string/maximum_consecutive_repetitions.hpp
+documentation_of: ../src/algorithm/string/sequence/maximum_consecutive_repetitions.hpp
 ---
 
 文字列の任意の部分文字列に現れる、連続した同一ブロックの最大個数を求める。

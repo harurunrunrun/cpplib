@@ -1,6 +1,6 @@
 ---
 title: Manacher (Manacher法)
-documentation_of: ../src/algorithm/string/manacher.hpp
+documentation_of: ../src/algorithm/string/palindrome/manacher.hpp
 ---
 
 各中心の回文半径を求める。

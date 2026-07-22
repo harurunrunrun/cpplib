@@ -1,6 +1,6 @@
 ---
 title: Longest Common Substring Length (最長共通部分文字列長) [ADAPHOTO] [LCS]
-documentation_of: ../src/algorithm/string/longest_common_substring_length.hpp
+documentation_of: ../src/algorithm/string/suffix/longest_common_substring_length.hpp
 ---
 
 2つのbyte列に共通する連続部分列の最大長を求める。

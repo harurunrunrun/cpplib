@@ -1,6 +1,6 @@
 ---
 title: Diff (差分)
-documentation_of: ../src/algorithm/string/diff.hpp
+documentation_of: ../src/algorithm/string/sequence/diff.hpp
 ---
 
 2 つの列の差分を LCS に基づいて求める。

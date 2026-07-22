@@ -1,6 +1,6 @@
 ---
 title: Offline LCA (オフライン最小共通祖先)
-documentation_of: ../src/algorithm/tree/offline_lca.hpp
+documentation_of: ../src/algorithm/tree/query/offline_lca.hpp
 ---
 
 Tarjan の offline LCA。

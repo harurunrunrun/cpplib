@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../src/algorithm/tree/tree_path_order_statistics.hpp"
+#include "../../src/algorithm/tree/query/tree_path_order_statistics.hpp"
 
 namespace{
 

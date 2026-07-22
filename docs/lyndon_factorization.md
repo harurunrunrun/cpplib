@@ -1,6 +1,6 @@
 ---
 title: Lyndon Factorization (Lyndon分解) [lyndon_factorization]
-documentation_of: ../src/algorithm/string/lyndon_factorization.hpp
+documentation_of: ../src/algorithm/string/sequence/lyndon_factorization.hpp
 ---
 
 文字列・列を辞書順で非増加となるLyndon word列へ一意に分解するDuval法。

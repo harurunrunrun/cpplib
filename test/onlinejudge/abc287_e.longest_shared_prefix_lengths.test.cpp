@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/longest_shared_prefix_lengths.hpp"
+#include "../../src/algorithm/string/suffix/longest_shared_prefix_lengths.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

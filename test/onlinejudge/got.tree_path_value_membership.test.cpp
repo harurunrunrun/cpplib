@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/tree/tree_path_value_membership.hpp"
+#include "../../src/algorithm/tree/query/tree_path_value_membership.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

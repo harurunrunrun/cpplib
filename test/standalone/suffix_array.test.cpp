@@ -6,8 +6,8 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/string/count_distinct_substrings.hpp"
-#include "../../src/algorithm/string/suffix_array.hpp"
+#include "../../src/algorithm/string/suffix/count_distinct_substrings.hpp"
+#include "../../src/algorithm/string/suffix/suffix_array.hpp"
 
 std::vector<int> naive_suffix_array(const std::string& s){
     std::vector<int> sa(s.size());

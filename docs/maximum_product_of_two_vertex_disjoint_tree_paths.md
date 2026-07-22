@@ -1,6 +1,6 @@
 ---
 title: Maximum Product of Two Vertex-Disjoint Tree Paths (頂点素な2本の木上パスの長さ積最大化) [TWOPATHS]
-documentation_of: ../src/algorithm/tree/maximum_product_of_two_vertex_disjoint_tree_paths.hpp
+documentation_of: ../src/algorithm/tree/dynamic_programming/maximum_product_of_two_vertex_disjoint_tree_paths.hpp
 ---
 
 無重み木から頂点を共有しない2本の単純パスを選び、辺数で測った長さの積を最大化する。

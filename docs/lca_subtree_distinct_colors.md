@@ -1,6 +1,6 @@
 ---
 title: LCA Subtree Distinct Colors (LCA部分木色数) [ADAORANG]
-documentation_of: ../src/algorithm/tree/lca_subtree_distinct_colors.hpp
+documentation_of: ../src/algorithm/tree/query/lca_subtree_distinct_colors.hpp
 ---
 
 2頂点のLCAを根とする部分木に現れる異なる色数を返す静的構造である。

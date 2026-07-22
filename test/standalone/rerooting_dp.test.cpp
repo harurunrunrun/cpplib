@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/rerooting_dp.hpp"
+#include "../../src/algorithm/tree/dynamic_programming/rerooting_dp.hpp"
 
 struct MaxIntMonoid{
     using S = int;

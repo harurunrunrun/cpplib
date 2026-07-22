@@ -1,6 +1,6 @@
 ---
 title: Tree Isomorphism (木の同型判定)
-documentation_of: ../src/algorithm/tree/tree_isomorphism.hpp
+documentation_of: ../src/algorithm/tree/isomorphism/tree_isomorphism.hpp
 ---
 
 AHU algorithm による木の同型性判定。

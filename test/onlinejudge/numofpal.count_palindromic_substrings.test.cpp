@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/count_palindromic_substrings.hpp"
+#include "../../src/algorithm/string/palindrome/count_palindromic_substrings.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

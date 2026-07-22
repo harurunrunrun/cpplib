@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/tree_distance_sums.hpp"
+#include "../../src/algorithm/tree/dynamic_programming/tree_distance_sums.hpp"
 
 void self_test(){
     assert(tree_distance_sums(0, {}).empty());

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/count_distinct_substrings_of_length.hpp"
+#include "../../src/algorithm/string/suffix/count_distinct_substrings_of_length.hpp"
 
 int main(){
     assert(count_distinct_substrings_of_length(std::string(), 1) == 0);

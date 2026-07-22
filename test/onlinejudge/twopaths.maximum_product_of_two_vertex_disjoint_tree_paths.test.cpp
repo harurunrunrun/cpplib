@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/maximum_product_of_two_vertex_disjoint_tree_paths.hpp"
+#include "../../src/algorithm/tree/dynamic_programming/maximum_product_of_two_vertex_disjoint_tree_paths.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

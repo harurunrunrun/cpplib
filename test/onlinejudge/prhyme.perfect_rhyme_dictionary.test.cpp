@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/string/longest_common_suffix_dictionary.hpp"
+#include "../../src/algorithm/string/suffix/longest_common_suffix_dictionary.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include "../../src/algorithm/string/z_algorithm.hpp"
+#include "../../src/algorithm/string/automata/z_algorithm.hpp"
 
 int main(){
     std::string text;

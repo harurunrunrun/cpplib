@@ -8,7 +8,7 @@
 #include <set>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/string/palindromic_tree.hpp"
+#include "../../src/algorithm/string/palindrome/palindromic_tree.hpp"
 
 bool is_palindrome(const std::string& s){
     for(int i = 0; i < static_cast<int>(s.size()); i++){

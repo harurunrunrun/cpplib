@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/periodic_prefixes.hpp"
+#include "../../src/algorithm/string/automata/periodic_prefixes.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

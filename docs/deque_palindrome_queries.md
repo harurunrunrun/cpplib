@@ -1,6 +1,6 @@
 ---
 title: Deque Palindrome Queries (両端回文更新query) [palindromes_in_deque]
-documentation_of: ../src/algorithm/string/deque_palindrome_queries.hpp
+documentation_of: ../src/algorithm/string/palindrome/deque_palindrome_queries.hpp
 ---
 
 両端回文木の更新と、更新直後の回文統計取得を1回のmethodで行う。

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/tree/are_unrooted_trees_isomorphic.hpp"
+#include "../../src/algorithm/tree/isomorphism/are_unrooted_trees_isomorphic.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

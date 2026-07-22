@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/static_tree_path_fold.hpp"
+#include "../../src/algorithm/tree/query/static_tree_path_fold.hpp"
 #include "../../src/structure/types/monoid.hpp"
 
 using Range = std::pair<long long, long long>;

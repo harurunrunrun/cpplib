@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/borders.hpp"
+#include "../../src/algorithm/string/automata/borders.hpp"
 
 int main(){
     assert((border_lengths(std::string("ababab")) == std::vector<int>{2, 4}));

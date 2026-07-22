@@ -1,6 +1,6 @@
 ---
 title: Suffix Array (接尾辞配列) [SARRAY] [suffixarray]
-documentation_of: ../src/algorithm/string/suffix_array.hpp
+documentation_of: ../src/algorithm/string/suffix/suffix_array.hpp
 ---
 
 Suffix Array と LCP Array。

@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/minimum_insertions_to_palindrome.hpp"
+#include "../../src/algorithm/string/palindrome/minimum_insertions_to_palindrome.hpp"
 
 int minimum_insertions_dp(const std::string& text){
     std::vector<int> dp(text.size());

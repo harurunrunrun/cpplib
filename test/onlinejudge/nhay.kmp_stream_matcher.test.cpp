@@ -5,7 +5,7 @@
 #include <string>
 #include <utility>
 
-#include "../../src/algorithm/string/kmp_stream_matcher.hpp"
+#include "../../src/algorithm/string/automata/kmp_stream_matcher.hpp"
 
 template<class Consumer>
 void consume_line(Consumer&& consume){

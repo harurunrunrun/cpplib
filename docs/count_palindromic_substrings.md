@@ -1,6 +1,6 @@
 ---
 title: Count Palindromic Substrings (回文部分文字列の個数) [NUMOFPAL]
-documentation_of: ../src/algorithm/string/count_palindromic_substrings.hpp
+documentation_of: ../src/algorithm/string/palindrome/count_palindromic_substrings.hpp
 ---
 
 文字列に含まれるすべての非空な回文部分文字列を、出現位置ごとに数える。

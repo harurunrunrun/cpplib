@@ -1,6 +1,6 @@
 ---
 title: Myers Bit-Parallel Edit Distance (Myersのビット並列編集距離) [DPL_1_E]
-documentation_of: ../src/algorithm/string/myers_edit_distance.hpp
+documentation_of: ../src/algorithm/string/sequence/myers_edit_distance.hpp
 ---
 
 Myers の bit-vector 法で、2つの byte 文字列の Levenshtein 距離を求める。

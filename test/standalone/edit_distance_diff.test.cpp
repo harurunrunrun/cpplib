@@ -6,8 +6,8 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/string/diff.hpp"
-#include "../../src/algorithm/string/edit_distance.hpp"
+#include "../../src/algorithm/string/sequence/diff.hpp"
+#include "../../src/algorithm/string/sequence/edit_distance.hpp"
 
 int edit_distance_naive(const std::string& a, const std::string& b){
     const int n = static_cast<int>(a.size());

@@ -1,6 +1,6 @@
 ---
 title: Minimum Insertions to Palindrome (回文化の最小挿入回数) [AIBOHP] [IOIPALIN]
-documentation_of: ../src/algorithm/string/minimum_insertions_to_palindrome.hpp
+documentation_of: ../src/algorithm/string/palindrome/minimum_insertions_to_palindrome.hpp
 ---
 
 列に要素を挿入して回文にするために必要な最小挿入回数を求める。

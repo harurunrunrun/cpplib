@@ -6,8 +6,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/lca.hpp"
-#include "../../src/algorithm/tree/offline_lca.hpp"
+#include "../../src/algorithm/tree/query/lca.hpp"
+#include "../../src/algorithm/tree/query/offline_lca.hpp"
 
 int naive_lca(int u, int v, const std::vector<int>& parent, const std::vector<int>& depth){
     while(depth[u] > depth[v]){

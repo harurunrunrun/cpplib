@@ -2,8 +2,8 @@
 
 #include <iostream>
 #include <memory>
-#include "../../src/algorithm/string/deque_palindromic_tree.hpp"
-#include "../../src/algorithm/string/deque_palindromic_tree.hpp"
+#include "../../src/algorithm/string/palindrome/deque_palindromic_tree.hpp"
+#include "../../src/algorithm/string/palindrome/deque_palindromic_tree.hpp"
 
 int main(){
     int query_count;

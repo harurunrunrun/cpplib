@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/suffix_array.hpp"
+#include "../../src/algorithm/string/suffix/suffix_array.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

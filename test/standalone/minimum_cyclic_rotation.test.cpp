@@ -9,7 +9,7 @@
 #include <string_view>
 #include <vector>
 
-#include "../../src/algorithm/string/minimum_cyclic_rotation.hpp"
+#include "../../src/algorithm/string/sequence/minimum_cyclic_rotation.hpp"
 
 namespace{
 

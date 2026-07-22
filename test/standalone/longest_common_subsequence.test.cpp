@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/longest_common_subsequence.hpp"
+#include "../../src/algorithm/string/sequence/longest_common_subsequence.hpp"
 
 int lcs_naive(const std::string& a, const std::string& b){
     int best = 0;

@@ -1,6 +1,6 @@
 ---
 title: Tree Edge Split Diameters (辺切断後の木の直径)
-documentation_of: ../src/algorithm/tree/tree_edge_split_diameters.hpp
+documentation_of: ../src/algorithm/tree/dynamic_programming/tree_edge_split_diameters.hpp
 ---
 
 入力順に与えた木の各辺を1本ずつ削除し、分かれた2成分の直径を求める。

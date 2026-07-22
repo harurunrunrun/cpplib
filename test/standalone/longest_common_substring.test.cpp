@@ -5,7 +5,7 @@
 #include <string>
 #include <utility>
 
-#include "../../src/algorithm/string/longest_common_substring.hpp"
+#include "../../src/algorithm/string/suffix/longest_common_substring.hpp"
 
 namespace{
 

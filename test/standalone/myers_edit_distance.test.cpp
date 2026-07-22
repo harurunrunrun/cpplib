@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/string/myers_edit_distance.hpp"
+#include "../../src/algorithm/string/sequence/myers_edit_distance.hpp"
 
 #include <algorithm>
 #include <cassert>

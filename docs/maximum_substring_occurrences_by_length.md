@@ -1,6 +1,6 @@
 ---
 title: Maximum Substring Occurrences by Length (長さ別部分文字列最大出現回数) [NSUBSTR]
-documentation_of: ../src/algorithm/string/maximum_substring_occurrences_by_length.hpp
+documentation_of: ../src/algorithm/string/suffix/maximum_substring_occurrences_by_length.hpp
 ---
 
 文字列の各長さについて、同じ内容の部分文字列が現れる回数の最大値を返す。

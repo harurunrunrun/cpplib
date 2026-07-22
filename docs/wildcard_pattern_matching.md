@@ -1,6 +1,6 @@
 ---
 title: Wildcard Pattern Matching (ワイルドカードパターンマッチング) [wildcard_pattern_matching]
-documentation_of: ../src/algorithm/string/wildcard_pattern_matching.hpp
+documentation_of: ../src/algorithm/string/automata/wildcard_pattern_matching.hpp
 ---
 
 文字列`text`の各位置に対して、`pattern`がwildcardを考慮して一致するかを求める。

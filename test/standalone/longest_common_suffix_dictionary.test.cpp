@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/string/longest_common_suffix_dictionary.hpp"
+#include "../../src/algorithm/string/suffix/longest_common_suffix_dictionary.hpp"
 
 template<class Function>
 void expect_dictionary_error(Function&& function){

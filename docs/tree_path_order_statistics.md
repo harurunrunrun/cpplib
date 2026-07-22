@@ -1,6 +1,6 @@
 ---
 title: Tree Path Order Statistics (木上パス順序統計)
-documentation_of: ../src/algorithm/tree/tree_path_order_statistics.hpp
+documentation_of: ../src/algorithm/tree/query/tree_path_order_statistics.hpp
 ---
 
 静的な頂点値付き木に対し、パス上のk番目の値や値域内の個数を求める。

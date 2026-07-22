@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/string/kmp_stream_matcher.hpp"
+#include "../../src/algorithm/string/automata/kmp_stream_matcher.hpp"
 
 int main(){
     KmpStreamMatcher matcher(std::string("aa"));

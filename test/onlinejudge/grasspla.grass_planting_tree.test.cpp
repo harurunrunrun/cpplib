@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/tree/path_add_edge_get_tree.hpp"
+#include "../../src/algorithm/tree/construction/path_add_edge_get_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

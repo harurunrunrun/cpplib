@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/string/minimum_binary_substring_mismatches.hpp"
+#include "../../src/algorithm/string/automata/minimum_binary_substring_mismatches.hpp"
 
 void self_test(){
     assert(minimum_binary_substring_mismatches("", "") == 0);

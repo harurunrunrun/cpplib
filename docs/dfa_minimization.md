@@ -1,6 +1,6 @@
 ---
 title: DFA Minimization (Hopcroft) (DFA最小化)
-documentation_of: ../src/algorithm/string/dfa_minimization.hpp
+documentation_of: ../src/algorithm/string/automata/dfa_minimization.hpp
 ---
 
 完全決定性有限オートマトン (DFA) の状態同値類と最小 DFA を Hopcroft 法で求める。

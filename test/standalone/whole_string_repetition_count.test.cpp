@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/whole_string_repetition_count.hpp"
+#include "../../src/algorithm/string/sequence/whole_string_repetition_count.hpp"
 
 int main(){
     assert(whole_string_repetition_count(std::string()) == 0);

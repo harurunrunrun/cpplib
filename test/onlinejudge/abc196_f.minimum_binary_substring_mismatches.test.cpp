@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/minimum_binary_substring_mismatches.hpp"
+#include "../../src/algorithm/string/automata/minimum_binary_substring_mismatches.hpp"
 
 int main(){
     std::string s, t;

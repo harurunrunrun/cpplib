@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/find_grid_pattern_placements.hpp"
+#include "../../src/algorithm/string/automata/find_grid_pattern_placements.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

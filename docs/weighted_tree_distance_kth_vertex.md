@@ -1,6 +1,6 @@
 ---
 title: Weighted Tree Distance and K-th Vertex (重み付き木の距離・K番目頂点) [QTREE2]
-documentation_of: ../src/algorithm/tree/weighted_tree_distance_kth_vertex.hpp
+documentation_of: ../src/algorithm/tree/query/weighted_tree_distance_kth_vertex.hpp
 ---
 
 辺に重みを持つ静的な木に対し、パスの重み和とパス上の頂点を求める。

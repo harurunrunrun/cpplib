@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/palindromic_tree_representation.hpp"
+#include "../../src/algorithm/string/palindrome/palindromic_tree_representation.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

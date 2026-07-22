@@ -1,6 +1,6 @@
 ---
 title: Count Fixed-Length Palindromic Substrings (固定長回文部分文字列の個数) [PLD]
-documentation_of: ../src/algorithm/string/count_palindromic_substrings_of_length.hpp
+documentation_of: ../src/algorithm/string/palindrome/count_palindromic_substrings_of_length.hpp
 ---
 
 指定した長さの回文部分文字列を、開始位置ごとに数える。

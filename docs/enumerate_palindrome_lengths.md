@@ -1,6 +1,6 @@
 ---
 title: Enumerate Palindrome Lengths (回文長列挙) [enumerate_palindromes]
-documentation_of: ../src/algorithm/string/enumerate_palindrome_lengths.hpp
+documentation_of: ../src/algorithm/string/palindrome/enumerate_palindrome_lengths.hpp
 ---
 
 文字位置と文字間の各中心について、その中心を持つ最長回文部分文字列の長さを返す。

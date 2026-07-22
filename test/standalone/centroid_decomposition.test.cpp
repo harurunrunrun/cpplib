@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/tree/centroid_decomposition.hpp"
+#include "../../src/algorithm/tree/decomposition/centroid_decomposition.hpp"
 
 void add_edge(std::vector<std::vector<int>>& graph, int u, int v){
     graph[u].push_back(v);

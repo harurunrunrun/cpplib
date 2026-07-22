@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../algorithm/tree/tree_path_order_statistics.hpp"
+#include "../../algorithm/tree/query/tree_path_order_statistics.hpp"
 
 template<class Value, int MAX_SIZE>
 class StaticRangeKthSmallest{

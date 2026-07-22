@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/aho_corasick_representation.hpp"
+#include "../../src/algorithm/string/automata/aho_corasick_representation.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -1,6 +1,6 @@
 ---
 title: DSU on Tree (Sack) (木上のDSU)
-documentation_of: ../src/algorithm/tree/dsu_on_tree.hpp
+documentation_of: ../src/algorithm/tree/decomposition/dsu_on_tree.hpp
 ---
 
 各頂点について部分木全体の情報を求める。最大部分木の子をheavy childとして保持し、light childの部分木だけをEuler順に追加し直す。

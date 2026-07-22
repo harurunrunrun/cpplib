@@ -6,7 +6,7 @@
 #include <string_view>
 #include <vector>
 
-#include "../../src/algorithm/string/count_encoded_dictionary_segmentations.hpp"
+#include "../../src/algorithm/string/sequence/count_encoded_dictionary_segmentations.hpp"
 
 namespace{
 

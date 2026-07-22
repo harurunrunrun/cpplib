@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/tree/rooted_tree_isomorphism_classification.hpp"
+#include "../../src/algorithm/tree/isomorphism/rooted_tree_isomorphism_classification.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

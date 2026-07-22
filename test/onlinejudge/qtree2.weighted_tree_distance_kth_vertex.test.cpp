@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/tree/weighted_tree_distance_kth_vertex.hpp"
+#include "../../src/algorithm/tree/query/weighted_tree_distance_kth_vertex.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

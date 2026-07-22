@@ -1,6 +1,6 @@
 ---
 title: Distinct Substrings by First Byte (先頭バイト別相異なる部分文字列数) [ADASTRNG]
-documentation_of: ../src/algorithm/string/distinct_substrings_by_first_byte.hpp
+documentation_of: ../src/algorithm/string/suffix/distinct_substrings_by_first_byte.hpp
 ---
 
 先頭バイトごとに、空でない相異なる部分文字列数を集計する。

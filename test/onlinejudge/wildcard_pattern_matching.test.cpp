@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/wildcard_pattern_matching.hpp"
+#include "../../src/algorithm/string/automata/wildcard_pattern_matching.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/euler_tour.hpp"
+#include "../../src/algorithm/tree/decomposition/euler_tour.hpp"
 
 void self_test(){
     TreeEulerTour<8> tour(6);

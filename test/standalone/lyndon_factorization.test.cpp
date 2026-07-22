@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/lyndon_factorization.hpp"
+#include "../../src/algorithm/string/sequence/lyndon_factorization.hpp"
 
 void self_test(){
     const std::vector<int> values = {1, 2, 1, 2, 0};

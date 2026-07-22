@@ -1,6 +1,6 @@
 ---
 title: Suffix Automaton (接尾辞オートマトン)
-documentation_of: ../src/algorithm/string/suffix_automaton.hpp
+documentation_of: ../src/algorithm/string/suffix/suffix_automaton.hpp
 ---
 
 Suffix Automaton。

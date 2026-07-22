@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/tree/offline_tree_path_distinct.hpp"
+#include "../../src/algorithm/tree/query/offline_tree_path_distinct.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

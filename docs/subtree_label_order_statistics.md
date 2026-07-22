@@ -1,6 +1,6 @@
 ---
 title: Subtree Label Order Statistics (部分木ラベル順序統計) [PT07J]
-documentation_of: ../src/algorithm/tree/subtree_label_order_statistics.hpp
+documentation_of: ../src/algorithm/tree/query/subtree_label_order_statistics.hpp
 ---
 
 静的な根付き木の各部分木について、ラベルと頂点番号の辞書順で頂点を選ぶ。

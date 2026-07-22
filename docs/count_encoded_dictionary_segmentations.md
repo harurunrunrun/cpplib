@@ -1,6 +1,6 @@
 ---
 title: Encoded Dictionary Segmentation Count (符号化辞書分割数) [MORSE]
-documentation_of: ../src/algorithm/string/count_encoded_dictionary_segmentations.hpp
+documentation_of: ../src/algorithm/string/sequence/count_encoded_dictionary_segmentations.hpp
 ---
 
 符号化済みの文字列を、符号化済み辞書要素の列へ分割する方法数を数えます。

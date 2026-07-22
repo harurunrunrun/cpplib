@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/shortest_palindrome_by_appending.hpp"
+#include "../../src/algorithm/string/palindrome/shortest_palindrome_by_appending.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/enumerate_palindrome_lengths.hpp"
+#include "../../src/algorithm/string/palindrome/enumerate_palindrome_lengths.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

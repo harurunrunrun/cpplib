@@ -1,6 +1,6 @@
 ---
 title: Cartesian Tree (カーテシアン木)
-documentation_of: ../src/algorithm/tree/cartesian_tree.hpp
+documentation_of: ../src/algorithm/tree/construction/cartesian_tree.hpp
 ---
 
 ## Cartesian Tree

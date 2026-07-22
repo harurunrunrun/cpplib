@@ -1,6 +1,6 @@
 ---
 title: Count Distinct Substrings (相異なる部分文字列数) [DISUBSTR] [number_of_substrings]
-documentation_of: ../src/algorithm/string/count_distinct_substrings.hpp
+documentation_of: ../src/algorithm/string/suffix/count_distinct_substrings.hpp
 ---
 
 空でない相異なる連続部分列の個数を返す。

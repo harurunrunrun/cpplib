@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/binary_tree_traversal_reconstruction.hpp"
+#include "../../src/algorithm/tree/construction/binary_tree_traversal_reconstruction.hpp"
 
 namespace{
 

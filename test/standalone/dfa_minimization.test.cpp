@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/string/dfa_minimization.hpp"
+#include "../../src/algorithm/string/automata/dfa_minimization.hpp"
 
 #include <algorithm>
 #include <cassert>

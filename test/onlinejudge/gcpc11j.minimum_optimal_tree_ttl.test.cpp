@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/unweighted_tree_radius.hpp"
+#include "../../src/algorithm/tree/dynamic_programming/unweighted_tree_radius.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

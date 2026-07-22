@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/shortest_uncommon_subsequence.hpp"
+#include "../../src/algorithm/string/sequence/shortest_uncommon_subsequence.hpp"
 
 int main(){
     assert(shortest_uncommon_subsequence_length(

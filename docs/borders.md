@@ -1,6 +1,6 @@
 ---
 title: Borders (境界) [SUFEQPRE]
-documentation_of: ../src/algorithm/string/borders.hpp
+documentation_of: ../src/algorithm/string/automata/borders.hpp
 ---
 
 列の非空な真のprefixであり、同時にsuffixでもある部分列（border）の長さを列挙する。

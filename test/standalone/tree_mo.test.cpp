@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/tree_mo.hpp"
+#include "../../src/algorithm/tree/decomposition/tree_mo.hpp"
 
 namespace{
 

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/tree/subtree_label_order_statistics.hpp"
+#include "../../src/algorithm/tree/query/subtree_label_order_statistics.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

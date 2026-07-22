@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/prefix_function.hpp"
+#include "../../src/algorithm/string/automata/prefix_function.hpp"
 
 void test_basic(){
     assert((prefix_function(std::string("ababa")) == std::vector<int>{0, 0, 1, 2, 3}));

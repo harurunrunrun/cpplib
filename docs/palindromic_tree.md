@@ -1,6 +1,6 @@
 ---
 title: Palindromic Tree (回文木)
-documentation_of: ../src/algorithm/string/palindromic_tree.hpp
+documentation_of: ../src/algorithm/string/palindrome/palindromic_tree.hpp
 ---
 
 Palindromic Tree。

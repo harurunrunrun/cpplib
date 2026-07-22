@@ -1,6 +1,6 @@
 ---
 title: Longest Common Suffix Dictionary (最長共通接尾辞辞書) [PRHYME]
-documentation_of: ../src/algorithm/string/longest_common_suffix_dictionary.hpp
+documentation_of: ../src/algorithm/string/suffix/longest_common_suffix_dictionary.hpp
 ---
 
 登録文字列から、クエリと最長の共通接尾辞を持つ別の文字列を検索します。

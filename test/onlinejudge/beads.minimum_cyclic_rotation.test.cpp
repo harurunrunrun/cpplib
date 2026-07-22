@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/minimum_cyclic_rotation.hpp"
+#include "../../src/algorithm/string/sequence/minimum_cyclic_rotation.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

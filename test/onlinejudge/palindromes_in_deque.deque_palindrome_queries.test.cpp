@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <memory>
-#include "../../src/algorithm/string/deque_palindrome_queries.hpp"
+#include "../../src/algorithm/string/palindrome/deque_palindrome_queries.hpp"
 
 int main(){
     int query_count;

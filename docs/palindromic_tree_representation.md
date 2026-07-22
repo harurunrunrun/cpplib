@@ -1,6 +1,6 @@
 ---
 title: Palindromic Tree Representation (回文木の関係表現) [eertree]
-documentation_of: ../src/algorithm/string/palindromic_tree_representation.hpp
+documentation_of: ../src/algorithm/string/palindrome/palindromic_tree_representation.hpp
 ---
 
 文字列の相異なる非空回文と、各prefixの最長回文suffixを回文木のnode番号で表す。

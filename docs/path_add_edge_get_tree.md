@@ -1,6 +1,6 @@
 ---
 title: Path Add Edge Get Tree (木上パス加算・辺取得) [GRASSPLA]
-documentation_of: ../src/algorithm/tree/path_add_edge_get_tree.hpp
+documentation_of: ../src/algorithm/tree/construction/path_add_edge_get_tree.hpp
 ---
 
 木上のパスに値を加え、指定した1辺の現在値を取得します。

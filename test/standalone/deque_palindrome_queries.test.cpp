@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/string/deque_palindrome_queries.hpp"
+#include "../../src/algorithm/string/palindrome/deque_palindrome_queries.hpp"
 
 void self_test(){
     DequePalindromeQueries<3, 32, 16> queries;

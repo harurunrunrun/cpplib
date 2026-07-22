@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://www.spoj.com/problems/DISQUERY/
 
 #include <iostream>
-#include "../../src/algorithm/tree/tree_path_minmax.hpp"
+#include "../../src/algorithm/tree/query/tree_path_minmax.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

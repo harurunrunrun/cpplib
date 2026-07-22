@@ -1,6 +1,6 @@
 ---
 title: Prefix-Free String Set Test (接頭辞自由文字列集合判定) [PHONELST]
-documentation_of: ../src/algorithm/string/is_prefix_free_string_set.hpp
+documentation_of: ../src/algorithm/string/automata/is_prefix_free_string_set.hpp
 ---
 
 文字列列の異なる2要素について、一方が他方の接頭辞にならないかを判定する。

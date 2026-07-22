@@ -1,6 +1,6 @@
 ---
 title: Binary Tree Traversal Compatibility (二分木巡回順整合判定) [TREEORD]
-documentation_of: ../src/algorithm/tree/binary_tree_traversal_compatibility.hpp
+documentation_of: ../src/algorithm/tree/construction/binary_tree_traversal_compatibility.hpp
 ---
 
 preorder・postorder・inorderが同じ二分木を表せるかを判定する。

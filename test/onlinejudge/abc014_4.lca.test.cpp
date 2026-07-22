@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/tree/lca.hpp"
+#include "../../src/algorithm/tree/query/lca.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

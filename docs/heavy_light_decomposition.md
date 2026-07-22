@@ -1,6 +1,6 @@
 ---
 title: Heavy Light Decomposition (HL分解)
-documentation_of: ../src/algorithm/tree/heavy_light_decomposition.hpp
+documentation_of: ../src/algorithm/tree/decomposition/heavy_light_decomposition.hpp
 ---
 
 木を heavy path に分解し、パス・部分木を Euler Tour 上の区間に移す。

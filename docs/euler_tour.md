@@ -1,6 +1,6 @@
 ---
 title: Tree Euler Tour (木のオイラーツアー)
-documentation_of: ../src/algorithm/tree/euler_tour.hpp
+documentation_of: ../src/algorithm/tree/decomposition/euler_tour.hpp
 ---
 
 fixed-capacityの根付き木Euler Tour。再帰を使わず、構築時に

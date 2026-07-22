@@ -8,10 +8,10 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/longest_common_substring.hpp"
-#include "../../src/algorithm/string/manacher.hpp"
-#include "../../src/algorithm/string/suffix_array.hpp"
-#include "../../src/algorithm/string/z_algorithm.hpp"
+#include "../../src/algorithm/string/suffix/longest_common_substring.hpp"
+#include "../../src/algorithm/string/palindrome/manacher.hpp"
+#include "../../src/algorithm/string/suffix/suffix_array.hpp"
+#include "../../src/algorithm/string/automata/z_algorithm.hpp"
 
 std::string binary_string(int n, int mask){
     std::string s(n, 'a');

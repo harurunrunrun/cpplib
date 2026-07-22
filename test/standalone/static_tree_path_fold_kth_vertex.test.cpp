@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/tree/static_tree_path_fold.hpp"
+#include "../../src/algorithm/tree/query/static_tree_path_fold.hpp"
 #include "../../src/structure/types/monoid.hpp"
 
 constexpr int kth_path_add(int left, int right){

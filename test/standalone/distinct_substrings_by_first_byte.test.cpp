@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/distinct_substrings_by_first_byte.hpp"
+#include "../../src/algorithm/string/suffix/distinct_substrings_by_first_byte.hpp"
 
 int main(){
     assert((distinct_substrings_by_first_byte("") ==

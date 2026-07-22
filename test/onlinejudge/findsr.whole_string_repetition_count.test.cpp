@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/whole_string_repetition_count.hpp"
+#include "../../src/algorithm/string/sequence/whole_string_repetition_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

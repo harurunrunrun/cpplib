@@ -1,6 +1,6 @@
 ---
 title: Fully Persistent Palindromic Tree (完全永続回文木)
-documentation_of: ../src/algorithm/string/fully_persistent_palindromic_tree.hpp
+documentation_of: ../src/algorithm/string/palindrome/fully_persistent_palindromic_tree.hpp
 ---
 
 任意のversionへ文字を追加できる完全永続Palindromic Tree。

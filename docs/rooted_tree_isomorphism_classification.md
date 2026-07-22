@@ -1,6 +1,6 @@
 ---
 title: Rooted Tree Isomorphism Classification (根付き部分木同型分類) [rooted_tree_isomorphism_classification]
-documentation_of: ../src/algorithm/tree/rooted_tree_isomorphism_classification.hpp
+documentation_of: ../src/algorithm/tree/isomorphism/rooted_tree_isomorphism_classification.hpp
 ---
 
 根付き木の全頂点について、その頂点を根とする部分木を同型類へ分類する。

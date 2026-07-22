@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/tree/cartesian_tree.hpp"
+#include "../../src/algorithm/tree/construction/cartesian_tree.hpp"
 
 template<class T, class Compare>
 void validate(

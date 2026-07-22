@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/tree/cartesian_tree_parent_array.hpp"
+#include "../../src/algorithm/tree/construction/cartesian_tree_parent_array.hpp"
 
 int main() {
     std::ios::sync_with_stdio(false);

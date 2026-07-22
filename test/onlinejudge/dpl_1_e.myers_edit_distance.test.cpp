@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/myers_edit_distance.hpp"
+#include "../../src/algorithm/string/sequence/myers_edit_distance.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/heavy_light_decomposition.hpp"
+#include "../../src/algorithm/tree/decomposition/heavy_light_decomposition.hpp"
 
 std::vector<int> collect(const HeavyLightDecomposition& hld, const std::vector<std::pair<int, int>>& ranges){
     std::vector<int> res;

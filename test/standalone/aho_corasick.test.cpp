@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/string/aho_corasick.hpp"
+#include "../../src/algorithm/string/automata/aho_corasick.hpp"
 
 template<class Function>
 void expect_aho_error(Function&& function){

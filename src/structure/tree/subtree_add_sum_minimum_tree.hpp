@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../algorithm/tree/euler_tour.hpp"
+#include "../../algorithm/tree/decomposition/euler_tour.hpp"
 #include "../segtree/lazysegtree.hpp"
 #include "../types/monoid_act.hpp"
 

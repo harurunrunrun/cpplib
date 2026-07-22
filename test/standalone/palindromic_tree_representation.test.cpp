@@ -5,7 +5,7 @@
 #include <string>
 
 #include <vector>
-#include "../../src/algorithm/string/palindromic_tree_representation.hpp"
+#include "../../src/algorithm/string/palindrome/palindromic_tree_representation.hpp"
 
 void self_test(){
     const auto empty = palindromic_tree_representation<8>("");

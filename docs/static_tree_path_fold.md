@@ -1,6 +1,6 @@
 ---
 title: Static Tree Path Fold (静的木上パス積)
-documentation_of: ../src/algorithm/tree/static_tree_path_fold.hpp
+documentation_of: ../src/algorithm/tree/query/static_tree_path_fold.hpp
 ---
 
 辺にモノイド要素を持つ静的な木を二分 lifting で前処理し、任意の有向パス上の積を求める。

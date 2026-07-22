@@ -8,7 +8,7 @@
 #include <string_view>
 #include <vector>
 
-#include "../../src/algorithm/string/suffix_automaton.hpp"
+#include "../../src/algorithm/string/suffix/suffix_automaton.hpp"
 
 int main(){
     SuffixAutomaton<3, 4> empty_automaton;

@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/tree/lca_subtree_distinct_colors.hpp"
+#include "../../src/algorithm/tree/query/lca_subtree_distinct_colors.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

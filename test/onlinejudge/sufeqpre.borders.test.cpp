@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/borders.hpp"
+#include "../../src/algorithm/string/automata/borders.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

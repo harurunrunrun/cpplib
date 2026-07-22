@@ -1,6 +1,6 @@
 ---
 title: Offline Tree Path Distinct (木上パス異なる値数) [COT2]
-documentation_of: ../src/algorithm/tree/offline_tree_path_distinct.hpp
+documentation_of: ../src/algorithm/tree/query/offline_tree_path_distinct.hpp
 ---
 
 静的な頂点値付き木について、複数パスの異なる値数をofflineで返す。

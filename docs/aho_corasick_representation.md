@@ -1,6 +1,6 @@
 ---
 title: Aho Corasick Representation (Aho-Corasick表現) [aho_corasick]
-documentation_of: ../src/algorithm/string/aho_corasick_representation.hpp
+documentation_of: ../src/algorithm/string/automata/aho_corasick_representation.hpp
 ---
 
 複数patternからAho-Corasick automatonを構築し、trieの親、failure link、

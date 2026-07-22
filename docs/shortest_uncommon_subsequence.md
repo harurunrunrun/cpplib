@@ -1,6 +1,6 @@
 ---
 title: Shortest Uncommon Subsequence (最短非共通部分列) [MSTRING]
-documentation_of: ../src/algorithm/string/shortest_uncommon_subsequence.hpp
+documentation_of: ../src/algorithm/string/sequence/shortest_uncommon_subsequence.hpp
 ---
 
 列 `source` の部分列であり、列 `forbidden` の部分列ではない非空列の

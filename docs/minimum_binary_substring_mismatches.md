@@ -1,6 +1,6 @@
 ---
 title: Minimum Binary Substring Mismatches (二進文字列の部分文字列最小不一致数) [ABC196_F]
-documentation_of: ../src/algorithm/string/minimum_binary_substring_mismatches.hpp
+documentation_of: ../src/algorithm/string/automata/minimum_binary_substring_mismatches.hpp
 ---
 
 二進文字列の各部分文字列とpatternとの不一致文字数の最小値を返す。

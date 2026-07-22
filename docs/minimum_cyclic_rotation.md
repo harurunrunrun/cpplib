@@ -1,6 +1,6 @@
 ---
 title: Minimum Cyclic Rotation (辞書順最小巡回シフト) [BEADS] [MINMOVE]
-documentation_of: ../src/algorithm/string/minimum_cyclic_rotation.hpp
+documentation_of: ../src/algorithm/string/sequence/minimum_cyclic_rotation.hpp
 ---
 
 列を巡回させて得られる列のうち、辞書順最小になる開始位置をBooth法で求める。

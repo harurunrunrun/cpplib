@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/longest_common_substring_length.hpp"
+#include "../../src/algorithm/string/suffix/longest_common_substring_length.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

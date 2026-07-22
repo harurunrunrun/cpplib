@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/minimum_insertions_to_palindrome.hpp"
+#include "../../src/algorithm/string/palindrome/minimum_insertions_to_palindrome.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

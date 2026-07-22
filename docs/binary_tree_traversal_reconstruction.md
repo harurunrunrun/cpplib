@@ -1,6 +1,6 @@
 ---
 title: Binary Tree Traversal Reconstruction (二分木の巡回順復元)
-documentation_of: ../src/algorithm/tree/binary_tree_traversal_reconstruction.hpp
+documentation_of: ../src/algorithm/tree/construction/binary_tree_traversal_reconstruction.hpp
 ---
 
 相異なるキーの preorder・inorder・postorder が同じ二分木の巡回順か判定し、整合する場合は木を復元する。

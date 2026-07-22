@@ -1,6 +1,6 @@
 ---
 title: Cartesian Tree Parent Array (カーテシアン木親配列) [cartesian_tree]
-documentation_of: ../src/algorithm/tree/cartesian_tree_parent_array.hpp
+documentation_of: ../src/algorithm/tree/construction/cartesian_tree_parent_array.hpp
 ---
 
 Cartesian Treeの各頂点について親頂点番号を返す。

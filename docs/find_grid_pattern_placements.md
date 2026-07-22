@@ -1,6 +1,6 @@
 ---
 title: Grid Pattern Placements (格子パターン配置検索) [WPUZZLES]
-documentation_of: ../src/algorithm/string/find_grid_pattern_placements.hpp
+documentation_of: ../src/algorithm/string/automata/find_grid_pattern_placements.hpp
 ---
 
 長方形格子の直線上に現れる複数の文字列パターンを8方向まとめて検索します。

@@ -1,6 +1,6 @@
 ---
 title: KMP Stream Matcher (KMPストリーム照合器) [NHAY]
-documentation_of: ../src/algorithm/string/kmp_stream_matcher.hpp
+documentation_of: ../src/algorithm/string/automata/kmp_stream_matcher.hpp
 ---
 
 入力列を保存せず、1要素ずつ受け取って固定patternの全出現位置を列挙する。

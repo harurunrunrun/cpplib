@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include "../../src/algorithm/string/longest_common_substring.hpp"
+#include "../../src/algorithm/string/suffix/longest_common_substring.hpp"
 
 int main(){
     std::string first, second;

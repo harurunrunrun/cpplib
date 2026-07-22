@@ -1,6 +1,6 @@
 ---
 title: Persistent Palindromic Tree (永続回文木)
-documentation_of: ../src/algorithm/string/persistent_palindromic_tree.hpp
+documentation_of: ../src/algorithm/string/palindrome/persistent_palindromic_tree.hpp
 ---
 
 prefix version を持つ Palindromic Tree。

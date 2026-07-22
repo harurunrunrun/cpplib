@@ -1,6 +1,6 @@
 ---
 title: Unrooted Tree Isomorphism Test (無根木同型判定) [TREEISO]
-documentation_of: ../src/algorithm/tree/are_unrooted_trees_isomorphic.hpp
+documentation_of: ../src/algorithm/tree/isomorphism/are_unrooted_trees_isomorphic.hpp
 ---
 
 2本の無根無向木が、頂点番号の付け替えによって一致するかを判定する。

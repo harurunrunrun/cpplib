@@ -1,6 +1,6 @@
 ---
 title: Count Distinct Substrings of Fixed Length (固定長の相異なる部分文字列数) [ADACLEAN]
-documentation_of: ../src/algorithm/string/count_distinct_substrings_of_length.hpp
+documentation_of: ../src/algorithm/string/suffix/count_distinct_substrings_of_length.hpp
 ---
 
 指定した長さの相異なる連続部分列数を返す。

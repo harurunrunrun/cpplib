@@ -1,6 +1,6 @@
 ---
 title: Longest Shared Prefix Lengths (各文字列の最長共有接頭辞長) [ABC287_E]
-documentation_of: ../src/algorithm/string/longest_shared_prefix_lengths.hpp
+documentation_of: ../src/algorithm/string/suffix/longest_shared_prefix_lengths.hpp
 ---
 
 各文字列について、別の入力文字列と共有できる接頭辞の最大長を求める。

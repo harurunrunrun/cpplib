@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/string/maximum_consecutive_repetitions.hpp"
+#include "../../src/algorithm/string/sequence/maximum_consecutive_repetitions.hpp"
 
 namespace{
 

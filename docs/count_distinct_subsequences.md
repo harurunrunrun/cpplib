@@ -1,6 +1,6 @@
 ---
 title: Distinct Subsequences Count (相異なる部分列の個数) [DSUBSEQ]
-documentation_of: ../src/algorithm/string/count_distinct_subsequences.hpp
+documentation_of: ../src/algorithm/string/sequence/count_distinct_subsequences.hpp
 ---
 
 空部分列を含む相異なる部分列の個数を法付きで返す。

@@ -6,7 +6,7 @@
 #include <string>
 #include <utility>
 
-#include "../../src/algorithm/string/count_nondecreasing_digit_sum_partitions.hpp"
+#include "../../src/algorithm/string/sequence/count_nondecreasing_digit_sum_partitions.hpp"
 
 namespace{
 

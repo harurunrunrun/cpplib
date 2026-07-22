@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/tree/auxiliary_tree.hpp"
+#include "../../src/algorithm/tree/decomposition/auxiliary_tree.hpp"
 
 void self_test(){
     AuxiliaryTree<8> tree(7);

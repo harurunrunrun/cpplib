@@ -1,6 +1,6 @@
 ---
 title: Longest Common Subsequence (最長共通部分列) [ALDS1_10_C]
-documentation_of: ../src/algorithm/string/longest_common_subsequence.hpp
+documentation_of: ../src/algorithm/string/sequence/longest_common_subsequence.hpp
 ---
 
 2 列の両方から順序を保って取り出せる最長の部分列を求める。

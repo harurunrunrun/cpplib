@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/dsu_on_tree.hpp"
+#include "../../src/algorithm/tree/decomposition/dsu_on_tree.hpp"
 
 namespace{
 

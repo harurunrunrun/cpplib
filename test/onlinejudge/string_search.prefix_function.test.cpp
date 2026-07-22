@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/prefix_function.hpp"
+#include "../../src/algorithm/string/automata/prefix_function.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

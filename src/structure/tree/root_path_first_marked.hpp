@@ -4,7 +4,7 @@
 #include <set>
 #include <stdexcept>
 
-#include "../../algorithm/tree/heavy_light_decomposition.hpp"
+#include "../../algorithm/tree/decomposition/heavy_light_decomposition.hpp"
 
 template<int MAX_SIZE>
 struct RootPathFirstMarked{

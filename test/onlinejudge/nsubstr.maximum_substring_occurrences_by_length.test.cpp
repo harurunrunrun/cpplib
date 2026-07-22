@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/maximum_substring_occurrences_by_length.hpp"
+#include "../../src/algorithm/string/suffix/maximum_substring_occurrences_by_length.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

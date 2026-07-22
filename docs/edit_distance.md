@@ -1,6 +1,6 @@
 ---
 title: Edit Distance (編集距離) [DPL_1_E] [EDIST]
-documentation_of: ../src/algorithm/string/edit_distance.hpp
+documentation_of: ../src/algorithm/string/sequence/edit_distance.hpp
 ---
 
 最小編集距離。

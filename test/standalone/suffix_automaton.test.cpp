@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/string/suffix_automaton.hpp"
+#include "../../src/algorithm/string/suffix/suffix_automaton.hpp"
 
 #include <cassert>
 #include <iostream>

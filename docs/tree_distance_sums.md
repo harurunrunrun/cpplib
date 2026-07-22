@@ -1,6 +1,6 @@
 ---
 title: Tree Distance Sums (木の全頂点距離和) [ABC220_F]
-documentation_of: ../src/algorithm/tree/tree_distance_sums.hpp
+documentation_of: ../src/algorithm/tree/dynamic_programming/tree_distance_sums.hpp
 ---
 
 無向木の各頂点について、全頂点への距離の総和を返す。

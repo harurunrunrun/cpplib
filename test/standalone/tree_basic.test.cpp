@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/tree_centroid.hpp"
-#include "../../src/algorithm/tree/tree_diameter.hpp"
+#include "../../src/algorithm/tree/decomposition/tree_centroid.hpp"
+#include "../../src/algorithm/tree/dynamic_programming/tree_diameter.hpp"
 
 void add_edge(std::vector<std::vector<int>>& graph, int u, int v){
     graph[u].push_back(v);

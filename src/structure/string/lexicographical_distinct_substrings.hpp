@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../algorithm/string/suffix_array.hpp"
+#include "../../algorithm/string/suffix/suffix_array.hpp"
 
 class LexicographicalDistinctSubstrings{
     std::string text_;

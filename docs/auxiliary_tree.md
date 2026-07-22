@@ -1,6 +1,6 @@
 ---
 title: Auxiliary Tree (補助木)
-documentation_of: ../src/algorithm/tree/auxiliary_tree.hpp
+documentation_of: ../src/algorithm/tree/decomposition/auxiliary_tree.hpp
 ---
 
 指定した頂点と、それらのLCAだけを残して木を圧縮する。

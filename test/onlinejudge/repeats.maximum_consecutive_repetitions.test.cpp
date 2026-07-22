@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/maximum_consecutive_repetitions.hpp"
+#include "../../src/algorithm/string/sequence/maximum_consecutive_repetitions.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

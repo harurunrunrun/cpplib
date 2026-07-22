@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/longest_common_subsequence.hpp"
+#include "../../src/algorithm/string/sequence/longest_common_subsequence.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

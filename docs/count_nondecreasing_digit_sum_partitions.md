@@ -1,6 +1,6 @@
 ---
 title: Nondecreasing Digit-Sum Partitions (桁和非減少分割の個数) [ANARC05H]
-documentation_of: ../src/algorithm/string/count_nondecreasing_digit_sum_partitions.hpp
+documentation_of: ../src/algorithm/string/sequence/count_nondecreasing_digit_sum_partitions.hpp
 ---
 
 数字列を各部分の桁和が非減少になるよう分割する方法数を返す。

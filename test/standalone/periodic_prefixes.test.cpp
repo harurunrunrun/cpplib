@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/string/periodic_prefixes.hpp"
+#include "../../src/algorithm/string/automata/periodic_prefixes.hpp"
 
 int main(){
     assert(periodic_prefixes(std::string()).empty());

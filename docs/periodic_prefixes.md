@@ -1,6 +1,6 @@
 ---
 title: Periodic Prefixes (周期的接頭辞) [PERIOD]
-documentation_of: ../src/algorithm/string/periodic_prefixes.hpp
+documentation_of: ../src/algorithm/string/automata/periodic_prefixes.hpp
 ---
 
 列の各接頭辞について、同じブロックを2回以上連結して表せるものを列挙する。

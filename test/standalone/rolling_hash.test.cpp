@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <string>
-#include "../../src/algorithm/string/rolling_hash.hpp"
+#include "../../src/algorithm/string/automata/rolling_hash.hpp"
 
 std::string random_string(std::mt19937& rng, int n){
     std::string s;

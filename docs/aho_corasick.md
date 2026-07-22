@@ -1,6 +1,6 @@
 ---
 title: Aho Corasick (Aho-Corasick法)
-documentation_of: ../src/algorithm/string/aho_corasick.hpp
+documentation_of: ../src/algorithm/string/automata/aho_corasick.hpp
 ---
 
 複数パターンマッチング。

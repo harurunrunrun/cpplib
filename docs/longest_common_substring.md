@@ -1,6 +1,6 @@
 ---
 title: Longest Common Substring (最長共通部分文字列) [longest_common_substring]
-documentation_of: ../src/algorithm/string/longest_common_substring.hpp
+documentation_of: ../src/algorithm/string/suffix/longest_common_substring.hpp
 ---
 
 2 つの文字列の最長共通部分文字列を求める。

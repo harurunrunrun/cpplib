@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/lyndon_factorization.hpp"
+#include "../../src/algorithm/string/sequence/lyndon_factorization.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

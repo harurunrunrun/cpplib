@@ -1,6 +1,6 @@
 ---
 title: Shortest Palindrome by Appending (末尾追加による最短回文) [EPALIN]
-documentation_of: ../src/algorithm/string/shortest_palindrome_by_appending.hpp
+documentation_of: ../src/algorithm/string/palindrome/shortest_palindrome_by_appending.hpp
 ---
 
 文字列の末尾だけに文字を追加して得られる最短の回文を返す。

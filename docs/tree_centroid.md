@@ -1,6 +1,6 @@
 ---
 title: Tree Centroid (木の重心)
-documentation_of: ../src/algorithm/tree/tree_centroid.hpp
+documentation_of: ../src/algorithm/tree/decomposition/tree_centroid.hpp
 ---
 
 木の重心。

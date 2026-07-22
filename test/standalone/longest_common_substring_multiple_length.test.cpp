@@ -6,7 +6,7 @@
 #include <vector>
 #include <utility>
 
-#include "../../src/algorithm/string/longest_common_substring_multiple_length.hpp"
+#include "../../src/algorithm/string/suffix/longest_common_substring_multiple_length.hpp"
 
 void self_test(){
     assert(longest_common_substring_multiple_length<16>(

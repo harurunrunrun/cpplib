@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/longest_shared_prefix_lengths.hpp"
+#include "../../src/algorithm/string/suffix/longest_shared_prefix_lengths.hpp"
 
 void self_test(){
     assert(longest_shared_prefix_lengths({}).empty());

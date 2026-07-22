@@ -1,6 +1,6 @@
 ---
 title: Tree Path K-th Value (木上パスK番目値) [COT]
-documentation_of: ../src/algorithm/tree/tree_path_kth_value.hpp
+documentation_of: ../src/algorithm/tree/query/tree_path_kth_value.hpp
 ---
 
 静的な頂点値付き木のパス上でk番目に小さい値を返す。

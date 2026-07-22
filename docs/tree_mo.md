@@ -1,6 +1,6 @@
 ---
 title: Tree Mo (木上のMo)
-documentation_of: ../src/algorithm/tree/tree_mo.hpp
+documentation_of: ../src/algorithm/tree/decomposition/tree_mo.hpp
 ---
 
 静的な無向木の頂点path queryを、Euler tour上のMoのアルゴリズムへ変換してoffline処理する。

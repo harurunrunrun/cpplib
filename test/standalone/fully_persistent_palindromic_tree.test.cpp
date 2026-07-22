@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/fully_persistent_palindromic_tree.hpp"
+#include "../../src/algorithm/string/palindrome/fully_persistent_palindromic_tree.hpp"
 
 int main(){
     int q;

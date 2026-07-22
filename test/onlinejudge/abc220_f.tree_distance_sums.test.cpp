@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/tree/tree_distance_sums.hpp"
+#include "../../src/algorithm/tree/dynamic_programming/tree_distance_sums.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

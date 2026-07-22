@@ -1,6 +1,6 @@
 ---
 title: Lowest Common Ancestor (最小共通祖先) [ABC014_4] [GRL_5_C] [lca]
-documentation_of: ../src/algorithm/tree/lca.hpp
+documentation_of: ../src/algorithm/tree/query/lca.hpp
 ---
 
 根付き木上の最小共通祖先、頂点間距離、祖先方向への移動を扱う。

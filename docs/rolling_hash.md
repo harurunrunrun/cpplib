@@ -1,6 +1,6 @@
 ---
 title: Rolling Hash (ローリングハッシュ)
-documentation_of: ../src/algorithm/string/rolling_hash.hpp
+documentation_of: ../src/algorithm/string/automata/rolling_hash.hpp
 ---
 
 mod $2^{61}-1$ の Rolling Hash。

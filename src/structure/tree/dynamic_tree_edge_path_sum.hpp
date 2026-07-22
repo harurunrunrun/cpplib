@@ -6,7 +6,7 @@
 #include <tuple>
 #include <vector>
 
-#include "../../algorithm/tree/heavy_light_decomposition.hpp"
+#include "../../algorithm/tree/decomposition/heavy_light_decomposition.hpp"
 
 template<class T>
 class DynamicTreeEdgePathSum{

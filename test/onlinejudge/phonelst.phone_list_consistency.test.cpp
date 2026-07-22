@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/string/is_prefix_free_string_set.hpp"
+#include "../../src/algorithm/string/automata/is_prefix_free_string_set.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/string/count_palindromic_substrings_of_length.hpp"
+#include "../../src/algorithm/string/palindrome/count_palindromic_substrings_of_length.hpp"
 
 int main(){
     assert(count_palindromic_substrings_of_length("", 1) == 0);

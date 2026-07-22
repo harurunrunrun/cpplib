@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/tree/tree_isomorphism.hpp"
+#include "../../src/algorithm/tree/isomorphism/tree_isomorphism.hpp"
 
 void add_edge(std::vector<std::vector<int>>& graph, int u, int v){
     graph[u].push_back(v);

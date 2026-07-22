@@ -1,6 +1,6 @@
 ---
 title: Whole String Repetition Count (文字列全体の反復回数) [FINDSR]
-documentation_of: ../src/algorithm/string/whole_string_repetition_count.hpp
+documentation_of: ../src/algorithm/string/sequence/whole_string_repetition_count.hpp
 ---
 
 列全体を同じ非空ブロックの反復として表すときの最大反復回数を返す。

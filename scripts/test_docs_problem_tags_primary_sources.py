@@ -17,7 +17,7 @@ class DocsProblemTagsPrimarySourcesTest(unittest.TestCase):
             wrapper.parent.mkdir(parents=True)
             source = (
                 '#include "../../src/structure/fenwick_tree.hpp"\n'
-                '#include "../../src/algorithm/tree/heavy_light_decomposition.hpp"\n'
+                '#include "../../src/algorithm/tree/decomposition/heavy_light_decomposition.hpp"\n'
             )
             self.assertEqual(
                 [path.stem for path in primary_sources(wrapper, source)],

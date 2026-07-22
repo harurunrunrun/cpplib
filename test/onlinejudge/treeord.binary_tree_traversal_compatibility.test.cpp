@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/tree/binary_tree_traversal_compatibility.hpp"
+#include "../../src/algorithm/tree/construction/binary_tree_traversal_compatibility.hpp"
 
 int main(){
     int n;

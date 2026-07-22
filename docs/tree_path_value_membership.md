@@ -1,6 +1,6 @@
 ---
 title: Tree Path Value Membership (木上パス値存在判定) [GOT]
-documentation_of: ../src/algorithm/tree/tree_path_value_membership.hpp
+documentation_of: ../src/algorithm/tree/query/tree_path_value_membership.hpp
 ---
 
 静的な頂点値付き木で、パス上に指定値が存在するかを返す。

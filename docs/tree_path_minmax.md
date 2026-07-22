@@ -1,6 +1,6 @@
 ---
 title: Tree Path Minimum Maximum (木上パス最小最大) [DISQUERY]
-documentation_of: ../src/algorithm/tree/tree_path_minmax.hpp
+documentation_of: ../src/algorithm/tree/query/tree_path_minmax.hpp
 ---
 
 重み付き静的木のパス上で辺重みの最小値と最大値を同時に返す。

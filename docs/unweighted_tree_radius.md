@@ -1,6 +1,6 @@
 ---
 title: Unweighted Tree Radius (重みなし木の半径) [GCPC11J]
-documentation_of: ../src/algorithm/tree/unweighted_tree_radius.hpp
+documentation_of: ../src/algorithm/tree/dynamic_programming/unweighted_tree_radius.hpp
 ---
 
 重みなし無向木について、各頂点から最遠頂点までの距離の最小値である木の半径を返す。
