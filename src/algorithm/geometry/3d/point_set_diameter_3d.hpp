@@ -104,7 +104,10 @@ inline ScaledDistance scaled_distance(
     return {fraction, scale + norm_exponent};
 }
 
-inline long double distance(const Point3& left, const Point3& right){
+inline long double scaled_euclidean_distance(
+    const Point3& left,
+    const Point3& right
+){
     const ScaledDistance value = scaled_distance(left, right);
     return std::scalbn(value.fraction, value.exponent);
 }
@@ -117,7 +120,8 @@ inline void improve(
 ){
     if(second < first) std::swap(first, second);
     if(first == second) return;
-    const long double current_distance = distance(points[first], points[second]);
+    const long double current_distance =
+        scaled_euclidean_distance(points[first], points[second]);
     if(current_distance > result.distance ||
        (current_distance == result.distance &&
         std::pair{first, second} < std::pair{result.first, result.second})){
@@ -224,7 +228,7 @@ class AabbBranchAndBound{
                 right_corner[axis] = coordinate(rhs.maximum, axis);
             }
         }
-        long double bound = distance(
+        long double bound = scaled_euclidean_distance(
             {left_corner[0], left_corner[1], left_corner[2]},
             {right_corner[0], right_corner[1], right_corner[2]}
         );
@@ -311,7 +315,7 @@ class AabbBranchAndBound{
 public:
     explicit AabbBranchAndBound(const std::vector<Point3>& points_):
         points(points_), order(points.size()), result{
-            0, 1, distance(points[0], points[1])
+            0, 1, scaled_euclidean_distance(points[0], points[1])
         }
     {
         std::iota(order.begin(), order.end(), std::size_t{0});
@@ -350,7 +354,9 @@ inline std::optional<PointSetDiameter3DResult> point_set_diameter_3d(
     PointSetDiameter3DResult result{
         0,
         1,
-        point_set_diameter_3d_detail::distance(points[0], points[1]),
+        point_set_diameter_3d_detail::scaled_euclidean_distance(
+            points[0], points[1]
+        ),
     };
     for(std::size_t first = 0; first < points.size(); ++first){
         for(std::size_t second = first + 1; second < points.size(); ++second){

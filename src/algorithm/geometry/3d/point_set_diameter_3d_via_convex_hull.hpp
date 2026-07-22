@@ -29,7 +29,9 @@ inline std::optional<PointSetDiameter3DResult> recover_original_indices(
     if(hull.vertices.size() == 1){
         return PointSetDiameter3DResult{
             0, 1,
-            point_set_diameter_3d_detail::distance(points[0], points[1]),
+            point_set_diameter_3d_detail::scaled_euclidean_distance(
+                points[0], points[1]
+            ),
         };
     }
 

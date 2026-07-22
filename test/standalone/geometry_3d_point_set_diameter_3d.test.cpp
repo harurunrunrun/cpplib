@@ -20,7 +20,7 @@ PointSetDiameter3DResult brute(const std::vector<Point3>& points){
     for(std::size_t first = 0; first < points.size(); ++first){
         for(std::size_t second = first + 1; second < points.size(); ++second){
             const long double distance =
-                point_set_diameter_3d_detail::distance(
+                point_set_diameter_3d_detail::scaled_euclidean_distance(
                     points[first], points[second]
                 );
             if(distance > result.distance ||
