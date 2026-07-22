@@ -11,6 +11,7 @@
 #include <type_traits>
 
 #include "../engine/xorshift.hpp"
+#include "gf2_linear_state_cracker.hpp"
 
 namespace xorshift_cracker_internal{
 
@@ -104,12 +105,73 @@ static_assert(
     "the XorShift64 LSB observation matrix must have full rank"
 );
 
+using XorShift32LsbCracker = Gf2LinearStateCracker<32>;
+using XorShift128LsbCracker = Gf2LinearStateCracker<128>;
+
+inline const XorShift32LsbCracker& xorshift32_lsb_cracker(){
+    static const XorShift32LsbCracker cracker(
+        [](XorShift32LsbCracker::state_type& packed, std::size_t){
+            std::uint32_t state = static_cast<std::uint32_t>(packed[0]);
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            packed[0] = state;
+            return (state & std::uint32_t{1}) != 0;
+        }
+    );
+    return cracker;
 }
 
+inline const XorShift128LsbCracker& xorshift128_lsb_cracker(){
+    static const XorShift128LsbCracker cracker(
+        [](XorShift128LsbCracker::state_type& packed, std::size_t){
+            const std::uint32_t first =
+                static_cast<std::uint32_t>(packed[0]);
+            const std::uint32_t second =
+                static_cast<std::uint32_t>(packed[0] >> 32);
+            const std::uint32_t third =
+                static_cast<std::uint32_t>(packed[1]);
+            const std::uint32_t fourth =
+                static_cast<std::uint32_t>(packed[1] >> 32);
+            const std::uint32_t temporary = first ^ (first << 11);
+            const std::uint32_t output = fourth ^ (fourth >> 19)
+                ^ temporary ^ (temporary >> 8);
+            packed[0] = static_cast<std::uint64_t>(second)
+                | (static_cast<std::uint64_t>(third) << 32);
+            packed[1] = static_cast<std::uint64_t>(fourth)
+                | (static_cast<std::uint64_t>(output) << 32);
+            return (output & std::uint32_t{1}) != 0;
+        }
+    );
+    return cracker;
+}
+
+}
+
+inline constexpr std::size_t xorshift32_lsb_observation_count = 32;
 inline constexpr std::size_t xorshift64_lsb_observation_count = 64;
+inline constexpr std::size_t xorshift128_lsb_observation_count = 128;
+
+inline std::size_t xorshift32_lsb_observation_rank(){
+    return xorshift_cracker_internal::xorshift32_lsb_cracker().rank();
+}
 
 constexpr std::size_t xorshift64_lsb_observation_rank() noexcept{
     return xorshift_cracker_internal::xorshift64_lsb_linear_system.rank;
+}
+
+inline std::size_t xorshift128_lsb_observation_rank(){
+    return xorshift_cracker_internal::xorshift128_lsb_cracker().rank();
+}
+
+inline std::uint32_t recover_xorshift32_seed_from_lsb(
+    std::span<const std::uint8_t> consecutive_output_lsb
+){
+    return static_cast<std::uint32_t>(
+        xorshift_cracker_internal::xorshift32_lsb_cracker().recover(
+            consecutive_output_lsb
+        )[0]
+    );
 }
 
 constexpr std::uint64_t recover_xorshift64_seed_from_lsb(
@@ -143,6 +205,21 @@ constexpr std::uint64_t recover_xorshift64_seed_from_lsb(
         seed |= static_cast<std::uint64_t>(parity) << seed_bit;
     }
     return seed;
+}
+
+inline XorShift128::state_type recover_xorshift128_state_from_lsb(
+    std::span<const std::uint8_t> consecutive_output_lsb
+){
+    const auto packed =
+        xorshift_cracker_internal::xorshift128_lsb_cracker().recover(
+            consecutive_output_lsb
+        );
+    return {
+        static_cast<std::uint32_t>(packed[0]),
+        static_cast<std::uint32_t>(packed[0] >> 32),
+        static_cast<std::uint32_t>(packed[1]),
+        static_cast<std::uint32_t>(packed[1] >> 32),
+    };
 }
 
 constexpr std::uint32_t recover_xorshift32_seed(
