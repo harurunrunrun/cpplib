@@ -155,6 +155,290 @@ class ExactInteger{
         while(!value.empty() && value.back() == 0) value.pop_back();
     }
 
+    struct SignedMagnitude{
+        std::vector<std::uint32_t> magnitude;
+        bool negative = false;
+    };
+
+    static int compare_magnitude_vectors(
+        const std::vector<std::uint32_t>& left,
+        const std::vector<std::uint32_t>& right
+    ){
+        if(left.size() != right.size()){
+            return left.size() < right.size() ? -1 : 1;
+        }
+        for(std::size_t index = left.size(); index-- > 0;){
+            if(left[index] != right[index]){
+                return left[index] < right[index] ? -1 : 1;
+            }
+        }
+        return 0;
+    }
+
+    static void normalize_signed_magnitude(SignedMagnitude& value){
+        trim_magnitude(value.magnitude);
+        if(value.magnitude.empty()) value.negative = false;
+    }
+
+    static SignedMagnitude signed_magnitude(
+        const std::vector<std::uint32_t>& magnitude
+    ){
+        SignedMagnitude result{magnitude, false};
+        normalize_signed_magnitude(result);
+        return result;
+    }
+
+    static SignedMagnitude negate_signed_magnitude(SignedMagnitude value){
+        if(!value.magnitude.empty()) value.negative = !value.negative;
+        return value;
+    }
+
+    static SignedMagnitude add_signed_magnitudes(
+        const SignedMagnitude& left,
+        const SignedMagnitude& right
+    ){
+        if(left.magnitude.empty()) return right;
+        if(right.magnitude.empty()) return left;
+        SignedMagnitude result;
+        if(left.negative == right.negative){
+            result.magnitude = add_magnitudes(
+                left.magnitude,
+                right.magnitude
+            );
+            result.negative = left.negative;
+        }else{
+            const int order = compare_magnitude_vectors(
+                left.magnitude,
+                right.magnitude
+            );
+            if(order == 0) return {};
+            if(order > 0){
+                result.magnitude = subtract_magnitudes(
+                    left.magnitude,
+                    right.magnitude
+                );
+                result.negative = left.negative;
+            }else{
+                result.magnitude = subtract_magnitudes(
+                    right.magnitude,
+                    left.magnitude
+                );
+                result.negative = right.negative;
+            }
+        }
+        normalize_signed_magnitude(result);
+        return result;
+    }
+
+    static SignedMagnitude subtract_signed_magnitudes(
+        const SignedMagnitude& left,
+        SignedMagnitude right
+    ){
+        return add_signed_magnitudes(
+            left,
+            negate_signed_magnitude(std::move(right))
+        );
+    }
+
+    static SignedMagnitude multiply_signed_magnitude_small(
+        const SignedMagnitude& value,
+        std::uint32_t factor
+    ){
+        if(value.magnitude.empty() || factor == 0) return {};
+        SignedMagnitude result;
+        result.magnitude.resize(value.magnitude.size() + 1, 0);
+        std::uint64_t carry = 0;
+        for(std::size_t index = 0; index < value.magnitude.size(); ++index){
+            const std::uint64_t current =
+                static_cast<std::uint64_t>(value.magnitude[index]) * factor
+                + carry;
+            result.magnitude[index] = static_cast<std::uint32_t>(current);
+            carry = current >> 32;
+        }
+        result.magnitude[value.magnitude.size()] =
+            static_cast<std::uint32_t>(carry);
+        result.negative = value.negative;
+        normalize_signed_magnitude(result);
+        return result;
+    }
+
+    static SignedMagnitude divide_signed_magnitude_exact(
+        SignedMagnitude value,
+        std::uint32_t divisor
+    ){
+        std::uint64_t remainder = 0;
+        for(std::size_t index = value.magnitude.size(); index-- > 0;){
+            const std::uint64_t current =
+                (remainder << 32) | value.magnitude[index];
+            value.magnitude[index] =
+                static_cast<std::uint32_t>(current / divisor);
+            remainder = current % divisor;
+        }
+        if(remainder != 0){
+            throw std::logic_error(
+                "ExactInteger Toom-Cook interpolation was not exact"
+            );
+        }
+        normalize_signed_magnitude(value);
+        return value;
+    }
+
+    static SignedMagnitude multiply_signed_magnitudes(
+        const SignedMagnitude& left,
+        const SignedMagnitude& right
+    ){
+        SignedMagnitude result;
+        result.magnitude = multiply_magnitudes(
+            left.magnitude,
+            right.magnitude
+        );
+        result.negative = !result.magnitude.empty()
+            && left.negative != right.negative;
+        return result;
+    }
+
+    static std::vector<std::uint32_t> toom_cook_3_multiply(
+        const std::vector<std::uint32_t>& left,
+        const std::vector<std::uint32_t>& right
+    ){
+        const std::size_t longer = std::max(left.size(), right.size());
+        const std::size_t split = longer / 3 + (longer % 3 != 0);
+
+        const SignedMagnitude left_0 = signed_magnitude(
+            limb_range(left, 0, split)
+        );
+        const SignedMagnitude left_1 = signed_magnitude(
+            limb_range(left, split, split * 2)
+        );
+        const SignedMagnitude left_2 = signed_magnitude(
+            limb_range(left, split * 2, left.size())
+        );
+        const SignedMagnitude right_0 = signed_magnitude(
+            limb_range(right, 0, split)
+        );
+        const SignedMagnitude right_1 = signed_magnitude(
+            limb_range(right, split, split * 2)
+        );
+        const SignedMagnitude right_2 = signed_magnitude(
+            limb_range(right, split * 2, right.size())
+        );
+
+        const SignedMagnitude left_at_1 = add_signed_magnitudes(
+            add_signed_magnitudes(left_0, left_1),
+            left_2
+        );
+        const SignedMagnitude right_at_1 = add_signed_magnitudes(
+            add_signed_magnitudes(right_0, right_1),
+            right_2
+        );
+        const SignedMagnitude left_at_minus_1 = add_signed_magnitudes(
+            subtract_signed_magnitudes(left_0, left_1),
+            left_2
+        );
+        const SignedMagnitude right_at_minus_1 = add_signed_magnitudes(
+            subtract_signed_magnitudes(right_0, right_1),
+            right_2
+        );
+        const SignedMagnitude left_at_2 = add_signed_magnitudes(
+            add_signed_magnitudes(
+                left_0,
+                multiply_signed_magnitude_small(left_1, 2)
+            ),
+            multiply_signed_magnitude_small(left_2, 4)
+        );
+        const SignedMagnitude right_at_2 = add_signed_magnitudes(
+            add_signed_magnitudes(
+                right_0,
+                multiply_signed_magnitude_small(right_1, 2)
+            ),
+            multiply_signed_magnitude_small(right_2, 4)
+        );
+
+        const SignedMagnitude value_0 = multiply_signed_magnitudes(
+            left_0,
+            right_0
+        );
+        const SignedMagnitude value_1 = multiply_signed_magnitudes(
+            left_at_1,
+            right_at_1
+        );
+        const SignedMagnitude value_minus_1 = multiply_signed_magnitudes(
+            left_at_minus_1,
+            right_at_minus_1
+        );
+        const SignedMagnitude value_2 = multiply_signed_magnitudes(
+            left_at_2,
+            right_at_2
+        );
+        const SignedMagnitude value_infinity = multiply_signed_magnitudes(
+            left_2,
+            right_2
+        );
+
+        // For c0+c1*x+...+c4*x^4, (v1-v(-1))/2 is c1+c3.
+        // The even coefficients follow from (v1+v(-1))/2, and v2 then
+        // separates c1 from c3.  Every division below is exact over the
+        // integers, including when an evaluation value is negative.
+
+        const SignedMagnitude odd_sum = divide_signed_magnitude_exact(
+            subtract_signed_magnitudes(value_1, value_minus_1),
+            2
+        );
+        SignedMagnitude coefficient_2 = subtract_signed_magnitudes(
+            divide_signed_magnitude_exact(
+                add_signed_magnitudes(value_1, value_minus_1),
+                2
+            ),
+            value_0
+        );
+        coefficient_2 = subtract_signed_magnitudes(
+            coefficient_2,
+            value_infinity
+        );
+
+        SignedMagnitude weighted_odd = subtract_signed_magnitudes(
+            value_2,
+            value_0
+        );
+        weighted_odd = subtract_signed_magnitudes(
+            weighted_odd,
+            multiply_signed_magnitude_small(coefficient_2, 4)
+        );
+        weighted_odd = subtract_signed_magnitudes(
+            weighted_odd,
+            multiply_signed_magnitude_small(value_infinity, 16)
+        );
+        weighted_odd = divide_signed_magnitude_exact(
+            std::move(weighted_odd),
+            2
+        );
+        const SignedMagnitude coefficient_3 = divide_signed_magnitude_exact(
+            subtract_signed_magnitudes(weighted_odd, odd_sum),
+            3
+        );
+        const SignedMagnitude coefficient_1 = subtract_signed_magnitudes(
+            odd_sum,
+            coefficient_3
+        );
+
+        if(value_0.negative || coefficient_1.negative
+            || coefficient_2.negative || coefficient_3.negative
+            || value_infinity.negative){
+            throw std::logic_error(
+                "ExactInteger Toom-Cook interpolation became negative"
+            );
+        }
+        std::vector<std::uint32_t> result;
+        result.reserve(left.size() + right.size());
+        add_shifted_magnitude(result, value_0.magnitude, 0);
+        add_shifted_magnitude(result, coefficient_1.magnitude, split);
+        add_shifted_magnitude(result, coefficient_2.magnitude, split * 2);
+        add_shifted_magnitude(result, coefficient_3.magnitude, split * 3);
+        add_shifted_magnitude(result, value_infinity.magnitude, split * 4);
+        trim_magnitude(result);
+        return result;
+    }
+
     static std::vector<std::uint32_t> schoolbook_multiply(
         const std::vector<std::uint32_t>& left,
         const std::vector<std::uint32_t>& right
@@ -240,12 +524,25 @@ class ExactInteger{
     ){
         if(left.empty() || right.empty()) return {};
         constexpr std::size_t karatsuba_threshold = 32;
-        if(std::min(left.size(), right.size()) <= karatsuba_threshold){
+        constexpr std::size_t toom_cook_3_threshold = 192;
+        const std::size_t shorter = std::min(left.size(), right.size());
+        const std::size_t longer = std::max(left.size(), right.size());
+        const std::size_t toom_split =
+            longer / 3 + (longer % 3 != 0);
+        if(shorter <= karatsuba_threshold){
             return schoolbook_multiply(left, right);
         }
 
-        const std::size_t split =
-            std::max(left.size(), right.size()) / 2;
+        // Three non-trivial chunks on both sides keep all five Toom-Cook
+        // products useful.  More uneven inputs stay on the Karatsuba path.
+        // At 192 limbs, the five smaller products amortize evaluation,
+        // interpolation, and allocation without penalizing small values.
+        if(shorter >= toom_cook_3_threshold
+            && shorter > toom_split * 2){
+            return toom_cook_3_multiply(left, right);
+        }
+
+        const std::size_t split = longer / 2;
         const auto left_low = limb_range(left, 0, split);
         const auto left_high = limb_range(left, split, left.size());
         const auto right_low = limb_range(right, 0, split);
@@ -264,6 +561,7 @@ class ExactInteger{
         trim_magnitude(middle);
 
         std::vector<std::uint32_t> result;
+        result.reserve(left.size() + right.size());
         add_shifted_magnitude(result, low, 0);
         add_shifted_magnitude(result, middle, split);
         add_shifted_magnitude(result, high, split * 2);

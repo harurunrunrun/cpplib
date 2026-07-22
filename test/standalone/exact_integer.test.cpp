@@ -1,5 +1,6 @@
 // competitive-verifier: STANDALONE
 
+#include <array>
 #include <cassert>
 #include <compare>
 #include <cstddef>
@@ -42,6 +43,28 @@ ExactInteger parse_hex(const std::string& token){
         result += value;
     }
     return negative ? -result : result;
+}
+
+void print_product_fingerprint(const ExactInteger& product){
+    constexpr std::array<std::uint64_t, 3> divisors{
+        1'000'000'007,
+        4'294'967'291,
+        (std::numeric_limits<std::uint64_t>::max)()
+    };
+    std::cout << product.bit_length() << ' '
+              << static_cast<int>(product.is_negative());
+    for(const std::uint64_t divisor: divisors){
+        const auto [quotient, remainder] = product.divmod(divisor);
+        const ExactInteger reconstructed =
+            abs(quotient) * ExactInteger(divisor) + remainder;
+        if(reconstructed != abs(product)){
+            throw std::runtime_error(
+                "ExactInteger divmod roundtrip failed"
+            );
+        }
+        std::cout << ' ' << remainder;
+    }
+    std::cout << '\n';
 }
 
 template<class Integer>
@@ -211,6 +234,36 @@ int main(){
             std::cin >> token >> divisor;
             const auto [quotient, remainder] = parse_hex(token).divmod(divisor);
             std::cout << quotient << ' ' << remainder << '\n';
+        }else if(operation == "MUL_CHECK"){
+            std::string left_token, right_token;
+            std::cin >> left_token >> right_token;
+            print_product_fingerprint(
+                parse_hex(left_token) * parse_hex(right_token)
+            );
+        }else if(operation == "DENSE_SQUARE"){
+            std::size_t bits;
+            std::cin >> bits;
+            if(bits > (std::numeric_limits<std::size_t>::max)() / 2){
+                return 2;
+            }
+            const ExactInteger value = (ExactInteger(1) << bits) - 1;
+            const ExactInteger expected =
+                (ExactInteger(1) << (bits * 2))
+                - (ExactInteger(1) << (bits + 1)) + 1;
+            const ExactInteger product = value * value;
+            if(product != expected){
+                throw std::runtime_error(
+                    "ExactInteger dense-square identity failed"
+                );
+            }
+            ExactInteger aliased = value;
+            aliased *= aliased;
+            if(aliased != expected || (-value) * value != -expected){
+                throw std::runtime_error(
+                    "ExactInteger signed or aliased square failed"
+                );
+            }
+            print_product_fingerprint(product);
         }else if(operation == "CONVERT"){
             std::string type, token;
             std::cin >> type >> token;

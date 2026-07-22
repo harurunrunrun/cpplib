@@ -21,6 +21,14 @@ def truncating_divmod(value: int, divisor: int) -> tuple[int, int]:
         quotient = -quotient
     return quotient, abs(value) % divisor
 
+PRODUCT_DIVISORS = (1_000_000_007, 4_294_967_291, 2**64 - 1)
+
+
+def product_fingerprint(value: int) -> str:
+    fields = [str(abs(value).bit_length()), str(int(value < 0))]
+    fields.extend(str(abs(value) % divisor) for divisor in PRODUCT_DIVISORS)
+    return " ".join(fields)
+
 
 class Case:
     def __init__(self) -> None:
@@ -74,6 +82,19 @@ class Case:
 
     def decimal(self, value: int) -> None:
         self.add(f"DEC {hexadecimal(value)}", value)
+
+    def multiply_check(self, left: int, right: int) -> None:
+        self.add(
+            f"MUL_CHECK {hexadecimal(left)} {hexadecimal(right)}",
+            product_fingerprint(left * right),
+        )
+
+    def dense_square(self, bits: int) -> None:
+        value = (1 << bits) - 1
+        self.add(
+            f"DENSE_SQUARE {bits}",
+            product_fingerprint(value * value),
+        )
 
     def decimal_power(self, bits: int, offset: int, negative: bool) -> None:
         value = (1 << bits) + offset
@@ -176,6 +197,81 @@ def large_case() -> Case:
     return case
 
 
+def integer_from_limbs(limbs: list[int]) -> int:
+    result = 0
+    for limb in reversed(limbs):
+        result = (result << 32) | limb
+    return result
+
+
+def multiplication_regression_case() -> Case:
+    rng = random.Random(2026072201)
+    case = Case()
+    mask = 2**32 - 1
+
+    def alternating(count: int, even: int, odd: int) -> int:
+        limbs = [even if index % 2 == 0 else odd for index in range(count)]
+        limbs[-1] |= 2**31
+        return integer_from_limbs(limbs)
+
+    for limb_count in (191, 192, 193, 257, 384, 769):
+        left = alternating(limb_count, mask, 0xAAAAAAAA)
+        right = alternating(limb_count, 0x55555555, mask)
+        if limb_count % 2 != 0:
+            right = -right
+        case.multiply_check(left, right)
+        if limb_count in (192, 193):
+            case.binary("MUL", left, right)
+
+    # At x=-1 the middle chunk dominates.  This exercises signed
+    # evaluation and exact division by both 2 and 3 during interpolation.
+    limb_count = 193
+    split = (limb_count + 2) // 3
+    cancellation_limbs = (
+        [1] * split
+        + [mask] * split
+        + [1] * (limb_count - split * 2)
+    )
+    cancellation_limbs[-1] |= 2**31
+    cancellation = integer_from_limbs(cancellation_limbs)
+    random_limbs = [rng.getrandbits(32) for _ in range(limb_count)]
+    random_limbs[-1] |= 2**31
+    case.multiply_check(cancellation, integer_from_limbs(random_limbs))
+
+    for iteration in range(16):
+        limb_count = rng.randrange(192, 451)
+        left = rng.getrandbits(limb_count * 32 - rng.randrange(31))
+        right = rng.getrandbits(limb_count * 32 - rng.randrange(31))
+        left |= 1 << ((limb_count - 1) * 32)
+        right |= 1 << ((limb_count - 1) * 32)
+        if iteration % 3 == 0:
+            left = -left
+        if iteration % 4 == 0:
+            right = -right
+        case.multiply_check(left, right)
+
+    for left_count, right_count in ((250, 241), (450, 320), (450, 300)):
+        left = rng.getrandbits(left_count * 32)
+        right = rng.getrandbits(right_count * 32)
+        left |= 1 << ((left_count - 1) * 32)
+        right |= 1 << ((right_count - 1) * 32)
+        case.multiply_check(left, -right)
+
+    # Keep a strongly unbalanced multiplication on the Karatsuba fallback.
+    long_limbs = [rng.getrandbits(32) for _ in range(400)]
+    short_limbs = [rng.getrandbits(32) for _ in range(80)]
+    long_limbs[-1] |= 2**31
+    short_limbs[-1] |= 2**31
+    case.multiply_check(
+        integer_from_limbs(long_limbs),
+        -integer_from_limbs(short_limbs),
+    )
+
+    for bits in (0, 1, 32 * 191, 32 * 192, 32 * 193, 262_144):
+        case.dense_square(bits)
+    return case
+
+
 def conversion_case() -> Case:
     case = Case()
     types = {
@@ -241,6 +337,7 @@ def main() -> None:
         conversion_case(),
         decimal_conversion_case(),
         large_decimal_conversion_case(),
+        multiplication_regression_case(),
     ]
     for case_id, case in enumerate(cases):
         write_case(args.out_dir, case_id, case)
