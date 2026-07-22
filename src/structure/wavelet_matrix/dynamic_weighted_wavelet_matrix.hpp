@@ -15,13 +15,11 @@ template<
     class T,
     class W,
     int MAX_SIZE,
-    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits,
-    int BLOCK_SIZE = 512
+    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 struct DynamicWeightedWaveletMatrix{
     static_assert(std::is_integral_v<T>);
     static_assert(MAX_SIZE >= 0);
-    static_assert(BLOCK_SIZE > 0);
     using U = std::make_unsigned_t<T>;
     static constexpr int digits = std::numeric_limits<U>::digits;
     static_assert(0 < BIT_WIDTH && BIT_WIDTH <= digits);

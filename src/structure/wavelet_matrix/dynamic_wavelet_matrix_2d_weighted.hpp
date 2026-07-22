@@ -17,11 +17,10 @@
 #include "dynamic_weighted_wavelet_matrix.hpp"
 
 template<class X, class Y, class W, int MAX_SIZE,
-         int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits,
-         int BLOCK_SIZE = 512>
+         int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits>
 struct DynamicWaveletMatrix2DWeighted{
     static_assert(std::is_integral_v<X> && std::is_integral_v<Y>);
-    static_assert(MAX_SIZE >= 0 && BLOCK_SIZE > 0);
+    static_assert(MAX_SIZE >= 0);
 
 private:
     static constexpr int STORAGE_SIZE = MAX_SIZE == 0 ? 1 : MAX_SIZE;
@@ -34,7 +33,7 @@ private:
     static constexpr IdMonoid id_monoid{};
     using Sequence = ImplicitTreap<id_monoid, STORAGE_SIZE>;
     using XOrder = TreapSet<std::pair<X, std::uint64_t>, STORAGE_SIZE>;
-    using Matrix = DynamicWeightedWaveletMatrix<Y, W, MAX_SIZE, Y_BIT_WIDTH, BLOCK_SIZE>;
+    using Matrix = DynamicWeightedWaveletMatrix<Y, W, MAX_SIZE, Y_BIT_WIDTH>;
 
     int _n = 0;
     std::uint64_t next_id_ = 1;

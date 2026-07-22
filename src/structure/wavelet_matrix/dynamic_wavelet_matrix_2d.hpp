@@ -10,12 +10,11 @@
 #include "dynamic_wavelet_matrix_2d_weighted.hpp"
 
 template<class X, class Y, int MAX_SIZE,
-         int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits,
-         int BLOCK_SIZE = 512>
+         int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits>
 struct DynamicWaveletMatrix2D{
 private:
     using Base = DynamicWaveletMatrix2DWeighted<
-        X, Y, int, MAX_SIZE, Y_BIT_WIDTH, BLOCK_SIZE
+        X, Y, int, MAX_SIZE, Y_BIT_WIDTH
     >;
     Base base_;
 

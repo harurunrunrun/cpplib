@@ -9,11 +9,10 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_weighted_wavelet_matri
 ## テンプレート引数
 
 ```cpp
-DynamicWeightedWaveletMatrix<T, W, MAX_SIZE, BIT_WIDTH, BLOCK_SIZE>
+DynamicWeightedWaveletMatrix<T, W, MAX_SIZE, BIT_WIDTH>
 ```
 
 `MAX_SIZE` は列長の上限、`BIT_WIDTH` は値を表す bit 数。
-`BLOCK_SIZE` は旧APIとのソース互換用で、現在の動的木の計算量には影響しない。
 
 ## 構築と取得
 

@@ -10,13 +10,12 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix_2d.hpp
 ## テンプレート引数
 
 ```cpp
-DynamicWaveletMatrix2D<X, Y, MAX_SIZE, Y_BIT_WIDTH, BLOCK_SIZE>
+DynamicWaveletMatrix2D<X, Y, MAX_SIZE, Y_BIT_WIDTH>
 ```
 
 - `X`, `Y`: 整数座標型。
 - `MAX_SIZE`: 同時に保持できる点数の上限。
 - `Y_BIT_WIDTH`: y座標を表現するbit数。
-- `BLOCK_SIZE`: 後方互換用で、内部の動的木の計算量には影響しない。
 
 ## 構築と要素参照
 

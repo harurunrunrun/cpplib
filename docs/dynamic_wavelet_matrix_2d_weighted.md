@@ -10,11 +10,10 @@ documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix_2d_weig
 ## テンプレート引数
 
 ```cpp
-DynamicWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH, BLOCK_SIZE>
+DynamicWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH>
 ```
 
 `X` と `Y` は整数座標型、`W` は加減算できる重み型、`MAX_SIZE` は点数上限。
-`BLOCK_SIZE` は後方互換用で、内部の動的木の計算量には影響しない。
 
 ## 構築と要素参照
 

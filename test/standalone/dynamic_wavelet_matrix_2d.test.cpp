@@ -25,8 +25,8 @@ int main(){
                 >> input_y[static_cast<std::size_t>(k)]
                 >> input_weight[static_cast<std::size_t>(k)];
         }
-        DynamicWaveletMatrix2D<int, int, 8192, 32, 24> plain(input_x, input_y);
-        DynamicWaveletMatrix2DWeighted<int, int, long long, 8192, 32, 24> weighted(
+        DynamicWaveletMatrix2D<int, int, 8192, 32> plain(input_x, input_y);
+        DynamicWaveletMatrix2DWeighted<int, int, long long, 8192, 32> weighted(
             input_x, input_y, input_weight
         );
         auto print_optional = [](const std::optional<int>& value){
@@ -112,11 +112,11 @@ int main(){
         weighted_points.emplace_back(xs[k], ys[k], weights[k]);
     }
 
-    DynamicWaveletMatrix2D<int, int, maximum_size, 32, 24> plain(xs, ys);
-    DynamicWaveletMatrix2D<int, int, maximum_size, 32, 24> plain_pairs(points);
-    DynamicWaveletMatrix2DWeighted<int, int, long long, maximum_size, 32, 24> weighted(
+    DynamicWaveletMatrix2D<int, int, maximum_size, 32> plain(xs, ys);
+    DynamicWaveletMatrix2D<int, int, maximum_size, 32> plain_pairs(points);
+    DynamicWaveletMatrix2DWeighted<int, int, long long, maximum_size, 32> weighted(
         xs, ys, weights);
-    DynamicRectangleSum<int, int, long long, maximum_size, 32, 24> rectangle_sum(
+    DynamicRectangleSum<int, int, long long, maximum_size, 32> rectangle_sum(
         weighted_points);
 
     auto verify_access = [&]{

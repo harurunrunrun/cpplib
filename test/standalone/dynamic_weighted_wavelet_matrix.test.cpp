@@ -18,7 +18,7 @@ int main(){
         std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
         for(int& value: input_value) std::cin >> value;
         for(auto& weight_value: input_weight) std::cin >> weight_value;
-        DynamicWeightedWaveletMatrix<int, long long, 512, 32, 24> matrix(
+        DynamicWeightedWaveletMatrix<int, long long, 512, 32> matrix(
             input_value, input_weight
         );
         auto print_optional = [](const std::optional<int>& value){
@@ -102,7 +102,7 @@ int main(){
         weights[i] = static_cast<int>(rng() % 2001) - 1000;
     }
 
-    DynamicWeightedWaveletMatrix<int, long long, 220, 32, 24> matrix(values, weights);
+    DynamicWeightedWaveletMatrix<int, long long, 220, 32> matrix(values, weights);
     for(int i = 0; i < n; i++){
         assert(matrix[i] == values[i]);
         assert(matrix.weight(i) == weights[i]);
@@ -175,7 +175,7 @@ int main(){
 
     std::vector<int> dynamic_values(values.begin(), values.begin() + 37);
     std::vector<long long> dynamic_weights(weights.begin(), weights.begin() + 37);
-    DynamicWeightedWaveletMatrix<int, long long, 320, 32, 8> dynamic_matrix(
+    DynamicWeightedWaveletMatrix<int, long long, 320, 32> dynamic_matrix(
         dynamic_values, dynamic_weights
     );
     for(int step = 0; step < 3500; step++){
@@ -280,7 +280,7 @@ int main(){
             performance_values[static_cast<std::size_t>(i)] =
                 static_cast<unsigned>((i * 11939) & 65535);
         }
-        DynamicWeightedWaveletMatrix<unsigned, int, 50000, 16, 64> performance(
+        DynamicWeightedWaveletMatrix<unsigned, int, 50000, 16> performance(
             performance_values, performance_weights
         );
         long long checksum = 0;
@@ -319,7 +319,7 @@ int main(){
 
     bool thrown = false;
     try{
-        DynamicWeightedWaveletMatrix<unsigned, int, 4, 3, 2> small({0U, 7U}, {1, 2});
+        DynamicWeightedWaveletMatrix<unsigned, int, 4, 3> small({0U, 7U}, {1, 2});
         small.set_value(0, 8U);
     }catch(const std::runtime_error&){
         thrown = true;
