@@ -1,20 +1,23 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_VORONOI_DIAGRAM_3D_HPP
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_VORONOI_DIAGRAM_3D_HPP
 
 #include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstddef>
-#include <map>
+#include <cstdint>
+#include <functional>
 #include <numeric>
-#include <set>
+#include <optional>
 #include <stdexcept>
+#include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
 #include "adaptive_orient3d.hpp"
 #include "cross.hpp"
 #include "delaunay_tetrahedralization_3d.hpp"
-#include "halfspace_intersection_3d.hpp"
 #include "is_finite.hpp"
 #include "on_plane.hpp"
 #include "voronoi_diagram3.hpp"
@@ -24,6 +27,43 @@ namespace voronoi_diagram_3d_detail{
 using ExactDyadic3 = std::array<
     geometry3d_adaptive_detail::ExactDyadic, 3
 >;
+
+template<std::size_t Size>
+struct IndexArrayHash{
+    std::size_t operator()(
+        const std::array<std::size_t, Size>& indices
+    ) const noexcept{
+        std::size_t result = 0x9e3779b97f4a7c15ULL;
+        for(std::size_t index: indices){
+            result ^= std::hash<std::size_t>{}(index)
+                + 0x9e3779b97f4a7c15ULL
+                + (result << 6) + (result >> 2);
+        }
+        return result;
+    }
+};
+
+struct PointHash{
+    std::size_t operator()(const Point3& point) const noexcept{
+        std::size_t result = 0x517cc1b727220a95ULL;
+        for(long double coordinate: {point.x, point.y, point.z}){
+            result ^= std::hash<long double>{}(coordinate)
+                + 0x9e3779b97f4a7c15ULL
+                + (result << 6) + (result >> 2);
+        }
+        return result;
+    }
+};
+
+struct PointExactEqual{
+    bool operator()(
+        const Point3& first,
+        const Point3& second
+    ) const noexcept{
+        return first.x == second.x && first.y == second.y
+            && first.z == second.z;
+    }
+};
 
 inline geometry3d_adaptive_detail::ExactDyadic exact_dot(
     const ExactDyadic3& first,
@@ -131,18 +171,23 @@ inline Point3 tetrahedron_circumcenter(
     return {center[0], center[1], center[2]};
 }
 
-template<class Range>
-inline void sort_unique(Range& values){
-    std::sort(values.begin(), values.end());
-    values.erase(std::unique(values.begin(), values.end()), values.end());
+inline void stable_unique_indices(std::vector<std::size_t>& values){
+    std::unordered_set<std::size_t> seen;
+    seen.reserve(values.size());
+    values.erase(std::remove_if(
+        values.begin(), values.end(), [&](std::size_t value){
+            return !seen.insert(value).second;
+        }
+    ), values.end());
 }
 inline Point3 scaled_difference(const Point3& first, const Point3& second){
     return geometry3d_normalized_difference(first, second).value;
 }
 
 
+template<class IndexMap>
 inline std::size_t find_or_add_finite_vertex(
-    std::map<Point3, std::size_t>& indices,
+    IndexMap& indices,
     std::vector<Point3>& vertices,
     const Point3& center
 ){
@@ -199,7 +244,8 @@ inline std::vector<std::size_t> order_ridge_vertices(
     bool unbounded
 ){
     if(incident.size() <= 1) return incident;
-    std::map<std::size_t, std::vector<std::size_t>> adjacency;
+    std::unordered_map<std::size_t, std::vector<std::size_t>> adjacency;
+    adjacency.reserve(incident.size());
     std::vector<std::size_t> boundary_endpoints;
     for(std::size_t edge_index: edge_indices){
         const VoronoiEdge3& edge = edges[edge_index];
@@ -212,11 +258,11 @@ inline std::vector<std::size_t> order_ridge_vertices(
     }
     for(auto& [vertex, neighbors]: adjacency){
         static_cast<void>(vertex);
-        sort_unique(neighbors);
+        stable_unique_indices(neighbors);
     }
-    sort_unique(boundary_endpoints);
+    stable_unique_indices(boundary_endpoints);
     std::size_t current = unbounded && !boundary_endpoints.empty()
-        ? boundary_endpoints.front() : *std::min_element(incident.begin(), incident.end());
+        ? boundary_endpoints.front() : incident.front();
     std::size_t previous = static_cast<std::size_t>(-1);
     std::vector<std::size_t> order;
     while(order.size() < incident.size()){
@@ -234,7 +280,7 @@ inline std::vector<std::size_t> order_ridge_vertices(
         previous = current;
         current = next;
     }
-    std::set<std::size_t> used(order.begin(), order.end());
+    std::unordered_set<std::size_t> used(order.begin(), order.end());
     for(std::size_t vertex: incident){
         if(!used.contains(vertex)) order.push_back(vertex);
     }
@@ -255,12 +301,68 @@ inline Plane3 cell_bisector_halfspace(
     };
 }
 
+inline std::optional<ConvexPolyhedron3>
+bounded_cell_polyhedron_from_incidence(
+    const VoronoiCell3& cell,
+    const VoronoiDiagram3& diagram
+){
+    if(cell.unbounded || cell.finite_vertices.size() < 4){
+        return std::nullopt;
+    }
+    ConvexPolyhedron3 polyhedron;
+    std::unordered_map<std::size_t, std::size_t> local_indices;
+    local_indices.reserve(cell.finite_vertices.size());
+    polyhedron.vertices.reserve(cell.finite_vertices.size());
+    for(std::size_t vertex: cell.finite_vertices){
+        local_indices.emplace(vertex, polyhedron.vertices.size());
+        polyhedron.vertices.push_back(diagram.finite_vertices[vertex]);
+    }
+    const auto local_index = [&](std::size_t vertex){
+        const auto iterator = local_indices.find(vertex);
+        if(iterator == local_indices.end()){
+            throw std::logic_error(
+                "Voronoi ridge vertex is absent from its incident cell"
+            );
+        }
+        return iterator->second;
+    };
+    for(std::size_t ridge_index: cell.ridge_indices){
+        const VoronoiRidge3& ridge = diagram.ridges[ridge_index];
+        // A co-spherical Delaunay triangulation may contain auxiliary edges
+        // whose dual ridge has zero area. They are incidence records, not
+        // faces of the geometric cell.
+        if(ridge.unbounded || ridge.finite_vertices.size() < 3) continue;
+        const std::size_t anchor = local_index(ridge.finite_vertices.front());
+        for(std::size_t index = 1;
+            index + 1 < ridge.finite_vertices.size(); ++index){
+            std::array<std::size_t, 3> face{
+                anchor,
+                local_index(ridge.finite_vertices[index]),
+                local_index(ridge.finite_vertices[index + 1]),
+            };
+            const int site_side = adaptive_orient3d(
+                polyhedron.vertices[face[0]],
+                polyhedron.vertices[face[1]],
+                polyhedron.vertices[face[2]],
+                diagram.sites[cell.site]
+            );
+            if(site_side == 0) continue;
+            if(site_side > 0) std::swap(face[1], face[2]);
+            polyhedron.faces.push_back(face);
+        }
+    }
+    if(polyhedron.faces.empty()) return std::nullopt;
+    polyhedron.affine_dimension = 3;
+    return polyhedron;
+}
+
 }  // namespace voronoi_diagram_3d_detail
 
-inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
-    using namespace voronoi_diagram_3d_detail;
-    const DelaunayTetrahedralization3 delaunay =
-        delaunay_tetrahedralization_3d(std::move(points));
+namespace voronoi_diagram_3d_detail{
+
+inline VoronoiDiagram3 from_delaunay(
+    DelaunayTetrahedralization3 delaunay
+){
     VoronoiDiagram3 result;
     result.affine_dimension = delaunay.affine_dimension;
     result.sites = delaunay.vertices;
@@ -271,10 +373,19 @@ inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
     // The following incidence is specifically the full-dimensional 3D dual.
     if(delaunay.affine_dimension < 3) return result;
 
-    std::map<std::array<std::size_t, 3>, std::vector<std::size_t>> face_tetrahedra;
-    std::map<std::array<std::size_t, 2>, std::vector<std::size_t>> edge_tetrahedra;
+    std::unordered_map<
+        std::array<std::size_t, 3>, std::vector<std::size_t>,
+        IndexArrayHash<3>> face_tetrahedra;
+    std::unordered_map<
+        std::array<std::size_t, 2>, std::vector<std::size_t>,
+        IndexArrayHash<2>> edge_tetrahedra;
     std::vector<std::size_t> tetrahedron_vertices;
-    std::map<Point3, std::size_t> finite_vertex_indices;
+    std::unordered_map<
+        Point3, std::size_t, PointHash, PointExactEqual
+    > finite_vertex_indices;
+    face_tetrahedra.reserve(4 * delaunay.tetrahedra.size());
+    edge_tetrahedra.reserve(6 * delaunay.tetrahedra.size());
+    finite_vertex_indices.reserve(delaunay.tetrahedra.size());
     tetrahedron_vertices.reserve(delaunay.tetrahedra.size());
     for(std::size_t tetrahedron_index = 0;
         tetrahedron_index < delaunay.tetrahedra.size(); ++tetrahedron_index){
@@ -305,16 +416,17 @@ inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
         }
     }
 
-    std::map<
-        std::array<std::size_t, 2>, std::vector<std::size_t>> edge_face_indices;
+    std::unordered_map<
+        std::array<std::size_t, 2>, std::vector<std::size_t>,
+        IndexArrayHash<2>> edge_face_indices;
+    edge_face_indices.reserve(edge_tetrahedra.size());
     for(auto& [face, incident]: face_tetrahedra){
-        sort_unique(incident);
         VoronoiEdge3 edge;
         edge.sites = face;
         for(std::size_t tetrahedron_index: incident){
             edge.finite_vertices.push_back(tetrahedron_vertices[tetrahedron_index]);
         }
-        sort_unique(edge.finite_vertices);
+        stable_unique_indices(edge.finite_vertices);
         edge.unbounded = incident.size() == 1;
         if(edge.unbounded){
             edge.ray = outward_voronoi_ray(
@@ -341,13 +453,12 @@ inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
     }
 
     for(auto& [delaunay_edge, incident]: edge_tetrahedra){
-        sort_unique(incident);
         std::vector<std::size_t> incident_vertices;
         incident_vertices.reserve(incident.size());
         for(std::size_t tetrahedron_index: incident){
             incident_vertices.push_back(tetrahedron_vertices[tetrahedron_index]);
         }
-        sort_unique(incident_vertices);
+        stable_unique_indices(incident_vertices);
         VoronoiRidge3 ridge;
         ridge.sites = delaunay_edge;
         const auto face_indices = edge_face_indices.find(delaunay_edge);
@@ -393,28 +504,39 @@ inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
         result.ridges.push_back(std::move(ridge));
     }
     for(VoronoiCell3& cell: result.cells){
-        sort_unique(cell.finite_vertices);
+        stable_unique_indices(cell.finite_vertices);
         if(cell.neighbors.size() != cell.ridge_indices.size())[[unlikely]]{
             throw std::logic_error("Voronoi cell incidence size mismatch");
         }
-        const std::set<std::size_t> unique_neighbors(
+        const std::unordered_set<std::size_t> unique_neighbors(
             cell.neighbors.begin(), cell.neighbors.end()
         );
         if(unique_neighbors.size() != cell.neighbors.size())[[unlikely]]{
             throw std::logic_error("duplicate Voronoi cell neighbor");
         }
-        if(!cell.unbounded){
-            if(!cell.boundary_halfspaces.empty()){
-                ConvexPolyhedron3 bounded = halfspace_intersection_3d(
-                    cell.boundary_halfspaces
-                );
-                if(!bounded.vertices.empty()){
-                    if(bounded.affine_dimension == 3){
-                        cell.bounded_polyhedron = std::move(bounded);
-                    }
-                }
-            }
-        }
+        cell.bounded_polyhedron =
+            bounded_cell_polyhedron_from_incidence(cell, result);
     }
     return result;
 }
+
+}  // namespace voronoi_diagram_3d_detail
+
+inline VoronoiDiagram3 voronoi_diagram_3d(std::vector<Point3> points){
+    return voronoi_diagram_3d_detail::from_delaunay(
+        delaunay_tetrahedralization_3d(std::move(points))
+    );
+}
+
+inline VoronoiDiagram3 voronoi_diagram_3d_randomized(
+    std::vector<Point3> points,
+    std::uint64_t seed
+){
+    return voronoi_diagram_3d_detail::from_delaunay(
+        delaunay_tetrahedralization_3d_randomized(
+            std::move(points), seed
+        )
+    );
+}
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_VORONOI_DIAGRAM_3D_HPP

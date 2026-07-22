@@ -123,6 +123,24 @@ int main(){
         if(!geometry3d_api_close(tetrahedron.radius, 2.0L, 1e-8L)){
             return false;
         }
+        const std::vector<Point3> coplanar_sites{
+            {-0.6L, -0.6L, 0}, {-0.6L, 0.6L, 0},
+            {0.6L, -0.6L, 0}, {0.6L, 0.6L, 0},
+        };
+        const Sphere3 coplanar =
+            maximum_empty_sphere(coplanar_sites, cube);
+        const Sphere3 coplanar_oracle =
+            exhaustive_candidate_sphere(coplanar_sites, cube);
+        if(!geometry3d_api_close(
+            coplanar.radius, coplanar_oracle.radius, 2e-7L
+        )) return false;
+        const Sphere3 duplicates = maximum_empty_sphere({
+            {-0.5L, 0, 0}, {-0.5L, 0, 0},
+            {0.5L, 0, 0}, {0.5L, 0, 0},
+        }, cube);
+        if(!geometry3d_api_close(
+            duplicates.radius, 1.5L, 2e-7L
+        )) return false;
 
         const long double translation = 1e3000L;
         const long double ulp = std::nextafter(
@@ -190,6 +208,29 @@ int main(){
             if(actual.radius + 2e-7L < grid_lower_bound) return false;
         }
         if(rounds == 32){
+            constexpr std::size_t large_size = 320;
+            std::vector<Point3> large_sites;
+            large_sites.reserve(large_size);
+            for(std::size_t index = 0; index < large_size; ++index){
+                const long double value =
+                    static_cast<long double>(index + 1);
+                large_sites.push_back({
+                    std::sin(value * 1.731L) * 0.95L,
+                    std::sin(value * value * 0.417L) * 0.95L,
+                    std::cos(value * 2.319L) * 0.95L,
+                });
+            }
+            const Sphere3 large =
+                maximum_empty_sphere(large_sites, cube);
+            if(!convex_polyhedron_contains(cube, large.center)
+                || !geometry3d_api_close(
+                    large.radius,
+                    nearest_distance(large.center, large_sites),
+                    2e-7L
+                )){
+                return false;
+            }
+
             std::vector<Point3> sites;
             sites.reserve(32);
             for(std::size_t index = 0; index < 32; ++index){

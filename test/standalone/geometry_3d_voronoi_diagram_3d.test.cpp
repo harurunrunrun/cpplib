@@ -8,7 +8,9 @@
 #include <random>
 #include <vector>
 
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
 #include "../../src/algorithm/geometry/3d/dot.hpp"
+#include "../../src/algorithm/geometry/3d/three_plane_intersection.hpp"
 #include "../../src/algorithm/geometry/3d/voronoi_diagram_3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
@@ -134,6 +136,115 @@ bool validate_finite_vertex_index(Random& random){
     return large_vertices.size() == large_size;
 }
 
+bool inside_halfspaces(
+    const std::vector<Plane3>& halfspaces,
+    const Point3& point
+){
+    for(const Plane3& halfspace: halfspaces){
+        const auto product =
+            geometry3d_plane_numeric_detail::exact_dot_difference(
+                halfspace.normal, point, halfspace.point
+            );
+        if(geometry3d_plane_numeric_detail::exact_dot_sign(
+            product, 128.0L
+        ) > 0) return false;
+    }
+    return true;
+}
+
+std::vector<Point3> brute_force_cell_vertices(
+    const VoronoiCell3& cell
+){
+    std::vector<Point3> result;
+    const auto& halfspaces = cell.boundary_halfspaces;
+    for(std::size_t first = 0; first < halfspaces.size(); ++first){
+        for(std::size_t second = first + 1;
+            second < halfspaces.size(); ++second){
+            for(std::size_t third = second + 1;
+                third < halfspaces.size(); ++third){
+                const ThreePlaneIntersection3 intersection =
+                    three_plane_intersection(
+                        halfspaces[first],
+                        halfspaces[second],
+                        halfspaces[third]
+                    );
+                const Point3* point = std::get_if<Point3>(&intersection);
+                if(!point || !inside_halfspaces(halfspaces, *point)) continue;
+                if(std::none_of(
+                    result.begin(), result.end(), [&](const Point3& existing){
+                        return geometry3d_api_close(
+                            existing, *point, 2e-7L
+                        );
+                    }
+                )){
+                    result.push_back(*point);
+                }
+            }
+        }
+    }
+    return result;
+}
+
+bool same_point_set(
+    const std::vector<Point3>& first,
+    const std::vector<Point3>& second
+){
+    if(first.size() != second.size()) return false;
+    for(const Point3& point: first){
+        if(std::none_of(
+            second.begin(), second.end(), [&](const Point3& candidate){
+                return geometry3d_api_close(point, candidate, 2e-7L);
+            }
+        )) return false;
+    }
+    return true;
+}
+
+bool validate_bounded_cell(
+    const VoronoiDiagram3& diagram,
+    const VoronoiCell3& cell,
+    bool run_oracle
+){
+    if(cell.unbounded) return !cell.bounded_polyhedron;
+    if(!cell.bounded_polyhedron) return false;
+    const ConvexPolyhedron3& polyhedron = *cell.bounded_polyhedron;
+    if(polyhedron.affine_dimension != 3
+        || polyhedron.vertices.size() != cell.finite_vertices.size()
+        || polyhedron.faces.empty()
+        || !convex_polyhedron_contains(
+            polyhedron, diagram.sites[cell.site]
+        )){
+        return false;
+    }
+    std::map<std::array<std::size_t, 2>, std::size_t> edge_counts;
+    for(const auto& face: polyhedron.faces){
+        if(face[0] >= polyhedron.vertices.size()
+            || face[1] >= polyhedron.vertices.size()
+            || face[2] >= polyhedron.vertices.size()) return false;
+        if(adaptive_orient3d(
+            polyhedron.vertices[face[0]],
+            polyhedron.vertices[face[1]],
+            polyhedron.vertices[face[2]],
+            diagram.sites[cell.site]
+        ) >= 0) return false;
+        for(std::size_t index = 0; index < 3; ++index){
+            std::array<std::size_t, 2> edge{
+                face[index], face[(index + 1) % 3]
+            };
+            std::sort(edge.begin(), edge.end());
+            ++edge_counts[edge];
+        }
+    }
+    if(std::any_of(
+        edge_counts.begin(), edge_counts.end(), [](const auto& entry){
+            return entry.second != 2;
+        }
+    )) return false;
+    return !run_oracle || same_point_set(
+        polyhedron.vertices, brute_force_cell_vertices(cell)
+    );
+}
+
 bool validate_voronoi(const VoronoiDiagram3& diagram){
     if(diagram.cells.size() != diagram.sites.size()) return false;
     if(diagram.affine_dimension < 3){
@@ -147,6 +258,9 @@ bool validate_voronoi(const VoronoiDiagram3& diagram){
         if(cell.unbounded){
             if(cell.bounded_polyhedron.has_value()) return false;
         }
+        if(!validate_bounded_cell(
+            diagram, cell, cell.neighbors.size() <= 14
+        )) return false;
         for(std::size_t index = 0; index < cell.neighbors.size(); ++index){
             if(cell.neighbors[index] >= diagram.sites.size()) return false;
             if(cell.ridge_indices[index] >= diagram.ridges.size()) return false;
@@ -242,6 +356,10 @@ int main(){
         if(std::none_of(diagram.cells.begin(), diagram.cells.end(), [](const auto& cell){
             return cell.bounded_polyhedron.has_value();
         })) return false;
+        const VoronoiDiagram3 randomized =
+            voronoi_diagram_3d_randomized(sites, random());
+        if(randomized.affine_dimension != 3
+            || !validate_voronoi(randomized)) return false;
 
         const auto cospherical_cube = voronoi_diagram_3d({
             {-1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}, {-1, 1, 1},
@@ -252,6 +370,46 @@ int main(){
         if(!matches_legacy_finite_vertices(
             cospherical_cube.sites, cospherical_cube
         )) return false;
+
+        if(rounds == 32){
+            // The central cell has one facet per shell site. Re-running a
+            // generic high-degree halfspace intersection for this cell would
+            // dominate the Delaunay construction.
+            constexpr std::size_t shell_size = 240;
+            const long double golden_angle =
+                std::acos(-1.0L) * (3.0L - std::sqrt(5.0L));
+            std::vector<Point3> high_degree_sites{{0, 0, 0}};
+            high_degree_sites.reserve(shell_size + 1);
+            for(std::size_t index = 0; index < shell_size; ++index){
+                const long double z = 1.0L - 2.0L
+                    * (static_cast<long double>(index) + 0.5L)
+                    / static_cast<long double>(shell_size);
+                const long double radial =
+                    std::sqrt(std::max(0.0L, 1.0L - z * z));
+                const long double angle =
+                    golden_angle * static_cast<long double>(index);
+                high_degree_sites.push_back({
+                    4.0L * radial * std::cos(angle),
+                    4.0L * radial * std::sin(angle),
+                    4.0L * z,
+                });
+            }
+            const VoronoiDiagram3 high_degree =
+                voronoi_diagram_3d(high_degree_sites);
+            const auto center = std::find(
+                high_degree.sites.begin(),
+                high_degree.sites.end(),
+                Point3{0, 0, 0}
+            );
+            if(center == high_degree.sites.end()) return false;
+            const VoronoiCell3& center_cell = high_degree.cells[
+                static_cast<std::size_t>(center - high_degree.sites.begin())
+            ];
+            if(center_cell.neighbors.size() != shell_size
+                || !validate_bounded_cell(
+                    high_degree, center_cell, false
+                )) return false;
+        }
 
         const long double translation = 1e3000L;
         const long double ulp = std::nextafter(

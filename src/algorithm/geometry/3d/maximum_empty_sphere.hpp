@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MAXIMUM_EMPTY_SPHERE_HPP
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MAXIMUM_EMPTY_SPHERE_HPP
 
 #include <algorithm>
 #include <array>
@@ -11,6 +12,7 @@
 #include <variant>
 #include <vector>
 
+#include "barycentric_coordinates.hpp"
 #include "convex_polyhedron3.hpp"
 #include "convex_polyhedron_contains.hpp"
 #include "convex_polyhedron_edges.hpp"
@@ -41,30 +43,102 @@ inline bool inside_bounds(
     return convex_polyhedron_contains(bounds, point);
 }
 
+inline long double site_distance(
+    const Point3& point,
+    const Point3& site
+){
+    const Geometry3DNormalizedDifference difference =
+        geometry3d_normalized_difference(point, site);
+    const long double normalized_distance = std::hypot(
+        difference.value.x,
+        difference.value.y,
+        difference.value.z
+    );
+    if(normalized_distance >
+        std::numeric_limits<long double>::max() / difference.scale){
+        throw std::overflow_error(
+            "maximum empty sphere radius is not representable"
+        );
+    }
+    return normalized_distance * difference.scale;
+}
+
 inline long double nearest_site_distance(
     const Point3& point,
     const std::vector<Point3>& sites
 ){
     long double result = std::numeric_limits<long double>::infinity();
     for(const Point3& site: sites){
-        const Geometry3DNormalizedDifference difference =
-            geometry3d_normalized_difference(point, site);
-        const long double normalized_distance = std::hypot(
-            difference.value.x,
-            difference.value.y,
-            difference.value.z
-        );
-        if(normalized_distance >
-            std::numeric_limits<long double>::max() / difference.scale){
-            throw std::overflow_error(
-                "maximum empty sphere radius is not representable"
-            );
-        }
-        result = std::min(
-            result, normalized_distance * difference.scale
-        );
+        result = std::min(result, site_distance(point, site));
     }
     return result;
+}
+
+inline bool inside_triangle(
+    const Triangle3& triangle,
+    const Point3& point
+){
+    std::array<long double, 3> weights{};
+    try{
+        weights = barycentric_coordinates(triangle, point);
+    }catch(const std::invalid_argument&){
+        return false;
+    }catch(const std::overflow_error&){
+        return false;
+    }
+    constexpr long double tolerance = 64.0L * GEOMETRY3D_EPS;
+    return weights[0] >= -tolerance
+        && weights[1] >= -tolerance
+        && weights[2] >= -tolerance
+        && weights[0] <= 1.0L + tolerance
+        && weights[1] <= 1.0L + tolerance
+        && weights[2] <= 1.0L + tolerance;
+}
+
+inline bool inside_voronoi_cell(
+    const VoronoiCell3& cell,
+    const Point3& point
+){
+    for(const Plane3& halfspace: cell.boundary_halfspaces){
+        const auto product =
+            geometry3d_plane_numeric_detail::exact_dot_difference(
+                halfspace.normal, point, halfspace.point
+            );
+        if(geometry3d_plane_numeric_detail::exact_dot_sign(product) > 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+inline std::optional<std::size_t> locate_voronoi_cell(
+    const VoronoiDiagram3& diagram,
+    const Point3& point,
+    std::size_t start = 0
+){
+    if(diagram.affine_dimension != 3 || diagram.cells.empty()){
+        return std::nullopt;
+    }
+    std::size_t current = std::min(start, diagram.cells.size() - 1);
+    for(std::size_t step = 0; step <= diagram.cells.size(); ++step){
+        const VoronoiCell3& cell = diagram.cells[current];
+        bool moved = false;
+        for(std::size_t index = 0;
+            index < cell.boundary_halfspaces.size(); ++index){
+            const Plane3& halfspace = cell.boundary_halfspaces[index];
+            const auto product =
+                geometry3d_plane_numeric_detail::exact_dot_difference(
+                    halfspace.normal, point, halfspace.point
+                );
+            if(geometry3d_plane_numeric_detail::exact_dot_sign(product) > 0){
+                current = cell.neighbors[index];
+                moved = true;
+                break;
+            }
+        }
+        if(!moved) return current;
+    }
+    return std::nullopt;
 }
 
 inline std::optional<Point3> voronoi_ray_plane_intersection(
@@ -142,19 +216,70 @@ inline Sphere3 maximum_empty_sphere(
     }
 
     Sphere3 best{{}, -1.0L};
-    const auto consider_inside = [&](const Point3& candidate){
+    const auto consider_inside_with_radius = [&](
+        const Point3& candidate,
+        long double radius
+    ){
         if(!geometry3d_is_finite(candidate)) return;
-        const long double radius = nearest_site_distance(candidate, sites);
         if(radius > best.radius) best = {candidate, radius};
     };
-    const auto consider = [&](const Point3& candidate){
+    const auto consider_inside_with_site = [&](
+        const Point3& candidate,
+        std::size_t site
+    ){
+        consider_inside_with_radius(
+            candidate, site_distance(candidate, sites[site])
+        );
+    };
+    const auto consider_inside = [&](const Point3& candidate){
+        consider_inside_with_radius(
+            candidate, nearest_site_distance(candidate, sites)
+        );
+    };
+    const auto consider_with_site = [&](
+        const Point3& candidate,
+        std::size_t site
+    ){
         if(geometry3d_is_finite(candidate)
             && inside_bounds(bounds, candidate)){
-            consider_inside(candidate);
+            consider_inside_with_site(candidate, site);
         }
     };
-    for(const Point3& vertex: bounds.vertices) consider_inside(vertex);
-    for(const Point3& vertex: voronoi.finite_vertices) consider(vertex);
+    std::size_t location_hint = 0;
+    for(const Point3& vertex: bounds.vertices){
+        if(const auto site = locate_voronoi_cell(
+            voronoi, vertex, location_hint
+        )){
+            location_hint = *site;
+            consider_inside_with_site(vertex, *site);
+        }else{
+            consider_inside(vertex);
+        }
+    }
+    const std::size_t no_site = sites.size();
+    std::vector<std::size_t> finite_vertex_sites(
+        voronoi.finite_vertices.size(), no_site
+    );
+    for(const VoronoiCell3& cell: voronoi.cells){
+        for(std::size_t vertex: cell.finite_vertices){
+            if(finite_vertex_sites[vertex] == no_site){
+                finite_vertex_sites[vertex] = cell.site;
+            }
+        }
+    }
+    for(std::size_t vertex = 0;
+        vertex < voronoi.finite_vertices.size(); ++vertex){
+        if(finite_vertex_sites[vertex] == no_site){
+            if(inside_bounds(bounds, voronoi.finite_vertices[vertex])){
+                consider_inside(voronoi.finite_vertices[vertex]);
+            }
+        }else{
+            consider_with_site(
+                voronoi.finite_vertices[vertex],
+                finite_vertex_sites[vertex]
+            );
+        }
+    }
 
     const auto edges = convex_polyhedron_edges(bounds);
     for(const auto& edge: edges){
@@ -162,18 +287,33 @@ inline Sphere3 maximum_empty_sphere(
             bounds.vertices[edge[0]], bounds.vertices[edge[1]]
         };
         const auto consider_bisector = [&](std::size_t first,
-                                            std::size_t second){
+                                            std::size_t second,
+                                            bool is_voronoi_ridge){
             try{
                 const auto intersection = segment_plane_intersection(
                     segment, bisector_plane(sites[first], sites[second])
                 );
-                if(intersection) consider_inside(*intersection);
+                if(!intersection) return;
+                if(is_voronoi_ridge){
+                    // The full bisector plane is larger than its Voronoi
+                    // ridge. Membership in either incident cell selects only
+                    // genuine lower-envelope breakpoints.
+                    if(inside_voronoi_cell(
+                        voronoi.cells[first], *intersection
+                    )){
+                        consider_inside_with_site(*intersection, first);
+                    }
+                }else{
+                    consider_inside(*intersection);
+                }
             }catch(const std::overflow_error&){
             }
         };
         if(voronoi.affine_dimension == 3){
             for(const VoronoiRidge3& ridge: voronoi.ridges){
-                consider_bisector(ridge.sites[0], ridge.sites[1]);
+                consider_bisector(
+                    ridge.sites[0], ridge.sites[1], true
+                );
             }
         }else{
             // Lower-dimensional diagrams do not expose their ridge incidence.
@@ -181,13 +321,18 @@ inline Sphere3 maximum_empty_sphere(
             for(std::size_t first = 0; first < sites.size(); ++first){
                 for(std::size_t second = first + 1;
                     second < sites.size(); ++second){
-                    consider_bisector(first, second);
+                    consider_bisector(first, second, false);
                 }
             }
         }
     }
 
     for(const auto& face: bounds.faces){
+        const Triangle3 face_triangle{
+            bounds.vertices[face[0]],
+            bounds.vertices[face[1]],
+            bounds.vertices[face[2]],
+        };
         const Point3& first_vertex = bounds.vertices[face[0]];
         const Point3 first_direction =
             geometry3d_normalized_difference(
@@ -208,7 +353,13 @@ inline Sphere3 maximum_empty_sphere(
                         const auto intersection = segment_plane_intersection(
                             *edge.segment, face_plane
                         );
-                        if(intersection) consider(*intersection);
+                        if(intersection && inside_triangle(
+                            face_triangle, *intersection
+                        )){
+                            consider_inside_with_site(
+                                *intersection, edge.sites[0]
+                            );
+                        }
                     }catch(const std::overflow_error&){
                     }
                 }
@@ -218,7 +369,13 @@ inline Sphere3 maximum_empty_sphere(
                             voronoi_ray_plane_intersection(
                                 *edge.ray, face_plane
                             );
-                        if(intersection) consider(*intersection);
+                        if(intersection && inside_triangle(
+                            face_triangle, *intersection
+                        )){
+                            consider_inside_with_site(
+                                *intersection, edge.sites[0]
+                            );
+                        }
                     }catch(const std::overflow_error&){
                     }
                 }
@@ -239,7 +396,9 @@ inline Sphere3 maximum_empty_sphere(
                                 );
                             if(const Point3* point =
                                 std::get_if<Point3>(&intersection)){
-                                consider(*point);
+                                if(inside_triangle(face_triangle, *point)){
+                                    consider_inside(*point);
+                                }
                             }
                         }catch(const std::overflow_error&){
                         }
@@ -253,3 +412,5 @@ inline Sphere3 maximum_empty_sphere(
     }
     return best;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MAXIMUM_EMPTY_SPHERE_HPP
