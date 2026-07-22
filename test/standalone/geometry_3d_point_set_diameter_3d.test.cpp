@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <limits>
 #include <optional>
 #include <random>
 #include <utility>
@@ -18,11 +19,10 @@ PointSetDiameter3DResult brute(const std::vector<Point3>& points){
     PointSetDiameter3DResult result{0, 1, 0};
     for(std::size_t first = 0; first < points.size(); ++first){
         for(std::size_t second = first + 1; second < points.size(); ++second){
-            const long double distance = std::hypot(
-                points[first].x - points[second].x,
-                points[first].y - points[second].y,
-                points[first].z - points[second].z
-            );
+            const long double distance =
+                point_set_diameter_3d_detail::distance(
+                    points[first], points[second]
+                );
             if(distance > result.distance ||
                (distance == result.distance &&
                 std::pair{first, second} < std::pair{result.first, result.second})){
@@ -64,6 +64,27 @@ int main(){
         point_set_diameter_3d_aabb_branch_and_bound(tied);
     if(!tied_result || tied_result->first != 0 || tied_result->second != 1)
         return 1;
+
+    const long double maximum =
+        std::numeric_limits<long double>::max();
+    const std::vector<Point3> overflowing{{
+        {maximum / 2, 0, 0}, {-maximum, 0, 0},
+        {maximum, 0, 0}, {0, 0, 0},
+    }};
+    const PointSetDiameter3DResult overflowing_expected = brute(overflowing);
+    const auto overflowing_plain = point_set_diameter_3d(overflowing);
+    const auto overflowing_bounded =
+        point_set_diameter_3d_aabb_branch_and_bound(overflowing);
+    if(overflowing_expected.first != 0 ||
+       overflowing_expected.second != 1 ||
+       !std::isinf(overflowing_expected.distance) ||
+       !overflowing_plain || !overflowing_bounded ||
+       overflowing_plain->first != overflowing_expected.first ||
+       overflowing_plain->second != overflowing_expected.second ||
+       overflowing_plain->distance != overflowing_expected.distance ||
+       overflowing_bounded->first != overflowing_expected.first ||
+       overflowing_bounded->second != overflowing_expected.second ||
+       overflowing_bounded->distance != overflowing_expected.distance) return 1;
 
     std::mt19937_64 random(seed);
     std::uniform_int_distribution<int> coordinate(-100, 100);

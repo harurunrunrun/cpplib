@@ -39,10 +39,74 @@ inline void validate(const std::vector<Point3>& points){
     }
 }
 
-inline long double distance(const Point3& left, const Point3& right){
-    return std::hypot(
-        left.x - right.x, left.y - right.y, left.z - right.z
+struct ScaledDistance{
+    long double fraction = 0;
+    int exponent = 0;
+};
+
+inline ScaledDistance axis_distance(long double left, long double right){
+    if(left == right) return {};
+    int left_exponent = 0;
+    int right_exponent = 0;
+    std::frexp(left, &left_exponent);
+    std::frexp(right, &right_exponent);
+    const int scale = std::max(left_exponent, right_exponent);
+    const long double scaled = std::abs(
+        std::scalbn(left, -scale) - std::scalbn(right, -scale)
     );
+    int exponent = 0;
+    const long double fraction = std::frexp(scaled, &exponent);
+    return {fraction, scale + exponent};
+}
+
+inline bool scaled_less(
+    const ScaledDistance& left,
+    const ScaledDistance& right
+){
+    if(left.fraction == 0) return right.fraction != 0;
+    if(right.fraction == 0) return false;
+    if(left.exponent != right.exponent){
+        return left.exponent < right.exponent;
+    }
+    return left.fraction < right.fraction;
+}
+
+inline ScaledDistance scaled_distance(
+    const Point3& left,
+    const Point3& right
+){
+    const std::array<ScaledDistance, 3> components{{
+        axis_distance(left.x, right.x),
+        axis_distance(left.y, right.y),
+        axis_distance(left.z, right.z),
+    }};
+    int scale = std::numeric_limits<int>::min();
+    for(const ScaledDistance& component: components){
+        if(component.fraction != 0){
+            scale = std::max(scale, component.exponent);
+        }
+    }
+    if(scale == std::numeric_limits<int>::min()) return {};
+    std::array<long double, 3> normalized{};
+    for(std::size_t axis = 0; axis < 3; ++axis){
+        if(components[axis].fraction != 0){
+            normalized[axis] = std::scalbn(
+                components[axis].fraction,
+                components[axis].exponent - scale
+            );
+        }
+    }
+    int norm_exponent = 0;
+    const long double fraction = std::frexp(
+        std::hypot(normalized[0], normalized[1], normalized[2]),
+        &norm_exponent
+    );
+    return {fraction, scale + norm_exponent};
+}
+
+inline long double distance(const Point3& left, const Point3& right){
+    const ScaledDistance value = scaled_distance(left, right);
+    return std::scalbn(value.fraction, value.exponent);
 }
 
 inline void improve(
@@ -141,20 +205,29 @@ class AabbBranchAndBound{
     ) const{
         const AabbNode& lhs = nodes[first];
         const AabbNode& rhs = nodes[second];
-        std::array<long double, 3> delta{};
+        std::array<long double, 3> left_corner{};
+        std::array<long double, 3> right_corner{};
         for(std::size_t axis = 0; axis < 3; ++axis){
-            delta[axis] = std::max(
-                std::abs(
-                    coordinate(lhs.minimum, axis) -
-                    coordinate(rhs.maximum, axis)
-                ),
-                std::abs(
-                    coordinate(lhs.maximum, axis) -
-                    coordinate(rhs.minimum, axis)
-                )
+            const ScaledDistance low_high = axis_distance(
+                coordinate(lhs.minimum, axis),
+                coordinate(rhs.maximum, axis)
             );
+            const ScaledDistance high_low = axis_distance(
+                coordinate(lhs.maximum, axis),
+                coordinate(rhs.minimum, axis)
+            );
+            if(scaled_less(low_high, high_low)){
+                left_corner[axis] = coordinate(lhs.maximum, axis);
+                right_corner[axis] = coordinate(rhs.minimum, axis);
+            }else{
+                left_corner[axis] = coordinate(lhs.minimum, axis);
+                right_corner[axis] = coordinate(rhs.maximum, axis);
+            }
         }
-        long double bound = std::hypot(delta[0], delta[1], delta[2]);
+        long double bound = distance(
+            {left_corner[0], left_corner[1], left_corner[2]},
+            {right_corner[0], right_corner[1], right_corner[2]}
+        );
         for(int iteration = 0;
             iteration < 16 && std::isfinite(bound); ++iteration){
             bound = std::nextafter(
