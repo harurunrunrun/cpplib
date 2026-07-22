@@ -137,9 +137,8 @@ inline long double direction_angle(const Point& direction){
 }
 
 inline bool on_segment_scaled(const Segment& segment, const Point& point){
-    const Point direction = segment.b - segment.a;
     if(point_equal(segment.a, segment.b)) return point_equal(segment.a, point);
-    if(cross_sign(direction, point - segment.a) != 0) return false;
+    if(side_sign(segment, point) != 0) return false;
     const long double product = dot(point - segment.a, point - segment.b);
     const long double scale = length(point - segment.a) * length(point - segment.b);
     return scaled_sign(product, scale) <= 0;
@@ -166,7 +165,7 @@ inline std::vector<Point> segment_intersection_set(
         }
         return {};
     }
-    if(cross_sign(first_direction, second.a - first.a) != 0) return {};
+    if(side_sign(first, second.a) != 0) return {};
 
     std::vector<Point> candidates;
     for(const Point& point: {first.a, first.b, second.a, second.b}){

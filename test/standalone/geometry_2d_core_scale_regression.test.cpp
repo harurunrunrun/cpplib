@@ -56,6 +56,44 @@ long double anchored_twice_area(const std::vector<Point>& polygon){
     return result;
 }
 
+bool polygon_validation_rejects(const std::vector<Point>& polygon){
+    try{
+        visibility_polygon_detail::validate_simple_polygon(polygon);
+    }catch(const std::invalid_argument&){
+        return true;
+    }
+    return false;
+}
+
+void check_visibility_polygon_validation(){
+    const long double offset = 1e18L;
+    const std::vector<Point> translated_thin_rectangle = {
+        {offset, offset},
+        {offset + 1e9L, offset},
+        {offset + 1e9L, offset + 1.0L},
+        {offset, offset + 1.0L},
+    };
+    assert(!polygon_validation_rejects(translated_thin_rectangle));
+
+    const std::vector<Point> proper_crossing = {
+        {0.0L, 0.0L},
+        {4.0L, 4.0L},
+        {0.0L, 4.0L},
+        {4.0L, 0.0L},
+        {5.0L, 2.0L},
+    };
+    assert(polygon_validation_rejects(proper_crossing));
+
+    const std::vector<Point> nonadjacent_touch = {
+        {0.0L, 0.0L},
+        {4.0L, 0.0L},
+        {4.0L, 4.0L},
+        {2.0L, 0.0L},
+        {0.0L, 4.0L},
+    };
+    assert(polygon_validation_rejects(nonadjacent_touch));
+}
+
 void check_scale(long double scale){
     assert(std::isfinite(scale) && scale > 0.0L);
     const Point shift{7.0L * scale, -11.0L * scale};
@@ -465,6 +503,7 @@ int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
+    check_visibility_polygon_validation();
     check_large_translation();
     check_elongated_geometry();
     int scale_count;
