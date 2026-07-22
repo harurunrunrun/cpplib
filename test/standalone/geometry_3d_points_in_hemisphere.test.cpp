@@ -69,6 +69,31 @@ int main(){
                 {0, -1, 0}, {0, 0, 1}, {0, 0, -1}
             })) return false;
 
+        const long double machine_epsilon =
+            std::numeric_limits<long double>::epsilon();
+        for(const long double multiplier: {290.0L, 300.0L, 310.0L}){
+            const std::vector<Point3> nearly_infeasible{
+                {1, 0, 0}, {0, 1, 0}, {0, 0, 1},
+                {-1, -1, -multiplier * machine_epsilon},
+            };
+            const bool first_result =
+                points_in_hemisphere(nearly_infeasible);
+            for(std::size_t repetition = 0; repetition < 4096; ++repetition){
+                if(points_in_hemisphere(nearly_infeasible)
+                    != first_result) return false;
+            }
+        }
+        const std::vector<Point3> separated_beyond_tolerance{
+            {1, 0, 0}, {0, 1, 0}, {0, 0, 1},
+            {-1, -1, -10000.0L * machine_epsilon},
+        };
+        const bool separated_result =
+            points_in_hemisphere(separated_beyond_tolerance);
+        for(std::size_t repetition = 0; repetition < 4096; ++repetition){
+            if(points_in_hemisphere(separated_beyond_tolerance)
+                != separated_result) return false;
+        }
+
         bool zero_rejected = false;
         try{
             static_cast<void>(points_in_hemisphere({{0, 0, 0}}));

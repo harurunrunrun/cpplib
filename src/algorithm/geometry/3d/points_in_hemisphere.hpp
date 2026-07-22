@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POINTS_IN_HEMISPHERE_HPP
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POINTS_IN_HEMISPHERE_HPP
 
 #include <algorithm>
 #include <array>
@@ -28,11 +29,10 @@ struct Point2D{
 
 inline bool satisfies(
     const LinearConstraint2D& constraint,
-    const Point2D& point,
-    long double tolerance
+    const Point2D& point
 ){
     return constraint.x * point.x + constraint.y * point.y
-        <= constraint.bound + tolerance;
+        <= constraint.bound;
 }
 
 inline bool restrict_parameter(
@@ -124,7 +124,7 @@ inline std::optional<Point2D> feasible_point_2d(
         processed < order.size();
         ++processed){
         const auto& constraint = constraints[order[processed]];
-        if(satisfies(constraint, point, tolerance)) continue;
+        if(satisfies(constraint, point)) continue;
         const auto replacement = optimize_on_boundary(
             constraint, constraints, order, processed, tolerance
         );
@@ -159,7 +159,7 @@ inline std::optional<Point3> fixed_coordinate_candidate(
         });
     }
     const auto variables = feasible_point_2d(
-        constraints, order, tolerance
+        constraints, order, tolerance * 0.25L
     );
     if(!variables) return std::nullopt;
     std::array<long double, 3> embedded{};
@@ -185,14 +185,10 @@ inline bool points_in_hemisphere(const std::vector<Point3>& points){
         * std::numeric_limits<long double>::epsilon();
     std::vector<std::size_t> order(unit.size());
     std::iota(order.begin(), order.end(), std::size_t{0});
-    static thread_local std::mt19937_64 random_engine([]{
-        std::random_device device;
-        std::seed_seq seed{
-            device(), device(), device(), device(),
-            device(), device(), device(), device(),
-        };
-        return std::mt19937_64(seed);
-    }());
+    std::mt19937_64 random_engine(
+        0xD1B54A32D192ED03ULL
+        ^ static_cast<std::uint64_t>(unit.size())
+    );
     std::shuffle(order.begin(), order.end(), random_engine);
 
     const auto accepts = [&](const Point3& raw_normal){
@@ -215,10 +211,12 @@ inline bool points_in_hemisphere(const std::vector<Point3>& points){
         for(const long double sign: {-1.0L, 1.0L}){
             const auto candidate =
                 points_in_hemisphere_detail::fixed_coordinate_candidate(
-                    unit, order, fixed, sign, tolerance * 0.25L
+                    unit, order, fixed, sign, tolerance * 0.5L
                 );
             if(candidate && accepts(*candidate)) return true;
         }
     }
     return false;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POINTS_IN_HEMISPHERE_HPP
