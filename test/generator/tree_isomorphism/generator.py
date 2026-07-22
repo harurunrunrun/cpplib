@@ -54,6 +54,36 @@ def permuted_edges(edges: list[tuple[int, int]], permutation: list[int]) -> list
     return [(permutation[u], permutation[v]) for u, v in edges]
 
 
+def multiplicity_tree(max_count: int, repetitions: int) -> list[tuple[int, int]]:
+    edges: list[tuple[int, int]] = []
+    next_vertex = 1
+    for count in range(1, max_count + 1):
+        for _ in range(repetitions):
+            parent = next_vertex
+            next_vertex += 1
+            edges.append((0, parent))
+            for _ in range(count):
+                edges.append((parent, next_vertex))
+                next_vertex += 1
+    return edges
+
+
+def write_large_path_case(out_dir: Path, n: int) -> None:
+    input_lines = ["1", f"{n} {n} 0 {n - 1}"]
+    input_lines.extend(f"{vertex - 1} {vertex}" for vertex in range(1, n))
+    input_lines.extend(f"{vertex - 1} {vertex}" for vertex in range(1, n))
+    left_center = n // 2 - 1
+    right_center = n // 2
+    expected = (
+        f"1 1 2 {left_center} {right_center} "
+        f"2 {left_center} {right_center}\n"
+    )
+    (out_dir / "case_01.in").write_text(
+        "\n".join(input_lines) + "\n", encoding="utf-8"
+    )
+    (out_dir / "case_01.out").write_text(expected, encoding="utf-8")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", required=True)
@@ -69,6 +99,35 @@ def main() -> None:
         rng.shuffle(permutation)
         root = rng.randrange(n)
         cases.append((n, edges, root, permuted_edges(edges, permutation), permutation[root]))
+
+    star_size = 4096
+    star_edges = [(0, vertex) for vertex in range(1, star_size)]
+    star_permutation = list(range(star_size))
+    rng.shuffle(star_permutation)
+    cases.append(
+        (
+            star_size,
+            star_edges,
+            0,
+            permuted_edges(star_edges, star_permutation),
+            star_permutation[0],
+        )
+    )
+
+    repeated_edges = multiplicity_tree(20, 2)
+    repeated_size = len(repeated_edges) + 1
+    repeated_permutation = list(range(repeated_size))
+    rng.shuffle(repeated_permutation)
+    cases.append(
+        (
+            repeated_size,
+            repeated_edges,
+            0,
+            permuted_edges(repeated_edges, repeated_permutation),
+            repeated_permutation[0],
+        )
+    )
+
     for _ in range(110):
         n = rng.randrange(1, 15)
         edges_a = random_tree(rng, n)
@@ -108,6 +167,7 @@ def main() -> None:
 
     (out_dir / "case_00.in").write_text("\n".join(input_lines) + "\n", encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(output_lines) + "\n", encoding="utf-8")
+    write_large_path_case(out_dir, 200_000)
 
 
 if __name__ == "__main__":

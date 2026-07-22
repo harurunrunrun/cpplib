@@ -12,24 +12,26 @@ AHU algorithm による木の同型性判定。
 - `tree_centers(graph)`
     - 木の center を返す。個数は 1 または 2。
 - `rooted_tree_isomorphism_labels(graph, root = 0)`
-    - 同じ返り値内で、根付き部分木が同型なら同じ label。
+    - 同じ返り値内で、根付き部分木が同型であることと label が等しいことは同値。
 - `rooted_tree_isomorphic(a, root_a, b, root_b)`
 - `tree_isomorphic(a, b)`
 
 ## 時間計算量
 
-$N$ を各木の頂点数とする。
+$N$ を入力に含まれる頂点数の合計とする。
 
 - `tree_centers`: $O(N)$。返す頂点数は高々2
-- `rooted_tree_isomorphism_labels`: $O(N\log(N+1))$。長さ $N$ のlabel列出力を含む
-- `rooted_tree_isomorphic`: $O(N\log(N+1))$
-- `tree_isomorphic`: center候補を高々2組比較して $O(N\log(N+1))$
+- `rooted_tree_isomorphism_labels`: $O(N)$。長さ $N$ のlabel列出力を含む
+- `rooted_tree_isomorphic`: $O(N)$
+- `tree_isomorphic`: center候補を高々2組比較して $O(N)$
 
-子label列の整列と `map<vector<int>, int>` の辞書操作が対数因子を持つ。
+部分木の高さごとに子の同型類を確定し、各同型類に属する子の個数で
+未確定頂点のpartitionを疎にrefineする。各親子辺は一度だけ個数集計へ
+寄与するため、比較sort、連想配列、衝突し得るhashを使わず決定的に線形時間となる。
 
 ## 空間計算量
 
-- rooted tree情報、signature辞書、戻り値を含めて $O(N)$
+- rooted tree情報、partition、戻り値を含めて $O(N)$
 
 ## 注意点
 

@@ -33,11 +33,13 @@ rooted_tree_isomorphism_classification(
 
 ## 時間計算量
 
-頂点数を $N$ として $O(N\log(N+1))$。
+頂点数を $N$ として $O(N)$。部分木の高さ順に同型類を確定し、子の
+同型類ごとの出現回数でpartitionを疎にrefineする。各親子辺は一度だけ
+個数集計へ寄与するため、比較sort、連想配列、衝突し得るhashには依存しない。
 
 ## 空間計算量
 
-根付き木情報、signature辞書、戻り値を含めて $O(N)$。
+根付き木情報、partition、戻り値を含めて $O(N)$。
 
 ## 注意点
 
