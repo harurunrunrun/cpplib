@@ -207,6 +207,7 @@
 #include "convex_polyhedron_centroid.hpp"
 #include "convex_polyhedron_contains.hpp"
 #include "convex_polyhedron_closest_point.hpp"
+#include "convex_polyhedron_query_hierarchy_3d.hpp"
 #include "convex_polyhedron_point_distance.hpp"
 #include "convex_polyhedron_support_point.hpp"
 #include "convex_polyhedron_support_plane.hpp"
