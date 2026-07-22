@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/other/multidimensional_prefix_sum.hpp"
+#include "../../src/algorithm/other/offline_query/multidimensional_prefix_sum.hpp"
 
 template<class Function>
 bool throws_runtime_error(Function&& function){

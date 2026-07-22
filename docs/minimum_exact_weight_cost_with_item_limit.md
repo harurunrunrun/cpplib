@@ -1,6 +1,6 @@
 ---
 title: Minimum Exact Weight Cost with Item Limit (個数制限付き指定重量の最小費用) [ABA12C]
-documentation_of: ../src/algorithm/other/minimum_exact_weight_cost_with_item_limit.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_exact_weight_cost_with_item_limit.hpp
 ---
 
 正整数の重みを持つ品物を個数制限内で重複選択し、指定した合計重みを作る

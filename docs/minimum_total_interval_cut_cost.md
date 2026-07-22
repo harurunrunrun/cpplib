@@ -1,6 +1,6 @@
 ---
 title: Minimum Total Interval Cut Cost (区間切断の最小総費用) [BRKSTRNG]
-documentation_of: ../src/algorithm/other/minimum_total_interval_cut_cost.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_total_interval_cut_cost.hpp
 ---
 
 一次元区間を指定位置ですべて切断するときの最小総費用を返す。

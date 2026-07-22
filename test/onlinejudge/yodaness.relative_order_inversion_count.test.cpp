@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/other/relative_order_inversion_count.hpp"
+#include "../../src/algorithm/other/sequence/relative_order_inversion_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

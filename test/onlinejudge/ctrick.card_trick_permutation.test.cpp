@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/other/cyclic_order_statistic_placement_permutation.hpp"
+#include "../../src/algorithm/other/sequence/cyclic_order_statistic_placement_permutation.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

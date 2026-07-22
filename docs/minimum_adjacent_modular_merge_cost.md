@@ -1,6 +1,6 @@
 ---
 title: Minimum Adjacent Modular Merge Cost (隣接剰余マージの最小コスト) [MIXTURES]
-documentation_of: ../src/algorithm/other/minimum_adjacent_modular_merge_cost.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_adjacent_modular_merge_cost.hpp
 ---
 
 隣接要素を順に併合して1要素にするときの最小総コストを求める。

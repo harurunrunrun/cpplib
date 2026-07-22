@@ -1,6 +1,6 @@
 ---
 title: Coordinate Compression (座標圧縮)
-documentation_of: ../src/algorithm/other/coordinate_compression.hpp
+documentation_of: ../src/algorithm/other/utility/coordinate_compression.hpp
 ---
 
 値を昇順に重複除去し、元の大小関係を保つ $[0,K)$ の添字へ写す。

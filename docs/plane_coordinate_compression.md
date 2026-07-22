@@ -1,6 +1,6 @@
 ---
 title: Plane Coordinate Compression (平面座標圧縮)
-documentation_of: ../src/algorithm/other/plane_coordinate_compression.hpp
+documentation_of: ../src/algorithm/other/utility/plane_coordinate_compression.hpp
 ---
 
 平面上で別々に与えた x 座標と y 座標を昇順の連続indexへ圧縮する。格子の連結性や座標間の空白を残したい場合は、各入力値の直前・直後の整数も集合へ加えられる。

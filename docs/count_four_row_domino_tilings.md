@@ -1,6 +1,6 @@
 ---
 title: Four-Row Domino Tilings (4行ドミノ敷き詰め数) [M4TILE]
-documentation_of: ../src/algorithm/other/count_four_row_domino_tilings.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/count_four_row_domino_tilings.hpp
 ---
 
 4行の長方形を $1\times2$ ドミノで敷き詰める方法数を返す。

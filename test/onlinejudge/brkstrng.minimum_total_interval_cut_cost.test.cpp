@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/minimum_total_interval_cut_cost.hpp"
+#include "../../src/algorithm/other/dynamic_programming/minimum_total_interval_cut_cost.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

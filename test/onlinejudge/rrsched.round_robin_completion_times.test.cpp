@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/round_robin_completion_times.hpp"
+#include "../../src/algorithm/other/scheduling/round_robin_completion_times.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

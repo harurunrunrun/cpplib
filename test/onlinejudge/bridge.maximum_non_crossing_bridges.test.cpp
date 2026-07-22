@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/other/maximum_noncrossing_bipartite_segments.hpp"
+#include "../../src/algorithm/other/dynamic_programming/maximum_noncrossing_bipartite_segments.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

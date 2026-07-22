@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/minimum_cost_path_with_resource_limit.hpp"
+#include "../../src/algorithm/other/dynamic_programming/minimum_cost_path_with_resource_limit.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

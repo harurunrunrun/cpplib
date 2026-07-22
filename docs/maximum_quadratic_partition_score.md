@@ -1,6 +1,6 @@
 ---
 title: Maximum Quadratic Partition Score (二次評価による連続区間分割の最大得点) [APIO10A]
-documentation_of: ../src/algorithm/other/maximum_quadratic_partition_score.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/maximum_quadratic_partition_score.hpp
 ---
 
 正の値からなる列を空でない連続区間へ分割し、各区間和に同じ二次式を適用した得点の総和を最大化する。

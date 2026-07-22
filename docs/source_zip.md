@@ -1,6 +1,6 @@
 ---
 title: Integer Array Encoding for Source Code (ソースコード埋め込み用整数配列圧縮)
-documentation_of: ../src/algorithm/other/source_zip.hpp
+documentation_of: ../src/algorithm/other/utility/source_zip.hpp
 ---
 
 整数配列をソースコードへ埋め込める文字列に変換する。

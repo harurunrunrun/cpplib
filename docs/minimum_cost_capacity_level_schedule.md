@@ -1,6 +1,6 @@
 ---
 title: Minimum-Cost Capacity-Level Schedule (容量水準スケジュールの最小費用) [MKBUDGET]
-documentation_of: ../src/algorithm/other/minimum_cost_capacity_level_schedule.hpp
+documentation_of: ../src/algorithm/other/scheduling/minimum_cost_capacity_level_schedule.hpp
 ---
 
 期間ごとの最低容量を満たすように容量水準を選び、水準の増減費用と期間ごとの維持費用の総和を最小化する。

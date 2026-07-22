@@ -1,6 +1,6 @@
 ---
 title: Cyclic Order-statistic Placement Permutation (巡回順序統計配置順列) [CTRICK]
-documentation_of: ../src/algorithm/other/cyclic_order_statistic_placement_permutation.hpp
+documentation_of: ../src/algorithm/other/sequence/cyclic_order_statistic_placement_permutation.hpp
 ---
 
 空き位置を巡回し、空き位置の順位で配置先を選んで得られる順列を構築します。

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/offline_dynamic_range_count_at_least.hpp"
+#include "../../src/algorithm/other/offline_query/offline_dynamic_range_count_at_least.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

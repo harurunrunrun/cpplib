@@ -1,6 +1,6 @@
 ---
 title: Minimum-Cost Path with Resource Limit (資源上限制約付き最小費用経路) [FISHER]
-documentation_of: ../src/algorithm/other/minimum_cost_path_with_resource_limit.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_cost_path_with_resource_limit.hpp
 ---
 
 各辺が資源使用量と費用を持つ有向グラフで、資源使用量の合計が上限以下となる始点から終点へのwalkのうち、費用が最小のものを求める。

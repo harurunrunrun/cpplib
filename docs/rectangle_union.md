@@ -1,6 +1,6 @@
 ---
 title: Rectangle Union Area (長方形の和集合面積) [area_of_union_of_rectangles]
-documentation_of: ../src/algorithm/other/rectangle_union.hpp
+documentation_of: ../src/algorithm/other/offline_query/rectangle_union.hpp
 ---
 
 軸平行長方形の和集合の面積。

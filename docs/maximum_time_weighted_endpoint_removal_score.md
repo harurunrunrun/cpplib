@@ -1,6 +1,6 @@
 ---
 title: Maximum Time-weighted Endpoint Removal Score (時刻重み付き端点除去の最大得点) [TRT]
-documentation_of: ../src/algorithm/other/maximum_time_weighted_endpoint_removal_score.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/maximum_time_weighted_endpoint_removal_score.hpp
 ---
 
 列の左端または右端を順に取り除くとき、時刻重み付き得点の最大値を求める。

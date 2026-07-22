@@ -1,6 +1,6 @@
 ---
 title: Offline Rectangle Add Point Get (オフライン長方形加算一点取得) [rectangle_add_point_get]
-documentation_of: ../src/algorithm/other/offline_rectangle_add_point_get.hpp
+documentation_of: ../src/algorithm/other/offline_query/offline_rectangle_add_point_get.hpp
 ---
 
 長方形加算と一点取得からなる操作列を登録し、まとめて評価する。

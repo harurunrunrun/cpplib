@@ -1,6 +1,6 @@
 ---
 title: Longest Decreasing Subsequence with Pivot Reset (基準位置で条件を一度解除できる最長減少部分列) [BAT3]
-documentation_of: ../src/algorithm/other/longest_decreasing_subsequence_with_pivot_reset.hpp
+documentation_of: ../src/algorithm/other/sequence/longest_decreasing_subsequence_with_pivot_reset.hpp
 ---
 
 列の狭義減少部分列について、指定位置から次に選ぶ1要素だけ大小条件を解除できる場合の最大長を返す。指定位置を使わない通常の減少部分列も候補に含む。

@@ -1,6 +1,6 @@
 ---
 title: Time Segment Tree (Offline Interval Events) (時間セグメント木)
-documentation_of: ../src/algorithm/other/time_segment_tree.hpp
+documentation_of: ../src/algorithm/other/offline_query/time_segment_tree.hpp
 ---
 
 時刻区間 $[l,r)$ で有効なイベントを、rollback できる状態へ適用するオフライン時間軸 segment tree。

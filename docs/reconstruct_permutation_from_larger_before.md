@@ -1,6 +1,6 @@
 ---
 title: Permutation Reconstruction from Larger-Before Counts (前方大要素数からの順列復元) [ORDERS]
-documentation_of: ../src/algorithm/other/reconstruct_permutation_from_larger_before.hpp
+documentation_of: ../src/algorithm/other/sequence/reconstruct_permutation_from_larger_before.hpp
 ---
 
 各位置より前にある大きな値の個数から、$1$ から $N$ の順列を復元します。

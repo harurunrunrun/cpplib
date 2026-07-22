@@ -7,7 +7,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/other/dynamic_point_add_rectangle_sum.hpp"
+#include "../../src/algorithm/other/offline_query/dynamic_point_add_rectangle_sum.hpp"
 
 struct Query{
     std::string type;

@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://www.spoj.com/problems/ABA12C/
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/other/minimum_exact_weight_cost_with_item_limit.hpp"
+#include "../../src/algorithm/other/dynamic_programming/minimum_exact_weight_cost_with_item_limit.hpp"
 int main(){ std::ios::sync_with_stdio(false); std::cin.tie(nullptr);
     int tests; std::cin>>tests; while(tests--){
         int maximum_item_count,target_weight;

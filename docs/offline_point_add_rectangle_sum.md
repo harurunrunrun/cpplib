@@ -1,6 +1,6 @@
 ---
 title: Offline Point Add Rectangle Sum (オフライン点加算長方形和) [point_add_rectangle_sum]
-documentation_of: ../src/algorithm/other/offline_point_add_rectangle_sum.hpp
+documentation_of: ../src/algorithm/other/offline_query/offline_point_add_rectangle_sum.hpp
 ---
 
 点加算と長方形和取得からなる操作列を登録し、まとめて評価する。

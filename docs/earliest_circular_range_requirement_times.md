@@ -1,6 +1,6 @@
 ---
 title: Earliest Circular Range Requirement Times (巡回区間加算の必要量初達時刻) [METEORS]
-documentation_of: ../src/algorithm/other/earliest_circular_range_requirement_times.hpp
+documentation_of: ../src/algorithm/other/offline_query/earliest_circular_range_requirement_times.hpp
 ---
 
 所有位置ごとの累積量が必要量へ初めて達する操作時刻を一括計算します。

@@ -1,6 +1,6 @@
 ---
 title: Longest Increasing Subsequence (最長増加部分列) [DPL_1_D] [longest_increasing_subsequence]
-documentation_of: ../src/algorithm/other/longest_increasing_subsequence.hpp
+documentation_of: ../src/algorithm/other/sequence/longest_increasing_subsequence.hpp
 ---
 
 最長増加部分列を復元する。返り値は元の列における添字列である。

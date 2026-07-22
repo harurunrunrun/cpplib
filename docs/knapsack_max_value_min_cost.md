@@ -1,6 +1,6 @@
 ---
 title: 0/1 Knapsack Maximum Value with Minimum Cost (0/1ナップサックの最大価値・最小費用) [PARTY]
-documentation_of: ../src/algorithm/other/knapsack_max_value_min_cost.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/knapsack_max_value_min_cost.hpp
 ---
 
 `capacity` 以下の合計costで得られる合計valueを最大化し、その最大値を達成する

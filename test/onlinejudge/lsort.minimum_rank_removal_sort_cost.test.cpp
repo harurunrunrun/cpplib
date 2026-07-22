@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/minimum_rank_removal_sort_cost.hpp"
+#include "../../src/algorithm/other/dynamic_programming/minimum_rank_removal_sort_cost.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

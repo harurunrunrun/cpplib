@@ -4,7 +4,7 @@
 #include <array>
 #include <vector>
 
-#include "../../src/algorithm/other/count_undominated_rank_triples.hpp"
+#include "../../src/algorithm/other/sequence/count_undominated_rank_triples.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

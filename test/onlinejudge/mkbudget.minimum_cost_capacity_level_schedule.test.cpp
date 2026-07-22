@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/minimum_cost_capacity_level_schedule.hpp"
+#include "../../src/algorithm/other/scheduling/minimum_cost_capacity_level_schedule.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

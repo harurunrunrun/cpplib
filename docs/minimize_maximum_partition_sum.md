@@ -1,6 +1,6 @@
 ---
 title: Minimize Maximum Partition Sum (最大区間和最小化) [SEQPAR]
-documentation_of: ../src/algorithm/other/minimize_maximum_partition_sum.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimize_maximum_partition_sum.hpp
 ---
 
 整数列をちょうど `k` 個の空でない連続区間へ分割し、各区間和の最大値を最小化する。負数を含む列に対応する。

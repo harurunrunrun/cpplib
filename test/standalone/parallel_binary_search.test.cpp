@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/other/parallel_binary_search.hpp"
+#include "../../src/algorithm/other/offline_query/parallel_binary_search.hpp"
 
 std::vector<int> solve_thresholds(
     const std::vector<long long>& targets,

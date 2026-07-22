@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/other/rectangle_xor.hpp"
+#include "../../src/algorithm/other/offline_query/rectangle_xor.hpp"
 
 using Rect = RectangleXorRectangle<long long>;
 

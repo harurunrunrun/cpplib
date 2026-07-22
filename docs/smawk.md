@@ -1,6 +1,6 @@
 ---
 title: SMAWK (SMAWK法)
-documentation_of: ../src/algorithm/other/smawk.hpp
+documentation_of: ../src/algorithm/other/utility/smawk.hpp
 ---
 
 totally monotoneな行列の各行について、最小値を取る最左の列を求める。行列は保持せず、要素を返す関数だけを受け取る。

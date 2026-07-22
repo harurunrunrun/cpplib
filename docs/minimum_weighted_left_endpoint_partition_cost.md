@@ -1,6 +1,6 @@
 ---
 title: Minimum Weighted Left-Endpoint Partition Cost (重み付き左端分割費用最小化) [NKLEAVES]
-documentation_of: ../src/algorithm/other/minimum_weighted_left_endpoint_partition_cost.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_weighted_left_endpoint_partition_cost.hpp
 ---
 
 正の重みを持つ一次元列を空でない連続区間へ分割し、各区間の要素をその左端へ移す重み付き距離の総和を最小化する。

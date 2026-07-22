@@ -1,6 +1,6 @@
 ---
 title: Count Undominated Rank Triples (非支配順位三つ組の個数) [NICEDAY]
-documentation_of: ../src/algorithm/other/count_undominated_rank_triples.hpp
+documentation_of: ../src/algorithm/other/sequence/count_undominated_rank_triples.hpp
 ---
 
 3種類の順位を持つ要素のうち、3順位すべてがより小さい別要素を持たない要素数を返す。

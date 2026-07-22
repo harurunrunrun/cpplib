@@ -1,6 +1,6 @@
 ---
 title: Maximum Disjoint Equal Pair Counts (区間内の最大同値ペア数) [ABC242_G]
-documentation_of: ../src/algorithm/other/maximum_disjoint_equal_pair_counts.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/maximum_disjoint_equal_pair_counts.hpp
 ---
 
 複数の半開区間ごとに、値が等しい二要素から作れる互いに素なペアの最大個数を返す。

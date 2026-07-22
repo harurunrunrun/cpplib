@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/offline_rectangle_add_point_get.hpp"
+#include "../../src/algorithm/other/offline_query/offline_rectangle_add_point_get.hpp"
 
 void self_test(){
     OfflineRectangleAddPointGet<long long> solver;

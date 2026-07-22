@@ -1,6 +1,6 @@
 ---
 title: Minimum Rectangle Batch Cost (長方形バッチ分割の最小費用) [ACQUIRE]
-documentation_of: ../src/algorithm/other/minimum_rectangle_batch_cost.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_rectangle_batch_cost.hpp
 ---
 
 長方形集合を複数のバッチへ分割し、各バッチの最大幅と最大高さの積をその費用としたときの総費用を最小化する。

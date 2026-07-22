@@ -1,6 +1,6 @@
 ---
 title: Parenthesized Expression Extrema (括弧付け式の最大値・最小値) [LISA]
-documentation_of: ../src/algorithm/other/parenthesized_expression_extrema.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/parenthesized_expression_extrema.hpp
 ---
 
 非負整数、`+`、`*` からなる式の括弧付けで得られる最小値と最大値を返す。

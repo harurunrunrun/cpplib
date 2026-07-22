@@ -3,7 +3,7 @@
 #include <limits>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/other/maximum_weight_nonoverlapping_intervals.hpp"
+#include "../../src/algorithm/other/dynamic_programming/maximum_weight_nonoverlapping_intervals.hpp"
 int main(){ std::ios::sync_with_stdio(false); std::cin.tie(nullptr);
     int tests; std::cin>>tests; while(tests--){ int n; std::cin>>n;
         std::vector<WeightedInterval> intervals; intervals.reserve(n);

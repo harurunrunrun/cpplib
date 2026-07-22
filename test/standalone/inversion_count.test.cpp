@@ -9,7 +9,7 @@
 #include <random>
 #include <vector>
 
-#include "../../src/algorithm/other/inversion_count.hpp"
+#include "../../src/algorithm/other/sequence/inversion_count.hpp"
 
 template<class T, class Compare>
 std::uint64_t naive_inversion_count(

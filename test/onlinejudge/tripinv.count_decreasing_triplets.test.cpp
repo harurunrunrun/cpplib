@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/count_decreasing_triplets.hpp"
+#include "../../src/algorithm/other/sequence/count_decreasing_triplets.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

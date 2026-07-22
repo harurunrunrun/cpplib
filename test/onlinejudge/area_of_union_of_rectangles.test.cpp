@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/other/rectangle_union.hpp"
+#include "../../src/algorithm/other/offline_query/rectangle_union.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -1,6 +1,6 @@
 ---
 title: Inversion Count (転倒数) [INVCNT]
-documentation_of: ../src/algorithm/other/inversion_count.hpp
+documentation_of: ../src/algorithm/other/sequence/inversion_count.hpp
 ---
 
 比較関数で定まる列の転倒数を返す。

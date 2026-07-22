@@ -1,6 +1,6 @@
 ---
 title: Minimum Cost Two-resource Cover (二資源被覆の最小費用) [SCUBADIV]
-documentation_of: ../src/algorithm/other/minimum_cost_two_resource_cover.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_cost_two_resource_cover.hpp
 ---
 
 2種類の資源量を持つ品物から部分集合を選び、両方の必要量を満たす最小費用を求める。

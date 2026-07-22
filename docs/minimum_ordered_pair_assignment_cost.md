@@ -1,6 +1,6 @@
 ---
 title: Minimum Ordered-Pair Assignment Cost (順序制約付きペア割当ての最小費用) [MPILOT]
-documentation_of: ../src/algorithm/other/minimum_ordered_pair_assignment_cost.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_ordered_pair_assignment_cost.hpp
 ---
 
 順序付き列の各要素をopening役またはclosing役へ割り当て、openingが必ず対応するclosingより前に現れるペアを作るときの最小総費用を求める。

@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/other/minimum_weighted_left_endpoint_partition_cost.hpp"
+#include "../../src/algorithm/other/dynamic_programming/minimum_weighted_left_endpoint_partition_cost.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

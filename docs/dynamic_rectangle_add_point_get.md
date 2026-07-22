@@ -1,6 +1,6 @@
 ---
 title: Dynamic Rectangle Add Point Get (動的長方形加算一点取得)
-documentation_of: ../src/algorithm/other/dynamic_rectangle_add_point_get.hpp
+documentation_of: ../src/algorithm/other/offline_query/dynamic_rectangle_add_point_get.hpp
 ---
 
 長方形加算・点取得。

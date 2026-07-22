@@ -1,6 +1,6 @@
 ---
 title: Maximum Weight of Non-overlapping Intervals (互いに重ならない区間の最大重み) [RENT]
-documentation_of: ../src/algorithm/other/maximum_weight_nonoverlapping_intervals.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/maximum_weight_nonoverlapping_intervals.hpp
 ---
 
 重み付き半開区間から互いに重ならない区間を選び、重みの総和を最大化する。

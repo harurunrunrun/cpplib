@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/longest_increasing_subsequence.hpp"
+#include "../../src/algorithm/other/sequence/longest_increasing_subsequence.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

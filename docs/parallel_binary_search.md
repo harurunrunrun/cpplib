@@ -1,6 +1,6 @@
 ---
 title: Parallel Binary Search (並列二分探索)
-documentation_of: ../src/algorithm/other/parallel_binary_search.hpp
+documentation_of: ../src/algorithm/other/offline_query/parallel_binary_search.hpp
 ---
 
 操作を先頭から適用した状態に対する複数の単調判定を、操作列の走査を共有して同時に二分探索する。

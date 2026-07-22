@@ -1,6 +1,6 @@
 ---
 title: Maximum Downward Grid Path Sum (下向き格子経路の最大和) [BYTESM2]
-documentation_of: ../src/algorithm/other/maximum_downward_grid_path_sum.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/maximum_downward_grid_path_sum.hpp
 ---
 
 数値格子の最上段から最下段まで進む経路の要素和の最大値を求める。

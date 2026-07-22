@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/other/count_bipartite_edge_crossings.hpp"
+#include "../../src/algorithm/other/sequence/count_bipartite_edge_crossings.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

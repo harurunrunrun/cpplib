@@ -1,6 +1,6 @@
 ---
 title: Deterministic Selection / Majority Vote (決定的選択・多数決法)
-documentation_of: ../src/algorithm/other/selection.hpp
+documentation_of: ../src/algorithm/other/sequence/selection.hpp
 ---
 
 ## `median_of_medians_select`

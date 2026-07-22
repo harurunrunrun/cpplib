@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/longest_increasing_subsequence.hpp"
+#include "../../src/algorithm/other/sequence/longest_increasing_subsequence.hpp"
 
 void test_basic(){
     const std::vector<int> values = {3, 1, 4, 1, 5, 9, 2, 6};

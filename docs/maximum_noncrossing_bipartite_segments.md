@@ -1,6 +1,6 @@
 ---
 title: Maximum Noncrossing Bipartite Segments (二直線間線分の最大非交差部分集合) [BRIDGE]
-documentation_of: ../src/algorithm/other/maximum_noncrossing_bipartite_segments.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/maximum_noncrossing_bipartite_segments.hpp
 ---
 
 平行な2直線上の点を結ぶ線分から、内部で交差しない最大個数を求める。

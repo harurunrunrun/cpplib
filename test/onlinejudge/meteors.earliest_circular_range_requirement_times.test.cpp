@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/earliest_circular_range_requirement_times.hpp"
+#include "../../src/algorithm/other/offline_query/earliest_circular_range_requirement_times.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

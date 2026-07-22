@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../src/algorithm/other/plane_coordinate_compression.hpp"
+#include "../../src/algorithm/other/utility/plane_coordinate_compression.hpp"
 
 template<class Function>
 bool throws_runtime_error(Function&& function){

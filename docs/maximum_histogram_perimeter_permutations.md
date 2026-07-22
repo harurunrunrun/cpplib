@@ -1,6 +1,6 @@
 ---
 title: Maximum Histogram Perimeter Permutations (ヒストグラム最大周長と順列数) [HIST2]
-documentation_of: ../src/algorithm/other/maximum_histogram_perimeter_permutations.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/maximum_histogram_perimeter_permutations.hpp
 ---
 
 異なる高さの棒を並べたヒストグラムの最大周長と達成順列数を返す。

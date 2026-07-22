@@ -5,7 +5,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/other/mo.hpp"
+#include "../../src/algorithm/other/offline_query/mo.hpp"
 
 std::vector<int> solve_distinct(const std::vector<int>& a, const std::vector<std::pair<int, int>>& queries){
     Mo mo(static_cast<int>(a.size()));

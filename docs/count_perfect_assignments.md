@@ -1,6 +1,6 @@
 ---
 title: Perfect Assignments Count (完全割当て数) [ASSIGN]
-documentation_of: ../src/algorithm/other/count_perfect_assignments.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/count_perfect_assignments.hpp
 ---
 
 二値選好行列を満たす全単射割当ての個数を返す。

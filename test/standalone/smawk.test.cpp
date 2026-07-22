@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/other/smawk.hpp"
+#include "../../src/algorithm/other/utility/smawk.hpp"
 
 std::vector<int> naive_minima(const std::vector<std::vector<long long>>& matrix){
     std::vector<int> result(matrix.size());

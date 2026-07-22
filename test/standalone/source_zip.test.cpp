@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/other/source_zip.hpp"
+#include "../../src/algorithm/other/utility/source_zip.hpp"
 
 template<class Function>
 void expect_source_zip_error(Function&& function){

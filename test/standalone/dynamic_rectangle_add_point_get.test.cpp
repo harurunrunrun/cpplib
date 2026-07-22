@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/other/dynamic_rectangle_add_point_get.hpp"
+#include "../../src/algorithm/other/offline_query/dynamic_rectangle_add_point_get.hpp"
 
 struct Query{
     std::string type;

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/other/offline_rectangle_add_point_get.hpp"
+#include "../../src/algorithm/other/offline_query/offline_rectangle_add_point_get.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

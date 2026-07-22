@@ -1,6 +1,6 @@
 ---
 title: Multidimensional Prefix Sum (多次元累積和)
-documentation_of: ../src/algorithm/other/multidimensional_prefix_sum.hpp
+documentation_of: ../src/algorithm/other/offline_query/multidimensional_prefix_sum.hpp
 ---
 
 静的な直方体配列をD次元累積和へ変換し、半開直方体の総和を求める。

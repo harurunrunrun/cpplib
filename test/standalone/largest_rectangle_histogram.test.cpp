@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/other/largest_rectangle_histogram.hpp"
+#include "../../src/algorithm/other/sequence/largest_rectangle_histogram.hpp"
 
 void test_basic(){
     const auto result = largest_rectangle_histogram(std::vector<long long>{2, 1, 5, 6, 2, 3});

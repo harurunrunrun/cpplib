@@ -1,6 +1,6 @@
 ---
 title: Round-Robin Completion Times (ラウンドロビン完了時刻) [RRSCHED]
-documentation_of: ../src/algorithm/other/round_robin_completion_times.hpp
+documentation_of: ../src/algorithm/other/scheduling/round_robin_completion_times.hpp
 ---
 
 各タスクを添字順に1単位ずつ処理するラウンドロビン方式について、各タスクが完了する時刻を返す。

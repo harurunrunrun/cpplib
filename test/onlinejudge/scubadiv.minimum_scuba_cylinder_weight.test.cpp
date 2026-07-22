@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://www.spoj.com/problems/SCUBADIV/
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/other/minimum_cost_two_resource_cover.hpp"
+#include "../../src/algorithm/other/dynamic_programming/minimum_cost_two_resource_cover.hpp"
 int main(){ std::ios::sync_with_stdio(false); std::cin.tie(nullptr);
     int tests; std::cin>>tests; while(tests--){
         int required_first,required_second,n;

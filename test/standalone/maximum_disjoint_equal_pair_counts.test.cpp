@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/other/maximum_disjoint_equal_pair_counts.hpp"
+#include "../../src/algorithm/other/dynamic_programming/maximum_disjoint_equal_pair_counts.hpp"
 
 void self_test(){
     const std::vector<int> values{7, 7, 7, -2, -2, 7};

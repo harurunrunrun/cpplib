@@ -1,6 +1,6 @@
 ---
 title: Zip Unzip (圧縮・展開)
-documentation_of: ../src/algorithm/other/zip_unzip.hpp
+documentation_of: ../src/algorithm/other/utility/zip_unzip.hpp
 ---
 
 配列をソースコードに埋め込みやすい形にするための run-length zip/unzip。

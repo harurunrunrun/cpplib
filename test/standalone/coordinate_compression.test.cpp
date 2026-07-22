@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/other/coordinate_compression.hpp"
+#include "../../src/algorithm/other/utility/coordinate_compression.hpp"
 
 static void test_random(){
     std::mt19937_64 rng(2026071605);

@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "min_plus_convolution.hpp"
-#include "../other/smawk.hpp"
+#include "../other/utility/smawk.hpp"
 
 template<std::signed_integral T>
 std::vector<T> min_plus_convolution_convex_arbitrary_smawk(

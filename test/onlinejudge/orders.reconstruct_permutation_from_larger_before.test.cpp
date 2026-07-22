@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/reconstruct_permutation_from_larger_before.hpp"
+#include "../../src/algorithm/other/sequence/reconstruct_permutation_from_larger_before.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

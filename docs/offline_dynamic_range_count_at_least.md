@@ -1,6 +1,6 @@
 ---
 title: Offline Dynamic Range Count At Least (オフライン動的区間下限個数) [GIVEAWAY]
-documentation_of: ../src/algorithm/other/offline_dynamic_range_count_at_least.hpp
+documentation_of: ../src/algorithm/other/offline_query/offline_dynamic_range_count_at_least.hpp
 ---
 
 点代入と区間内の下限以上の要素数問い合わせを、操作列が事前に分かる場合に処理する。

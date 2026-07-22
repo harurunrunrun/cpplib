@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/largest_rectangle_histogram.hpp"
+#include "../../src/algorithm/other/sequence/largest_rectangle_histogram.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

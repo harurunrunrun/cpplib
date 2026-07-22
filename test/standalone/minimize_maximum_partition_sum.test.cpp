@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/other/minimize_maximum_partition_sum.hpp"
+#include "../../src/algorithm/other/dynamic_programming/minimize_maximum_partition_sum.hpp"
 
 long long brute_partition_sum(
     const std::vector<long long>& values,

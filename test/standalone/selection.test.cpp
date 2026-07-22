@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../../src/algorithm/other/selection.hpp"
+#include "../../src/algorithm/other/sequence/selection.hpp"
 
 std::optional<long long> naive_majority(const std::vector<long long>& values){
     std::unordered_map<long long, int> count;

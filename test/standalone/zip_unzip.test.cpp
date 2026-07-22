@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/other/zip_unzip.hpp"
+#include "../../src/algorithm/other/utility/zip_unzip.hpp"
 
 void self_test(){
     std::vector<int> data = {1, 1, 1, 2, 2, 3, 1, 1};

@@ -3,7 +3,7 @@
 #include <vector>
 #include <utility>
 
-#include "../../src/algorithm/other/minimum_rectangle_batch_cost.hpp"
+#include "../../src/algorithm/other/dynamic_programming/minimum_rectangle_batch_cost.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

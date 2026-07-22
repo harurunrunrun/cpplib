@@ -1,6 +1,6 @@
 ---
 title: Offline Dynamic Range Count Less Equal (オフライン動的区間以下個数) [RACETIME]
-documentation_of: ../src/algorithm/other/offline_dynamic_range_count_less_equal.hpp
+documentation_of: ../src/algorithm/other/offline_query/offline_dynamic_range_count_less_equal.hpp
 ---
 
 一点代入と、区間内で指定値以下の要素数を数える問い合わせをオフラインで処理します。

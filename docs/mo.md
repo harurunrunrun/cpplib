@@ -1,6 +1,6 @@
 ---
 title: Mo (Moのアルゴリズム)
-documentation_of: ../src/algorithm/other/mo.hpp
+documentation_of: ../src/algorithm/other/offline_query/mo.hpp
 ---
 
 Mo's algorithm 用のクエリ並べ替え。

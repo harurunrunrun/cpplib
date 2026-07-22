@@ -1,6 +1,6 @@
 ---
 title: Minimum Rank-Removal Sort Cost (順位費用付き除去ソートの最小費用) [LSORT]
-documentation_of: ../src/algorithm/other/minimum_rank_removal_sort_cost.hpp
+documentation_of: ../src/algorithm/other/dynamic_programming/minimum_rank_removal_sort_cost.hpp
 ---
 
 順列から要素を1個ずつ除去し、除去順を値の昇順または降順側から構成するときの最小総費用を求める。

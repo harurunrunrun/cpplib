@@ -1,6 +1,6 @@
 ---
 title: Dynamic Point Add Rectangle Sum (動的点加算長方形和)
-documentation_of: ../src/algorithm/other/dynamic_point_add_rectangle_sum.hpp
+documentation_of: ../src/algorithm/other/offline_query/dynamic_point_add_rectangle_sum.hpp
 ---
 
 点加算・長方形和。

@@ -1,6 +1,6 @@
 ---
 title: Largest Rectangle in a Histogram (ヒストグラム最大長方形) [DPL_3_C] [HISTOGRA]
-documentation_of: ../src/algorithm/other/largest_rectangle_histogram.hpp
+documentation_of: ../src/algorithm/other/sequence/largest_rectangle_histogram.hpp
 ---
 
 非負の高さ列をhistogramとみなし、含まれる最大長方形を求める。
