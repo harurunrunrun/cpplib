@@ -21,4 +21,4 @@ documentation_of: ../src/algorithm/integer_geometry/distance.hpp
 
 平方根を取らないため誤差はない。`squared_distance` は指定された距離が `__uint128_t` で表せなければ `std::overflow_error` を送出する。`closest_pair_squared` は遠い候補対が表現範囲外でも無視して正しい最小値を求め、最小距離そのものが表現できない場合だけ `std::overflow_error` を送出する。
 
-回転キャリパーの面積比較は最大129 bitの絶対値を二語で保持して正確に行う。直径の平方そのものが `__uint128_t` で表せない場合は `std::overflow_error` を送出する。`convex_diameter_squared` には時計回りまたは反時計回りの凸多角形を巡回順で渡し、重複頂点を含めない。
+回転キャリパーの面積比較は最大129 bitの絶対値を二語で保持して正確に行う。最初の辺について全頂点を一度走査して対蹠点を初期化し、等しい面積の対蹠点も比較するため、時計回り・反時計回りのどちらでも辺上の共線頂点を取りこぼさない。全点共線なら辞書順の両端を $O(H)$ 時間・$O(1)$ 追加領域で直接比較する。直径の平方そのものが `__uint128_t` で表せない場合は `std::overflow_error` を送出する。`convex_diameter_squared` には凸多角形を巡回順で渡し、重複頂点を含めない。

@@ -162,40 +162,96 @@ inline std::optional<UnsignedWide> convex_diameter_squared(
         return squared_distance(convex_polygon[0], convex_polygon[1]);
     }
 
-    UnsignedWide best = 0;
+    bool all_collinear = true;
+    for(std::size_t index = 2; index < size; ++index){
+        if(orientation(
+            convex_polygon[0], convex_polygon[1], convex_polygon[index]
+        ) != 0){
+            all_collinear = false;
+            break;
+        }
+    }
+    if(all_collinear){
+        const auto [minimum, maximum] = std::minmax_element(
+            convex_polygon.begin(), convex_polygon.end()
+        );
+        return squared_distance(*minimum, *maximum);
+    }
+
+    const auto doubled_area = [&](
+        const Vector& edge,
+        std::size_t edge_start,
+        std::size_t vertex
+    ){
+        const Vector offset = vector_from(
+            convex_polygon[edge_start], convex_polygon[vertex]
+        );
+        return detail::absolute_product_difference(
+            edge.x, offset.y, edge.y, offset.x
+        );
+    };
+    const auto same_area = [](
+        const detail::DoubleUnsignedWide& first,
+        const detail::DoubleUnsignedWide& second
+    ){
+        return first.high == second.high && first.low == second.low;
+    };
+
     std::size_t opposite = 1;
+    const Vector first_edge = vector_from(
+        convex_polygon[0], convex_polygon[1]
+    );
+    detail::DoubleUnsignedWide opposite_area =
+        doubled_area(first_edge, 0, opposite);
+    for(std::size_t candidate = 2; candidate < size; ++candidate){
+        const detail::DoubleUnsignedWide candidate_area =
+            doubled_area(first_edge, 0, candidate);
+        if(detail::double_unsigned_less_equal(
+            opposite_area, candidate_area
+        )){
+            opposite = candidate;
+            opposite_area = candidate_area;
+        }
+    }
+
+    UnsignedWide best = 0;
     for(std::size_t index = 0; index < size; ++index){
         const std::size_t next = (index + 1) % size;
         const Vector edge = vector_from(
             convex_polygon[index], convex_polygon[next]
         );
+        opposite_area = doubled_area(edge, index, opposite);
         while(true){
             const std::size_t next_opposite = (opposite + 1) % size;
-            const Vector current_offset = vector_from(
-                convex_polygon[index], convex_polygon[opposite]
-            );
-            const Vector next_offset = vector_from(
-                convex_polygon[index], convex_polygon[next_opposite]
-            );
-            const detail::DoubleUnsignedWide current_area =
-                detail::absolute_product_difference(
-                    edge.x, current_offset.y, edge.y, current_offset.x
-                );
             const detail::DoubleUnsignedWide next_area =
-                detail::absolute_product_difference(
-                    edge.x, next_offset.y, edge.y, next_offset.x
-                );
+                doubled_area(edge, index, next_opposite);
             if(detail::double_unsigned_less_equal(
-                next_area, current_area
-            )) break;
+                next_area, opposite_area
+            )){
+                break;
+            }
             opposite = next_opposite;
+            opposite_area = next_area;
         }
+
         best = std::max(best, squared_distance(
             convex_polygon[index], convex_polygon[opposite]
         ));
         best = std::max(best, squared_distance(
             convex_polygon[next], convex_polygon[opposite]
         ));
+
+        const std::size_t next_opposite = (opposite + 1) % size;
+        const detail::DoubleUnsignedWide next_area =
+            doubled_area(edge, index, next_opposite);
+        if(same_area(opposite_area, next_area)){
+            best = std::max(best, squared_distance(
+                convex_polygon[index], convex_polygon[next_opposite]
+            ));
+            best = std::max(best, squared_distance(
+                convex_polygon[next], convex_polygon[next_opposite]
+            ));
+        }
     }
     return best;
 }
