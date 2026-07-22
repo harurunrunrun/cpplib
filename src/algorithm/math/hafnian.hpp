@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_HAFNIAN_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_HAFNIAN_HPP_INCLUDED
 
 #include <bit>
 #include <cstddef>
@@ -163,3 +164,5 @@ T hafnian(const Matrix<T, MAX_ROW, MAX_COL>& matrix){
     }
     return hafnian(values);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_HAFNIAN_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -186,3 +187,5 @@ auto run_first_order(
 }
 
 }  // namespace approximate::optimization::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_COMMON_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_SUM_SQRT_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_SUM_SQRT_TREE_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -38,3 +39,5 @@ public:
         return tree.empty() ? T(0) : tree.all_prod();
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_SUM_SQRT_TREE_HPP_INCLUDED

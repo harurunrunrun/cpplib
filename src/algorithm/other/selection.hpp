@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_SELECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_SELECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <concepts>
@@ -135,3 +136,5 @@ std::optional<std::iter_value_t<Iterator>> boyer_moore_majority(
     if(size / 2 < count) return candidate;
     return std::nullopt;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_SELECTION_HPP_INCLUDED

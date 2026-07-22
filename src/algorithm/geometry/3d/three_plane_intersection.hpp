@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_THREE_PLANE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_THREE_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <variant>
 
@@ -40,3 +41,5 @@ inline ThreePlaneIntersection3 three_plane_intersection(
     }
     return line_plane_intersection(line, third);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_THREE_PLANE_INTERSECTION_HPP_INCLUDED

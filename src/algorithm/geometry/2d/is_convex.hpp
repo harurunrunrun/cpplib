@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_IS_CONVEX_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_IS_CONVEX_HPP_INCLUDED
 
 #include <cstddef>
 #include <vector>
@@ -21,3 +22,5 @@ inline bool is_convex(const std::vector<Point>& polygon){
     }
     return true;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_IS_CONVEX_HPP_INCLUDED

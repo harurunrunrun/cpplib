@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_COMMON_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_COMMON_INTERSECTION_HPP_INCLUDED
 
 #include "is_finite.hpp"
 #include "line_plane_intersection.hpp"
@@ -34,3 +35,5 @@ inline LinearIntersection3 segment_plane_common_intersection(
     }
     return intersection->point;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_COMMON_INTERSECTION_HPP_INCLUDED

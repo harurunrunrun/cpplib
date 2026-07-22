@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_SEGTREE_2D_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_SEGTREE_2D_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -396,3 +397,5 @@ public:
         return all_prod(latest_version());
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_SEGTREE_2D_HPP_INCLUDED

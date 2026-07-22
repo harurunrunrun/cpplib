@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_TWO_MAXIMUM_SEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_TWO_MAXIMUM_SEGTREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -145,3 +146,5 @@ public:
         return aggregate.value[0] + aggregate.value[1];
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_TWO_MAXIMUM_SEGTREE_HPP_INCLUDED

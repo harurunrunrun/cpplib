@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_DSU_WEIGHTED_PARENT_FOREST_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_DSU_WEIGHTED_PARENT_FOREST_DISTANCE_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -102,3 +103,5 @@ public:
             std::move(edge_weight);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_DSU_WEIGHTED_PARENT_FOREST_DISTANCE_HPP_INCLUDED

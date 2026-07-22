@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_EULER_TOUR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_EULER_TOUR_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -333,3 +334,5 @@ public:
         }
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_EULER_TOUR_HPP_INCLUDED

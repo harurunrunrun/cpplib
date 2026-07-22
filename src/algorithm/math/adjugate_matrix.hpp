@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_ADJUGATE_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_ADJUGATE_MATRIX_HPP_INCLUDED
 
 #include <cstddef>
 #include <numeric>
@@ -188,3 +189,5 @@ Matrix<T, MAX_ROW, MAX_COL> adjugate_matrix(
     }
     return fixed_result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_ADJUGATE_MATRIX_HPP_INCLUDED

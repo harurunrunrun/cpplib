@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_SUBSET_CONVOLUTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_SUBSET_CONVOLUTION_HPP_INCLUDED
 
 #include <bit>
 #include <cstddef>
@@ -98,3 +99,5 @@ std::vector<T> subset_convolution(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_SUBSET_CONVOLUTION_HPP_INCLUDED

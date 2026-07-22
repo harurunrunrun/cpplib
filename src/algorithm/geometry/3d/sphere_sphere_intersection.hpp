@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SPHERE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SPHERE_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -73,3 +74,5 @@ inline std::optional<Circle3> sphere_sphere_intersection(
     }
     return Circle3{center, normal, radius};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SPHERE_INTERSECTION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_MYERS_EDIT_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_MYERS_EDIT_DISTANCE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -110,3 +111,5 @@ inline std::size_t myers_bit_parallel_edit_distance(
     }
     return score;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_MYERS_EDIT_DISTANCE_HPP_INCLUDED

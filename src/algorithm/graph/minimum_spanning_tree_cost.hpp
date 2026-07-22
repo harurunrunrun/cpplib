@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_SPANNING_TREE_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_SPANNING_TREE_COST_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -28,3 +29,5 @@ inline long long minimum_spanning_tree_cost(
     }
     return static_cast<long long>(result.cost);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_SPANNING_TREE_COST_HPP_INCLUDED

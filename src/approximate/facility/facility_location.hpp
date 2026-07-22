@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_FACILITY_FACILITY_LOCATION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_FACILITY_FACILITY_LOCATION_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -73,3 +74,5 @@ FacilityLocationResult add_drop_facility_location(
 }
 
 }  // namespace approximate::facility
+
+#endif  // CPPLIB_SRC_APPROXIMATE_FACILITY_FACILITY_LOCATION_HPP_INCLUDED

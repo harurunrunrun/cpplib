@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_COUNT_VISIBLE_OVERLAID_INTERVALS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_COUNT_VISIBLE_OVERLAID_INTERVALS_HPP_INCLUDED
 
 #include <algorithm>
 #include <memory>
@@ -46,3 +47,5 @@ int count_visible_overlaid_intervals(
     }
     return static_cast<int>(std::count(visible.begin() + 1, visible.end(), true));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_COUNT_VISIBLE_OVERLAID_INTERVALS_HPP_INCLUDED

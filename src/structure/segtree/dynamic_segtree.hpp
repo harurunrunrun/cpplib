@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_SEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_SEGTREE_HPP_INCLUDED
 #include <vector>
 #include <stdexcept>
 #include <type_traits>
@@ -214,3 +215,5 @@ struct DynamicSegtree{
             return std::max(0LL, internal_min_left(root, 0, MAX_SIZE, acc, r, f, args...));
         }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_SEGTREE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_VERTEX_ADD_PATH_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_VERTEX_ADD_PATH_SUM_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -131,3 +132,5 @@ using DynamicForestVertexAddPathSumLazyTopTree =
         T,
         MAX_SIZE
     >;
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_VERTEX_ADD_PATH_SUM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_ASSIGN_ADD_SUM_SQUARES_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_ASSIGN_ADD_SUM_SQUARES_HPP_INCLUDED
 
 #include <memory>
 #include <vector>
@@ -44,3 +45,5 @@ public:
         return tree_->prod(left, right).square_sum;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_ASSIGN_ADD_SUM_SQUARES_HPP_INCLUDED

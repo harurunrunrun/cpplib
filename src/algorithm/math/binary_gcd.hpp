@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_BINARY_GCD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_BINARY_GCD_HPP_INCLUDED
 
 #include <bit>
 #include <cstdint>
@@ -45,3 +46,5 @@ constexpr std::uint64_t binary_gcd_signed(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_BINARY_GCD_HPP_INCLUDED

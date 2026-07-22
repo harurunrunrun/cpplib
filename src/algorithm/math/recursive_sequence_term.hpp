@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_RECURSIVE_SEQUENCE_TERM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_RECURSIVE_SEQUENCE_TERM_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -143,3 +144,5 @@ inline std::uint64_t recursive_sequence_term(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_RECURSIVE_SEQUENCE_TERM_HPP_INCLUDED

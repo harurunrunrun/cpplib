@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DOMINANT_AXIS_PROJECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DOMINANT_AXIS_PROJECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -31,3 +32,5 @@ inline Point dominant_axis_projection(
     if(axis == DominantAxis3::y) return {point.z, point.x};
     return {point.x, point.y};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DOMINANT_AXIS_PROJECTION_HPP_INCLUDED

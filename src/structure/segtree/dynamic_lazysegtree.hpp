@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_LAZYSEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_LAZYSEGTREE_HPP_INCLUDED
 #include <vector>
 #include <stdexcept>
 #include <type_traits>
@@ -301,3 +302,5 @@ struct DynamicLazySegtree{
             return std::max(0LL, internal_min_left(root, 0, _n, acc, acc_len, r, g, Monoid.id(), args...));
         }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_LAZYSEGTREE_HPP_INCLUDED

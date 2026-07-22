@@ -3,8 +3,6 @@ title: Dynamic Wavelet Matrix (動的ウェーブレット行列)
 documentation_of: ../src/structure/wavelet_matrix/dynamic_wavelet_matrix.hpp
 ---
 
-# Dynamic Wavelet Matrix
-
 要素の挿入・削除・置換に対応した整数列向け Wavelet Matrix。
 
 各ビット階層は B+ 木型の動的ビットベクトルで管理され、次の操作を提供する。

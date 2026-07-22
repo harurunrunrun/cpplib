@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_FLOOR_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_FLOOR_SUM_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -110,3 +111,5 @@ inline long long floor_sum(long long n, long long m, long long a, long long b){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_FLOOR_SUM_HPP_INCLUDED

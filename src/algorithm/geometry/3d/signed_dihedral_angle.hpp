@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SIGNED_DIHEDRAL_ANGLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SIGNED_DIHEDRAL_ANGLE_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -26,3 +27,5 @@ inline long double signed_dihedral_angle(
         dot(first_normal, second_normal)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SIGNED_DIHEDRAL_ANGLE_HPP_INCLUDED

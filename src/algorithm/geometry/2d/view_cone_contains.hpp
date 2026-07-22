@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VIEW_CONE_CONTAINS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VIEW_CONE_CONTAINS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -44,3 +45,5 @@ inline bool view_cone_contains(
     if(include_boundary) return angle <= half + GEOMETRY_EPS;
     return angle < half - GEOMETRY_EPS;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VIEW_CONE_CONTAINS_HPP_INCLUDED

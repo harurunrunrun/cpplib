@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_POWER_TOWER_LAST_DIGITS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_POWER_TOWER_LAST_DIGITS_HPP_INCLUDED
 
 #include <cstdint>
 #include <iomanip>
@@ -133,3 +134,5 @@ inline TetrationLastDigits tetration_last_digits(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_POWER_TOWER_LAST_DIGITS_HPP_INCLUDED

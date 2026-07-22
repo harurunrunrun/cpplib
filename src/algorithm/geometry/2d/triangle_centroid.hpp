@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CENTROID_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CENTROID_HPP_INCLUDED
 
 #include "types.hpp"
 
@@ -11,3 +12,5 @@ inline Point triangle_centroid(
         (second - first) / 3.0L +
         (third - first) / 3.0L;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CENTROID_HPP_INCLUDED

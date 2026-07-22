@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -91,3 +92,5 @@ Polynomial<MOD> polynomial_derivative(const Polynomial<MOD>& polynomial){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_COMMON_HPP_INCLUDED

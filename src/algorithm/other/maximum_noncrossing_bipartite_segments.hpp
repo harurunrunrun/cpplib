@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_NONCROSSING_BIPARTITE_SEGMENTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_NONCROSSING_BIPARTITE_SEGMENTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -24,3 +25,5 @@ inline std::size_t maximum_noncrossing_bipartite_segments(
     }
     return tails.size();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_NONCROSSING_BIPARTITE_SEGMENTS_HPP_INCLUDED

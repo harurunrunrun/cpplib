@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_ENDPOINT_FAILURE_CONNECTIVITY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_ENDPOINT_FAILURE_CONNECTIVITY_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdint>
@@ -50,3 +51,5 @@ public:
         return oracle.connected_without_vertex(first, second, removed);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_ENDPOINT_FAILURE_CONNECTIVITY_HPP_INCLUDED

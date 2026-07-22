@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANDOM_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -501,3 +502,5 @@ recover_linear_congruential_unknown_modulus_candidate(
         std::span<const UInt>(consecutive_outputs)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED

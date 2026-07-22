@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_MATRIX_POWER_MOD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_MATRIX_POWER_MOD_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -67,3 +68,5 @@ inline DynamicModMatrix matrix_power_mod(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_MATRIX_POWER_MOD_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_FFT_POLYA_EXPONENTIAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_FFT_POLYA_EXPONENTIAL_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -109,3 +110,5 @@ std::vector<Modint<MOD>> polya_logarithm(
 ){
     return polya_logarithm<MOD>(values, values.size());
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_FFT_POLYA_EXPONENTIAL_HPP_INCLUDED

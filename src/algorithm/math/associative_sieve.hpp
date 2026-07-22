@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_ASSOCIATIVE_SIEVE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_ASSOCIATIVE_SIEVE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -331,3 +332,5 @@ inline std::vector<AssociativeSieveValue> associative_sieve_summatory_quotients(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_ASSOCIATIVE_SIEVE_HPP_INCLUDED

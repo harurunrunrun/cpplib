@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_BINARY_TREE_TRAVERSAL_COMPATIBILITY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_BINARY_TREE_TRAVERSAL_COMPATIBILITY_HPP_INCLUDED
 
 #include <vector>
 
@@ -12,3 +13,5 @@ bool binary_tree_traversal_compatibility(
 ){
     return binary_tree_traversals_compatible<MAX_SIZE>(preorder, inorder, postorder);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_BINARY_TREE_TRAVERSAL_COMPATIBILITY_HPP_INCLUDED

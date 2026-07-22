@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_RECTANGLE_BATCH_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_RECTANGLE_BATCH_COST_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -100,3 +101,5 @@ inline long long minimum_rectangle_batch_cost(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_RECTANGLE_BATCH_COST_HPP_INCLUDED

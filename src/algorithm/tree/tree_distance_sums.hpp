@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_TREE_DISTANCE_SUMS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_TREE_DISTANCE_SUMS_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -72,3 +73,5 @@ inline std::vector<long long> tree_distance_sums(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_TREE_DISTANCE_SUMS_HPP_INCLUDED

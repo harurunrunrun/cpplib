@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_COMBINATORICS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_COMBINATORICS_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -99,3 +100,5 @@ struct Combinatorics{
         return res;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_COMBINATORICS_HPP_INCLUDED

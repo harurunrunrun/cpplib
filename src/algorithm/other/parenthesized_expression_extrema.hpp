@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_PARENTHESIZED_EXPRESSION_EXTREMA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_PARENTHESIZED_EXPRESSION_EXTREMA_HPP_INCLUDED
 
 #include <algorithm>
 #include <cctype>
@@ -102,3 +103,5 @@ inline ParenthesizedExpressionExtrema parenthesized_expression_extrema(
     }
     return {minimum.front().back(), maximum.front().back()};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_PARENTHESIZED_EXPRESSION_EXTREMA_HPP_INCLUDED

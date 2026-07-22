@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_RANGE_PRIORITY_QUEUE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_RANGE_PRIORITY_QUEUE_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -190,3 +191,5 @@ public:
         return value;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_RANGE_PRIORITY_QUEUE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_BIG_INTEGER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_BIG_INTEGER_HPP_INCLUDED
 
 #include <compare>
 #include <concepts>
@@ -250,3 +251,4 @@ public:
     }
 };
 
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_BIG_INTEGER_HPP_INCLUDED

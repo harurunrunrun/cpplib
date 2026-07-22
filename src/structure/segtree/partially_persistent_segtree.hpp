@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_SEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_SEGTREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -213,3 +214,5 @@ public:
         return min_left(latest_version(), r, f, std::forward<decltype(args)>(args)...);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_SEGTREE_HPP_INCLUDED

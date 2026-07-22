@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ROTATE_AROUND_AXIS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ROTATE_AROUND_AXIS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -24,3 +25,5 @@ inline Point3 rotate_around_axis(
     return point * cosine + cross(direction, point) * sine +
         direction * dot(direction, point) * (1 - cosine);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ROTATE_AROUND_AXIS_HPP_INCLUDED

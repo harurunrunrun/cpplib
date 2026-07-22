@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_BIPARTITE_EDGE_COLORING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_BIPARTITE_EDGE_COLORING_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -501,3 +502,5 @@ inline BipartiteEdgeColoringResult bipartite_edge_coloring(
     solver.solve(maximum_degree);
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_BIPARTITE_EDGE_COLORING_HPP_INCLUDED

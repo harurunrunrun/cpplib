@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_COMPONENT_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_COMPONENT_COUNT_HPP_INCLUDED
 
 #include <numeric>
 #include <stdexcept>
@@ -50,3 +51,5 @@ inline int undirected_component_count(
     }
     return component_count;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_COMPONENT_COUNT_HPP_INCLUDED

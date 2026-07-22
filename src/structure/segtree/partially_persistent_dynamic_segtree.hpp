@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_DYNAMIC_SEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_DYNAMIC_SEGTREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -283,3 +284,5 @@ public:
     requires std::is_invocable_v<F, S, Args...>
     long long min_left(long long right, F predicate, Args&&... args) const{ return min_left(latest_version(), right, predicate, args...); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_DYNAMIC_SEGTREE_HPP_INCLUDED

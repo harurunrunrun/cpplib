@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_BELLMAN_FORD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_BELLMAN_FORD_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -78,3 +79,5 @@ BellmanFordResult<T> bellman_ford(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_BELLMAN_FORD_HPP_INCLUDED

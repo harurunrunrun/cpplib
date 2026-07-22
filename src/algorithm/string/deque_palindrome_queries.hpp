@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_DEQUE_PALINDROME_QUERIES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_DEQUE_PALINDROME_QUERIES_HPP_INCLUDED
 
 #include "deque_palindromic_tree.hpp"
 
@@ -30,3 +31,5 @@ public:
         return tree_.statistics();
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_DEQUE_PALINDROME_QUERIES_HPP_INCLUDED

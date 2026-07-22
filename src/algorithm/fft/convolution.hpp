@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_FFT_CONVOLUTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_FFT_CONVOLUTION_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -228,3 +229,5 @@ std::vector<Modint<MOD>> arbitrary_mod_convolution(const std::vector<Modint<MOD>
         return res;
     }
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_FFT_CONVOLUTION_HPP_INCLUDED

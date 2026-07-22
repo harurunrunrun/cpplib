@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_DETAIL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_DETAIL_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -229,3 +230,5 @@ inline std::vector<Point> clip_segment_by_convex_polygon(
 }
 
 }  // namespace advanced_geometry_detail
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_DETAIL_HPP_INCLUDED

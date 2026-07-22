@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_KTH_ROOT_INTEGER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_KTH_ROOT_INTEGER_HPP_INCLUDED
 
 #include <bit>
 #include <cstdint>
@@ -59,3 +60,5 @@ inline std::uint64_t kth_root_integer(std::uint64_t value, unsigned int exponent
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_KTH_ROOT_INTEGER_HPP_INCLUDED

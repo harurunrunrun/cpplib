@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WAVELET_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WAVELET_MATRIX_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -326,3 +327,5 @@ public:
         return kth_smallest(version, l, r, count);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WAVELET_MATRIX_HPP_INCLUDED

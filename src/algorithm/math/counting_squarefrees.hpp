@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_COUNTING_SQUAREFREES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_COUNTING_SQUAREFREES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -154,3 +155,5 @@ inline std::uint64_t count_squarefree(std::uint64_t n){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_COUNTING_SQUAREFREES_HPP_INCLUDED

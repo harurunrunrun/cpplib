@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_SEGMENT_LI_CHAO_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_SEGMENT_LI_CHAO_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -163,3 +164,5 @@ public:
         return static_cast<long long>(*answer);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_SEGMENT_LI_CHAO_TREE_HPP_INCLUDED

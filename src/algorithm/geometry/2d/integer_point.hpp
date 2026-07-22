@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_POINT_HPP_INCLUDED
 
 #include <concepts>
 
@@ -14,3 +15,5 @@ struct IntegerPoint{
         return y < other.y;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_POINT_HPP_INCLUDED

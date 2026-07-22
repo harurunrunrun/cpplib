@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_OVERLAP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_OVERLAP_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -43,3 +44,5 @@ inline std::optional<Segment> segment_overlap(
     }
     return Segment{low, high};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_OVERLAP_HPP_INCLUDED

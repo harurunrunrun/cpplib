@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_VALUE_MEMBERSHIP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_VALUE_MEMBERSHIP_HPP_INCLUDED
 
 #include <vector>
 
@@ -17,3 +18,5 @@ public:
         return statistics.count_equal(left, right, value) != 0;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_VALUE_MEMBERSHIP_HPP_INCLUDED

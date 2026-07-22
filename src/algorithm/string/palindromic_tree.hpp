@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_PALINDROMIC_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_PALINDROMIC_TREE_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -235,3 +236,5 @@ public:
         return nodes[longest_palindrome_node()].length;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_PALINDROMIC_TREE_HPP_INCLUDED

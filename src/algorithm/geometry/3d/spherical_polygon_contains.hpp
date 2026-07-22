@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_POLYGON_CONTAINS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_POLYGON_CONTAINS_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -88,3 +89,5 @@ inline bool spherical_polygon_contains(
     return std::abs(winding) > GEOMETRY3D_PI
         and winding * signed_area > 0.0L;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_POLYGON_CONTAINS_HPP_INCLUDED

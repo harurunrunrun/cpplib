@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_STATIC_RANGE_COUNT_DISTINCT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_STATIC_RANGE_COUNT_DISTINCT_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -69,3 +70,5 @@ public:
 
     int count_distinct(int left, int right) const{ return count(left, right); }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_STATIC_RANGE_COUNT_DISTINCT_HPP_INCLUDED

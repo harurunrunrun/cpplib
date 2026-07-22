@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_ROOTED_TREE_ISOMORPHISM_CLASSIFICATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_ROOTED_TREE_ISOMORPHISM_CLASSIFICATION_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -31,3 +32,5 @@ rooted_tree_isomorphism_classification(
     for(int& label: labels) --label;
     return {class_count, std::move(labels)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_ROOTED_TREE_ISOMORPHISM_CLASSIFICATION_HPP_INCLUDED

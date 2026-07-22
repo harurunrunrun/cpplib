@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_GRAPH_DYNAMIC_GRAPH_CONNECTIVITY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_GRAPH_DYNAMIC_GRAPH_CONNECTIVITY_HPP_INCLUDED
 
 #include "online_dynamic_connectivity.hpp"
 
@@ -13,3 +14,5 @@ public:
     bool remove_edge(int left, int right){ return graph.erase_edge(left, right); }
     bool connected(int left, int right) const{ return graph.same(left, right); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_GRAPH_DYNAMIC_GRAPH_CONNECTIVITY_HPP_INCLUDED

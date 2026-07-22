@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_NESTEROV_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_NESTEROV_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -58,3 +59,5 @@ auto nesterov_accelerated_gradient(
 }
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_NESTEROV_HPP_INCLUDED

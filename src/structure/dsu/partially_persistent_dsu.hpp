@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_DSU_PARTIALLY_PERSISTENT_DSU_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_DSU_PARTIALLY_PERSISTENT_DSU_HPP_INCLUDED
 
 #include <array>
 #include <limits>
@@ -101,3 +102,5 @@ public:
         return new_version;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_DSU_PARTIALLY_PERSISTENT_DSU_HPP_INCLUDED

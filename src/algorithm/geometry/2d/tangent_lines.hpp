@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TANGENT_LINES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TANGENT_LINES_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -33,3 +34,5 @@ inline std::vector<Line> tangent_lines(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TANGENT_LINES_HPP_INCLUDED

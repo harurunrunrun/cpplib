@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_SUM_OF_TOTIENT_FUNCTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_SUM_OF_TOTIENT_FUNCTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -128,3 +129,5 @@ Modint<MOD> sum_totient(std::uint64_t n){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_SUM_OF_TOTIENT_FUNCTION_HPP_INCLUDED

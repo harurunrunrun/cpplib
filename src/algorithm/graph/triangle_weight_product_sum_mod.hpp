@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_TRIANGLE_WEIGHT_PRODUCT_SUM_MOD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_TRIANGLE_WEIGHT_PRODUCT_SUM_MOD_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -35,3 +36,5 @@ inline long long triangle_weight_product_sum_mod(
     });
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_TRIANGLE_WEIGHT_PRODUCT_SUM_MOD_HPP_INCLUDED

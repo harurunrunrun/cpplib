@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SPHERE_INTERSECTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SPHERE_INTERSECTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -42,3 +43,5 @@ inline bool convex_polyhedron_sphere_intersects(
     return convex_polyhedron_point_distance(normalized, {0.0L, 0.0L, 0.0L})
         <= sphere.radius / scale;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SPHERE_INTERSECTS_HPP_INCLUDED

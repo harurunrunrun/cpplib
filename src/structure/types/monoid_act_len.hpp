@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TYPES_MONOID_ACT_LEN_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TYPES_MONOID_ACT_LEN_HPP_INCLUDED
 #include <type_traits>
 
 template<auto op_func, auto e_func, auto mapping_func, auto composition_func, auto id_func>
@@ -22,3 +23,5 @@ struct Monoid_Act_Len{
         return id_func();
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TYPES_MONOID_ACT_LEN_HPP_INCLUDED

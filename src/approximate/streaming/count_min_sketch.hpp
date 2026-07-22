@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_COUNT_MIN_SKETCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_COUNT_MIN_SKETCH_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -66,3 +67,5 @@ public:
         return std::exp(-static_cast<long double>(Depth));
     }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_COUNT_MIN_SKETCH_HPP_INCLUDED

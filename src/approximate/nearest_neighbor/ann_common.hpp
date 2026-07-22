@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_ANN_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_ANN_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -83,3 +84,5 @@ inline void sort_unique_indices(std::vector<std::size_t>& indices) {
 }  // namespace detail
 
 }  // namespace approximate::nearest_neighbor
+
+#endif  // CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_ANN_COMMON_HPP_INCLUDED

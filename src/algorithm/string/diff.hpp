@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_DIFF_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_DIFF_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -227,3 +228,5 @@ std::vector<DiffOp<typename Sequence::value_type>> diff_sequence(const Sequence&
     std::reverse(result.begin(), result.end());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_DIFF_HPP_INCLUDED

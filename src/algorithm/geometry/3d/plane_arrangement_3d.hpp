@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_ARRANGEMENT_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_ARRANGEMENT_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdint>
@@ -123,3 +124,5 @@ inline PlaneArrangement3 plane_arrangement_3d(
     );
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_ARRANGEMENT_3D_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_LEIDEN_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_LEIDEN_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -110,3 +111,5 @@ namespace detail {
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_LEIDEN_HPP_INCLUDED

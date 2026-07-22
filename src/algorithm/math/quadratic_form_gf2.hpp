@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_QUADRATIC_FORM_GF2_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_QUADRATIC_FORM_GF2_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -381,3 +382,5 @@ public:
 };
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_QUADRATIC_FORM_GF2_HPP_INCLUDED

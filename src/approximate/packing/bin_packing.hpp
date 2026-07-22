@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_BIN_PACKING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_PACKING_BIN_PACKING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -198,3 +199,5 @@ BinPackingResult<Size> worst_fit_bin_packing(
 }
 
 }  // namespace approximate::packing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_BIN_PACKING_HPP_INCLUDED

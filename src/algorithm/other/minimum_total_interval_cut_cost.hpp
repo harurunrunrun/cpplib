@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_TOTAL_INTERVAL_CUT_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_TOTAL_INTERVAL_CUT_COST_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -74,3 +75,5 @@ inline long long minimum_total_interval_cut_cost(
     }
     return dp.front().back();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_TOTAL_INTERVAL_CUT_COST_HPP_INCLUDED

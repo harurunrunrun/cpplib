@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_PERIMETER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_PERIMETER_HPP_INCLUDED
 
 #include <cstddef>
 #include <vector>
@@ -13,3 +14,5 @@ inline long double polygon_perimeter(const std::vector<Point>& polygon){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_PERIMETER_HPP_INCLUDED

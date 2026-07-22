@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_BINARY_LABELING_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_BINARY_LABELING_COST_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -63,3 +64,5 @@ inline long long minimum_binary_labeling_cost(
     }
     return static_cast<long long>(answer);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_BINARY_LABELING_COST_HPP_INCLUDED

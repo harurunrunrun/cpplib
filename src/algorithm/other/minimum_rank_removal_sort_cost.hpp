@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_RANK_REMOVAL_SORT_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_RANK_REMOVAL_SORT_COST_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -107,3 +108,5 @@ inline long long minimum_rank_removal_sort_cost(
     }
     return minimum_cost[1][static_cast<std::size_t>(n)];
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_RANK_REMOVAL_SORT_COST_HPP_INCLUDED

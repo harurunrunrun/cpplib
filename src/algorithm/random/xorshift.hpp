@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_HPP_INCLUDED
 
 #include <array>
 #include <cstdint>
@@ -162,3 +163,5 @@ public:
         return std::numeric_limits<result_type>::max();
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_HPP_INCLUDED

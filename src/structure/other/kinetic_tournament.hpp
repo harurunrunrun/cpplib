@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_KINETIC_TOURNAMENT_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_KINETIC_TOURNAMENT_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -294,3 +295,5 @@ public:
         return query(0, size_);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_KINETIC_TOURNAMENT_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_CIRCLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_CIRCLE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -37,3 +38,5 @@ inline bool on_circle(const Circle3& circle, const Point3& point){
         center_distance - radius, std::max(center_distance, radius)
     ) == 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_CIRCLE_HPP_INCLUDED

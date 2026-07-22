@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_SLERP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_SLERP_HPP_INCLUDED
 
 #include <cmath>
 #include <limits>
@@ -38,3 +39,5 @@ inline Point3 spherical_slerp(
         result, "spherical interpolation overflow"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_SLERP_HPP_INCLUDED

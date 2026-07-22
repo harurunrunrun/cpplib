@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_GRAPH_COORDINATE_PRODUCT_KNIGHT_DISTANCES_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_GRAPH_COORDINATE_PRODUCT_KNIGHT_DISTANCES_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -83,3 +84,5 @@ public:
         for(auto& result: cache_) result.reset();
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_GRAPH_COORDINATE_PRODUCT_KNIGHT_DISTANCES_HPP_INCLUDED

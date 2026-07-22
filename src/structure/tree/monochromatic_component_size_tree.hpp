@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_MONOCHROMATIC_COMPONENT_SIZE_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_MONOCHROMATIC_COMPONENT_SIZE_TREE_HPP_INCLUDED
 
 #include <vector>
 
@@ -18,3 +19,5 @@ public:
     bool toggle(int vertex){ return tree.toggle(vertex); }
     int component_size(int vertex){ return tree.component_prod(vertex); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_MONOCHROMATIC_COMPONENT_SIZE_TREE_HPP_INCLUDED

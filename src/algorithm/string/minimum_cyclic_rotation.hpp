@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_CYCLIC_ROTATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_CYCLIC_ROTATION_HPP_INCLUDED
 
 #include <concepts>
 #include <cstddef>
@@ -53,3 +54,5 @@ std::size_t minimum_cyclic_rotation_index(
 inline std::size_t minimum_cyclic_rotation_index(std::string_view text){
     return minimum_cyclic_rotation_index(text.begin(), text.end());
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_CYCLIC_ROTATION_HPP_INCLUDED

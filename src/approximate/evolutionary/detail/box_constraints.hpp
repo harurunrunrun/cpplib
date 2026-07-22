@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_BOX_CONSTRAINTS_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_BOX_CONSTRAINTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -68,3 +69,5 @@ void validate_population_box(
 }
 
 }  // namespace approximate::evolutionary::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_BOX_CONSTRAINTS_HPP_INCLUDED

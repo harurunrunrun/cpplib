@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_ADAM_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_ADAM_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -71,3 +72,5 @@ auto adam(
 }
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_ADAM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SURFACE_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SURFACE_AREA_HPP_INCLUDED
 
 #include "base.hpp"
 #include "is_finite.hpp"
@@ -10,3 +11,5 @@ inline long double sphere_surface_area(const Sphere3& sphere){
         "sphere surface area is not representable"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SURFACE_AREA_HPP_INCLUDED

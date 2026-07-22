@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_SEGMENT_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_SEGMENT_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <variant>
@@ -50,3 +51,5 @@ inline LinearIntersection3 ray_segment_intersection(
         ray.origin + direction * upper,
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_SEGMENT_INTERSECTION_HPP_INCLUDED

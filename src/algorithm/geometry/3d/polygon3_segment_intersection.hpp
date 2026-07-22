@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_SEGMENT_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_SEGMENT_INTERSECTION_HPP_INCLUDED
 
 #include "polygon3_line_intersection.hpp"
 
@@ -17,3 +18,5 @@ inline Polygon3LinearIntersection3 polygon3_segment_intersection(
         polygon, {segment.a, segment.b}, 0.0L, 1.0L
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_SEGMENT_INTERSECTION_HPP_INCLUDED

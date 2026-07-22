@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SPARSE_UNDIRECTED_COMPONENT_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SPARSE_UNDIRECTED_COMPONENT_COUNT_HPP_INCLUDED
 
 #include <algorithm>
 #include <numeric>
@@ -67,3 +68,5 @@ inline long long sparse_undirected_component_count(
     }
     return component_count;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SPARSE_UNDIRECTED_COMPONENT_COUNT_HPP_INCLUDED

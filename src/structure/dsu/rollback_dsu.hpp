@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_DSU_ROLLBACK_DSU_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_DSU_ROLLBACK_DSU_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -95,3 +96,5 @@ public:
         while(history_size > snapshot_id) undo();
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_DSU_ROLLBACK_DSU_HPP_INCLUDED

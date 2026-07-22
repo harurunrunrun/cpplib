@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_QUADRATIC_PARTITION_SCORE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_QUADRATIC_PARTITION_SCORE_HPP_INCLUDED
 
 #include "../math/exact_integer.hpp"
 
@@ -81,3 +82,5 @@ inline long long maximum_quadratic_partition_score(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_QUADRATIC_PARTITION_SCORE_HPP_INCLUDED

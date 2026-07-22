@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_BEST_BIN_FIRST_KD_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_BEST_BIN_FIRST_KD_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -212,3 +213,5 @@ private:
 };
 
 }  // namespace approximate::nearest_neighbor
+
+#endif  // CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_BEST_BIN_FIRST_KD_TREE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_UNIT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_UNIT_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -11,3 +12,5 @@ inline Point unit(const Point& point){
     }
     return point / length;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_UNIT_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_CHINESE_WHISPERS_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_CHINESE_WHISPERS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -60,3 +61,5 @@ namespace approximate::graph {
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_CHINESE_WHISPERS_HPP_INCLUDED

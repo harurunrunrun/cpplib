@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_INSPHERE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_INSPHERE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -132,3 +133,5 @@ inline long double insphere(
         normalized_value, raw.scale, 5
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_INSPHERE_HPP_INCLUDED

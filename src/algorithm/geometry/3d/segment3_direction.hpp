@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT3_DIRECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT3_DIRECTION_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -12,3 +13,5 @@ inline Point3 segment3_direction(const Segment3& segment){
     }
     return direction;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT3_DIRECTION_HPP_INCLUDED

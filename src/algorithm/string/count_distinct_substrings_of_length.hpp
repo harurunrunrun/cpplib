@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSTRINGS_OF_LENGTH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSTRINGS_OF_LENGTH_HPP_INCLUDED
 
 #include <cstddef>
 #include <string>
@@ -44,3 +45,5 @@ long long count_distinct_substrings_of_length(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSTRINGS_OF_LENGTH_HPP_INCLUDED

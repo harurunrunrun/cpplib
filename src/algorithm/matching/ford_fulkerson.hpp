@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_FORD_FULKERSON_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_FORD_FULKERSON_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -123,3 +124,5 @@ public:
         return flow;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_FORD_FULKERSON_HPP_INCLUDED

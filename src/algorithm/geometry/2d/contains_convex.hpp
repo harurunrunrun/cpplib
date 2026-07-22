@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONTAINS_CONVEX_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONTAINS_CONVEX_HPP_INCLUDED
 
 #include <vector>
 
@@ -10,3 +11,5 @@ inline int contains_convex(
 ){
     return ConvexPolygonQuery(polygon).contains(point);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONTAINS_CONVEX_HPP_INCLUDED

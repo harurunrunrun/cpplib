@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_SEGMENTED_SIEVE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_SEGMENTED_SIEVE_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -92,3 +93,5 @@ std::vector<long long> primes_in_range(long long l, long long r){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_SEGMENTED_SIEVE_HPP_INCLUDED

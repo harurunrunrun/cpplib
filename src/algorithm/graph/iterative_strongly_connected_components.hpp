@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_ITERATIVE_STRONGLY_CONNECTED_COMPONENTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_ITERATIVE_STRONGLY_CONNECTED_COMPONENTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -85,3 +86,5 @@ iterative_strongly_connected_components(
     result.count = static_cast<int>(result.groups.size());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_ITERATIVE_STRONGLY_CONNECTED_COMPONENTS_HPP_INCLUDED

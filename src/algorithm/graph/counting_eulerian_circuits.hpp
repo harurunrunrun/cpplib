@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_COUNTING_EULERIAN_CIRCUITS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_COUNTING_EULERIAN_CIRCUITS_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -79,3 +80,5 @@ T count_eulerian_circuits(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_COUNTING_EULERIAN_CIRCUITS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_TREE_EDGE_SPLIT_DIAMETERS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_TREE_EDGE_SPLIT_DIAMETERS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -255,3 +256,5 @@ std::vector<TreeEdgeSplitDiameter> tree_edge_split_diameters(
         "library assertion fault: graph is not a tree (tree_edge_split_diameters)."
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_TREE_EDGE_SPLIT_DIAMETERS_HPP_INCLUDED

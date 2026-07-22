@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_CONNECTIVITY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_CONNECTIVITY_HPP_INCLUDED
 
 #include "link_cut_tree.hpp"
 #include "../types/common_monoids.hpp"
@@ -14,3 +15,5 @@ public:
     bool remove_edge(int left, int right){ return forest.cut(left, right); }
     bool connected(int left, int right){ return forest.connected(left, right); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_CONNECTIVITY_HPP_INCLUDED

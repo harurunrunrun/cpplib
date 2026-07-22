@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_MATRIX3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_MATRIX3_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -100,3 +101,5 @@ inline Quaternion3 quaternion3_from_matrix3(
     ))) result = -result;
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_MATRIX3_HPP_INCLUDED

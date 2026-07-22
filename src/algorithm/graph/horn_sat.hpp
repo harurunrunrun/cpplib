@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_HORN_SAT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_HORN_SAT_HPP_INCLUDED
 
 #include <cstddef>
 #include <deque>
@@ -90,3 +91,5 @@ inline HornSatResult horn_sat(
     }
     return {true, std::move(model)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_HORN_SAT_HPP_INCLUDED

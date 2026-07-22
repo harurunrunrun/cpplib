@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_GEOMETRY_3D_TEST_COMMON_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_GEOMETRY_3D_TEST_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -52,3 +53,5 @@ int geometry3d_test_main_impl(const char* source_file, Function function){
 
 #define geometry3d_test_main(...) \
     geometry3d_test_main_impl(__FILE__, (__VA_ARGS__))
+
+#endif  // CPPLIB_TEST_STANDALONE_GEOMETRY_3D_TEST_COMMON_HPP_INCLUDED

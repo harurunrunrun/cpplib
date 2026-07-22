@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_RANDOMIZED_RANDOMIZED_MIN_CUT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_RANDOMIZED_RANDOMIZED_MIN_CUT_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -259,3 +260,5 @@ RandomizedMinCutResult karger_stein_min_cut(
 }
 
 }  // namespace approximate::randomized
+
+#endif  // CPPLIB_SRC_APPROXIMATE_RANDOMIZED_RANDOMIZED_MIN_CUT_HPP_INCLUDED

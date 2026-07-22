@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_QUASI_NEWTON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_QUASI_NEWTON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -407,3 +408,5 @@ auto lbfgs(
 }
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_QUASI_NEWTON_HPP_INCLUDED

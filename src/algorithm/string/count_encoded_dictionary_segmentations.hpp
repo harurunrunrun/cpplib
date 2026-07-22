@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_COUNT_ENCODED_DICTIONARY_SEGMENTATIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_COUNT_ENCODED_DICTIONARY_SEGMENTATIONS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -178,3 +179,5 @@ inline long long count_encoded_dictionary_segmentations(
     }
     return ways.back();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_COUNT_ENCODED_DICTIONARY_SEGMENTATIONS_HPP_INCLUDED

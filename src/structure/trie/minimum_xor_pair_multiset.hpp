@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TRIE_MINIMUM_XOR_PAIR_MULTISET_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TRIE_MINIMUM_XOR_PAIR_MULTISET_HPP_INCLUDED
 
 #include <cstddef>
 #include <iterator>
@@ -69,3 +70,5 @@ public:
         return *adjacent_xors.begin();
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TRIE_MINIMUM_XOR_PAIR_MULTISET_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_SECTOR_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_SECTOR_AREA_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -15,3 +16,5 @@ inline long double circle_sector_area(
     }
     return circle.radius * circle.radius * central_angle / 2.0L;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_SECTOR_AREA_HPP_INCLUDED

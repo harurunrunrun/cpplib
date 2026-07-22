@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_WEIGHT_GENERAL_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_WEIGHT_GENERAL_MATCHING_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -97,3 +98,5 @@ MaximumWeightGeneralMatchingResult<T> maximum_weight_general_matching(
     result.weight = static_cast<T>(total_weight);
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_WEIGHT_GENERAL_MATCHING_HPP_INCLUDED

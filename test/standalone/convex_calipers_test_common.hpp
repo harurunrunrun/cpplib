@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_CONVEX_CALIPERS_TEST_COMMON_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_CONVEX_CALIPERS_TEST_COMMON_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -35,3 +36,5 @@ inline void check_calipers_equal(long double first, long double second){
         throw std::runtime_error("inconsistent rotating-calipers result");
     }
 }
+
+#endif  // CPPLIB_TEST_STANDALONE_CONVEX_CALIPERS_TEST_COMMON_HPP_INCLUDED

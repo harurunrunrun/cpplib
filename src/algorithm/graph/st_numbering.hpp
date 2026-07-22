@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_ST_NUMBERING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_ST_NUMBERING_HPP_INCLUDED
 
 #include <optional>
 #include <stdexcept>
@@ -166,3 +167,5 @@ inline std::optional<STNumberingResult> st_numbering(
     }
     return STNumberingResult{std::move(number), std::move(order)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_ST_NUMBERING_HPP_INCLUDED

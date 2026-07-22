@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GEOMETRY_ITERATIVE_CLOSEST_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GEOMETRY_ITERATIVE_CLOSEST_POINT_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -189,3 +190,5 @@ TranslationIcpResult<Dimension> brute_force_translation_icp(
 }
 
 }  // namespace approximate::geometry
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GEOMETRY_ITERATIVE_CLOSEST_POINT_HPP_INCLUDED

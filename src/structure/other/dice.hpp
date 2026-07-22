@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_DICE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_DICE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -220,3 +221,5 @@ public:
         return left.labels_ == right.labels_;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_DICE_HPP_INCLUDED

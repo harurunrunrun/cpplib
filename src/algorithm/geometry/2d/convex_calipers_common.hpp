@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_CALIPERS_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_CALIPERS_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -158,3 +159,5 @@ inline int contains_normalized_convex_polygon(
 }
 
 }  // namespace rotating_calipers_detail
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_CALIPERS_COMMON_HPP_INCLUDED

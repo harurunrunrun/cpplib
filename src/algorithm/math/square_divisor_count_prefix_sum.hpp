@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_SQUARE_DIVISOR_COUNT_PREFIX_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_SQUARE_DIVISOR_COUNT_PREFIX_SUM_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -177,3 +178,5 @@ inline std::vector<std::uint64_t> square_divisor_count_prefix_sums(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_SQUARE_DIVISOR_COUNT_PREFIX_SUM_HPP_INCLUDED

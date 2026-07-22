@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_MONOCHROMATIC_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_MONOCHROMATIC_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -516,3 +517,5 @@ public:
         return query_minimum(vertex_color, left, right, 1, 0, _n).product;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_MONOCHROMATIC_TREE_HPP_INCLUDED

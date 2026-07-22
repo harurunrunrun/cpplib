@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_NUMBER_OF_SUBSEQUENCES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_NUMBER_OF_SUBSEQUENCES_HPP_INCLUDED
 
 #include <cstdint>
 #include <functional>
@@ -36,3 +37,5 @@ std::uint32_t number_of_distinct_subsequences(
         (static_cast<std::uint64_t>(including_empty) + modulus - 1) % modulus
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_NUMBER_OF_SUBSEQUENCES_HPP_INCLUDED

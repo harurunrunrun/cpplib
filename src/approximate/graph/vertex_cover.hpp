@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_VERTEX_COVER_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_VERTEX_COVER_HPP_INCLUDED
 
 #include <cstddef>
 #include <utility>
@@ -56,3 +57,5 @@ struct VertexCoverResult {
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_VERTEX_COVER_HPP_INCLUDED

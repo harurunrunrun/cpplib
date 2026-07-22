@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_MATRIX_SQUARE_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_MATRIX_SQUARE_MATRIX_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -229,3 +230,5 @@ public:
         return res;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_MATRIX_SQUARE_MATRIX_HPP_INCLUDED

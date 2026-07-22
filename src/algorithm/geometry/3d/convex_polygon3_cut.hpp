@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYGON3_CUT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYGON3_CUT_HPP_INCLUDED
 
 #include <cstddef>
 
@@ -29,3 +30,5 @@ inline Polygon3 convex_polygon3_cut(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYGON3_CUT_HPP_INCLUDED

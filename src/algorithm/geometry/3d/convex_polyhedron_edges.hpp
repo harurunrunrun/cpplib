@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_EDGES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_EDGES_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -43,3 +44,5 @@ inline std::vector<std::array<std::size_t, 2>> convex_polyhedron_edges(
     }
     return edges;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_EDGES_HPP_INCLUDED

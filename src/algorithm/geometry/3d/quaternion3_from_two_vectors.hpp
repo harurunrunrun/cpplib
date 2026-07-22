@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_TWO_VECTORS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_TWO_VECTORS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -61,3 +62,5 @@ inline Quaternion3 quaternion3_from_two_vectors(
     const Point3 axis = cross(first, second);
     return Quaternion3{1.0L + cosine, axis.x, axis.y, axis.z}.normalized();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_TWO_VECTORS_HPP_INCLUDED

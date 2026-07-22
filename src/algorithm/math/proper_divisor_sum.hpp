@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_PROPER_DIVISOR_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_PROPER_DIVISOR_SUM_HPP_INCLUDED
 
 #include <cstdint>
 #include <limits>
@@ -30,3 +31,5 @@ inline std::uint64_t proper_divisor_sum(std::uint64_t n){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_PROPER_DIVISOR_SUM_HPP_INCLUDED

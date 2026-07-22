@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_INDEPENDENT_SET_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_INDEPENDENT_SET_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -35,3 +36,5 @@ std::vector<int> maximum_independent_set(const std::vector<std::vector<int>>& gr
     }
     return maximum_clique(complement);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_INDEPENDENT_SET_HPP_INCLUDED

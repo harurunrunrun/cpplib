@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_FACILITY_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_FACILITY_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -127,3 +128,5 @@ KMedianResult evaluate_k_median(
 }
 
 }  // namespace approximate::facility
+
+#endif  // CPPLIB_SRC_APPROXIMATE_FACILITY_COMMON_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TYPES_SUM_SQUARES_MONOID_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TYPES_SUM_SQUARES_MONOID_HPP_INCLUDED
 
 #include "common_monoids.hpp"
 
@@ -73,3 +74,5 @@ using AffineSumSquaresMonoidAct = Monoid_Act<
     common_monoid_internal::affine_composition<T>,
     common_monoid_internal::affine_id<T>
 >;
+
+#endif  // CPPLIB_SRC_STRUCTURE_TYPES_SUM_SQUARES_MONOID_HPP_INCLUDED

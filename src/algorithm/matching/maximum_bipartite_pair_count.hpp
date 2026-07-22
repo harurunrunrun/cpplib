@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_BIPARTITE_PAIR_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_BIPARTITE_PAIR_COUNT_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -23,3 +24,5 @@ inline int maximum_bipartite_pair_count(
     }
     return matching.solve().size;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_BIPARTITE_PAIR_COUNT_HPP_INCLUDED

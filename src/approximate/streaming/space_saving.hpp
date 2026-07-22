@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_SPACE_SAVING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_SPACE_SAVING_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -82,3 +83,5 @@ public:
     [[nodiscard]] std::size_t size() const noexcept { return size_; }
     [[nodiscard]] static constexpr std::size_t capacity() noexcept { return Capacity; }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_SPACE_SAVING_HPP_INCLUDED

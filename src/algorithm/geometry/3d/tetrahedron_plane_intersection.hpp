@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_PLANE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -71,3 +72,5 @@ inline PlanarIntersection3 tetrahedron_plane_intersection(
     });
     return points;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_PLANE_INTERSECTION_HPP_INCLUDED

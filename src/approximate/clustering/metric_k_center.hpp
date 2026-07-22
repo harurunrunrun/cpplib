@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CLUSTERING_METRIC_K_CENTER_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CLUSTERING_METRIC_K_CENTER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -92,3 +93,5 @@ template<class Distance>
 }
 
 }  // namespace approximate::clustering
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CLUSTERING_METRIC_K_CENTER_HPP_INCLUDED

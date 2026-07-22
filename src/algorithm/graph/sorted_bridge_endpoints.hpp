@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SORTED_BRIDGE_ENDPOINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SORTED_BRIDGE_ENDPOINTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -22,3 +23,5 @@ inline std::vector<std::pair<int, int>> sorted_bridge_endpoints(
     std::sort(answer.begin(), answer.end());
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SORTED_BRIDGE_ENDPOINTS_HPP_INCLUDED

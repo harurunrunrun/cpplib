@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_POINT_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_POINT_DISTANCE_HPP_INCLUDED
 
 #include <cmath>
 #include <algorithm>
@@ -37,3 +38,5 @@ inline long double distance(const Circle3& circle, const Point3& point){
     }
     return normalized_distance * difference.scale;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_POINT_DISTANCE_HPP_INCLUDED

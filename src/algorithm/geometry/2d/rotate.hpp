@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ROTATE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ROTATE_HPP_INCLUDED
 
 #include <cmath>
 
@@ -12,3 +13,5 @@ inline Point rotate(const Point& point, long double theta){
         point.x * sine + point.y * cosine,
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ROTATE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_ALMOST_SHORTEST_PATH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_ALMOST_SHORTEST_PATH_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -58,3 +59,5 @@ AlmostShortestPathResult<T> almost_shortest_path(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_ALMOST_SHORTEST_PATH_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_CLOSEST_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_CLOSEST_POINT_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -42,3 +43,5 @@ inline Point3 convex_polyhedron_closest_point(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_CLOSEST_POINT_HPP_INCLUDED

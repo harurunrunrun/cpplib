@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_FIBONACCI_RANGE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_FIBONACCI_RANGE_SUM_HPP_INCLUDED
 
 #include <cstdint>
 #include <stdexcept>
@@ -44,3 +45,5 @@ inline std::uint64_t fibonacci_range_sum(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_FIBONACCI_RANGE_SUM_HPP_INCLUDED

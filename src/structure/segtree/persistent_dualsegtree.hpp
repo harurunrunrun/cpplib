@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_DUALSEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_DUALSEGTREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -319,3 +320,5 @@ public:
         return get_impl(root[version], 0, sz, k);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_DUALSEGTREE_HPP_INCLUDED

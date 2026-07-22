@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_TDIGEST_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_TDIGEST_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -126,3 +127,5 @@ public:
         return MaxCentroids;
     }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_TDIGEST_HPP_INCLUDED

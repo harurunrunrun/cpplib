@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_ROLLBACK_WIDESEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_ROLLBACK_WIDESEGTREE_HPP_INCLUDED
 
 #include "rollback_dynamic_segtree.hpp"
 #include "wide_segtree_persistence_common.hpp"
@@ -25,3 +26,5 @@ public:
 
 template<long long MAX_SIZE, int MAX_NODES, int MAX_CHANGES>
 using RollbackWide_Segtree = RollbackWideSegtree<MAX_SIZE, MAX_NODES, MAX_CHANGES>;
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_ROLLBACK_WIDESEGTREE_HPP_INCLUDED

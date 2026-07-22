@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_HPP_INCLUDED
 
 #include <string>
 
@@ -40,3 +41,5 @@ inline LongestCommonSubstringResult longest_common_substring(const std::string& 
     }
     return best;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_HPP_INCLUDED

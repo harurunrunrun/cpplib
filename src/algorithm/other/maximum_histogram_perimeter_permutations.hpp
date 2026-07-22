@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_HISTOGRAM_PERIMETER_PERMUTATIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_HISTOGRAM_PERIMETER_PERMUTATIONS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -85,3 +86,5 @@ inline HistogramPerimeterPermutations maximum_histogram_perimeter_permutations(
     }
     return {maximum, count};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_HISTOGRAM_PERIMETER_PERMUTATIONS_HPP_INCLUDED

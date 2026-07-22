@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_ELIMINATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_ELIMINATION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -569,3 +570,5 @@ GF2LinearSystemSolution<MAX_COL> gf2_solve_linear_system(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_ELIMINATION_HPP_INCLUDED

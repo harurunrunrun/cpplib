@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_TWO_RESOURCE_COVER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_TWO_RESOURCE_COVER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -77,3 +78,5 @@ inline long long minimum_cost_two_resource_cover(
     }
     return static_cast<long long>(answer);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_TWO_RESOURCE_COVER_HPP_INCLUDED

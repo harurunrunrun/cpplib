@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_ASSIGNMENT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_ASSIGNMENT_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -118,3 +119,5 @@ AssignmentResult<T> minimum_cost_assignment(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_ASSIGNMENT_HPP_INCLUDED

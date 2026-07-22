@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_MAXIMUM_PRODUCT_OF_TWO_VERTEX_DISJOINT_TREE_PATHS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_MAXIMUM_PRODUCT_OF_TWO_VERTEX_DISJOINT_TREE_PATHS_HPP_INCLUDED
 
 #include "tree_edge_split_diameters.hpp"
 
@@ -46,3 +47,5 @@ TreeTwoDisjointPathsResult maximum_product_of_two_vertex_disjoint_tree_paths(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_MAXIMUM_PRODUCT_OF_TWO_VERTEX_DISJOINT_TREE_PATHS_HPP_INCLUDED

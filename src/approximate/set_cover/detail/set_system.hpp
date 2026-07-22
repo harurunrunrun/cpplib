@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SET_COVER_DETAIL_SET_SYSTEM_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SET_COVER_DETAIL_SET_SYSTEM_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -76,3 +77,5 @@ inline void cover_set(
 }
 
 }  // namespace approximate::set_cover::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SET_COVER_DETAIL_SET_SYSTEM_HPP_INCLUDED

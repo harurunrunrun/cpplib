@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_COUNT_DOMINANCE_PAIRS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_COUNT_DOMINANCE_PAIRS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -88,3 +89,5 @@ long long count_dominance_pairs(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_COUNT_DOMINANCE_PAIRS_HPP_INCLUDED

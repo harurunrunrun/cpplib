@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VORONOI_DIAGRAM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VORONOI_DIAGRAM_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -310,3 +311,5 @@ inline VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points){
 
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VORONOI_DIAGRAM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_DSU_INCREMENTAL_COMPONENT_AFFINE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_DSU_INCREMENTAL_COMPONENT_AFFINE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -218,3 +219,5 @@ public:
         return aggregate[leader(vertex)];
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_DSU_INCREMENTAL_COMPONENT_AFFINE_HPP_INCLUDED

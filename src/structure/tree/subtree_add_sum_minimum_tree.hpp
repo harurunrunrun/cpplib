@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_SUBTREE_ADD_SUM_MINIMUM_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_SUBTREE_ADD_SUM_MINIMUM_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -181,3 +182,5 @@ public:
         return delta;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_SUBTREE_ADD_SUM_MINIMUM_TREE_HPP_INCLUDED

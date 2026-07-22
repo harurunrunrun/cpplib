@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_NUMBER_PARTITIONING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_PACKING_NUMBER_PARTITIONING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -264,3 +265,5 @@ PartitionResult<Weight> karmarkar_karp_partition(
 }
 
 }  // namespace approximate::packing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_NUMBER_PARTITIONING_HPP_INCLUDED

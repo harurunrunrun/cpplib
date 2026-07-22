@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PERPENDICULAR_BISECTOR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PERPENDICULAR_BISECTOR_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -16,3 +17,5 @@ inline Line perpendicular_bisector(
     const Point midpoint = (first + second) / 2.0L;
     return {midpoint, midpoint + rotate90(direction)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PERPENDICULAR_BISECTOR_HPP_INCLUDED

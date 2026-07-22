@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_DP_KNAPSACK_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_DP_KNAPSACK_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -306,3 +307,5 @@ template<class Weight, class Value, class Capacity>
 }
 
 }  // namespace approximate::dp
+
+#endif  // CPPLIB_SRC_APPROXIMATE_DP_KNAPSACK_HPP_INCLUDED

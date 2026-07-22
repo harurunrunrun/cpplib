@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_STATIC_RANGE_GREATER_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_STATIC_RANGE_GREATER_COUNT_HPP_INCLUDED
 
 #include <limits>
 #include <vector>
@@ -26,3 +27,5 @@ public:
         return matrix.count_greater(left, right, threshold);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_STATIC_RANGE_GREATER_COUNT_HPP_INCLUDED

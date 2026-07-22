@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -36,3 +37,5 @@ inline Point segment_intersection(
     if(candidates.size() == 1) return candidates[0];
     throw std::domain_error("segments do not have a unique intersection");
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_INTERSECTION_HPP_INCLUDED

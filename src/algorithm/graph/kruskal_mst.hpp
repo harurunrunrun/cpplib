@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_KRUSKAL_MST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_KRUSKAL_MST_HPP_INCLUDED
 
 #include <algorithm>
 #include <numeric>
@@ -81,3 +82,5 @@ KruskalMstResult<T> kruskal_mst(int n, const std::vector<KruskalEdge<T>>& edges)
     result.connected = static_cast<int>(result.edge_ids.size()) == std::max(0, n - 1);
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_KRUSKAL_MST_HPP_INCLUDED

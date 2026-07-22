@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_COMPLEMENT_SHORTEST_PATH_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_COMPLEMENT_SHORTEST_PATH_COUNT_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -90,3 +91,5 @@ inline long long complement_shortest_path_count(
     }
     return ways[static_cast<std::size_t>(target)];
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_COMPLEMENT_SHORTEST_PATH_COUNT_HPP_INCLUDED

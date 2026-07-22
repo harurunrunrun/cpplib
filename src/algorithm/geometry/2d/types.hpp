@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TYPES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TYPES_HPP_INCLUDED
 
 #include "geometry_sign.hpp"
 
@@ -68,3 +69,5 @@ struct Circle{
     Point center;
     long double radius;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TYPES_HPP_INCLUDED

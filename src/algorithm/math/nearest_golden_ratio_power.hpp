@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_NEAREST_GOLDEN_RATIO_POWER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_NEAREST_GOLDEN_RATIO_POWER_HPP_INCLUDED
 
 #include <cstdint>
 #include <stdexcept>
@@ -76,3 +77,5 @@ inline std::uint64_t nearest_golden_ratio_power_mod(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_NEAREST_GOLDEN_RATIO_POWER_HPP_INCLUDED

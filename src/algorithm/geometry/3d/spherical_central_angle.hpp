@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_CENTRAL_ANGLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_CENTRAL_ANGLE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -60,3 +61,5 @@ inline long double spherical_central_angle(
         std::clamp(dot(left, right), -1.0L, 1.0L)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_CENTRAL_ANGLE_HPP_INCLUDED

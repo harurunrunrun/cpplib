@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_WITH_MODE_SWITCHES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_WITH_MODE_SWITCHES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -78,3 +79,5 @@ inline int shortest_path_with_mode_switches(
     if(distance_one == -1) return distance_zero;
     return std::min(distance_zero, distance_one);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_WITH_MODE_SWITCHES_HPP_INCLUDED

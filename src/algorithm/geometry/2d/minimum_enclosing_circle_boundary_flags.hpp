@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_CIRCLE_BOUNDARY_FLAGS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_CIRCLE_BOUNDARY_FLAGS_HPP_INCLUDED
 
 #include <cstdint>
 #include <vector>
@@ -18,3 +19,5 @@ inline std::vector<bool> minimum_enclosing_circle_boundary_flags(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_CIRCLE_BOUNDARY_FLAGS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_OPTIMIZATION_RESULT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_OPTIMIZATION_RESULT_HPP_INCLUDED
 
 #include <cstddef>
 #include <vector>
@@ -16,3 +17,5 @@ struct OptimizationResult{
 };
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_OPTIMIZATION_RESULT_HPP_INCLUDED

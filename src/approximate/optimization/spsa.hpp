@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_SPSA_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_SPSA_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -176,3 +177,5 @@ auto spsa(
 }
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_SPSA_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_SUBTREE_LABEL_ORDER_STATISTICS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_SUBTREE_LABEL_ORDER_STATISTICS_HPP_INCLUDED
 
 #include <memory>
 #include <stdexcept>
@@ -48,3 +49,5 @@ public:
         return matrix->kth_smallest(left, right, order).second;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_SUBTREE_LABEL_ORDER_STATISTICS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CAN_ORDER_STRINGS_BY_MATCHING_ENDPOINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CAN_ORDER_STRINGS_BY_MATCHING_ENDPOINTS_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -79,3 +80,5 @@ inline bool can_order_strings_by_matching_endpoints(
     }
     return true;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CAN_ORDER_STRINGS_BY_MATCHING_ENDPOINTS_HPP_INCLUDED

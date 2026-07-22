@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_LARGEST_RECTANGLE_HISTOGRAM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_LARGEST_RECTANGLE_HISTOGRAM_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -51,3 +52,5 @@ LargestRectangleHistogramResult<T> largest_rectangle_histogram(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_LARGEST_RECTANGLE_HISTOGRAM_HPP_INCLUDED

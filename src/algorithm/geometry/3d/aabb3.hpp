@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AABB3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AABB3_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -53,3 +54,5 @@ struct AABB3{
         if(!valid()) throw std::invalid_argument("invalid AABB3");
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AABB3_HPP_INCLUDED

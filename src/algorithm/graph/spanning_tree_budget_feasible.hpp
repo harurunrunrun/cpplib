@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SPANNING_TREE_BUDGET_FEASIBLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SPANNING_TREE_BUDGET_FEASIBLE_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -34,3 +35,5 @@ inline bool spanning_tree_budget_feasible(
     return result.connected &&
         result.cost <= static_cast<__int128_t>(budget);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SPANNING_TREE_BUDGET_FEASIBLE_HPP_INCLUDED

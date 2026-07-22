@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_GENERAL_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_GENERAL_MATCHING_HPP_INCLUDED
 
 #include <algorithm>
 #include <queue>
@@ -134,3 +135,5 @@ struct GeneralMatching{
         return {result, match};
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_GENERAL_MATCHING_HPP_INCLUDED

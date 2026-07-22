@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_AHO_CORASICK_REPRESENTATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_AHO_CORASICK_REPRESENTATION_HPP_INCLUDED
 
 #include <memory>
 #include <string>
@@ -40,3 +41,5 @@ AhoCorasickRepresentation aho_corasick_representation(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_AHO_CORASICK_REPRESENTATION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_ROUTING_TOUR_COST_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_ROUTING_TOUR_COST_HPP_INCLUDED
 
 #include <cstddef>
 #include <vector>
@@ -47,3 +48,5 @@ auto path_cost(
 }
 
 }  // namespace approximate::routing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_ROUTING_TOUR_COST_HPP_INCLUDED

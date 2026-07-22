@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_DOMINATOR_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_DOMINATOR_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -156,3 +157,5 @@ inline DominatorTreeResult dominator_tree(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_DOMINATOR_TREE_HPP_INCLUDED

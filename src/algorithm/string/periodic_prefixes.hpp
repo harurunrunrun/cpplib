@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_PERIODIC_PREFIXES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_PERIODIC_PREFIXES_HPP_INCLUDED
 
 #include <utility>
 #include <vector>
@@ -20,3 +21,5 @@ std::vector<std::pair<int, int>> periodic_prefixes(const Sequence& sequence){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_PERIODIC_PREFIXES_HPP_INCLUDED

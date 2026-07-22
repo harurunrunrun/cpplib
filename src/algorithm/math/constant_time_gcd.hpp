@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_CONSTANT_TIME_GCD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_CONSTANT_TIME_GCD_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -121,3 +122,5 @@ public:
         return query(first, second);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_CONSTANT_TIME_GCD_HPP_INCLUDED

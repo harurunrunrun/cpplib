@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <optional>
 
@@ -33,3 +34,5 @@ inline std::optional<Point3> segment_plane_intersection(
     }
     return intersection->point;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_INTERSECTION_HPP_INCLUDED

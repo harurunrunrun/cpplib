@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_SEGMENT_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_SEGMENT_DISTANCE_HPP_INCLUDED
 
 #include "abs.hpp"
 #include "base.hpp"
@@ -14,3 +15,5 @@ inline long double distance(const Ray3& ray, const Segment3& segment){
 inline long double distance(const Segment3& segment, const Ray3& ray){
     return distance(ray, segment);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_SEGMENT_DISTANCE_HPP_INCLUDED

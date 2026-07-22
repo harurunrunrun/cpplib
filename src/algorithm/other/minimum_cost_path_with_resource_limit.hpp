@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_PATH_WITH_RESOURCE_LIMIT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_PATH_WITH_RESOURCE_LIMIT_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -102,3 +103,5 @@ minimum_cost_path_with_resource_limit(
         best_resource
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_PATH_WITH_RESOURCE_LIMIT_HPP_INCLUDED

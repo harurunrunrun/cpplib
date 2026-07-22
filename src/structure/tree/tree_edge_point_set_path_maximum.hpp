@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_TREE_EDGE_POINT_SET_PATH_MAXIMUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_TREE_EDGE_POINT_SET_PATH_MAXIMUM_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -103,3 +104,5 @@ public:
         return answer;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_TREE_EDGE_POINT_SET_PATH_MAXIMUM_HPP_INCLUDED

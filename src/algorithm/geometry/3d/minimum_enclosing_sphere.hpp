@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINIMUM_ENCLOSING_SPHERE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINIMUM_ENCLOSING_SPHERE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -312,3 +313,5 @@ inline Sphere3 minimum_enclosing_sphere(
     }
     return sphere;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINIMUM_ENCLOSING_SPHERE_HPP_INCLUDED

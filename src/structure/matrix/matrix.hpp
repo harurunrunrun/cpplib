@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_MATRIX_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_MATRIX_MATRIX_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -435,3 +436,5 @@ public:
         return pow_entry_bmbm(exponent, k / _cols, k % _cols);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_MATRIX_MATRIX_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_CIRCLE_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_CIRCLE_INTERSECTIONS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -98,3 +99,5 @@ inline std::vector<Point3> circle_circle_intersections(
     );
     return {restore(base - delta), restore(base + delta)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_CIRCLE_INTERSECTIONS_HPP_INCLUDED

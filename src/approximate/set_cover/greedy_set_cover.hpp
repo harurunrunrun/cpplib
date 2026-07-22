@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SET_COVER_GREEDY_SET_COVER_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SET_COVER_GREEDY_SET_COVER_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -156,3 +157,5 @@ template<class Weight>
 }
 
 }  // namespace approximate::set_cover
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SET_COVER_GREEDY_SET_COVER_HPP_INCLUDED

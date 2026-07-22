@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_HPP_INCLUDED
 
 #include "../../math/exact_integer.hpp"
 
@@ -18,3 +19,5 @@ inline GeometryIntegerWide integer_dot(
     return GeometryIntegerWide(first_x) * GeometryIntegerWide(second_x) +
         GeometryIntegerWide(first_y) * GeometryIntegerWide(second_y);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_HPP_INCLUDED

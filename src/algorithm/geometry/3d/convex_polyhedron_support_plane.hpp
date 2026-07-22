@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SUPPORT_PLANE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SUPPORT_PLANE_HPP_INCLUDED
 
 #include "convex_polyhedron_support_point.hpp"
 
@@ -11,3 +12,5 @@ inline Plane3 convex_polyhedron_support_plane(
         outward_normal,
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SUPPORT_PLANE_HPP_INCLUDED

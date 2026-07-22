@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_CENTROID_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_CENTROID_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -88,3 +89,5 @@ inline Point3 convex_polyhedron_centroid(const ConvexPolyhedron3& polyhedron){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_CENTROID_HPP_INCLUDED

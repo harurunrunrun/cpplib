@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CHROMATIC_NUMBER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CHROMATIC_NUMBER_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -84,3 +85,5 @@ int chromatic_number(const std::vector<std::vector<int>>& graph){
     }
     return n;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CHROMATIC_NUMBER_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_RECTANGLE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_RECTANGLE_SUM_HPP_INCLUDED
 
 #include <limits>
 #include <type_traits>
@@ -17,3 +18,5 @@ struct DynamicRectangleSum :
     using Base = DynamicWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH, BLOCK_SIZE>;
     using Base::Base;
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_RECTANGLE_SUM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_BLOCK_CUT_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_BLOCK_CUT_TREE_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -88,3 +89,5 @@ inline BlockCutTreeResult block_cut_tree(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_BLOCK_CUT_TREE_HPP_INCLUDED

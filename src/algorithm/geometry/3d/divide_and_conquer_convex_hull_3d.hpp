@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DIVIDE_AND_CONQUER_CONVEX_HULL_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DIVIDE_AND_CONQUER_CONVEX_HULL_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -383,3 +384,5 @@ inline ConvexPolyhedron3 divide_and_conquer_convex_hull_3d(
     }
     return convex_hull_3d(std::move(points));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DIVIDE_AND_CONQUER_CONVEX_HULL_3D_HPP_INCLUDED

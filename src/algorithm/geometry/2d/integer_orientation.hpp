@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_ORIENTATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_ORIENTATION_HPP_INCLUDED
 
 #include "integer_cross.hpp"
 
@@ -20,3 +21,5 @@ inline int integer_orientation(
         first_x * second_y - first_y * second_x;
     return (determinant > 0) - (determinant < 0);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_ORIENTATION_HPP_INCLUDED

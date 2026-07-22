@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GREAT_CIRCLE_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GREAT_CIRCLE_DISTANCE_HPP_INCLUDED
 #include <cmath>
 #include <stdexcept>
 
@@ -16,3 +17,5 @@ inline long double great_circle_distance(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GREAT_CIRCLE_DISTANCE_HPP_INCLUDED

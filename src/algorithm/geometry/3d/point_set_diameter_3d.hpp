@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POINT_SET_DIAMETER_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POINT_SET_DIAMETER_3D_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -50,3 +51,5 @@ inline std::optional<PointSetDiameter3DResult> point_set_diameter_3d(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POINT_SET_DIAMETER_3D_HPP_INCLUDED

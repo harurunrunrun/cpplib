@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_DISTANCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -175,3 +176,5 @@ inline long double polygon3_distance(
         result, input.local_scale
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_DISTANCE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_LAZY_TOP_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_LAZY_TOP_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -189,3 +190,5 @@ public:
         return {source.edge, source.compress, source.rake, source.depth};
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_LAZY_TOP_TREE_HPP_INCLUDED

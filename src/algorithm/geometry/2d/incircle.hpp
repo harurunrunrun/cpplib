@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INCIRCLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INCIRCLE_HPP_INCLUDED
 
 #include <cmath>
 
@@ -16,3 +17,5 @@ inline Circle incircle(
     const long double radius = std::abs(cross(direction / length, center - first));
     return {center, radius};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INCIRCLE_HPP_INCLUDED

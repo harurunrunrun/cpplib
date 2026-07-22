@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_ZERO_SUM_SUBARRAY_LENGTHS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_ZERO_SUM_SUBARRAY_LENGTHS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -101,3 +102,5 @@ inline std::vector<int> maximum_zero_sum_subarray_lengths(
     });
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_ZERO_SUM_SUBARRAY_LENGTHS_HPP_INCLUDED

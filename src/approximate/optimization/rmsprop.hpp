@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_RMSPROP_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_RMSPROP_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -59,3 +60,5 @@ auto rmsprop(
 }
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_RMSPROP_HPP_INCLUDED

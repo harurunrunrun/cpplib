@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COMMON_TANGENTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COMMON_TANGENTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -86,3 +87,5 @@ inline std::vector<Line> common_tangents(
         first, second, {-1, 1}
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COMMON_TANGENTS_HPP_INCLUDED

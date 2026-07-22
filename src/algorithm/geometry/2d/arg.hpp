@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ARG_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ARG_HPP_INCLUDED
 
 #include <cmath>
 
@@ -7,3 +8,5 @@
 inline long double arg(const Point& point){
     return std::atan2(point.y, point.x);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ARG_HPP_INCLUDED

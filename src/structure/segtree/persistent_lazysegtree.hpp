@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_LAZYSEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_LAZYSEGTREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -573,3 +574,5 @@ public:
         return res == -1 ? 0 : res;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_LAZYSEGTREE_HPP_INCLUDED

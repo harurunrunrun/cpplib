@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SINK_SCC_VERTICES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SINK_SCC_VERTICES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -32,3 +33,5 @@ inline std::vector<int> sink_scc_vertices(
     }
     return vertices;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SINK_SCC_VERTICES_HPP_INCLUDED

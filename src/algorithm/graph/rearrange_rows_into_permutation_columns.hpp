@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_REARRANGE_ROWS_INTO_PERMUTATION_COLUMNS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_REARRANGE_ROWS_INTO_PERMUTATION_COLUMNS_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -84,3 +85,5 @@ inline std::vector<std::vector<int>> rearrange_rows_into_permutation_columns(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_REARRANGE_ROWS_INTO_PERMUTATION_COLUMNS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_PLANE_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_PLANE_INTERSECTIONS_HPP_INCLUDED
 
 #include <stdexcept>
 #include <algorithm>
@@ -44,3 +45,5 @@ inline std::vector<Point3> circle_plane_intersections(
         plane_plane_intersection(circle_plane, plane), circle
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_PLANE_INTERSECTIONS_HPP_INCLUDED

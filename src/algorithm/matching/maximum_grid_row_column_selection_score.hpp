@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -70,3 +71,5 @@ inline long long maximum_grid_row_column_selection_score(
     }
     return -solver.solve().cost;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_GRID_ROW_COLUMN_SELECTION_SCORE_HPP_INCLUDED

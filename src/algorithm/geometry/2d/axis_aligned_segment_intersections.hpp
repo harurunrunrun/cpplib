@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AXIS_ALIGNED_SEGMENT_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AXIS_ALIGNED_SEGMENT_INTERSECTIONS_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -88,3 +89,5 @@ inline long long count_axis_aligned_segment_intersections(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AXIS_ALIGNED_SEGMENT_INTERSECTIONS_HPP_INCLUDED

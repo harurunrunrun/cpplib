@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_RESULTANT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_RESULTANT_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -539,3 +540,5 @@ T polynomial_discriminant(
     if(((degree * (degree - 1) / 2) & 1U) != 0) result = -result;
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_RESULTANT_HPP_INCLUDED

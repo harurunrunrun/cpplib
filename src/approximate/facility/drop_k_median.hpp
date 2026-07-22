@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_FACILITY_DROP_K_MEDIAN_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_FACILITY_DROP_K_MEDIAN_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -64,3 +65,5 @@ KMedianResult drop_k_median(const std::vector<std::vector<T>>& distance, std::si
 }
 
 }  // namespace approximate::facility
+
+#endif  // CPPLIB_SRC_APPROXIMATE_FACILITY_DROP_K_MEDIAN_HPP_INCLUDED

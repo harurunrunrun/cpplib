@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_PAIR_INDICES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_PAIR_INDICES_HPP_INCLUDED
 
 #include "../../math/exact_integer.hpp"
 
@@ -185,3 +186,5 @@ ClosestPairResult closest_pair_indices(
     };
     return solve(solve, 0, sorted.size());
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_PAIR_INDICES_HPP_INCLUDED

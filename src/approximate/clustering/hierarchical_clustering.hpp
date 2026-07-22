@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CLUSTERING_HIERARCHICAL_CLUSTERING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CLUSTERING_HIERARCHICAL_CLUSTERING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -127,3 +128,5 @@ template<class Distance>
 }
 
 }  // namespace approximate::clustering
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CLUSTERING_HIERARCHICAL_CLUSTERING_HPP_INCLUDED

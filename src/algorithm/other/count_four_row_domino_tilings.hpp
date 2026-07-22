@@ -1,7 +1,10 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_COUNT_FOUR_ROW_DOMINO_TILINGS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_COUNT_FOUR_ROW_DOMINO_TILINGS_HPP_INCLUDED
 
 #include "count_three_row_domino_tilings.hpp"
 
 inline std::uint64_t count_four_row_domino_tilings(int width){
     return count_three_row_domino_tilings_internal::fixed_height(4, width);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_COUNT_FOUR_ROW_DOMINO_TILINGS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_FIND_GRID_PATTERN_PLACEMENTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_FIND_GRID_PATTERN_PLACEMENTS_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -187,3 +188,5 @@ inline std::vector<GridPatternPlacement> find_grid_pattern_placements(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_FIND_GRID_PATTERN_PLACEMENTS_HPP_INCLUDED

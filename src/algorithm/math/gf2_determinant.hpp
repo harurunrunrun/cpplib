@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_GF2_DETERMINANT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_GF2_DETERMINANT_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -49,3 +50,5 @@ inline int gf2_determinant(const std::vector<std::string>& matrix){
     }
     return 1;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_GF2_DETERMINANT_HPP_INCLUDED

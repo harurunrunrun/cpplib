@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_CIRCLE_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_CIRCLE_INTERSECTIONS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -71,3 +72,5 @@ inline std::vector<Point3> line_circle_intersections(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_CIRCLE_INTERSECTIONS_HPP_INCLUDED

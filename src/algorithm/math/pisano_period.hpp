@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_PISANO_PERIOD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_PISANO_PERIOD_HPP_INCLUDED
 
 #include <cstdint>
 #include <numeric>
@@ -84,3 +85,5 @@ inline std::uint64_t pisano_period(std::uint64_t modulus){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_PISANO_PERIOD_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_PLANE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_PLANE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -376,3 +377,5 @@ inline bool on_plane(const Plane3& plane, const Point3& point){
     );
     return geometry3d_plane_numeric_detail::exact_dot_sign(product) == 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_PLANE_HPP_INCLUDED

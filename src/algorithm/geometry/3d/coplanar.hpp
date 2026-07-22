@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_COPLANAR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_COPLANAR_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -19,3 +20,5 @@ inline bool coplanar(
 ){
     return adaptive_orient3d(first, second, third, fourth) == 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_COPLANAR_HPP_INCLUDED

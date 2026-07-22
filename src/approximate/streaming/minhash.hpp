@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_MINHASH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_MINHASH_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -63,3 +64,5 @@ public:
         return SignatureSize;
     }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_MINHASH_HPP_INCLUDED

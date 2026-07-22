@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_MODINT_EXPONENTIABLE_MODINT_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_MODINT_EXPONENTIABLE_MODINT_HPP_INCLUDED
 
 #include <cstdint>
 
@@ -173,3 +174,5 @@ struct ExponentiableModint<1>{
             return !(lhs == rhs);
         }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_MODINT_EXPONENTIABLE_MODINT_HPP_INCLUDED

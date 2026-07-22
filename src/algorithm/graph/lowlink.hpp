@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_LOWLINK_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_LOWLINK_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -71,3 +72,5 @@ LowlinkResult lowlink(int n, const std::vector<std::pair<int, int>>& edges){
     std::sort(result.bridges.begin(), result.bridges.end());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_LOWLINK_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_LYNDON_FACTORIZATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_LYNDON_FACTORIZATION_HPP_INCLUDED
 
 #include <concepts>
 #include <cstddef>
@@ -45,3 +46,5 @@ std::vector<std::size_t> lyndon_factorization(
 inline std::vector<std::size_t> lyndon_factorization(std::string_view text){
     return lyndon_factorization(text.begin(), text.end());
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_LYNDON_FACTORIZATION_HPP_INCLUDED

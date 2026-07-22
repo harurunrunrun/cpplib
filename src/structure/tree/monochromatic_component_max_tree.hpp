@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_MONOCHROMATIC_COMPONENT_MAX_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_MONOCHROMATIC_COMPONENT_MAX_TREE_HPP_INCLUDED
 
 #include "dynamic_monochromatic_tree.hpp"
 #include "../types/common_monoids.hpp"
@@ -17,3 +18,5 @@ public:
     bool toggle(int vertex){ return tree.toggle(vertex); }
     Value component_maximum(int vertex){ return tree.component_prod(vertex); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_MONOCHROMATIC_COMPONENT_MAX_TREE_HPP_INCLUDED

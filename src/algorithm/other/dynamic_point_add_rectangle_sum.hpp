@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_DYNAMIC_POINT_ADD_RECTANGLE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_DYNAMIC_POINT_ADD_RECTANGLE_SUM_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -120,3 +121,5 @@ public:
         return prefix_sum_less(x2, y2) - prefix_sum_less(x1, y2) - prefix_sum_less(x2, y1) + prefix_sum_less(x1, y1);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_DYNAMIC_POINT_ADD_RECTANGLE_SUM_HPP_INCLUDED

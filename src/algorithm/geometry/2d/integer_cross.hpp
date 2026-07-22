@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_CROSS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_CROSS_HPP_INCLUDED
 
 #include "integer_dot.hpp"
 
@@ -14,3 +15,5 @@ inline GeometryIntegerWide integer_cross(
     return GeometryIntegerWide(first_x) * GeometryIntegerWide(second_y) -
         GeometryIntegerWide(first_y) * GeometryIntegerWide(second_x);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_CROSS_HPP_INCLUDED

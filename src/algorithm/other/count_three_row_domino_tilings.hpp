@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_COUNT_THREE_ROW_DOMINO_TILINGS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_COUNT_THREE_ROW_DOMINO_TILINGS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -51,3 +52,5 @@ inline std::uint64_t fixed_height(int height, int width){
 inline std::uint64_t count_three_row_domino_tilings(int width){
     return count_three_row_domino_tilings_internal::fixed_height(3, width);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_COUNT_THREE_ROW_DOMINO_TILINGS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_RANDOMIZED_METROPOLIS_HASTINGS_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_RANDOMIZED_METROPOLIS_HASTINGS_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -129,3 +130,5 @@ MetropolisHastingsResult<State> metropolis_hastings_symmetric(
 }
 
 }  // namespace approximate::randomized
+
+#endif  // CPPLIB_SRC_APPROXIMATE_RANDOMIZED_METROPOLIS_HASTINGS_HPP_INCLUDED

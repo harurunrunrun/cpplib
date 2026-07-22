@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_KTH_SHORTEST_WALK_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_KTH_SHORTEST_WALK_HPP_INCLUDED
 
 #include <functional>
 #include <optional>
@@ -340,3 +341,5 @@ std::optional<T> kth_shortest_walk_1indexed(
         graph, source, target, static_cast<std::size_t>(k), nullptr
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_KTH_SHORTEST_WALK_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MANHATTAN_MST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MANHATTAN_MST_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdlib>
@@ -106,3 +107,5 @@ ManhattanMstResult<T> manhattan_mst(std::vector<ManhattanMstPoint<T>> points){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MANHATTAN_MST_HPP_INCLUDED

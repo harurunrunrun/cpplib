@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_PERSISTENT_QUEUE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_PERSISTENT_QUEUE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -163,3 +164,5 @@ using PersistentSegtreeQueue = PersistentQueue<
     PersistentSegtree<Monoid, MAX_SIZE, MAX_VERSION>,
     MAX_VERSION
 >;
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_PERSISTENT_QUEUE_HPP_INCLUDED

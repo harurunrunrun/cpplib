@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_COUNT_UNBLOCKED_HEIGHT_QUERIES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_COUNT_UNBLOCKED_HEIGHT_QUERIES_HPP_INCLUDED
 
 #include <algorithm>
 #include <memory>
@@ -34,3 +35,5 @@ int count_unblocked_height_queries(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_COUNT_UNBLOCKED_HEIGHT_QUERIES_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_Z_ALGORITHM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_Z_ALGORITHM_HPP_INCLUDED
 
 #include <algorithm>
 #include <vector>
@@ -26,3 +27,5 @@ std::vector<int> z_algorithm(const Sequence& s){
     }
     return z;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_Z_ALGORITHM_HPP_INCLUDED

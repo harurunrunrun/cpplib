@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INCENTER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INCENTER_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -33,3 +34,5 @@ inline Point incenter(
         (second - first) * (normalized_second / normalized_sum) +
         (third - first) * (normalized_third / normalized_sum);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INCENTER_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_LINE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_LINE_INTERSECTION_HPP_INCLUDED
 
 #include <variant>
 
@@ -27,3 +28,5 @@ inline LinearIntersection3 line_line_intersection(
     }
     return (on_first + on_second) / 2;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_LINE_INTERSECTION_HPP_INCLUDED

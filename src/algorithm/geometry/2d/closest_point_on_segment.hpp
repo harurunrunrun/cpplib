@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_POINT_ON_SEGMENT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_POINT_ON_SEGMENT_HPP_INCLUDED
 
 #include <algorithm>
 
@@ -20,3 +21,5 @@ inline Point closest_point_on_segment(
     );
     return segment.a + direction * parameter;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_POINT_ON_SEGMENT_HPP_INCLUDED

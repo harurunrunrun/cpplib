@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_MATRIX_PRODUCT_MOD_2_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_MATRIX_PRODUCT_MOD_2_HPP_INCLUDED
 
 #include <bitset>
 #include <cstddef>
@@ -40,3 +41,5 @@ std::vector<std::bitset<MAX_COLUMNS>> matrix_product_mod_2(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_MATRIX_PRODUCT_MOD_2_HPP_INCLUDED

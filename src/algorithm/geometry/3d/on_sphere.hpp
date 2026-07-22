@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_SPHERE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_SPHERE_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -23,3 +24,5 @@ inline bool on_sphere(const Sphere3& sphere, const Point3& point){
         center_distance - radius, std::max(center_distance, radius)
     ) == 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_SPHERE_HPP_INCLUDED

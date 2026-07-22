@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SINGLE_FAILURE_CONNECTIVITY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SINGLE_FAILURE_CONNECTIVITY_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -282,3 +283,5 @@ private:
     bool built_ = false;
     std::unique_ptr<State> state_;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SINGLE_FAILURE_CONNECTIVITY_HPP_INCLUDED

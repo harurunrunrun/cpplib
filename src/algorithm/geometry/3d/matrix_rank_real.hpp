@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MATRIX_RANK_REAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MATRIX_RANK_REAL_HPP_INCLUDED
 
 #include <cstddef>
 #include <vector>
@@ -11,3 +12,5 @@ inline std::size_t matrix_rank_real(
 ){
     return gaussian_elimination_real(matrix, relative_epsilon).rank();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MATRIX_RANK_REAL_HPP_INCLUDED

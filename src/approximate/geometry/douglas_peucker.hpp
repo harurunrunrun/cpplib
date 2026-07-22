@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GEOMETRY_DOUGLAS_PEUCKER_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GEOMETRY_DOUGLAS_PEUCKER_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -75,3 +76,5 @@ std::vector<std::array<T, Dimension>> douglas_peucker(
 }
 
 }  // namespace approximate::geometry
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GEOMETRY_DOUGLAS_PEUCKER_HPP_INCLUDED

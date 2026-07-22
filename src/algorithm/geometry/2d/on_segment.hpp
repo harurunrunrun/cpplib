@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ON_SEGMENT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ON_SEGMENT_HPP_INCLUDED
 
 #include "abs.hpp"
 #include "cross.hpp"
@@ -28,3 +29,5 @@ inline bool on_segment(const Segment& segment, const Point& point){
         dot_roundoff + squared_length
     ) <= 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ON_SEGMENT_HPP_INCLUDED

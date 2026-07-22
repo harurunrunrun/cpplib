@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CLUSTERING_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CLUSTERING_COMMON_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -141,3 +142,5 @@ template<class LeftReal, class RightReal>
 }
 
 }  // namespace approximate::clustering
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CLUSTERING_COMMON_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TRIANGULATION_TEST_UTILS_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TRIANGULATION_TEST_UTILS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -145,3 +146,5 @@ inline bool validate(
 }
 
 }  // namespace geometry_2d_triangulation_test
+
+#endif  // CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TRIANGULATION_TEST_UTILS_HPP_INCLUDED

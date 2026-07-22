@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_WILDCARD_PATTERN_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_WILDCARD_PATTERN_MATCHING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -171,3 +172,5 @@ inline std::vector<bool> wildcard_pattern_matching(
     }
     return matches;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_WILDCARD_PATTERN_MATCHING_HPP_INCLUDED

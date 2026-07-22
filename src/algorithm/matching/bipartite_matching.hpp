@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_MATCHING_HPP_INCLUDED
 
 #include <queue>
 #include <stdexcept>
@@ -96,3 +97,5 @@ struct BipartiteMatching{
         return {result, left_match, right_match};
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_MATCHING_HPP_INCLUDED

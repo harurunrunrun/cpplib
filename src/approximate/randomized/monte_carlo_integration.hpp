@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_RANDOMIZED_MONTE_CARLO_INTEGRATION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_RANDOMIZED_MONTE_CARLO_INTEGRATION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -145,3 +146,5 @@ MonteCarloEstimate monte_carlo_integrate_hyperrectangle(
 }
 
 }  // namespace approximate::randomized
+
+#endif  // CPPLIB_SRC_APPROXIMATE_RANDOMIZED_MONTE_CARLO_INTEGRATION_HPP_INCLUDED

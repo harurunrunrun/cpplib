@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_FIRST_FIT_BIN_PACKING_SUMMARY_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_PACKING_FIRST_FIT_BIN_PACKING_SUMMARY_HPP_INCLUDED
 
 #include <cstddef>
 #include <numeric>
@@ -29,3 +30,5 @@ inline FirstFitBinPackingSummary first_fit_bin_packing_summary(
 }
 
 } // namespace approximate::packing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_FIRST_FIT_BIN_PACKING_SUMMARY_HPP_INCLUDED

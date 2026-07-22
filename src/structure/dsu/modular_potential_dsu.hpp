@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_DSU_MODULAR_POTENTIAL_DSU_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_DSU_MODULAR_POTENTIAL_DSU_HPP_INCLUDED
 
 #include <optional>
 
@@ -62,3 +63,5 @@ public:
         return result->value;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_DSU_MODULAR_POTENTIAL_DSU_HPP_INCLUDED

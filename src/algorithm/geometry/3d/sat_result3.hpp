@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SAT_RESULT3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SAT_RESULT3_HPP_INCLUDED
 
 #include <cstddef>
 
@@ -11,3 +12,5 @@ struct SATResult3{
     Point3 axis{};
     std::size_t tested_axes = 0;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SAT_RESULT3_HPP_INCLUDED

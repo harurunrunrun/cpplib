@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AFFINE_TRANSFORM3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AFFINE_TRANSFORM3_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -163,3 +164,5 @@ struct AffineTransform3{
         return outer.compose(inner);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AFFINE_TRANSFORM3_HPP_INCLUDED

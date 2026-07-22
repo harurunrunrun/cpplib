@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_COMMON_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_COMMON_INTERSECTION_HPP_INCLUDED
 
 #include <stdexcept>
 #include <variant>
@@ -29,3 +30,5 @@ inline PlanePlaneIntersection3 plane_plane_common_intersection(
     }
     return plane_plane_intersection(first, second);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_COMMON_INTERSECTION_HPP_INCLUDED

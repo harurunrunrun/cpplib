@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_SKEW_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_SKEW_HPP_INCLUDED
 
 #include <variant>
 
@@ -54,3 +55,5 @@ inline bool skew(const Segment3& first, const Segment3& second){
     (void)segment3_direction(second);
     return skew(Line3{first.a, first.b}, Line3{second.a, second.b});
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_SKEW_HPP_INCLUDED

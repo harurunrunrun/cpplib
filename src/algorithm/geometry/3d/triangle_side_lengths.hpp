@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_SIDE_LENGTHS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_SIDE_LENGTHS_HPP_INCLUDED
 
 #include <array>
 
@@ -14,3 +15,5 @@ inline std::array<long double, 3> triangle_side_lengths(
         abs(triangle.a - triangle.c),
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_SIDE_LENGTHS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_HASH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_HASH_HPP_INCLUDED
 
 #include <cstdint>
 #include <functional>
@@ -25,3 +26,5 @@ inline long double unit_open(std::uint64_t value) noexcept {
 }
 
 }  // namespace approximate_streaming_detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_HASH_HPP_INCLUDED

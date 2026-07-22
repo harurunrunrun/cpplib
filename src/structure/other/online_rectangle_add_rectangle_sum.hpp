@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_ONLINE_RECTANGLE_ADD_RECTANGLE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_ONLINE_RECTANGLE_ADD_RECTANGLE_SUM_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -249,3 +250,5 @@ public:
             + prefix_sum(x_left, y_lower);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_ONLINE_RECTANGLE_ADD_RECTANGLE_SUM_HPP_INCLUDED

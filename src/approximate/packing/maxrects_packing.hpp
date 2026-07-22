@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_MAXRECTS_PACKING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_PACKING_MAXRECTS_PACKING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -298,3 +299,5 @@ RectanglePackingResult<Size> maxrects_best_area_fit(
 }
 
 }  // namespace approximate::packing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_MAXRECTS_PACKING_HPP_INCLUDED

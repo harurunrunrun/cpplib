@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_BBST_PERSISTENT_RED_BLACK_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_BBST_PERSISTENT_RED_BLACK_TREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -432,3 +433,5 @@ public:
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_BBST_PERSISTENT_RED_BLACK_TREE_HPP_INCLUDED

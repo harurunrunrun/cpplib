@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DELAUNAY_TETRAHEDRALIZATION_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DELAUNAY_TETRAHEDRALIZATION_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -610,3 +611,5 @@ inline DelaunayTetrahedralization3 delaunay_tetrahedralization_3d(
         std::move(input), 0x243f6a8885a308d3ULL
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DELAUNAY_TETRAHEDRALIZATION_3D_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_PARTICLE_SWARM_OPTIMIZATION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_PARTICLE_SWARM_OPTIMIZATION_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -112,3 +113,5 @@ auto particle_swarm_optimization(
 }
 
 }  // namespace approximate::evolutionary
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_PARTICLE_SWARM_OPTIMIZATION_HPP_INCLUDED

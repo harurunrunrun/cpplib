@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_KNAPSACK_MAX_VALUE_MIN_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_KNAPSACK_MAX_VALUE_MIN_COST_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -51,3 +52,5 @@ inline KnapsackOptimum knapsack_max_value_min_cost(
     );
     return {minimum_cost, best_value};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_KNAPSACK_MAX_VALUE_MIN_COST_HPP_INCLUDED

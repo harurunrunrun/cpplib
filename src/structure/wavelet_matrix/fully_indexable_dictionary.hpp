@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_FULLY_INDEXABLE_DICTIONARY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_FULLY_INDEXABLE_DICTIONARY_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -113,3 +114,5 @@ public:
         return (word << 6) + static_cast<int>(std::countr_zero(candidates));
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_FULLY_INDEXABLE_DICTIONARY_HPP_INCLUDED

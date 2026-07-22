@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_DSU_ON_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_DSU_ON_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -486,3 +487,5 @@ public:
         call_reset(reset_callback);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_DSU_ON_TREE_HPP_INCLUDED

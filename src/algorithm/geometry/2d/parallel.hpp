@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PARALLEL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PARALLEL_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -26,3 +27,5 @@ inline bool parallel(const Line& left, const Line& right){
     }
     return parallel(left.b - left.a, right.b - right.a);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PARALLEL_HPP_INCLUDED

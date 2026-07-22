@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_FURTHEST_PAIR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_FURTHEST_PAIR_HPP_INCLUDED
 
 #include "../../math/exact_integer.hpp"
 
@@ -162,3 +163,5 @@ FurthestPairResult furthest_pair(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_FURTHEST_PAIR_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_EULERIAN_TRAIL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_EULERIAN_TRAIL_HPP_INCLUDED
 
 #include <algorithm>
 #include <optional>
@@ -183,3 +184,5 @@ inline std::optional<EulerianTrailResult> undirected_eulerian_trail(
         graph, static_cast<int>(edges.size()), chosen_start
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_EULERIAN_TRAIL_HPP_INCLUDED

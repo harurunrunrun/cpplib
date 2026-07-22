@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CLUSTERING_OPTICS_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CLUSTERING_OPTICS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -117,3 +118,5 @@ template<class Real>
 }
 
 }  // namespace approximate::clustering
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CLUSTERING_OPTICS_HPP_INCLUDED

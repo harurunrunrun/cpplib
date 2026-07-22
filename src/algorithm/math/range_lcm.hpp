@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_RANGE_LCM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_RANGE_LCM_HPP_INCLUDED
 
 #include <concepts>
 #include <ranges>
@@ -18,3 +19,5 @@ long long range_lcm(Range&& values){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_RANGE_LCM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_CAPACITY_LEVEL_SCHEDULE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_CAPACITY_LEVEL_SCHEDULE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -94,3 +95,5 @@ inline long long minimum_cost_capacity_level_schedule(
     }
     return static_cast<long long>(answer);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_COST_CAPACITY_LEVEL_SCHEDULE_HPP_INCLUDED

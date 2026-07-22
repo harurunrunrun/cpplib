@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_COMPACT_GENETIC_ALGORITHM_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_COMPACT_GENETIC_ALGORITHM_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -108,3 +109,5 @@ auto compact_genetic_algorithm(
 }
 
 }  // namespace approximate::evolutionary
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_COMPACT_GENETIC_ALGORITHM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_COUNT_PALINDROMIC_SUBSTRINGS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_COUNT_PALINDROMIC_SUBSTRINGS_HPP_INCLUDED
 
 #include <string>
 #include <vector>
@@ -11,3 +12,5 @@ inline long long count_palindromic_substrings(const std::string& text){
     for(int radius: manacher_even(text)) result += radius;
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_COUNT_PALINDROMIC_SUBSTRINGS_HPP_INCLUDED

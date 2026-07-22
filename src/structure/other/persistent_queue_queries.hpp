@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_PERSISTENT_QUEUE_QUERIES_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_PERSISTENT_QUEUE_QUERIES_HPP_INCLUDED
 
 #include <memory>
 #include <stdexcept>
@@ -55,3 +56,5 @@ public:
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_PERSISTENT_QUEUE_QUERIES_HPP_INCLUDED

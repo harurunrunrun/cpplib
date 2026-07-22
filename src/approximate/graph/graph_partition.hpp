@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_GRAPH_PARTITION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_GRAPH_PARTITION_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -131,3 +132,5 @@ inline void rebalance_partition(
 
 }  // namespace detail
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_GRAPH_PARTITION_HPP_INCLUDED

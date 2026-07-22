@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_DSU_OFFLINE_PERSISTENT_UNIONFIND_QUERIES_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_DSU_OFFLINE_PERSISTENT_UNIONFIND_QUERIES_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -85,3 +86,5 @@ public:
 
     std::vector<int> solve(){ return dsu_.solve(); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_DSU_OFFLINE_PERSISTENT_UNIONFIND_QUERIES_HPP_INCLUDED

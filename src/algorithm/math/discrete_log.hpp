@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_DISCRETE_LOG_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_DISCRETE_LOG_HPP_INCLUDED
 
 #include <stdexcept>
 #include <unordered_map>
@@ -98,3 +99,5 @@ long long discrete_log(long long a, long long b, long long mod){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_DISCRETE_LOG_HPP_INCLUDED

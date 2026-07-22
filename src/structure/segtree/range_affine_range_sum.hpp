@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_RANGE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_RANGE_SUM_HPP_INCLUDED
 
 #include <memory>
 #include <vector>
@@ -47,3 +48,5 @@ public:
         return tree_->prod(left, right).sum;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_RANGE_SUM_HPP_INCLUDED

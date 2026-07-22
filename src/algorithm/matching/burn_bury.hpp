@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_BURN_BURY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_BURN_BURY_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -75,3 +76,5 @@ struct BurnBury{
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_BURN_BURY_HPP_INCLUDED

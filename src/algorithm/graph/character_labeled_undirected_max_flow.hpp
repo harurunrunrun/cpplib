@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CHARACTER_LABELED_UNDIRECTED_MAX_FLOW_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CHARACTER_LABELED_UNDIRECTED_MAX_FLOW_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -56,3 +57,5 @@ T character_labeled_undirected_max_flow(
         vertex_count, indexed_edges, source, sink
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CHARACTER_LABELED_UNDIRECTED_MAX_FLOW_HPP_INCLUDED

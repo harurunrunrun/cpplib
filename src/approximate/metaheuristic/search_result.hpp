@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_SEARCH_RESULT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_SEARCH_RESULT_HPP_INCLUDED
 
 #include <cstddef>
 
@@ -14,3 +15,5 @@ struct SearchResult{
 };
 
 }  // namespace approximate::metaheuristic
+
+#endif  // CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_SEARCH_RESULT_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_MODINT_FAST_MODINT_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_MODINT_FAST_MODINT_HPP_INCLUDED
 
 #include <cstdint>
 #include <istream>
@@ -203,3 +204,5 @@ public:
 
 using FastModint998244353 = FastModint<998244353>;
 using FastModint1000000007 = FastModint<1000000007>;
+
+#endif  // CPPLIB_SRC_STRUCTURE_MODINT_FAST_MODINT_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_ROUND_ROBIN_COMPLETION_TIMES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_ROUND_ROBIN_COMPLETION_TIMES_HPP_INCLUDED
 
 #include <algorithm>
 #include <memory>
@@ -57,3 +58,5 @@ std::vector<long long> round_robin_completion_times(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_ROUND_ROBIN_COMPLETION_TIMES_HPP_INCLUDED

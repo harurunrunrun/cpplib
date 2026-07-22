@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_NTH_THREE_PRIME_FACTORS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_NTH_THREE_PRIME_FACTORS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -55,3 +56,5 @@ public:
 };
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_NTH_THREE_PRIME_FACTORS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_COUNTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_COUNTS_HPP_INCLUDED
 
 #include <cstddef>
 
@@ -23,3 +24,5 @@ inline ConvexPolyhedronCounts3 convex_polyhedron_counts(
         triangulated, convex_polyhedron_facets(polyhedron).size(), triangulated,
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_COUNTS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_DIRECTED_SPANNING_ARBORESCENCES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_DIRECTED_SPANNING_ARBORESCENCES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -128,3 +129,5 @@ inline long long count_directed_spanning_arborescences(
     }
     return static_cast<long long>(answer);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_DIRECTED_SPANNING_ARBORESCENCES_HPP_INCLUDED

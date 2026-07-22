@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_SLERP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_SLERP_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -32,3 +33,5 @@ inline Quaternion3 quaternion3_slerp(
     const long double second_weight = std::sin(parameter * angle) / sine;
     return (first_weight * start + second_weight * finish).normalized();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_SLERP_HPP_INCLUDED

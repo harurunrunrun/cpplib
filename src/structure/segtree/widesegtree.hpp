@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_WIDESEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_WIDESEGTREE_HPP_INCLUDED
 
 #include <array>
 #include <memory>
@@ -292,3 +293,5 @@ struct Wide_Segtree{
             return root.get()->sum[node_size - 1];
         }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_WIDESEGTREE_HPP_INCLUDED

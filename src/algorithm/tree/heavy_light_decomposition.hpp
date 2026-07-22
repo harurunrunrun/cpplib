@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_HEAVY_LIGHT_DECOMPOSITION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_HEAVY_LIGHT_DECOMPOSITION_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -247,3 +248,5 @@ public:
         return {in_vertex[v] + (vertex ? 0 : 1), out_vertex[v]};
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_HEAVY_LIGHT_DECOMPOSITION_HPP_INCLUDED

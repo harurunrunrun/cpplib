@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_AREA_HPP_INCLUDED
 
 #include <cmath>
 
@@ -11,3 +12,5 @@ inline long double triangle_area(
 ){
     return std::abs(triangle_signed_area(first, second, third));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_AREA_HPP_INCLUDED

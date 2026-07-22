@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_TETRAHEDRON_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_TETRAHEDRON_INTERSECTION_HPP_INCLUDED
 
 #include <array>
 #include <variant>
@@ -64,3 +65,5 @@ inline ConvexPolyhedron3 tetrahedron_tetrahedron_intersection(
     add_edge_face_intersections(second, first);
     return convex_hull_3d(std::move(points));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_TETRAHEDRON_INTERSECTION_HPP_INCLUDED

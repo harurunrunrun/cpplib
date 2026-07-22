@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_WAVELET_MATRIX_2D_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_WAVELET_MATRIX_2D_HPP_INCLUDED
 
 #include <limits>
 #include <optional>
@@ -80,3 +81,5 @@ public:
         return base_.next_y(xl, xr, lower);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_WAVELET_MATRIX_2D_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_PRIME_FACTORIZATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_PRIME_FACTORIZATION_HPP_INCLUDED
 
 #include <algorithm>
 #include <numeric>
@@ -211,3 +212,5 @@ inline u64 euler_phi(u64 n){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_PRIME_FACTORIZATION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ANGLE_INTERVAL_SET_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ANGLE_INTERVAL_SET_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -186,3 +187,5 @@ public:
             && covers_linear(0.0L, right);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ANGLE_INTERVAL_SET_HPP_INCLUDED

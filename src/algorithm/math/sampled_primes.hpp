@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_SAMPLED_PRIMES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_SAMPLED_PRIMES_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -34,3 +35,5 @@ inline std::vector<int> sampled_primes(int exclusive_limit, int stride = 100){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_SAMPLED_PRIMES_HPP_INCLUDED

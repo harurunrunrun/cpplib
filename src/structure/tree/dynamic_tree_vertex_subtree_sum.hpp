@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_TREE_VERTEX_SUBTREE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_TREE_VERTEX_SUBTREE_SUM_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -106,3 +107,5 @@ public:
         return range_sum(left, right);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_TREE_VERTEX_SUBTREE_SUM_HPP_INCLUDED

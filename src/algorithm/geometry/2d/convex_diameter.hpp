@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_DIAMETER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_DIAMETER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -101,3 +102,5 @@ inline long double convex_diameter(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_DIAMETER_HPP_INCLUDED

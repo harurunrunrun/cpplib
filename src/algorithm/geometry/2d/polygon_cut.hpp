@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_CUT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_CUT_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -261,3 +262,5 @@ inline PolygonLineCutResult polygon_cut(
     }
     return {left_graph.polygons(), right_graph.polygons()};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_CUT_HPP_INCLUDED

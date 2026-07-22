@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SCHEDULING_SINGLE_MACHINE_DISPATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SCHEDULING_SINGLE_MACHINE_DISPATCHING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -515,3 +516,5 @@ SingleMachineSchedule<Time> apparent_tardiness_cost_with_setups_schedule(
 }
 
 }  // namespace approximate::scheduling
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SCHEDULING_SINGLE_MACHINE_DISPATCHING_HPP_INCLUDED

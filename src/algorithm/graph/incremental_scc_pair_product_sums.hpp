@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_INCREMENTAL_SCC_PAIR_PRODUCT_SUMS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_INCREMENTAL_SCC_PAIR_PRODUCT_SUMS_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -75,3 +76,5 @@ std::vector<T> incremental_scc_pair_product_sums(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_INCREMENTAL_SCC_PAIR_PRODUCT_SUMS_HPP_INCLUDED

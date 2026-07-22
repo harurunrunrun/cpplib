@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_SIGN_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_SIGN_HPP_INCLUDED
 
 #include <cmath>
 #include <limits>
@@ -26,3 +27,5 @@ inline int geometry_scaled_sign(
 inline int geometry_scaled_sign(long double value, long double scale){
     return geometry_scaled_sign(value, scale, scale);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_SIGN_HPP_INCLUDED

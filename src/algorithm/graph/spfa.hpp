@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SPFA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SPFA_HPP_INCLUDED
 
 #include <cstddef>
 #include <deque>
@@ -135,3 +136,5 @@ SpfaResult<T> spfa(
 ){
     return spfa(graph, std::vector<int>{source}, inf);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SPFA_HPP_INCLUDED

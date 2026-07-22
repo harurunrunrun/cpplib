@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MATRIX_DETERMINANT_REAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MATRIX_DETERMINANT_REAL_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -85,3 +86,5 @@ inline long double matrix_determinant_real(
     }
     return std::ldexp(mantissa, static_cast<int>(exponent));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MATRIX_DETERMINANT_REAL_HPP_INCLUDED

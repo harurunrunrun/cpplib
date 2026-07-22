@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_INTEGER_SQRT_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_INTEGER_SQRT_SUM_HPP_INCLUDED
 
 #include <memory>
 #include <set>
@@ -46,3 +47,5 @@ public:
 
     long long sum(int left, int right) const{ return tree_->prod(left, right); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_INTEGER_SQRT_SUM_HPP_INCLUDED

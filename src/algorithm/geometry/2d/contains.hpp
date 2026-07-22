@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONTAINS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONTAINS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -28,3 +29,5 @@ inline int contains(const std::vector<Point>& polygon, const Point& point){
     }
     return inside ? 2 : 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONTAINS_HPP_INCLUDED

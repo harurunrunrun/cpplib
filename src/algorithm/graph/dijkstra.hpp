@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_DIJKSTRA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_DIJKSTRA_HPP_INCLUDED
 
 #include <functional>
 #include <limits>
@@ -63,3 +64,5 @@ DijkstraResult<T> dijkstra(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_DIJKSTRA_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PARALLEL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PARALLEL_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -29,3 +30,5 @@ inline bool parallel(const Point3& left, const Point3& right){
     return abs(cross(scaled_left, scaled_right)) <=
         GEOMETRY3D_EPS * abs(scaled_left) * abs(scaled_right);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PARALLEL_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_GEOMETRY_3D_PROPERTY_TESTS_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_GEOMETRY_3D_PROPERTY_TESTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -836,3 +837,5 @@ inline bool geometry3d_property_suite(
     if(name == "geometry_3d_headers") return true;
     return false;
 }
+
+#endif  // CPPLIB_TEST_STANDALONE_GEOMETRY_3D_PROPERTY_TESTS_HPP_INCLUDED

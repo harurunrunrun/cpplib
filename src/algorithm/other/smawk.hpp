@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_SMAWK_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_SMAWK_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -93,3 +94,5 @@ std::vector<int> smawk_row_minima(int row_count, int column_count, Value value){
     }
     return smawk_internal::Solver<Value>(row_count, std::move(value)).run(column_count);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_SMAWK_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_RANGE_MAJORITY_QUERY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_RANGE_MAJORITY_QUERY_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -263,3 +264,5 @@ public:
         return std::nullopt;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_RANGE_MAJORITY_QUERY_HPP_INCLUDED

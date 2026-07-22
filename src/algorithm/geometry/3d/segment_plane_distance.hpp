@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED
 
 #include "abs.hpp"
 #include "base.hpp"
@@ -12,3 +13,5 @@ inline long double distance(const Segment3& segment, const Plane3& plane){
 inline long double distance(const Plane3& plane, const Segment3& segment){
     return distance(segment, plane);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED

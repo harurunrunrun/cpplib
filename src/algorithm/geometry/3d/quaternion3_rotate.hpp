@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_ROTATE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_ROTATE_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -24,3 +25,5 @@ inline Point3 quaternion3_rotate(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_ROTATE_HPP_INCLUDED

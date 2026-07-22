@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_DISJOINT_EQUAL_PAIR_COUNTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_DISJOINT_EQUAL_PAIR_COUNTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -57,3 +58,5 @@ std::vector<int> maximum_disjoint_equal_pair_counts(
     });
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_DISJOINT_EQUAL_PAIR_COUNTS_HPP_INCLUDED

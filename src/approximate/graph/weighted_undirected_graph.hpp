@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_WEIGHTED_UNDIRECTED_GRAPH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_WEIGHTED_UNDIRECTED_GRAPH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -113,3 +114,5 @@ inline void validate_weighted_endpoint(std::size_t vertex_count, std::size_t ver
 
 }  // namespace detail
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_WEIGHTED_UNDIRECTED_GRAPH_HPP_INCLUDED

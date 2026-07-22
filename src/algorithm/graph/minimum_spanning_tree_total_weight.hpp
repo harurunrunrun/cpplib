@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_SPANNING_TREE_TOTAL_WEIGHT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_SPANNING_TREE_TOTAL_WEIGHT_HPP_INCLUDED
 
 #include <stdexcept>
 #include <tuple>
@@ -30,3 +31,5 @@ inline long long minimum_spanning_tree_total_weight(
     }
     return result.cost;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_SPANNING_TREE_TOTAL_WEIGHT_HPP_INCLUDED

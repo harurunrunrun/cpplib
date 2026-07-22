@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_FENWICK_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_FENWICK_TREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -74,3 +75,5 @@ struct FenwickTree{
         add(k, x - get(k));
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_FENWICK_TREE_HPP_INCLUDED

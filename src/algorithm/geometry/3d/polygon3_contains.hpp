@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_CONTAINS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_CONTAINS_HPP_INCLUDED
 
 #include "../2d/contains.hpp"
 #include <algorithm>
@@ -17,3 +18,5 @@ inline int polygon3_contains(const Polygon3& polygon, const Point3& point){
     }
     return contains(projected, to_plane_coordinates(system, point));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_CONTAINS_HPP_INCLUDED

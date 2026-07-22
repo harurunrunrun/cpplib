@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_HIERARCHY_FROM_SUPERIOR_CONSTRAINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_HIERARCHY_FROM_SUPERIOR_CONSTRAINTS_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -26,3 +27,5 @@ inline std::vector<int> hierarchy_from_superior_constraints(
     }
     return parent;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_HIERARCHY_FROM_SUPERIOR_CONSTRAINTS_HPP_INCLUDED

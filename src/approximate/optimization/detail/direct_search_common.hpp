@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_DIRECT_SEARCH_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_DIRECT_SEARCH_COMMON_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -131,3 +132,5 @@ std::vector<Real> point_displacement(
 }
 
 }  // namespace approximate::optimization::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_DIRECT_SEARCH_COMMON_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -410,3 +411,5 @@ inline EPAResult3 epa_3d(
         normalization
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_3D_HPP_INCLUDED

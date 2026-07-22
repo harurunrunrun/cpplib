@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_POLYGON_INTERSECTION_AREA_DETAIL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_POLYGON_INTERSECTION_AREA_DETAIL_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -66,3 +67,5 @@ inline long double edge_area(Point a, Point b, long double radius){
 }
 
 } // namespace circle_polygon_intersection_internal
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_POLYGON_INTERSECTION_AREA_DETAIL_HPP_INCLUDED

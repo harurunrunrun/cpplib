@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_RANDOMIZED_RANDOM_PROJECTION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_RANDOMIZED_RANDOM_PROJECTION_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -148,3 +149,5 @@ std::array<std::array<double, OutputDimension>, PointCount> apply_random_project
 }
 
 }  // namespace approximate::randomized
+
+#endif  // CPPLIB_SRC_APPROXIMATE_RANDOMIZED_RANDOM_PROJECTION_HPP_INCLUDED

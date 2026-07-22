@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_PERMUTATION_GROUP_ORDER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_PERMUTATION_GROUP_ORDER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -171,3 +172,4 @@ inline PermutationGroupOrderResult permutation_group_order(
     return result;
 }
 
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_PERMUTATION_GROUP_ORDER_HPP_INCLUDED

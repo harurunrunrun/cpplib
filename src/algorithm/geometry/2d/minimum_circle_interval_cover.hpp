@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_CIRCLE_INTERVAL_COVER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_CIRCLE_INTERVAL_COVER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -127,3 +128,5 @@ inline int minimum_circle_interval_cover(
     }
     return answer == std::numeric_limits<int>::max() ? -1 : answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_CIRCLE_INTERVAL_COVER_HPP_INCLUDED

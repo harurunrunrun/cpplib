@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT_PLANE_NORMAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT_PLANE_NORMAL_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -20,3 +21,5 @@ inline Plane3 orient_plane_normal(
     if(dot(plane.normal, reference_direction) < 0) plane.normal = -plane.normal;
     return plane;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT_PLANE_NORMAL_HPP_INCLUDED

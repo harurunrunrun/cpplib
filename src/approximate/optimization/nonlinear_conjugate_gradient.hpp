@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_NONLINEAR_CONJUGATE_GRADIENT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_NONLINEAR_CONJUGATE_GRADIENT_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -127,3 +128,5 @@ auto nonlinear_conjugate_gradient(
 }
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_NONLINEAR_CONJUGATE_GRADIENT_HPP_INCLUDED

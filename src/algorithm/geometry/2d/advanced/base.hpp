@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_BASE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_BASE_HPP_INCLUDED
 
 #include <vector>
 
@@ -16,3 +17,5 @@ struct HalfPlaneIntersectionResult{
     HalfPlaneIntersectionKind kind = HALF_PLANE_EMPTY;
     std::vector<Point> polygon;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_BASE_HPP_INCLUDED

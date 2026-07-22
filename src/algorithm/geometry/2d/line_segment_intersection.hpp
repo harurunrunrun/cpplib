@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LINE_SEGMENT_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LINE_SEGMENT_INTERSECTION_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -32,3 +33,5 @@ inline Point line_segment_intersection(
     }
     return cross_point(line, segment);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LINE_SEGMENT_INTERSECTION_HPP_INCLUDED

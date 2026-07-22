@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_TETRAHEDRON_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_TETRAHEDRON_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -42,3 +43,5 @@ inline LinearIntersection3 line_tetrahedron_intersection(
         line.a + direction * upper,
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_TETRAHEDRON_INTERSECTION_HPP_INCLUDED

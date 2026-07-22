@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SET_COVER_GREEDY_MAX_COVERAGE_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SET_COVER_GREEDY_MAX_COVERAGE_HPP_INCLUDED
 
 #include <cstddef>
 #include <queue>
@@ -49,3 +50,5 @@ struct MaxCoverageResult {
 }
 
 }  // namespace approximate::set_cover
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SET_COVER_GREEDY_MAX_COVERAGE_HPP_INCLUDED

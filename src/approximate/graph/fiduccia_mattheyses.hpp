@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_FIDUCCIA_MATTHEYSES_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_FIDUCCIA_MATTHEYSES_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -165,3 +166,5 @@ struct FmQueueCompare {
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_FIDUCCIA_MATTHEYSES_HPP_INCLUDED

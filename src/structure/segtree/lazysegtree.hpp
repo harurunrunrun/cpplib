@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_LAZYSEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_LAZYSEGTREE_HPP_INCLUDED
 #include <array>
 #include <vector>
 #include <stdexcept>
@@ -255,3 +256,5 @@ struct LazySegtree{
             return 0;
         }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_LAZYSEGTREE_HPP_INCLUDED

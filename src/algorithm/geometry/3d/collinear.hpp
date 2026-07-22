@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_COLLINEAR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_COLLINEAR_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -18,3 +19,5 @@ inline bool collinear(
 ){
     return parallel(second - first, third - first);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_COLLINEAR_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_HULL_DETAIL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_HULL_DETAIL_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -77,3 +78,5 @@ inline std::vector<Point> build_convex_hull(
 }
 
 }  // namespace convex_hull_detail
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_HULL_DETAIL_HPP_INCLUDED

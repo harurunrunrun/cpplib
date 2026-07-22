@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_INTERSECTION_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_INTERSECTION_COUNT_HPP_INCLUDED
 
 #include <cstddef>
 #include <vector>
@@ -10,3 +11,5 @@ inline std::size_t segment_intersection_count(
 ){
     return bentley_ottmann_intersections(segments).size();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_INTERSECTION_COUNT_HPP_INCLUDED

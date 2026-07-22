@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_GRADIENT_DESCENT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_GRADIENT_DESCENT_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -43,3 +44,5 @@ auto gradient_descent(
 }
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_GRADIENT_DESCENT_HPP_INCLUDED

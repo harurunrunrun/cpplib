@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_IS_FINITE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_IS_FINITE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -279,3 +280,5 @@ inline void geometry3d_validate(const Sphere3& sphere){
         throw std::invalid_argument("negative sphere radius");
     }
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_IS_FINITE_HPP_INCLUDED

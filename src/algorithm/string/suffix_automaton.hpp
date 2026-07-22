@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_SUFFIX_AUTOMATON_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_SUFFIX_AUTOMATON_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -365,3 +366,5 @@ public:
 };
 
 } // namespace suffix_automaton_internal
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_SUFFIX_AUTOMATON_HPP_INCLUDED

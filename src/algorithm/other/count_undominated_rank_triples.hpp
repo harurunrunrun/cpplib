@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_COUNT_UNDOMINATED_RANK_TRIPLES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_COUNT_UNDOMINATED_RANK_TRIPLES_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -40,3 +41,5 @@ int count_undominated_rank_triples(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_COUNT_UNDOMINATED_RANK_TRIPLES_HPP_INCLUDED

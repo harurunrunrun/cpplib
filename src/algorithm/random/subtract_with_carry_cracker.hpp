@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_SUBTRACT_WITH_CARRY_CRACKER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANDOM_SUBTRACT_WITH_CARRY_CRACKER_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -682,3 +683,5 @@ recover_subtract_with_carry_seed_in_range(
         static_cast<unsigned long long>(seed_last - seed_first)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_SUBTRACT_WITH_CARRY_CRACKER_HPP_INCLUDED

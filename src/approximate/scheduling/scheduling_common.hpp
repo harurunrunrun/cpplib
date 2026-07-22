@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SCHEDULING_SCHEDULING_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SCHEDULING_SCHEDULING_COMMON_HPP_INCLUDED
 
 #include <cmath>
 #include <limits>
@@ -60,3 +61,5 @@ void validate_nonnegative_time(const Time& value, const char* message){
 }
 
 }  // namespace approximate::scheduling::scheduling_internal
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SCHEDULING_SCHEDULING_COMMON_HPP_INCLUDED

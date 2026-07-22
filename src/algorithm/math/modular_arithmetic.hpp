@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_MODULAR_ARITHMETIC_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_MODULAR_ARITHMETIC_HPP_INCLUDED
 
 #include <limits>
 #include <optional>
@@ -97,3 +98,5 @@ inline u64 primitive_root(u64 prime){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_MODULAR_ARITHMETIC_HPP_INCLUDED

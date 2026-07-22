@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TYPES_COMMON_MONOIDS_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TYPES_COMMON_MONOIDS_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -716,3 +717,5 @@ using AssignMaxSubarrayMonoidAct = Monoid_Act_Len<
     common_monoid_internal::assignment_composition<T>,
     common_monoid_internal::assignment_id<T>
 >;
+
+#endif  // CPPLIB_SRC_STRUCTURE_TYPES_COMMON_MONOIDS_HPP_INCLUDED

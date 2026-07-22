@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_MIN_OF_MOD_OF_LINEAR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_MIN_OF_MOD_OF_LINEAR_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdint>
@@ -61,3 +62,5 @@ inline long long min_of_mod_of_linear(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_MIN_OF_MOD_OF_LINEAR_HPP_INCLUDED

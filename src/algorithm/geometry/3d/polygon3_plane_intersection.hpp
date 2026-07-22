@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_PLANE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <optional>
 
@@ -37,3 +38,5 @@ inline Polygon3PlaneIntersection3 polygon3_plane_intersection(
         std::nullopt, std::move(linear.points), std::move(linear.segments)
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_PLANE_INTERSECTION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_CIRCLE_SEGMENT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_CIRCLE_SEGMENT_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -45,3 +46,5 @@ inline bool intersect_circle_segment(
         radius_squared + maximum_squared
     ) <= 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_CIRCLE_SEGMENT_HPP_INCLUDED

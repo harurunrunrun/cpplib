@@ -101,6 +101,10 @@ PROBLEM_CODES = (
 
 TRAILING_VERIFICATION_TAGS = re.compile(r"(?:\s+\[[^\[\]\n]+\])+\s*$")
 TITLE_FIELD = re.compile(r"^title:[ \t]*(?P<value>.*?)[ \t]*$")
+INCLUDE_GUARD_DIRECTIVE = re.compile(
+    r"^\s*#\s*(?:(?:ifndef|define)\s+CPPLIB_[A-Z0-9_]+_INCLUDED"
+    r"|endif\s*//\s*CPPLIB_[A-Z0-9_]+_INCLUDED)\s*$"
+)
 
 
 @dataclass(frozen=True)
@@ -261,6 +265,8 @@ def check_file(path: Path, *, is_documentation: bool | None = None) -> list[Viol
         is_documentation and lines and lines[0].strip() == "---"
     )
     for index, line in enumerate(lines, start=1):
+        if not is_documentation and INCLUDE_GUARD_DIRECTIVE.match(line):
+            continue
         if is_documentation and in_front_matter:
             if index > 1 and line.strip() == "---":
                 in_front_matter = False

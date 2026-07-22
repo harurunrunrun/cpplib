@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_SUM_OF_MULTIPLICATIVE_FUNCTION_LARGE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_SUM_OF_MULTIPLICATIVE_FUNCTION_LARGE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -348,3 +349,5 @@ Modint<MOD> sum_of_multiplicative_function_large(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_SUM_OF_MULTIPLICATIVE_FUNCTION_LARGE_HPP_INCLUDED

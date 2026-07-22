@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_PAIRWISE_DISCONNECT_COST_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_PAIRWISE_DISCONNECT_COST_SUM_HPP_INCLUDED
 
 #include <algorithm>
 #include <numeric>
@@ -134,3 +135,5 @@ long long pairwise_disconnect_cost_sum(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_PAIRWISE_DISCONNECT_COST_SUM_HPP_INCLUDED

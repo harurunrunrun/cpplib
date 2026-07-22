@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_LINEAR_COUNTING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_LINEAR_COUNTING_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -62,3 +63,5 @@ public:
     [[nodiscard]] std::size_t occupied_bits() const noexcept { return occupied_; }
     [[nodiscard]] static constexpr std::size_t bit_count() noexcept { return BitCount; }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_LINEAR_COUNTING_HPP_INCLUDED

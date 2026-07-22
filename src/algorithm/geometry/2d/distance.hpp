@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DISTANCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -62,3 +63,5 @@ inline long double distance_line_segment(const Line& line, const Segment& segmen
     if(intersect_line_segment(line, segment)) return 0;
     return std::min(distance(line, segment.a), distance(line, segment.b));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DISTANCE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COMMON_INTERNAL_TANGENTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COMMON_INTERNAL_TANGENTS_HPP_INCLUDED
 
 #include <vector>
 
@@ -12,3 +13,5 @@ inline std::vector<Line> common_internal_tangents(
         first, second, {-1}
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COMMON_INTERNAL_TANGENTS_HPP_INCLUDED

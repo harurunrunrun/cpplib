@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_EDIT_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_EDIT_DISTANCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <vector>
@@ -26,3 +27,5 @@ int edit_distance(
     }
     return dp[m];
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_EDIT_DISTANCE_HPP_INCLUDED

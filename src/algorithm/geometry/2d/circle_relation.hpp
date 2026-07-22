@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_RELATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_RELATION_HPP_INCLUDED
 
 #include <cmath>
 
@@ -50,3 +51,5 @@ inline int circle_relation(const Circle& first, const Circle& second){
     }
     return CIRCLE_INTERSECT;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_RELATION_HPP_INCLUDED

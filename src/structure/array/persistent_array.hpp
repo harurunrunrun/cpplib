@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_ARRAY_PERSISTENT_ARRAY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_ARRAY_PERSISTENT_ARRAY_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -254,3 +255,5 @@ public:
         return new_version;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_ARRAY_PERSISTENT_ARRAY_HPP_INCLUDED

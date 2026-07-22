@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_RECTANGLE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_RECTANGLE_SUM_HPP_INCLUDED
 
 #include <limits>
 #include <type_traits>
@@ -15,3 +16,5 @@ struct RectangleSum : WaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH>{
     using Base = WaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH>;
     using Base::Base;
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_RECTANGLE_SUM_HPP_INCLUDED

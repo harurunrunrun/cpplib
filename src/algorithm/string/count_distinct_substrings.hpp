@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSTRINGS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSTRINGS_HPP_INCLUDED
 
 #include <string>
 
@@ -26,3 +27,5 @@ long long count_distinct_substrings(const Sequence& sequence){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSTRINGS_HPP_INCLUDED

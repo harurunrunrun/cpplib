@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_FFT_MIN_PLUS_CONVOLUTION_SMAWK_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_FFT_MIN_PLUS_CONVOLUTION_SMAWK_HPP_INCLUDED
 
 #include <algorithm>
 #include <concepts>
@@ -83,3 +84,5 @@ std::vector<T> min_plus_convolution_convex_arbitrary_smawk(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_FFT_MIN_PLUS_CONVOLUTION_SMAWK_HPP_INCLUDED

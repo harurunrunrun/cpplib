@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_MORRIS_COUNTER_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_MORRIS_COUNTER_HPP_INCLUDED
 
 #include <cmath>
 #include <cstdint>
@@ -37,3 +38,5 @@ public:
     [[nodiscard]] std::uint32_t exponent() const noexcept { return exponent_; }
     [[nodiscard]] long double base() const noexcept { return base_; }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_MORRIS_COUNTER_HPP_INCLUDED

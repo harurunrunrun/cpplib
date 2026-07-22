@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_ORDER_STATISTICS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_ORDER_STATISTICS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -514,3 +515,5 @@ public:
         return count_prefix(versions, rank_right) - count_prefix(versions, rank_left);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_ORDER_STATISTICS_HPP_INCLUDED

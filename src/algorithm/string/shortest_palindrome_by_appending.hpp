@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_SHORTEST_PALINDROME_BY_APPENDING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_SHORTEST_PALINDROME_BY_APPENDING_HPP_INCLUDED
 
 #include <algorithm>
 #include <string>
@@ -45,3 +46,5 @@ inline std::string shortest_palindrome_by_appending(std::string_view text){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_SHORTEST_PALINDROME_BY_APPENDING_HPP_INCLUDED

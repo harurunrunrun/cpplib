@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_ROLLING_HASH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_ROLLING_HASH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdint>
@@ -90,3 +91,5 @@ public:
         return low;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_ROLLING_HASH_HPP_INCLUDED

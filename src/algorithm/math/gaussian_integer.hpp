@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_INTEGER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_INTEGER_HPP_INCLUDED
 
 #include <array>
 #include <cstdint>
@@ -86,3 +87,5 @@ inline GaussianInteger gaussian_gcd(GaussianInteger left, GaussianInteger right)
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_INTEGER_HPP_INCLUDED

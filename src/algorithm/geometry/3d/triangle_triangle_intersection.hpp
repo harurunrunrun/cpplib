@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_TRIANGLE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_TRIANGLE_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -153,3 +154,5 @@ inline PlanarIntersection3 triangle_triangle_intersection(
         triangle_plane_intersection(second, first_plane)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_TRIANGLE_INTERSECTION_HPP_INCLUDED

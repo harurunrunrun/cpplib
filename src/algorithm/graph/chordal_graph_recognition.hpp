@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CHORDAL_GRAPH_RECOGNITION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CHORDAL_GRAPH_RECOGNITION_HPP_INCLUDED
 
 #include <algorithm>
 #include <queue>
@@ -130,3 +131,5 @@ inline ChordalGraphRecognitionResult chordal_graph_recognition(
     std::reverse(selection_order.begin(), selection_order.end());
     return {true, std::move(selection_order), {}};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CHORDAL_GRAPH_RECOGNITION_HPP_INCLUDED

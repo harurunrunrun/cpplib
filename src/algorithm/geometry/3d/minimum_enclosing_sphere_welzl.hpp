@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINIMUM_ENCLOSING_SPHERE_WELZL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINIMUM_ENCLOSING_SPHERE_WELZL_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -68,3 +69,5 @@ inline Sphere3 minimum_enclosing_sphere_welzl(
         points, points.size(), boundary, 0
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINIMUM_ENCLOSING_SPHERE_WELZL_HPP_INCLUDED

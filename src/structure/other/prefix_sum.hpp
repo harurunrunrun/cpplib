@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_PREFIX_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_PREFIX_SUM_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -190,3 +191,5 @@ public:
         return sum(row, col, row + 1, col + 1);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_PREFIX_SUM_HPP_INCLUDED

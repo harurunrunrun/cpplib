@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_WEIGHT_NONOVERLAPPING_INTERVALS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_WEIGHT_NONOVERLAPPING_INTERVALS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -55,3 +56,5 @@ inline long long maximum_weight_nonoverlapping_intervals(
     }
     return dp.back();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_WEIGHT_NONOVERLAPPING_INTERVALS_HPP_INCLUDED

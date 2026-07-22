@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_HASH_ASSOCIATIVE_ARRAY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_HASH_ASSOCIATIVE_ARRAY_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -198,3 +199,5 @@ public:
         size_ = 0;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_HASH_ASSOCIATIVE_ARRAY_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_SHORTEST_PATH_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_SHORTEST_PATH_DISTANCE_HPP_INCLUDED
 
 #include <cstddef>
 #include <optional>
@@ -51,3 +52,5 @@ std::optional<T> undirected_shortest_path_distance(
     if(!shortest.reachable[static_cast<std::size_t>(target)]) return std::nullopt;
     return shortest.dist[static_cast<std::size_t>(target)];
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_SHORTEST_PATH_DISTANCE_HPP_INCLUDED

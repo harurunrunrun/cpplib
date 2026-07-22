@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_SEQUENCE_SLIDING_WINDOW_K_SMALLEST_SUMS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_SEQUENCE_SLIDING_WINDOW_K_SMALLEST_SUMS_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -44,3 +45,5 @@ std::vector<Sum> sliding_window_k_smallest_sums(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_SEQUENCE_SLIDING_WINDOW_K_SMALLEST_SUMS_HPP_INCLUDED

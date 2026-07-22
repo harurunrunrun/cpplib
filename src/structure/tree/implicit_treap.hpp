@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_IMPLICIT_TREAP_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_IMPLICIT_TREAP_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -237,3 +238,5 @@ public:
         return aggregate_or_e(root_node);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_IMPLICIT_TREAP_HPP_INCLUDED

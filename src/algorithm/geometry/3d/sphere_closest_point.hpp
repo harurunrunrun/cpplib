@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_CLOSEST_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_CLOSEST_POINT_HPP_INCLUDED
 
 #include <stdexcept>
 #include <algorithm>
@@ -40,3 +41,5 @@ inline Point3 closest_point(const Sphere3& sphere, const Point3& point){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_CLOSEST_POINT_HPP_INCLUDED

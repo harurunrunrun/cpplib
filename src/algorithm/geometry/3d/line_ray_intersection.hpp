@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_RAY_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_RAY_INTERSECTION_HPP_INCLUDED
 
 #include <variant>
 
@@ -23,3 +24,5 @@ inline LinearIntersection3 line_ray_intersection(
     if(std::holds_alternative<Line3>(support)) return ray;
     return std::monostate{};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_RAY_INTERSECTION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_RESERVOIR_SAMPLING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_RESERVOIR_SAMPLING_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -125,3 +126,5 @@ public:
     [[nodiscard]] std::uint64_t seen() const noexcept { return seen_; }
     [[nodiscard]] static constexpr std::size_t capacity() noexcept { return Capacity; }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_RESERVOIR_SAMPLING_HPP_INCLUDED

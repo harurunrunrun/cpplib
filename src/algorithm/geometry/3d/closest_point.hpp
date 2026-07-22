@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINT_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -113,3 +114,5 @@ inline Point3 closest_point(const Triangle3& triangle, const Point3& point){
         local, triangle.a, scale
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINT_HPP_INCLUDED

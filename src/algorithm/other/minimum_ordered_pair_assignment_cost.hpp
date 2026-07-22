@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_ORDERED_PAIR_ASSIGNMENT_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_ORDERED_PAIR_ASSIGNMENT_COST_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -57,3 +58,5 @@ inline long long minimum_ordered_pair_assignment_cost(
     }
     return static_cast<long long>(result);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_ORDERED_PAIR_ASSIGNMENT_COST_HPP_INCLUDED

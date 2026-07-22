@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CONTAINS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CONTAINS_HPP_INCLUDED
 
 #include "advanced/detail.hpp"
 #include "on_segment.hpp"
@@ -43,3 +44,5 @@ inline bool triangle_contains(
         first_side <= 0 && second_side <= 0 && third_side <= 0;
     return nonnegative || nonpositive;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CONTAINS_HPP_INCLUDED

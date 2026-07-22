@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SIGNED_VOLUME_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SIGNED_VOLUME_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -18,3 +19,5 @@ inline long double signed_volume(const Tetrahedron3& tetrahedron){
         tetrahedron.d - tetrahedron.a
     ) / 6;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SIGNED_VOLUME_HPP_INCLUDED

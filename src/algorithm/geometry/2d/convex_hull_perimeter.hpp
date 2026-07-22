@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_HULL_PERIMETER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_HULL_PERIMETER_HPP_INCLUDED
 
 #include <cstddef>
 #include <utility>
@@ -17,3 +18,5 @@ inline long double convex_hull_perimeter(std::vector<Point> points){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_HULL_PERIMETER_HPP_INCLUDED

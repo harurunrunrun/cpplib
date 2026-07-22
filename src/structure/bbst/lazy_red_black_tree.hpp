@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_BBST_LAZY_RED_BLACK_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_BBST_LAZY_RED_BLACK_TREE_HPP_INCLUDED
 
 #include <array>
 #include <functional>
@@ -369,3 +370,5 @@ public:
         return std::nullopt;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_BBST_LAZY_RED_BLACK_TREE_HPP_INCLUDED

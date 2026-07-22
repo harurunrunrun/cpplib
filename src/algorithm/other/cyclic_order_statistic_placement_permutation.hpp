@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_CYCLIC_ORDER_STATISTIC_PLACEMENT_PERMUTATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_CYCLIC_ORDER_STATISTIC_PLACEMENT_PERMUTATION_HPP_INCLUDED
 
 #include <memory>
 #include <stdexcept>
@@ -43,3 +44,5 @@ std::vector<int> cyclic_order_statistic_placement_permutation(int size){
     }
     return permutation;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_CYCLIC_ORDER_STATISTIC_PLACEMENT_PERMUTATION_HPP_INCLUDED

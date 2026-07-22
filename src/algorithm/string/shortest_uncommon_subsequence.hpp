@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_SHORTEST_UNCOMMON_SUBSEQUENCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_SHORTEST_UNCOMMON_SUBSEQUENCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <vector>
@@ -38,3 +39,5 @@ int shortest_uncommon_subsequence_length(
     }
     return next_row[0] < infinity ? next_row[0] : -1;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_SHORTEST_UNCOMMON_SUBSEQUENCE_HPP_INCLUDED

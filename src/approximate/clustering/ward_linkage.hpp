@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CLUSTERING_WARD_LINKAGE_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CLUSTERING_WARD_LINKAGE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -93,3 +94,5 @@ template<class Real>
 }
 
 }  // namespace approximate::clustering
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CLUSTERING_WARD_LINKAGE_HPP_INCLUDED

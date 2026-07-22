@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_RESULT3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_RESULT3_HPP_INCLUDED
 
 #include <cstddef>
 
@@ -13,3 +14,5 @@ struct EPAResult3{
     std::size_t iterations = 0;
     bool converged = false;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_RESULT3_HPP_INCLUDED

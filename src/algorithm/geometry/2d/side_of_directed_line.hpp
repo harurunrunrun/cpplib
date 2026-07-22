@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SIDE_OF_DIRECTED_LINE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SIDE_OF_DIRECTED_LINE_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -18,3 +19,5 @@ inline int side_of_directed_line(const Line& line, const Point& point){
         cross(direction, relative), length, roundoff
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SIDE_OF_DIRECTED_LINE_HPP_INCLUDED

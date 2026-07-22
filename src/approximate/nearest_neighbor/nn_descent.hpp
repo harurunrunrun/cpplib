@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_NN_DESCENT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_NN_DESCENT_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -202,3 +203,5 @@ private:
 };
 
 }  // namespace approximate::nearest_neighbor
+
+#endif  // CPPLIB_SRC_APPROXIMATE_NEAREST_NEIGHBOR_NN_DESCENT_HPP_INCLUDED

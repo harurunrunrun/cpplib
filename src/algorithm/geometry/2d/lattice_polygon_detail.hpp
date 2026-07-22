@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_DETAIL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_DETAIL_HPP_INCLUDED
 
 #include <algorithm>
 #include "../../math/exact_integer.hpp"
@@ -57,3 +58,5 @@ inline __uint128_t to_uint128(const Wide& value){
 }
 
 } // namespace lattice_polygon_detail
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_DETAIL_HPP_INCLUDED

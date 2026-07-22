@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_RECTANGLE_UNION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_RECTANGLE_UNION_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -108,3 +109,5 @@ T rectangle_union_area(std::vector<RectangleUnionRectangle<T>> rectangles){
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_RECTANGLE_UNION_HPP_INCLUDED

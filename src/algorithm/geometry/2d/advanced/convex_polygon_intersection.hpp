@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -191,3 +192,5 @@ inline std::vector<Point> convex_polygon_intersection(
         first, second
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_INTERSECTION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_FACE_ADJACENCY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_FACE_ADJACENCY_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -44,3 +45,5 @@ convex_polyhedron_face_adjacency(const ConvexPolyhedron3& polyhedron){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_FACE_ADJACENCY_HPP_INCLUDED

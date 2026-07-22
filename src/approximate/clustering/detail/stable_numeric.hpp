@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CLUSTERING_DETAIL_STABLE_NUMERIC_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CLUSTERING_DETAIL_STABLE_NUMERIC_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -78,3 +79,5 @@ template<class LeftReal, class RightReal>
 }
 
 }  // namespace approximate::clustering::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CLUSTERING_DETAIL_STABLE_NUMERIC_HPP_INCLUDED

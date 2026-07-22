@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PICK_THEOREM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PICK_THEOREM_HPP_INCLUDED
 
 #include "lattice_polygon_interior_points.hpp"
 
@@ -16,3 +17,5 @@ inline PickTheoremResult pick_theorem(
         lattice_polygon_interior_points(polygon),
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PICK_THEOREM_HPP_INCLUDED

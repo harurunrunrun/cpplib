@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_ENUMERATE_PALINDROME_LENGTHS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_ENUMERATE_PALINDROME_LENGTHS_HPP_INCLUDED
 
 #include <string>
 #include <vector>
@@ -19,3 +20,5 @@ inline std::vector<int> enumerate_palindrome_lengths(const std::string& text){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_ENUMERATE_PALINDROME_LENGTHS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_FUNCTIONAL_GRID_CYCLE_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_FUNCTIONAL_GRID_CYCLE_COUNT_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -89,3 +90,5 @@ inline std::size_t functional_grid_cycle_count(
     }
     return cycle_count;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_FUNCTIONAL_GRID_CYCLE_COUNT_HPP_INCLUDED

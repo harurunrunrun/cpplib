@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_PATH_ADD_EDGE_GET_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_PATH_ADD_EDGE_GET_TREE_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -88,3 +89,5 @@ public:
         );
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_PATH_ADD_EDGE_GET_TREE_HPP_INCLUDED

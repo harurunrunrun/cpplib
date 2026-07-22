@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_RESULT3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_RESULT3_HPP_INCLUDED
 
 #include <cstddef>
 #include <vector>
@@ -21,3 +22,5 @@ struct GJKResult3{
     std::size_t iterations = 0;
     bool converged = false;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_RESULT3_HPP_INCLUDED

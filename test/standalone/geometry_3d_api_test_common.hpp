@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_GEOMETRY_3D_API_TEST_COMMON_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_GEOMETRY_3D_API_TEST_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -38,3 +39,5 @@ int geometry3d_api_test_main(Function function){
     std::cout << "OK\n";
     return 0;
 }
+
+#endif  // CPPLIB_TEST_STANDALONE_GEOMETRY_3D_API_TEST_COMMON_HPP_INCLUDED

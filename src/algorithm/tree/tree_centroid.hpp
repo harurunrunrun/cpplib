@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_TREE_CENTROID_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_TREE_CENTROID_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -79,3 +80,5 @@ inline int tree_centroid(const std::vector<std::vector<int>>& graph){
     }
     return centroids[0];
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_TREE_CENTROID_HPP_INCLUDED

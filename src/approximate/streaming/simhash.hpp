@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_SIMHASH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_SIMHASH_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -51,3 +52,5 @@ public:
     [[nodiscard]] std::uint64_t seed() const noexcept { return seed_; }
     [[nodiscard]] static constexpr std::size_t bit_count() noexcept { return Bits; }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_SIMHASH_HPP_INCLUDED

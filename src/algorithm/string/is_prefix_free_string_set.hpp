@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_IS_PREFIX_FREE_STRING_SET_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_IS_PREFIX_FREE_STRING_SET_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -17,3 +18,5 @@ inline bool is_prefix_free_string_set(const std::vector<std::string>& strings){
     }
     return true;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_IS_PREFIX_FREE_STRING_SET_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_XOR_BASIS_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_XOR_BASIS_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -127,3 +128,5 @@ public:
         }
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_XOR_BASIS_HPP_INCLUDED

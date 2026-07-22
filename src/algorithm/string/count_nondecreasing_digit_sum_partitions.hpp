@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_COUNT_NONDECREASING_DIGIT_SUM_PARTITIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_COUNT_NONDECREASING_DIGIT_SUM_PARTITIONS_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -67,3 +68,5 @@ inline unsigned long long count_nondecreasing_digit_sum_partitions(
     }
     return static_cast<unsigned long long>(answer);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_COUNT_NONDECREASING_DIGIT_SUM_PARTITIONS_HPP_INCLUDED

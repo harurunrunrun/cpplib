@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MAXIMUM_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MAXIMUM_DISTANCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -26,3 +27,5 @@ inline long double convex_polygon_maximum_distance(
     }
     return std::sqrt(squared_result);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MAXIMUM_DISTANCE_HPP_INCLUDED

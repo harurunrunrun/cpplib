@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_CIRCLE_LINE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_CIRCLE_LINE_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -26,3 +27,5 @@ inline bool intersect_circle_line(const Circle& circle, const Line& line){
         left - right, left + right
     ) <= 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_CIRCLE_LINE_HPP_INCLUDED

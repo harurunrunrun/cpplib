@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ADAPTIVE_ORIENT3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ADAPTIVE_ORIENT3D_HPP_INCLUDED
 
 #include <cmath>
 #include <limits>
@@ -181,3 +182,5 @@ inline int adaptive_orient3d(
     );
     return expansion_sign == exact_sign ? expansion_sign : exact_sign;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ADAPTIVE_ORIENT3D_HPP_INCLUDED

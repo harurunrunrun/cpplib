@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_SEGMENT_CROSS_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_SEGMENT_CROSS_POINTS_HPP_INCLUDED
 
 #include <cmath>
 #include <vector>
@@ -35,3 +36,5 @@ inline std::vector<Point> circle_segment_cross_points(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_SEGMENT_CROSS_POINTS_HPP_INCLUDED

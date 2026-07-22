@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_IMPLICIT_TREAP_DEQUE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_IMPLICIT_TREAP_DEQUE_HPP_INCLUDED
 
 #include "implicit_treap.hpp"
 
@@ -18,3 +19,5 @@ public:
     void pop_back(){ sequence_.erase(sequence_.size() - 1); }
     value_type get(int index){ return sequence_.get(index); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_IMPLICIT_TREAP_DEQUE_HPP_INCLUDED

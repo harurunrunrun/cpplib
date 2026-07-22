@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VALIDATE_CIRCLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VALIDATE_CIRCLE_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -33,3 +34,5 @@ inline void validate_circle(const Circle& circle){
         throw std::invalid_argument("negative circle radius");
     }
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_VALIDATE_CIRCLE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_INSERTIONS_TO_PALINDROME_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_INSERTIONS_TO_PALINDROME_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -40,3 +41,5 @@ int minimum_insertions_to_palindrome(const Sequence& sequence){
     return static_cast<int>(sequence.size())
         - longest_common_subsequence_length(sequence, reversed);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_INSERTIONS_TO_PALINDROME_HPP_INCLUDED

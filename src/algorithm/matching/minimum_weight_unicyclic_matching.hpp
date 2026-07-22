@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_UNICYCLIC_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_UNICYCLIC_MATCHING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -433,3 +434,5 @@ MinimumWeightUnicyclicMatchingResult<T> minimum_weight_unicyclic_matching(
     minimum_weight_unicyclic_matching_internal::Solver<T> solver(n, edges);
     return solver.run();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_UNICYCLIC_MATCHING_HPP_INCLUDED

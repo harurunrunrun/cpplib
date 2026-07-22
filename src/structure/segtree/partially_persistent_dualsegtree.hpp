@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_DUALSEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_DUALSEGTREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -154,3 +155,5 @@ public:
     }
     S get(int k) const{ return get(latest_version(), k); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_DUALSEGTREE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_INCREMENTAL_SCC_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_INCREMENTAL_SCC_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -230,3 +231,5 @@ inline std::vector<int> incremental_scc(
     divide(divide, std::move(records), 0, edge_count + 1);
     return merge_time;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_INCREMENTAL_SCC_HPP_INCLUDED

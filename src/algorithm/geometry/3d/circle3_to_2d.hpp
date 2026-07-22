@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE3_TO_2D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE3_TO_2D_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -51,3 +52,5 @@ inline Circle circle3_to_2d(
     }
     return {{x, y}, circle.radius};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE3_TO_2D_HPP_INCLUDED

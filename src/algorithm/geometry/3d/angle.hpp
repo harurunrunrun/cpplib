@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ANGLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ANGLE_HPP_INCLUDED
 
 #include <cmath>
 
@@ -16,3 +17,5 @@ inline long double angle(const Point3& first, const Point3& second){
         dot(first_unit, second_unit)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ANGLE_HPP_INCLUDED

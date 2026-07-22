@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_DISCRETE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_DISCRETE_SUM_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -213,3 +214,5 @@ public:
 };
 
 }  // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_DISCRETE_SUM_HPP_INCLUDED

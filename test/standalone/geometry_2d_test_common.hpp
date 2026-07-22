@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TEST_COMMON_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TEST_COMMON_HPP_INCLUDED
 
 #include <cmath>
 #include <iomanip>
@@ -21,3 +22,5 @@ inline void geometry_test_print_point(const PointLike& point){
     std::cout << geometry_test_clean(point.x) << ' '
               << geometry_test_clean(point.y) << '\n';
 }
+
+#endif  // CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TEST_COMMON_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_SHELF_PACKING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_PACKING_SHELF_PACKING_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -266,3 +267,5 @@ RectanglePackingResult<Size> bfdh_rectangle_packing(
 }
 
 }  // namespace approximate::packing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_SHELF_PACKING_HPP_INCLUDED

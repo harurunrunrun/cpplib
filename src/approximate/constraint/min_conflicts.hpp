@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CONSTRAINT_MIN_CONFLICTS_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CONSTRAINT_MIN_CONFLICTS_HPP_INCLUDED
 
 #include <cmath>
 #include <concepts>
@@ -237,3 +238,5 @@ template<class ConflictCounter, class UniformRandomBitGenerator>
 }
 
 }  // namespace approximate::constraint
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CONSTRAINT_MIN_CONFLICTS_HPP_INCLUDED

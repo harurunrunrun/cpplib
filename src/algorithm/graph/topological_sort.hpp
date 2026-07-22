@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_TOPOLOGICAL_SORT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_TOPOLOGICAL_SORT_HPP_INCLUDED
 
 #include <algorithm>
 #include <functional>
@@ -97,3 +98,5 @@ TopologicalSortResult lexicographical_topological_sort(
     result.is_dag = static_cast<int>(result.order.size()) == n;
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_TOPOLOGICAL_SORT_HPP_INCLUDED

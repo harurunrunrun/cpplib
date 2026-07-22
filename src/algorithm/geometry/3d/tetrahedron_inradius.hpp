@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_INRADIUS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_INRADIUS_HPP_INCLUDED
 
 #include "base.hpp"
 #include "tetrahedron_incenter.hpp"
@@ -11,3 +12,5 @@ inline long double tetrahedron_inradius(const Tetrahedron3& tetrahedron){
         "tetrahedron inradius is not representable"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_INRADIUS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_NONATTACKING_ROOKS_WITH_BLOCKERS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_NONATTACKING_ROOKS_WITH_BLOCKERS_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -109,3 +110,5 @@ inline int maximum_nonattacking_rooks_with_blockers(
         horizontal_count, vertical_count, allowed_placements
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_NONATTACKING_ROOKS_WITH_BLOCKERS_HPP_INCLUDED

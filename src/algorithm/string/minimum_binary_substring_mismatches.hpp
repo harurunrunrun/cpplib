@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_BINARY_SUBSTRING_MISMATCHES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_BINARY_SUBSTRING_MISMATCHES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -66,3 +67,5 @@ inline int minimum_binary_substring_mismatches(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_MINIMUM_BINARY_SUBSTRING_MISMATCHES_HPP_INCLUDED

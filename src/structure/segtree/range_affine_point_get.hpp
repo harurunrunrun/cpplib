@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_POINT_GET_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_POINT_GET_HPP_INCLUDED
 
 #include <memory>
 #include <vector>
@@ -47,3 +48,5 @@ public:
         return tree_->get(index).sum;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_POINT_GET_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_OFFLINE_TREE_PATH_DISTINCT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_OFFLINE_TREE_PATH_DISTINCT_HPP_INCLUDED
 
 #include <algorithm>
 #include <vector>
@@ -59,3 +60,5 @@ public:
         return answer;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_OFFLINE_TREE_PATH_DISTINCT_HPP_INCLUDED

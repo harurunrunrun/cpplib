@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_UNICYCLIC_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_UNICYCLIC_MATCHING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -356,3 +357,5 @@ inline UnicyclicMatchingResult unicyclic_matching(int n, const std::vector<Unicy
     unicyclic_matching_internal::Solver solver(n, edges);
     return solver.run();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_UNICYCLIC_MATCHING_HPP_INCLUDED

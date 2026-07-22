@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_PRODUCT_LESS_EQUAL_MOD_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_PRODUCT_LESS_EQUAL_MOD_HPP_INCLUDED
 
 #include <memory>
 #include <vector>
@@ -34,3 +35,5 @@ public:
         return tree_->fold_less_equal(left, right, upper);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_PRODUCT_LESS_EQUAL_MOD_HPP_INCLUDED

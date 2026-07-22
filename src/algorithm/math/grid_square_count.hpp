@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_GRID_SQUARE_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_GRID_SQUARE_COUNT_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -19,3 +20,5 @@ inline long long grid_square_count(long long side_length){
     }
     return static_cast<long long>(result);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_GRID_SQUARE_COUNT_HPP_INCLUDED

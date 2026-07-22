@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_NORMALIZED_LINE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_NORMALIZED_LINE_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -29,3 +30,5 @@ inline NormalizedLine normalized_line(const Line& line){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_NORMALIZED_LINE_HPP_INCLUDED

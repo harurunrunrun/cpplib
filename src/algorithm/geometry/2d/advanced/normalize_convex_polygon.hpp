@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_NORMALIZE_CONVEX_POLYGON_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_NORMALIZE_CONVEX_POLYGON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -75,3 +76,5 @@ inline std::vector<Point> normalize_convex_polygon(std::vector<Point> polygon){
     canonicalize_start(result);
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_NORMALIZE_CONVEX_POLYGON_HPP_INCLUDED

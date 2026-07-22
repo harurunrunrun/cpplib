@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_SPHERE_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_SPHERE_INTERSECTIONS_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -22,3 +23,5 @@ inline std::vector<Point3> circle_sphere_intersections(
     if(!section) return {};
     return circle_circle_intersections(circle, *section);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_SPHERE_INTERSECTIONS_HPP_INCLUDED

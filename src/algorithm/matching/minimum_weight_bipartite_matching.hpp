@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_BIPARTITE_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_BIPARTITE_MATCHING_HPP_INCLUDED
 
 #include <algorithm>
 #include <functional>
@@ -194,3 +195,5 @@ MinimumWeightBipartiteMatchingResult<T> minimum_weight_bipartite_matching(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_BIPARTITE_MATCHING_HPP_INCLUDED

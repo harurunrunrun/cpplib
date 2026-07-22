@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SCALE_AWARE_SIGN_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SCALE_AWARE_SIGN_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -28,3 +29,5 @@ inline int scale_aware_sign(
     if(value < -bound) return -1;
     return 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SCALE_AWARE_SIGN_HPP_INCLUDED

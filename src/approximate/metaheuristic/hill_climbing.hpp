@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_HILL_CLIMBING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_HILL_CLIMBING_HPP_INCLUDED
 
 #include <functional>
 #include <stdexcept>
@@ -182,3 +183,5 @@ auto random_restart_hill_climbing(
 }
 
 }  // namespace approximate::metaheuristic
+
+#endif  // CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_HILL_CLIMBING_HPP_INCLUDED

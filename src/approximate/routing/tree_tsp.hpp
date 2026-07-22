@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_ROUTING_TREE_TSP_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_ROUTING_TREE_TSP_HPP_INCLUDED
 
 #include <algorithm>
 #include <bit>
@@ -245,3 +246,5 @@ std::vector<int> christofides_tsp_tour(
 }
 
 }  // namespace approximate::routing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_ROUTING_TREE_TSP_HPP_INCLUDED

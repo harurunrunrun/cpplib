@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_COLLISION_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_COLLISION_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -74,3 +75,5 @@ inline ConvexCollisionResult3 convex_collision_3d(
     result.converged = gjk.converged && epa.converged;
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_COLLISION_3D_HPP_INCLUDED

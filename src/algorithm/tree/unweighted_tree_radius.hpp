@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_UNWEIGHTED_TREE_RADIUS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_UNWEIGHTED_TREE_RADIUS_HPP_INCLUDED
 
 #include <queue>
 #include <stdexcept>
@@ -76,3 +77,5 @@ inline int unweighted_tree_radius(
     const int diameter = farthest(endpoint.first).second;
     return (diameter + 1) / 2;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_UNWEIGHTED_TREE_RADIUS_HPP_INCLUDED

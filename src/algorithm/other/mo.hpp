@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MO_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MO_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -71,3 +72,5 @@ public:
         solve(add, add, erase, erase, answer, block_size);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MO_HPP_INCLUDED

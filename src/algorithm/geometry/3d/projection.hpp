@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PROJECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PROJECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -399,3 +400,5 @@ inline Point3 projection(const Plane3& plane, const Point3& point){
         local, plane.point, difference.scale
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PROJECTION_HPP_INCLUDED

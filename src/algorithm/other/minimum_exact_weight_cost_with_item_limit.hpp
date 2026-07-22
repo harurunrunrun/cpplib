@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_EXACT_WEIGHT_COST_WITH_ITEM_LIMIT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_EXACT_WEIGHT_COST_WITH_ITEM_LIMIT_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -72,3 +73,5 @@ inline long long minimum_exact_weight_cost_with_item_limit(
     }
     return static_cast<long long>(answer);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_EXACT_WEIGHT_COST_WITH_ITEM_LIMIT_HPP_INCLUDED

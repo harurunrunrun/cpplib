@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_DIRECTED_SHORTEST_PATH_ROUTE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_DIRECTED_SHORTEST_PATH_ROUTE_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -67,3 +68,5 @@ DirectedShortestPathRouteResult<T> directed_shortest_path_route(
     std::reverse(result.edges.begin(), result.edges.end());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_DIRECTED_SHORTEST_PATH_ROUTE_HPP_INCLUDED

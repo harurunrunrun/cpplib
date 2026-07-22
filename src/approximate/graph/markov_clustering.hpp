@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_MARKOV_CLUSTERING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_MARKOV_CLUSTERING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -184,3 +185,5 @@ public:
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_MARKOV_CLUSTERING_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_MIDPOINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_MIDPOINT_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -18,3 +19,5 @@ inline Point3 spherical_midpoint(const Point3& first, const Point3& second){
         left + right, "degenerate spherical midpoint"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_MIDPOINT_HPP_INCLUDED

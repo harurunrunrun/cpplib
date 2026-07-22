@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_PARALLEL_BINARY_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_PARALLEL_BINARY_SEARCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -68,3 +69,5 @@ std::vector<int> parallel_binary_search(
     }
     return upper;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_PARALLEL_BINARY_SEARCH_HPP_INCLUDED

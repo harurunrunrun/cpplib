@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_PARTIAL_FRACTION_DECOMPOSITION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_PARTIAL_FRACTION_DECOMPOSITION_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -125,3 +126,5 @@ PartialFractionDecompositionResult<MOD> partial_fraction_decomposition(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_PARTIAL_FRACTION_DECOMPOSITION_HPP_INCLUDED

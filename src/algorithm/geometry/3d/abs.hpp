@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ABS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ABS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -23,3 +24,5 @@ inline long double abs(const Point3& point){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ABS_HPP_INCLUDED

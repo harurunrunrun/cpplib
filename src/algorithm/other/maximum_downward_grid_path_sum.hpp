@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_DOWNWARD_GRID_PATH_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_DOWNWARD_GRID_PATH_SUM_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -35,3 +36,5 @@ inline long long maximum_downward_grid_path_sum(
     }
     return *std::max_element(previous.begin(), previous.end());
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_DOWNWARD_GRID_PATH_SUM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_MINKOWSKI_DIFFERENCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_MINKOWSKI_DIFFERENCE_HPP_INCLUDED
 
 #include <utility>
 #include <vector>
@@ -14,3 +15,5 @@ inline std::vector<Point> convex_polygon_minkowski_difference(
         std::move(first), std::move(second)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_MINKOWSKI_DIFFERENCE_HPP_INCLUDED

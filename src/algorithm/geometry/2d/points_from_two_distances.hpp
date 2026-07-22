@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POINTS_FROM_TWO_DISTANCES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POINTS_FROM_TWO_DISTANCES_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -26,3 +27,5 @@ inline std::vector<Point> points_from_two_distances(
         Circle{second, second_distance}
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POINTS_FROM_TWO_DISTANCES_HPP_INCLUDED

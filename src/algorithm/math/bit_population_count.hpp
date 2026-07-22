@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_BIT_POPULATION_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_BIT_POPULATION_COUNT_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -79,3 +80,4 @@ constexpr WideBitCount total_set_bits_half_open(std::uint64_t right){
 
 } // namespace math
 
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_BIT_POPULATION_COUNT_HPP_INCLUDED

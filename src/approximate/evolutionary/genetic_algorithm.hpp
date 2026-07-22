@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_GENETIC_ALGORITHM_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_GENETIC_ALGORITHM_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -203,3 +204,5 @@ auto steady_state_genetic_algorithm(
 }
 
 }  // namespace approximate::evolutionary
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_GENETIC_ALGORITHM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DIHEDRAL_ANGLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DIHEDRAL_ANGLE_HPP_INCLUDED
 
 #include "angle.hpp"
 #include "base.hpp"
@@ -13,3 +14,5 @@ inline long double dihedral_angle(
         plane3_unit_normal(second)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DIHEDRAL_ANGLE_HPP_INCLUDED

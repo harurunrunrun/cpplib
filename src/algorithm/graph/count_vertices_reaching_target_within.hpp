@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_VERTICES_REACHING_TARGET_WITHIN_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_VERTICES_REACHING_TARGET_WITHIN_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -53,3 +54,5 @@ int count_vertices_reaching_target_within(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_VERTICES_REACHING_TARGET_WITHIN_HPP_INCLUDED

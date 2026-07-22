@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_TOP_TREE_INTERNAL_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_TOP_TREE_INTERNAL_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -655,3 +656,5 @@ public:
 };
 
 } // namespace top_tree_internal
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_TOP_TREE_INTERNAL_HPP_INCLUDED

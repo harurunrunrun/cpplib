@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_PALINDROMIC_TREE_REPRESENTATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_PALINDROMIC_TREE_REPRESENTATION_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -60,3 +61,5 @@ PalindromicTreeRepresentation palindromic_tree_representation(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_PALINDROMIC_TREE_REPRESENTATION_HPP_INCLUDED

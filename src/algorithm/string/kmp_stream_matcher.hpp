@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_KMP_STREAM_MATCHER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_KMP_STREAM_MATCHER_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -50,3 +51,5 @@ public:
 
 template<class Pattern>
 KmpStreamMatcher(Pattern) -> KmpStreamMatcher<Pattern>;
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_KMP_STREAM_MATCHER_HPP_INCLUDED

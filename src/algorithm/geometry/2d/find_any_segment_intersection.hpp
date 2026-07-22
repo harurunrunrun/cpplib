@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_FIND_ANY_SEGMENT_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_FIND_ANY_SEGMENT_INTERSECTION_HPP_INCLUDED
 
 #include <optional>
 #include <utility>
@@ -16,3 +17,5 @@ find_any_segment_intersection(const std::vector<Segment>& segments){
         intersections.front().first, intersections.front().second
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_FIND_ANY_SEGMENT_INTERSECTION_HPP_INCLUDED

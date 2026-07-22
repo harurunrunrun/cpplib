@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_WIDESEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_WIDESEGTREE_HPP_INCLUDED
 
 #include "partially_persistent_dynamic_segtree.hpp"
 #include "wide_segtree_persistence_common.hpp"
@@ -24,3 +25,5 @@ public:
 
 template<long long MAX_SIZE, int MAX_NODES, int MAX_VERSIONS, int MAX_CHANGES>
 using PartiallyPersistentWide_Segtree = PartiallyPersistentWideSegtree<MAX_SIZE, MAX_NODES, MAX_VERSIONS, MAX_CHANGES>;
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PARTIALLY_PERSISTENT_WIDESEGTREE_HPP_INCLUDED

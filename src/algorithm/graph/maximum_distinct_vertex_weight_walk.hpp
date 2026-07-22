@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_DISTINCT_VERTEX_WEIGHT_WALK_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_DISTINCT_VERTEX_WEIGHT_WALK_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -133,3 +134,5 @@ inline std::optional<long long> maximum_distinct_vertex_weight_walk(
     if(answer == UNREACHABLE) return std::nullopt;
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_DISTINCT_VERTEX_WEIGHT_WALK_HPP_INCLUDED

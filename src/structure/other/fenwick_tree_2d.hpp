@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_FENWICK_TREE_2D_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_FENWICK_TREE_2D_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -94,3 +95,5 @@ struct FenwickTree2D{
             return y * (MAX_W + 1) + x;
         }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_FENWICK_TREE_2D_HPP_INCLUDED

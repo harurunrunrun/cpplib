@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_CARTESIAN_TREE_PARENT_ARRAY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_CARTESIAN_TREE_PARENT_ARRAY_HPP_INCLUDED
 
 #include <functional>
 #include <utility>
@@ -17,3 +18,5 @@ std::vector<int> cartesian_tree_parent_array(
     }
     return std::move(tree.parent);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_CARTESIAN_TREE_PARENT_ARRAY_HPP_INCLUDED

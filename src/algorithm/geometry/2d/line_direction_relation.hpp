@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LINE_DIRECTION_RELATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LINE_DIRECTION_RELATION_HPP_INCLUDED
 
 #include "orthogonal.hpp"
 #include "parallel.hpp"
@@ -17,3 +18,5 @@ inline LineDirectionRelation line_direction_relation(
     if(orthogonal(first, second)) return LineDirectionRelation::ORTHOGONAL;
     return LineDirectionRelation::NEITHER;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LINE_DIRECTION_RELATION_HPP_INCLUDED

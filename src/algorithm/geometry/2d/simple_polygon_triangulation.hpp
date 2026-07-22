@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SIMPLE_POLYGON_TRIANGULATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SIMPLE_POLYGON_TRIANGULATION_HPP_INCLUDED
 
 #include <vector>
 
@@ -9,3 +10,5 @@ inline std::vector<EarClippingTriangle> simple_polygon_triangulation(
 ){
     return ear_clipping_triangulation(polygon);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SIMPLE_POLYGON_TRIANGULATION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GEOMETRY_RANSAC_LINE_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GEOMETRY_RANSAC_LINE_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -115,3 +116,5 @@ RansacLineResult ransac_line(
 }
 
 }  // namespace approximate::geometry
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GEOMETRY_RANSAC_LINE_HPP_INCLUDED

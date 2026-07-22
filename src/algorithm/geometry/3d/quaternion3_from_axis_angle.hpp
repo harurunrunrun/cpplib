@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_AXIS_ANGLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_AXIS_ANGLE_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -30,3 +31,5 @@ inline Quaternion3 quaternion3_from_axis_angle(
         direction.y * sine, direction.z * sine,
     }.normalized();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_FROM_AXIS_ANGLE_HPP_INCLUDED

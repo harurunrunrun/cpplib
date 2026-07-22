@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_FFT_SPARSE_FORMAL_POWER_SERIES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_FFT_SPARSE_FORMAL_POWER_SERIES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -364,3 +365,5 @@ std::optional<std::vector<Modint<MOD>>> sparse_fps_sqrt(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_FFT_SPARSE_FORMAL_POWER_SERIES_HPP_INCLUDED

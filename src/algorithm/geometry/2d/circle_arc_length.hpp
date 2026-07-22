@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_ARC_LENGTH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_ARC_LENGTH_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -15,3 +16,5 @@ inline long double circle_arc_length(
     }
     return circle.radius * central_angle;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_ARC_LENGTH_HPP_INCLUDED

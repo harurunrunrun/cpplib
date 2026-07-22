@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MINIMUM_WIDTH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MINIMUM_WIDTH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -48,3 +49,5 @@ inline long double convex_polygon_minimum_width(std::vector<Point> polygon){
         NormalizedConvexPolygon(std::move(polygon))
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MINIMUM_WIDTH_HPP_INCLUDED

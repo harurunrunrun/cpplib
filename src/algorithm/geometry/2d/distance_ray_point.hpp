@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DISTANCE_RAY_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DISTANCE_RAY_POINT_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -20,3 +21,5 @@ inline long double distance(const Ray& ray, const Point& point){
     }
     return std::abs(cross(unit_direction, point - ray.origin));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DISTANCE_RAY_POINT_HPP_INCLUDED

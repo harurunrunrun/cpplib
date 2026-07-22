@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SCALAR_TRIPLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SCALAR_TRIPLE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -19,3 +20,5 @@ inline long double scalar_triple(
 ){
     return dot(first, cross(second, third));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SCALAR_TRIPLE_HPP_INCLUDED

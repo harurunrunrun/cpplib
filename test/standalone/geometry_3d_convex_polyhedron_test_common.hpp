@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_GEOMETRY_3D_CONVEX_POLYHEDRON_TEST_COMMON_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_GEOMETRY_3D_CONVEX_POLYHEDRON_TEST_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -31,3 +32,5 @@ inline bool geometry3d_convex_close(
         && geometry3d_convex_close(first.y, second.y, tolerance)
         && geometry3d_convex_close(first.z, second.z, tolerance);
 }
+
+#endif  // CPPLIB_TEST_STANDALONE_GEOMETRY_3D_CONVEX_POLYHEDRON_TEST_COMMON_HPP_INCLUDED

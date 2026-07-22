@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSEQUENCES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSEQUENCES_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -27,3 +28,5 @@ inline long long count_distinct_subsequences(
     }
     return total;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_COUNT_DISTINCT_SUBSEQUENCES_HPP_INCLUDED

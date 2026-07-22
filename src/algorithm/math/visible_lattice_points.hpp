@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_VISIBLE_LATTICE_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_VISIBLE_LATTICE_POINTS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -71,3 +72,5 @@ public:
 };
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_VISIBLE_LATTICE_POINTS_HPP_INCLUDED

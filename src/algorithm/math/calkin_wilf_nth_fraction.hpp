@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_CALKIN_WILF_NTH_FRACTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_CALKIN_WILF_NTH_FRACTION_HPP_INCLUDED
 
 #include <cstdint>
 #include <stdexcept>
@@ -29,3 +30,5 @@ inline std::pair<std::uint64_t, std::uint64_t> calkin_wilf_nth_fraction(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_CALKIN_WILF_NTH_FRACTION_HPP_INCLUDED

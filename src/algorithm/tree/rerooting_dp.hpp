@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_REROOTING_DP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_REROOTING_DP_HPP_INCLUDED
 
 #include <stdexcept>
 #include <type_traits>
@@ -142,3 +143,5 @@ public:
         return answer;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_REROOTING_DP_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_FFT_FFT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_FFT_FFT_HPP_INCLUDED
 
 #include <cmath>
 #include <complex>
@@ -103,3 +104,5 @@ std::vector<long long> convolution_ll(const std::vector<long long>& a, const std
     }
     return res;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_FFT_FFT_HPP_INCLUDED

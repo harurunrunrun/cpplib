@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_INCONSISTENT_MODULO_THREE_CONSTRAINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_INCONSISTENT_MODULO_THREE_CONSTRAINTS_HPP_INCLUDED
 
 #include <numeric>
 #include <stdexcept>
@@ -92,3 +93,5 @@ inline int count_inconsistent_modulo_three_constraints(
     }
     return inconsistent_count;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_INCONSISTENT_MODULO_THREE_CONSTRAINTS_HPP_INCLUDED

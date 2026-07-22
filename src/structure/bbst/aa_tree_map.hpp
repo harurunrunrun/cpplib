@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_BBST_AA_TREE_MAP_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_BBST_AA_TREE_MAP_HPP_INCLUDED
 
 #include <array>
 #include <algorithm>
@@ -346,3 +347,4 @@ public:
     }
 };
 
+#endif  // CPPLIB_SRC_STRUCTURE_BBST_AA_TREE_MAP_HPP_INCLUDED

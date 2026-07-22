@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_AREA_VECTOR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_AREA_VECTOR_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -20,3 +21,5 @@ inline Point3 polygon3_area_vector(const Polygon3& polygon){
     }
     return doubled_area / 2.0L;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_AREA_VECTOR_HPP_INCLUDED

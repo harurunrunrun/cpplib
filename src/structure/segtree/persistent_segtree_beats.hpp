@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_SEGTREE_BEATS_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_SEGTREE_BEATS_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -295,3 +296,5 @@ public:
 
 template<class T, int MAX_SIZE, int MAX_NODES, int MAX_VERSIONS>
 using PersistentSegtreeBeats = PersistentSegmentTreeBeats<T, MAX_SIZE, MAX_NODES, MAX_VERSIONS>;
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_SEGTREE_BEATS_HPP_INCLUDED

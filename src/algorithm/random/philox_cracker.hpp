@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_PHILOX_CRACKER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANDOM_PHILOX_CRACKER_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -657,3 +658,5 @@ PhiloxSeedRecovery<Engine> recover_philox_seed_in_range(
         candidate_count
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_PHILOX_CRACKER_HPP_INCLUDED

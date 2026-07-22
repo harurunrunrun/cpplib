@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CHINESE_POSTMAN_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CHINESE_POSTMAN_HPP_INCLUDED
 
 #include <concepts>
 #include <cstddef>
@@ -183,3 +184,5 @@ std::optional<ChinesePostmanResult<T>> undirected_chinese_postman(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CHINESE_POSTMAN_HPP_INCLUDED

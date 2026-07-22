@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_LONGEST_INCREASING_SUBSEQUENCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_LONGEST_INCREASING_SUBSEQUENCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <functional>
@@ -63,3 +64,5 @@ int longest_increasing_subsequence_length(
     }
     return static_cast<int>(tails.size());
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_LONGEST_INCREASING_SUBSEQUENCE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GEOMETRY_VISVALINGAM_WHYATT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GEOMETRY_VISVALINGAM_WHYATT_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -94,3 +95,5 @@ std::vector<std::array<T, 2>> visvalingam_whyatt(
 }
 
 }  // namespace approximate::geometry
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GEOMETRY_VISVALINGAM_WHYATT_HPP_INCLUDED

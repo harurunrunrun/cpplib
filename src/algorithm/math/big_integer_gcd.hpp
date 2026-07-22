@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_BIG_INTEGER_GCD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_BIG_INTEGER_GCD_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -65,3 +66,4 @@ inline BigInteger big_integer_lcm(
     return abs((first / big_integer_gcd(first, second)) * second);
 }
 
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_BIG_INTEGER_GCD_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SEGMENT_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SEGMENT_INTERSECTION_HPP_INCLUDED
 
 #include <optional>
 
@@ -22,3 +23,5 @@ inline std::optional<Segment3> convex_polyhedron_segment_intersection(
         segment.a * (1.0L - interval->second) + segment.b * interval->second,
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SEGMENT_INTERSECTION_HPP_INCLUDED

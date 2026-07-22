@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_CENTROID_DECOMPOSITION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_CENTROID_DECOMPOSITION_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -177,3 +178,5 @@ public:
         return centroid_graph;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_CENTROID_DECOMPOSITION_HPP_INCLUDED

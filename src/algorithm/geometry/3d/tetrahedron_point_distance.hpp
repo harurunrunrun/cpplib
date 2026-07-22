@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_POINT_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_POINT_DISTANCE_HPP_INCLUDED
 
 #include "abs.hpp"
 #include "base.hpp"
@@ -10,3 +11,5 @@ inline long double distance(
 ){
     return abs(point - closest_point(tetrahedron, point));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON_POINT_DISTANCE_HPP_INCLUDED

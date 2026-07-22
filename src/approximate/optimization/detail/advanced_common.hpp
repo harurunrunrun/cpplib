@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_ADVANCED_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_ADVANCED_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -200,3 +201,5 @@ std::vector<Real> negative_gradient(const std::vector<Real>& gradient){
 }
 
 }  // namespace approximate::optimization::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_DETAIL_ADVANCED_COMMON_HPP_INCLUDED

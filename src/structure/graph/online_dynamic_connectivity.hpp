@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_GRAPH_ONLINE_DYNAMIC_CONNECTIVITY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_GRAPH_ONLINE_DYNAMIC_CONNECTIVITY_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -221,3 +222,5 @@ public:
     bool link(int left, int right){ return add_edge(left, right); }
     bool cut(int left, int right){ return erase_edge(left, right); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_GRAPH_ONLINE_DYNAMIC_CONNECTIVITY_HPP_INCLUDED

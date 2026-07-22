@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_BENTLEY_OTTMANN_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_BENTLEY_OTTMANN_INTERSECTIONS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -461,3 +462,5 @@ inline std::vector<SegmentIntersectionRecord> bentley_ottmann_intersections(
         segments, std::numeric_limits<std::size_t>::max()
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_BENTLEY_OTTMANN_INTERSECTIONS_HPP_INCLUDED

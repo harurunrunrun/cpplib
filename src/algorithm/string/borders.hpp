@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_BORDERS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_BORDERS_HPP_INCLUDED
 
 #include <algorithm>
 #include <vector>
@@ -17,3 +18,5 @@ std::vector<int> border_lengths(const Sequence& sequence){
     std::reverse(result.begin(), result.end());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_BORDERS_HPP_INCLUDED

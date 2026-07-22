@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_AUXILIARY_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_AUXILIARY_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -362,3 +363,5 @@ public:
 
 template<int MAX_SIZE>
 using VirtualTree = AuxiliaryTree<MAX_SIZE>;
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_AUXILIARY_TREE_HPP_INCLUDED

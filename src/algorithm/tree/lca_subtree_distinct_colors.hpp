@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_LCA_SUBTREE_DISTINCT_COLORS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_LCA_SUBTREE_DISTINCT_COLORS_HPP_INCLUDED
 
 #include <memory>
 #include <stdexcept>
@@ -45,3 +46,5 @@ public:
         return distinct->count(range_left, range_right);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_LCA_SUBTREE_DISTINCT_COLORS_HPP_INCLUDED

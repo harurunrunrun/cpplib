@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_MANHATTAN_THRESHOLD_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_MANHATTAN_THRESHOLD_MATCHING_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -49,3 +50,5 @@ inline int maximum_manhattan_threshold_matching(
         allowed_pairs
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_MANHATTAN_THRESHOLD_MATCHING_HPP_INCLUDED

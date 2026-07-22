@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_RANGE_EDGE_GRAPH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_RANGE_EDGE_GRAPH_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -203,3 +204,5 @@ public:
         return graph_;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_RANGE_EDGE_GRAPH_HPP_INCLUDED

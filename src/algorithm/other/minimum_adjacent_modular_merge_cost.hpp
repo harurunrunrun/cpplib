@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_ADJACENT_MODULAR_MERGE_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_ADJACENT_MODULAR_MERGE_COST_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -75,3 +76,5 @@ inline long long minimum_adjacent_modular_merge_cost(
     }
     return dp.front().back();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_ADJACENT_MODULAR_MERGE_COST_HPP_INCLUDED

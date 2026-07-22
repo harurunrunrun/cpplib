@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COUNT_POINTS_IN_TRIANGLES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COUNT_POINTS_IN_TRIANGLES_HPP_INCLUDED
 
 #include <algorithm>
 #include <concepts>
@@ -242,3 +243,5 @@ private:
     std::vector<std::vector<int>> edge_left_;
     std::vector<std::vector<int>> edge_on_;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COUNT_POINTS_IN_TRIANGLES_HPP_INCLUDED

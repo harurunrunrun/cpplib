@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_DYNAMIC_MEDIAN_MULTISET_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_DYNAMIC_MEDIAN_MULTISET_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -134,3 +135,5 @@ public:
         return {*std::prev(lower_.end()), *upper_.begin()};
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_DYNAMIC_MEDIAN_MULTISET_HPP_INCLUDED

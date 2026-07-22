@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_GEOMETRY_3D_CIRCLE_SPHERE_VALIDATION_TEST_COMMON_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_GEOMETRY_3D_CIRCLE_SPHERE_VALIDATION_TEST_COMMON_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -53,3 +54,5 @@ bool geometry3d_rejects_invalid_spheres(Function&& function){
     }
     return true;
 }
+
+#endif  // CPPLIB_TEST_STANDALONE_GEOMETRY_3D_CIRCLE_SPHERE_VALIDATION_TEST_COMMON_HPP_INCLUDED

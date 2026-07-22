@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_PFAFFIAN_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_PFAFFIAN_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -94,3 +95,5 @@ T pfaffian(const Matrix<T, MAX_ROW, MAX_COL>& matrix){
     }
     return pfaffian(std::move(values));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_PFAFFIAN_HPP_INCLUDED

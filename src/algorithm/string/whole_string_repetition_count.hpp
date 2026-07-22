@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_WHOLE_STRING_REPETITION_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_WHOLE_STRING_REPETITION_COUNT_HPP_INCLUDED
 
 #include "prefix_function.hpp"
 
@@ -10,3 +11,5 @@ int whole_string_repetition_count(const Sequence& sequence){
     const int period = size - failure.back();
     return size % period == 0 ? size / period : 1;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_WHOLE_STRING_REPETITION_COUNT_HPP_INCLUDED

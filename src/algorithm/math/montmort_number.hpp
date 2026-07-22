@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_MONTMORT_NUMBER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_MONTMORT_NUMBER_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -25,3 +26,5 @@ inline std::vector<std::uint32_t> montmort_numbers(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_MONTMORT_NUMBER_HPP_INCLUDED

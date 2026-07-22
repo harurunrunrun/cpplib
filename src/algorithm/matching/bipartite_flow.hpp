@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_FLOW_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_FLOW_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -77,3 +78,5 @@ struct BipartiteFlow{
         return {flow, graph.edges};
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_FLOW_HPP_INCLUDED

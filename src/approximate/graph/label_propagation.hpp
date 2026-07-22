@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_LABEL_PROPAGATION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_LABEL_PROPAGATION_HPP_INCLUDED
 
 #include <cstddef>
 #include <map>
@@ -52,3 +53,5 @@ namespace approximate::graph {
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_LABEL_PROPAGATION_HPP_INCLUDED

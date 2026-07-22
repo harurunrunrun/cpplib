@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -186,3 +187,5 @@ inline long double quaternion3_dot(const Quaternion3& first, const Quaternion3& 
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_HPP_INCLUDED

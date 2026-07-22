@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SCHEDULING_DAG_SCHEDULING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SCHEDULING_DAG_SCHEDULING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -499,3 +500,5 @@ DagSchedule<Time> cpop_schedule(
 }
 
 }  // namespace approximate::scheduling
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SCHEDULING_DAG_SCHEDULING_HPP_INCLUDED

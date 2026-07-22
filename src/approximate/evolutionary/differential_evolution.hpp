@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DIFFERENTIAL_EVOLUTION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DIFFERENTIAL_EVOLUTION_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -102,3 +103,5 @@ auto differential_evolution(
 }
 
 }  // namespace approximate::evolutionary
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DIFFERENTIAL_EVOLUTION_HPP_INCLUDED

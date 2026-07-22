@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_ROUTING_INSERTION_HEURISTICS_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_ROUTING_INSERTION_HEURISTICS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -298,3 +299,5 @@ std::vector<int> regret_insertion_tour(
 }
 
 }  // namespace approximate::routing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_ROUTING_INSERTION_HEURISTICS_HPP_INCLUDED

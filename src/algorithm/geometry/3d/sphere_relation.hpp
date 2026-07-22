@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_RELATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_RELATION_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -52,3 +53,5 @@ inline SphereRelation sphere_relation(
     if(difference_comparison == 0) return SPHERE_INTERNALLY_TANGENT;
     return SPHERE_INTERSECT;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_RELATION_HPP_INCLUDED

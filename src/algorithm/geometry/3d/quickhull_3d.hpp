@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUICKHULL_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUICKHULL_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -372,3 +373,5 @@ inline ConvexPolyhedron3 quickhull_3d(std::vector<Point3> input){
     }
     return {3, std::move(vertices), std::move(result_faces)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUICKHULL_3D_HPP_INCLUDED

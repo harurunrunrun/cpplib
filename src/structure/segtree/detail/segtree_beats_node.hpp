@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_DETAIL_SEGTREE_BEATS_NODE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_DETAIL_SEGTREE_BEATS_NODE_HPP_INCLUDED
 
 #include <algorithm>
 
@@ -136,3 +137,5 @@ void inherit(const Node<T>& parent, Node<T>& child){
 }
 
 } // namespace segtree_beats_detail
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_DETAIL_SEGTREE_BEATS_NODE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_LENGTH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_LENGTH_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -208,3 +209,5 @@ inline int longest_common_substring_length(
     for(unsigned char byte: first) automaton.extend(byte);
     return automaton.match(second);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_LENGTH_HPP_INCLUDED

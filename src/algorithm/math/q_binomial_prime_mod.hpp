@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_Q_BINOMIAL_PRIME_MOD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_Q_BINOMIAL_PRIME_MOD_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -177,3 +178,5 @@ public:
                         q_binomial_small(n_low, k_low));
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_Q_BINOMIAL_PRIME_MOD_HPP_INCLUDED

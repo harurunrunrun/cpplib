@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_TREE_VERTEX_PATH_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_TREE_VERTEX_PATH_SUM_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -113,3 +114,5 @@ public:
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_TREE_VERTEX_PATH_SUM_HPP_INCLUDED

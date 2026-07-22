@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_KTH_SMALLEST_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_KTH_SMALLEST_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -53,3 +54,5 @@ public:
         return statistics_.kth_smallest(left, right - 1, order);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_KTH_SMALLEST_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_RECONSTRUCT_PERMUTATION_FROM_LARGER_BEFORE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_RECONSTRUCT_PERMUTATION_FROM_LARGER_BEFORE_HPP_INCLUDED
 
 #include <memory>
 #include <stdexcept>
@@ -38,3 +39,5 @@ std::vector<int> reconstruct_permutation_from_larger_before(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_RECONSTRUCT_PERMUTATION_FROM_LARGER_BEFORE_HPP_INCLUDED

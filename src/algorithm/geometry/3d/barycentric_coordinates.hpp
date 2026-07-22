@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_BARYCENTRIC_COORDINATES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_BARYCENTRIC_COORDINATES_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -186,3 +187,5 @@ inline std::array<long double, 4> barycentric_coordinates(
         fourth_weight,
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_BARYCENTRIC_COORDINATES_HPP_INCLUDED

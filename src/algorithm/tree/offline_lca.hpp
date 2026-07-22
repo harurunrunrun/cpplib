@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_OFFLINE_LCA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_OFFLINE_LCA_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -150,3 +151,5 @@ std::vector<int> offline_lca(
     (void)visited;
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_OFFLINE_LCA_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_POINT_SET_RANGE_COMPOSITE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_POINT_SET_RANGE_COMPOSITE_HPP_INCLUDED
 
 #include <memory>
 #include <vector>
@@ -41,3 +42,5 @@ public:
         return function.multiplier * value + function.addend;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_POINT_SET_RANGE_COMPOSITE_HPP_INCLUDED

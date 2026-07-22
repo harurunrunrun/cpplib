@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_FUNCTIONAL_GRAPH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_FUNCTIONAL_GRAPH_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -284,3 +285,5 @@ public:
         return static_cast<long long>(_distance_to_cycle[static_cast<std::size_t>(from)]) + around;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_FUNCTIONAL_GRAPH_HPP_INCLUDED

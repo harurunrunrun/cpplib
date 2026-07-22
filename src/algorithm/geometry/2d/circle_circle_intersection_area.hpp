@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_CIRCLE_INTERSECTION_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_CIRCLE_INTERSECTION_AREA_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -62,3 +63,5 @@ inline long double circle_circle_intersection_area(
     return segment_area(first_radius, first_cosine) +
         segment_area(second_radius, second_cosine);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_CIRCLE_INTERSECTION_AREA_HPP_INCLUDED

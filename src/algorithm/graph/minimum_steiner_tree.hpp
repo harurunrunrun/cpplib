@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_STEINER_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_STEINER_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -191,3 +192,5 @@ MinimumSteinerTreeResult<T> minimum_steiner_tree(
     std::sort(edge_ids.begin(), edge_ids.end());
     return {distance[state(full, best_vertex)], std::move(edge_ids), true};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_STEINER_TREE_HPP_INCLUDED

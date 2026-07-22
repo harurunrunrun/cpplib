@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_PAIR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_PAIR_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -55,3 +56,5 @@ inline long double closest_pair(std::vector<Point> points){
     };
     return solve(solve, 0, size);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CLOSEST_PAIR_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_LCM_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_LCM_SUM_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -59,3 +60,5 @@ public:
 };
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_LCM_SUM_HPP_INCLUDED

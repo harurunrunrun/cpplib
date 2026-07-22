@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_LEXICOGRAPHICALLY_SMALLEST_TOPOLOGICAL_ORDER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_LEXICOGRAPHICALLY_SMALLEST_TOPOLOGICAL_ORDER_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -22,3 +23,5 @@ lexicographically_smallest_topological_order(
     if(!result.is_dag) return std::nullopt;
     return std::move(result.order);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_LEXICOGRAPHICALLY_SMALLEST_TOPOLOGICAL_ORDER_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_PARALLEL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_PARALLEL_HPP_INCLUDED
 
 #include "base.hpp"
 #include "line3_direction.hpp"
@@ -41,3 +42,5 @@ inline bool parallel(const Segment3& first, const Ray3& second){
 inline bool parallel(const Segment3& first, const Segment3& second){
     return parallel(segment3_direction(first), segment3_direction(second));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_PARALLEL_HPP_INCLUDED

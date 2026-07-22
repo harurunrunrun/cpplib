@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SCHEDULING_UNRELATED_MACHINE_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SCHEDULING_UNRELATED_MACHINE_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -203,3 +204,5 @@ UnrelatedMachineSchedule<Time> sufferage_schedule(
 }
 
 }  // namespace approximate::scheduling
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SCHEDULING_UNRELATED_MACHINE_HPP_INCLUDED

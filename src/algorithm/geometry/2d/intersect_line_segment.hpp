@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_LINE_SEGMENT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_LINE_SEGMENT_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -15,3 +16,5 @@ inline bool intersect_line_segment(const Line& line, const Segment& segment){
     return geometry_sign(cross(unit_direction, segment.a - line.a)) *
         geometry_sign(cross(unit_direction, segment.b - line.a)) <= 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_LINE_SEGMENT_HPP_INCLUDED

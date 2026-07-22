@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SURFACE_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SURFACE_AREA_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -40,3 +41,5 @@ inline long double convex_polyhedron_surface_area(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SURFACE_AREA_HPP_INCLUDED

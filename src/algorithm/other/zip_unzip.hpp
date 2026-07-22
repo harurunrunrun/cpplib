@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_ZIP_UNZIP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_ZIP_UNZIP_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -35,3 +36,5 @@ std::vector<T> run_length_unzip(const std::vector<std::pair<T, int>>& data){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_ZIP_UNZIP_HPP_INCLUDED

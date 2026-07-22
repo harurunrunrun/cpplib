@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SCHEDULING_FLOW_SHOP_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SCHEDULING_FLOW_SHOP_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -141,3 +142,5 @@ std::vector<std::size_t> neh_flow_shop_order(
 }
 
 }  // namespace approximate::scheduling
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SCHEDULING_FLOW_SHOP_HPP_INCLUDED

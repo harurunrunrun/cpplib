@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_PRIM_MST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_PRIM_MST_HPP_INCLUDED
 
 #include <functional>
 #include <limits>
@@ -70,3 +71,5 @@ PrimMstResult<T> prim_mst(const std::vector<std::vector<PrimEdge<T>>>& graph){
     result.connected = components <= 1;
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_PRIM_MST_HPP_INCLUDED

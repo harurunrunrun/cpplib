@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_MAXIMUM_CONSECUTIVE_REPETITIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_MAXIMUM_CONSECUTIVE_REPETITIONS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -356,3 +357,5 @@ inline int maximum_consecutive_repetitions(const std::string& text){
     );
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_MAXIMUM_CONSECUTIVE_REPETITIONS_HPP_INCLUDED

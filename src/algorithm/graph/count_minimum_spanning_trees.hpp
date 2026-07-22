@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_MINIMUM_SPANNING_TREES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_MINIMUM_SPANNING_TREES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdint>
@@ -265,3 +266,5 @@ MinimumSpanningTreeCountResult<Weight> count_minimum_spanning_trees(
     }
     return {true, minimum_weight, count};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_COUNT_MINIMUM_SPANNING_TREES_HPP_INCLUDED

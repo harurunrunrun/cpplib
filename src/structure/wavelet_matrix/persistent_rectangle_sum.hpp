@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_RECTANGLE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_RECTANGLE_SUM_HPP_INCLUDED
 
 #include <limits>
 #include <type_traits>
@@ -18,3 +19,5 @@ struct PersistentRectangleSum :
     using Base = PersistentWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH, BLOCK_SIZE>;
     using Base::Base;
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_RECTANGLE_SUM_HPP_INCLUDED

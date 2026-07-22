@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TYPES_RESIDUE_COUNT_MONOID_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TYPES_RESIDUE_COUNT_MONOID_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -113,3 +114,5 @@ using AddResidueCountMonoidAct = Monoid_Act<
     residue_count_monoid_internal::residue_shift_composition<MOD>,
     residue_count_monoid_internal::residue_shift_identity<MOD>
 >;
+
+#endif  // CPPLIB_SRC_STRUCTURE_TYPES_RESIDUE_COUNT_MONOID_HPP_INCLUDED

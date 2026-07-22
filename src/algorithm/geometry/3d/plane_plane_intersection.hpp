@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -252,3 +253,5 @@ inline Line3 plane_plane_intersection(
         "plane-plane intersection line is not representable"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_INTERSECTION_HPP_INCLUDED

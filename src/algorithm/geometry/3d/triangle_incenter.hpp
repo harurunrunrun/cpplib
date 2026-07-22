@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_INCENTER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_INCENTER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -120,3 +121,5 @@ inline Point3 triangle_incenter(const Triangle3& triangle){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_INCENTER_HPP_INCLUDED

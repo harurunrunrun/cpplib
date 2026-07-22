@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_RAY_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_RAY_INTERSECTION_HPP_INCLUDED
 
 #include <limits>
 
@@ -15,3 +16,5 @@ inline Polygon3LinearIntersection3 polygon3_ray_intersection(
         std::numeric_limits<long double>::infinity()
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_RAY_INTERSECTION_HPP_INCLUDED

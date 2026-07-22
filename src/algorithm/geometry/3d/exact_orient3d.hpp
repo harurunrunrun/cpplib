@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXACT_ORIENT3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXACT_ORIENT3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -69,3 +70,5 @@ inline int exact_orient3d(
         first, second, third, fourth
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXACT_ORIENT3D_HPP_INCLUDED

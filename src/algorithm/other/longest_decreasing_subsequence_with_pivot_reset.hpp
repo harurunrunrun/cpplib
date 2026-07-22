@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_LONGEST_DECREASING_SUBSEQUENCE_WITH_PIVOT_RESET_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_LONGEST_DECREASING_SUBSEQUENCE_WITH_PIVOT_RESET_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -55,3 +56,5 @@ inline int longest_decreasing_subsequence_with_pivot_reset(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_LONGEST_DECREASING_SUBSEQUENCE_WITH_PIVOT_RESET_HPP_INCLUDED

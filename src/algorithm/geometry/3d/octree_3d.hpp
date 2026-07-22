@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_OCTREE_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_OCTREE_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -199,3 +200,5 @@ public:
         return std::pair{best_index, best_distance};
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_OCTREE_3D_HPP_INCLUDED

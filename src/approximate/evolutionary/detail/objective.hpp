@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_OBJECTIVE_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_OBJECTIVE_HPP_INCLUDED
 
 #include <cmath>
 #include <functional>
@@ -23,3 +24,5 @@ auto evaluate_objective(Evaluate& evaluate, const Individual& individual){
 }
 
 }  // namespace approximate::evolutionary::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_OBJECTIVE_HPP_INCLUDED

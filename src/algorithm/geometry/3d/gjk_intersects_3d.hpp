@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_INTERSECTS_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_INTERSECTS_3D_HPP_INCLUDED
 
 #include "gjk_query_3d.hpp"
 
@@ -10,3 +11,5 @@ inline bool gjk_intersects_3d(
 ){
     return gjk_query_3d(first, second, tolerance, max_iterations).intersects;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_INTERSECTS_3D_HPP_INCLUDED

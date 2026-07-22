@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXPANSION_ARITHMETIC_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXPANSION_ARITHMETIC_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -159,3 +160,5 @@ inline int geometry3d_expansion_sign(const Geometry3DExpansion& expansion){
     }
     return 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXPANSION_ARITHMETIC_HPP_INCLUDED

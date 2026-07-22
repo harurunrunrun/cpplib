@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_SLIDING_WINDOW_MAXIMUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_SLIDING_WINDOW_MAXIMUM_HPP_INCLUDED
 
 #include <deque>
 #include <functional>
@@ -36,3 +37,5 @@ std::vector<T> sliding_window_maximum(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_SLIDING_WINDOW_MAXIMUM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_ADVANCED_GEOMETRY_TEST_COMMON_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_ADVANCED_GEOMETRY_TEST_COMMON_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -23,3 +24,5 @@ inline void advanced_geometry_print_polygon(const std::vector<Point>& polygon){
     }
     std::cout << '\n';
 }
+
+#endif  // CPPLIB_TEST_STANDALONE_ADVANCED_GEOMETRY_TEST_COMMON_HPP_INCLUDED

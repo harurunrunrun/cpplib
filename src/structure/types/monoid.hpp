@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TYPES_MONOID_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TYPES_MONOID_HPP_INCLUDED
 
 #include <type_traits>
 
@@ -12,3 +13,5 @@ struct Monoid{
         return e_func();
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TYPES_MONOID_HPP_INCLUDED

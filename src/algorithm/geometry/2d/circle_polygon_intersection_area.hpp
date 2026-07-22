@@ -1,4 +1,7 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_POLYGON_INTERSECTION_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_POLYGON_INTERSECTION_AREA_HPP_INCLUDED
 
 #include "circle_polygon_intersection_area/signed_circle_polygon_intersection_area.hpp"
 #include "circle_polygon_intersection_area/circle_polygon_intersection_area.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_POLYGON_INTERSECTION_AREA_HPP_INCLUDED

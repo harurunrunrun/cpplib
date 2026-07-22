@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_PARENTHESES_SEQUENCE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_PARENTHESES_SEQUENCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <memory>
@@ -72,3 +73,5 @@ public:
         return whole.balance == 0 && whole.minimum_prefix == 0;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_PARENTHESES_SEQUENCE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINKOWSKI_DIFFERENCE_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINKOWSKI_DIFFERENCE_3D_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -24,3 +25,5 @@ inline ConvexPolyhedron3 minkowski_difference_3d(
     }
     return convex_hull_3d(std::move(points));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINKOWSKI_DIFFERENCE_3D_HPP_INCLUDED

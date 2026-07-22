@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_TREE_DIAMETER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_TREE_DIAMETER_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -181,3 +182,5 @@ WeightedTreeDiameterResult<T> weighted_tree_diameter(
     auto [t, length] = tree_algorithm_detail::farthest_weighted(graph, s, &parent);
     return {s, t, length, tree_algorithm_detail::restore_path(s, t, parent)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_TREE_DIAMETER_HPP_INCLUDED

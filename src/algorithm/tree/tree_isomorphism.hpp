@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_TREE_ISOMORPHISM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_TREE_ISOMORPHISM_HPP_INCLUDED
 
 #include <algorithm>
 #include <map>
@@ -249,3 +250,5 @@ inline bool tree_isomorphic(
     return rooted_tree_isomorphic(a, center_a[0], b, center_b[0])
         || rooted_tree_isomorphic(a, center_a[0], b, center_b[1]);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_TREE_ISOMORPHISM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LEAST_SQUARES_PLANE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LEAST_SQUARES_PLANE_HPP_INCLUDED
 
 #include <cmath>
 #include <optional>
@@ -29,3 +30,5 @@ inline std::optional<Plane3> least_squares_plane(
     }
     return Plane3{axes.centroid, axes.axes[2]};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LEAST_SQUARES_PLANE_HPP_INCLUDED

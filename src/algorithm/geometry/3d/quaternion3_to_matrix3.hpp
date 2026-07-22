@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_TO_MATRIX3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_TO_MATRIX3_HPP_INCLUDED
 
 #include "matrix3.hpp"
 #include "quaternion3.hpp"
@@ -20,3 +21,5 @@ inline Matrix3 quaternion3_to_matrix3(const Quaternion3& quaternion){
         Matrix3::Row{{2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy)}},
     }});
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_QUATERNION3_TO_MATRIX3_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_CENTROID_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_CENTROID_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -30,3 +31,5 @@ inline Point polygon_centroid(const std::vector<Point>& polygon){
     return origin +
         local_weighted / (3.0L * doubled_area);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_CENTROID_HPP_INCLUDED

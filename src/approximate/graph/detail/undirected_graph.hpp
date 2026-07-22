@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_DETAIL_UNDIRECTED_GRAPH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_DETAIL_UNDIRECTED_GRAPH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -44,3 +45,5 @@ inline void validate_endpoint(std::size_t vertex_count, std::size_t vertex){
 }
 
 }  // namespace approximate::graph::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_DETAIL_UNDIRECTED_GRAPH_HPP_INCLUDED

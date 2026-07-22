@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_DINIC_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_DINIC_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -118,3 +119,5 @@ struct Dinic{
         return visited;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_DINIC_HPP_INCLUDED

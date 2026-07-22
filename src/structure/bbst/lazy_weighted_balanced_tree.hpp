@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_BBST_LAZY_WEIGHTED_BALANCED_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_BBST_LAZY_WEIGHTED_BALANCED_TREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -285,3 +286,5 @@ public:
         return aggregate_or_e(root_node);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_BBST_LAZY_WEIGHTED_BALANCED_TREE_HPP_INCLUDED

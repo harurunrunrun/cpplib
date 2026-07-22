@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MULTI_SOURCE_SHORTEST_PATH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MULTI_SOURCE_SHORTEST_PATH_HPP_INCLUDED
 
 #include <functional>
 #include <limits>
@@ -75,3 +76,5 @@ MultiSourceShortestPathResult<T> multi_source_shortest_path(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MULTI_SOURCE_SHORTEST_PATH_HPP_INCLUDED

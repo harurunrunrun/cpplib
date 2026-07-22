@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_SEGMENT_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_SEGMENT_INTERSECTIONS_HPP_INCLUDED
 
 #include <algorithm>
 #include <vector>
@@ -35,3 +36,5 @@ inline std::vector<Point> polygon_segment_intersections(
     ), result.end());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POLYGON_SEGMENT_INTERSECTIONS_HPP_INCLUDED

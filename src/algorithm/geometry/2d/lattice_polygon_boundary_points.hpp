@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_BOUNDARY_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_BOUNDARY_POINTS_HPP_INCLUDED
 
 #include "lattice_polygon_detail.hpp"
 
@@ -17,3 +18,5 @@ inline __uint128_t lattice_polygon_boundary_points(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_BOUNDARY_POINTS_HPP_INCLUDED

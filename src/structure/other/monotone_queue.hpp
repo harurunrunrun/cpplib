@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_MONOTONE_QUEUE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_MONOTONE_QUEUE_HPP_INCLUDED
 
 #include <array>
 #include <functional>
@@ -139,3 +140,5 @@ template<class T, int MAX_WINDOW>
 std::vector<T> sliding_window_min(const std::vector<T>& values, int window){
     return sliding_window_extreme<T, MAX_WINDOW>(values, window, std::less<T>());
 }
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_MONOTONE_QUEUE_HPP_INCLUDED

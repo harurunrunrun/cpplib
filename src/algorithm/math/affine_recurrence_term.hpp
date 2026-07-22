@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_AFFINE_RECURRENCE_TERM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_AFFINE_RECURRENCE_TERM_HPP_INCLUDED
 
 #include <cctype>
 #include <cstdint>
@@ -86,3 +87,5 @@ inline std::uint64_t affine_recurrence_term(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_AFFINE_RECURRENCE_TERM_HPP_INCLUDED

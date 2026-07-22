@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_BASIC_NUMBER_THEORY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_BASIC_NUMBER_THEORY_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -202,3 +203,5 @@ unsigned long long from_base_digits(const std::vector<int>& digits, int base){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_BASIC_NUMBER_THEORY_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ON_CONVEX_HULL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ON_CONVEX_HULL_HPP_INCLUDED
 
 #include <vector>
 
@@ -17,3 +18,5 @@ inline bool on_convex_hull(
 ){
     return on_convex_hull(ConvexPolygonQuery(polygon), point);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ON_CONVEX_HULL_HPP_INCLUDED

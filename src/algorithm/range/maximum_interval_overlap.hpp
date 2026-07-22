@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_INTERVAL_OVERLAP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_INTERVAL_OVERLAP_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -60,3 +61,5 @@ int maximum_interval_overlap(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_INTERVAL_OVERLAP_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_DSU_PERSISTENT_DSU_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_DSU_PERSISTENT_DSU_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -249,3 +250,5 @@ public:
         );
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_DSU_PERSISTENT_DSU_HPP_INCLUDED

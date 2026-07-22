@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_AMS_SKETCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_AMS_SKETCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -86,3 +87,5 @@ public:
         return SamplesPerGroup;
     }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_AMS_SKETCH_HPP_INCLUDED

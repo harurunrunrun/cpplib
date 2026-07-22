@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_DIRECTED_MST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_DIRECTED_MST_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -94,3 +95,5 @@ DirectedMstResult<T> directed_mst(
         edges.swap(next_edges);
     }
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_DIRECTED_MST_HPP_INCLUDED

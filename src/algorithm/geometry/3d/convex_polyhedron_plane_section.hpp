@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_PLANE_SECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_PLANE_SECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -161,3 +162,5 @@ inline Polygon3 convex_polyhedron_plane_section(
     if(points.empty()) return {};
     return convex_order(std::move(points), data.plane.normal);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_PLANE_SECTION_HPP_INCLUDED

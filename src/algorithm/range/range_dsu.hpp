@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_RANGE_DSU_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_RANGE_DSU_HPP_INCLUDED
 
 #include <algorithm>
 #include <map>
@@ -139,3 +140,5 @@ public:
         return true;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_RANGE_DSU_HPP_INCLUDED

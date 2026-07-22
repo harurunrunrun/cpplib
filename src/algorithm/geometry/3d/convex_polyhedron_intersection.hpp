@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_INTERSECTION_HPP_INCLUDED
 
 #include <vector>
 
@@ -34,3 +35,5 @@ inline ConvexPolyhedron3 convex_polyhedron_intersection(
     add_clipped_edges(second, first);
     return convex_hull_3d(std::move(points));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_INTERSECTION_HPP_INCLUDED

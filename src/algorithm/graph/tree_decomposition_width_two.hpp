@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_TREE_DECOMPOSITION_WIDTH_TWO_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_TREE_DECOMPOSITION_WIDTH_TWO_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -131,3 +132,5 @@ inline TreeDecompositionWidthTwoResult tree_decomposition_width_two(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_TREE_DECOMPOSITION_WIDTH_TWO_HPP_INCLUDED

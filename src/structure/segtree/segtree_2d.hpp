@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_SEGTREE_2D_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_SEGTREE_2D_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -212,3 +213,5 @@ public:
         return data[index(1, 1)];
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_SEGTREE_2D_HPP_INCLUDED

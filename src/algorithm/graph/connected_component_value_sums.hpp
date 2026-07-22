@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CONNECTED_COMPONENT_VALUE_SUMS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CONNECTED_COMPONENT_VALUE_SUMS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -61,3 +62,5 @@ inline std::vector<long long> connected_component_value_sums(
     std::sort(answer.begin(), answer.end());
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CONNECTED_COMPONENT_VALUE_SUMS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_SLOPE_TRICK_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_SLOPE_TRICK_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -192,3 +193,5 @@ public:
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_SLOPE_TRICK_HPP_INCLUDED

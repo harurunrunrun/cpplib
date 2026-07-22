@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_BERNOULLI_NUMBER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_BERNOULLI_NUMBER_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -52,3 +53,5 @@ std::vector<Modint<MOD>> bernoulli_numbers(std::size_t maximum_index){
     }
     return exponential_generating_function;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_BERNOULLI_NUMBER_HPP_INCLUDED

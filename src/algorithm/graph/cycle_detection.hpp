@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CYCLE_DETECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CYCLE_DETECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -156,3 +157,5 @@ inline std::vector<int> undirected_cycle(
 ){
     return undirected_cycle_with_edges(n, edges).vertices;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CYCLE_DETECTION_HPP_INCLUDED

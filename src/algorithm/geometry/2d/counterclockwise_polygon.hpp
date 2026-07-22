@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COUNTERCLOCKWISE_POLYGON_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COUNTERCLOCKWISE_POLYGON_HPP_INCLUDED
 
 #include <algorithm>
 #include <vector>
@@ -25,3 +26,5 @@ inline std::vector<Point> counterclockwise_polygon(std::vector<Point> polygon){
     }
     return polygon;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_COUNTERCLOCKWISE_POLYGON_HPP_INCLUDED

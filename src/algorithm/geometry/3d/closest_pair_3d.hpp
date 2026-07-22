@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_PAIR_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_PAIR_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -501,3 +502,5 @@ inline std::optional<ClosestPair3DResult> closest_pair_3d(
         closest_pair_3d_detail::unscale(result.distance),
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_PAIR_3D_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_INTERIOR_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_INTERIOR_POINTS_HPP_INCLUDED
 
 #include "lattice_polygon_boundary_points.hpp"
 
@@ -27,3 +28,5 @@ inline __uint128_t lattice_polygon_interior_points(
     }
     return lattice_polygon_detail::to_uint128(interior);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_INTERIOR_POINTS_HPP_INCLUDED

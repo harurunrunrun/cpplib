@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_ROOT_PATH_FIRST_MARKED_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_ROOT_PATH_FIRST_MARKED_HPP_INCLUDED
 
 #include <set>
 #include <stdexcept>
@@ -49,3 +50,5 @@ public:
         return -1;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_ROOT_PATH_FIRST_MARKED_HPP_INCLUDED

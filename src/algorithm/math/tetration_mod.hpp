@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_TETRATION_MOD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_TETRATION_MOD_HPP_INCLUDED
 
 #include <cstdint>
 #include <stdexcept>
@@ -74,3 +75,5 @@ inline std::uint32_t tetration_mod(std::uint64_t base, std::uint64_t height,
     if(modulus == 0) throw std::invalid_argument("tetration_mod requires modulus > 0");
     return tetration_mod_internal::solve(base, height, modulus);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_TETRATION_MOD_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_OVERLAP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_OVERLAP_HPP_INCLUDED
 
 #include <variant>
 
@@ -53,3 +54,5 @@ inline bool overlap(const Segment3& first, const Segment3& second){
         segment_segment_intersection(first, second)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_OVERLAP_HPP_INCLUDED

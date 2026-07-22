@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -92,3 +93,5 @@ inline long double orient3d(
         normalized.determinant, normalized.scale, 3
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT3D_HPP_INCLUDED

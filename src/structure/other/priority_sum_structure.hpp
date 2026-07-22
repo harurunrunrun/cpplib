@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_PRIORITY_SUM_STRUCTURE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_PRIORITY_SUM_STRUCTURE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -269,3 +270,5 @@ public:
     const Sum& smallest_sum() const{ return cached_smallest; }
     const Sum& largest_sum() const{ return cached_largest; }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_PRIORITY_SUM_STRUCTURE_HPP_INCLUDED

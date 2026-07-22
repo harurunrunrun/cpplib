@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_ENUMERATE_TRIANGLES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_ENUMERATE_TRIANGLES_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -72,3 +73,5 @@ inline long long count_triangles(
 ){
     return enumerate_triangles(vertex_count, edges, [](int, int, int){});
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_ENUMERATE_TRIANGLES_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_LENSTRA_ECM_FACTORIZATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_LENSTRA_ECM_FACTORIZATION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -755,3 +756,5 @@ inline std::vector<std::pair<BigInteger, int>> factorize_lenstra_ecm(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_LENSTRA_ECM_FACTORIZATION_HPP_INCLUDED

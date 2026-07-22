@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_STEINER_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_STEINER_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <functional>
@@ -102,3 +103,5 @@ T steiner_tree(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_STEINER_TREE_HPP_INCLUDED

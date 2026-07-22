@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_TIME_WEIGHTED_ENDPOINT_REMOVAL_SCORE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_TIME_WEIGHTED_ENDPOINT_REMOVAL_SCORE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -53,3 +54,5 @@ inline long long maximum_time_weighted_endpoint_removal_score(
     }
     return dp.front();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MAXIMUM_TIME_WEIGHTED_ENDPOINT_REMOVAL_SCORE_HPP_INCLUDED

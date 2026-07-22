@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_FUNCTIONAL_WAVELET_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_FUNCTIONAL_WAVELET_MATRIX_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -37,3 +38,5 @@ public:
         static_assert(N <= static_cast<std::size_t>(MAX_SIZE));
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_FUNCTIONAL_WAVELET_MATRIX_HPP_INCLUDED

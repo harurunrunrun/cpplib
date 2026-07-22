@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_ROUTING_LOCAL_MOVES_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_ROUTING_LOCAL_MOVES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -297,3 +298,5 @@ inline void exchange_segments(
 }
 
 }  // namespace approximate::routing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_ROUTING_LOCAL_MOVES_HPP_INCLUDED

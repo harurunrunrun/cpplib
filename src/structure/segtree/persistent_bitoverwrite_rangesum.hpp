@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_BITOVERWRITE_RANGESUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_BITOVERWRITE_RANGESUM_HPP_INCLUDED
 
 #include "detail/persistent_bit_range_tree.hpp"
 
@@ -16,3 +17,5 @@ struct PersistentBitOverwriteRangeSum:
 template<long long MAX_SIZE, int MAX_NODES, int MAX_VERSIONS>
 using PersistentDynamicBitOverwriteRangeSum =
     PersistentBitOverwriteRangeSum<MAX_SIZE, MAX_NODES, MAX_VERSIONS>;
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_BITOVERWRITE_RANGESUM_HPP_INCLUDED

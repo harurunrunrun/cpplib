@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_KLL_SKETCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_KLL_SKETCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -101,3 +102,5 @@ public:
         return 1.0L / std::sqrt(static_cast<long double>(K));
     }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_KLL_SKETCH_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCUMSPHERE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCUMSPHERE_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -64,3 +65,5 @@ inline Sphere3 circumsphere(const Tetrahedron3& tetrahedron){
         ),
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCUMSPHERE_HPP_INCLUDED

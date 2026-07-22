@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_INTERPOLATION_FAST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_INTERPOLATION_FAST_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -50,3 +51,5 @@ Polynomial<MOD> polynomial_interpolation(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_INTERPOLATION_FAST_HPP_INCLUDED

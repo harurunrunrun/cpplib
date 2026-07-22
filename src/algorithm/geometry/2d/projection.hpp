@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PROJECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PROJECTION_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -13,3 +14,5 @@ inline Point projection(const Line& line, const Point& point){
     }
     return line.a + direction * (dot(point - line.a, direction) / norm(direction));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_PROJECTION_HPP_INCLUDED

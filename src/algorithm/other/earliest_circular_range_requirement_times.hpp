@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_EARLIEST_CIRCULAR_RANGE_REQUIREMENT_TIMES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_EARLIEST_CIRCULAR_RANGE_REQUIREMENT_TIMES_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -91,3 +92,5 @@ inline std::vector<int> earliest_circular_range_requirement_times(
         }
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_EARLIEST_CIRCULAR_RANGE_REQUIREMENT_TIMES_HPP_INCLUDED

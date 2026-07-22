@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCUMCIRCLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCUMCIRCLE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -177,3 +178,5 @@ inline Circle3 circumcircle(const Triangle3& triangle){
         ),
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCUMCIRCLE_HPP_INCLUDED

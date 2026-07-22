@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_GENERAL_MATCHING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_GENERAL_MATCHING_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -97,3 +98,5 @@ MinimumWeightGeneralMatchingResult<T> minimum_weight_general_matching(
     result.cost = static_cast<T>(total_cost);
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MINIMUM_WEIGHT_GENERAL_MATCHING_HPP_INCLUDED

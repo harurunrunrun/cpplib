@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CONSTRAINT_CNF_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CONSTRAINT_CNF_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -129,3 +130,5 @@ public:
 };
 
 }  // namespace approximate::constraint
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CONSTRAINT_CNF_HPP_INCLUDED

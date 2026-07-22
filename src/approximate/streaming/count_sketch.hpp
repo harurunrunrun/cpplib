@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_COUNT_SKETCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_COUNT_SKETCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -82,3 +83,5 @@ public:
     [[nodiscard]] static constexpr std::size_t width() noexcept { return Width; }
     [[nodiscard]] static constexpr std::size_t depth() noexcept { return Depth; }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_COUNT_SKETCH_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_FFT_BITWISE_CONVOLUTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_FFT_BITWISE_CONVOLUTION_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -150,3 +151,5 @@ std::vector<T> xnor_convolution(const std::vector<T>& a, const std::vector<T>& b
     }
     return res;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_FFT_BITWISE_CONVOLUTION_HPP_INCLUDED

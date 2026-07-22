@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_MULTIPLE_LENGTH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_MULTIPLE_LENGTH_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -45,3 +46,5 @@ int longest_common_substring_multiple_length(
     }
     return automaton->longest_common_substring_length(additional);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_MULTIPLE_LENGTH_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_MAXIMUM_SUBARRAY_SUM_SEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_MAXIMUM_SUBARRAY_SUM_SEGTREE_HPP_INCLUDED
 
 #include <memory>
 #include <stdexcept>
@@ -47,3 +48,5 @@ public:
         return tree_->prod(left, right).best;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_MAXIMUM_SUBARRAY_SUM_SEGTREE_HPP_INCLUDED

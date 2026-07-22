@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_DUALSEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_DUALSEGTREE_HPP_INCLUDED
 #include <array>
 #include <vector>
 #include <stdexcept>
@@ -111,3 +112,5 @@ struct DualSegtree{
             }
         }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_DUALSEGTREE_HPP_INCLUDED

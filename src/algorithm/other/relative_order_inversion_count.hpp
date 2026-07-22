@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_RELATIVE_ORDER_INVERSION_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_RELATIVE_ORDER_INVERSION_COUNT_HPP_INCLUDED
 
 #include <stdexcept>
 #include <string>
@@ -42,3 +43,5 @@ long long relative_order_inversion_count(
     }
     return inversion_count(sequence);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_RELATIVE_ORDER_INVERSION_COUNT_HPP_INCLUDED

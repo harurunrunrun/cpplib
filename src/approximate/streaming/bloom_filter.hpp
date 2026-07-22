@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_BLOOM_FILTER_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_BLOOM_FILTER_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -132,3 +133,5 @@ public:
     [[nodiscard]] static constexpr std::size_t counter_count() noexcept { return CounterCount; }
     [[nodiscard]] static constexpr std::size_t hash_count() noexcept { return HashCount; }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_BLOOM_FILTER_HPP_INCLUDED

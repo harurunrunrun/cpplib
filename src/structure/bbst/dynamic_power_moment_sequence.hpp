@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_BBST_DYNAMIC_POWER_MOMENT_SEQUENCE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_BBST_DYNAMIC_POWER_MOMENT_SEQUENCE_HPP_INCLUDED
 
 #include <cstddef>
 #include <memory>
@@ -57,3 +58,5 @@ public:
         return sequence_->prod(left, right).moment[power];
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_BBST_DYNAMIC_POWER_MOMENT_SEQUENCE_HPP_INCLUDED

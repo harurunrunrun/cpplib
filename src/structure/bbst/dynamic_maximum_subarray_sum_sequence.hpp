@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_BBST_DYNAMIC_MAXIMUM_SUBARRAY_SUM_SEQUENCE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_BBST_DYNAMIC_MAXIMUM_SUBARRAY_SUM_SEQUENCE_HPP_INCLUDED
 
 #include <memory>
 #include <stdexcept>
@@ -52,3 +53,5 @@ public:
         return sequence_->prod(left, right).best;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_BBST_DYNAMIC_MAXIMUM_SUBARRAY_SUM_SEQUENCE_HPP_INCLUDED

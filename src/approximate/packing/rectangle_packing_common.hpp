@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_RECTANGLE_PACKING_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_PACKING_RECTANGLE_PACKING_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -197,3 +198,5 @@ template<class Size>
 }  // namespace rectangle_packing_internal
 
 }  // namespace approximate::packing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_RECTANGLE_PACKING_COMMON_HPP_INCLUDED

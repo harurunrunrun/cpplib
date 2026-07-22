@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SOLVE_LINEAR_SYSTEM_3X3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SOLVE_LINEAR_SYSTEM_3X3_HPP_INCLUDED
 
 #include <optional>
 #include <vector>
@@ -23,3 +24,5 @@ inline std::optional<Point3> solve_linear_system_3x3(
     if(!solution) return std::nullopt;
     return Point3{(*solution)[0], (*solution)[1], (*solution)[2]};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SOLVE_LINEAR_SYSTEM_3X3_HPP_INCLUDED

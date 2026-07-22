@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_IRREDUCIBLE_PAIRS_FROM_DISTANCE_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_IRREDUCIBLE_PAIRS_FROM_DISTANCE_MATRIX_HPP_INCLUDED
 
 #include <limits>
 #include <stdexcept>
@@ -73,3 +74,5 @@ irreducible_pairs_from_distance_matrix(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_IRREDUCIBLE_PAIRS_FROM_DISTANCE_MATRIX_HPP_INCLUDED

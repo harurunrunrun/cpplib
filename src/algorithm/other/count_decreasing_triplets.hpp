@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_COUNT_DECREASING_TRIPLETS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_COUNT_DECREASING_TRIPLETS_HPP_INCLUDED
 
 #include <algorithm>
 #include <memory>
@@ -39,3 +40,5 @@ long long count_decreasing_triplets(const std::vector<T>& values){
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_COUNT_DECREASING_TRIPLETS_HPP_INCLUDED

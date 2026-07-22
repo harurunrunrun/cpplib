@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_TWO_EDGE_CONNECTED_COMPONENTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_TWO_EDGE_CONNECTED_COMPONENTS_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -55,3 +56,5 @@ TwoEdgeConnectedComponentsResult two_edge_connected_components(
     result.count = static_cast<int>(result.groups.size());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_TWO_EDGE_CONNECTED_COMPONENTS_HPP_INCLUDED

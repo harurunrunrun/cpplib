@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SYMMETRIC_EIGEN_3X3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SYMMETRIC_EIGEN_3X3_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -141,3 +142,5 @@ inline SymmetricEigen3 symmetric_eigen_3x3(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SYMMETRIC_EIGEN_3X3_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MATRIX_TREE_THEOREM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MATRIX_TREE_THEOREM_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -198,3 +199,5 @@ T count_weighted_directed_in_arborescences(
     }
     return matrix_tree_determinant<T, MAX_VERTEX>(std::move(minor), n - 1);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MATRIX_TREE_THEOREM_HPP_INCLUDED

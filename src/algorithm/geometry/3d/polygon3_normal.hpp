@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_NORMAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_NORMAL_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -14,3 +15,5 @@ inline Point3 polygon3_normal(const Polygon3& polygon){
     }
     return vector / length;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_NORMAL_HPP_INCLUDED

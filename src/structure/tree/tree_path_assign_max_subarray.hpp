@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_TREE_PATH_ASSIGN_MAX_SUBARRAY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_TREE_PATH_ASSIGN_MAX_SUBARRAY_HPP_INCLUDED
 
 #include <vector>
 
@@ -30,3 +31,5 @@ public:
         tree.path_apply(left, right, MonoidAssignment<Value>{true, value});
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_TREE_PATH_ASSIGN_MAX_SUBARRAY_HPP_INCLUDED

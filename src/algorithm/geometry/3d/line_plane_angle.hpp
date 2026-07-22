@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_ANGLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_ANGLE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -16,3 +17,5 @@ inline long double line_plane_angle(const Line3& line, const Plane3& plane){
         std::abs(dot(direction, normal)), 0.0L, 1.0L
     ));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_ANGLE_HPP_INCLUDED

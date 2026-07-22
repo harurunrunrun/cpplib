@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WAVELET_MATRIX_2D_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WAVELET_MATRIX_2D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -144,3 +145,5 @@ public:
         return state->matrix->next_value(version, l, r, lower);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WAVELET_MATRIX_2D_HPP_INCLUDED

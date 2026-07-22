@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_ORTHONORMAL_BASIS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_ORTHONORMAL_BASIS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -27,3 +28,5 @@ inline std::pair<Point3, Point3> plane_orthonormal_basis(const Plane3& plane){
     }
     return {first, cross(normal, first)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_ORTHONORMAL_BASIS_HPP_INCLUDED

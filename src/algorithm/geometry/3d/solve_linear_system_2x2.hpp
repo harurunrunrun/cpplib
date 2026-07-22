@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SOLVE_LINEAR_SYSTEM_2X2_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SOLVE_LINEAR_SYSTEM_2X2_HPP_INCLUDED
 
 #include <array>
 #include <optional>
@@ -19,3 +20,5 @@ inline std::optional<std::array<long double, 2>> solve_linear_system_2x2(
     if(!solution) return std::nullopt;
     return std::array<long double, 2>{(*solution)[0], (*solution)[1]};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SOLVE_LINEAR_SYSTEM_2X2_HPP_INCLUDED

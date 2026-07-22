@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_SERIES_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_SERIES_SUM_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -47,3 +48,5 @@ T geometric_progression_sum(T first, T ratio, long long n){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_SERIES_SUM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_BFS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_BFS_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -77,3 +78,5 @@ inline BFSResult bfs(
 inline BFSResult bfs(const std::vector<std::vector<int>>& graph, int source){
     return bfs(graph, std::vector<int>{source});
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_BFS_HPP_INCLUDED

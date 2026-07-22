@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_ZERO_ONE_BFS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_ZERO_ONE_BFS_HPP_INCLUDED
 
 #include <deque>
 #include <stdexcept>
@@ -148,3 +149,5 @@ inline ZeroOneBFSResult zero_one_bfs(
 ){
     return zero_one_bfs(graph, std::vector<int>{source});
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_ZERO_ONE_BFS_HPP_INCLUDED

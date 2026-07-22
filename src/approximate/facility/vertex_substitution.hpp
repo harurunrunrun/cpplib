@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_FACILITY_VERTEX_SUBSTITUTION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_FACILITY_VERTEX_SUBSTITUTION_HPP_INCLUDED
 
 #include <cstddef>
 #include <utility>
@@ -20,3 +21,5 @@ KMedianResult vertex_substitution_k_median(
 }
 
 }  // namespace approximate::facility
+
+#endif  // CPPLIB_SRC_APPROXIMATE_FACILITY_VERTEX_SUBSTITUTION_HPP_INCLUDED

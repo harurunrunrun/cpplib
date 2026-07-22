@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_SEGMENT_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_SEGMENT_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <variant>
@@ -59,3 +60,5 @@ inline LinearIntersection3 segment_segment_intersection(
         first.a + first_direction * upper,
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_SEGMENT_INTERSECTION_HPP_INCLUDED

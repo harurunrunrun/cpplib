@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SUM_SHORTEST_PATH_QUERY_COSTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SUM_SHORTEST_PATH_QUERY_COSTS_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -245,3 +246,5 @@ T sum_shortest_path_query_costs_johnson(
             }
         );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SUM_SHORTEST_PATH_QUERY_COSTS_HPP_INCLUDED

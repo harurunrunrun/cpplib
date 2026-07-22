@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_PAIRWISE_GCD_SUMS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_PAIRWISE_GCD_SUMS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -61,3 +62,5 @@ inline std::vector<std::uint64_t> pairwise_gcd_sums(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_PAIRWISE_GCD_SUMS_HPP_INCLUDED

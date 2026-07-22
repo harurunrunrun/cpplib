@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_STATIC_INTERVAL_COVERAGE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_STATIC_INTERVAL_COVERAGE_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -53,3 +54,5 @@ public:
         return coverage_[static_cast<std::size_t>(position)];
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_STATIC_INTERVAL_COVERAGE_HPP_INCLUDED

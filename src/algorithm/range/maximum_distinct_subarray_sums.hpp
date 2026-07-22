@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_DISTINCT_SUBARRAY_SUMS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_DISTINCT_SUBARRAY_SUMS_HPP_INCLUDED
 
 #include <algorithm>
 #include <memory>
@@ -55,3 +56,5 @@ std::vector<T> maximum_distinct_subarray_sums(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_MAXIMUM_DISTINCT_SUBARRAY_SUMS_HPP_INCLUDED

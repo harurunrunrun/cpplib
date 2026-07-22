@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TYPES_POWER_MOMENT_MONOID_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TYPES_POWER_MOMENT_MONOID_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -89,3 +90,5 @@ using PowerMomentMonoid = Monoid<
     power_moment_detail::power_moment_op<T, MAX_POWER>,
     power_moment_detail::power_moment_identity<T, MAX_POWER>
 >;
+
+#endif  // CPPLIB_SRC_STRUCTURE_TYPES_POWER_MOMENT_MONOID_HPP_INCLUDED

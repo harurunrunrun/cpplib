@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CONTAINS_STRICT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CONTAINS_STRICT_HPP_INCLUDED
 
 #include "advanced/detail.hpp"
 #include "on_segment.hpp"
@@ -39,3 +40,5 @@ inline bool triangle_contains_strict(
     const int third_side = resolved_side(third, first);
     return first_side == second_side && second_side == third_side;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TRIANGLE_CONTAINS_STRICT_HPP_INCLUDED

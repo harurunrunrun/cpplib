@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_TRIANGULATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_TRIANGULATION_HPP_INCLUDED
 
 #include <array>
 #include <vector>
@@ -23,3 +24,5 @@ inline std::vector<Triangle3> polygon3_triangulation(const Polygon3& polygon){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_TRIANGULATION_HPP_INCLUDED

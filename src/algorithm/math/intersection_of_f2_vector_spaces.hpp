@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_INTERSECTION_OF_F2_VECTOR_SPACES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_INTERSECTION_OF_F2_VECTOR_SPACES_HPP_INCLUDED
 
 #include <array>
 #include <concepts>
@@ -89,3 +90,5 @@ std::vector<UInt> intersection_of_f2_vector_spaces(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_INTERSECTION_OF_F2_VECTOR_SPACES_HPP_INCLUDED

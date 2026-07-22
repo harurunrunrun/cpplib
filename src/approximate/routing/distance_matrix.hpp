@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_ROUTING_DISTANCE_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_ROUTING_DISTANCE_MATRIX_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -42,3 +43,5 @@ inline void validate_tour_vertices(
 }  // namespace internal
 
 }  // namespace approximate::routing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_ROUTING_DISTANCE_MATRIX_HPP_INCLUDED

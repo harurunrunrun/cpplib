@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SEARCH_HEURISTIC_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SEARCH_HEURISTIC_SEARCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -424,3 +425,5 @@ auto bidirectional_a_star_search(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SEARCH_HEURISTIC_SEARCH_HPP_INCLUDED

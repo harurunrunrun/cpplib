@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_COMPASS_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_COMPASS_SEARCH_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -73,3 +74,5 @@ auto compass_search(
 }
 
 }  // namespace approximate::optimization
+
+#endif  // CPPLIB_SRC_APPROXIMATE_OPTIMIZATION_COMPASS_SEARCH_HPP_INCLUDED

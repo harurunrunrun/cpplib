@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_HYPERLOGLOG_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_HYPERLOGLOG_HPP_INCLUDED
 
 #include <array>
 #include <cmath>
@@ -80,3 +81,5 @@ public:
         return 1.04L / std::sqrt(static_cast<long double>(register_count_));
     }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_HYPERLOGLOG_HPP_INCLUDED

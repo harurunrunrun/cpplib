@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_RANDOMIZED_GIBBS_SAMPLING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_RANDOMIZED_GIBBS_SAMPLING_HPP_INCLUDED
 
 #include <concepts>
 #include <cstddef>
@@ -76,3 +77,5 @@ template<class Value, class ConditionalSampler, class UniformRandomBitGenerator>
 }
 
 }  // namespace approximate::randomized
+
+#endif  // CPPLIB_SRC_APPROXIMATE_RANDOMIZED_GIBBS_SAMPLING_HPP_INCLUDED

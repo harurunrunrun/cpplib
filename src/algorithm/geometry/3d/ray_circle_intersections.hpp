@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_CIRCLE_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_CIRCLE_INTERSECTIONS_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -37,3 +38,5 @@ inline std::vector<Point3> ray_circle_intersections(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_CIRCLE_INTERSECTIONS_HPP_INCLUDED

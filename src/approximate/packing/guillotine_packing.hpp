@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_GUILLOTINE_PACKING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_PACKING_GUILLOTINE_PACKING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -200,3 +201,5 @@ RectanglePackingResult<Size> guillotine_best_area_fit_rectangle_packing(
 }
 
 }  // namespace approximate::packing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_GUILLOTINE_PACKING_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXACT_INSPHERE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXACT_INSPHERE_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -66,3 +67,5 @@ inline int exact_insphere(
     );
     return orientation > 0 ? -raw_sign : raw_sign;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EXACT_INSPHERE_HPP_INCLUDED

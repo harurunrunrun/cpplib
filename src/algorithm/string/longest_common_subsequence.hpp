@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSEQUENCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSEQUENCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -105,3 +106,5 @@ Sequence longest_common_subsequence(const Sequence& a, const Sequence& b){
     std::reverse(result.begin(), result.end());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSEQUENCE_HPP_INCLUDED

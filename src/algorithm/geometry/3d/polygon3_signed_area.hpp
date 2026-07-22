@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_SIGNED_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_SIGNED_AREA_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -17,3 +18,5 @@ inline long double polygon3_signed_area(
     }
     return dot(polygon3_area_vector(polygon), reference_normal / length);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_SIGNED_AREA_HPP_INCLUDED

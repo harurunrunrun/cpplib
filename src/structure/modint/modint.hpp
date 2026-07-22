@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_MODINT_MODINT_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_MODINT_MODINT_HPP_INCLUDED
 
 #include <cstdint>
 #include <istream>
@@ -204,3 +205,5 @@ struct Modint{
 };
 
 using Modint998244353 = Modint<998244353>;
+
+#endif  // CPPLIB_SRC_STRUCTURE_MODINT_MODINT_HPP_INCLUDED

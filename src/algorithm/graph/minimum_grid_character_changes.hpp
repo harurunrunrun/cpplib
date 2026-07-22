@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_GRID_CHARACTER_CHANGES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_GRID_CHARACTER_CHANGES_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -56,3 +57,5 @@ inline int minimum_grid_character_changes(
     );
     return result.dist.back();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_GRID_CHARACTER_CHANGES_HPP_INCLUDED

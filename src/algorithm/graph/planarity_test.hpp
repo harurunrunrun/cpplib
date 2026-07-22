@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_PLANARITY_TEST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_PLANARITY_TEST_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -390,3 +391,5 @@ inline bool is_planar_graph(
         vertex_count, edges
     ).run();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_PLANARITY_TEST_HPP_INCLUDED

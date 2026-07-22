@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_PRODUCT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_PRODUCT_HPP_INCLUDED
 
 #include <cstddef>
 #include <utility>
@@ -34,3 +35,5 @@ Polynomial<MOD> product_of_polynomial_sequence(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_PRODUCT_HPP_INCLUDED

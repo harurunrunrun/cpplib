@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_PARTITION_FUNCTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_PARTITION_FUNCTION_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -37,3 +38,5 @@ std::vector<Modint<MOD>> partition_numbers(std::size_t maximum_sum){
     }
     return fps_inv<MOD>(euler_product, size);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_PARTITION_FUNCTION_HPP_INCLUDED

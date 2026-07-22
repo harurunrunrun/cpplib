@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_KTH_SHORTEST_PATH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_KTH_SHORTEST_PATH_HPP_INCLUDED
 
 #include <algorithm>
 #include <functional>
@@ -243,3 +244,5 @@ std::vector<KthShortestPathResult<T>> kth_shortest_paths(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_KTH_SHORTEST_PATH_HPP_INCLUDED

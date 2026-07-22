@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MINIMUM_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MINIMUM_DISTANCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -40,3 +41,5 @@ inline long double convex_polygon_minimum_distance(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MINIMUM_DISTANCE_HPP_INCLUDED

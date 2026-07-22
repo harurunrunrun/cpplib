@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_DSU_OFFLINE_PERSISTENT_DSU_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_DSU_OFFLINE_PERSISTENT_DSU_HPP_INCLUDED
 
 #include <cstddef>
 #include <memory>
@@ -169,3 +170,5 @@ public:
         return answer;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_DSU_OFFLINE_PERSISTENT_DSU_HPP_INCLUDED

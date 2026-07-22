@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_NEAREST_MARKED_TREE_QUERIES_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_NEAREST_MARKED_TREE_QUERIES_HPP_INCLUDED
 
 #include <optional>
 
@@ -16,3 +17,5 @@ public:
     void toggle(int vertex){ tree.toggle(vertex); }
     std::optional<Weight> nearest_distance(int vertex) const{ return tree.nearest_distance(vertex); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_NEAREST_MARKED_TREE_QUERIES_HPP_INCLUDED

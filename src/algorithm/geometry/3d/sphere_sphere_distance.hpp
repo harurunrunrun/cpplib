@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SPHERE_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SPHERE_DISTANCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -43,3 +44,5 @@ inline long double sphere_sphere_distance(
 inline long double distance(const Sphere3& first, const Sphere3& second){
     return sphere_sphere_distance(first, second);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_SPHERE_DISTANCE_HPP_INCLUDED

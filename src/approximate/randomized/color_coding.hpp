@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_RANDOMIZED_COLOR_CODING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_RANDOMIZED_COLOR_CODING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -155,3 +156,5 @@ template<class UniformRandomBitGenerator>
 }
 
 }  // namespace approximate::randomized
+
+#endif  // CPPLIB_SRC_APPROXIMATE_RANDOMIZED_COLOR_CODING_HPP_INCLUDED

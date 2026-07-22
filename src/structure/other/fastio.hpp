@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_FASTIO_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_FASTIO_HPP_INCLUDED
 
 #include <limits>
 #include <stdio.h>
@@ -183,3 +184,5 @@ public:
     while (n--) write(s[n]);
   }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_FASTIO_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RELATIVE_EQUAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RELATIVE_EQUAL_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -26,3 +27,5 @@ inline bool relative_equal(
     if(!geometry3d_is_finite(relative_bound)) return true;
     return difference <= std::max(absolute_tolerance, relative_bound);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RELATIVE_EQUAL_HPP_INCLUDED

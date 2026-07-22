@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_EVOLUTION_STRATEGY_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_EVOLUTION_STRATEGY_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -220,3 +221,5 @@ auto mu_comma_lambda_es(
 }
 
 }  // namespace approximate::evolutionary
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_EVOLUTION_STRATEGY_HPP_INCLUDED

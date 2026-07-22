@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_BITASSIGN_RANGESUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_BITASSIGN_RANGESUM_HPP_INCLUDED
 
 #include <algorithm>
 #include <cassert>
@@ -447,3 +448,5 @@ public:
         return sum(i, i + 1) != 0;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_BITASSIGN_RANGESUM_HPP_INCLUDED

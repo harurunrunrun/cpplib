@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_INTEGER_FACTORIZATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_INTEGER_FACTORIZATION_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdint>
@@ -185,3 +186,5 @@ inline GaussianIntegerFactorization factorize_gaussian_integer(GaussianInteger v
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_GAUSSIAN_INTEGER_FACTORIZATION_HPP_INCLUDED

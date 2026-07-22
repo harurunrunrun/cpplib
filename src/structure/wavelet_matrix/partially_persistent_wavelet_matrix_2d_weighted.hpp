@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PARTIALLY_PERSISTENT_WAVELET_MATRIX_2D_WEIGHTED_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PARTIALLY_PERSISTENT_WAVELET_MATRIX_2D_WEIGHTED_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -107,3 +108,5 @@ public:
     int range_freq(int version, X xl, X xr, Y yl, Y yr) const{ return rectangle_count(version, xl, xr, yl, yr); }
     W range_sum(int version, X xl, X xr, Y yl, Y yr) const{ return rectangle_sum(version, xl, xr, yl, yr); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PARTIALLY_PERSISTENT_WAVELET_MATRIX_2D_WEIGHTED_HPP_INCLUDED

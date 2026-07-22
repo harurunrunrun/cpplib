@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_TREAP_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_TREAP_HPP_INCLUDED
 
 #include <array>
 #include <cstdint>
@@ -236,3 +237,5 @@ public:
         return state->key[best];
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_TREAP_HPP_INCLUDED

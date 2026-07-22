@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_VORONOI_DIAGRAM3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_VORONOI_DIAGRAM3_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -48,3 +49,5 @@ struct VoronoiDiagram3{
     std::vector<VoronoiRidge3> ridges;
     std::vector<VoronoiEdge3> edges;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_VORONOI_DIAGRAM3_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_SEGTREE_BEATS_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_SEGTREE_BEATS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -534,3 +535,5 @@ public:
         return data[1].max_value;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_SEGTREE_BEATS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_INTERSECTION_HPP_INCLUDED
 
 #include <variant>
 
@@ -29,3 +30,5 @@ inline LinearIntersection3 line_segment_intersection(
     if(std::holds_alternative<Line3>(support)) return segment;
     return std::monostate{};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_INTERSECTION_HPP_INCLUDED

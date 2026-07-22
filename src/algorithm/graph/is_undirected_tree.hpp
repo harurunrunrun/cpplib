@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_IS_UNDIRECTED_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_IS_UNDIRECTED_TREE_HPP_INCLUDED
 
 #include <numeric>
 #include <stdexcept>
@@ -53,3 +54,5 @@ inline bool is_undirected_tree(
     }
     return true;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_IS_UNDIRECTED_TREE_HPP_INCLUDED

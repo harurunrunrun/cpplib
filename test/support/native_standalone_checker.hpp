@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_SUPPORT_NATIVE_STANDALONE_CHECKER_HPP_INCLUDED
+#define CPPLIB_TEST_SUPPORT_NATIVE_STANDALONE_CHECKER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdlib>
@@ -128,3 +129,5 @@ inline int run(int argc, char** argv){
 }
 
 } // namespace native_standalone_checker
+
+#endif  // CPPLIB_TEST_SUPPORT_NATIVE_STANDALONE_CHECKER_HPP_INCLUDED

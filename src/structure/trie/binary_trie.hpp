@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TRIE_BINARY_TRIE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TRIE_BINARY_TRIE_HPP_INCLUDED
 
 #include <array>
 #include <optional>
@@ -126,3 +127,5 @@ public:
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TRIE_BINARY_TRIE_HPP_INCLUDED

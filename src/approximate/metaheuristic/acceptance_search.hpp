@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_ACCEPTANCE_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_ACCEPTANCE_SEARCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -241,3 +242,5 @@ auto late_acceptance_hill_climbing(
 }
 
 }  // namespace approximate::metaheuristic
+
+#endif  // CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_ACCEPTANCE_SEARCH_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_PATHS_WITH_DISTINCT_TERMINAL_EDGES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_PATHS_WITH_DISTINCT_TERMINAL_EDGES_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -60,3 +61,5 @@ inline long long maximum_paths_with_distinct_terminal_edges(
     }
     return flow.max_flow(source, sink);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_PATHS_WITH_DISTINCT_TERMINAL_EDGES_HPP_INCLUDED

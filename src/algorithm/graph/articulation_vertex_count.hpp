@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_ARTICULATION_VERTEX_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_ARTICULATION_VERTEX_COUNT_HPP_INCLUDED
 
 #include <utility>
 #include <vector>
@@ -11,3 +12,5 @@ inline int articulation_vertex_count(
 ){
     return static_cast<int>(lowlink(vertex_count, edges).articulation.size());
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_ARTICULATION_VERTEX_COUNT_HPP_INCLUDED

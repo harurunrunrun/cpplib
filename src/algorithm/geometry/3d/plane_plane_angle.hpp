@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_ANGLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_ANGLE_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -19,3 +20,5 @@ inline long double plane_plane_angle(
         1.0L
     ));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_PLANE_PLANE_ANGLE_HPP_INCLUDED

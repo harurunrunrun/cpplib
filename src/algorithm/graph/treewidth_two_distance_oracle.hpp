@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_TREEWIDTH_TWO_DISTANCE_ORACLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_TREEWIDTH_TWO_DISTANCE_ORACLE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -479,3 +480,5 @@ public:
         return distance(from, to) != infinity_;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_TREEWIDTH_TWO_DISTANCE_ORACLE_HPP_INCLUDED

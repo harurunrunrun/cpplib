@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_MAX_CUT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_MAX_CUT_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -94,3 +95,5 @@ template<class UniformRandomBitGenerator>
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_MAX_CUT_HPP_INCLUDED

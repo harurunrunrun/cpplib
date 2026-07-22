@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_SEGMENT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_SEGMENT_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -20,3 +21,5 @@ inline bool on_segment(const Segment3& segment, const Point3& point){
     return parallel(direction, point - segment.a) &&
         geometry3d_sign(dot(point - segment.a, point - segment.b)) <= 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_SEGMENT_HPP_INCLUDED

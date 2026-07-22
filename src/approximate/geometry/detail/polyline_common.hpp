@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GEOMETRY_DETAIL_POLYLINE_COMMON_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GEOMETRY_DETAIL_POLYLINE_COMMON_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -69,3 +70,5 @@ long double doubled_triangle_area(
 }
 
 }  // namespace approximate::geometry::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GEOMETRY_DETAIL_POLYLINE_COMMON_HPP_INCLUDED

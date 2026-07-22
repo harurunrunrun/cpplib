@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANGE_INTERVAL_SET_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANGE_INTERVAL_SET_HPP_INCLUDED
 
 #include <algorithm>
 #include <iterator>
@@ -340,3 +341,5 @@ public:
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANGE_INTERVAL_SET_HPP_INCLUDED

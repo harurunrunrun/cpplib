@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_RAY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_RAY_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -19,3 +20,5 @@ inline bool on_ray(const Ray3& ray, const Point3& point){
     return parallel(direction, point - ray.origin) &&
         geometry3d_sign(dot(direction, point - ray.origin)) >= 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ON_RAY_HPP_INCLUDED

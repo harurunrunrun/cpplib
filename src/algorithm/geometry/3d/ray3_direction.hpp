@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY3_DIRECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY3_DIRECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -19,3 +20,5 @@ inline Point3 ray3_direction(const Ray3& ray){
     }
     return direction;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY3_DIRECTION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_CLIQUE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_CLIQUE_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -103,3 +104,5 @@ std::vector<int> maximum_clique(const std::vector<std::vector<int>>& graph){
     std::sort(solver.best.begin(), solver.best.end());
     return solver.best;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MAXIMUM_CLIQUE_HPP_INCLUDED

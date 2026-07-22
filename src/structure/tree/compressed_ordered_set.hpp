@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_COMPRESSED_ORDERED_SET_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_COMPRESSED_ORDERED_SET_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -116,3 +117,5 @@ public:
         return decode(set_.least(index));
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_COMPRESSED_ORDERED_SET_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_TABU_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_TABU_SEARCH_HPP_INCLUDED
 
 #include <functional>
 #include <optional>
@@ -75,3 +76,5 @@ auto tabu_search(
 }
 
 }  // namespace approximate::metaheuristic
+
+#endif  // CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_TABU_SEARCH_HPP_INCLUDED

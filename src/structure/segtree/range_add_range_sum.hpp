@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_ADD_RANGE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_ADD_RANGE_SUM_HPP_INCLUDED
 
 #include <memory>
 
@@ -20,3 +21,5 @@ public:
     void add(int left, int right, T value){ tree_->apply(left, right, value); }
     T sum(int left, int right) const{ return tree_->prod(left, right); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_ADD_RANGE_SUM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_FORWARD_OR_JUMP_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_FORWARD_OR_JUMP_COST_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -41,3 +42,5 @@ Cost minimum_forward_or_jump_cost(
     }
     return dijkstra(graph, 0).dist[static_cast<std::size_t>(vertex_count - 1)];
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_MINIMUM_FORWARD_OR_JUMP_COST_HPP_INCLUDED

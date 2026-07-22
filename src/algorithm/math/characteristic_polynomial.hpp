@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_CHARACTERISTIC_POLYNOMIAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_CHARACTERISTIC_POLYNOMIAL_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -120,3 +121,5 @@ std::vector<T> characteristic_polynomial(
     }
     return characteristic_polynomial(std::move(values));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_CHARACTERISTIC_POLYNOMIAL_HPP_INCLUDED

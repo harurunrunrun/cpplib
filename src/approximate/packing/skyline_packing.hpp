@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_SKYLINE_PACKING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_PACKING_SKYLINE_PACKING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -241,3 +242,5 @@ RectanglePackingResult<Size> skyline_best_fit_rectangle_packing(
 }
 
 }  // namespace approximate::packing
+
+#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_SKYLINE_PACKING_HPP_INCLUDED

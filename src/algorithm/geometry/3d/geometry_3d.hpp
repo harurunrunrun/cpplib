@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GEOMETRY_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GEOMETRY_3D_HPP_INCLUDED
 
 #include "base.hpp"
 #include "geometry3d_sign.hpp"
@@ -257,3 +258,5 @@
 #include "plane_arrangement3.hpp"
 #include "plane_arrangement_3d.hpp"
 #include "maximum_empty_sphere.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GEOMETRY_3D_HPP_INCLUDED

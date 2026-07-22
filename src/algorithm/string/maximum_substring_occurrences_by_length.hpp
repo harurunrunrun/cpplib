@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_MAXIMUM_SUBSTRING_OCCURRENCES_BY_LENGTH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_MAXIMUM_SUBSTRING_OCCURRENCES_BY_LENGTH_HPP_INCLUDED
 
 #include <limits>
 #include <memory>
@@ -27,3 +28,5 @@ std::vector<long long> maximum_substring_occurrences_by_length(
     for(char character: text) automaton->extend(character);
     return automaton->maximum_occurrences_by_length();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_MAXIMUM_SUBSTRING_OCCURRENCES_BY_LENGTH_HPP_INCLUDED

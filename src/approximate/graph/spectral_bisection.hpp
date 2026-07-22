@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_SPECTRAL_BISECTION_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_SPECTRAL_BISECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -97,3 +98,5 @@ inline void center_and_normalize(std::vector<long double>& values){
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_SPECTRAL_BISECTION_HPP_INCLUDED

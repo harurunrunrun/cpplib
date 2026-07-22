@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_CAP_VOLUME_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_CAP_VOLUME_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -21,3 +22,5 @@ inline long double sphere_cap_volume(
         "sphere cap volume is not representable"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_CAP_VOLUME_HPP_INCLUDED

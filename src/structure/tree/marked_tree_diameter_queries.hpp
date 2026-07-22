@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_MARKED_TREE_DIAMETER_QUERIES_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_MARKED_TREE_DIAMETER_QUERIES_HPP_INCLUDED
 
 #include <optional>
 
@@ -16,3 +17,5 @@ public:
     bool toggle(int vertex){ return tree.toggle(vertex); }
     std::optional<Weight> diameter() const{ return tree.diameter(); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_MARKED_TREE_DIAMETER_QUERIES_HPP_INCLUDED

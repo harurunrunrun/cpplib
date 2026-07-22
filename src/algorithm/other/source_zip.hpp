@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_SOURCE_ZIP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_SOURCE_ZIP_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -188,3 +189,5 @@ std::vector<T> source_unzip(std::string_view encoded){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_SOURCE_ZIP_HPP_INCLUDED

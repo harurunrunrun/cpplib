@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_GF2_MATRIX_RANK_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_GF2_MATRIX_RANK_HPP_INCLUDED
 
 #include <cstddef>
 #include <cstdint>
@@ -65,3 +66,5 @@ inline std::size_t gf2_matrix_rank(
 ){
     return gf2_matrix_rank(matrix, matrix.empty() ? 0 : matrix.front().size());
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_GF2_MATRIX_RANK_HPP_INCLUDED

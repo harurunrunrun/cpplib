@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_TRIANGLE_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_TRIANGLE_AREA_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -49,3 +50,5 @@ inline long double spherical_triangle_area(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERICAL_TRIANGLE_AREA_HPP_INCLUDED

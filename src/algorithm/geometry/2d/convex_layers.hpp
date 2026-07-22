@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_LAYERS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_LAYERS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cassert>
@@ -313,3 +314,5 @@ std::vector<int> convex_layers(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_LAYERS_HPP_INCLUDED

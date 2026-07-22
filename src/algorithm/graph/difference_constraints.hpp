@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_DIFFERENCE_CONSTRAINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_DIFFERENCE_CONSTRAINTS_HPP_INCLUDED
 
 #include <functional>
 #include <limits>
@@ -310,3 +311,5 @@ DifferenceRangeResult<T> difference_range(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_DIFFERENCE_CONSTRAINTS_HPP_INCLUDED

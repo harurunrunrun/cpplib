@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_GRID_FOREST_DIAMETER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_GRID_FOREST_DIAMETER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -151,3 +152,5 @@ inline int grid_forest_diameter(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_GRID_FOREST_DIAMETER_HPP_INCLUDED

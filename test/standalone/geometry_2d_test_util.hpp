@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TEST_UTIL_HPP_INCLUDED
+#define CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TEST_UTIL_HPP_INCLUDED
 
 #include <cmath>
 #include <iomanip>
@@ -26,3 +27,5 @@ inline void print_geometry_points(const std::vector<Point>& points){
     }
     std::cout << '\n';
 }
+
+#endif  // CPPLIB_TEST_STANDALONE_GEOMETRY_2D_TEST_UTIL_HPP_INCLUDED

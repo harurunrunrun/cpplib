@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MIN_COST_FLOW_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MIN_COST_FLOW_HPP_INCLUDED
 
 #include <algorithm>
 #include <functional>
@@ -216,3 +217,5 @@ public:
         return result.cost;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MIN_COST_FLOW_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_GCD_SMALL_HUGE_INTEGER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_GCD_SMALL_HUGE_INTEGER_HPP_INCLUDED
 
 #include <cctype>
 #include <cstdint>
@@ -36,3 +37,5 @@ inline std::string gcd_small_huge_integer(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_GCD_SMALL_HUGE_INTEGER_HPP_INCLUDED

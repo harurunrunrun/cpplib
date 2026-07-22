@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_ROLLBACK_DYNAMIC_LAZYSEGTREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_ROLLBACK_DYNAMIC_LAZYSEGTREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -301,3 +302,5 @@ public:
         while(target < operation_count) undo_one();
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_ROLLBACK_DYNAMIC_LAZYSEGTREE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_FFT_MIN_PLUS_CONVOLUTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_FFT_MIN_PLUS_CONVOLUTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <concepts>
@@ -237,3 +238,5 @@ std::vector<T> min_plus_convolution_convex_convex(
         left_convex_values, right_convex_values
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_FFT_MIN_PLUS_CONVOLUTION_HPP_INCLUDED

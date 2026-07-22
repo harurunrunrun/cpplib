@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_BINARY_TREE_TRAVERSAL_RECONSTRUCTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_BINARY_TREE_TRAVERSAL_RECONSTRUCTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -249,3 +250,5 @@ bool binary_tree_traversals_compatible(
         std::move(equal)
     ));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_BINARY_TREE_TRAVERSAL_RECONSTRUCTION_HPP_INCLUDED

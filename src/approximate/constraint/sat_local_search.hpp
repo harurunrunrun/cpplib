@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_CONSTRAINT_SAT_LOCAL_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_CONSTRAINT_SAT_LOCAL_SEARCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -316,3 +317,5 @@ template<class UniformRandomBitGenerator>
 }
 
 }  // namespace approximate::constraint
+
+#endif  // CPPLIB_SRC_APPROXIMATE_CONSTRAINT_SAT_LOCAL_SEARCH_HPP_INCLUDED

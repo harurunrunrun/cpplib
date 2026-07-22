@@ -1,7 +1,10 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_HPP_INCLUDED
 
 #include <vector>
 
 #include "base.hpp"
 
 using Polygon3 = std::vector<Point3>;
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_HPP_INCLUDED

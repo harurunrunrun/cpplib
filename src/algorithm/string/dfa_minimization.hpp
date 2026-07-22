@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_DFA_MINIMIZATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_DFA_MINIMIZATION_HPP_INCLUDED
 
 #include <cstddef>
 #include <deque>
@@ -417,3 +418,5 @@ inline DfaMinimizationResult hopcroft_minimize_dfa(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_DFA_MINIMIZATION_HPP_INCLUDED

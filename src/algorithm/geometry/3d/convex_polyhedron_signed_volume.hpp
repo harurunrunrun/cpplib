@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SIGNED_VOLUME_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SIGNED_VOLUME_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -42,3 +43,5 @@ inline long double convex_polyhedron_signed_volume(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_SIGNED_VOLUME_HPP_INCLUDED

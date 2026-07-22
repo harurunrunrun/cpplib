@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_PREFIX_FUNCTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_PREFIX_FUNCTION_HPP_INCLUDED
 
 #include <cstddef>
 #include <numeric>
@@ -51,3 +52,5 @@ std::vector<int> kmp_search(const Text& text, const Pattern& pattern){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_PREFIX_FUNCTION_HPP_INCLUDED

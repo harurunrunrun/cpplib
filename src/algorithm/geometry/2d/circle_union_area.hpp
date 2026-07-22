@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_UNION_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_UNION_AREA_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -113,3 +114,4 @@ inline long double circle_union_area(const std::vector<Circle>& circles){
     return result < 0.0L && geometry_sign(result) == 0 ? 0.0L : result;
 }
 
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCLE_UNION_AREA_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_SEGTREE_2D_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_SEGTREE_2D_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -261,3 +262,5 @@ public:
         return root->columns == nullptr ? Monoid.e() : root->columns->value;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_SEGTREE_2D_HPP_INCLUDED

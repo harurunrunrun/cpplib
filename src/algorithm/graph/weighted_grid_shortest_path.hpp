@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_WEIGHTED_GRID_SHORTEST_PATH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_WEIGHTED_GRID_SHORTEST_PATH_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -125,3 +126,5 @@ inline long long weighted_grid_shortest_path(
     }
     return static_cast<long long>(distance[target]);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_WEIGHTED_GRID_SHORTEST_PATH_HPP_INCLUDED

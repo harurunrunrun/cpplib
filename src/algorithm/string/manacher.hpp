@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_MANACHER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_MANACHER_HPP_INCLUDED
 
 #include <algorithm>
 #include <string>
@@ -60,3 +61,5 @@ std::pair<int, int> longest_palindrome(const std::string& s){
     }
     return {best_l, best_len};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_MANACHER_HPP_INCLUDED

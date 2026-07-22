@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_TIME_SEGMENT_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_TIME_SEGMENT_TREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -209,3 +210,5 @@ public:
 
 template<class Event, int MAX_TIME, int MAX_EVENTS>
 using OfflineIntervalEvents = TimeSegmentTree<Event, MAX_TIME, MAX_EVENTS>;
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_TIME_SEGMENT_TREE_HPP_INCLUDED

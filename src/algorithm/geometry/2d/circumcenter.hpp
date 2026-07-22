@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCUMCENTER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCUMCENTER_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -40,3 +41,5 @@ inline Point circumcenter(
     };
     return first + offset * scale;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CIRCUMCENTER_HPP_INCLUDED

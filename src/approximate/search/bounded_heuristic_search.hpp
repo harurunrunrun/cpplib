@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SEARCH_BOUNDED_HEURISTIC_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SEARCH_BOUNDED_HEURISTIC_SEARCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -195,3 +196,5 @@ auto ida_star_search(
         bound = *next_bound;
     }
 }
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SEARCH_BOUNDED_HEURISTIC_SEARCH_HPP_INCLUDED

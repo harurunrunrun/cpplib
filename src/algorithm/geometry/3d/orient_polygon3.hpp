@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT_POLYGON3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT_POLYGON3_HPP_INCLUDED
 
 #include <algorithm>
 
@@ -13,3 +14,5 @@ inline Polygon3 orient_polygon3(
     }
     return polygon;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORIENT_POLYGON3_HPP_INCLUDED

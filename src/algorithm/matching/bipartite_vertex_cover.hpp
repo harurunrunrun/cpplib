@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_VERTEX_COVER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_VERTEX_COVER_HPP_INCLUDED
 
 #include <cstddef>
 #include <optional>
@@ -161,3 +162,5 @@ inline std::optional<std::vector<std::pair<int, int>>> minimum_bipartite_edge_co
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_VERTEX_COVER_HPP_INCLUDED

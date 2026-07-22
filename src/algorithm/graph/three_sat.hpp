@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_THREE_SAT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_THREE_SAT_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -117,3 +118,5 @@ ThreeSatResult three_sat(int n, const std::vector<ThreeSatClause>& clauses){
     if(!result.satisfiable) result.assignment.clear();
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_THREE_SAT_HPP_INCLUDED

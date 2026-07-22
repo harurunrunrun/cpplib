@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_SPARSE_TABLE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_SPARSE_TABLE_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -92,3 +93,5 @@ private:
         return 31 - __builtin_clz(x);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_SPARSE_TABLE_HPP_INCLUDED

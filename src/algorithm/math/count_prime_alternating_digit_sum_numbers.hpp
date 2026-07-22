@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_COUNT_PRIME_ALTERNATING_DIGIT_SUM_NUMBERS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_COUNT_PRIME_ALTERNATING_DIGIT_SUM_NUMBERS_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -77,3 +78,5 @@ inline std::uint64_t count_prime_alternating_digit_sum_numbers(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_COUNT_PRIME_ALTERNATING_DIGIT_SUM_NUMBERS_HPP_INCLUDED

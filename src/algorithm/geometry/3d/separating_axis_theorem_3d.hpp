@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEPARATING_AXIS_THEOREM_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEPARATING_AXIS_THEOREM_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -297,3 +298,5 @@ inline SATResult3 separating_axis_theorem_3d(
         normalization
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEPARATING_AXIS_THEOREM_3D_HPP_INCLUDED

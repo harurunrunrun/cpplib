@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_TWO_SAT_ASSIGNMENT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_TWO_SAT_ASSIGNMENT_HPP_INCLUDED
 
 #include <optional>
 #include <vector>
@@ -9,3 +10,5 @@ inline std::optional<std::vector<int>> two_sat_assignment(TwoSat& solver){
     if(!solver.satisfiable()) return std::nullopt;
     return solver.answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_TWO_SAT_ASSIGNMENT_HPP_INCLUDED

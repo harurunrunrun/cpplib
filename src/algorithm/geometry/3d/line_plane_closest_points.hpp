@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_CLOSEST_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_CLOSEST_POINTS_HPP_INCLUDED
 
 #include <utility>
 
@@ -30,3 +31,5 @@ inline std::pair<Point3, Point3> closest_points(
     const auto result = closest_points(line, plane);
     return {result.second, result.first};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_CLOSEST_POINTS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_PLANE_CUT_VOLUME_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_PLANE_CUT_VOLUME_HPP_INCLUDED
 
 #include "base.hpp"
 #include "sphere_cap_height.hpp"
@@ -14,3 +15,5 @@ inline long double sphere_plane_cut_volume(
         sphere_cap_height(sphere, cutting_plane, side)
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_PLANE_CUT_VOLUME_HPP_INCLUDED

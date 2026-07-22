@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_CUT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_CUT_HPP_INCLUDED
 
 #include <cstddef>
 #include <stdexcept>
@@ -38,3 +39,5 @@ inline std::vector<Point> convex_cut(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_CUT_HPP_INCLUDED

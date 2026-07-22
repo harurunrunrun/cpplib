@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DELAUNAY_TRIANGULATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DELAUNAY_TRIANGULATION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -571,3 +572,5 @@ inline DelaunayTriangulationResult delaunay_triangulation(
     result.edges.erase(std::unique(result.edges.begin(), result.edges.end()), result.edges.end());
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_DELAUNAY_TRIANGULATION_HPP_INCLUDED

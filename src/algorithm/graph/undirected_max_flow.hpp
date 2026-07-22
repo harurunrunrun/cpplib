@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_MAX_FLOW_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_MAX_FLOW_HPP_INCLUDED
 
 #include <stdexcept>
 #include <type_traits>
@@ -40,3 +41,5 @@ T undirected_max_flow(
     }
     return flow.max_flow(source, sink);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_UNDIRECTED_MAX_FLOW_HPP_INCLUDED

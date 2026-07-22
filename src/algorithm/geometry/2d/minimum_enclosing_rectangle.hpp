@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_RECTANGLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_RECTANGLE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -107,3 +108,5 @@ inline MinimumEnclosingRectangleResult minimum_enclosing_rectangle(
         NormalizedConvexPolygon(std::move(polygon))
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_RECTANGLE_HPP_INCLUDED

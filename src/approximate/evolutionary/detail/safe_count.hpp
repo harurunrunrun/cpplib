@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_SAFE_COUNT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_SAFE_COUNT_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -38,3 +39,5 @@ inline std::size_t checked_multiply_add(
 }
 
 }  // namespace approximate::evolutionary::detail
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_DETAIL_SAFE_COUNT_HPP_INCLUDED

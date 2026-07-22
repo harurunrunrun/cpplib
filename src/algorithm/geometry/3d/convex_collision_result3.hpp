@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_COLLISION_RESULT3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_COLLISION_RESULT3_HPP_INCLUDED
 
 #include <cstddef>
 
@@ -15,3 +16,5 @@ struct ConvexCollisionResult3{
     std::size_t epa_iterations = 0;
     bool converged = false;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_COLLISION_RESULT3_HPP_INCLUDED

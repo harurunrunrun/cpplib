@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_HALF_PLANE_INTERSECTION_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_HALF_PLANE_INTERSECTION_AREA_HPP_INCLUDED
 
 #include <cmath>
 #include <limits>
@@ -18,3 +19,5 @@ inline long double half_plane_intersection_area(
     }
     return std::abs(area(result.polygon));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_HALF_PLANE_INTERSECTION_AREA_HPP_INCLUDED

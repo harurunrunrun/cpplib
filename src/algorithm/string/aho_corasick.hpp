@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_AHO_CORASICK_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_AHO_CORASICK_HPP_INCLUDED
 
 #include <array>
 #include <queue>
@@ -161,3 +162,5 @@ public:
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_AHO_CORASICK_HPP_INCLUDED

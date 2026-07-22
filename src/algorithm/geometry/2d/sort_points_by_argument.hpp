@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SORT_POINTS_BY_ARGUMENT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SORT_POINTS_BY_ARGUMENT_HPP_INCLUDED
 
 #include <algorithm>
 #include <vector>
@@ -32,3 +33,5 @@ inline std::vector<Point> sort_points_by_argument(std::vector<Point> points){
     std::sort(points.begin(), points.end(), sort_points_by_argument_detail::Less{});
     return points;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SORT_POINTS_BY_ARGUMENT_HPP_INCLUDED

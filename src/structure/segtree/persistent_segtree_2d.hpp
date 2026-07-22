@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_SEGTREE_2D_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_SEGTREE_2D_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -658,3 +659,5 @@ public:
         return col_value(column_root(root), 1, 1);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_SEGTREE_2D_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SEARCH_MONTE_CARLO_TREE_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SEARCH_MONTE_CARLO_TREE_SEARCH_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -180,3 +181,5 @@ auto monte_carlo_tree_search(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SEARCH_MONTE_CARLO_TREE_SEARCH_HPP_INCLUDED

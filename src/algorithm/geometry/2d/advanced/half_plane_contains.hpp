@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_HALF_PLANE_CONTAINS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_HALF_PLANE_CONTAINS_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -11,3 +12,5 @@ inline bool half_plane_contains(const Line& half_plane, const Point& point){
     }
     return advanced_geometry_detail::side_sign(half_plane, point) >= 0;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_HALF_PLANE_CONTAINS_HPP_INCLUDED

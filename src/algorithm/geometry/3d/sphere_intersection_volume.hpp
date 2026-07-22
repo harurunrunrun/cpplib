@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_INTERSECTION_VOLUME_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_INTERSECTION_VOLUME_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -52,3 +53,5 @@ inline long double sphere_intersection_volume(
         "sphere intersection volume is not representable"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_INTERSECTION_VOLUME_HPP_INCLUDED

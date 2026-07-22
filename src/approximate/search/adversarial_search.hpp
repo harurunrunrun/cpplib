@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_SEARCH_ADVERSARIAL_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_SEARCH_ADVERSARIAL_SEARCH_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -275,3 +276,5 @@ auto negascout_search(
         root, depth, std::move(evaluate), std::move(children)
     );
 }
+
+#endif  // CPPLIB_SRC_APPROXIMATE_SEARCH_ADVERSARIAL_SEARCH_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_COUNT_PERFECT_ASSIGNMENTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_COUNT_PERFECT_ASSIGNMENTS_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -50,3 +51,5 @@ inline long long count_perfect_assignments(
     }
     return dp.back();
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_COUNT_PERFECT_ASSIGNMENTS_HPP_INCLUDED

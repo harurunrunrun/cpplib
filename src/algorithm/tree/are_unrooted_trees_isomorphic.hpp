@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_ARE_UNROOTED_TREES_ISOMORPHIC_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_ARE_UNROOTED_TREES_ISOMORPHIC_HPP_INCLUDED
 
 #include <vector>
 
@@ -10,3 +11,5 @@ inline bool are_unrooted_trees_isomorphic(
 ){
     return tree_isomorphic(first, second);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_ARE_UNROOTED_TREES_ISOMORPHIC_HPP_INCLUDED

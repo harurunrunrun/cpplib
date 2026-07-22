@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_COUNT_PRIMES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_COUNT_PRIMES_HPP_INCLUDED
 
 #include <concepts>
 #include <cstdint>
@@ -70,3 +71,5 @@ std::size_t count_primes_with_sieve(
 
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_COUNT_PRIMES_HPP_INCLUDED

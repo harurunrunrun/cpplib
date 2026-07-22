@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_MINKOWSKI_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_MINKOWSKI_SUM_HPP_INCLUDED
 
 #include <cstddef>
 #include <utility>
@@ -61,3 +62,5 @@ inline std::vector<Point> convex_polygon_minkowski_sum(
     if(result.size() >= 2 && point_equal(result.front(), result.back())) result.pop_back();
     return normalize_convex_polygon(std::move(result));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_CONVEX_POLYGON_MINKOWSKI_SUM_HPP_INCLUDED

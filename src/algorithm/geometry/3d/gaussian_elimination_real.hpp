@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GAUSSIAN_ELIMINATION_REAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GAUSSIAN_ELIMINATION_REAL_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -194,3 +195,5 @@ inline std::optional<std::vector<long double>> solve_square_linear_system_real(
     }
     return solution;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GAUSSIAN_ELIMINATION_REAL_HPP_INCLUDED

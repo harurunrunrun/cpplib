@@ -26,7 +26,7 @@ $S=|a|+|b|$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `longest_common_substring(a,b)` | $O(S)$ | $O(|a|)$ |
+| `longest_common_substring(a,b)` | $O(S)$ | $O(\lvert a\rvert)$ |
 | `LongestCommonSubstringResult` の各field参照 | $O(1)$ | - |
 
 第1文字列からbyte suffix automatonを構築し、第2文字列をsuffix linkで後退しながら

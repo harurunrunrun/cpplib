@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_QUERY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_QUERY_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -149,3 +150,5 @@ public:
         return side > 0 ? 2 : 0;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_QUERY_HPP_INCLUDED

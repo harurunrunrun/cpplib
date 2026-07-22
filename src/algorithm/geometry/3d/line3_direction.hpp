@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE3_DIRECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE3_DIRECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -19,3 +20,5 @@ inline Point3 line3_direction(const Line3& line){
     }
     return direction;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE3_DIRECTION_HPP_INCLUDED

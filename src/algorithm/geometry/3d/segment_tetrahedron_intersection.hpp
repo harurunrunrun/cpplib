@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_TETRAHEDRON_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_TETRAHEDRON_INTERSECTION_HPP_INCLUDED
 
 #include <variant>
 
@@ -31,3 +32,5 @@ inline LinearIntersection3 segment_tetrahedron_intersection(
     }
     return std::monostate{};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_TETRAHEDRON_INTERSECTION_HPP_INCLUDED

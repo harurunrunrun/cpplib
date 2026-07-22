@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_ITERATED_SEARCH_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_ITERATED_SEARCH_HPP_INCLUDED
 
 #include <functional>
 #include <iterator>
@@ -219,3 +220,5 @@ auto destroy_and_repair(
 }
 
 }  // namespace approximate::metaheuristic
+
+#endif  // CPPLIB_SRC_APPROXIMATE_METAHEURISTIC_ITERATED_SEARCH_HPP_INCLUDED

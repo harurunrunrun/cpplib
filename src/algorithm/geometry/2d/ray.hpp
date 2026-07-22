@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_RAY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_RAY_HPP_INCLUDED
 
 #include "types.hpp"
 
@@ -6,3 +7,5 @@ struct Ray{
     Point origin;
     Point through;
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_RAY_HPP_INCLUDED

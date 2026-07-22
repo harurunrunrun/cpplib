@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLAMP_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLAMP_HPP_INCLUDED
 
 #include <algorithm>
 #include <stdexcept>
@@ -16,3 +17,5 @@ inline long double clamp(
     }
     return std::clamp(value, lower_bound, upper_bound);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLAMP_HPP_INCLUDED

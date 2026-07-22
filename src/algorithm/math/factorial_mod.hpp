@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_FACTORIAL_MOD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_FACTORIAL_MOD_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
@@ -54,3 +55,5 @@ class FactorialModPrime{
 };
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_FACTORIAL_MOD_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_INRADIUS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_INRADIUS_HPP_INCLUDED
 
 #include "base.hpp"
 #include "triangle_incenter.hpp"
@@ -11,3 +12,5 @@ inline long double triangle_inradius(const Triangle3& triangle){
         "3D triangle inradius is not representable"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_INRADIUS_HPP_INCLUDED

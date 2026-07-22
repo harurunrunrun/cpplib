@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_MULTILEVEL_PARTITIONING_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_MULTILEVEL_PARTITIONING_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -123,3 +124,5 @@ struct GraphCoarseningLevel {
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_MULTILEVEL_PARTITIONING_HPP_INCLUDED

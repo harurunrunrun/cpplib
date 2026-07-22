@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_STATIC_TREE_PATH_FOLD_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_STATIC_TREE_PATH_FOLD_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -331,3 +332,5 @@ public:
         return Monoid.op(left_product, right_product);
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_STATIC_TREE_PATH_FOLD_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMIZE_MAXIMUM_PARTITION_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMIZE_MAXIMUM_PARTITION_SUM_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -183,3 +184,5 @@ inline long long minimize_maximum_partition_sum(
     }
     return minimize_maximum_partition_sum_internal::narrow_answer(lower);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMIZE_MAXIMUM_PARTITION_SUM_HPP_INCLUDED

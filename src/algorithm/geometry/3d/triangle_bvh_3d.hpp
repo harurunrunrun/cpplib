@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_BVH_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_BVH_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -340,3 +341,5 @@ public:
         return std::tuple{best_index, best_parameter, best_point};
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_BVH_3D_HPP_INCLUDED

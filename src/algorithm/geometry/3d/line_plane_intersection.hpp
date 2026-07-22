@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <array>
 #include <algorithm>
@@ -122,3 +123,5 @@ inline Point3 line_plane_intersection(const Line3& line, const Plane3& plane){
     }
     return intersection->point;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_INTERSECTION_HPP_INCLUDED

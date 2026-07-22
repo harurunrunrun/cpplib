@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_CLOSEST_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_CLOSEST_POINT_HPP_INCLUDED
 
 #include <stdexcept>
 #include <algorithm>
@@ -38,3 +39,5 @@ inline Point3 closest_point(const Circle3& circle, const Point3& point){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CIRCLE_CLOSEST_POINT_HPP_INCLUDED

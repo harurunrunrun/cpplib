@@ -20,7 +20,7 @@ ConvexPolyhedron3 convex_hull_3d_with_seed(
 三角形面である。共面の場合も境界多角形を三角形分割して返す。
 
 `convex_hull_3d_with_seed` は、三次元入力を処理する増分順序のseedを指定する。
-SplitMix64とrejection sampling付きFisher--Yates shuffleを使うため、同じ点集合と
+SplitMix64とrejection sampling付きFisher-Yates shuffleを使うため、同じ点集合と
 同じseedからは常に同じ頂点列・面列が得られる。`convex_hull_3d` は
 `0x6a09e667f3bcc909` を既定seedとして呼び出す再現可能な簡略APIである。
 

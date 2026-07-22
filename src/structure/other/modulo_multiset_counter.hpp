@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_MODULO_MULTISET_COUNTER_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_MODULO_MULTISET_COUNTER_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -302,3 +303,4 @@ public:
 
 using ModCounter = ModuloMultisetCounter;
 
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_MODULO_MULTISET_COUNTER_HPP_INCLUDED

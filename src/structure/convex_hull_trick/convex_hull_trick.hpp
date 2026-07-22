@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_CONVEX_HULL_TRICK_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_CONVEX_HULL_TRICK_HPP_INCLUDED
 
 #include <array>
 #include <limits>
@@ -134,3 +135,5 @@ public:
         return hull[pointer].eval(x);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_CONVEX_HULL_TRICK_HPP_INCLUDED

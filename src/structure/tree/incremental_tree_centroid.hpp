@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_INCREMENTAL_TREE_CENTROID_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_INCREMENTAL_TREE_CENTROID_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -291,3 +292,5 @@ public:
         return static_cast<std::size_t>(leave_rank - enter_rank + 1) / 2;
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_INCREMENTAL_TREE_CENTROID_HPP_INCLUDED

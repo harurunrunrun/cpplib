@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_RANGE_ADD_POINT_GET_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_RANGE_ADD_POINT_GET_HPP_INCLUDED
 
 #include <memory>
 #include <stdexcept>
@@ -35,3 +36,5 @@ public:
         return difference_->prefix_sum(position + 1);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_RANGE_ADD_POINT_GET_HPP_INCLUDED

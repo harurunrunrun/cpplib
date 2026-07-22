@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_SQRT_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_SQRT_TREE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -262,3 +263,5 @@ public:
         return prod(0, length);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_SQRT_TREE_HPP_INCLUDED

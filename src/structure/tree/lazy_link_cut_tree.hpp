@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_LAZY_LINK_CUT_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_LAZY_LINK_CUT_TREE_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -280,3 +281,5 @@ public:
         return kth_on_path(u, v, k);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_LAZY_LINK_CUT_TREE_HPP_INCLUDED

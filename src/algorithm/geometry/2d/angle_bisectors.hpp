@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ANGLE_BISECTORS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ANGLE_BISECTORS_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -32,3 +33,5 @@ inline std::array<Line, 2> angle_bisectors(
         Line{intersection, intersection + unit(first_direction - second_direction)},
     };
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ANGLE_BISECTORS_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_COUNTING_C4_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_COUNTING_C4_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstdint>
@@ -195,3 +196,5 @@ inline __int128_t count_c4(
     for(long long value: per_edge) total += value;
     return total / 4;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_COUNTING_C4_HPP_INCLUDED

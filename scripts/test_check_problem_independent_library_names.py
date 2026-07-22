@@ -154,6 +154,24 @@ class CheckProblemIndependentLibraryNamesTest(unittest.TestCase):
         )
         self.assertEqual(self.terms(document), [])
 
+    def test_generated_include_guard_is_not_public_vocabulary(self) -> None:
+        header = self.write(
+            "src/approximate/packing/bottom_left_packing.hpp",
+            "#ifndef CPPLIB_SRC_APPROXIMATE_PACKING_BOTTOM_LEFT_PACKING_HPP_INCLUDED\n"
+            "#define CPPLIB_SRC_APPROXIMATE_PACKING_BOTTOM_LEFT_PACKING_HPP_INCLUDED\n"
+            "inline int bottom_left_packing(){ return 0; }\n"
+            "#endif  // CPPLIB_SRC_APPROXIMATE_PACKING_BOTTOM_LEFT_PACKING_HPP_INCLUDED\n",
+        )
+        self.assertEqual(self.terms(header, doc=False), [])
+        header.write_text(
+            header.read_text(encoding="utf-8").replace(
+                "inline int bottom_left_packing(){ return 0; }",
+                "inline const char* code(){ return \"BOTTOM\"; }",
+            ),
+            encoding="utf-8",
+        )
+        self.assertIn("BOTTOM", self.terms(header, doc=False))
+
     def test_problem_story_in_title_is_rejected_before_allowed_tag(self) -> None:
         path = self.write(
             "docs/is_bipartite.md",

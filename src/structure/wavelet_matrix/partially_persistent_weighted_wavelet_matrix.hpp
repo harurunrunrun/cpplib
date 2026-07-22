@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PARTIALLY_PERSISTENT_WEIGHTED_WAVELET_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PARTIALLY_PERSISTENT_WEIGHTED_WAVELET_MATRIX_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -45,3 +46,5 @@ struct PartiallyPersistentWeightedWaveletMatrix :
         return set(k, Base::access(Base::latest_version(), k), weight);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PARTIALLY_PERSISTENT_WEIGHTED_WAVELET_MATRIX_HPP_INCLUDED

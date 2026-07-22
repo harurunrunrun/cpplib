@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_WITH_OPTIONAL_EDGE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_WITH_OPTIONAL_EDGE_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -78,3 +79,5 @@ std::optional<T> shortest_path_with_at_most_one_optional_edge(
     }
     return answer;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_WITH_OPTIONAL_EDGE_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_WEIGHT_BIPARTITE_PAIRING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_WEIGHT_BIPARTITE_PAIRING_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -113,3 +114,5 @@ inline long long maximum_weight_bipartite_pairing(
     }
     return static_cast<long long>(answer);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATCHING_MAXIMUM_WEIGHT_BIPARTITE_PAIRING_HPP_INCLUDED

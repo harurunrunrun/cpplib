@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_COUNT_BIPARTITE_EDGE_CROSSINGS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_COUNT_BIPARTITE_EDGE_CROSSINGS_HPP_INCLUDED
 
 #include <algorithm>
 #include <utility>
@@ -18,3 +19,5 @@ inline long long count_bipartite_edge_crossings(
     }
     return inversion_count(right_endpoint);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_COUNT_BIPARTITE_EDGE_CROSSINGS_HPP_INCLUDED

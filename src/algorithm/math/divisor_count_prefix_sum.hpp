@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_DIVISOR_COUNT_PREFIX_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_DIVISOR_COUNT_PREFIX_SUM_HPP_INCLUDED
 
 #include <cmath>
 #include <cstdint>
@@ -100,3 +101,5 @@ inline divisor_count_prefix_sum_value divisor_count_prefix_sum(std::uint64_t n){
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_DIVISOR_COUNT_PREFIX_SUM_HPP_INCLUDED

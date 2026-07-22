@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_DISTINCT_SUBSTRINGS_BY_FIRST_BYTE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_DISTINCT_SUBSTRINGS_BY_FIRST_BYTE_HPP_INCLUDED
 
 #include <array>
 #include <string>
@@ -28,3 +29,5 @@ distinct_substrings_by_first_byte(const std::string& text){
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_DISTINCT_SUBSTRINGS_BY_FIRST_BYTE_HPP_INCLUDED

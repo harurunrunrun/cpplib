@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_MISRA_GRIES_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_MISRA_GRIES_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -89,3 +90,5 @@ public:
     }
     [[nodiscard]] static constexpr std::size_t capacity() noexcept { return Capacity; }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_MISRA_GRIES_HPP_INCLUDED

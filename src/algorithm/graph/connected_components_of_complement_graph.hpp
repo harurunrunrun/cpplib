@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CONNECTED_COMPONENTS_OF_COMPLEMENT_GRAPH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CONNECTED_COMPONENTS_OF_COMPLEMENT_GRAPH_HPP_INCLUDED
 
 #include <queue>
 #include <stdexcept>
@@ -65,3 +66,5 @@ inline ComplementConnectedComponentsResult connected_components_of_complement_gr
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CONNECTED_COMPONENTS_OF_COMPLEMENT_GRAPH_HPP_INCLUDED

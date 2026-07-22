@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_RANGE_ASSIGN_FREQUENCY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_RANGE_ASSIGN_FREQUENCY_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -173,3 +174,5 @@ public:
         assign(left, right, value);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_RANGE_ASSIGN_FREQUENCY_HPP_INCLUDED

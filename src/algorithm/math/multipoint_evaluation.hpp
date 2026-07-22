@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_MULTIPOINT_EVALUATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_MULTIPOINT_EVALUATION_HPP_INCLUDED
 
 #include <cstddef>
 #include <utility>
@@ -104,3 +105,5 @@ std::vector<Modint<MOD>> multipoint_evaluation(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_MULTIPOINT_EVALUATION_HPP_INCLUDED

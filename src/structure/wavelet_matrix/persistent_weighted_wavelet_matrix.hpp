@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WEIGHTED_WAVELET_MATRIX_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WEIGHTED_WAVELET_MATRIX_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -46,3 +47,5 @@ struct PersistentWeightedWaveletMatrix :
     }
     int fork(int version){ return Base::fork_from_version(version); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_WEIGHTED_WAVELET_MATRIX_HPP_INCLUDED

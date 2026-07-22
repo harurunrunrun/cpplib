@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_POINT_ADD_RANGE_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_POINT_ADD_RANGE_SUM_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -56,3 +57,5 @@ public:
         return tree_.prod(version, left, right);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_POINT_ADD_RANGE_SUM_HPP_INCLUDED

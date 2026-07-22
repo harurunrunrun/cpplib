@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_LINE_CONVEX_POLYGON_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_LINE_CONVEX_POLYGON_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -43,3 +44,5 @@ inline bool intersect_line_convex_polygon(
         line, NormalizedConvexPolygon(std::move(polygon))
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_LINE_CONVEX_POLYGON_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORTHONORMAL_BASIS_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORTHONORMAL_BASIS_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -34,3 +35,5 @@ inline std::array<Point3, 3> orthonormal_basis_3d(const Point3& first_axis){
     const Point3 third = cross(first, second);
     return {first, second, third};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_ORTHONORMAL_BASIS_3D_HPP_INCLUDED

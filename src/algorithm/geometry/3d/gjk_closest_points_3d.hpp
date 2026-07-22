@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_CLOSEST_POINTS_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_CLOSEST_POINTS_3D_HPP_INCLUDED
 
 #include <utility>
 
@@ -14,3 +15,5 @@ inline std::pair<Point3, Point3> gjk_closest_points_3d(
         gjk_query_3d(first, second, tolerance, max_iterations);
     return {result.point_on_first, result.point_on_second};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_CLOSEST_POINTS_3D_HPP_INCLUDED

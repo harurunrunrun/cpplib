@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_TO_2D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_TO_2D_HPP_INCLUDED
 
 #include <stdexcept>
 #include <utility>
@@ -32,3 +33,5 @@ inline std::pair<PlaneCoordinateSystem3, std::vector<Point>> polygon3_to_2d(
     });
     return {system, polygon3_to_2d(polygon, system)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_TO_2D_HPP_INCLUDED

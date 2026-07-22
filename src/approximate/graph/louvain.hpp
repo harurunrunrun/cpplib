@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_LOUVAIN_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_LOUVAIN_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -170,3 +171,5 @@ template<class UniformRandomBitGenerator>
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_LOUVAIN_HPP_INCLUDED

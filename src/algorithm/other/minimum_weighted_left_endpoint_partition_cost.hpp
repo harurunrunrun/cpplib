@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_WEIGHTED_LEFT_ENDPOINT_PARTITION_COST_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_WEIGHTED_LEFT_ENDPOINT_PARTITION_COST_HPP_INCLUDED
 
 #include "../math/exact_integer.hpp"
 
@@ -117,3 +118,5 @@ inline long long minimum_weighted_left_endpoint_partition_cost(
     }
     return static_cast<long long>(answer);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_WEIGHTED_LEFT_ENDPOINT_PARTITION_COST_HPP_INCLUDED

@@ -33,7 +33,7 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help verifier-setup verifier-wrapper-test header-guard-check no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
@@ -41,6 +41,7 @@ help:
 	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
 	@echo "make standalone-results-prune  削除・改名済みstandaloneの古いmanifestを除去"
 	@echo "make standalone-results-check  standalone全件の最新成功manifestを検査"
+	@echo "make header-guard-check  全headerの一意なinclude guardを検査"
 	@echo "make no-boost-dependency-check  reject Boost dependencies in src/test/docs"
 	@echo "make docs-title-check  docsの英日併記タイトルを検査"
 	@echo "make test-coverage-check  全headerに直接対象テストがあることを検査"
@@ -58,7 +59,11 @@ verifier-setup: $(VERIFIER)
 verifier-wrapper-test:
 	$(PYTHON) scripts/test_competitive_verifier_gcc15_wrapper.py
 
-no-boost-dependency-check:
+header-guard-check:
+	$(PYTHON) scripts/test_check_header_guards.py
+	$(PYTHON) scripts/check_header_guards.py src test
+
+no-boost-dependency-check: header-guard-check
 	$(PYTHON) scripts/test_check_no_boost_dependency.py
 	$(PYTHON) scripts/check_no_boost_dependency.py src test docs
 

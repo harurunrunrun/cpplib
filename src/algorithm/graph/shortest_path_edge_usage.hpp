@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_EDGE_USAGE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_EDGE_USAGE_HPP_INCLUDED
 
 #include <functional>
 #include <limits>
@@ -112,3 +113,5 @@ ShortestPathEdgeUsageResult<T> shortest_path_edge_usage(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SHORTEST_PATH_EDGE_USAGE_HPP_INCLUDED

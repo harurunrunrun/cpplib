@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_MINMAX_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_MINMAX_HPP_INCLUDED
 
 #include <algorithm>
 #include <limits>
@@ -35,3 +36,5 @@ public:
     void build(int root = 0){ tree.build(root); }
     std::pair<Weight, Weight> path_minmax(int left, int right) const{ return tree.prod(left, right); }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_TREE_PATH_MINMAX_HPP_INCLUDED

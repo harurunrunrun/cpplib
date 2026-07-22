@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_VOLUME_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_VOLUME_HPP_INCLUDED
 
 #include "base.hpp"
 #include "is_finite.hpp"
@@ -15,3 +16,5 @@ inline long double sphere_volume(const Sphere3& sphere){
         "sphere volume is not representable"
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_VOLUME_HPP_INCLUDED

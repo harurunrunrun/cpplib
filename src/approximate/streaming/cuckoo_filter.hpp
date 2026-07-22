@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_STREAMING_CUCKOO_FILTER_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_STREAMING_CUCKOO_FILTER_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -138,3 +139,5 @@ public:
         return static_cast<long double>(size_) / static_cast<long double>(capacity());
     }
 };
+
+#endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_CUCKOO_FILTER_HPP_INCLUDED

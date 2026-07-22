@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_COMMON_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_COMMON_INTERSECTION_HPP_INCLUDED
 
 #include "is_finite.hpp"
 #include "line_plane_intersection.hpp"
@@ -21,3 +22,5 @@ inline LinearIntersection3 line_plane_common_intersection(
     if(on_plane(plane, line.a)) return line;
     return std::monostate{};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_COMMON_INTERSECTION_HPP_INCLUDED

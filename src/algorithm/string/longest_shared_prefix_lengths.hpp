@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_LONGEST_SHARED_PREFIX_LENGTHS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_LONGEST_SHARED_PREFIX_LENGTHS_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -31,3 +32,5 @@ inline std::vector<std::size_t> longest_shared_prefix_lengths(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_LONGEST_SHARED_PREFIX_LENGTHS_HPP_INCLUDED

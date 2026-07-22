@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_HPP_INCLUDED
 
 #include "abs.hpp"
 #include "area.hpp"
@@ -135,3 +136,5 @@
 #include "view_cone_contains.hpp"
 #include "visibility_graph.hpp"
 #include "visibility_polygon.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_DIAMETER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_DIAMETER_HPP_INCLUDED
 
 #include <optional>
 
@@ -10,3 +11,5 @@ inline std::optional<PointSetDiameter3DResult> convex_polyhedron_diameter(
 ){
     return point_set_diameter_3d(polyhedron.vertices);
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_DIAMETER_HPP_INCLUDED

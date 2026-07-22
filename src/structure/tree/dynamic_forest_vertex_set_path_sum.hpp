@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_VERTEX_SET_PATH_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_VERTEX_SET_PATH_SUM_HPP_INCLUDED
 
 #include <optional>
 #include <vector>
@@ -43,3 +44,5 @@ public:
         return forest.path_prod(left, right);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_VERTEX_SET_PATH_SUM_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CROSS_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CROSS_POINT_HPP_INCLUDED
 
 #include <stdexcept>
 
@@ -24,3 +25,5 @@ inline Point cross_point(const Line& first, const Line& second){
         cross(second.a - first.a, second_unit) / denominator
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CROSS_POINT_HPP_INCLUDED

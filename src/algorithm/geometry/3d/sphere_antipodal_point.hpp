@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_ANTIPODAL_POINT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_ANTIPODAL_POINT_HPP_INCLUDED
 
 #include <cmath>
 #include <stdexcept>
@@ -30,3 +31,5 @@ inline Point3 sphere_antipodal_point(
     }
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SPHERE_ANTIPODAL_POINT_HPP_INCLUDED

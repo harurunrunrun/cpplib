@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_PLANE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <array>
 #include <variant>
@@ -49,3 +50,5 @@ inline PlanarIntersection3 triangle_plane_intersection(
     if(points.size() == 1) return points.front();
     return Segment3{points[0], points[1]};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TRIANGLE_PLANE_INTERSECTION_HPP_INCLUDED

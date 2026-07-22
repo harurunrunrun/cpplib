@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_STRING_SUFFIX_ARRAY_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_STRING_SUFFIX_ARRAY_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -331,3 +332,5 @@ template<class Sequence>
 std::vector<int> lcp_array(const Sequence& s){
     return lcp_array(s, suffix_array(s));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_STRING_SUFFIX_ARRAY_HPP_INCLUDED

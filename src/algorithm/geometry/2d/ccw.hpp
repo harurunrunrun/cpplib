@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CCW_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CCW_HPP_INCLUDED
 
 #include "cross.hpp"
 #include "dot.hpp"
@@ -40,3 +41,5 @@ inline int ccw(Point first, Point second, Point third){
     ) > 0) return ONLINE_FRONT;
     return ON_SEGMENT;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CCW_HPP_INCLUDED

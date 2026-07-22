@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_RADIUS_BALLS_FORM_VERTEX_PARTITION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_RADIUS_BALLS_FORM_VERTEX_PARTITION_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -88,3 +89,5 @@ inline bool radius_balls_form_vertex_partition(
     }
     return true;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_RADIUS_BALLS_FORM_VERTEX_PARTITION_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_GRAPH_KERNIGHAN_LIN_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_GRAPH_KERNIGHAN_LIN_HPP_INCLUDED
 
 #include <cstddef>
 #include <limits>
@@ -112,3 +113,5 @@ namespace approximate::graph {
 }
 
 }  // namespace approximate::graph
+
+#endif  // CPPLIB_SRC_APPROXIMATE_GRAPH_KERNIGHAN_LIN_HPP_INCLUDED

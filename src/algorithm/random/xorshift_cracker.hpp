@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_CRACKER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_CRACKER_HPP_INCLUDED
 
 #include <array>
 #include <bit>
@@ -206,3 +207,5 @@ public:
         return predictor_.state();
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_CRACKER_HPP_INCLUDED

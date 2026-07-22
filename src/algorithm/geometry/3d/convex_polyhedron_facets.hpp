@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_FACETS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_FACETS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -157,3 +158,5 @@ inline std::vector<ConvexPolyhedronFacet3> convex_polyhedron_facets(
     });
     return result;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_FACETS_HPP_INCLUDED

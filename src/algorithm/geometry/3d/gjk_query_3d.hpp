@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_QUERY_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_QUERY_3D_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -594,3 +595,5 @@ inline GJKResult3 gjk_query_3d(
         normalization
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GJK_QUERY_3D_HPP_INCLUDED

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CENTROID_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CENTROID_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -64,3 +65,5 @@ inline Point3 centroid(const Tetrahedron3& tetrahedron){
         tetrahedron.a, tetrahedron.b, tetrahedron.c, tetrahedron.d,
     });
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CENTROID_HPP_INCLUDED

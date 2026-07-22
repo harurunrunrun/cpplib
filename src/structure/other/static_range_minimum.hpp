@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_MINIMUM_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_MINIMUM_HPP_INCLUDED
 
 #include <memory>
 #include <vector>
@@ -20,3 +21,5 @@ public:
     int size() const{ return table_->size(); }
     T minimum(int left, int right) const{ return table_->prod(left, right); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_OTHER_STATIC_RANGE_MINIMUM_HPP_INCLUDED

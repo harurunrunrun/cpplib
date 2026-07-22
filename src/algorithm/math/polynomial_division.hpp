@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_DIVISION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_DIVISION_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -107,3 +108,5 @@ Polynomial<MOD> polynomial_remainder(
 }
 
 } // namespace math
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_DIVISION_HPP_INCLUDED

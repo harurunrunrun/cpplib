@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_INVERSE_MATRIX_MOD_2_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_INVERSE_MATRIX_MOD_2_HPP_INCLUDED
 
 #include <bitset>
 #include <cstddef>
@@ -47,3 +48,5 @@ std::optional<std::vector<std::bitset<MAX_SIZE>>> inverse_matrix_mod_2(
     }
     return inverse;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_INVERSE_MATRIX_MOD_2_HPP_INCLUDED

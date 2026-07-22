@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_HALF_PLANE_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_HALF_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -198,3 +199,5 @@ inline HalfPlaneIntersectionResult half_plane_intersection(
     if(polygon.empty()) return {HALF_PLANE_EMPTY, {}};
     return {HALF_PLANE_BOUNDED, std::move(polygon)};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_ADVANCED_HALF_PLANE_INTERSECTION_HPP_INCLUDED

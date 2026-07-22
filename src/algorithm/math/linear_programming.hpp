@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_LINEAR_PROGRAMMING_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_LINEAR_PROGRAMMING_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -391,3 +392,5 @@ public:
         return result;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_LINEAR_PROGRAMMING_HPP_INCLUDED

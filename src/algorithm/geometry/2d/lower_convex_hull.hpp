@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LOWER_CONVEX_HULL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LOWER_CONVEX_HULL_HPP_INCLUDED
 
 #include <utility>
 #include <vector>
@@ -14,3 +15,5 @@ inline std::vector<Point> lower_convex_hull(
         points, false, keep_collinear
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LOWER_CONVEX_HULL_HPP_INCLUDED

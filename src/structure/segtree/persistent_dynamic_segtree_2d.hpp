@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_DYNAMIC_SEGTREE_2D_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_DYNAMIC_SEGTREE_2D_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -402,3 +403,5 @@ public:
 
     S all_prod() const{ return all_prod(latest_version()); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_DYNAMIC_SEGTREE_2D_HPP_INCLUDED

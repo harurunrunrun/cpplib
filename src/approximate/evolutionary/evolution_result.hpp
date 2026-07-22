@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_EVOLUTION_RESULT_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_EVOLUTION_RESULT_HPP_INCLUDED
 
 #include <cstddef>
 
@@ -13,3 +14,5 @@ struct EvolutionResult{
 };
 
 }  // namespace approximate::evolutionary
+
+#endif  // CPPLIB_SRC_APPROXIMATE_EVOLUTIONARY_EVOLUTION_RESULT_HPP_INCLUDED

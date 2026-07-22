@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_ORDERED_QUOTA_EUCLIDEAN_ACTIVATION_TIMES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_ORDERED_QUOTA_EUCLIDEAN_ACTIVATION_TIMES_HPP_INCLUDED
 
 #include <cmath>
 #include <cstddef>
@@ -126,3 +127,5 @@ ordered_quota_euclidean_activation_times(
     }
     return activation_time;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_ORDERED_QUOTA_EUCLIDEAN_ACTIVATION_TIMES_HPP_INCLUDED

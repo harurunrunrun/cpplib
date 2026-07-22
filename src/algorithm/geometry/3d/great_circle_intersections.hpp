@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GREAT_CIRCLE_INTERSECTIONS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GREAT_CIRCLE_INTERSECTIONS_HPP_INCLUDED
 
 #include <optional>
 #include <utility>
@@ -24,3 +25,5 @@ inline std::optional<std::pair<Point3, Point3>> great_circle_intersections(
     const Point3 point = direction / length;
     return std::pair<Point3, Point3>{point, -point};
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_GREAT_CIRCLE_INTERSECTIONS_HPP_INCLUDED

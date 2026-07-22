@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_LINEAR_RECURRENCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_LINEAR_RECURRENCE_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -290,3 +291,5 @@ Modint<MOD> bostan_mori(
     }
     return p[0];
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_LINEAR_RECURRENCE_HPP_INCLUDED

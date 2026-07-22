@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_APPROXIMATE_RANDOMIZED_FREIVALDS_HPP_INCLUDED
+#define CPPLIB_SRC_APPROXIMATE_RANDOMIZED_FREIVALDS_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -92,3 +93,5 @@ bool freivalds_verify(const std::array<std::array<T, Inner>, Rows>& first,
     }
     return true;
 }
+
+#endif  // CPPLIB_SRC_APPROXIMATE_RANDOMIZED_FREIVALDS_HPP_INCLUDED

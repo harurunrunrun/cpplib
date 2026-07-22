@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_IS_BIPARTITE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_IS_BIPARTITE_HPP_INCLUDED
 
 #include <queue>
 #include <stdexcept>
@@ -49,3 +50,5 @@ inline bool is_bipartite(
     }
     return true;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_IS_BIPARTITE_HPP_INCLUDED

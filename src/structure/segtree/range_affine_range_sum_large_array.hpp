@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_RANGE_SUM_LARGE_ARRAY_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_RANGE_SUM_LARGE_ARRAY_HPP_INCLUDED
 
 #include "../types/common_monoids.hpp"
 #include "dynamic_lazysegtree.hpp"
@@ -37,3 +38,5 @@ public:
         return tree_.prod(left, right);
     }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_RANGE_AFFINE_RANGE_SUM_LARGE_ARRAY_HPP_INCLUDED

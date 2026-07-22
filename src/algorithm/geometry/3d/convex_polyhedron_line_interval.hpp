@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_LINE_INTERVAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_LINE_INTERVAL_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -89,3 +90,5 @@ convex_polyhedron_line_interval(
         std::numeric_limits<long double>::infinity()
     );
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_LINE_INTERVAL_HPP_INCLUDED

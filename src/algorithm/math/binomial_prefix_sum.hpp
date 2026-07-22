@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_BINOMIAL_PREFIX_SUM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_BINOMIAL_PREFIX_SUM_HPP_INCLUDED
 
 #include <array>
 #include <stdexcept>
@@ -41,3 +42,5 @@ struct BinomialPrefixSum{
         return prefix[n][k];
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_BINOMIAL_PREFIX_SUM_HPP_INCLUDED

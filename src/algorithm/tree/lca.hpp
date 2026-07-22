@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_LCA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_LCA_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
@@ -247,3 +248,5 @@ public:
         return dist(u, v) + 1;
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_LCA_HPP_INCLUDED

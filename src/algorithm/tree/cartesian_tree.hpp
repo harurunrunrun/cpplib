@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_TREE_CARTESIAN_TREE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_TREE_CARTESIAN_TREE_HPP_INCLUDED
 
 #include <cstddef>
 #include <functional>
@@ -73,3 +74,5 @@ CartesianTreeResult build_cartesian_tree(
 ){
     return cartesian_tree(values, std::move(compare));
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_TREE_CARTESIAN_TREE_HPP_INCLUDED

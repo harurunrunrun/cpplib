@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_NAMED_SHORTEST_PATHS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_NAMED_SHORTEST_PATHS_HPP_INCLUDED
 
 #include <optional>
 #include <stdexcept>
@@ -80,3 +81,5 @@ public:
         for(auto& result: cache_) result.reset();
     }
 };
+
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_NAMED_SHORTEST_PATHS_HPP_INCLUDED

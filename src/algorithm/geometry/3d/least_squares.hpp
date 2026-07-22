@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LEAST_SQUARES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LEAST_SQUARES_HPP_INCLUDED
 
 #include <algorithm>
 #include <cmath>
@@ -114,3 +115,5 @@ inline std::optional<std::vector<long double>> least_squares(
     }
     return solution;
 }
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LEAST_SQUARES_HPP_INCLUDED

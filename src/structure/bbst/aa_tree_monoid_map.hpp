@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CPPLIB_SRC_STRUCTURE_BBST_AA_TREE_MONOID_MAP_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_BBST_AA_TREE_MONOID_MAP_HPP_INCLUDED
 
 #include <algorithm>
 #include <array>
@@ -477,3 +478,5 @@ public:
 
     mapped_type all_prod() const{ return aggregate_of(root); }
 };
+
+#endif  // CPPLIB_SRC_STRUCTURE_BBST_AA_TREE_MONOID_MAP_HPP_INCLUDED
