@@ -70,12 +70,34 @@ bool rejects(Function function){
     return false;
 }
 
+std::size_t hierarchy_depth_bound(std::size_t size){
+    std::size_t logarithm = 0;
+    while(size > 1){
+        size = size / 2 + size % 2;
+        ++logarithm;
+    }
+    return 2 + logarithm * 20;
+}
+
 bool compare_queries(
     const ConvexPolyhedron3& polyhedron,
     std::mt19937_64& random,
     std::size_t count
 ){
     const ConvexPolyhedronQueryHierarchy3D hierarchy(polyhedron, 4);
+    if(polyhedron.affine_dimension == 3){
+        if(hierarchy.support_hierarchy_depth() == 0
+            || hierarchy.contains_hierarchy_depth() == 0
+            || hierarchy.hierarchy_maximum_branching() > 11
+            || hierarchy.support_hierarchy_depth()
+                > hierarchy_depth_bound(polyhedron.faces.size())
+            || hierarchy.contains_hierarchy_depth()
+                > hierarchy_depth_bound(polyhedron.vertices.size())
+            || (polyhedron.vertices.size() > 24
+                && hierarchy.contains_hierarchy_depth() < 2)){
+            return false;
+        }
+    }
     for(std::size_t query = 0; query < count; ++query){
         Point3 direction = random_point(random, 4);
         if(direction.x == 0 && direction.y == 0 && direction.z == 0){
@@ -160,6 +182,175 @@ int main(){
     if(!inward_cube.contains({boundary_x, -2.0e12L, 3.0e12L})
        || inward_cube.contains({outside_x, -2.0e12L, 3.0e12L})) return 1;
     if(!compare_queries(inward_cube.polyhedron(), random, rounds)) return 1;
+    for(const Point3 direction: std::vector<Point3>{
+        {1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, 0, -1},
+        {1, 1, 0}, {1, 0, -1}, {0, -1, 1},
+        {1, 1, 1}, {-1, 1, -1},
+    }){
+        if(!same_point(
+            inward_cube.support_point(direction),
+            convex_polyhedron_support_point(
+                inward_cube.polyhedron(), direction
+            )
+        )) return 1;
+    }
+    {
+        const ConvexPolyhedron3 octahedron = convex_hull_3d({
+            {1, 0, 0}, {-1, 0, 0}, {0, 1, 0},
+            {0, -1, 0}, {0, 0, 1}, {0, 0, -1},
+        });
+        const ConvexPolyhedronQueryHierarchy3D octahedron_hierarchy(
+            octahedron, 3
+        );
+        for(const Point3 direction: std::vector<Point3>{
+            {1, 0, 0}, {-1, 0, 0}, {0, 1, 0},
+            {0, -1, 0}, {0, 0, 1}, {0, 0, -1},
+            {1, 1, 0}, {1, 1, 1},
+        }){
+            if(!same_point(
+                octahedron_hierarchy.support_point(direction),
+                convex_polyhedron_support_point(octahedron, direction)
+            )) return 1;
+        }
+        if(!compare_queries(octahedron, random, 16)) return 1;
+    }
+    {
+        const ConvexPolyhedron3 tetrahedron = convex_hull_3d({
+            {0, 0, 0}, {8, 0, 0}, {0, 8, 0}, {0, 0, 8},
+        });
+        const auto selected = tetrahedron.faces.front();
+        const Point3 first = tetrahedron.vertices[selected[0]];
+        const Point3 second = tetrahedron.vertices[selected[1]];
+        const Point3 third = tetrahedron.vertices[selected[2]];
+        const Point3 interior{
+            (first.x + second.x + 2 * third.x) / 4,
+            (first.y + second.y + 2 * third.y) / 4,
+            (first.z + second.z + 2 * third.z) / 4,
+        };
+        ConvexPolyhedron3 subdivided;
+        subdivided.affine_dimension = 3;
+        subdivided.vertices.push_back(interior);
+        subdivided.vertices.insert(
+            subdivided.vertices.end(),
+            tetrahedron.vertices.begin(), tetrahedron.vertices.end()
+        );
+        for(std::size_t index = 0;
+            index < tetrahedron.faces.size(); ++index){
+            const auto face = tetrahedron.faces[index];
+            if(index != 0){
+                subdivided.faces.push_back({
+                    face[0] + 1, face[1] + 1, face[2] + 1
+                });
+                continue;
+            }
+            const std::size_t a = face[0] + 1;
+            const std::size_t b = face[1] + 1;
+            const std::size_t c = face[2] + 1;
+            subdivided.faces.push_back({a, b, 0});
+            subdivided.faces.push_back({b, c, 0});
+            subdivided.faces.push_back({c, a, 0});
+        }
+        const Point3 first_edge = second - first;
+        const Point3 second_edge = third - first;
+        const Point3 facet_normal{
+            first_edge.y * second_edge.z - first_edge.z * second_edge.y,
+            first_edge.z * second_edge.x - first_edge.x * second_edge.z,
+            first_edge.x * second_edge.y - first_edge.y * second_edge.x,
+        };
+        const ConvexPolyhedronQueryHierarchy3D subdivided_hierarchy(
+            subdivided, 2
+        );
+        if(!same_point(
+            subdivided_hierarchy.support_point(facet_normal),
+            subdivided.vertices[0]
+        ) || !same_point(
+            subdivided_hierarchy.support_point(facet_normal),
+            convex_polyhedron_support_point(subdivided, facet_normal)
+        ) || !compare_queries(subdivided, random, 16)){
+            return 1;
+        }
+    }
+    {
+        const ConvexPolyhedron3 tetrahedron = convex_hull_3d({
+            {0, 0, 0}, {8, 0, 0}, {0, 8, 0}, {0, 0, 8},
+        });
+        const std::size_t edge_first = tetrahedron.faces[0][0];
+        const std::size_t edge_second = tetrahedron.faces[0][1];
+        const Point3 midpoint{
+            (tetrahedron.vertices[edge_first].x
+                + tetrahedron.vertices[edge_second].x) / 2,
+            (tetrahedron.vertices[edge_first].y
+                + tetrahedron.vertices[edge_second].y) / 2,
+            (tetrahedron.vertices[edge_first].z
+                + tetrahedron.vertices[edge_second].z) / 2,
+        };
+        std::vector<std::size_t> incident_faces;
+        ConvexPolyhedron3 subdivided;
+        subdivided.affine_dimension = 3;
+        subdivided.vertices.push_back(midpoint);
+        subdivided.vertices.insert(
+            subdivided.vertices.end(),
+            tetrahedron.vertices.begin(), tetrahedron.vertices.end()
+        );
+        for(std::size_t index = 0;
+            index < tetrahedron.faces.size(); ++index){
+            const auto face = tetrahedron.faces[index];
+            std::size_t edge_position = 3;
+            for(std::size_t position = 0; position < 3; ++position){
+                const std::size_t first = face[position];
+                const std::size_t second = face[(position + 1) % 3];
+                if(std::minmax(first, second)
+                    == std::minmax(edge_first, edge_second)){
+                    edge_position = position;
+                    break;
+                }
+            }
+            if(edge_position == 3){
+                subdivided.faces.push_back({
+                    face[0] + 1, face[1] + 1, face[2] + 1
+                });
+                continue;
+            }
+            incident_faces.push_back(index);
+            const std::size_t first = face[edge_position] + 1;
+            const std::size_t second = face[(edge_position + 1) % 3] + 1;
+            const std::size_t third = face[(edge_position + 2) % 3] + 1;
+            subdivided.faces.push_back({first, 0, third});
+            subdivided.faces.push_back({0, second, third});
+        }
+        if(incident_faces.size() != 2) return 1;
+        const auto outward_normal =
+            [&](const std::array<std::size_t, 3>& face) -> Point3{
+                const Point3 first = tetrahedron.vertices[face[0]];
+                const Point3 first_edge =
+                    tetrahedron.vertices[face[1]] - first;
+                const Point3 second_edge =
+                    tetrahedron.vertices[face[2]] - first;
+                return {
+                    first_edge.y * second_edge.z
+                        - first_edge.z * second_edge.y,
+                    first_edge.z * second_edge.x
+                        - first_edge.x * second_edge.z,
+                    first_edge.x * second_edge.y
+                        - first_edge.y * second_edge.x,
+                };
+            };
+        const Point3 edge_normal =
+            outward_normal(tetrahedron.faces[incident_faces[0]])
+            + outward_normal(tetrahedron.faces[incident_faces[1]]);
+        const ConvexPolyhedronQueryHierarchy3D subdivided_hierarchy(
+            subdivided, 2
+        );
+        if(!same_point(
+            subdivided_hierarchy.support_point(edge_normal),
+            subdivided.vertices[0]
+        ) || !same_point(
+            subdivided_hierarchy.support_point(edge_normal),
+            convex_polyhedron_support_point(subdivided, edge_normal)
+        ) || !compare_queries(subdivided, random, 16)){
+            return 1;
+        }
+    }
     for(const Point3 boundary: std::vector<Point3>{
         {boundary_x, -2.0e12L, 3.0e12L},
         {boundary_x, -2.0e12L + 1.0e3L, 3.0e12L},
