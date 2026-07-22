@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/random/mersenne_twister_cracker.hpp"
+#include "../../src/algorithm/random/crack/mersenne_twister_cracker.hpp"
 
 namespace{
 

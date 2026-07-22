@@ -1,6 +1,6 @@
 ---
 title: Xorshift Engines (Xorshift乱数生成器)
-documentation_of: ../src/algorithm/random/xorshift.hpp
+documentation_of: ../src/algorithm/random/engine/xorshift.hpp
 ---
 
 XORとbit shiftで状態を更新する固定状態乱数生成器。

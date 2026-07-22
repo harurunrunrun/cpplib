@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/random/linear_congruential_cracker.hpp"
-#include "../../src/algorithm/random/linear_congruential_generator.hpp"
+#include "../../src/algorithm/random/crack/linear_congruential_cracker.hpp"
+#include "../../src/algorithm/random/engine/linear_congruential_generator.hpp"
 
 namespace{
 

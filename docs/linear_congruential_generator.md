@@ -1,6 +1,6 @@
 ---
 title: Linear Congruential Generator (線形合同法乱数生成器)
-documentation_of: ../src/algorithm/random/linear_congruential_generator.hpp
+documentation_of: ../src/algorithm/random/engine/linear_congruential_generator.hpp
 ---
 
 $x_{i+1}=Ax_i+C\pmod M$ で状態を更新する線形合同法乱数生成器。

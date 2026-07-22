@@ -1,6 +1,6 @@
 ---
 title: Linear Congruential Generator Cracker (線形合同法状態復元)
-documentation_of: ../src/algorithm/random/linear_congruential_cracker.hpp
+documentation_of: ../src/algorithm/random/crack/linear_congruential_cracker.hpp
 ---
 
 パラメータが既知の線形合同法を複製するほか、法と3個以上の連続出力から

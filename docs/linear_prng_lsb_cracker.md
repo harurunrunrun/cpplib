@@ -1,6 +1,6 @@
 ---
 title: Linear PRNG LSB Cracker (線形PRNGのLSB状態復元)
-documentation_of: ../src/algorithm/random/linear_prng_lsb_cracker.hpp
+documentation_of: ../src/algorithm/random/crack/linear_prng_lsb_cracker.hpp
 ---
 
 Xoroshiro128+とWELL512aについて、完全な出力値ではなく連続出力の

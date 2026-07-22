@@ -1,5 +1,5 @@
-#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_CRACKER_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_CRACKER_HPP_INCLUDED
+#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_XORSHIFT_CRACKER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_XORSHIFT_CRACKER_HPP_INCLUDED
 
 #include <array>
 #include <bit>
@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "xorshift.hpp"
+#include "../engine/xorshift.hpp"
 
 namespace xorshift_cracker_internal{
 
@@ -208,4 +208,4 @@ public:
     }
 };
 
-#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_XORSHIFT_CRACKER_HPP_INCLUDED
+#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_XORSHIFT_CRACKER_HPP_INCLUDED

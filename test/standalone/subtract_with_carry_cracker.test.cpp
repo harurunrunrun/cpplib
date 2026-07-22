@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/random/subtract_with_carry_cracker.hpp"
+#include "../../src/algorithm/random/crack/subtract_with_carry_cracker.hpp"
 
 template<class Function>
 void expect_invalid_argument(Function&& function){

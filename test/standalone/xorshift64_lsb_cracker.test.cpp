@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/random/xorshift_cracker.hpp"
+#include "../../src/algorithm/random/crack/xorshift_cracker.hpp"
 
 constexpr std::array<std::uint8_t, 64> observe_lsb(std::uint64_t seed){
     std::array<std::uint8_t, 64> observations{};

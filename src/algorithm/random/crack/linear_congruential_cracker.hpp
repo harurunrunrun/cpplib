@@ -1,5 +1,5 @@
-#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_RANDOM_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED
+#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "linear_congruential_generator.hpp"
+#include "../engine/linear_congruential_generator.hpp"
 
 namespace linear_congruential_cracker_internal{
 
@@ -503,4 +503,4 @@ recover_linear_congruential_unknown_modulus_candidate(
     );
 }
 
-#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED
+#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_LINEAR_CONGRUENTIAL_CRACKER_HPP_INCLUDED

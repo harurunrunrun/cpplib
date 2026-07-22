@@ -1,6 +1,6 @@
 ---
 title: Mersenne Twister State Cracker (メルセンヌツイスター状態復元)
-documentation_of: ../src/algorithm/random/mersenne_twister_cracker.hpp
+documentation_of: ../src/algorithm/random/crack/mersenne_twister_cracker.hpp
 ---
 
 連続した完全出力のテンパリングを逆変換し、Mersenne Twisterの内部状態列を復元する。

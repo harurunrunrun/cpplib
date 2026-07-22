@@ -1,6 +1,6 @@
 ---
 title: Xorshift State Cracker (Xorshift状態復元)
-documentation_of: ../src/algorithm/random/xorshift_cracker.hpp
+documentation_of: ../src/algorithm/random/crack/xorshift_cracker.hpp
 ---
 
 Xorshiftの完全な生出力から、観測直前の状態を逆算して次の出力を予測する。

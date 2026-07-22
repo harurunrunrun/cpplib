@@ -1,6 +1,6 @@
 ---
 title: Subtract-with-Carry State Cracker (キャリー付き減算法状態復元)
-documentation_of: ../src/algorithm/random/subtract_with_carry_cracker.hpp
+documentation_of: ../src/algorithm/random/crack/subtract_with_carry_cracker.hpp
 ---
 
 <code>std::subtract_with_carry_engine</code> の加工されていない連続出力から、

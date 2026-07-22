@@ -10,8 +10,8 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/random/gf2_linear_state_cracker.hpp"
-#include "../../src/algorithm/random/linear_prng_lsb_cracker.hpp"
+#include "../../src/algorithm/random/crack/gf2_linear_state_cracker.hpp"
+#include "../../src/algorithm/random/crack/linear_prng_lsb_cracker.hpp"
 
 namespace{
 

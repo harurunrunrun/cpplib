@@ -1,6 +1,6 @@
 ---
 title: GF(2) Linear State Cracker (GF(2)線形状態復元)
-documentation_of: ../src/algorithm/random/gf2_linear_state_cracker.hpp
+documentation_of: ../src/algorithm/random/crack/gf2_linear_state_cracker.hpp
 ---
 
 $GF(2)$ 上で線形な状態遷移と1bit出力から、連続する出力bitを使って

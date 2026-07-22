@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/random/philox_cracker.hpp"
+#include "../../src/algorithm/random/crack/philox_cracker.hpp"
 
 namespace{
 

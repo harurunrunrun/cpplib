@@ -1,6 +1,6 @@
 ---
 title: Philox State Cracker (Philox状態復元)
-documentation_of: ../src/algorithm/random/philox_cracker.hpp
+documentation_of: ../src/algorithm/random/crack/philox_cracker.hpp
 ---
 
 Philoxのblock roundを順方向・逆方向に計算する。

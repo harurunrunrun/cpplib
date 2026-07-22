@@ -1,5 +1,5 @@
-#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_PHILOX_CRACKER_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_RANDOM_PHILOX_CRACKER_HPP_INCLUDED
+#ifndef CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_PHILOX_CRACKER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_PHILOX_CRACKER_HPP_INCLUDED
 
 #include <array>
 #include <cstddef>
@@ -9,7 +9,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "philox_engine.hpp"
+#include "../engine/philox_engine.hpp"
 
 namespace philox_cracker_detail{
 
@@ -659,4 +659,4 @@ PhiloxSeedRecovery<Engine> recover_philox_seed_in_range(
     );
 }
 
-#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_PHILOX_CRACKER_HPP_INCLUDED
+#endif  // CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_PHILOX_CRACKER_HPP_INCLUDED

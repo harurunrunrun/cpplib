@@ -5,8 +5,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/random/xorshift.hpp"
-#include "../../src/algorithm/random/xorshift_cracker.hpp"
+#include "../../src/algorithm/random/engine/xorshift.hpp"
+#include "../../src/algorithm/random/crack/xorshift_cracker.hpp"
 
 namespace{
 

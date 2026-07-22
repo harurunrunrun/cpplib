@@ -10,14 +10,14 @@
 #include <string>
 #include <utility>
 
-#include "../../src/algorithm/random/linear_congruential_cracker.hpp"
-#include "../../src/algorithm/random/linear_congruential_generator.hpp"
-#include "../../src/algorithm/random/mersenne_twister_cracker.hpp"
-#include "../../src/algorithm/random/philox_cracker.hpp"
-#include "../../src/algorithm/random/philox_engine.hpp"
-#include "../../src/algorithm/random/subtract_with_carry_cracker.hpp"
-#include "../../src/algorithm/random/xorshift.hpp"
-#include "../../src/algorithm/random/xorshift_cracker.hpp"
+#include "../../src/algorithm/random/crack/linear_congruential_cracker.hpp"
+#include "../../src/algorithm/random/engine/linear_congruential_generator.hpp"
+#include "../../src/algorithm/random/crack/mersenne_twister_cracker.hpp"
+#include "../../src/algorithm/random/crack/philox_cracker.hpp"
+#include "../../src/algorithm/random/engine/philox_engine.hpp"
+#include "../../src/algorithm/random/crack/subtract_with_carry_cracker.hpp"
+#include "../../src/algorithm/random/engine/xorshift.hpp"
+#include "../../src/algorithm/random/crack/xorshift_cracker.hpp"
 
 namespace{
 

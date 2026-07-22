@@ -1,6 +1,6 @@
 ---
 title: Philox Engine (Philoxカウンタベース乱数生成器)
-documentation_of: ../src/algorithm/random/philox_engine.hpp
+documentation_of: ../src/algorithm/random/engine/philox_engine.hpp
 ---
 
 現行C++ draftの <code>philox_engine</code> と同じcounter・key・round定義を

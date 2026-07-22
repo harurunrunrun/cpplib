@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-#include "../../src/algorithm/random/philox_engine.hpp"
+#include "../../src/algorithm/random/engine/philox_engine.hpp"
 
 namespace{
 
