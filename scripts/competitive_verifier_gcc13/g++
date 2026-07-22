@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Narrow GCC 15 compatibility wrapper for Library Checker references.
+"""Narrow GCC 13 compiler wrapper for competitive-verifier.
 
 Put this directory at the front of PATH and set
-COMPETITIVE_VERIFIER_REAL_GXX to the real C++ compiler.  The wrapper only
-suppresses -Wignored-attributes while compiling a C/C++ source stored below a
-library-checker-problems directory; all other invocations are passed through
-unchanged.
+COMPETITIVE_VERIFIER_REAL_GXX to an explicitly selected GCC 13 executable.
+The wrapper only suppresses -Wignored-attributes while compiling a C/C++
+source stored below a library-checker-problems directory; all other
+invocations are passed through unchanged.
 """
 
 from __future__ import annotations

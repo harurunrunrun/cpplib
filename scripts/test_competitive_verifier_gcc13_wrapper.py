@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests for the competitive-verifier GCC 15 compatibility wrapper."""
+"""Unit tests for the competitive-verifier GCC 13 compiler wrapper."""
 
 from __future__ import annotations
 
@@ -13,10 +13,10 @@ import unittest
 
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
-WRAPPER = SCRIPTS_DIR / "competitive_verifier_gcc15" / "g++"
+WRAPPER = SCRIPTS_DIR / "competitive_verifier_gcc13" / "g++"
 
 
-class CompetitiveVerifierGcc15WrapperTest(unittest.TestCase):
+class CompetitiveVerifierGcc13WrapperTest(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary_directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary_directory.cleanup)

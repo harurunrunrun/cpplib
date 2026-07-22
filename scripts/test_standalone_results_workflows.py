@@ -244,6 +244,9 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
                 int(attempt["with"]["timeout"]),
                 60 * int(attempt["timeout-minutes"]),
             )
+        for retry in (retry_two, retry_three):
+            self.assertGreaterEqual(int(retry["timeout-minutes"]), 8)
+            self.assertGreaterEqual(int(retry["with"]["timeout"]), 420)
         self.assertEqual(
             restore["with"]["path"], ".competitive-verifier/cache/result.json"
         )
@@ -259,6 +262,28 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
         )
         self.assertIn("outcome != 'skipped'", second["if"])
         self.assertIn("outcome != 'skipped'", retry_three["if"])
+
+    def test_online_verifier_uses_gcc13_and_small_shards(self) -> None:
+        workflow = load_workflow("verify.yaml")
+        source = (ROOT / ".github" / "workflows" / "verify.yaml").read_text(
+            encoding="utf-8"
+        )
+        for job_name in ("resolve", "verify"):
+            configure = named_steps(workflow["jobs"][job_name])[
+                "Configure competitive-verifier compiler wrapper"
+            ]
+            command = configure["run"]
+            self.assertIn('real_gxx="$(command -v g++-13)"', command)
+            self.assertIn(
+                'echo "COMPETITIVE_VERIFIER_REAL_GXX=$real_gxx"', command
+            )
+            self.assertNotIn("command -v g++)", command)
+
+        plan = named_steps(workflow["jobs"]["resolve"])[
+            "Plan verification shards"
+        ]
+        self.assertLessEqual(int(plan["env"]["TARGET_FILES_PER_SHARD"]), 12)
+        self.assertEqual(source.count("command -v g++-13"), 3)
 
     def test_merge_reports_details_and_caches_only_successes(self) -> None:
         workflow = load_workflow("verify.yaml")

@@ -121,12 +121,13 @@ jobs:
       - name: Configure competitive-verifier compiler wrapper
         shell: bash
         run: |
-          echo "COMPETITIVE_VERIFIER_REAL_GXX=$(command -v g++)" >> "$GITHUB_ENV"
-          echo "$GITHUB_WORKSPACE/scripts/competitive_verifier_gcc15" >> "$GITHUB_PATH"
+          real_gxx="$(command -v g++-13)"
+          echo "COMPETITIVE_VERIFIER_REAL_GXX=$real_gxx" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/scripts/competitive_verifier_gcc13" >> "$GITHUB_PATH"
 
       - name: Test competitive-verifier compiler wrapper
         run: |
-          python3 scripts/test_competitive_verifier_gcc15_wrapper.py
+          python3 scripts/test_competitive_verifier_gcc13_wrapper.py
 
       - name: Resolve online judge verification files
         uses: competitive-verifier/actions/oj-resolve@v2
@@ -151,7 +152,7 @@ jobs:
         id: plan
         shell: bash
         env:
-          TARGET_FILES_PER_SHARD: "24"
+          TARGET_FILES_PER_SHARD: "12"
         run: |
           python3 - <<'PY'
           import json
@@ -231,12 +232,13 @@ jobs:
       - name: Configure competitive-verifier compiler wrapper
         shell: bash
         run: |
-          echo "COMPETITIVE_VERIFIER_REAL_GXX=$(command -v g++)" >> "$GITHUB_ENV"
-          echo "$GITHUB_WORKSPACE/scripts/competitive_verifier_gcc15" >> "$GITHUB_PATH"
+          real_gxx="$(command -v g++-13)"
+          echo "COMPETITIVE_VERIFIER_REAL_GXX=$real_gxx" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/scripts/competitive_verifier_gcc13" >> "$GITHUB_PATH"
 
       - name: Test competitive-verifier compiler wrapper
         run: |
-          python3 scripts/test_competitive_verifier_gcc15_wrapper.py
+          python3 scripts/test_competitive_verifier_gcc13_wrapper.py
 
       - name: Download resolved verification files
         uses: actions/download-artifact@v4
@@ -312,7 +314,7 @@ jobs:
         id: verifier_retry_1
         if: ${{ always() && steps.verifier_initial.outputs.is-success != 'true' }}
         uses: competitive-verifier/actions/verify@v2
-        timeout-minutes: 4
+        timeout-minutes: 8
         continue-on-error: true
         with:
           verify-files: verify-files.json
@@ -320,7 +322,7 @@ jobs:
           prev-result: ${{ steps.retry_previous_1.outputs.path }}
           split-size: ${{ needs.resolve.outputs.shard_count }}
           split-index: ${{ matrix.index }}
-          timeout: "180"
+          timeout: "420"
           check: false
 
       - name: Prepare successful results for attempt 3
@@ -348,7 +350,7 @@ jobs:
         id: verifier_retry_2
         if: ${{ always() && steps.verifier_retry_1.outcome != 'skipped' && steps.verifier_retry_1.outputs.is-success != 'true' }}
         uses: competitive-verifier/actions/verify@v2
-        timeout-minutes: 4
+        timeout-minutes: 8
         continue-on-error: true
         with:
           verify-files: verify-files.json
@@ -356,7 +358,7 @@ jobs:
           prev-result: ${{ steps.retry_previous_2.outputs.path }}
           split-size: ${{ needs.resolve.outputs.shard_count }}
           split-index: ${{ matrix.index }}
-          timeout: "180"
+          timeout: "420"
           check: false
 
       - name: Select latest valid shard result

@@ -21,7 +21,7 @@ CXXFLAGS ?= -std=c++20 -O2 -Wall -Wextra
 STANDALONE_SPLIT_SIZE ?= 1
 STANDALONE_SPLIT_INDEX ?= 0
 LOCAL_VERIFY_JOBS ?= 4
-VERIFIER_GXX_WRAPPER_DIR := $(CURDIR)/scripts/competitive_verifier_gcc15
+VERIFIER_GXX_WRAPPER_DIR := $(CURDIR)/scripts/competitive_verifier_gcc13
 VERIFIER_REAL_GXX := $(shell command -v g++ 2>/dev/null)
 VERIFIER_COMMAND_ENV := COMPETITIVE_VERIFIER_REAL_GXX="$(VERIFIER_REAL_GXX)" PATH="$(VERIFIER_GXX_WRAPPER_DIR):$(PATH)"
 
@@ -57,7 +57,7 @@ $(VERIFIER):
 verifier-setup: $(VERIFIER)
 
 verifier-wrapper-test:
-	$(PYTHON) scripts/test_competitive_verifier_gcc15_wrapper.py
+	$(PYTHON) scripts/test_competitive_verifier_gcc13_wrapper.py
 
 header-guard-check:
 	$(PYTHON) scripts/test_check_header_guards.py
