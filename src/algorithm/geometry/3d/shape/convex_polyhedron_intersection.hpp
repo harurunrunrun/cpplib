@@ -7,6 +7,7 @@
 
 #include "convex_hull_3d.hpp"
 #include "../predicate/convex_polyhedron_contains.hpp"
+#include "../predicate/convex_polyhedron_intersects.hpp"
 #include "../query/convex_polyhedron_edges.hpp"
 #include "convex_polyhedron_segment_intersection.hpp"
 #include "../point/cross.hpp"
@@ -78,11 +79,14 @@ inline ConvexPolyhedron3 convex_polyhedron_intersection_via_halfspaces(
     if(first.vertices.empty() || second.vertices.empty()){
         return {-1, {}, {}};
     }
-    return halfspace_intersection_3d(
+    const std::vector<Plane3> halfspaces =
         convex_polyhedron_intersection_detail::combined_halfspaces(
             first, second
-        )
-    );
+        );
+    if(!convex_polyhedron_intersects_exact(first, second)){
+        return {-1, {}, {}};
+    }
+    return halfspace_intersection_3d(halfspaces);
 }
 
 inline ConvexPolyhedron3 convex_polyhedron_intersection(

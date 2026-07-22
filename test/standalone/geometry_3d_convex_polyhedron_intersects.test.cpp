@@ -1,7 +1,10 @@
 // competitive-verifier: STANDALONE
 
+#include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
@@ -44,6 +47,122 @@ bool throws_exception(Function&& function){
     return false;
 }
 
+ConvexPolyhedron3 axis_box(const Point3& center){
+    return {
+        3,
+        {
+            center + Point3{-1, -1, -1},
+            center + Point3{ 1, -1, -1},
+            center + Point3{-1,  1, -1},
+            center + Point3{ 1,  1, -1},
+            center + Point3{-1, -1,  1},
+            center + Point3{ 1, -1,  1},
+            center + Point3{-1,  1,  1},
+            center + Point3{ 1,  1,  1},
+        },
+        {
+            {0, 4, 6}, {0, 6, 2},
+            {1, 3, 7}, {1, 7, 5},
+            {0, 1, 5}, {0, 5, 4},
+            {2, 6, 7}, {2, 7, 3},
+            {0, 2, 3}, {0, 3, 1},
+            {4, 5, 7}, {4, 7, 6},
+        },
+    };
+}
+
+bool checked_exact_answer(
+    const ConvexPolyhedron3& first,
+    const ConvexPolyhedron3& second
+){
+    const bool expected = convex_polyhedron_intersects_exact_sat(
+        first, second
+    );
+    constexpr std::array<std::uint64_t, 12> seeds{
+        0, 1, 2, 3,
+        0x243F6A8885A308D3ULL,
+        0x9E3779B97F4A7C15ULL,
+        0xD1B54A32D192ED03ULL,
+        0x94D049BB133111EBULL,
+        0xBF58476D1CE4E5B9ULL,
+        0xDEADBEEFCAFEBABEULL,
+        0x8000000000000000ULL,
+        std::numeric_limits<std::uint64_t>::max(),
+    };
+    for(const std::uint64_t seed: seeds){
+        if(convex_polyhedron_intersects_exact_with_seed(
+            first, second, seed
+        ) != expected){
+            throw std::runtime_error("seeded exact LP/SAT mismatch");
+        }
+    }
+    if(convex_polyhedron_intersects_exact(first, second) != expected){
+        throw std::runtime_error("random exact LP/SAT mismatch");
+    }
+    return expected;
+}
+
+ConvexPolyhedron3 subdivided_axis_box(
+    const Point3& center,
+    std::size_t division
+){
+    if(division == 0) throw std::invalid_argument("zero box subdivision");
+    const std::size_t width = division + 1;
+    ConvexPolyhedron3 result;
+    result.affine_dimension = 3;
+    result.vertices.reserve(width * width * width);
+    for(std::size_t first = 0; first < width; ++first){
+        for(std::size_t second = 0; second < width; ++second){
+            for(std::size_t third = 0; third < width; ++third){
+                const auto coordinate = [&](std::size_t index){
+                    return -1.0L
+                        + 2.0L * static_cast<long double>(index)
+                        / static_cast<long double>(division);
+                };
+                result.vertices.push_back(center + Point3{
+                    coordinate(first), coordinate(second), coordinate(third)
+                });
+            }
+        }
+    }
+    const auto vertex = [&](std::size_t first, std::size_t second,
+                            std::size_t third){
+        return (first * width + second) * width + third;
+    };
+    for(std::size_t fixed_axis = 0; fixed_axis < 3; ++fixed_axis){
+        const std::size_t first_axis = (fixed_axis + 1) % 3;
+        const std::size_t second_axis = (fixed_axis + 2) % 3;
+        for(const std::size_t fixed: {std::size_t{0}, division}){
+            for(std::size_t first = 0; first < division; ++first){
+                for(std::size_t second = 0; second < division; ++second){
+                    const auto index = [&](std::size_t first_value,
+                                           std::size_t second_value){
+                        std::array<std::size_t, 3> coordinate{};
+                        coordinate[fixed_axis] = fixed;
+                        coordinate[first_axis] = first_value;
+                        coordinate[second_axis] = second_value;
+                        return vertex(
+                            coordinate[0], coordinate[1], coordinate[2]
+                        );
+                    };
+                    const std::size_t lower_left = index(first, second);
+                    const std::size_t lower_right = index(first + 1, second);
+                    const std::size_t upper_right =
+                        index(first + 1, second + 1);
+                    const std::size_t upper_left = index(first, second + 1);
+                    result.faces.push_back({
+                        lower_left, lower_right, upper_right
+                    });
+                    result.faces.push_back({
+                        lower_left, upper_right, upper_left
+                    });
+                }
+            }
+        }
+    }
+    return result;
+}
+
 void self_check(){
     const ConvexPolyhedron3 point{0, {{0, 0, 0}}, {}};
     if(!throws_exception<std::invalid_argument>([&]{
@@ -57,6 +176,10 @@ void self_check(){
     })) throw std::runtime_error("zero iteration limit was accepted");
     if(!throws_exception<std::invalid_argument>([&]{
         (void)convex_polyhedron_intersects_exact(point, point);
+    }) || !throws_exception<std::invalid_argument>([&]{
+        (void)convex_polyhedron_intersects_exact_with_seed(point, point, 0);
+    }) || !throws_exception<std::invalid_argument>([&]{
+        (void)convex_polyhedron_intersects_exact_sat(point, point);
     })) throw std::runtime_error("non-spatial exact input was accepted");
 
     ConvexPolyhedron3 invalid{
@@ -66,6 +189,12 @@ void self_check(){
     };
     if(!throws_exception<std::out_of_range>([&]{
         (void)convex_polyhedron_intersects_exact(invalid, invalid);
+    }) || !throws_exception<std::out_of_range>([&]{
+        (void)convex_polyhedron_intersects_exact_with_seed(
+            invalid, invalid, 0
+        );
+    }) || !throws_exception<std::out_of_range>([&]{
+        (void)convex_polyhedron_intersects_exact_sat(invalid, invalid);
     })) throw std::runtime_error("invalid face index was accepted");
 
     ConvexPolyhedron3 non_finite = point;
@@ -74,6 +203,45 @@ void self_check(){
     if(!throws_exception<std::invalid_argument>([&]{
         (void)convex_polyhedron_intersects(non_finite, point);
     })) throw std::runtime_error("non-finite fast input was accepted");
+
+    const ConvexPolyhedron3 cube = axis_box({});
+    if(!checked_exact_answer(cube, cube)
+        || !checked_exact_answer(cube, axis_box({2, 0, 0}))
+        || !checked_exact_answer(cube, axis_box({2, 2, 0}))
+        || !checked_exact_answer(cube, axis_box({2, 2, 2}))
+        || checked_exact_answer(cube, axis_box({3, 0, 0}))){
+        throw std::runtime_error("face/edge/vertex contact failed");
+    }
+
+    ConvexPolyhedron3 reordered = cube;
+    std::reverse(reordered.faces.begin(), reordered.faces.end());
+    for(auto& face: reordered.faces){
+        std::rotate(face.begin(), face.begin() + 1, face.end());
+        std::swap(face[1], face[2]);
+    }
+    if(!checked_exact_answer(cube, reordered)){
+        throw std::runtime_error("face order/orientation changed result");
+    }
+
+    ConvexPolyhedron3 duplicated = cube;
+    const auto cube_faces = cube.faces;
+    for(std::size_t repetition = 0; repetition < 32; ++repetition){
+        duplicated.faces.insert(
+            duplicated.faces.end(), cube_faces.begin(), cube_faces.end()
+        );
+    }
+    if(!convex_polyhedron_intersects_exact(cube, duplicated)){
+        throw std::runtime_error("duplicate coplanar constraints failed");
+    }
+    for(const std::uint64_t seed: {
+        std::uint64_t{0}, std::numeric_limits<std::uint64_t>::max()
+    }){
+        if(!convex_polyhedron_intersects_exact_with_seed(
+            cube, duplicated, seed
+        )){
+            throw std::runtime_error("duplicate coplanar constraints failed");
+        }
+    }
 
     const long double base = 1.0e3000L;
     const long double next = std::nextafter(
@@ -99,9 +267,24 @@ void self_check(){
     const ConvexPolyhedron3 separated = tetrahedron(
         next_next, next_next_next
     );
-    if(!convex_polyhedron_intersects_exact(extreme, extreme)
-        || convex_polyhedron_intersects_exact(extreme, separated)){
+    if(!checked_exact_answer(extreme, extreme)
+        || checked_exact_answer(extreme, separated)){
         throw std::runtime_error("extreme exact projection failed");
+    }
+
+    const ConvexPolyhedron3 dense = subdivided_axis_box({}, 16);
+    const ConvexPolyhedron3 dense_separated =
+        subdivided_axis_box({4, 0, 0}, 16);
+    for(const std::uint64_t seed: {
+        std::uint64_t{0}, std::uint64_t{0x9E3779B97F4A7C15ULL}
+    }){
+        if(!convex_polyhedron_intersects_exact_with_seed(
+            dense, dense, seed
+        ) || convex_polyhedron_intersects_exact_with_seed(
+            dense, dense_separated, seed
+        )){
+            throw std::runtime_error("large subdivided exact LP failed");
+        }
     }
 }
 
@@ -142,9 +325,10 @@ int main(){
         if(operation == 'B'){
             const ConvexPolyhedron3 first = read_polyhedron();
             const ConvexPolyhedron3 second = read_polyhedron();
+            const bool exact = checked_exact_answer(first, second);
             std::cout
                 << convex_polyhedron_intersects(first, second) << ' '
-                << convex_polyhedron_intersects_exact(first, second) << '\n';
+                << exact << '\n';
         }else if(operation == 'G'){
             const ConvexPolyhedron3 first = read_polyhedron();
             const ConvexPolyhedron3 second = read_polyhedron();

@@ -82,6 +82,13 @@ def tetrahedron(origin: Point, basis: tuple[Point, Point, Point]) -> Polyhedron:
     ]
 
 
+def reordered(polyhedron: Polyhedron) -> Polyhedron:
+    vertices, faces = polyhedron
+    return vertices, [
+        (face[2], face[1], face[0]) for face in reversed(faces)
+    ]
+
+
 def edge_directions(polyhedron: Polyhedron) -> list[Point]:
     vertices, faces = polyhedron
     edges: set[tuple[int, int]] = set()
@@ -189,8 +196,10 @@ def fixed_cases(out_dir: Path) -> None:
     queries = [
         both_query(first, first),
         both_query(first, box((2, 0, 0), unit)),
+        both_query(first, box((2, 2, 0), unit)),
         both_query(first, box((2, 2, 2), unit)),
         both_query(first, box((3, 0, 0), unit)),
+        both_query(first, reordered(first)),
         both_query(box((4, -3, 2), skew), box((6, -1, 1), skew)),
         both_query(box((4, -3, 2), skew), box((40, -30, 20), skew)),
         both_query(
