@@ -5,6 +5,7 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <limits>
 #include <numeric>
 #include <optional>
@@ -171,7 +172,10 @@ inline std::optional<Point3> fixed_coordinate_candidate(
 
 }  // namespace points_in_hemisphere_detail
 
-inline bool points_in_hemisphere(const std::vector<Point3>& points){
+inline bool points_in_hemisphere_with_seed(
+    const std::vector<Point3>& points,
+    std::uint64_t random_seed
+){
     if(points.empty()) return true;
     std::vector<Point3> unit;
     unit.reserve(points.size());
@@ -186,8 +190,7 @@ inline bool points_in_hemisphere(const std::vector<Point3>& points){
     std::vector<std::size_t> order(unit.size());
     std::iota(order.begin(), order.end(), std::size_t{0});
     std::mt19937_64 random_engine(
-        0xD1B54A32D192ED03ULL
-        ^ static_cast<std::uint64_t>(unit.size())
+        random_seed ^ static_cast<std::uint64_t>(unit.size())
     );
     std::shuffle(order.begin(), order.end(), random_engine);
 
@@ -217,6 +220,12 @@ inline bool points_in_hemisphere(const std::vector<Point3>& points){
         }
     }
     return false;
+}
+
+inline bool points_in_hemisphere(const std::vector<Point3>& points){
+    return points_in_hemisphere_with_seed(
+        points, 0xD1B54A32D192ED03ULL
+    );
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POINTS_IN_HEMISPHERE_HPP_INCLUDED

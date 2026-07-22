@@ -1,7 +1,9 @@
 // competitive-verifier: STANDALONE
 
+#include <array>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <limits>
 #include <stdexcept>
 #include <vector>
@@ -58,7 +60,10 @@ int main(){
     return geometry3d_api_test_main([](
         std::mt19937_64& random, std::size_t rounds
     ){
+        constexpr std::uint64_t default_seed =
+            0xD1B54A32D192ED03ULL;
         if(!points_in_hemisphere({})
+            || !points_in_hemisphere_with_seed({}, 0)
             || !points_in_hemisphere({{1, 0, 0}, {-1, 0, 0}})
             || !points_in_hemisphere({
                 {1, 0, 0}, {0, 1, 0}, {-1, 0, 0}, {0, -1, 0}
@@ -68,6 +73,34 @@ int main(){
                 {1, 0, 0}, {-1, 0, 0}, {0, 1, 0},
                 {0, -1, 0}, {0, 0, 1}, {0, 0, -1}
             })) return false;
+
+        const std::array<std::uint64_t, 6> lp_seeds{
+            0, 1, default_seed, 0x9E3779B97F4A7C15ULL,
+            random(), random(),
+        };
+        const std::vector<std::vector<Point3>> degenerate_cases{
+            {},
+            {{1, 0, 0}},
+            {{1, 0, 0}, {1, 0, 0}, {-1, 0, 0}},
+            {{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}},
+            {{1, 1, 1}, {1, -1, -1}, {-1, 1, -1}, {-1, -1, 1}},
+            {{1, 0, 0}, {-1, 0, 0}, {0, 1, 0},
+             {0, -1, 0}, {0, 0, 1}, {0, 0, -1}},
+        };
+        for(const auto& points: degenerate_cases){
+            const bool expected = brute_points_in_hemisphere(points);
+            const bool legacy = points_in_hemisphere(points);
+            if(legacy != expected
+                || points_in_hemisphere_with_seed(points, default_seed)
+                    != legacy) return false;
+            for(const std::uint64_t seed: lp_seeds){
+                const bool result =
+                    points_in_hemisphere_with_seed(points, seed);
+                if(result != expected
+                    || points_in_hemisphere_with_seed(points, seed)
+                        != result) return false;
+            }
+        }
 
         const long double machine_epsilon =
             std::numeric_limits<long double>::epsilon();
@@ -100,7 +133,15 @@ int main(){
         }catch(const std::invalid_argument&){
             zero_rejected = true;
         }
-        if(!zero_rejected) return false;
+        bool seeded_zero_rejected = false;
+        try{
+            static_cast<void>(points_in_hemisphere_with_seed(
+                {{0, 0, 0}}, random()
+            ));
+        }catch(const std::invalid_argument&){
+            seeded_zero_rejected = true;
+        }
+        if(!zero_rejected || !seeded_zero_rejected) return false;
 
         const std::vector<Point3> catalogue{
             {1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0},
@@ -116,8 +157,12 @@ int main(){
                     subset.push_back(catalogue[index]);
                 }
             }
-            if(points_in_hemisphere(subset)
-                != brute_points_in_hemisphere(subset)) return false;
+            const bool expected = brute_points_in_hemisphere(subset);
+            if(points_in_hemisphere(subset) != expected) return false;
+            for(const std::uint64_t seed: lp_seeds){
+                if(points_in_hemisphere_with_seed(subset, seed)
+                    != expected) return false;
+            }
         }
 
         for(std::size_t iteration = 0; iteration < rounds; ++iteration){
@@ -134,9 +179,11 @@ int main(){
                     points.push_back(point);
                 }
             }
-            if(points_in_hemisphere(points)
-                != brute_points_in_hemisphere(points)){
-                return false;
+            const bool expected = brute_points_in_hemisphere(points);
+            if(points_in_hemisphere(points) != expected) return false;
+            for(const std::uint64_t seed: lp_seeds){
+                if(points_in_hemisphere_with_seed(points, seed)
+                    != expected) return false;
             }
         }
 
@@ -155,6 +202,9 @@ int main(){
                 });
             }
             if(!points_in_hemisphere(points)) return false;
+            for(const std::uint64_t seed: lp_seeds){
+                if(!points_in_hemisphere_with_seed(points, seed)) return false;
+            }
         }
 
         if(rounds == 32){
@@ -169,6 +219,11 @@ int main(){
                 adversarial.push_back(tetrahedron[index % 4]);
             }
             if(points_in_hemisphere(adversarial)) return false;
+            for(const std::uint64_t seed: lp_seeds){
+                if(points_in_hemisphere_with_seed(adversarial, seed)){
+                    return false;
+                }
+            }
 
             std::vector<Point3> upper;
             upper.reserve(size);
@@ -180,6 +235,9 @@ int main(){
                 upper.push_back({x, y, 1.0L});
             }
             if(!points_in_hemisphere(upper)) return false;
+            for(const std::uint64_t seed: lp_seeds){
+                if(!points_in_hemisphere_with_seed(upper, seed)) return false;
+            }
         }
         return true;
     });
