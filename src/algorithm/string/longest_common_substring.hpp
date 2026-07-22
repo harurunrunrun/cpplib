@@ -1,6 +1,9 @@
 #ifndef CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_STRING_LONGEST_COMMON_SUBSTRING_HPP_INCLUDED
 
+#include <cstddef>
+#include <limits>
+#include <stdexcept>
 #include <string>
 
 #include "suffix_automaton.hpp"
@@ -12,6 +15,12 @@ struct LongestCommonSubstringResult{
 };
 
 inline LongestCommonSubstringResult longest_common_substring(const std::string& a, const std::string& b){
+    if(a.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()) ||
+       b.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())){
+        throw std::length_error(
+            "library assertion fault: input string is too long."
+        );
+    }
     using suffix_automaton_internal::ByteSuffixAutomaton;
     const ByteSuffixAutomaton automaton(a);
     LongestCommonSubstringResult best{0, 0, 0};

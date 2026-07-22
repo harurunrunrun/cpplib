@@ -40,6 +40,18 @@ def main() -> None:
         "\n".join(str(solve_brute(text, length)) for length, text in cases) + "\n",
         encoding="ascii",
     )
+    size = 300_000
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    periodic = (alphabet * (size // len(alphabet) + 1))[:size]
+    large_cases = [(size // 2, "a" * size), (size // 2, periodic)]
+    (out_dir / "case_01.in").write_text(
+        "\n".join(
+            ["2", *(f"{length} {text}" for length, text in large_cases)]
+        ) + "\n",
+        encoding="ascii",
+    )
+    (out_dir / "case_01.out").write_text("1\n26\n", encoding="ascii")
+
 
 
 if __name__ == "__main__":

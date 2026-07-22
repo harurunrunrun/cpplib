@@ -33,6 +33,27 @@ def main() -> None:
         "\n".join(" ".join(map(str, solve_brute(text))) for text in texts) + "\n",
         encoding="ascii",
     )
+    size = 300_000
+    periodic = (
+        string.ascii_lowercase
+        * (size // len(string.ascii_lowercase) + 1)
+    )[:size]
+    large_texts = ["a" * size, periodic]
+    large_answers = [
+        [size] + [0] * 25,
+        [size - offset for offset in range(26)],
+    ]
+    (out_dir / "case_01.in").write_text(
+        "\n".join(["2", *large_texts]) + "\n",
+        encoding="ascii",
+    )
+    (out_dir / "case_01.out").write_text(
+        "\n".join(
+            " ".join(map(str, answer)) for answer in large_answers
+        ) + "\n",
+        encoding="ascii",
+    )
+
 
 
 if __name__ == "__main__":

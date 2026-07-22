@@ -14,6 +14,9 @@ int main(){
     assert(count_distinct_substrings_of_length(std::string("abac"), 2) == 3);
     assert(count_distinct_substrings_of_length(std::string("abc"), 0) == 0);
     assert(count_distinct_substrings_of_length(std::string("abc"), 4) == 0);
+    const std::string bytes("\xff\x80\xff\0", 4);
+    assert(count_distinct_substrings_of_length(bytes, 1) == 3);
+    assert(count_distinct_substrings_of_length(bytes, 2) == 3);
     assert(count_distinct_substrings_of_length(
         std::vector<int>{1, 2, 1, 2}, 2
     ) == 2);

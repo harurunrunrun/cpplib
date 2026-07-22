@@ -12,6 +12,9 @@ int main(){
     assert(count_distinct_substrings(std::string("a")) == 1);
     assert(count_distinct_substrings(std::string("aaa")) == 3);
     assert(count_distinct_substrings(std::string("banana")) == 15);
+    assert(count_distinct_substrings(
+        std::string("\xff\x80\xff\0", 4)
+    ) == 9);
     assert(count_distinct_substrings(std::vector<int>{1, 2, 1}) == 5);
 
     int test_count;

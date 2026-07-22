@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <array>
 #include <cstddef>
+#include <limits>
 #include <span>
 #include <stdexcept>
 #include <string>
@@ -291,6 +292,12 @@ public:
     ByteSuffixAutomaton() = default;
 
     explicit ByteSuffixAutomaton(std::string_view text){
+        if(text.size() >
+           static_cast<std::size_t>(std::numeric_limits<int>::max())){
+            throw std::length_error(
+                "library assertion fault: text is too long."
+            );
+        }
         states_.reserve(2 * text.size() + 1);
         int position = 0;
         for(const unsigned char byte: text) extend(byte, position++);

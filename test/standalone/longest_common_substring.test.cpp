@@ -37,6 +37,14 @@ bool valid_result(
 } // namespace
 
 int main(){
+    const std::string byte_first("\xff\0\x80\xff", 4);
+    const std::string byte_second("\x7f\0\x80\xff\x01", 5);
+    const auto byte_result = longest_common_substring(
+        byte_first, byte_second
+    );
+    if(byte_result.first_pos != 1 || byte_result.second_pos != 1 ||
+       byte_result.length != 3) return 1;
+
     int case_count;
     if(!(std::cin >> case_count) || case_count < 0) return 2;
     for(int index = 0; index < case_count; ++index){
