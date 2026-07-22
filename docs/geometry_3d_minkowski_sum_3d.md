@@ -52,13 +52,14 @@ $F_i,E_i$ とする。三角形分割内の共面对角線は $E_i$ に含めな
   $O(P\log P+K)$、期待追加領域 $O(P+K)$。固定seedに対する最悪上界は
   `minkowski_sum_3d` と同じ。
 
-- `minkowski_sum_3d_direct`: 既存のfacet統合が
-  $O(T_1\log T_1+T_2\log T_2)$、支持頂点探索と法線fanのoverlayが
+- `minkowski_sum_3d_direct`: facet統合が $O(V_1+V_2+T_1+T_2)$、
+  支持頂点探索と法線fanのoverlayが
   $O(F_1V_2+F_2V_1+E_1E_2)$、出力構築が期待 $O(K)$。
-  したがって全体の期待時間は
-  $O(T_1\log T_1+T_2\log T_2+F_1V_2+F_2V_1+E_1E_2+K)$、
-  追加領域は $O(T_1+T_2+K)$ である。hash tableの衝突が集中した場合の
-  最悪時間は線形ではない。
+  したがって、入力サイズを $N_i=V_i+T_i+E_i+F_i$ とすると全体の
+  期待時間は
+  $O(T_1+T_2+F_1V_2+F_2V_1+E_1E_2+K)=O(N_1N_2+K)$、
+  追加領域は $O(V_1+V_2+T_1+T_2+K)$ である。出力構築用hash tableの
+  衝突が集中した場合の最悪時間は線形ではない。
 
 候補点の生成自体は時間・領域ともに $O(P)$ である。
 
