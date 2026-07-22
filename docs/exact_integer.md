@@ -80,7 +80,8 @@ ExactInteger& operator*=(Integer value);
 | ExactInteger同士の `*`, `*=` | NTT範囲では $O(P\log P)$、それ以外の長さが同程度なら $O(P^{\log_3 5})$、最悪 $O(P^{\log_2 3})$ | $O(P)$ |
 | 組み込み整数を右辺に取る `+=`, `-=`, `*=` | $O(L)$ | $O(L)$ |
 
-短い方が32 limb以下なら学校式、それ以外はKaratsuba法を使う。
+短い方が32 limb以下なら学校式を使い、それより長い場合は
+以下の条件でNTT・Toom-Cook-3・Karatsuba法を切り替える。
 短い方が512 limb以上かつ共通の $2^{21}$ 乗根で扱える長さなら、15bit digitへ
 変換して2個のNTT素数で畳み込み、CRTで整数係数を一意に復元する。この経路は
 $O(P\log P)$ 時間、$O(P)$ 追加領域であり、浮動小数点誤差を持たない。
