@@ -10,6 +10,28 @@
 
 #include "gf2_linear_state_cracker.hpp"
 
+struct Xorshift128PlusState{
+    std::uint64_t first = 0;
+    std::uint64_t second = 0;
+
+    friend constexpr bool operator==(
+        const Xorshift128PlusState&,
+        const Xorshift128PlusState&
+    ) = default;
+};
+
+constexpr std::uint64_t xorshift128plus_next(
+    Xorshift128PlusState& state
+) noexcept{
+    std::uint64_t first = state.first;
+    const std::uint64_t second = state.second;
+    const std::uint64_t result = first + second;
+    state.first = second;
+    first ^= first << 23;
+    state.second = first ^ second ^ (first >> 18) ^ (second >> 5);
+    return result;
+}
+
 struct Xoroshiro128PlusState{
     std::uint64_t first = 0;
     std::uint64_t second = 0;
@@ -29,6 +51,29 @@ constexpr std::uint64_t xoroshiro128plus_next(
     second ^= first;
     state.first = std::rotl(first, 55) ^ second ^ (second << 14);
     state.second = std::rotl(second, 36);
+    return result;
+}
+
+struct Xoshiro256PlusState{
+    std::array<std::uint64_t, 4> words{};
+
+    friend constexpr bool operator==(
+        const Xoshiro256PlusState&,
+        const Xoshiro256PlusState&
+    ) = default;
+};
+
+constexpr std::uint64_t xoshiro256plus_next(
+    Xoshiro256PlusState& state
+) noexcept{
+    const std::uint64_t result = state.words[0] + state.words[3];
+    const std::uint64_t shifted = state.words[1] << 17;
+    state.words[2] ^= state.words[0];
+    state.words[3] ^= state.words[1];
+    state.words[1] ^= state.words[2];
+    state.words[0] ^= state.words[3];
+    state.words[2] ^= shifted;
+    state.words[3] = std::rotl(state.words[3], 45);
     return result;
 }
 
@@ -62,8 +107,23 @@ constexpr std::uint32_t well512a_next(Well512aState& state) noexcept{
 
 namespace linear_prng_lsb_cracker_internal{
 
+using XorshiftCracker = Gf2LinearStateCracker<128>;
 using XoroshiroCracker = Gf2LinearStateCracker<128>;
+using XoshiroCracker = Gf2LinearStateCracker<256>;
 using WellCracker = Gf2LinearStateCracker<512>;
+
+inline const XorshiftCracker& xorshift_cracker(){
+    static const XorshiftCracker cracker(
+        [](XorshiftCracker::state_type& packed, std::size_t){
+            Xorshift128PlusState state{packed[0], packed[1]};
+            const bool result = (xorshift128plus_next(state) & 1U) != 0;
+            packed[0] = state.first;
+            packed[1] = state.second;
+            return result;
+        }
+    );
+    return cracker;
+}
 
 inline const XoroshiroCracker& xoroshiro_cracker(){
     static const XoroshiroCracker cracker(
@@ -72,6 +132,18 @@ inline const XoroshiroCracker& xoroshiro_cracker(){
             const bool result = (xoroshiro128plus_next(state) & 1U) != 0;
             packed[0] = state.first;
             packed[1] = state.second;
+            return result;
+        }
+    );
+    return cracker;
+}
+
+inline const XoshiroCracker& xoshiro_cracker(){
+    static const XoshiroCracker cracker(
+        [](XoshiroCracker::state_type& packed, std::size_t){
+            Xoshiro256PlusState state{packed};
+            const bool result = (xoshiro256plus_next(state) & 1U) != 0;
+            packed = state.words;
             return result;
         }
     );
@@ -105,15 +177,35 @@ inline const WellCracker& well_cracker(){
 
 }
 
+inline constexpr std::size_t xorshift128plus_lsb_observation_count = 128;
 inline constexpr std::size_t xoroshiro128plus_lsb_observation_count = 128;
+inline constexpr std::size_t xoshiro256plus_lsb_observation_count = 256;
 inline constexpr std::size_t well512a_lsb_observation_count = 512;
+
+inline std::size_t xorshift128plus_lsb_observation_rank(){
+    return linear_prng_lsb_cracker_internal::xorshift_cracker().rank();
+}
 
 inline std::size_t xoroshiro128plus_lsb_observation_rank(){
     return linear_prng_lsb_cracker_internal::xoroshiro_cracker().rank();
 }
 
+inline std::size_t xoshiro256plus_lsb_observation_rank(){
+    return linear_prng_lsb_cracker_internal::xoshiro_cracker().rank();
+}
+
 inline std::size_t well512a_lsb_observation_rank(){
     return linear_prng_lsb_cracker_internal::well_cracker().rank();
+}
+
+inline Xorshift128PlusState recover_xorshift128plus_state_from_lsb(
+    std::span<const std::uint8_t> consecutive_output_lsb
+){
+    const auto packed =
+        linear_prng_lsb_cracker_internal::xorshift_cracker().recover(
+            consecutive_output_lsb
+        );
+    return {packed[0], packed[1]};
 }
 
 inline Xoroshiro128PlusState recover_xoroshiro128plus_state_from_lsb(
@@ -124,6 +216,16 @@ inline Xoroshiro128PlusState recover_xoroshiro128plus_state_from_lsb(
             consecutive_output_lsb
         );
     return {packed[0], packed[1]};
+}
+
+inline Xoshiro256PlusState recover_xoshiro256plus_state_from_lsb(
+    std::span<const std::uint8_t> consecutive_output_lsb
+){
+    return {
+        linear_prng_lsb_cracker_internal::xoshiro_cracker().recover(
+            consecutive_output_lsb
+        )
+    };
 }
 
 inline Well512aState recover_well512a_state_from_lsb(
