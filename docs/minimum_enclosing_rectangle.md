@@ -1,6 +1,6 @@
 ---
 title: Minimum Enclosing Rectangle (最小外接長方形)
-documentation_of: ../src/algorithm/geometry/2d/minimum_enclosing_rectangle.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/minimum_enclosing_rectangle.hpp
 ---
 
 ## API

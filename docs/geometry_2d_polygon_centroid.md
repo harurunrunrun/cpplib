@@ -1,6 +1,6 @@
 ---
 title: 2D Polygon Centroid (二次元多角形の面積重心)
-documentation_of: ../src/algorithm/geometry/2d/polygon_centroid.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/polygon_centroid.hpp
 ---
 
 ## API

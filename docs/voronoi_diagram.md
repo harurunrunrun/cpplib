@@ -1,6 +1,6 @@
 ---
 title: 2D Voronoi Diagram (二次元Voronoi図)
-documentation_of: ../src/algorithm/geometry/2d/voronoi_diagram.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/voronoi_diagram.hpp
 ---
 
 ## API

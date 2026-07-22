@@ -1,6 +1,6 @@
 ---
 title: 2D Geometry Constants (二次元幾何定数)
-documentation_of: ../src/algorithm/geometry/2d/constants.hpp
+documentation_of: ../src/algorithm/geometry/2d/core/constants.hpp
 ---
 
 二次元幾何で共有する誤差定数。

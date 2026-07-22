@@ -5,8 +5,8 @@
 #include <random>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/orthonormal_basis_3d.hpp"
-#include "../../src/algorithm/geometry/3d/dot.hpp"
+#include "../../src/algorithm/geometry/3d/point_collection/orthonormal_basis_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/dot.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/2d/view_cone_contains.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/view_cone_contains.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

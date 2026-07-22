@@ -1,6 +1,6 @@
 ---
 title: To Plane Coordinates 3D (三次元点の平面座標変換)
-documentation_of: ../src/algorithm/geometry/3d/to_plane_coordinates.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/to_plane_coordinates.hpp
 ---
 
 ## API

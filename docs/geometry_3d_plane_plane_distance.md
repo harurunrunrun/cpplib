@@ -1,6 +1,6 @@
 ---
 title: Distance between 3D Plane and Plane (三次元平面同士の距離)
-documentation_of: ../src/algorithm/geometry/3d/plane_plane_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/plane_plane_distance.hpp
 ---
 
 ## API

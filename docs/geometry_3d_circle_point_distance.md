@@ -1,6 +1,6 @@
 ---
 title: Point to 3D Circle Distance (点と三次元円の距離)
-documentation_of: ../src/algorithm/geometry/3d/circle_point_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/circle_point_distance.hpp
 ---
 
 ## API

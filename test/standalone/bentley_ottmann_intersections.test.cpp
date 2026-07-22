@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/bentley_ottmann_intersections.hpp"
+#include "../../src/algorithm/geometry/2d/shape/bentley_ottmann_intersections.hpp"
 
 #include <iostream>
 #include <vector>

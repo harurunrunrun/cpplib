@@ -1,6 +1,6 @@
 ---
 title: 3D Least-Squares Plane (三次元最小二乗平面)
-documentation_of: ../src/algorithm/geometry/3d/least_squares_plane.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/least_squares_plane.hpp
 ---
 
 点から平面までの直交距離の二乗和を最小化するtotal least-squares平面を求める。

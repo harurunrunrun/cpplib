@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/voronoi_diagram.hpp"
+#include "../../src/algorithm/geometry/2d/shape/voronoi_diagram.hpp"
 
 namespace{
 

@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circumcircle.hpp"
+#include "../../src/algorithm/geometry/2d/shape/circumcircle.hpp"
 
 int main(){
     Point a, b, c;

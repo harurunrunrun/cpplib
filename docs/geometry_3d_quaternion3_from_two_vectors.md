@@ -1,6 +1,6 @@
 ---
 title: Quaternion between Two Vectors (二ベクトル間の最短回転)
-documentation_of: ../src/algorithm/geometry/3d/quaternion3_from_two_vectors.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/quaternion3_from_two_vectors.hpp
 ---
 
 ## API

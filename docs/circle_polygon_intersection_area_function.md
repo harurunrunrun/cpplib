@@ -1,6 +1,6 @@
 ---
 title: Circle-Polygon Intersection Area Function (円と多角形の共通部分面積関数)
-documentation_of: ../src/algorithm/geometry/2d/circle_polygon_intersection_area/circle_polygon_intersection_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/circle_polygon_intersection_area_value.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Circle3 to 2D (三次元円の二次元化)
-documentation_of: ../src/algorithm/geometry/3d/circle3_to_2d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/circle3_to_2d.hpp
 ---
 
 ## API

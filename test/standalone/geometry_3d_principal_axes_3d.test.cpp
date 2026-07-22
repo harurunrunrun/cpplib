@@ -7,8 +7,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/principal_axes_3d.hpp"
-#include "../../src/algorithm/geometry/3d/dot.hpp"
+#include "../../src/algorithm/geometry/3d/query/principal_axes_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/dot.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

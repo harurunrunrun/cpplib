@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/advanced/convex_polygon_minkowski_difference.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/convex_polygon_minkowski_difference.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

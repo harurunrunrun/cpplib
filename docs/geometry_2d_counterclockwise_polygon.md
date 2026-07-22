@@ -1,6 +1,6 @@
 ---
 title: Counterclockwise Polygon (多角形の反時計回り化)
-documentation_of: ../src/algorithm/geometry/2d/counterclockwise_polygon.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/counterclockwise_polygon.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Circle-Segment Intersection Count (円と線分の交点数)
-documentation_of: ../src/algorithm/geometry/2d/circle_segment_intersection_count.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/circle_segment_intersection_count.hpp
 ---
 
 ## API

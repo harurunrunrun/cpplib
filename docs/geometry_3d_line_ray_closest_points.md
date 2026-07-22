@@ -1,6 +1,6 @@
 ---
 title: Closest Points between 3D Line and Ray (三次元直線と半直線の最近点対)
-documentation_of: ../src/algorithm/geometry/3d/line_ray_closest_points.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/line_ray_closest_points.hpp
 ---
 
 ## API

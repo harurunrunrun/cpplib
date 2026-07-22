@@ -1,6 +1,6 @@
 ---
 title: Sort Points by Argument (偏角ソート) [sort_points_by_argument]
-documentation_of: ../src/algorithm/geometry/2d/sort_points_by_argument.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/sort_points_by_argument.hpp
 ---
 
 2次元vectorを偏角順にsortする。三角関数を使わず、半平面と外積だけを比較する。

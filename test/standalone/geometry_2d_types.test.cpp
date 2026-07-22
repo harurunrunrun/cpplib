@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/types.hpp"
+#include "../../src/algorithm/geometry/2d/core/types.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <string>

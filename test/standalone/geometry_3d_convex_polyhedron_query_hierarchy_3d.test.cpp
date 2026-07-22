@@ -10,12 +10,12 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_closest_point.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_support_point.hpp"
-#include "../../src/algorithm/geometry/3d/distance.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/point/convex_polyhedron_closest_point.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/convex_polyhedron_contains.hpp"
+#include "../../src/algorithm/geometry/3d/query/convex_polyhedron_query_hierarchy_3d.hpp"
+#include "../../src/algorithm/geometry/3d/point/convex_polyhedron_support_point.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/distance.hpp"
 
 namespace{
 

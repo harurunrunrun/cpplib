@@ -1,6 +1,6 @@
 ---
 title: Find Any Segment Intersection (任意の線分交差)
-documentation_of: ../src/algorithm/geometry/2d/find_any_segment_intersection.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/find_any_segment_intersection.hpp
 ---
 
 交差する線分対が存在するかを平面走査で調べ、見つかった一組を返す。

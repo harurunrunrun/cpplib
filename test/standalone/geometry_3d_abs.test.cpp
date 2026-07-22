@@ -4,7 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/abs.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/abs.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/same_line.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/same_line.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

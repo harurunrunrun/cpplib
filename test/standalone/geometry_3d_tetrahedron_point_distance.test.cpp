@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/tetrahedron_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/tetrahedron_point_distance.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

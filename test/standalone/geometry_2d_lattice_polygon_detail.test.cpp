@@ -1,5 +1,5 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/lattice_polygon_detail.hpp"
+#include "../../src/algorithm/geometry/2d/detail/lattice_polygon_arithmetic_detail.hpp"
 #include <iostream>
 #include <vector>
 static void print_u128(__uint128_t value){ if(value>=10)print_u128(value/10);std::cout<<char('0'+value%10); }

@@ -1,11 +1,11 @@
 ---
 title: Advanced Convex Geometry (高度な凸幾何)
-documentation_of: ../src/algorithm/geometry/2d/advanced_convex_geometry.hpp
+documentation_of: ../src/algorithm/geometry/2d/core/advanced_convex_geometry.hpp
 ---
 
 geometry.hpp の Point と Line を用いる高度な凸幾何である。
 
-    #include "src/algorithm/geometry/2d/advanced_convex_geometry.hpp"
+    #include "src/algorithm/geometry/2d/core/advanced_convex_geometry.hpp"
 
 ## 凸多角形の正規化
 

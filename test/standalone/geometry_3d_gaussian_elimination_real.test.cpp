@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/gaussian_elimination_real.hpp"
+#include "../../src/algorithm/geometry/3d/query/gaussian_elimination_real.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

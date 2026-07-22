@@ -3,7 +3,7 @@
 #include <cmath>
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/quaternion3.hpp"
+#include "../../src/algorithm/geometry/3d/core/quaternion3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

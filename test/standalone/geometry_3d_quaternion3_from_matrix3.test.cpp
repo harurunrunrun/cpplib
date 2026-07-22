@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/quaternion3_from_axis_angle.hpp"
-#include "../../src/algorithm/geometry/3d/quaternion3_from_matrix3.hpp"
-#include "../../src/algorithm/geometry/3d/quaternion3_to_matrix3.hpp"
+#include "../../src/algorithm/geometry/3d/shape/quaternion3_from_axis_angle.hpp"
+#include "../../src/algorithm/geometry/3d/shape/quaternion3_from_matrix3.hpp"
+#include "../../src/algorithm/geometry/3d/shape/quaternion3_to_matrix3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

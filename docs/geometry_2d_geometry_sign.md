@@ -1,6 +1,6 @@
 ---
 title: 2D Geometry Sign (二次元幾何の符号判定)
-documentation_of: ../src/algorithm/geometry/2d/geometry_sign.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/geometry_sign.hpp
 ---
 
 浮動小数値を許容誤差付きで符号化する。

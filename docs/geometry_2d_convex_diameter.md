@@ -1,6 +1,6 @@
 ---
 title: 2D Convex Diameter (二次元凸多角形の直径) [CGL_4_B]
-documentation_of: ../src/algorithm/geometry/2d/convex_diameter.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/convex_diameter.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Visibility Graph (可視グラフ)
-documentation_of: ../src/algorithm/geometry/2d/visibility_graph.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/visibility_graph.hpp
 ---
 
 単純多角形の頂点同士を、多角形の内部または境界だけを通る直接の線分で結ぶ可視グラフを構築する。

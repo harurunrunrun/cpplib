@@ -1,6 +1,6 @@
 ---
 title: Visibility Polygon (可視領域多角形)
-documentation_of: ../src/algorithm/geometry/2d/visibility_polygon.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/visibility_polygon.hpp
 ---
 
 単純多角形の内部にある観測点から、遮られずに見える領域の境界を求める。

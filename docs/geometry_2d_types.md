@@ -1,6 +1,6 @@
 ---
 title: 2D Geometry Types (二次元幾何の基本型)
-documentation_of: ../src/algorithm/geometry/2d/types.hpp
+documentation_of: ../src/algorithm/geometry/2d/core/types.hpp
 ---
 
 点、直線、線分、円を表す基本型。

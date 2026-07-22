@@ -1,6 +1,6 @@
 ---
 title: Spherical Polygon Area (球面多角形面積)
-documentation_of: ../src/algorithm/geometry/3d/spherical_polygon_area.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/spherical_polygon_area.hpp
 ---
 
 ## API

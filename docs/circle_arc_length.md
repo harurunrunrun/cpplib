@@ -1,6 +1,6 @@
 ---
 title: Circle Arc Length (円弧長)
-documentation_of: ../src/algorithm/geometry/2d/circle_arc_length.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/circle_arc_length.hpp
 ---
 
 ## API

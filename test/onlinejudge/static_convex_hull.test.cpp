@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/convex_hull.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/convex_hull.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

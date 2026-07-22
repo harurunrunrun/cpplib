@@ -1,6 +1,6 @@
 ---
 title: Point Side of 3D Plane (三次元平面に対する点の向き)
-documentation_of: ../src/algorithm/geometry/3d/plane_side.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/plane_side.hpp
 ---
 
 ## API

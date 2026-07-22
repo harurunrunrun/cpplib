@@ -1,6 +1,6 @@
 ---
 title: Side of Directed Line (有向直線の左右判定)
-documentation_of: ../src/algorithm/geometry/2d/side_of_directed_line.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/side_of_directed_line.hpp
 ---
 
 ## API

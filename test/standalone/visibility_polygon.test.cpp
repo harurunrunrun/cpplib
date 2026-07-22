@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/visibility_polygon.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/visibility_polygon.hpp"
 
 namespace{
 

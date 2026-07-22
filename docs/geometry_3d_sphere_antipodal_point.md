@@ -1,6 +1,6 @@
 ---
 title: Antipodal Point on 3D Sphere (三次元球面上の反対点)
-documentation_of: ../src/algorithm/geometry/3d/sphere_antipodal_point.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/sphere_antipodal_point.hpp
 ---
 
 ## API

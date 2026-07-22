@@ -1,6 +1,6 @@
 ---
 title: Spherical Polygon Containment (球面多角形の包含判定)
-documentation_of: ../src/algorithm/geometry/3d/spherical_polygon_contains.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/spherical_polygon_contains.hpp
 ---
 
 ## API

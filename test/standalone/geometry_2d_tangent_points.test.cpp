@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/tangent_points.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/tangent_points.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

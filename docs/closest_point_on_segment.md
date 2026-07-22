@@ -1,6 +1,6 @@
 ---
 title: Closest Point on Segment (線分上の最近点)
-documentation_of: ../src/algorithm/geometry/2d/closest_point_on_segment.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/closest_point_on_segment.hpp
 ---
 
 ## API

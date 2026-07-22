@@ -1,6 +1,6 @@
 ---
 title: Point on 3D Circle (三次元円周上判定)
-documentation_of: ../src/algorithm/geometry/3d/on_circle.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/on_circle.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 2D Circle-Segment Cross Points (二次元円と線分の交点)
-documentation_of: ../src/algorithm/geometry/2d/circle_segment_cross_points.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/circle_segment_cross_points.hpp
 ---
 
 ## API

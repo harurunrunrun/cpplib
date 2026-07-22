@@ -1,6 +1,6 @@
 ---
 title: 2D Line Direction Relation (二次元直線方向関係) [CGL_2_A]
-documentation_of: ../src/algorithm/geometry/2d/line_direction_relation.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/line_direction_relation.hpp
 ---
 
 ## API

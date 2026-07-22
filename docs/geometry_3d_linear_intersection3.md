@@ -1,6 +1,6 @@
 ---
 title: 3D Linear Intersection Result (三次元線形図形の交差集合型)
-documentation_of: ../src/algorithm/geometry/3d/linear_intersection3.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/linear_intersection3.hpp
 ---
 
 ## API

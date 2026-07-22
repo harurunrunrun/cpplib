@@ -1,6 +1,6 @@
 ---
 title: 3D Ray-Sphere Intersections (三次元半直線と球面の交点)
-documentation_of: ../src/algorithm/geometry/3d/ray_sphere_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/ray_sphere_intersections.hpp
 ---
 
 ## API

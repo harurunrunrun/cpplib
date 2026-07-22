@@ -1,6 +1,6 @@
 ---
 title: 3D Scalar Triple Product (三次元スカラー三重積)
-documentation_of: ../src/algorithm/geometry/3d/scalar_triple.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/scalar_triple.hpp
 ---
 
 ## API

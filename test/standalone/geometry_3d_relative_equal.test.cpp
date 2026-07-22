@@ -3,7 +3,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/relative_equal.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/relative_equal.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

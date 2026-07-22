@@ -1,6 +1,6 @@
 ---
 title: Polygon-Line Intersections (多角形と直線の交点)
-documentation_of: ../src/algorithm/geometry/2d/polygon_line_intersections.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/polygon_line_intersections.hpp
 ---
 
 ## API

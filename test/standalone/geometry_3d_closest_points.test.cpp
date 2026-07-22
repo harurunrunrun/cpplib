@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/point_collection/closest_points.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_test_common.hpp"
 

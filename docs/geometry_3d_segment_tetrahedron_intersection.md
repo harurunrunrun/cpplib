@@ -1,6 +1,6 @@
 ---
 title: 3D Segment and Tetrahedron Intersection (三次元線分と四面体の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/segment_tetrahedron_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/segment_tetrahedron_intersection.hpp
 ---
 
 ## API

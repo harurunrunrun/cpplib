@@ -1,6 +1,6 @@
 ---
 title: 3D Sphere Projection (三次元球面への射影)
-documentation_of: ../src/algorithm/geometry/3d/sphere_projection.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/sphere_projection.hpp
 ---
 
 ## API

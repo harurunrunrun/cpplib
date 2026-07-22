@@ -1,6 +1,6 @@
 ---
 title: 3D Convex Hull, Legacy Divide-and-Conquer API (三次元凸包・旧分割統治API)
-documentation_of: ../src/algorithm/geometry/3d/divide_and_conquer_convex_hull_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/divide_and_conquer_convex_hull_3d.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 2D Triangle Centroid (二次元三角形の重心)
-documentation_of: ../src/algorithm/geometry/2d/triangle_centroid.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/triangle_centroid.hpp
 ---
 
 ## API

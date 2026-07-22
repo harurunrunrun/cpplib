@@ -3,7 +3,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/centroid.hpp"
+#include "../../src/algorithm/geometry/3d/point/centroid.hpp"
 #include "geometry_3d_test_common.hpp"
 
 namespace{

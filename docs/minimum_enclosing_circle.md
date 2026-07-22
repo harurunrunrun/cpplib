@@ -1,6 +1,6 @@
 ---
 title: Minimum Enclosing Circle (最小包含円)
-documentation_of: ../src/algorithm/geometry/2d/minimum_enclosing_circle.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/minimum_enclosing_circle.hpp
 ---
 
 点集合をすべて含む最小半径の円を、固定seedのrandomized incremental法で求める。

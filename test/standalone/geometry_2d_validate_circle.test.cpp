@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/2d/validate_circle.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/validate_circle.hpp"
 
 int main(){
     int query_count;

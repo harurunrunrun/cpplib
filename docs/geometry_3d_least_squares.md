@@ -1,6 +1,6 @@
 ---
 title: Least Squares by QR (QR分解による最小二乗法)
-documentation_of: ../src/algorithm/geometry/3d/least_squares.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/least_squares.hpp
 ---
 
 過決定または正方な実数線形系について、$\lVert Ax-b\rVert_2$ を最小化する

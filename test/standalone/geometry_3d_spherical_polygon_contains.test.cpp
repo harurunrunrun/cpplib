@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/spherical_polygon_contains.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/spherical_polygon_contains.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

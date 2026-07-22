@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/triangle_bvh_3d.hpp"
+#include "../../src/algorithm/geometry/3d/query/triangle_bvh_3d.hpp"
 
 namespace{
 AABB3 box_of(const Triangle3& triangle){

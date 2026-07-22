@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/is_convex.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/is_convex.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

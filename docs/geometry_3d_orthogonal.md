@@ -1,6 +1,6 @@
 ---
 title: 3D Orthogonality (3次元直交判定)
-documentation_of: ../src/algorithm/geometry/3d/orthogonal.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/orthogonal.hpp
 ---
 
 ## API

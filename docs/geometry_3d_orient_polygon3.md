@@ -1,6 +1,6 @@
 ---
 title: Orient Polygon3 (三次元多角形の向き統一)
-documentation_of: ../src/algorithm/geometry/3d/orient_polygon3.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/orient_polygon3.hpp
 ---
 
 ## API

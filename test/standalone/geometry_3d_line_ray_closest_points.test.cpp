@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_ray_closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/point_collection/line_ray_closest_points.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

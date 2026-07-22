@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Normal (三次元三角形の法線)
-documentation_of: ../src/algorithm/geometry/3d/triangle_normal.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/triangle_normal.hpp
 ---
 
 ## API

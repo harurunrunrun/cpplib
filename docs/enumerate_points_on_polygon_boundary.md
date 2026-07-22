@@ -1,6 +1,6 @@
 ---
 title: Enumerate Points on Polygon Boundary (多角形境界上の点列挙)
-documentation_of: ../src/algorithm/geometry/2d/polygon_boundary_points/enumerate_points_on_polygon_boundary.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/enumerate_points_on_polygon_boundary.hpp
 ---
 
 ## API

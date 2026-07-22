@@ -1,6 +1,6 @@
 ---
 title: 3D Ray and Tetrahedron Intersection (三次元半直線と四面体の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/ray_tetrahedron_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/ray_tetrahedron_intersection.hpp
 ---
 
 ## API

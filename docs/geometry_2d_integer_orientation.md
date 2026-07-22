@@ -1,6 +1,6 @@
 ---
 title: 2D Integer Orientation (二次元整数点向き判定)
-documentation_of: ../src/algorithm/geometry/2d/integer_orientation.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/integer_orientation.hpp
 ---
 
 ## API

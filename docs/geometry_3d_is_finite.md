@@ -1,6 +1,6 @@
 ---
 title: 3D Finite Value Check (三次元幾何の有限値判定)
-documentation_of: ../src/algorithm/geometry/3d/is_finite.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/is_finite.hpp
 ---
 
 ## API

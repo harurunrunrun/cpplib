@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Line Intersection (三次元多角形と直線の交差)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_line_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/polygon3_line_intersection.hpp
 ---
 
 ## API

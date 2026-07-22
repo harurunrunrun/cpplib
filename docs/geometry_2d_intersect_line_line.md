@@ -1,6 +1,6 @@
 ---
 title: 2D Line Intersection Test (二次元直線交差判定)
-documentation_of: ../src/algorithm/geometry/2d/intersect_line_line.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/intersect_line_line.hpp
 ---
 
 ## API

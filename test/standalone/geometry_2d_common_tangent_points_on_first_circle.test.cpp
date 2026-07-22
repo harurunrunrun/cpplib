@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/2d/common_tangent_points_on_first_circle.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/common_tangent_points_on_first_circle.hpp"
 
 int main(){
     std::cout << std::fixed << std::setprecision(9);

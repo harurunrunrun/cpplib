@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/gjk_distance_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/gjk_distance_3d.hpp"
 #include "geometry_3d_collision_test_common.hpp"
 
 int main(){

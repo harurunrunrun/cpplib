@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/euclidean_mst.hpp"
+#include "../../src/algorithm/geometry/2d/shape/euclidean_mst.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

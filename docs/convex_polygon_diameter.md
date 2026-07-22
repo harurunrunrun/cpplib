@@ -1,12 +1,12 @@
 ---
 title: Convex Polygon Diameter (凸多角形の直径) [CGL_4_B]
-documentation_of: ../src/algorithm/geometry/2d/convex_polygon_diameter.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/convex_polygon_diameter.hpp
 ---
 
 凸多角形の最遠点対と直径。
 
 ```cpp
-#include "src/algorithm/geometry/2d/convex_polygon_diameter.hpp"
+#include "src/algorithm/geometry/2d/scalar/convex_polygon_diameter.hpp"
 
 ConvexPolygonDiameterResult result = convex_polygon_diameter(polygon);
 ```

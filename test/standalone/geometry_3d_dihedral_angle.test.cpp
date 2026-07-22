@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/dihedral_angle.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/dihedral_angle.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

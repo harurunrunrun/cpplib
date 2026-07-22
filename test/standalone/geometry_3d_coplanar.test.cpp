@@ -4,7 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/coplanar.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/coplanar.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

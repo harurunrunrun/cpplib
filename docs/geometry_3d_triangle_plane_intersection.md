@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle and Plane Intersection (三次元三角形と平面の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/triangle_plane_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/triangle_plane_intersection.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Convex Hull Detail (凸包内部処理)
-documentation_of: ../src/algorithm/geometry/2d/convex_hull_detail.hpp
+documentation_of: ../src/algorithm/geometry/2d/detail/convex_hull_construction_detail.hpp
 ---
 
 ## API

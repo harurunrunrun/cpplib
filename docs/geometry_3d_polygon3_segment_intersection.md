@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Segment Intersection (三次元多角形と線分の交差)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_segment_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/polygon3_segment_intersection.hpp
 ---
 
 ## API

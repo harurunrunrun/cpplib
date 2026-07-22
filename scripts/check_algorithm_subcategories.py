@@ -7,6 +7,14 @@ from pathlib import Path
 
 
 EXPECTED_LAYOUT: dict[Path, frozenset[str]] = {
+    Path("src/algorithm/geometry/2d"): frozenset({
+        "core", "detail", "point", "point_collection", "predicate",
+        "query", "scalar", "shape",
+    }),
+    Path("src/algorithm/geometry/3d"): frozenset({
+        "core", "detail", "point", "point_collection", "predicate",
+        "query", "scalar", "shape",
+    }),
     Path("src/algorithm/string"): frozenset({
         "automata", "palindrome", "sequence", "suffix",
     }),

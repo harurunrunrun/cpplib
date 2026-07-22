@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Incenter (三次元三角形の内心)
-documentation_of: ../src/algorithm/geometry/3d/triangle_incenter.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/triangle_incenter.hpp
 ---
 
 ## API

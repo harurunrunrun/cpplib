@@ -1,6 +1,6 @@
 ---
 title: Orient Plane Normal 3D (三次元平面法線の向き統一)
-documentation_of: ../src/algorithm/geometry/3d/orient_plane_normal.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/orient_plane_normal.hpp
 ---
 
 ## API

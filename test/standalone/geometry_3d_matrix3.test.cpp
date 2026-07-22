@@ -9,7 +9,7 @@
 #include <optional>
 #include <random>
 
-#include "../../src/algorithm/geometry/3d/matrix3.hpp"
+#include "../../src/algorithm/geometry/3d/core/matrix3.hpp"
 
 namespace{
 

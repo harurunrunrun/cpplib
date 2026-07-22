@@ -5,7 +5,7 @@
 #include <limits>
 #include <utility>
 
-#include "../../src/algorithm/geometry/3d/expansion_arithmetic.hpp"
+#include "../../src/algorithm/geometry/3d/detail/expansion_arithmetic.hpp"
 #include "../../src/algorithm/math/integer/exact_integer.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/projection.hpp"
+#include "../../src/algorithm/geometry/2d/point/projection.hpp"
 
 int main(){
     Line line;

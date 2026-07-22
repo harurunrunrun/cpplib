@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Area Vector (三次元多角形の面積ベクトル)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_area_vector.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/polygon3_area_vector.hpp
 ---
 
 ## API

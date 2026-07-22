@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/convex_diameter.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/convex_diameter.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

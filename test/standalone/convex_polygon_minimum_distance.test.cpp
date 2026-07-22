@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_minimum_distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/convex_polygon_minimum_distance.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

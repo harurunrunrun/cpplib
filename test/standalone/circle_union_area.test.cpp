@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/circle_union_area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_union_area.hpp"
 
 static bool close(long double actual, long double expected, long double tolerance){
     return std::abs(actual - expected)

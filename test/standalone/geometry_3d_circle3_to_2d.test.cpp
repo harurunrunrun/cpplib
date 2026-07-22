@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/circle3_to_2d.hpp"
+#include "../../src/algorithm/geometry/3d/shape/circle3_to_2d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_circle_sphere_validation_test_common.hpp"
 

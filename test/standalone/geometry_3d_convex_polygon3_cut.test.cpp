@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/convex_polygon3_cut.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_area.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_contains.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_polygon3_cut.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/polygon3_area.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/polygon3_contains.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

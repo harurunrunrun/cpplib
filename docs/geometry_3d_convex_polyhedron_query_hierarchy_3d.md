@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Query Hierarchy 3D (三次元凸多面体クエリ階層)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/convex_polyhedron_query_hierarchy_3d.hpp
 ---
 
 同じ凸多面体に対する支持点、包含、最近点の多数queryを処理する。

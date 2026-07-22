@@ -1,6 +1,6 @@
 ---
 title: 3D Finite Clamp (三次元幾何の有限値クランプ)
-documentation_of: ../src/algorithm/geometry/3d/clamp.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/clamp.hpp
 ---
 
 ## API

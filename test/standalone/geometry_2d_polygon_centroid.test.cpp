@@ -1,5 +1,5 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/polygon_centroid.hpp"
+#include "../../src/algorithm/geometry/2d/point/polygon_centroid.hpp"
 #include "geometry_2d_test_common.hpp"
 #include <exception>
 #include <vector>

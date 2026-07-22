@@ -1,0 +1,10 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CORE_POLYGON3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CORE_POLYGON3_HPP_INCLUDED
+
+#include <vector>
+
+#include "geometry_primitives.hpp"
+
+using Polygon3 = std::vector<Point3>;
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CORE_POLYGON3_HPP_INCLUDED

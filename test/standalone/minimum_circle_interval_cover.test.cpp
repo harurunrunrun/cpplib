@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/minimum_circle_interval_cover.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/minimum_circle_interval_cover.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

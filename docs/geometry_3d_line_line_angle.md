@@ -1,6 +1,6 @@
 ---
 title: Angle between 3D Lines (三次元直線同士の角度)
-documentation_of: ../src/algorithm/geometry/3d/line_line_angle.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/line_line_angle.hpp
 ---
 
 ## API

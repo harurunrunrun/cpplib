@@ -1,6 +1,6 @@
 ---
 title: Incremental Convex Hull (逐次追加凸包)
-documentation_of: ../src/algorithm/geometry/2d/incremental_convex_hull.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/incremental_convex_hull.hpp
 ---
 
 整数座標の点を追加しながら、2次元凸包を保つ。上側・下側の $x$ 単調chainを

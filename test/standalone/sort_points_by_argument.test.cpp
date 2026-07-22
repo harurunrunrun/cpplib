@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/sort_points_by_argument.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/sort_points_by_argument.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

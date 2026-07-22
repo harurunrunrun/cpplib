@@ -1,6 +1,6 @@
 ---
 title: 3D Line and Circle Intersections (三次元直線と円の交点)
-documentation_of: ../src/algorithm/geometry/3d/line_circle_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/line_circle_intersections.hpp
 ---
 
 ## API

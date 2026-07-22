@@ -1,6 +1,6 @@
 ---
 title: Real Matrix Rank (実数行列の階数)
-documentation_of: ../src/algorithm/geometry/3d/matrix_rank_real.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/matrix_rank_real.hpp
 ---
 
 `long double` の一般矩形行列の数値rankを求める。

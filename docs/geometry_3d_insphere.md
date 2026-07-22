@@ -1,6 +1,6 @@
 ---
 title: In-Sphere Determinant (三次元外接球内外式)
-documentation_of: ../src/algorithm/geometry/3d/insphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/insphere.hpp
 ---
 
 ## API

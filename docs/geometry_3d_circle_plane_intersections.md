@@ -1,6 +1,6 @@
 ---
 title: 3D Circle and Plane Intersections (三次元円と平面の交点)
-documentation_of: ../src/algorithm/geometry/3d/circle_plane_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/circle_plane_intersections.hpp
 ---
 
 ## API

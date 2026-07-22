@@ -1,6 +1,6 @@
 ---
 title: Point Set-Line Minimum Distance (点集合と直線の最小距離)
-documentation_of: ../src/algorithm/geometry/2d/point_set_line_minimum_distance.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/point_set_line_minimum_distance.hpp
 ---
 
 ## API

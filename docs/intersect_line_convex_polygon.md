@@ -1,6 +1,6 @@
 ---
 title: Line-Convex Polygon Intersection Test (直線と凸多角形の交差判定)
-documentation_of: ../src/algorithm/geometry/2d/intersect_line_convex_polygon.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/intersect_line_convex_polygon.hpp
 ---
 
 ## API

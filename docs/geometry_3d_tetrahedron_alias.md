@@ -1,6 +1,6 @@
 ---
 title: 3D Tetrahedron Alias (三次元四面体別名)
-documentation_of: ../src/algorithm/geometry/3d/tetrahedron.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/tetrahedron.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 3D Sphere Cap Height (三次元球冠の高さ)
-documentation_of: ../src/algorithm/geometry/3d/sphere_cap_height.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/sphere_cap_height.hpp
 ---
 
 ## API

@@ -4,7 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/orthogonal.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/orthogonal.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

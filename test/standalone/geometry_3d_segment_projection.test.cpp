@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/segment_projection.hpp"
+#include "../../src/algorithm/geometry/3d/point/segment_projection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

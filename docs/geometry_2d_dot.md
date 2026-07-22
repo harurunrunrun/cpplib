@@ -1,6 +1,6 @@
 ---
 title: 2D Dot Product (二次元内積)
-documentation_of: ../src/algorithm/geometry/2d/dot.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/dot.hpp
 ---
 
 ## API

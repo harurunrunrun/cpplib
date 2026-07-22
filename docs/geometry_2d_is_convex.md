@@ -1,6 +1,6 @@
 ---
 title: 2D Convexity Test (二次元凸性判定) [CGL_3_B]
-documentation_of: ../src/algorithm/geometry/2d/is_convex.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/is_convex.hpp
 ---
 
 ## API

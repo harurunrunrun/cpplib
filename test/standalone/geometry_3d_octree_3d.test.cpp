@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/octree_3d.hpp"
+#include "../../src/algorithm/geometry/3d/query/octree_3d.hpp"
 
 namespace{
 long double point_distance(const Point3& left, const Point3& right){

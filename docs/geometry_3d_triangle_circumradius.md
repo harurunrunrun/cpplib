@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Circumradius (三次元三角形の外接円半径)
-documentation_of: ../src/algorithm/geometry/3d/triangle_circumradius.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/triangle_circumradius.hpp
 ---
 
 ## API

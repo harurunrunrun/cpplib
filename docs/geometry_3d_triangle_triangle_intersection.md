@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Intersection (三次元三角形同士の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/triangle_triangle_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/triangle_triangle_intersection.hpp
 ---
 
 ## API

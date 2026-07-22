@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <variant>
-#include "../../src/algorithm/geometry/3d/ray_segment_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/query/ray_segment_intersection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

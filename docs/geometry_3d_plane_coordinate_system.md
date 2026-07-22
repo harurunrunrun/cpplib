@@ -1,6 +1,6 @@
 ---
 title: Plane Coordinate System 3D (三次元平面座標系)
-documentation_of: ../src/algorithm/geometry/3d/plane_coordinate_system.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/plane_coordinate_system.hpp
 ---
 
 ## API

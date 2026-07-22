@@ -1,6 +1,6 @@
 ---
 title: Closest Point on 3D Sphere (三次元球面上の最近点)
-documentation_of: ../src/algorithm/geometry/3d/sphere_closest_point.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/sphere_closest_point.hpp
 ---
 
 ## API

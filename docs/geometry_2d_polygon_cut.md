@@ -1,6 +1,6 @@
 ---
 title: General Polygon Line Cut (一般多角形の直線切断)
-documentation_of: ../src/algorithm/geometry/2d/polygon_cut.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/polygon_cut.hpp
 ---
 
 ## API

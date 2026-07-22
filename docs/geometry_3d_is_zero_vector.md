@@ -1,6 +1,6 @@
 ---
 title: 3D Zero Vector Check (三次元零ベクトル判定)
-documentation_of: ../src/algorithm/geometry/3d/is_zero_vector.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/is_zero_vector.hpp
 ---
 
 ## API

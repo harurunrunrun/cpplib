@@ -1,6 +1,6 @@
 ---
 title: 3D Linear Parallel Test (三次元線形図形の平行判定)
-documentation_of: ../src/algorithm/geometry/3d/linear_parallel.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/linear_parallel.hpp
 ---
 
 ## API

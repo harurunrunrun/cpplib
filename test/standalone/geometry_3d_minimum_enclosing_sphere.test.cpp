@@ -11,7 +11,7 @@
 #include <random>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere.hpp"
+#include "../../src/algorithm/geometry/3d/shape/minimum_enclosing_sphere.hpp"
 
 namespace{
 

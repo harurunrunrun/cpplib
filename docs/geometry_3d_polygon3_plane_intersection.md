@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Plane Intersection (三次元多角形と平面の交差)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_plane_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/polygon3_plane_intersection.hpp
 ---
 
 ## API

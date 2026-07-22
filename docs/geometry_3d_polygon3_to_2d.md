@@ -1,6 +1,6 @@
 ---
 title: Polygon3 to 2D (三次元多角形の二次元化)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_to_2d.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/polygon3_to_2d.hpp
 ---
 
 ## API

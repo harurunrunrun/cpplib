@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/circle_triangle_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_triangle_intersection_area.hpp"
 #include "geometry_2d_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 ---
 title: Exact Integer Orient3D (整数三次元向きの正確判定)
-documentation_of: ../src/algorithm/geometry/3d/exact_orient3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/exact_orient3d.hpp
 ---
 
 ## 公開型

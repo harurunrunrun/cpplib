@@ -1,6 +1,6 @@
 ---
 title: Polygon3 (三次元多角形)
-documentation_of: ../src/algorithm/geometry/3d/polygon3.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/polygon3.hpp
 ---
 
 ## API

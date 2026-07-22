@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <random>
 
-#include "../../src/algorithm/geometry/3d/solve_linear_system_3x3.hpp"
+#include "../../src/algorithm/geometry/3d/query/solve_linear_system_3x3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

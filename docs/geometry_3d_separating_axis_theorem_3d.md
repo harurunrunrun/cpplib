@@ -1,6 +1,6 @@
 ---
 title: Separating Axis Theorem 3D (3次元分離軸定理)
-documentation_of: ../src/algorithm/geometry/3d/separating_axis_theorem_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/separating_axis_theorem_3d.hpp
 ---
 
 ## API

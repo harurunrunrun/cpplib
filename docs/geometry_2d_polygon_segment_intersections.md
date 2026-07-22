@@ -1,6 +1,6 @@
 ---
 title: Polygon-Segment Intersections (多角形と線分の交点)
-documentation_of: ../src/algorithm/geometry/2d/polygon_segment_intersections.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/polygon_segment_intersections.hpp
 ---
 
 ## API

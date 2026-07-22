@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_query.hpp"
+#include "../../src/algorithm/geometry/2d/query/convex_polygon_query.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

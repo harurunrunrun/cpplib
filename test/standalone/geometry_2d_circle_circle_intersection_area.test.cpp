@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circle_circle_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_circle_intersection_area.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

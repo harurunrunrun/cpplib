@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Edges (凸多面体の辺列挙)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_edges.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/convex_polyhedron_edges.hpp
 ---
 
 ## API

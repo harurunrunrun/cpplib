@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_hull_perimeter.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/convex_hull_perimeter.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

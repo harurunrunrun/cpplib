@@ -11,7 +11,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/algorithm/geometry/2d/geometry.hpp"
+#include "../../src/algorithm/geometry/2d/core/geometry.hpp"
 
 void self_test(){
     auto close = [](long double a, long double b){

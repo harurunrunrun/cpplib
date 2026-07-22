@@ -1,6 +1,6 @@
 ---
 title: 2D Vector Argument (二次元ベクトルの偏角)
-documentation_of: ../src/algorithm/geometry/2d/arg.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/arg.hpp
 ---
 
 ## API

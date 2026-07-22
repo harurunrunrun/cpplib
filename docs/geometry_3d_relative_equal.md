@@ -1,6 +1,6 @@
 ---
 title: 3D Relative Equality (三次元幾何の相対誤差比較)
-documentation_of: ../src/algorithm/geometry/3d/relative_equal.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/relative_equal.hpp
 ---
 
 ## API

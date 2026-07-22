@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/least_squares.hpp"
+#include "../../src/algorithm/geometry/3d/query/least_squares.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

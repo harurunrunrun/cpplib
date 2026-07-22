@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Inradius (三次元三角形の内接円半径)
-documentation_of: ../src/algorithm/geometry/3d/triangle_inradius.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/triangle_inradius.hpp
 ---
 
 ## API

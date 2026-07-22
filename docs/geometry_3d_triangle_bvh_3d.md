@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle BVH (三次元三角形境界体積階層)
-documentation_of: ../src/algorithm/geometry/3d/triangle_bvh_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/triangle_bvh_3d.hpp
 ---
 
 `TriangleBVH3D` は三角形のAABBを重心の最大spread軸で中央値分割する静的BVHである。

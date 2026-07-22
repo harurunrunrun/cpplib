@@ -1,6 +1,6 @@
 ---
 title: From Plane Coordinates 3D (平面座標の三次元復元)
-documentation_of: ../src/algorithm/geometry/3d/from_plane_coordinates.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/from_plane_coordinates.hpp
 ---
 
 ## API

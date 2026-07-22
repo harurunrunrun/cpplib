@@ -1,6 +1,6 @@
 ---
 title: Distance between 3D Ray and Plane (三次元半直線と平面の距離)
-documentation_of: ../src/algorithm/geometry/3d/ray_plane_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/ray_plane_distance.hpp
 ---
 
 ## API

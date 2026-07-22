@@ -1,6 +1,6 @@
 ---
 title: Closest Points between 3D Plane and Plane (三次元平面同士の最近点対)
-documentation_of: ../src/algorithm/geometry/3d/plane_plane_closest_points.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/plane_plane_closest_points.hpp
 ---
 
 ## API

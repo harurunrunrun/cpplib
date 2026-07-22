@@ -1,6 +1,6 @@
 ---
 title: Angle between 3D Planes (三次元平面同士の角度)
-documentation_of: ../src/algorithm/geometry/3d/plane_plane_angle.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/plane_plane_angle.hpp
 ---
 
 ## API

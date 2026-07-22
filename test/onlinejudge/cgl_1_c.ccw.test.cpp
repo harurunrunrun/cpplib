@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/ccw.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/ccw.hpp"
 
 int main(){
     Point a, b;

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/rotate_around_axis.hpp"
+#include "../../src/algorithm/geometry/3d/point/rotate_around_axis.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

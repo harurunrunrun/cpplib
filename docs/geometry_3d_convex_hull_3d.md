@@ -1,6 +1,6 @@
 ---
 title: 3D Convex Hull (三次元凸包)
-documentation_of: ../src/algorithm/geometry/3d/convex_hull_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/convex_hull_3d.hpp
 ---
 
 ## API

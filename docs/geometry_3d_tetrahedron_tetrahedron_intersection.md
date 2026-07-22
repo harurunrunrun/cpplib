@@ -1,6 +1,6 @@
 ---
 title: 3D Tetrahedron Intersection (三次元四面体同士の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/tetrahedron_tetrahedron_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/tetrahedron_tetrahedron_intersection.hpp
 ---
 
 ## API

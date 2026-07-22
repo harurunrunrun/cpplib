@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/polygon3_to_2d.hpp"
-#include "../../src/algorithm/geometry/3d/from_plane_coordinates.hpp"
+#include "../../src/algorithm/geometry/3d/point_collection/polygon3_to_2d.hpp"
+#include "../../src/algorithm/geometry/3d/point/from_plane_coordinates.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

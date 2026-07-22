@@ -3,7 +3,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/clamp.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/clamp.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

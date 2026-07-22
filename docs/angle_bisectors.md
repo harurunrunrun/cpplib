@@ -1,6 +1,6 @@
 ---
 title: Angle Bisectors of Two Lines (二直線の角の二等分線)
-documentation_of: ../src/algorithm/geometry/2d/angle_bisectors.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/angle_bisectors.hpp
 ---
 
 ## API

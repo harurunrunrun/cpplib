@@ -1,6 +1,6 @@
 ---
 title: 2D Cross Product (二次元外積)
-documentation_of: ../src/algorithm/geometry/2d/cross.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/cross.hpp
 ---
 
 ## API

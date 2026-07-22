@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/segment3_direction.hpp"
+#include "../../src/algorithm/geometry/3d/point/segment3_direction.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 ---
 title: Distance between 3D Segment and Plane (三次元線分と平面の距離)
-documentation_of: ../src/algorithm/geometry/3d/segment_plane_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/segment_plane_distance.hpp
 ---
 
 ## API

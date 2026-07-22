@@ -1,6 +1,6 @@
 ---
 title: 2D Integer Point (二次元整数点)
-documentation_of: ../src/algorithm/geometry/2d/integer_point.hpp
+documentation_of: ../src/algorithm/geometry/2d/core/integer_point.hpp
 ---
 
 ## API

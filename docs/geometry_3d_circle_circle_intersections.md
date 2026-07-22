@@ -1,6 +1,6 @@
 ---
 title: 3D Circle and Circle Intersections (三次元円同士の交点)
-documentation_of: ../src/algorithm/geometry/3d/circle_circle_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/circle_circle_intersections.hpp
 ---
 
 ## API

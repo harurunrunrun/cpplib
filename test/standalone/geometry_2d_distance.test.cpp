@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/distance.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

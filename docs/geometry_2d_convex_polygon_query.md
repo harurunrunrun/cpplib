@@ -1,6 +1,6 @@
 ---
 title: 2D Convex Polygon Query (二次元凸多角形クエリ)
-documentation_of: ../src/algorithm/geometry/2d/convex_polygon_query.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/convex_polygon_query.hpp
 ---
 
 同じ凸多角形に対する包含判定を前処理する。

@@ -1,6 +1,6 @@
 ---
 title: 3D Axis-Aligned Bounding Box (三次元軸平行境界箱)
-documentation_of: ../src/algorithm/geometry/3d/aabb3.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/aabb3.hpp
 ---
 
 `AABB3` は閉区間

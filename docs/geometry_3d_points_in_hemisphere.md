@@ -1,6 +1,6 @@
 ---
 title: Hemisphere Containment (半球包含判定)
-documentation_of: ../src/algorithm/geometry/3d/points_in_hemisphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/points_in_hemisphere.hpp
 ---
 
 ## API

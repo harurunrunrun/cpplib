@@ -1,6 +1,6 @@
 ---
 title: 3D Sphere Alias (三次元球別名)
-documentation_of: ../src/algorithm/geometry/3d/sphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/sphere.hpp
 ---
 
 ## API

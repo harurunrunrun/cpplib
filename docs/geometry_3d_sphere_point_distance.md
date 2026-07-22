@@ -1,6 +1,6 @@
 ---
 title: Point to 3D Sphere Distance (点と三次元球面の距離)
-documentation_of: ../src/algorithm/geometry/3d/sphere_point_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/sphere_point_distance.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Segment Intersection (凸多面体と線分の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_segment_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/convex_polyhedron_segment_intersection.hpp
 ---
 
 ## API

@@ -1,5 +1,5 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/polygon_line_intersections.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/polygon_line_intersections.hpp"
 #include "geometry_2d_test_common.hpp"
 #include <exception>
 #include <vector>

@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/distance.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_test_common.hpp"
 

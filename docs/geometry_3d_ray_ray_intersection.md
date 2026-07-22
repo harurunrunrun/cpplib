@@ -1,6 +1,6 @@
 ---
 title: 3D Ray Intersection (三次元半直線同士の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/ray_ray_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/ray_ray_intersection.hpp
 ---
 
 ## API

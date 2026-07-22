@@ -1,6 +1,6 @@
 ---
 title: Convex Collision Query 3D (3次元凸形状衝突問い合わせ)
-documentation_of: ../src/algorithm/geometry/3d/convex_collision_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/convex_collision_3d.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/geometry_sign.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/geometry_sign.hpp"
 #include "geometry_2d_test_common.hpp"
 
 int main(){

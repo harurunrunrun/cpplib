@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/scalar_triple.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/scalar_triple.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

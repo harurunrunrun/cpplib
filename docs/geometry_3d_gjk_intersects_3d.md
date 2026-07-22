@@ -1,6 +1,6 @@
 ---
 title: GJK Intersection 3D (3次元GJK交差判定)
-documentation_of: ../src/algorithm/geometry/3d/gjk_intersects_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/gjk_intersects_3d.hpp
 ---
 
 ## API

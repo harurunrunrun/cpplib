@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/unit.hpp"
+#include "../../src/algorithm/geometry/2d/point/unit.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

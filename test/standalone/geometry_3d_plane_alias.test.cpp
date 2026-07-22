@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <type_traits>
-#include "../../src/algorithm/geometry/3d/plane.hpp"
+#include "../../src/algorithm/geometry/3d/core/plane.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

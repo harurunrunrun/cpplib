@@ -1,6 +1,6 @@
 ---
 title: Normalized Line Equation (直線の正規化方程式)
-documentation_of: ../src/algorithm/geometry/2d/normalized_line.hpp
+documentation_of: ../src/algorithm/geometry/2d/core/normalized_line.hpp
 ---
 
 ## API

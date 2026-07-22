@@ -1,6 +1,6 @@
 ---
 title: Strict Point in Triangle (三角形の内部判定)
-documentation_of: ../src/algorithm/geometry/2d/triangle_contains_strict.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/triangle_contains_strict.hpp
 ---
 
 ## API

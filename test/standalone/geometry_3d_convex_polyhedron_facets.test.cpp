@@ -4,8 +4,8 @@
 #include <array>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_facets.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/query/convex_polyhedron_facets.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

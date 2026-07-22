@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circle_circle_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_circle_intersection_area.hpp"
 
 int main(){
     Circle a, b;

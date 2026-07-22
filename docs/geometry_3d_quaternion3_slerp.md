@@ -1,6 +1,6 @@
 ---
 title: Quaternion SLERP (クォータニオン球面線形補間)
-documentation_of: ../src/algorithm/geometry/3d/quaternion3_slerp.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/quaternion3_slerp.hpp
 ---
 
 ## API

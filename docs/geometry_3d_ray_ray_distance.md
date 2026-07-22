@@ -1,6 +1,6 @@
 ---
 title: Distance between 3D Ray and Ray (三次元半直線同士の距離)
-documentation_of: ../src/algorithm/geometry/3d/ray_ray_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/ray_ray_distance.hpp
 ---
 
 ## API

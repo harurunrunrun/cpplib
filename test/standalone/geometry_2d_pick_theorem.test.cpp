@@ -1,5 +1,5 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/pick_theorem.hpp"
+#include "../../src/algorithm/geometry/2d/query/pick_theorem.hpp"
 #include <exception>
 #include <iostream>
 #include <vector>

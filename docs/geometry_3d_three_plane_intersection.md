@@ -1,6 +1,6 @@
 ---
 title: Intersection of Three 3D Planes (三次元の三平面の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/three_plane_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/three_plane_intersection.hpp
 ---
 
 ## API

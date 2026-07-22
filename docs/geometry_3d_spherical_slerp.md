@@ -1,6 +1,6 @@
 ---
 title: Spherical SLERP (球面線形補間)
-documentation_of: ../src/algorithm/geometry/3d/spherical_slerp.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/spherical_slerp.hpp
 ---
 
 ## API

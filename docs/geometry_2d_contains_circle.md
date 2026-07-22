@@ -1,6 +1,6 @@
 ---
 title: 2D Circle Containment (二次元円盤の点包含)
-documentation_of: ../src/algorithm/geometry/2d/contains_circle.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/contains_circle.hpp
 ---
 
 ## API

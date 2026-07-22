@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/circles_through_two_points.hpp"
+#include "../../src/algorithm/geometry/2d/shape/circles_through_two_points.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

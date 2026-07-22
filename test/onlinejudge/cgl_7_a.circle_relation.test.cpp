@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circle_relation.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/circle_relation.hpp"
 
 int main(){
     Circle a, b;

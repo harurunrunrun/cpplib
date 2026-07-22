@@ -1,6 +1,6 @@
 ---
 title: Triangle Area from Two Sides and Angle (二辺と挟角から求める三角形面積)
-documentation_of: ../src/algorithm/geometry/2d/triangle_area_from_two_sides_angle.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/triangle_area_from_two_sides_angle.hpp
 ---
 
 ## API

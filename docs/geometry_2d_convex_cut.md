@@ -1,6 +1,6 @@
 ---
 title: 2D Convex Polygon Cut (二次元凸多角形切断)
-documentation_of: ../src/algorithm/geometry/2d/convex_cut.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/convex_cut.hpp
 ---
 
 ## API

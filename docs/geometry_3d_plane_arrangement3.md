@@ -1,6 +1,6 @@
 ---
 title: PlaneArrangement3 (三次元平面アレンジメント結果)
-documentation_of: ../src/algorithm/geometry/3d/plane_arrangement3.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/plane_arrangement_result3.hpp
 ---
 
 平面アレンジメントの重複除去済み平面、交線、三面交点、三次元領域数を保持する。

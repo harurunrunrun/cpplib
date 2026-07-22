@@ -1,6 +1,6 @@
 ---
 title: Convex Hull Perimeter (凸包周長)
-documentation_of: ../src/algorithm/geometry/2d/convex_hull_perimeter.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/convex_hull_perimeter.hpp
 ---
 
 ## API

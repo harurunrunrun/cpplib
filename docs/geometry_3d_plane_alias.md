@@ -1,6 +1,6 @@
 ---
 title: 3D Plane Alias (三次元平面別名)
-documentation_of: ../src/algorithm/geometry/3d/plane.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/plane.hpp
 ---
 
 ## API

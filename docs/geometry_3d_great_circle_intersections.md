@@ -1,6 +1,6 @@
 ---
 title: Great-Circle Intersections (大円どうしの交点)
-documentation_of: ../src/algorithm/geometry/3d/great_circle_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/great_circle_intersections.hpp
 ---
 
 ## API

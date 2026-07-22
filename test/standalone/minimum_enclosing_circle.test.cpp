@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_circle.hpp"
+#include "../../src/algorithm/geometry/2d/shape/minimum_enclosing_circle.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

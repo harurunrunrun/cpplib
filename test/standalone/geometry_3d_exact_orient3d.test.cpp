@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/exact_orient3d.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/exact_orient3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

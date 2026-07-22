@@ -1,5 +1,5 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/point_set_line_minimum_distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/point_set_line_minimum_distance.hpp"
 #include "geometry_2d_test_common.hpp"
 #include <cmath>
 #include <exception>

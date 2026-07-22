@@ -1,6 +1,6 @@
 ---
 title: 3D Tetrahedron Incenter (三次元四面体の内心)
-documentation_of: ../src/algorithm/geometry/3d/tetrahedron_incenter.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/tetrahedron_incenter.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Floating-Point Expansion Arithmetic (浮動小数点展開演算)
-documentation_of: ../src/algorithm/geometry/3d/expansion_arithmetic.hpp
+documentation_of: ../src/algorithm/geometry/3d/detail/expansion_arithmetic.hpp
 ---
 
 ## 公開型

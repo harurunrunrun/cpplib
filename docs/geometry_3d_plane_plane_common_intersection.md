@@ -1,6 +1,6 @@
 ---
 title: 3D Plane-Plane Common Intersection (三次元平面同士の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/plane_plane_common_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/plane_plane_common_intersection.hpp
 ---
 
 ## 概要

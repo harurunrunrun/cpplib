@@ -1,6 +1,6 @@
 ---
 title: Sphere Surface Area (球の表面積)
-documentation_of: ../src/algorithm/geometry/3d/sphere_surface_area.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/sphere_surface_area.hpp
 ---
 
 ## API

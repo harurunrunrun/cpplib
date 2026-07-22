@@ -1,6 +1,6 @@
 ---
 title: Convex Polygon Minkowski Difference (凸多角形のミンコフスキー差)
-documentation_of: ../src/algorithm/geometry/2d/advanced/convex_polygon_minkowski_difference.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/convex_polygon_minkowski_difference.hpp
 ---
 
 ## API

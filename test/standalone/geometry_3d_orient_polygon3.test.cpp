@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/orient_polygon3.hpp"
+#include "../../src/algorithm/geometry/3d/shape/orient_polygon3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

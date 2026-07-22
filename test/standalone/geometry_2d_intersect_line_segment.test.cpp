@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/intersect_line_segment.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/intersect_line_segment.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

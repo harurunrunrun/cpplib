@@ -1,6 +1,6 @@
 ---
 title: 3D Reflection (三次元鏡映)
-documentation_of: ../src/algorithm/geometry/3d/reflection.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/reflection.hpp
 ---
 
 ## API

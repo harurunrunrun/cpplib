@@ -1,6 +1,6 @@
 ---
 title: Ear Clipping Triangulation (耳切り法三角形分割)
-documentation_of: ../src/algorithm/geometry/2d/ear_clipping_triangulation.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/ear_clipping_triangulation.hpp
 ---
 
 単純多角形を三角形分割する。既存のAPI名は互換性のため維持しているが、

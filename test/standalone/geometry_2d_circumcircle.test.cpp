@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circumcircle.hpp"
+#include "../../src/algorithm/geometry/2d/shape/circumcircle.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 ---
 title: 3D Line and Triangle Intersection (三次元直線と三角形の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/line_triangle_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/line_triangle_intersection.hpp
 ---
 
 ## API

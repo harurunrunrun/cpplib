@@ -1,6 +1,6 @@
 ---
 title: Convex Hull with Collinear Points (共線点を残す凸包) [CGL_4_A]
-documentation_of: ../src/algorithm/geometry/2d/convex_hull_with_collinear.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/convex_hull_with_collinear.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 3D Segment and Circle Intersections (三次元線分と円の交点)
-documentation_of: ../src/algorithm/geometry/3d/segment_circle_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/segment_circle_intersections.hpp
 ---
 
 ## API

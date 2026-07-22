@@ -1,6 +1,6 @@
 ---
 title: 3D Fixed Matrix (三次元固定行列)
-documentation_of: ../src/algorithm/geometry/3d/matrix3.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/matrix3.hpp
 ---
 
 `Matrix3` は `long double` の $3\times3$ 行列である。要素は固定長の

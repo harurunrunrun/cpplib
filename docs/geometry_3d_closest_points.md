@@ -1,6 +1,6 @@
 ---
 title: Closest Points in 3D (三次元最近点対)
-documentation_of: ../src/algorithm/geometry/3d/closest_points.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/closest_points.hpp
 ---
 
 ## API

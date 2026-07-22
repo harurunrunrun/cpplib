@@ -3,7 +3,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/scale_aware_sign.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/scale_aware_sign.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

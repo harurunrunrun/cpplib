@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_support_plane.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_polyhedron_support_plane.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_convex_polyhedron_test_common.hpp"
 

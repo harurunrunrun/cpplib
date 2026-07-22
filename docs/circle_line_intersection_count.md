@@ -1,6 +1,6 @@
 ---
 title: Circle-Line Intersection Count (円と直線の交点数)
-documentation_of: ../src/algorithm/geometry/2d/circle_line_intersection_count.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/circle_line_intersection_count.hpp
 ---
 
 ## API

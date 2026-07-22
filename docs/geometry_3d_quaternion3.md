@@ -1,6 +1,6 @@
 ---
 title: Quaternion3 (三次元クォータニオン)
-documentation_of: ../src/algorithm/geometry/3d/quaternion3.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/quaternion3.hpp
 ---
 
 ## API

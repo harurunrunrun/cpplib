@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/closest_pair.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/closest_pair.hpp"
 
 int main(){
     int size;

@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Contains (凸多面体の点包含)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/convex_polyhedron_contains.hpp
 ---
 
 ## API

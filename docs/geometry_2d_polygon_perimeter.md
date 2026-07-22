@@ -1,6 +1,6 @@
 ---
 title: 2D Polygon Perimeter (二次元多角形の周長)
-documentation_of: ../src/algorithm/geometry/2d/polygon_perimeter.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/polygon_perimeter.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/common_external_tangents.hpp"
+#include "../../src/algorithm/geometry/2d/shape/common_external_tangents.hpp"
 
 #include <iostream>
 

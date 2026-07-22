@@ -1,6 +1,6 @@
 ---
 title: SAT Result 3D (3次元分離軸判定結果)
-documentation_of: ../src/algorithm/geometry/3d/sat_result3.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/sat_result3.hpp
 ---
 
 ## API

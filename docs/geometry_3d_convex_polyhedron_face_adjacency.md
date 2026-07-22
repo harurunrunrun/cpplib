@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Face Adjacency (凸多面体の面隣接)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_face_adjacency.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/convex_polyhedron_face_adjacency.hpp
 ---
 
 ## API

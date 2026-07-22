@@ -1,6 +1,6 @@
 ---
 title: 2D Common Internal Tangents (二次元円の共通内接線)
-documentation_of: ../src/algorithm/geometry/2d/common_internal_tangents.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/common_internal_tangents.hpp
 ---
 
 ## API

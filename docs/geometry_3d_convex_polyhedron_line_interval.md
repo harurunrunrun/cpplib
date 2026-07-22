@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Line Interval (凸多面体と直線の交差区間)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_line_interval.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/convex_polyhedron_line_interval.hpp
 ---
 
 ## API

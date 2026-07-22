@@ -1,6 +1,6 @@
 ---
 title: 2D Point in Convex Polygon (二次元凸多角形包含判定)
-documentation_of: ../src/algorithm/geometry/2d/contains_convex.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/contains_convex.hpp
 ---
 
 ## API

@@ -8,8 +8,8 @@
 #include <random>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/dot.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/dot.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 inline ConvexPolyhedron3 geometry3d_collision_box(

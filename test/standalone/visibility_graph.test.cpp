@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/visibility_graph.hpp"
+#include "../../src/algorithm/geometry/2d/shape/visibility_graph.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

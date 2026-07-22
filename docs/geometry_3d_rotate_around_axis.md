@@ -1,6 +1,6 @@
 ---
 title: 3D Rotation Around Axis (三次元軸回転)
-documentation_of: ../src/algorithm/geometry/3d/rotate_around_axis.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/rotate_around_axis.hpp
 ---
 
 ## API

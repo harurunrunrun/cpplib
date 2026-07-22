@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/on_convex_hull.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/on_convex_hull.hpp"
 
 #include <iostream>
 #include <vector>

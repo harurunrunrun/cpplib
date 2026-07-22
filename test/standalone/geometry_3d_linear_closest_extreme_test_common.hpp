@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#include "../../src/algorithm/geometry/3d/base.hpp"
+#include "../../src/algorithm/geometry/3d/core/geometry_primitives.hpp"
 
 inline constexpr long double GEOMETRY3D_LINEAR_TEST_TRANSLATION =
     1e3000L;

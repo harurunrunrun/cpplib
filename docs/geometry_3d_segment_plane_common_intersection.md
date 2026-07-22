@@ -1,6 +1,6 @@
 ---
 title: 3D Segment-Plane Common Intersection (三次元線分・平面共通部分)
-documentation_of: ../src/algorithm/geometry/3d/segment_plane_common_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/segment_plane_common_intersection.hpp
 ---
 
 ## 概要

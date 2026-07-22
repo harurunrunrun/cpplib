@@ -1,6 +1,6 @@
 ---
 title: Closest Pair of Points (indices) (最近点対) [closest_pair]
-documentation_of: ../src/algorithm/geometry/2d/closest_pair_indices.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/closest_pair_indices.hpp
 ---
 
 整数座標点集合の最近点対を入力添字で求める。距離の比較には平方距離を用い、

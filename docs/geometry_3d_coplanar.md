@@ -1,6 +1,6 @@
 ---
 title: 3D Coplanarity (3次元共面判定)
-documentation_of: ../src/algorithm/geometry/3d/coplanar.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/coplanar.hpp
 ---
 
 ## API

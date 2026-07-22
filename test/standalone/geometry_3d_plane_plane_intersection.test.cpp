@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/plane_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/shape/plane_plane_intersection.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

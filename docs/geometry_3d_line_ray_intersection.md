@@ -1,6 +1,6 @@
 ---
 title: 3D Line and Ray Intersection (三次元直線と半直線の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/line_ray_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/line_ray_intersection.hpp
 ---
 
 ## API

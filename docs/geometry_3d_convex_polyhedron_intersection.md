@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Intersection (凸多面体同士の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/convex_polyhedron_intersection.hpp
 ---
 
 外向き三角形面で表された二つの凸多面体の共通部分を

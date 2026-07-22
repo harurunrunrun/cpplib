@@ -1,6 +1,6 @@
 ---
 title: 2D Orthogonality (二次元直交判定)
-documentation_of: ../src/algorithm/geometry/2d/orthogonal.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/orthogonal.hpp
 ---
 
 ## API

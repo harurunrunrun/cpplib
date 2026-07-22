@@ -1,6 +1,6 @@
 ---
 title: 3D Ray Projection (三次元半直線への射影)
-documentation_of: ../src/algorithm/geometry/3d/ray_projection.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/ray_projection.hpp
 ---
 
 ## API

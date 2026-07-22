@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/reflection.hpp"
+#include "../../src/algorithm/geometry/2d/point/reflection.hpp"
 
 int main(){
     Line line;

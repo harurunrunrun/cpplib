@@ -1,6 +1,6 @@
 ---
 title: Distance between 3D Ray and Segment (三次元半直線と線分の距離)
-documentation_of: ../src/algorithm/geometry/3d/ray_segment_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/ray_segment_distance.hpp
 ---
 
 ## API

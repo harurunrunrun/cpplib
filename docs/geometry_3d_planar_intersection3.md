@@ -1,6 +1,6 @@
 ---
 title: 3D Planar Intersection Result (三次元平面図形の共通部分型)
-documentation_of: ../src/algorithm/geometry/3d/planar_intersection3.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/planar_intersection3.hpp
 ---
 
 ## API

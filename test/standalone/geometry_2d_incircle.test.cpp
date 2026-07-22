@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/incircle.hpp"
+#include "../../src/algorithm/geometry/2d/shape/incircle.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

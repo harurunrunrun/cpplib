@@ -1,6 +1,6 @@
 ---
 title: Bentley Ottmann Intersections (Bentley–Ottmann交差列挙)
-documentation_of: ../src/algorithm/geometry/2d/bentley_ottmann_intersections.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/bentley_ottmann_intersections.hpp
 ---
 
 Bentley–Ottmann法によって、交差する線分対とその交差形状を列挙する。

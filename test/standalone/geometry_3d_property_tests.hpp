@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <string_view>
 
-#include "../../src/algorithm/geometry/3d/geometry_3d.hpp"
+#include "../../src/algorithm/geometry/3d/core/geometry_3d.hpp"
 
 inline std::string_view geometry3d_test_stem(std::string_view path){
     const std::size_t slash = path.find_last_of("/\\");

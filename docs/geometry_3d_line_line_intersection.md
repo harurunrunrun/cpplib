@@ -1,6 +1,6 @@
 ---
 title: 3D Line Intersection (三次元直線同士の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/line_line_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/line_line_intersection.hpp
 ---
 
 ## API

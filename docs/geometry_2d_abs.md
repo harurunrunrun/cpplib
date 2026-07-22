@@ -1,6 +1,6 @@
 ---
 title: 2D Vector Length (二次元ベクトル長)
-documentation_of: ../src/algorithm/geometry/2d/abs.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/abs.hpp
 ---
 
 ## API

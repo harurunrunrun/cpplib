@@ -1,6 +1,6 @@
 ---
 title: Maximum Empty Sphere (最大空球)
-documentation_of: ../src/algorithm/geometry/3d/maximum_empty_sphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/maximum_empty_sphere.hpp
 ---
 
 有界凸多面体内に中心を制約し、siteを内部に含まない最大半径の球を求める。

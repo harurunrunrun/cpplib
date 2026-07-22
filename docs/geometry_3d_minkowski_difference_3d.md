@@ -1,6 +1,6 @@
 ---
 title: Minkowski Difference 3D (3次元Minkowski差)
-documentation_of: ../src/algorithm/geometry/3d/minkowski_difference_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/minkowski_difference_3d.hpp
 ---
 
 二つの凸形状について $\{a-b\mid a\in A,b\in B\}$ の凸包を構築する。

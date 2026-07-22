@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/sphere_intersection_volume.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/sphere_intersection_volume.hpp"
 #include "geometry_3d_test_common.hpp"
 #include "geometry_3d_circle_sphere_validation_test_common.hpp"
 

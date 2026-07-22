@@ -1,6 +1,6 @@
 ---
 title: Half-Plane Intersection Area (半平面共通部分の面積)
-documentation_of: ../src/algorithm/geometry/2d/half_plane_intersection_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/half_plane_intersection_area.hpp
 ---
 
 ## API

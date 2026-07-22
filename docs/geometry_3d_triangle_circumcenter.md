@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Circumcenter (三次元三角形の外心)
-documentation_of: ../src/algorithm/geometry/3d/triangle_circumcenter.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/triangle_circumcenter.hpp
 ---
 
 ## API

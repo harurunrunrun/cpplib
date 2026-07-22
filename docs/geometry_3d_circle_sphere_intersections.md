@@ -1,6 +1,6 @@
 ---
 title: 3D Circle and Sphere Intersections (三次元円と球の交点)
-documentation_of: ../src/algorithm/geometry/3d/circle_sphere_intersections.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/circle_sphere_intersections.hpp
 ---
 
 ## API

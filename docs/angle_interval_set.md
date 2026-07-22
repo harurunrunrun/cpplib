@@ -1,6 +1,6 @@
 ---
 title: Angle Interval Set (円周角区間集合)
-documentation_of: ../src/algorithm/geometry/2d/angle_interval_set.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/angle_interval_set.hpp
 ---
 
 角度を2π周期で管理し、円周上の半開区間の和集合を保持する。

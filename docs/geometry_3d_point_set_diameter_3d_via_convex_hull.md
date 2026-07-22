@@ -1,6 +1,6 @@
 ---
 title: 3D Point Set Diameter via Convex Hull (三次元凸包経由点集合直径)
-documentation_of: ../src/algorithm/geometry/3d/point_set_diameter_3d_via_convex_hull.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/point_set_diameter_3d_via_convex_hull.hpp
 ---
 
 三次元点集合の凸包を先に構築して内点・面内部点・辺上内部点を除き、残った極点を

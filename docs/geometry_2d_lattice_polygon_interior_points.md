@@ -1,6 +1,6 @@
 ---
 title: Lattice Polygon Interior Points (格子多角形の内部格子点数)
-documentation_of: ../src/algorithm/geometry/2d/lattice_polygon_interior_points.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/lattice_polygon_interior_points.hpp
 ---
 
 ## API

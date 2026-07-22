@@ -1,6 +1,6 @@
 ---
 title: Expanding Polytope Algorithm 3D (3次元拡張ポリトープ法)
-documentation_of: ../src/algorithm/geometry/3d/epa_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/epa_3d.hpp
 ---
 
 ## API

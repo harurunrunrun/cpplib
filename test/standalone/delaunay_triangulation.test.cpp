@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/delaunay_triangulation.hpp"
+#include "../../src/algorithm/geometry/2d/shape/delaunay_triangulation.hpp"
 
 namespace{
 

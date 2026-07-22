@@ -8,9 +8,9 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/contains.hpp"
-#include "../../src/algorithm/geometry/2d/polygon_area.hpp"
-#include "../../src/algorithm/geometry/2d/polygon_cut.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/contains.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/polygon_area.hpp"
+#include "../../src/algorithm/geometry/2d/shape/polygon_cut.hpp"
 #include "geometry_2d_test_common.hpp"
 
 namespace{

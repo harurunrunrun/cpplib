@@ -1,6 +1,6 @@
 ---
 title: 3D Sphere-Sphere Distance (三次元球面間距離)
-documentation_of: ../src/algorithm/geometry/3d/sphere_sphere_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/sphere_sphere_distance.hpp
 ---
 
 ## 概要

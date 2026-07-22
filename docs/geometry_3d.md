@@ -1,6 +1,6 @@
 ---
 title: 3D Geometry (三次元幾何)
-documentation_of: ../src/algorithm/geometry/3d/geometry_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/geometry_3d.hpp
 ---
 
 `long double` を用いる3次元幾何の基本型、距離、交差、三角形、四面体、球をまとめる。判定には `GEOMETRY3D_EPS = 1e-10L` を使う。

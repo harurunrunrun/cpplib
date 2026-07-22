@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/types.hpp"
+#include "../../src/algorithm/geometry/2d/core/types.hpp"
 
 inline void print_geometry_scalar(long double value){
     if(std::abs(value) < 0.5e-12L) value = 0.0L;

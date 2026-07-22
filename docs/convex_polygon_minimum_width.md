@@ -1,6 +1,6 @@
 ---
 title: Convex Polygon Minimum Width (凸多角形の最小幅)
-documentation_of: ../src/algorithm/geometry/2d/convex_polygon_minimum_width.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/convex_polygon_minimum_width.hpp
 ---
 
 ## API

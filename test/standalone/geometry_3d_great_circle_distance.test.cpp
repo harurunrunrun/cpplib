@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/great_circle_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/great_circle_distance.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

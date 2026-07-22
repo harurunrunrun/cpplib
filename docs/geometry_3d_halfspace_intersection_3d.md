@@ -1,6 +1,6 @@
 ---
 title: 3D Halfspace Intersection (三次元半空間交差)
-documentation_of: ../src/algorithm/geometry/3d/halfspace_intersection_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/halfspace_intersection_3d.hpp
 ---
 
 平面が表す閉半空間の共通部分を、点・平面の極双対と三次元凸包を用いて

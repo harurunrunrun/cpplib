@@ -1,5 +1,5 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/lattice_polygon_interior_points.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/lattice_polygon_interior_points.hpp"
 #include <exception>
 #include <iostream>
 #include <vector>

@@ -1,6 +1,6 @@
 ---
 title: Lattice Polygon Detail (格子多角形内部処理)
-documentation_of: ../src/algorithm/geometry/2d/lattice_polygon_detail.hpp
+documentation_of: ../src/algorithm/geometry/2d/detail/lattice_polygon_arithmetic_detail.hpp
 ---
 
 ## API

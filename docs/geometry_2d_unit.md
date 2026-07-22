@@ -1,6 +1,6 @@
 ---
 title: 2D Unit Vector (二次元単位ベクトル)
-documentation_of: ../src/algorithm/geometry/2d/unit.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/unit.hpp
 ---
 
 ## API

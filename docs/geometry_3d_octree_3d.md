@@ -1,6 +1,6 @@
 ---
 title: 3D Octree (三次元八分木)
-documentation_of: ../src/algorithm/geometry/3d/octree_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/octree_3d.hpp
 ---
 
 `Octree3D` は指定した有限な `AABB3` を各軸の中点で8分割する動的点集合である。

@@ -1,6 +1,6 @@
 ---
 title: GJK Closest Points 3D (3次元GJK最近点)
-documentation_of: ../src/algorithm/geometry/3d/gjk_closest_points_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/gjk_closest_points_3d.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Point on 3D Sphere (三次元球面上判定)
-documentation_of: ../src/algorithm/geometry/3d/on_sphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/on_sphere.hpp
 ---
 
 ## API

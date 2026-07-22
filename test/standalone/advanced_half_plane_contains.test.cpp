@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/advanced/half_plane_contains.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/half_plane_contains.hpp"
 #include "advanced_geometry_test_common.hpp"
 
 #include <stdexcept>

@@ -1,6 +1,6 @@
 ---
 title: Point to 3D Tetrahedron Distance (点と三次元四面体の距離)
-documentation_of: ../src/algorithm/geometry/3d/tetrahedron_point_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/tetrahedron_point_distance.hpp
 ---
 
 ## API

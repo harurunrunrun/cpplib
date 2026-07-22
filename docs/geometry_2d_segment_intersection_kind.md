@@ -1,6 +1,6 @@
 ---
 title: Segment Intersection Kind (線分交差部分の分類)
-documentation_of: ../src/algorithm/geometry/2d/segment_intersection_kind.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/segment_intersection_kind.hpp
 ---
 
 ## API

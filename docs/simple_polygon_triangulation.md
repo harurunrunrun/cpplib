@@ -1,6 +1,6 @@
 ---
 title: Simple Polygon Triangulation (単純多角形三角形分割)
-documentation_of: ../src/algorithm/geometry/2d/simple_polygon_triangulation.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/simple_polygon_triangulation.hpp
 ---
 
 単純多角形を三角形分割するための汎用API。

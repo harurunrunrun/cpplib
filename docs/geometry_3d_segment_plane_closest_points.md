@@ -1,6 +1,6 @@
 ---
 title: Closest Points between 3D Segment and Plane (三次元線分と平面の最近点対)
-documentation_of: ../src/algorithm/geometry/3d/segment_plane_closest_points.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/segment_plane_closest_points.hpp
 ---
 
 ## API

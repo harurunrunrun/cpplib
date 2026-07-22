@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersects.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/convex_polyhedron_intersects.hpp"
 
 namespace{
 

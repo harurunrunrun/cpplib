@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/dot.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/dot.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 ---
 title: 3D Tetrahedron Inradius (三次元四面体の内接球半径)
-documentation_of: ../src/algorithm/geometry/3d/tetrahedron_inradius.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/tetrahedron_inradius.hpp
 ---
 
 ## API

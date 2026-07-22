@@ -1,6 +1,6 @@
 ---
 title: 3D kd-tree (三次元kd木)
-documentation_of: ../src/algorithm/geometry/3d/kd_tree_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/kd_tree_3d.hpp
 ---
 
 `KdTree3D` は有限な三次元点を最大spread軸の中央値で再帰分割し、各部分木の

@@ -1,6 +1,6 @@
 ---
 title: Minimum Enclosing Circle Boundary Flags (最小包含円境界判定列) [minimum_enclosing_circle]
-documentation_of: ../src/algorithm/geometry/2d/minimum_enclosing_circle_boundary_flags.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/minimum_enclosing_circle_boundary_flags.hpp
 ---
 
 点集合の最小包含円を求め、各入力点がその円周上にあるかを返す。

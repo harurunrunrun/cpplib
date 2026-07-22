@@ -1,6 +1,6 @@
 ---
 title: Proper Segment Intersection (線分の真交差判定)
-documentation_of: ../src/algorithm/geometry/2d/proper_segment_intersection.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/proper_segment_intersection.hpp
 ---
 
 ## API

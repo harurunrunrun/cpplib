@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/dominant_axis_projection.hpp"
+#include "../../src/algorithm/geometry/3d/point/dominant_axis_projection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

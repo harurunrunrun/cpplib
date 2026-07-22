@@ -1,6 +1,6 @@
 ---
 title: Spherical Triangle Area (球面三角形面積)
-documentation_of: ../src/algorithm/geometry/3d/spherical_triangle_area.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/spherical_triangle_area.hpp
 ---
 
 ## API

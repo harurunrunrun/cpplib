@@ -1,6 +1,6 @@
 ---
 title: Points from Two Distances (二点からの距離による点復元)
-documentation_of: ../src/algorithm/geometry/2d/points_from_two_distances.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/points_from_two_distances.hpp
 ---
 
 ## API

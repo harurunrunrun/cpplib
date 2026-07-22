@@ -7,9 +7,9 @@
 #include <random>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
-#include "../../src/algorithm/geometry/3d/maximum_empty_sphere.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/convex_polyhedron_contains.hpp"
+#include "../../src/algorithm/geometry/3d/shape/maximum_empty_sphere.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

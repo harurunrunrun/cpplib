@@ -1,6 +1,6 @@
 ---
 title: Circle Sector Area (扇形面積)
-documentation_of: ../src/algorithm/geometry/2d/circle_sector_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/circle_sector_area.hpp
 ---
 
 ## API

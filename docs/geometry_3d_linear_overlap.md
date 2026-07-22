@@ -1,6 +1,6 @@
 ---
 title: 3D Linear Overlap Test (三次元線形図形の重なり判定)
-documentation_of: ../src/algorithm/geometry/3d/linear_overlap.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/linear_overlap.hpp
 ---
 
 ## API

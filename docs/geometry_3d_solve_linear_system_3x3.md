@@ -1,6 +1,6 @@
 ---
 title: Solve 3x3 Linear System (三元連立一次方程式)
-documentation_of: ../src/algorithm/geometry/3d/solve_linear_system_3x3.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/solve_linear_system_3x3.hpp
 ---
 
 `Matrix3` と `Point3` で与えた三元連立一次方程式 $Ax=b$ を解く。

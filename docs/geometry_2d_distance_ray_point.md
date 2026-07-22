@@ -1,6 +1,6 @@
 ---
 title: 2D Ray-Point Distance (二次元半直線と点の距離)
-documentation_of: ../src/algorithm/geometry/2d/distance_ray_point.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/distance_ray_point.hpp
 ---
 
 ## API

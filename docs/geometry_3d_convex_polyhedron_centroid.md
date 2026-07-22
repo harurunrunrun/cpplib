@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Centroid (凸多面体の重心)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_centroid.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/convex_polyhedron_centroid.hpp
 ---
 
 ## API

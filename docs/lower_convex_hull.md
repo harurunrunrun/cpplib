@@ -1,6 +1,6 @@
 ---
 title: Lower Convex Hull (下側凸包)
-documentation_of: ../src/algorithm/geometry/2d/lower_convex_hull.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/lower_convex_hull.hpp
 ---
 
 ## API

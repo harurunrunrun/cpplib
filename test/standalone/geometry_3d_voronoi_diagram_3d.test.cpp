@@ -8,10 +8,10 @@
 #include <random>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
-#include "../../src/algorithm/geometry/3d/dot.hpp"
-#include "../../src/algorithm/geometry/3d/three_plane_intersection.hpp"
-#include "../../src/algorithm/geometry/3d/voronoi_diagram_3d.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/convex_polyhedron_contains.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/dot.hpp"
+#include "../../src/algorithm/geometry/3d/point/three_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/shape/voronoi_diagram_3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

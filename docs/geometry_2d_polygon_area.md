@@ -1,6 +1,6 @@
 ---
 title: 2D Polygon Area (二次元多角形の面積)
-documentation_of: ../src/algorithm/geometry/2d/polygon_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/polygon_area.hpp
 ---
 
 ## API

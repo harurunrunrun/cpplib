@@ -1,12 +1,12 @@
 ---
 title: Convex Polygon Tangents from Point (点から凸多角形への接線)
-documentation_of: ../src/algorithm/geometry/2d/convex_polygon_tangents.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/convex_polygon_tangents.hpp
 ---
 
 外点から凸多角形へ引いた左右の接線の接点。
 
 ```cpp
-#include "src/algorithm/geometry/2d/convex_polygon_tangents.hpp"
+#include "src/algorithm/geometry/2d/query/convex_polygon_tangents.hpp"
 
 ConvexPolygonTangentResult result = convex_polygon_tangents(polygon, point);
 ```

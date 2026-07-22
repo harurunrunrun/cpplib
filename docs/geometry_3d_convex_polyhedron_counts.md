@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Counts (凸多面体の要素数)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_counts.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/convex_polyhedron_counts.hpp
 ---
 
 ## API

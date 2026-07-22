@@ -1,6 +1,6 @@
 ---
 title: Real Matrix Determinant (実数行列の行列式)
-documentation_of: ../src/algorithm/geometry/3d/matrix_determinant_real.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/matrix_determinant_real.hpp
 ---
 
 `long double` の一般正方行列のdeterminantを部分pivoting付き消去法で求める。

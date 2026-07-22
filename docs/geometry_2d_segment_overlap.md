@@ -1,6 +1,6 @@
 ---
 title: Collinear Segment Overlap (共線線分の共通部分)
-documentation_of: ../src/algorithm/geometry/2d/segment_overlap.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/segment_overlap.hpp
 ---
 
 ## API

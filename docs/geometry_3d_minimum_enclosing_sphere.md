@@ -1,6 +1,6 @@
 ---
 title: 3D Minimum Enclosing Sphere (三次元最小包含球)
-documentation_of: ../src/algorithm/geometry/3d/minimum_enclosing_sphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/minimum_enclosing_sphere.hpp
 ---
 
 有限な三次元点集合をすべて含む半径最小の閉球を求める。1〜4点のoverloadは

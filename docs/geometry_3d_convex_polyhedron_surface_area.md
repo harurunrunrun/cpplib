@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Surface Area (凸多面体の表面積)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_surface_area.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/convex_polyhedron_surface_area.hpp
 ---
 
 ## API

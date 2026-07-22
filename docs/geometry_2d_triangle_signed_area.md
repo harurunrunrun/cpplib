@@ -1,6 +1,6 @@
 ---
 title: 2D Triangle Signed Area (二次元三角形の符号付き面積)
-documentation_of: ../src/algorithm/geometry/2d/triangle_signed_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/triangle_signed_area.hpp
 ---
 
 ## API

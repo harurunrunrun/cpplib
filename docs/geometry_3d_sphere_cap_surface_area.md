@@ -1,6 +1,6 @@
 ---
 title: Sphere Cap Surface Area (球冠の曲面積)
-documentation_of: ../src/algorithm/geometry/3d/sphere_cap_surface_area.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/sphere_cap_surface_area.hpp
 ---
 
 ## API

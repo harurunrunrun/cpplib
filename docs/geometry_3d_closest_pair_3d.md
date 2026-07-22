@@ -1,6 +1,6 @@
 ---
 title: 3D Closest Pair (三次元最近点対)
-documentation_of: ../src/algorithm/geometry/3d/closest_pair_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/closest_pair_3d.hpp
 ---
 
 三次元点集合からEuclidean距離が最小の異なるindex対を求める。全点対列挙ではなく、

@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Signed Volume (凸多面体の向き付き体積)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_signed_volume.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/convex_polyhedron_signed_volume.hpp
 ---
 
 ## API

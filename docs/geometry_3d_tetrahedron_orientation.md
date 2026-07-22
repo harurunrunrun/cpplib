@@ -1,6 +1,6 @@
 ---
 title: 3D Tetrahedron Orientation (三次元四面体の向き)
-documentation_of: ../src/algorithm/geometry/3d/tetrahedron_orientation.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/tetrahedron_orientation.hpp
 ---
 
 ## API

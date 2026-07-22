@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Support Point (凸多面体の支持点)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_support_point.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/convex_polyhedron_support_point.hpp
 ---
 
 ## API

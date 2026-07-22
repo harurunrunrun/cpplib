@@ -1,6 +1,6 @@
 ---
 title: Pick Theorem (ピックの定理)
-documentation_of: ../src/algorithm/geometry/2d/pick_theorem.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/pick_theorem.hpp
 ---
 
 ## API

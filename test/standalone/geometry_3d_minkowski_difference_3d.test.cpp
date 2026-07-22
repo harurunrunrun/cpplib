@@ -5,9 +5,9 @@
 #include <utility>
 #include <cstdint>
 
-#include "../../src/algorithm/geometry/3d/minkowski_difference_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_point_distance.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
+#include "../../src/algorithm/geometry/3d/shape/minkowski_difference_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/convex_polyhedron_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/convex_polyhedron_volume.hpp"
 #include "geometry_3d_collision_test_common.hpp"
 
 namespace{

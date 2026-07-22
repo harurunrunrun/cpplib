@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/spherical_slerp.hpp"
+#include "../../src/algorithm/geometry/3d/point/spherical_slerp.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

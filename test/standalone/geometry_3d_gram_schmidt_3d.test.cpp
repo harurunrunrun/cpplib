@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/gram_schmidt_3d.hpp"
+#include "../../src/algorithm/geometry/3d/point_collection/gram_schmidt_3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

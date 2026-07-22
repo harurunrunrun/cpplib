@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include "../../src/algorithm/geometry/3d/convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_hull_3d.hpp"
 
 inline ConvexPolyhedron3 geometry3d_test_cube(Point3 shift = {}){
     std::vector<Point3> points;

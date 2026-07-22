@@ -2,7 +2,7 @@
 
 #include <type_traits>
 #include <variant>
-#include "../../src/algorithm/geometry/3d/linear_intersection3.hpp"
+#include "../../src/algorithm/geometry/3d/query/linear_intersection3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

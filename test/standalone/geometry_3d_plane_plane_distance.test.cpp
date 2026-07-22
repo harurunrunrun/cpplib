@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/plane_plane_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/plane_plane_distance.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

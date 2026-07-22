@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/intersect_circle_circle.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/intersect_circle_circle.hpp"
 
 int main(){
     int query_count;

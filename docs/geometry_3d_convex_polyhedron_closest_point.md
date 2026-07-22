@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Closest Point (凸多面体上の最近点)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_closest_point.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/convex_polyhedron_closest_point.hpp
 ---
 
 ## API

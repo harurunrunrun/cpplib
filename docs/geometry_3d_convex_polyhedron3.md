@@ -1,6 +1,6 @@
 ---
 title: ConvexPolyhedron3 (三次元凸多面体)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron3.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/convex_polyhedron3.hpp
 ---
 
 ## API

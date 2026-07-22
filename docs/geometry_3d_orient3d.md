@@ -1,6 +1,6 @@
 ---
 title: Orient3D Determinant (三次元向き付き体積式)
-documentation_of: ../src/algorithm/geometry/3d/orient3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/orient3d.hpp
 ---
 
 ## API

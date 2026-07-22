@@ -1,6 +1,6 @@
 ---
 title: Segment Intersection Count (線分交差対数)
-documentation_of: ../src/algorithm/geometry/2d/segment_intersection_count.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/segment_intersection_count.hpp
 ---
 
 交差する線分の非順序対の個数を平面走査で数える。

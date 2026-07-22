@@ -4,7 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/exact_insphere.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/exact_insphere.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

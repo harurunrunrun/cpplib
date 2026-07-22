@@ -1,6 +1,6 @@
 ---
 title: Exact Integer In-Sphere (整数三次元外接球の正確判定)
-documentation_of: ../src/algorithm/geometry/3d/exact_insphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/exact_insphere.hpp
 ---
 
 ## API

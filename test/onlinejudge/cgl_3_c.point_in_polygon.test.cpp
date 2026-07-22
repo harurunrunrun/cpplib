@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/contains.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/contains.hpp"
 
 int main(){
     int size;

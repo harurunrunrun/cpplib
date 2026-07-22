@@ -1,6 +1,6 @@
 ---
 title: 3D Containment (三次元包含判定)
-documentation_of: ../src/algorithm/geometry/3d/contains.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/contains.hpp
 ---
 
 ## API

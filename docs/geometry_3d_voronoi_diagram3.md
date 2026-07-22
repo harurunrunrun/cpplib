@@ -1,6 +1,6 @@
 ---
 title: VoronoiDiagram3 (三次元Voronoi図結果)
-documentation_of: ../src/algorithm/geometry/3d/voronoi_diagram3.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/voronoi_diagram_result3.hpp
 ---
 
 三次元Voronoi図をDelaunay双対の位相と実際の幾何として保持する型群。

@@ -1,6 +1,6 @@
 ---
 title: 2D Ray (二次元半直線)
-documentation_of: ../src/algorithm/geometry/2d/ray.hpp
+documentation_of: ../src/algorithm/geometry/2d/core/ray.hpp
 ---
 
 ## API

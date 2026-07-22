@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/polygon3_coplanar.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/polygon3_coplanar.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

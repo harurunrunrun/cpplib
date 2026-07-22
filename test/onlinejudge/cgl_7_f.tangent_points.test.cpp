@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/tangent_points.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/tangent_points.hpp"
 
 int main(){
     Circle circle;

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_sphere_intersections.hpp"
+#include "../../src/algorithm/geometry/3d/point_collection/line_sphere_intersections.hpp"
 #include "geometry_3d_test_common.hpp"
 #include "geometry_3d_circle_sphere_validation_test_common.hpp"
 

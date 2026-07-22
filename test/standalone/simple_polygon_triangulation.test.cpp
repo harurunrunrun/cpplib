@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/simple_polygon_triangulation.hpp"
+#include "../../src/algorithm/geometry/2d/shape/simple_polygon_triangulation.hpp"
 #include "geometry_2d_triangulation_test_utils.hpp"
 
 #include <algorithm>

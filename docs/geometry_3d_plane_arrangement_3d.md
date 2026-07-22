@@ -1,6 +1,6 @@
 ---
 title: 3D Plane Arrangement (三次元平面アレンジメント)
-documentation_of: ../src/algorithm/geometry/3d/plane_arrangement_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/plane_arrangement_3d.hpp
 ---
 
 平面を順に挿入し、新しい平面上に既存平面が作る直線アレンジメントの領域数を加えて

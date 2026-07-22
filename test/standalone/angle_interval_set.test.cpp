@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/geometry/2d/angle_interval_set.hpp"
+#include "../../src/algorithm/geometry/2d/query/angle_interval_set.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

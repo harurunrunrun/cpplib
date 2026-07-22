@@ -1,6 +1,6 @@
 ---
 title: Latitude-Longitude Conversion 3D (三次元緯度経度変換)
-documentation_of: ../src/algorithm/geometry/3d/latitude_longitude3.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/latitude_longitude3.hpp
 ---
 
 ## API

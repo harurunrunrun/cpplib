@@ -1,6 +1,6 @@
 ---
 title: Quaternion from Axis-Angle (軸角からクォータニオンへの変換)
-documentation_of: ../src/algorithm/geometry/3d/quaternion3_from_axis_angle.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/quaternion3_from_axis_angle.hpp
 ---
 
 ## API

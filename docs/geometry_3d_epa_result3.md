@@ -1,6 +1,6 @@
 ---
 title: EPA Result 3D (3次元EPA結果)
-documentation_of: ../src/algorithm/geometry/3d/epa_result3.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/epa_result3.hpp
 ---
 
 ## API

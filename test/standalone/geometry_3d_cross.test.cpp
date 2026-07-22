@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/cross.hpp"
+#include "../../src/algorithm/geometry/3d/point/cross.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

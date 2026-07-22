@@ -1,6 +1,6 @@
 ---
 title: 3D Unit Vector (3次元単位ベクトル)
-documentation_of: ../src/algorithm/geometry/3d/unit.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/unit.hpp
 ---
 
 ## API

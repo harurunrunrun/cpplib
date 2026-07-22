@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/tetrahedron_closest_point.hpp"
+#include "../../src/algorithm/geometry/3d/point/tetrahedron_closest_point.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

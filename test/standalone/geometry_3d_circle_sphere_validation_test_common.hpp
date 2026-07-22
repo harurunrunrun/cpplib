@@ -4,7 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/base.hpp"
+#include "../../src/algorithm/geometry/3d/core/geometry_primitives.hpp"
 
 template<class Exception, class Function>
 bool geometry3d_throws(Function&& function){

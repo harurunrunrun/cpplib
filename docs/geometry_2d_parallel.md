@@ -1,6 +1,6 @@
 ---
 title: 2D Parallelism (二次元平行判定)
-documentation_of: ../src/algorithm/geometry/2d/parallel.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/parallel.hpp
 ---
 
 ## API

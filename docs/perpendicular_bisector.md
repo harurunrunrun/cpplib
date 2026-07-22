@@ -1,6 +1,6 @@
 ---
 title: Perpendicular Bisector (垂直二等分線)
-documentation_of: ../src/algorithm/geometry/2d/perpendicular_bisector.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/perpendicular_bisector.hpp
 ---
 
 ## API

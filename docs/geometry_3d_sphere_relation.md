@@ -1,6 +1,6 @@
 ---
 title: 3D Sphere Relation (三次元球の位置関係)
-documentation_of: ../src/algorithm/geometry/3d/sphere_relation.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/sphere_relation.hpp
 ---
 
 ## API

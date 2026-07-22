@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_plane_closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/point_collection/line_plane_closest_points.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

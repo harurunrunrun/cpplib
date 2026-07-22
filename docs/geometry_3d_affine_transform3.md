@@ -1,6 +1,6 @@
 ---
 title: 3D Affine Transform (三次元アフィン変換)
-documentation_of: ../src/algorithm/geometry/3d/affine_transform3.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/affine_transform3.hpp
 ---
 
 `AffineTransform3` は点 $p$ を `linear * p + offset` へ移す三次元アフィン変換を

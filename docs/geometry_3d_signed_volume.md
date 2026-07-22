@@ -1,6 +1,6 @@
 ---
 title: Signed Tetrahedron Volume (四面体の符号付き体積)
-documentation_of: ../src/algorithm/geometry/3d/signed_volume.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/signed_volume.hpp
 ---
 
 ## API

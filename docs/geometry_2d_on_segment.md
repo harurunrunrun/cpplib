@@ -1,6 +1,6 @@
 ---
 title: 2D Point on Segment (二次元線分上判定)
-documentation_of: ../src/algorithm/geometry/2d/on_segment.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/on_segment.hpp
 ---
 
 ## API

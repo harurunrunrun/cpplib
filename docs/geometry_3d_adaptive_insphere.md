@@ -1,6 +1,6 @@
 ---
 title: Adaptive In-Sphere (適応的精度による三次元外接球判定)
-documentation_of: ../src/algorithm/geometry/3d/adaptive_insphere.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/adaptive_insphere.hpp
 ---
 
 ## API

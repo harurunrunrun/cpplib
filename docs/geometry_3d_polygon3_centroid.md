@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Centroid (三次元多角形の重心)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_centroid.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/polygon3_centroid.hpp
 ---
 
 ## API

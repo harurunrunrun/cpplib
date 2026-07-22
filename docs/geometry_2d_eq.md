@@ -1,6 +1,6 @@
 ---
 title: 2D Floating Equality (二次元幾何の誤差付き等値判定)
-documentation_of: ../src/algorithm/geometry/2d/eq.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/eq.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 2D Common Tangents (二次元円の共通接線)
-documentation_of: ../src/algorithm/geometry/2d/common_tangents.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/common_tangents.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 2D Integer Cross Product (二次元整数外積)
-documentation_of: ../src/algorithm/geometry/2d/integer_cross.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/integer_cross.hpp
 ---
 
 ## API

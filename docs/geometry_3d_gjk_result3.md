@@ -1,6 +1,6 @@
 ---
 title: GJK Result 3D (3次元GJK結果)
-documentation_of: ../src/algorithm/geometry/3d/gjk_result3.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/gjk_result3.hpp
 ---
 
 ## API

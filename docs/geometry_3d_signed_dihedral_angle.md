@@ -1,6 +1,6 @@
 ---
 title: Signed 3D Dihedral Angle (三次元符号付き二面角)
-documentation_of: ../src/algorithm/geometry/3d/signed_dihedral_angle.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/signed_dihedral_angle.hpp
 ---
 
 ## API

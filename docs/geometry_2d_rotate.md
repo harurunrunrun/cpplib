@@ -1,6 +1,6 @@
 ---
 title: 2D Rotation (二次元回転)
-documentation_of: ../src/algorithm/geometry/2d/rotate.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/rotate.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Triangle Area from Three Sides (三辺から求める三角形面積)
-documentation_of: ../src/algorithm/geometry/2d/triangle_area_from_sides.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/triangle_area_from_sides.hpp
 ---
 
 ## API

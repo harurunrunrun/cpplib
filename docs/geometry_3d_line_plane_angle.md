@@ -1,6 +1,6 @@
 ---
 title: Angle between 3D Line and Plane (三次元直線と平面の角度)
-documentation_of: ../src/algorithm/geometry/3d/line_plane_angle.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/line_plane_angle.hpp
 ---
 
 ## API

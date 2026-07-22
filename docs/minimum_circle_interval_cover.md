@@ -1,6 +1,6 @@
 ---
 title: Minimum Circle Interval Cover (円周区間最小被覆)
-documentation_of: ../src/algorithm/geometry/2d/minimum_circle_interval_cover.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/minimum_circle_interval_cover.hpp
 ---
 
 円周上の候補区間から、全周を覆う最小本数を求める。

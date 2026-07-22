@@ -6,9 +6,9 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/algorithm/geometry/2d/polygon_boundary_points/enumerate_points_on_polygon_boundary.hpp"
-#include "../../src/algorithm/geometry/2d/polygon_boundary_points.hpp"
-#include "../../src/algorithm/geometry/2d/polygon_boundary_points/polygon_boundary_point_query.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/enumerate_points_on_polygon_boundary.hpp"
+#include "../../src/algorithm/geometry/2d/core/polygon_boundary_points.hpp"
+#include "../../src/algorithm/geometry/2d/query/polygon_boundary_point_query.hpp"
 
 std::vector<int> polygon_boundary_points_odr_part_a(
     const std::vector<Point>& polygon,

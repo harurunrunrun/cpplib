@@ -1,6 +1,6 @@
 ---
 title: Sphere Cap Volume (球冠の体積)
-documentation_of: ../src/algorithm/geometry/3d/sphere_cap_volume.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/sphere_cap_volume.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Point on Convex Hull (凸包上の点判定)
-documentation_of: ../src/algorithm/geometry/2d/on_convex_hull.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/on_convex_hull.hpp
 ---
 
 ## API

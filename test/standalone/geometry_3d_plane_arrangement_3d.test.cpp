@@ -9,7 +9,7 @@
 #include <variant>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/plane_arrangement_3d.hpp"
+#include "../../src/algorithm/geometry/3d/shape/plane_arrangement_3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

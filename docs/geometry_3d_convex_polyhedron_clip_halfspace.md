@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Halfspace Clip (凸多面体の半空間切断)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_clip_halfspace.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/convex_polyhedron_clip_halfspace.hpp
 ---
 
 ## API

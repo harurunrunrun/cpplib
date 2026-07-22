@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/circle_segment_intersection_count.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_segment_intersection_count.hpp"
 
 #include <iostream>
 

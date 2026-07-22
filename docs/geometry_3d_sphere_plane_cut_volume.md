@@ -1,6 +1,6 @@
 ---
 title: Sphere Volume Cut by 3D Plane (三次元平面で切られる球の体積)
-documentation_of: ../src/algorithm/geometry/3d/sphere_plane_cut_volume.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/sphere_plane_cut_volume.hpp
 ---
 
 ## API

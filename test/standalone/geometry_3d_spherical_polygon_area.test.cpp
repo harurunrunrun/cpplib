@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/spherical_polygon_area.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/spherical_polygon_area.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

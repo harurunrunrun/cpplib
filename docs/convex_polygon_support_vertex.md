@@ -1,12 +1,12 @@
 ---
 title: Convex Polygon Support Vertex (凸多角形の支持点)
-documentation_of: ../src/algorithm/geometry/2d/convex_polygon_support_vertex.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/convex_polygon_support_vertex.hpp
 ---
 
 指定方向に最も遠い凸多角形の頂点。
 
 ```cpp
-#include "src/algorithm/geometry/2d/convex_polygon_support_vertex.hpp"
+#include "src/algorithm/geometry/2d/query/convex_polygon_support_vertex.hpp"
 
 std::size_t index = convex_polygon_support_vertex(polygon, direction);
 ```

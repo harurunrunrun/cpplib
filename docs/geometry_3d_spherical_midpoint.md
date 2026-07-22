@@ -1,6 +1,6 @@
 ---
 title: Spherical Midpoint (球面中点)
-documentation_of: ../src/algorithm/geometry/3d/spherical_midpoint.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/spherical_midpoint.hpp
 ---
 
 ## API

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_circle_boundary_flags.hpp"
+#include "../../src/algorithm/geometry/2d/query/minimum_enclosing_circle_boundary_flags.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

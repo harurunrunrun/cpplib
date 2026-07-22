@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 #include <cmath>
 
-#include "../../src/algorithm/geometry/3d/quaternion3_from_axis_angle.hpp"
-#include "../../src/algorithm/geometry/3d/quaternion3_rotate.hpp"
-#include "../../src/algorithm/geometry/3d/quaternion3_slerp.hpp"
+#include "../../src/algorithm/geometry/3d/shape/quaternion3_from_axis_angle.hpp"
+#include "../../src/algorithm/geometry/3d/point/quaternion3_rotate.hpp"
+#include "../../src/algorithm/geometry/3d/shape/quaternion3_slerp.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/gjk_intersects_3d.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/gjk_intersects_3d.hpp"
 #include "geometry_3d_collision_test_common.hpp"
 
 int main(){

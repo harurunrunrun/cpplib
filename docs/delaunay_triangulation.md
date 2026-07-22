@@ -1,6 +1,6 @@
 ---
 title: 2D Delaunay Triangulation (二次元Delaunay三角形分割)
-documentation_of: ../src/algorithm/geometry/2d/delaunay_triangulation.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/delaunay_triangulation.hpp
 ---
 
 ## API

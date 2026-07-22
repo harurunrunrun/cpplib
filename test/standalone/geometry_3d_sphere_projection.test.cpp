@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/sphere_projection.hpp"
+#include "../../src/algorithm/geometry/3d/shape/sphere_projection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_circle_sphere_validation_test_common.hpp"
 

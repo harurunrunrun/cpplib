@@ -1,6 +1,6 @@
 ---
 title: 3D Point Deduplication (三次元点の重複除去)
-documentation_of: ../src/algorithm/geometry/3d/deduplicate_points_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/deduplicate_points_3d.hpp
 ---
 
 ## API

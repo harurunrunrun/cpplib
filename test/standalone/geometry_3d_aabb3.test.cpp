@@ -7,7 +7,7 @@
 #include <limits>
 #include <random>
 
-#include "../../src/algorithm/geometry/3d/aabb3.hpp"
+#include "../../src/algorithm/geometry/3d/core/aabb3.hpp"
 
 int main(){
     std::uint64_t seed;

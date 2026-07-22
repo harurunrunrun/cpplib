@@ -1,6 +1,6 @@
 ---
 title: 3D Linear Coincidence Test (三次元線形図形の一致判定)
-documentation_of: ../src/algorithm/geometry/3d/linear_coincident.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/linear_coincident.hpp
 ---
 
 ## API

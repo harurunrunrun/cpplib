@@ -1,6 +1,6 @@
 ---
 title: 2D Squared Norm (二次元ノルム二乗)
-documentation_of: ../src/algorithm/geometry/2d/norm.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/norm.hpp
 ---
 
 ## API

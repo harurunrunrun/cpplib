@@ -1,6 +1,6 @@
 ---
 title: Closest Point on 3D Tetrahedron (三次元四面体上の最近点)
-documentation_of: ../src/algorithm/geometry/3d/tetrahedron_closest_point.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/tetrahedron_closest_point.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 2D Triangle Orthocenter (二次元三角形の垂心)
-documentation_of: ../src/algorithm/geometry/2d/orthocenter.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/orthocenter.hpp
 ---
 
 ## API

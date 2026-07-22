@@ -1,6 +1,6 @@
 ---
 title: Euclidean Minimum Spanning Tree (ユークリッド最小全域木) [euclidean_mst]
-documentation_of: ../src/algorithm/geometry/2d/euclidean_mst.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/euclidean_mst.hpp
 ---
 
 二次元整数座標点の完全グラフについて、辺重みをユークリッド距離とした最小全域木を求める。

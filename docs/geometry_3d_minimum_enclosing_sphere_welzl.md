@@ -1,6 +1,6 @@
 ---
 title: 3D Welzl Minimum Sphere (三次元Welzl最小包含球)
-documentation_of: ../src/algorithm/geometry/3d/minimum_enclosing_sphere_welzl.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/minimum_enclosing_sphere_welzl.hpp
 ---
 
 Welzlの再帰アルゴリズムで三次元点集合の最小包含球を求める。境界集合は高々4点で、

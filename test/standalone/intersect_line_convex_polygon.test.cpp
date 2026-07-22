@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/intersect_line_convex_polygon.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/intersect_line_convex_polygon.hpp"
 
 #include <iostream>
 #include <stdexcept>

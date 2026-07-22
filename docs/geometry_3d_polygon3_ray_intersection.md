@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Ray Intersection (三次元多角形と半直線の交差)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_ray_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/polygon3_ray_intersection.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Point Set-Segment Minimum Distance (点集合と線分の最小距離)
-documentation_of: ../src/algorithm/geometry/2d/point_set_segment_minimum_distance.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/point_set_segment_minimum_distance.hpp
 ---
 
 ## API

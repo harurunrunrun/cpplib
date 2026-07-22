@@ -1,6 +1,6 @@
 ---
 title: 3D Orthonormal Basis (三次元正規直交基底)
-documentation_of: ../src/algorithm/geometry/3d/orthonormal_basis_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/point_collection/orthonormal_basis_3d.hpp
 ---
 
 指定方向を第1軸とする右手系の三次元正規直交基底を構築する。

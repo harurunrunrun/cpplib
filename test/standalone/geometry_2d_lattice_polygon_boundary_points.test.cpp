@@ -1,5 +1,5 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/lattice_polygon_boundary_points.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/lattice_polygon_boundary_points.hpp"
 #include <iostream>
 #include <vector>
 static void print_u128(__uint128_t value){ if(value>=10)print_u128(value/10);std::cout<<char('0'+value%10); }

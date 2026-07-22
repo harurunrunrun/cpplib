@@ -1,6 +1,6 @@
 ---
 title: 3D Segment and Triangle Intersection (三次元線分と三角形の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/segment_triangle_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/segment_triangle_intersection.hpp
 ---
 
 ## API

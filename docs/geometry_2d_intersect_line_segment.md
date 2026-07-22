@@ -1,6 +1,6 @@
 ---
 title: 2D Line-Segment Intersection Test (二次元直線と線分の交差判定)
-documentation_of: ../src/algorithm/geometry/2d/intersect_line_segment.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/intersect_line_segment.hpp
 ---
 
 ## API

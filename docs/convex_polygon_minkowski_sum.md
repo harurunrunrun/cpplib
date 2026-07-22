@@ -1,6 +1,6 @@
 ---
 title: Convex Polygon Minkowski Sum (凸多角形のミンコフスキー和)
-documentation_of: ../src/algorithm/geometry/2d/advanced/convex_polygon_minkowski_sum.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/convex_polygon_minkowski_sum.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: QuickHull 3D (三次元QuickHull)
-documentation_of: ../src/algorithm/geometry/3d/quickhull_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/quickhull_3d.hpp
 ---
 
 ## API

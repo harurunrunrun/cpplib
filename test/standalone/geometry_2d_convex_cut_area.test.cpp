@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/convex_cut_area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/convex_cut_area.hpp"
 
 int main(){
     std::cout << std::fixed << std::setprecision(9);

@@ -1,6 +1,6 @@
 ---
 title: Lattice Polygon Boundary Points (格子多角形の境界格子点数)
-documentation_of: ../src/algorithm/geometry/2d/lattice_polygon_boundary_points.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/lattice_polygon_boundary_points.hpp
 ---
 
 ## API

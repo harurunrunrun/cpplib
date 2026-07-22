@@ -4,7 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/barycentric_coordinates.hpp"
+#include "../../src/algorithm/geometry/3d/query/barycentric_coordinates.hpp"
 #include "geometry_3d_test_common.hpp"
 
 namespace{

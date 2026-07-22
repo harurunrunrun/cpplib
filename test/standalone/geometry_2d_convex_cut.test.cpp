@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_cut.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/convex_cut.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

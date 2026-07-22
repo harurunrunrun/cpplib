@@ -1,6 +1,6 @@
 ---
 title: 3D Tetrahedron Plane Section (三次元四面体の平面切断)
-documentation_of: ../src/algorithm/geometry/3d/tetrahedron_plane_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/tetrahedron_plane_intersection.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: DelaunayTetrahedralization3 (三次元Delaunay四面体分割結果)
-documentation_of: ../src/algorithm/geometry/3d/delaunay_tetrahedralization3.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/delaunay_tetrahedralization_result3.hpp
 ---
 
 三次元Delaunay四面体分割の頂点と四面体を保持する結果型。

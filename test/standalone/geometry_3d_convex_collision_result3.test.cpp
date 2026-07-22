@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/convex_collision_result3.hpp"
+#include "../../src/algorithm/geometry/3d/query/convex_collision_result3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

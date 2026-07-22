@@ -1,6 +1,6 @@
 ---
 title: 3D Delaunay Tetrahedralization (三次元Delaunay四面体分割)
-documentation_of: ../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/delaunay_tetrahedralization_3d.hpp
 ---
 
 ランダム増分 Bowyer--Watson 法で有限点集合の Delaunay 四面体分割を構築する。

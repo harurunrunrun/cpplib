@@ -1,6 +1,6 @@
 ---
 title: 2D Tangent Lines from Point (二次元点から円への接線)
-documentation_of: ../src/algorithm/geometry/2d/tangent_lines.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/tangent_lines.hpp
 ---
 
 ## API

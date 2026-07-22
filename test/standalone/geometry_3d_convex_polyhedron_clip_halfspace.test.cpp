@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_clip_halfspace.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_polyhedron_clip_halfspace.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/convex_polyhedron_volume.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_convex_polyhedron_test_common.hpp"
 

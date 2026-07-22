@@ -1,6 +1,6 @@
 ---
 title: 3D Point Set Diameter (三次元点集合直径)
-documentation_of: ../src/algorithm/geometry/3d/point_set_diameter_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/point_set_diameter_3d.hpp
 ---
 
 三次元点集合のEuclidean直径と、その両端のindexを正確に求める。

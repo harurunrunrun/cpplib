@@ -1,6 +1,6 @@
 ---
 title: GJK Query 3D (3次元GJK問い合わせ)
-documentation_of: ../src/algorithm/geometry/3d/gjk_query_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/gjk_query_3d.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Point Distance (凸多面体と点の距離)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_point_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/convex_polyhedron_point_distance.hpp
 ---
 
 ## API

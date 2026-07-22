@@ -1,6 +1,6 @@
 ---
 title: Advanced Geometry Result Types (高度幾何の結果型)
-documentation_of: ../src/algorithm/geometry/2d/advanced/base.hpp
+documentation_of: ../src/algorithm/geometry/2d/core/half_plane_intersection_result.hpp
 ---
 
 半平面交差の結果型。

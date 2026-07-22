@@ -1,6 +1,6 @@
 ---
 title: Upper Convex Hull (上側凸包)
-documentation_of: ../src/algorithm/geometry/2d/upper_convex_hull.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/upper_convex_hull.hpp
 ---
 
 ## API

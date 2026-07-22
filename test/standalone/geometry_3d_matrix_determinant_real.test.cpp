@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/matrix_determinant_real.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/matrix_determinant_real.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

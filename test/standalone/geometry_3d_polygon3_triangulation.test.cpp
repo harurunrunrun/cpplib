@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/polygon3_triangulation.hpp"
-#include "../../src/algorithm/geometry/3d/area.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_area.hpp"
+#include "../../src/algorithm/geometry/3d/shape/polygon3_triangulation.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/area.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/polygon3_area.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 ---
 title: 2D Point on Circle (二次元円周上の点判定)
-documentation_of: ../src/algorithm/geometry/2d/on_circle.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/on_circle.hpp
 ---
 
 ## API

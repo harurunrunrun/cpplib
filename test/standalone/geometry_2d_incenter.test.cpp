@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/incenter.hpp"
+#include "../../src/algorithm/geometry/2d/point/incenter.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

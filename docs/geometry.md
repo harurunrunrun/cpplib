@@ -1,6 +1,6 @@
 ---
 title: Geometry (二次元幾何)
-documentation_of: ../src/algorithm/geometry/2d/geometry.hpp
+documentation_of: ../src/algorithm/geometry/2d/core/geometry.hpp
 ---
 
 Two-dimensional geometry with `long double` coordinates. Comparisons use the absolute tolerance `GEOMETRY_EPS = 1e-10` unless otherwise noted. `Point::operator<` is exact lexicographical order so that it can be used by standard sorting algorithms.

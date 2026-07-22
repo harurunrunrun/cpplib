@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/spherical_central_angle.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/spherical_central_angle.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 ---
 title: Dominant Axis Projection 3D (三次元支配軸射影)
-documentation_of: ../src/algorithm/geometry/3d/dominant_axis_projection.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/dominant_axis_projection.hpp
 ---
 
 ## API

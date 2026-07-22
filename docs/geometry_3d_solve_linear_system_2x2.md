@@ -1,6 +1,6 @@
 ---
 title: Solve 2x2 Linear System (二元連立一次方程式)
-documentation_of: ../src/algorithm/geometry/3d/solve_linear_system_2x2.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/solve_linear_system_2x2.hpp
 ---
 
 二元連立一次方程式 $Ax=b$ を部分pivoting付き消去法で解く。

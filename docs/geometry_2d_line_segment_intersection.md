@@ -1,6 +1,6 @@
 ---
 title: Line-Segment Intersection Point (直線と線分の交点)
-documentation_of: ../src/algorithm/geometry/2d/line_segment_intersection.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/line_segment_intersection.hpp
 ---
 
 ## API

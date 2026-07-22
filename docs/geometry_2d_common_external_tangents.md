@@ -1,6 +1,6 @@
 ---
 title: 2D Common External Tangents (二次元円の共通外接線)
-documentation_of: ../src/algorithm/geometry/2d/common_external_tangents.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/common_external_tangents.hpp
 ---
 
 ## API

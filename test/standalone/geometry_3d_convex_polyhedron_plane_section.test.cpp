@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_plane_section.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_polyhedron_plane_section.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_convex_polyhedron_test_common.hpp"
 

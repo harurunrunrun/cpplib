@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Coplanarity (三次元多角形の共面判定)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_coplanar.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/polygon3_coplanar.hpp
 ---
 
 ## API

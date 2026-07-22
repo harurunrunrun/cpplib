@@ -1,6 +1,6 @@
 ---
 title: Minkowski Sum 3D (3次元Minkowski和)
-documentation_of: ../src/algorithm/geometry/3d/minkowski_sum_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/minkowski_sum_3d.hpp
 ---
 
 二つの凸形状のMinkowski和を `ConvexPolyhedron3` として構築する。

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/on_segment.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/on_segment.hpp"
 #include "geometry_2d_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 ---
 title: 3D Dot Product (三次元内積)
-documentation_of: ../src/algorithm/geometry/3d/dot.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/dot.hpp
 ---
 
 ## API

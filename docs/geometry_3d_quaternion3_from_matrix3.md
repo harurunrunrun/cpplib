@@ -1,6 +1,6 @@
 ---
 title: Matrix3 to Quaternion (回転行列からクォータニオンへの変換)
-documentation_of: ../src/algorithm/geometry/3d/quaternion3_from_matrix3.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/quaternion3_from_matrix3.hpp
 ---
 
 ## API

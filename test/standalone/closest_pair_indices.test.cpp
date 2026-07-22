@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/closest_pair_indices.hpp"
+#include "../../src/algorithm/geometry/2d/query/closest_pair_indices.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

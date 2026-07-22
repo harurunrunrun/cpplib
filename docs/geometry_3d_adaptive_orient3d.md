@@ -1,6 +1,6 @@
 ---
 title: Adaptive Orient3D (適応的精度による三次元向き判定)
-documentation_of: ../src/algorithm/geometry/3d/adaptive_orient3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/adaptive_orient3d.hpp
 ---
 
 ## API

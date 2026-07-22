@@ -1,6 +1,6 @@
 ---
 title: Tetrahedron Volume (四面体の体積)
-documentation_of: ../src/algorithm/geometry/3d/volume.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/volume.hpp
 ---
 
 ## API

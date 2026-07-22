@@ -1,6 +1,6 @@
 ---
 title: 3D Dihedral Angle (三次元二面角)
-documentation_of: ../src/algorithm/geometry/3d/dihedral_angle.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/dihedral_angle.hpp
 ---
 
 ## API

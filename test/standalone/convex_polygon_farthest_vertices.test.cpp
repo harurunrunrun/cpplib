@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices.hpp"
+#include "../../src/algorithm/geometry/2d/query/convex_polygon_farthest_vertices.hpp"
 #include "convex_calipers_test_common.hpp"
 
 int main(){

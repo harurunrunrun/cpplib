@@ -1,6 +1,6 @@
 ---
 title: 2D Convex Cut Area (二次元凸多角形切断面積) [CGL_4_C]
-documentation_of: ../src/algorithm/geometry/2d/convex_cut_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/convex_cut_area.hpp
 ---
 
 ## API

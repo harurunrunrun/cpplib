@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Area (三次元三角形面積)
-documentation_of: ../src/algorithm/geometry/3d/area.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/area.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/linear_coincident.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/linear_coincident.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

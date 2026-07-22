@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Intersects (凸多面体同士の交差判定)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_intersects.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/convex_polyhedron_intersects.hpp
 ---
 
 ## API

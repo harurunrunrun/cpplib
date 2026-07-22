@@ -1,6 +1,6 @@
 ---
 title: 2D Circle-Line Intersection Test (二次元円と直線の交差判定)
-documentation_of: ../src/algorithm/geometry/2d/intersect_circle_line.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/intersect_circle_line.hpp
 ---
 
 ## API

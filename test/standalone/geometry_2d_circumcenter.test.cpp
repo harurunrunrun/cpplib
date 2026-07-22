@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circumcenter.hpp"
+#include "../../src/algorithm/geometry/2d/point/circumcenter.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

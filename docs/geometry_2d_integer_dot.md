@@ -1,6 +1,6 @@
 ---
 title: 2D Integer Dot Product (二次元整数内積)
-documentation_of: ../src/algorithm/geometry/2d/integer_dot.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/integer_dot.hpp
 ---
 
 ## API

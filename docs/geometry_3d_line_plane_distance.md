@@ -1,6 +1,6 @@
 ---
 title: Distance between 3D Line and Plane (三次元直線と平面の距離)
-documentation_of: ../src/algorithm/geometry/3d/line_plane_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/line_plane_distance.hpp
 ---
 
 ## API

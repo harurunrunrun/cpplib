@@ -1,6 +1,6 @@
 ---
 title: Closest Point on 3D Primitive (三次元図形上の最近点)
-documentation_of: ../src/algorithm/geometry/3d/closest_point.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/closest_point.hpp
 ---
 
 ## API

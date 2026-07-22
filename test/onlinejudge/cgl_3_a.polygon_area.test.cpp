@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/area.hpp"
 
 int main(){
     int size;

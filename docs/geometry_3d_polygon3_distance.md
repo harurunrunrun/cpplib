@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Point Distance (三次元多角形と点の距離)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/polygon3_distance.hpp
 ---
 
 ## API

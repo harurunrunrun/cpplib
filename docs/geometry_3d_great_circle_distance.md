@@ -1,6 +1,6 @@
 ---
 title: Great-Circle Distance (大円距離)
-documentation_of: ../src/algorithm/geometry/3d/great_circle_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/great_circle_distance.hpp
 ---
 
 ## API

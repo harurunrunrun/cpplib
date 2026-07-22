@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Volume (凸多面体の体積)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/convex_polyhedron_volume.hpp
 ---
 
 ## API

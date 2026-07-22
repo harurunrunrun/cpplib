@@ -1,6 +1,6 @@
 ---
 title: 3D Segment Projection (三次元線分への射影)
-documentation_of: ../src/algorithm/geometry/3d/segment_projection.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/segment_projection.hpp
 ---
 
 ## API

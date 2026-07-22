@@ -1,6 +1,6 @@
 ---
 title: Area of Union of Circles (円の和集合面積)
-documentation_of: ../src/algorithm/geometry/2d/circle_union_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/circle_union_area.hpp
 ---
 
 複数の円板の和集合面積を求める。各円周について他の円板に覆われる角度区間を

@@ -1,6 +1,6 @@
 ---
 title: Convex Hull Area (凸包面積)
-documentation_of: ../src/algorithm/geometry/2d/convex_hull_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/convex_hull_area.hpp
 ---
 
 ## API

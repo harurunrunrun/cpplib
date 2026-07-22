@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Side Lengths (三次元三角形の三辺長)
-documentation_of: ../src/algorithm/geometry/3d/triangle_side_lengths.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/triangle_side_lengths.hpp
 ---
 
 ## API

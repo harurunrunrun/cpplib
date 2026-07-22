@@ -1,6 +1,6 @@
 ---
 title: Spherical Central Angle (球面中心角)
-documentation_of: ../src/algorithm/geometry/3d/spherical_central_angle.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/spherical_central_angle.hpp
 ---
 
 ## API

@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "../../src/algorithm/geometry/3d/voronoi_diagram3.hpp"
+#include "../../src/algorithm/geometry/3d/shape/voronoi_diagram_result3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

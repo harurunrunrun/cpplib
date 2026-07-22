@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Normal (三次元多角形の法線)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_normal.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/polygon3_normal.hpp
 ---
 
 ## API

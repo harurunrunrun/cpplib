@@ -1,6 +1,6 @@
 ---
 title: 3D Skew Linear Primitives (三次元線形図形のねじれ判定)
-documentation_of: ../src/algorithm/geometry/3d/linear_skew.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/linear_skew.hpp
 ---
 
 ## API

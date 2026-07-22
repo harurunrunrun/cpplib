@@ -1,6 +1,6 @@
 ---
 title: 2D Circle-Segment Intersection Test (二次元円と線分の交差判定)
-documentation_of: ../src/algorithm/geometry/2d/intersect_circle_segment.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/intersect_circle_segment.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Signed Area (三次元多角形の向き付き面積)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_signed_area.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/polygon3_signed_area.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Circles through Two Points (2点を通る指定半径円)
-documentation_of: ../src/algorithm/geometry/2d/circles_through_two_points.hpp
+documentation_of: ../src/algorithm/geometry/2d/shape/circles_through_two_points.hpp
 ---
 
 ## API

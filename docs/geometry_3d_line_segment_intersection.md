@@ -1,6 +1,6 @@
 ---
 title: 3D Line and Segment Intersection (三次元直線と線分の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/line_segment_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/line_segment_intersection.hpp
 ---
 
 ## API

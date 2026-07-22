@@ -1,6 +1,6 @@
 ---
 title: Polygon3 Triangulation (三次元多角形の三角形分割)
-documentation_of: ../src/algorithm/geometry/3d/polygon3_triangulation.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/polygon3_triangulation.hpp
 ---
 
 ## API

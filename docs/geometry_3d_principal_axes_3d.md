@@ -1,6 +1,6 @@
 ---
 title: 3D Principal Axes (三次元主成分軸)
-documentation_of: ../src/algorithm/geometry/3d/principal_axes_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/principal_axes_3d.hpp
 ---
 
 点集合の重心と母共分散行列を計算し、分散の降順に3本のprincipal axisを返す。

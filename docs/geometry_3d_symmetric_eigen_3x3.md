@@ -1,6 +1,6 @@
 ---
 title: Symmetric 3x3 Eigensystem (三次対称行列の固有系)
-documentation_of: ../src/algorithm/geometry/3d/symmetric_eigen_3x3.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/symmetric_eigen_3x3.hpp
 ---
 
 実対称な `Matrix3` の固有値と正規直交固有ベクトルをJacobi回転で求める。

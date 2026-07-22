@@ -7,20 +7,20 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/circle_circle_cross_points.hpp"
-#include "../../src/algorithm/geometry/2d/circle_circle_intersection_count.hpp"
-#include "../../src/algorithm/geometry/2d/circle_line_cross_points.hpp"
-#include "../../src/algorithm/geometry/2d/circle_line_intersection_count.hpp"
-#include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area.hpp"
-#include "../../src/algorithm/geometry/2d/circle_segment_cross_points.hpp"
-#include "../../src/algorithm/geometry/2d/circle_segment_intersection_count.hpp"
-#include "../../src/algorithm/geometry/2d/circle_triangle_intersection_area.hpp"
-#include "../../src/algorithm/geometry/2d/circles_through_two_points.hpp"
-#include "../../src/algorithm/geometry/2d/common_tangents.hpp"
-#include "../../src/algorithm/geometry/2d/intersect_circle_circle.hpp"
-#include "../../src/algorithm/geometry/2d/intersect_circle_line.hpp"
-#include "../../src/algorithm/geometry/2d/intersect_circle_segment.hpp"
-#include "../../src/algorithm/geometry/2d/tangent_points.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/circle_circle_cross_points.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_circle_intersection_count.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/circle_line_cross_points.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_line_intersection_count.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_polygon_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/circle_segment_cross_points.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_segment_intersection_count.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_triangle_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/shape/circles_through_two_points.hpp"
+#include "../../src/algorithm/geometry/2d/shape/common_tangents.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/intersect_circle_circle.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/intersect_circle_line.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/intersect_circle_segment.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/tangent_points.hpp"
 
 namespace{
 

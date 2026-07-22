@@ -1,6 +1,6 @@
 ---
 title: 2D Triangle Area (二次元三角形の面積)
-documentation_of: ../src/algorithm/geometry/2d/triangle_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/triangle_area.hpp
 ---
 
 ## API

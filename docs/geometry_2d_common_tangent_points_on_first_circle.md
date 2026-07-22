@@ -1,6 +1,6 @@
 ---
 title: 2D Common Tangent Points on First Circle (二次元第一円上共通接点) [CGL_7_G]
-documentation_of: ../src/algorithm/geometry/2d/common_tangent_points_on_first_circle.hpp
+documentation_of: ../src/algorithm/geometry/2d/point_collection/common_tangent_points_on_first_circle.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_hull_detail.hpp"
+#include "../../src/algorithm/geometry/2d/detail/convex_hull_construction_detail.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

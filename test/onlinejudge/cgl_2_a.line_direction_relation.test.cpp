@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/line_direction_relation.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/line_direction_relation.hpp"
 
 int main(){
     int query_count;

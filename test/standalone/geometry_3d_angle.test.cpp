@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/angle.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/angle.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

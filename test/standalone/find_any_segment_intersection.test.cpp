@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/find_any_segment_intersection.hpp"
+#include "../../src/algorithm/geometry/2d/query/find_any_segment_intersection.hpp"
 
 #include <iostream>
 #include <vector>

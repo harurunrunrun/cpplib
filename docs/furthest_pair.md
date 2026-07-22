@@ -1,6 +1,6 @@
 ---
 title: Furthest Pair of Points (最遠点対) [furthest_pair]
-documentation_of: ../src/algorithm/geometry/2d/furthest_pair.hpp
+documentation_of: ../src/algorithm/geometry/2d/query/furthest_pair.hpp
 ---
 
 整数座標点集合の最遠点対を求める。

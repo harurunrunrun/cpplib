@@ -1,0 +1,10 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POINT_ROTATE90_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POINT_ROTATE90_HPP_INCLUDED
+
+#include "../core/types.hpp"
+
+inline Point rotate90(const Point& point){
+    return {-point.y, point.x};
+}
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_POINT_ROTATE90_HPP_INCLUDED

@@ -1,6 +1,6 @@
 ---
 title: 2D Line Intersection (二次元直線交点)
-documentation_of: ../src/algorithm/geometry/2d/line_intersection.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/line_intersection.hpp
 ---
 
 ## API

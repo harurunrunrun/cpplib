@@ -1,6 +1,6 @@
 ---
 title: GJK Distance 3D (3次元GJK距離)
-documentation_of: ../src/algorithm/geometry/3d/gjk_distance_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/gjk_distance_3d.hpp
 ---
 
 ## API

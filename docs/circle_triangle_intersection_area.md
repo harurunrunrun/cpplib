@@ -1,6 +1,6 @@
 ---
 title: Circle-Triangle Intersection Area (円と三角形の共通部分面積)
-documentation_of: ../src/algorithm/geometry/2d/circle_triangle_intersection_area.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/circle_triangle_intersection_area.hpp
 ---
 
 ## API

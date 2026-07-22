@@ -1,6 +1,6 @@
 ---
 title: 2D Circumcenter (二次元外心)
-documentation_of: ../src/algorithm/geometry/2d/circumcenter.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/circumcenter.hpp
 ---
 
 ## API

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <random>
 
-#include "../../src/algorithm/geometry/3d/base.hpp"
+#include "../../src/algorithm/geometry/3d/core/geometry_primitives.hpp"
 #include "geometry_3d_property_tests.hpp"
 
 inline bool geometry3d_close_value(

@@ -1,6 +1,6 @@
 ---
 title: View Cone Contains (視野角包含判定)
-documentation_of: ../src/algorithm/geometry/2d/view_cone_contains.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/view_cone_contains.hpp
 ---
 
 観測点から方向vectorを中心に広がる対称な視野角に、点が入るかを判定する。

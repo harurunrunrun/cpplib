@@ -1,6 +1,6 @@
 ---
 title: 2D Closest Pair Distance (二次元最近点対距離) [CGL_5_A]
-documentation_of: ../src/algorithm/geometry/2d/closest_pair.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/closest_pair.hpp
 ---
 
 ## API

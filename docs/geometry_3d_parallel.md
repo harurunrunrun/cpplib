@@ -1,6 +1,6 @@
 ---
 title: 3D Parallelism (3次元平行判定)
-documentation_of: ../src/algorithm/geometry/3d/parallel.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/parallel.hpp
 ---
 
 ## API

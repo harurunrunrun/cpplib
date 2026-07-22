@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Facets (三次元凸多面体の幾何面)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_facets.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/convex_polyhedron_facets.hpp
 ---
 
 ## API

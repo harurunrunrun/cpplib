@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/2d/intersect_circle_line.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/intersect_circle_line.hpp"
 
 int main(){
     int query_count;

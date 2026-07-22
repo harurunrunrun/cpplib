@@ -8,12 +8,12 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_diameter.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_support_vertex.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_tangents.hpp"
-#include "../../src/algorithm/geometry/2d/rotating_calipers.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/convex_polygon_diameter.hpp"
+#include "../../src/algorithm/geometry/2d/query/convex_polygon_farthest_vertices.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/convex_polygon_maximum_area_triangle.hpp"
+#include "../../src/algorithm/geometry/2d/query/convex_polygon_support_vertex.hpp"
+#include "../../src/algorithm/geometry/2d/query/convex_polygon_tangents.hpp"
+#include "../../src/algorithm/geometry/2d/core/rotating_calipers.hpp"
 
 inline std::vector<Point> read_calipers_polygon(){
     std::size_t count;

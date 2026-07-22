@@ -1,6 +1,6 @@
 ---
 title: 2D Coincident Lines (二次元同一直線判定)
-documentation_of: ../src/algorithm/geometry/2d/same_line.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/same_line.hpp
 ---
 
 ## API

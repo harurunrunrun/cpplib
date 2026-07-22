@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/ear_clipping_triangulation.hpp"
+#include "../../src/algorithm/geometry/2d/shape/ear_clipping_triangulation.hpp"
 #include "geometry_2d_triangulation_test_utils.hpp"
 
 #include <algorithm>

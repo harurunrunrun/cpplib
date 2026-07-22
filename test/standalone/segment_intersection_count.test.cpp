@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/segment_intersection_count.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/segment_intersection_count.hpp"
 
 #include <iostream>
 #include <vector>

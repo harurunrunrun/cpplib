@@ -1,6 +1,6 @@
 ---
 title: 3D Voronoi Diagram (三次元Voronoi図)
-documentation_of: ../src/algorithm/geometry/3d/voronoi_diagram_3d.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/voronoi_diagram_3d.hpp
 ---
 
 三次元Delaunay四面体分割の双対として、描画・包含処理に使えるVoronoi図を構築する。

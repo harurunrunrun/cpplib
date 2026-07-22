@@ -1,6 +1,6 @@
 ---
 title: 2D Circle Validation (二次元円の検査)
-documentation_of: ../src/algorithm/geometry/2d/validate_circle.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/validate_circle.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 3D Vector Alias (三次元ベクトル別名)
-documentation_of: ../src/algorithm/geometry/3d/vector3.hpp
+documentation_of: ../src/algorithm/geometry/3d/core/vector3.hpp
 ---
 
 ## API

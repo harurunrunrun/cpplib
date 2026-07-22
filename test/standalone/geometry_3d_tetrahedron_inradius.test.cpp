@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/tetrahedron_inradius.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/tetrahedron_inradius.hpp"
 #include "geometry_3d_center_radius_extreme_test_common.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

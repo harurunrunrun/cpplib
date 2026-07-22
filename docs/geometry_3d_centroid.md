@@ -1,6 +1,6 @@
 ---
 title: 3D Centroid (三次元重心)
-documentation_of: ../src/algorithm/geometry/3d/centroid.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/centroid.hpp
 ---
 
 ## API

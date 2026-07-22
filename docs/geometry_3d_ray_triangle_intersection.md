@@ -1,6 +1,6 @@
 ---
 title: 3D Ray and Triangle Intersection (三次元半直線と三角形の共通部分)
-documentation_of: ../src/algorithm/geometry/3d/ray_triangle_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/ray_triangle_intersection.hpp
 ---
 
 ## API

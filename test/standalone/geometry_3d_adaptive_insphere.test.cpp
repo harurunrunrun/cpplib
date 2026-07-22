@@ -6,8 +6,8 @@
 #include <random>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/adaptive_insphere.hpp"
-#include "../../src/algorithm/geometry/3d/exact_insphere.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/adaptive_insphere.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/exact_insphere.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

@@ -1,6 +1,6 @@
 ---
 title: 3D Squared Norm (三次元ノルム二乗)
-documentation_of: ../src/algorithm/geometry/3d/norm.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/norm.hpp
 ---
 
 ## API

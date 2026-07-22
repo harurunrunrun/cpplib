@@ -1,6 +1,6 @@
 ---
 title: 2D Right-Angle Rotation (二次元90度回転)
-documentation_of: ../src/algorithm/geometry/2d/rotate90.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/rotate90.hpp
 ---
 
 ## API

@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circle_line_cross_points.hpp"
+#include "../../src/algorithm/geometry/2d/point_collection/circle_line_cross_points.hpp"
 
 int main(){
     Circle circle;

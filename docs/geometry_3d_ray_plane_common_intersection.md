@@ -1,6 +1,6 @@
 ---
 title: 3D Ray-Plane Common Intersection (三次元半直線・平面共通部分)
-documentation_of: ../src/algorithm/geometry/3d/ray_plane_common_intersection.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/ray_plane_common_intersection.hpp
 ---
 
 ## 概要

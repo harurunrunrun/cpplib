@@ -10,12 +10,12 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d.hpp"
-#include "../../src/algorithm/geometry/3d/adaptive_insphere.hpp"
-#include "../../src/algorithm/geometry/3d/adaptive_orient3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
-#include "../../src/algorithm/geometry/3d/signed_volume.hpp"
+#include "../../src/algorithm/geometry/3d/shape/delaunay_tetrahedralization_3d.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/adaptive_insphere.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/adaptive_orient3d.hpp"
+#include "../../src/algorithm/geometry/3d/shape/convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/convex_polyhedron_volume.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/signed_volume.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

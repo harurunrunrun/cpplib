@@ -1,6 +1,6 @@
 ---
 title: 3D Scale-Aware Sign (三次元幾何のスケール付き符号判定)
-documentation_of: ../src/algorithm/geometry/3d/scale_aware_sign.hpp
+documentation_of: ../src/algorithm/geometry/3d/predicate/scale_aware_sign.hpp
 ---
 
 ## API

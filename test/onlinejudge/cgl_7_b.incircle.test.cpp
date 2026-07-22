@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/incircle.hpp"
+#include "../../src/algorithm/geometry/2d/shape/incircle.hpp"
 
 int main(){
     Point a, b, c;

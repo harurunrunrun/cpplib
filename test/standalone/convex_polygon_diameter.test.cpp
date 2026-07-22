@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_calipers_common.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_diameter.hpp"
-#include "../../src/algorithm/geometry/2d/rotating_calipers.hpp"
+#include "../../src/algorithm/geometry/2d/detail/convex_calipers_detail.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/convex_polygon_diameter.hpp"
+#include "../../src/algorithm/geometry/2d/core/rotating_calipers.hpp"
 #include "convex_calipers_test_common.hpp"
 
 namespace{

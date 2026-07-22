@@ -1,6 +1,6 @@
 ---
 title: Maximum Distance between Convex Polygons (凸多角形間の最大距離)
-documentation_of: ../src/algorithm/geometry/2d/convex_polygon_maximum_distance.hpp
+documentation_of: ../src/algorithm/geometry/2d/scalar/convex_polygon_maximum_distance.hpp
 ---
 
 ## API

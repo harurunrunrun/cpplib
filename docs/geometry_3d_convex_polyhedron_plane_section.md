@@ -1,6 +1,6 @@
 ---
 title: Convex Polyhedron Plane Section (凸多面体の平面断面)
-documentation_of: ../src/algorithm/geometry/3d/convex_polyhedron_plane_section.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/convex_polyhedron_plane_section.hpp
 ---
 
 ## API

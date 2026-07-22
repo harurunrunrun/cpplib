@@ -1,6 +1,6 @@
 ---
 title: Convex Polygon3 Cut (三次元凸多角形の半空間切断)
-documentation_of: ../src/algorithm/geometry/3d/convex_polygon3_cut.hpp
+documentation_of: ../src/algorithm/geometry/3d/shape/convex_polygon3_cut.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: 2D Polar Coordinates (二次元極座標)
-documentation_of: ../src/algorithm/geometry/2d/polar.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/polar.hpp
 ---
 
 ## API

@@ -1,6 +1,6 @@
 ---
 title: Real Gaussian Elimination (実数ガウス消去法)
-documentation_of: ../src/algorithm/geometry/3d/gaussian_elimination_real.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/gaussian_elimination_real.hpp
 ---
 
 `long double` 行列に対し、絶対値最大の要素を pivot に選ぶ部分 pivoting 付き

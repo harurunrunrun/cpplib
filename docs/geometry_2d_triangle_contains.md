@@ -1,6 +1,6 @@
 ---
 title: Inclusive Point in Triangle (三角形の内部・境界判定)
-documentation_of: ../src/algorithm/geometry/2d/triangle_contains.hpp
+documentation_of: ../src/algorithm/geometry/2d/predicate/triangle_contains.hpp
 ---
 
 ## API

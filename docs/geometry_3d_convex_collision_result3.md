@@ -1,6 +1,6 @@
 ---
 title: Convex Collision Result 3D (3次元凸形状衝突結果)
-documentation_of: ../src/algorithm/geometry/3d/convex_collision_result3.hpp
+documentation_of: ../src/algorithm/geometry/3d/query/convex_collision_result3.hpp
 ---
 
 ## API

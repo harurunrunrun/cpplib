@@ -1,6 +1,6 @@
 ---
 title: Closest Point on 3D Circle (三次元円周上の最近点)
-documentation_of: ../src/algorithm/geometry/3d/circle_closest_point.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/circle_closest_point.hpp
 ---
 
 ## API

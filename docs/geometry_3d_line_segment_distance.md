@@ -1,6 +1,6 @@
 ---
 title: Distance between 3D Line and Segment (三次元直線と線分の距離)
-documentation_of: ../src/algorithm/geometry/3d/line_segment_distance.hpp
+documentation_of: ../src/algorithm/geometry/3d/scalar/line_segment_distance.hpp
 ---
 
 ## API

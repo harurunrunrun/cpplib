@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/count_points_in_triangles.hpp"
+#include "../../src/algorithm/geometry/2d/query/count_points_in_triangles.hpp"
 
 void test_invalid_indices(){
     const std::vector<std::pair<long long, long long>> vertices{

@@ -5,7 +5,7 @@
 #include <cmath>
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/base.hpp"
+#include "../../src/algorithm/geometry/3d/core/geometry_primitives.hpp"
 
 inline bool geometry3d_extreme_relative_close(
     long double actual,

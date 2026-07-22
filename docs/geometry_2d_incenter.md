@@ -1,6 +1,6 @@
 ---
 title: 2D Incenter (二次元内心)
-documentation_of: ../src/algorithm/geometry/2d/incenter.hpp
+documentation_of: ../src/algorithm/geometry/2d/point/incenter.hpp
 ---
 
 ## API

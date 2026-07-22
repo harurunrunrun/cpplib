@@ -1,5 +1,5 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/half_plane_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/half_plane_intersection_area.hpp"
 #include "geometry_2d_test_common.hpp"
 #include <cmath>
 #include <exception>

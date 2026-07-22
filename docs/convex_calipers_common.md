@@ -1,12 +1,12 @@
 ---
 title: Normalized Convex Polygon (正規化凸多角形)
-documentation_of: ../src/algorithm/geometry/2d/convex_calipers_common.hpp
+documentation_of: ../src/algorithm/geometry/2d/detail/convex_calipers_detail.hpp
 ---
 
 rotating calipers 系の問い合わせで共有する正規化済み凸多角形。
 
 ```cpp
-#include "src/algorithm/geometry/2d/convex_calipers_common.hpp"
+#include "src/algorithm/geometry/2d/detail/convex_calipers_detail.hpp"
 
 NormalizedConvexPolygon polygon(vertices);
 ```

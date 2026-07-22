@@ -1,6 +1,6 @@
 ---
 title: Quaternion Vector Rotation (クォータニオンによるベクトル回転)
-documentation_of: ../src/algorithm/geometry/3d/quaternion3_rotate.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/quaternion3_rotate.hpp
 ---
 
 ## API

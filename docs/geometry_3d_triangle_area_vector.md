@@ -1,6 +1,6 @@
 ---
 title: 3D Triangle Area Vector (三次元三角形の向き付き面積ベクトル)
-documentation_of: ../src/algorithm/geometry/3d/triangle_area_vector.hpp
+documentation_of: ../src/algorithm/geometry/3d/point/triangle_area_vector.hpp
 ---
 
 ## API
