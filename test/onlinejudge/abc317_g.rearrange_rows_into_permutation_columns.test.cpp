@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/rearrange_rows_into_permutation_columns.hpp"
+#include "../../src/algorithm/graph/specialized/rearrange_rows_into_permutation_columns.hpp"
 
 int main(){
     int n, m;

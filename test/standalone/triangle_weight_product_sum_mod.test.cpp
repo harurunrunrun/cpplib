@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/triangle_weight_product_sum_mod.hpp"
+#include "../../src/algorithm/graph/specialized/triangle_weight_product_sum_mod.hpp"
 
 namespace{
 

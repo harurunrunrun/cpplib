@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_binary_labeling_cost.hpp"
+#include "../../src/algorithm/graph/flow_cut/minimum_binary_labeling_cost.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

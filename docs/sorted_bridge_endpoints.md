@@ -1,6 +1,6 @@
 ---
 title: Sorted Bridge Endpoints (ソート済み橋端点列挙) [EC_P]
-documentation_of: ../src/algorithm/graph/sorted_bridge_endpoints.hpp
+documentation_of: ../src/algorithm/graph/specialized/sorted_bridge_endpoints.hpp
 ---
 
 無向graphの橋を端点pairとして正規化し、辞書順に列挙する。

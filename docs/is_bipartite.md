@@ -1,6 +1,6 @@
 ---
 title: Bipartite Graph Test (二部グラフ判定) [BUGLIFE]
-documentation_of: ../src/algorithm/graph/is_bipartite.hpp
+documentation_of: ../src/algorithm/graph/constraints/is_bipartite.hpp
 ---
 
 無向グラフを2色で矛盾なく彩色できるかを判定する。

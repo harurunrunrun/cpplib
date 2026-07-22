@@ -1,6 +1,6 @@
 ---
 title: Sparse Undirected Component Count (疎頂点無向グラフの連結成分数) [FOXLINGS]
-documentation_of: ../src/algorithm/graph/sparse_undirected_component_count.hpp
+documentation_of: ../src/algorithm/graph/connectivity/sparse_undirected_component_count.hpp
 ---
 
 頂点数に対して辺に現れる頂点が少ない無向グラフの連結成分数を、出現頂点だけを保持して求める。

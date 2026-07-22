@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/two_edge_connected_components.hpp"
+#include "../../src/algorithm/graph/connectivity/two_edge_connected_components.hpp"
 
 int components_without_bridges(int n, const std::vector<std::pair<int, int>>& edges){
     auto low = lowlink(n, edges);

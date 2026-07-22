@@ -1,6 +1,6 @@
 ---
 title: Minimum Grid Character Changes (グリッド最小文字変更回数) [KATHTHI]
-documentation_of: ../src/algorithm/graph/minimum_grid_character_changes.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/minimum_grid_character_changes.hpp
 ---
 
 ## minimum_grid_character_changes

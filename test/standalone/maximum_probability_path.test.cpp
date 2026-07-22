@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/maximum_probability_path.hpp"
+#include "../../src/algorithm/graph/shortest_path/maximum_probability_path.hpp"
 
 int main(){
     int vertex_count, edge_count, source;

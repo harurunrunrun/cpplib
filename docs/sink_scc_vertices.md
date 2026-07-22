@@ -1,6 +1,6 @@
 ---
 title: Vertices in Sink Strongly Connected Components (シンク強連結成分に属する頂点) [BOTTOM]
-documentation_of: ../src/algorithm/graph/sink_scc_vertices.hpp
+documentation_of: ../src/algorithm/graph/connectivity/sink_scc_vertices.hpp
 ---
 
 有向グラフの強連結成分のうち、縮約graphで出次数が0となる成分に属する

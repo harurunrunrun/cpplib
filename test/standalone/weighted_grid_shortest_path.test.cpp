@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/weighted_grid_shortest_path.hpp"
+#include "../../src/algorithm/graph/shortest_path/weighted_grid_shortest_path.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

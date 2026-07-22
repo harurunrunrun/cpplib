@@ -1,6 +1,6 @@
 ---
 title: Minimum Spanning Tree Total Weight (最小全域木の総重み) [MST]
-documentation_of: ../src/algorithm/graph/minimum_spanning_tree_total_weight.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/minimum_spanning_tree_total_weight.hpp
 ---
 
 重み付き無向グラフの最小全域木の総重みを返す。

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/lowlink.hpp"
+#include "../../src/algorithm/graph/connectivity/lowlink.hpp"
 
 int components(int n, const std::vector<std::pair<int, int>>& edges, int banned_vertex, int banned_edge){
     std::vector<std::vector<int>> graph(static_cast<std::size_t>(n));

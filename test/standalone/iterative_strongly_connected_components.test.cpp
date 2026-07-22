@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/iterative_strongly_connected_components.hpp"
+#include "../../src/algorithm/graph/connectivity/iterative_strongly_connected_components.hpp"
 
 int main(){
     int vertex_count, edge_count;

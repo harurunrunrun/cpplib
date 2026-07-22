@@ -1,6 +1,6 @@
 ---
 title: Pairwise Disconnect Cost Sum (全頂点対切断コスト総和) [KOICOST]
-documentation_of: ../src/algorithm/graph/pairwise_disconnect_cost_sum.hpp
+documentation_of: ../src/algorithm/graph/connectivity/pairwise_disconnect_cost_sum.hpp
 ---
 
 重みが相異なる無向グラフについて、辺を重みの昇順に削除したときの全頂点対の切断コスト総和を求める。

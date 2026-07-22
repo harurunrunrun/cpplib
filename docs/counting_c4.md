@@ -1,6 +1,6 @@
 ---
 title: Counting C4 (長さ4の閉路数え上げ) [counting_c4]
-documentation_of: ../src/algorithm/graph/counting_c4.hpp
+documentation_of: ../src/algorithm/graph/specialized/counting_c4.hpp
 ---
 
 自己loopを含まない無向多重グラフで、4つの異なる頂点を巡る長さ4のcycleを数える。多重辺はラベル付きの別々の辺として区別する。

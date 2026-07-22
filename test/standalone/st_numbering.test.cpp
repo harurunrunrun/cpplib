@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/st_numbering.hpp"
+#include "../../src/algorithm/graph/connectivity/st_numbering.hpp"
 
 bool valid_numbering(
     int n,

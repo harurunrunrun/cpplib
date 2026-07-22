@@ -5,7 +5,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/graph/difference_constraints.hpp"
+#include "../../src/algorithm/graph/shortest_path/difference_constraints.hpp"
 
 constexpr long long INF = (1LL << 60);
 

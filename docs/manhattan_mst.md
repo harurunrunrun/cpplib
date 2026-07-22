@@ -1,6 +1,6 @@
 ---
 title: Manhattan MST (マンハッタン最小全域木) [manhattanmst]
-documentation_of: ../src/algorithm/graph/manhattan_mst.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/manhattan_mst.hpp
 ---
 
 2次元点集合のマンハッタン距離に対する最小全域木を求める。

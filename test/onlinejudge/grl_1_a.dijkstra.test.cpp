@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/dijkstra.hpp"
+#include "../../src/algorithm/graph/shortest_path/dijkstra.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

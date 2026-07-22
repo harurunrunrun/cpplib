@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/strong_component_count.hpp"
+#include "../../src/algorithm/graph/connectivity/strong_component_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

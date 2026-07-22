@@ -1,6 +1,6 @@
 ---
 title: Matrix-Tree Theorem (行列木定理) [counting_spanning_tree_directed] [counting_spanning_tree_undirected]
-documentation_of: ../src/algorithm/graph/matrix_tree_theorem.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/matrix_tree_theorem.hpp
 ---
 
 Matrix-Tree theoremで、重み付き全域木および有向全域木の重み総和を求める。各木の重みは、選んだ辺の `weight` の積である。多重辺は別々の辺として数え、自己loopはどのAPIでも無視する。

@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/johnson_all_pairs_shortest_paths.hpp"
+#include "../../src/algorithm/graph/shortest_path/johnson_all_pairs_shortest_paths.hpp"
 
 namespace{
 

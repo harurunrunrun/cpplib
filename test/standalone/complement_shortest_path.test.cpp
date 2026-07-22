@@ -5,7 +5,7 @@
 #include <queue>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/complement_shortest_path.hpp"
+#include "../../src/algorithm/graph/shortest_path/complement_shortest_path.hpp"
 
 std::vector<int> brute(int n, const std::vector<std::vector<int>>& graph, int s){
     std::vector<std::vector<char>> has(static_cast<std::size_t>(n), std::vector<char>(static_cast<std::size_t>(n), 0));

@@ -1,6 +1,6 @@
 ---
 title: Shortest Path with Mode Switches (モード切替付き最短路) [ABC277_E]
-documentation_of: ../src/algorithm/graph/shortest_path_with_mode_switches.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/shortest_path_with_mode_switches.hpp
 ---
 
 二つのモードを持つ無向グラフで、頂点上のモード切替を許した最短辺数を返す。

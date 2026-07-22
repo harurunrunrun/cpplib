@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/shortest_path_with_mode_switches.hpp"
+#include "../../src/algorithm/graph/shortest_path/shortest_path_with_mode_switches.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

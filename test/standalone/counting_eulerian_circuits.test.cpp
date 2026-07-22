@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/counting_eulerian_circuits.hpp"
+#include "../../src/algorithm/graph/traversal/counting_eulerian_circuits.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 using Mint = FastModint998244353;

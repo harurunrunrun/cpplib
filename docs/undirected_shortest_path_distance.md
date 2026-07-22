@@ -1,6 +1,6 @@
 ---
 title: Undirected Shortest Path Distance (無向グラフ二頂点間最短距離) [HIGHWAYS]
-documentation_of: ../src/algorithm/graph/undirected_shortest_path_distance.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/undirected_shortest_path_distance.hpp
 ---
 
 非負重み無向グラフの指定した2頂点間の最短距離を求める。

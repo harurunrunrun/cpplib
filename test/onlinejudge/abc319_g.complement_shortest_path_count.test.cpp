@@ -4,7 +4,7 @@
 #include <vector>
 #include <utility>
 
-#include "../../src/algorithm/graph/complement_shortest_path_count.hpp"
+#include "../../src/algorithm/graph/shortest_path/complement_shortest_path_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

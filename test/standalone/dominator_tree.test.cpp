@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/dominator_tree.hpp"
+#include "../../src/algorithm/graph/connectivity/dominator_tree.hpp"
 
 std::vector<int> naive_immediate_dominator(
     const std::vector<std::vector<int>>& graph,

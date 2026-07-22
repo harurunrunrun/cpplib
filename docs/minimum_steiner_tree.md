@@ -1,6 +1,6 @@
 ---
 title: Minimum Steiner Tree with Edge Reconstruction (辺復元付き最小シュタイナー木) [minimum_steiner_tree]
-documentation_of: ../src/algorithm/graph/minimum_steiner_tree.hpp
+documentation_of: ../src/algorithm/graph/specialized/minimum_steiner_tree.hpp
 ---
 
 無向非負重みグラフで、指定した端点をすべて連結する最小Steiner treeを求め、

@@ -1,6 +1,6 @@
 ---
 title: Undirected Component Count (無向グラフの連結成分数) [CAM5]
-documentation_of: ../src/algorithm/graph/undirected_component_count.hpp
+documentation_of: ../src/algorithm/graph/connectivity/undirected_component_count.hpp
 ---
 
 無向グラフの連結成分数を求める。

@@ -1,6 +1,6 @@
 ---
 title: Steiner Tree (シュタイナー木)
-documentation_of: ../src/algorithm/graph/steiner_tree.hpp
+documentation_of: ../src/algorithm/graph/specialized/steiner_tree.hpp
 ---
 
 無向重み付きグラフの最小シュタイナー木。

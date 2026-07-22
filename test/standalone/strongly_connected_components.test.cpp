@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/strongly_connected_components.hpp"
+#include "../../src/algorithm/graph/connectivity/strongly_connected_components.hpp"
 
 std::vector<std::vector<char>> reachability(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());

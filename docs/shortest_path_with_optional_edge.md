@@ -1,6 +1,6 @@
 ---
 title: Shortest Path with Optional Edge (追加辺を高々1本使う最短路) [TRAFFICN]
-documentation_of: ../src/algorithm/graph/shortest_path_with_optional_edge.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/shortest_path_with_optional_edge.hpp
 ---
 
 非負重み有向グラフで、候補辺を高々1本だけ使えるときの2頂点間最短距離を求める。

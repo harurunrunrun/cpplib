@@ -1,6 +1,6 @@
 ---
 title: Count Vertices Reaching Target Within Limit (制限時間内に目標へ到達できる頂点数) [MICEMAZE]
-documentation_of: ../src/algorithm/graph/count_vertices_reaching_target_within.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/count_vertices_reaching_target_within.hpp
 ---
 
 非負重み有向グラフで、指定した距離以内に目標頂点へ到達できる始点の個数を求める。

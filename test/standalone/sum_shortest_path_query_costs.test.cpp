@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/sum_shortest_path_query_costs.hpp"
+#include "../../src/algorithm/graph/shortest_path/sum_shortest_path_query_costs.hpp"
 
 void self_test(){
     constexpr long long inf = (1LL << 60);

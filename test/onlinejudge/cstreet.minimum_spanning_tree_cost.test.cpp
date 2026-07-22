@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_spanning_tree_cost.hpp"
+#include "../../src/algorithm/graph/spanning_tree/minimum_spanning_tree_cost.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

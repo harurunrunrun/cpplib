@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/count_directed_spanning_arborescences.hpp"
+#include "../../src/algorithm/graph/spanning_tree/count_directed_spanning_arborescences.hpp"
 
 long long brute_count(const std::vector<std::string>& adjacency){
     const int vertex_count = static_cast<int>(adjacency.size());

@@ -1,6 +1,6 @@
 ---
 title: Left-Right Planarity Test (左右平面性判定)
-documentation_of: ../src/algorithm/graph/planarity_test.hpp
+documentation_of: ../src/algorithm/graph/specialized/planarity_test.hpp
 ---
 
 単純化した無向グラフが平面的かをLeft-Right planarity testで判定する。

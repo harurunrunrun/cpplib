@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/grid_forest_diameter.hpp"
+#include "../../src/algorithm/graph/specialized/grid_forest_diameter.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

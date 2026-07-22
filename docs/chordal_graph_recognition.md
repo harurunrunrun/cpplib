@@ -1,6 +1,6 @@
 ---
 title: Chordal Graph Recognition (弦グラフ判定) [chordal_graph_recognition]
-documentation_of: ../src/algorithm/graph/chordal_graph_recognition.hpp
+documentation_of: ../src/algorithm/graph/constraints/chordal_graph_recognition.hpp
 ---
 
 単純無向グラフがchordal graphかをMaximum Cardinality Searchで判定し、判定結果に対応するcertificateを返す。

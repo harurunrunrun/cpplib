@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/shortest_path_with_optional_edge.hpp"
+#include "../../src/algorithm/graph/shortest_path/shortest_path_with_optional_edge.hpp"
 
 namespace{
 

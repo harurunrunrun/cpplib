@@ -1,6 +1,6 @@
 ---
 title: Character Labeled Undirected Maximum Flow (文字ラベル付き無向最大流) [MTOTALF]
-documentation_of: ../src/algorithm/graph/character_labeled_undirected_max_flow.hpp
+documentation_of: ../src/algorithm/graph/flow_cut/character_labeled_undirected_max_flow.hpp
 ---
 
 1 byteの文字で頂点を識別する無向容量グラフの最大流を求めます。

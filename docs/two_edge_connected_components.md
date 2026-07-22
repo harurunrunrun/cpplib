@@ -1,6 +1,6 @@
 ---
 title: Two Edge Connected Components (二重辺連結成分分解) [two_edge_connected_components]
-documentation_of: ../src/algorithm/graph/two_edge_connected_components.hpp
+documentation_of: ../src/algorithm/graph/connectivity/two_edge_connected_components.hpp
 ---
 
 無向グラフの二重辺連結成分分解。

@@ -7,7 +7,7 @@
 #include <random>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/graph/prim_mst.hpp"
+#include "../../src/algorithm/graph/spanning_tree/prim_mst.hpp"
 
 struct Dsu{
     std::vector<int> p;

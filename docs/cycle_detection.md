@@ -1,6 +1,6 @@
 ---
 title: Cycle Detection (閉路検出) [cycle_detection] [GRL_4_A]
-documentation_of: ../src/algorithm/graph/cycle_detection.hpp
+documentation_of: ../src/algorithm/graph/traversal/cycle_detection.hpp
 ---
 
 有向・無向グラフから閉路を1つ検出する。探索は反復DFSで行うため、長い一本道でも再帰スタックを消費しない。

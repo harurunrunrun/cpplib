@@ -1,6 +1,6 @@
 ---
 title: Minimum Forward or Jump Cost (前進または跳躍の最小費用) [ABC340_D]
-documentation_of: ../src/algorithm/graph/minimum_forward_or_jump_cost.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/minimum_forward_or_jump_cost.hpp
 ---
 
 各頂点から次頂点への前進辺と任意頂点への跳躍辺を1本ずつ持つグラフの最小費用を

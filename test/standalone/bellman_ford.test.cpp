@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/bellman_ford.hpp"
+#include "../../src/algorithm/graph/shortest_path/bellman_ford.hpp"
 
 struct BruteDistance{
     bool reachable;

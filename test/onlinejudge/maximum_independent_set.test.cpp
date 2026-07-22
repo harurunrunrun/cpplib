@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/graph/maximum_independent_set.hpp"
+#include "../../src/algorithm/graph/constraints/maximum_independent_set.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

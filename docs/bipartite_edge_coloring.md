@@ -1,6 +1,6 @@
 ---
 title: Bipartite Edge Coloring (二部グラフの辺彩色) [bipartite_edge_coloring]
-documentation_of: ../src/algorithm/graph/bipartite_edge_coloring.hpp
+documentation_of: ../src/algorithm/graph/constraints/bipartite_edge_coloring.hpp
 ---
 
 無向二部多重グラフを、辺彩色数と等しい最小色数でproper edge coloringする。Kőnigのline coloring theoremにより、必要な色数は最大次数 `Delta` である。

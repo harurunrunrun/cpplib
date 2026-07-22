@@ -1,6 +1,6 @@
 ---
 title: Lexicographically Smallest Topological Order (辞書順最小トポロジカル順序) [TOPOSORT]
-documentation_of: ../src/algorithm/graph/lexicographically_smallest_topological_order.hpp
+documentation_of: ../src/algorithm/graph/traversal/lexicographically_smallest_topological_order.hpp
 ---
 
 ## lexicographically_smallest_topological_order

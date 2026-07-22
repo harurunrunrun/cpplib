@@ -1,6 +1,6 @@
 ---
 title: Complement Shortest Path (補グラフ最短路)
-documentation_of: ../src/algorithm/graph/complement_shortest_path.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/complement_shortest_path.hpp
 ---
 
 補グラフ上の単一始点無重み最短路。

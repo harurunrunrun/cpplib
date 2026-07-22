@@ -1,6 +1,6 @@
 ---
 title: Undirected Chinese Postman (無向中国人郵便配達問題) [DPL_2_B]
-documentation_of: ../src/algorithm/graph/chinese_postman.hpp
+documentation_of: ../src/algorithm/graph/specialized/chinese_postman.hpp
 ---
 
 非負重み無向グラフの全辺を少なくとも1回通る閉じたwalkの最小距離を求める。

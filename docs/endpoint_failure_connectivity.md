@@ -1,6 +1,6 @@
 ---
 title: Endpoint Failure Connectivity (端点指定単一故障連結性) [POLQUERY]
-documentation_of: ../src/algorithm/graph/endpoint_failure_connectivity.hpp
+documentation_of: ../src/algorithm/graph/connectivity/endpoint_failure_connectivity.hpp
 ---
 
 静的無向単純graphで、削除辺を両端から指定できる単一故障連結性oracleである。

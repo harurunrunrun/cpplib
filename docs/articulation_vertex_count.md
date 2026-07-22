@@ -1,6 +1,6 @@
 ---
 title: Articulation Vertex Count (関節点数) [SUBMERGE]
-documentation_of: ../src/algorithm/graph/articulation_vertex_count.hpp
+documentation_of: ../src/algorithm/graph/connectivity/articulation_vertex_count.hpp
 ---
 
 ## articulation_vertex_count

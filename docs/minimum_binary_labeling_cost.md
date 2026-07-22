@@ -1,6 +1,6 @@
 ---
 title: Minimum Binary Labeling Cost (二値ラベル付け最小コスト) [COCONUTS]
-documentation_of: ../src/algorithm/graph/minimum_binary_labeling_cost.hpp
+documentation_of: ../src/algorithm/graph/flow_cut/minimum_binary_labeling_cost.hpp
 ---
 
 各変数に0または1を割り当てる。

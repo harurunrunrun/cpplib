@@ -1,6 +1,6 @@
 ---
 title: Count Minimum Spanning Trees (最小全域木数え上げ)
-documentation_of: ../src/algorithm/graph/count_minimum_spanning_trees.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/count_minimum_spanning_trees.hpp
 ---
 
 重み付き無向多重グラフの最小全域木の重みと個数を求める。

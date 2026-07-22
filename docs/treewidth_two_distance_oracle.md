@@ -1,6 +1,6 @@
 ---
 title: Treewidth-Two Shortest-Path Oracle (木幅2グラフ最短路オラクル)
-documentation_of: ../src/algorithm/graph/treewidth_two_distance_oracle.hpp
+documentation_of: ../src/algorithm/graph/specialized/treewidth_two_distance_oracle.hpp
 ---
 
 基礎無向グラフの木幅が2以下である、非負重み付き有向グラフの二頂点間最短距離を前処理する。

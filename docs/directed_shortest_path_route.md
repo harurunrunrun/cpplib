@@ -1,6 +1,6 @@
 ---
 title: Directed Shortest Path Route (有向グラフ最短路復元) [shortest_path]
-documentation_of: ../src/algorithm/graph/directed_shortest_path_route.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/directed_shortest_path_route.hpp
 ---
 
 非負重み有向グラフの2頂点間について、最短距離と最短路を取得する。

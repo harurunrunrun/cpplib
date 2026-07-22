@@ -1,6 +1,6 @@
 ---
 title: String Endpoint Chain Feasibility (文字列端点連鎖判定) [WORDS1]
-documentation_of: ../src/algorithm/graph/can_order_strings_by_matching_endpoints.hpp
+documentation_of: ../src/algorithm/graph/constraints/can_order_strings_by_matching_endpoints.hpp
 ---
 
 各文字列をちょうど1回ずつ使用し、直前の文字列の末尾文字と次の文字列の先頭文字が一致する順序を作れるかを判定する。

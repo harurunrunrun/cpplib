@@ -1,6 +1,6 @@
 ---
 title: Two Vertex Connected Components (二重頂点連結成分分解) [biconnected_components]
-documentation_of: ../src/algorithm/graph/two_vertex_connected_components.hpp
+documentation_of: ../src/algorithm/graph/connectivity/two_vertex_connected_components.hpp
 ---
 
 無向グラフの二重頂点連結成分分解。

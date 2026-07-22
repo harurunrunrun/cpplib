@@ -1,6 +1,6 @@
 ---
 title: Breadth First Search (幅優先探索)
-documentation_of: ../src/algorithm/graph/bfs.hpp
+documentation_of: ../src/algorithm/graph/traversal/bfs.hpp
 ---
 
 重みなし有向グラフの最短路を幅優先探索で求める。無向グラフは各辺を両方向に追加する。

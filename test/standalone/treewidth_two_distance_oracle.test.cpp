@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/treewidth_two_distance_oracle.hpp"
+#include "../../src/algorithm/graph/specialized/treewidth_two_distance_oracle.hpp"
 
 using Oracle = TreewidthTwoDistanceOracle<long long>;
 

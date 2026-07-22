@@ -1,6 +1,6 @@
 ---
 title: Directed MST (有向最小全域木) [GRL_2_B]
-documentation_of: ../src/algorithm/graph/directed_mst.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/directed_mst.hpp
 ---
 
 最小有向全域木。rootから全頂点へ到達する有向木の最小コストを求める。

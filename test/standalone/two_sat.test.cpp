@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/graph/two_sat.hpp"
+#include "../../src/algorithm/graph/constraints/two_sat.hpp"
 
 bool brute(int n, const std::vector<std::tuple<int, int, int, int>>& clauses){
     for(int mask = 0; mask < (1 << n); mask++){

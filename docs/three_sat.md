@@ -1,6 +1,6 @@
 ---
 title: 3-SAT (3充足可能性問題)
-documentation_of: ../src/algorithm/graph/three_sat.hpp
+documentation_of: ../src/algorithm/graph/constraints/three_sat.hpp
 ---
 
 3-SAT。

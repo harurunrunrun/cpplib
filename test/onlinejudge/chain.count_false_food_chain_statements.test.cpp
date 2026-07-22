@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/count_inconsistent_modulo_three_constraints.hpp"
+#include "../../src/algorithm/graph/constraints/count_inconsistent_modulo_three_constraints.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

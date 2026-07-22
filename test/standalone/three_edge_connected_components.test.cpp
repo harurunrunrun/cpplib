@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/three_edge_connected_components.hpp"
+#include "../../src/algorithm/graph/connectivity/three_edge_connected_components.hpp"
 
 bool connected_without(
     int n,

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/maximum_clique.hpp"
+#include "../../src/algorithm/graph/constraints/maximum_clique.hpp"
 
 int main(){
     int n, m;

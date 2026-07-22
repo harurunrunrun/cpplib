@@ -1,6 +1,6 @@
 ---
 title: Rearrange Rows into Permutation Columns (行内並べ替えによる列置換化) [ABC317_G]
-documentation_of: ../src/algorithm/graph/rearrange_rows_into_permutation_columns.hpp
+documentation_of: ../src/algorithm/graph/specialized/rearrange_rows_into_permutation_columns.hpp
 ---
 
 各行の要素を行内だけで並べ替え、すべての列を `0,1,...,N-1` の置換にする。

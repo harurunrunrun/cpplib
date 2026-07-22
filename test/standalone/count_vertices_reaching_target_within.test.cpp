@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/count_vertices_reaching_target_within.hpp"
+#include "../../src/algorithm/graph/shortest_path/count_vertices_reaching_target_within.hpp"
 
 void self_test(){
     const std::vector<ReachingTargetEdge<int>> edges{

@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/maximum_paths_with_distinct_terminal_edges.hpp"
+#include "../../src/algorithm/graph/flow_cut/maximum_paths_with_distinct_terminal_edges.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

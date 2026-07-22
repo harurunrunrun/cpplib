@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/bellman_ford.hpp"
+#include "../../src/algorithm/graph/shortest_path/bellman_ford.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

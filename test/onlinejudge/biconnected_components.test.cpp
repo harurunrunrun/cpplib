@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-#include "../../src/algorithm/graph/two_vertex_connected_components.hpp"
+#include "../../src/algorithm/graph/connectivity/two_vertex_connected_components.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -1,6 +1,6 @@
 ---
 title: Maximum Independent Set (最大独立集合) [maximum_independent_set]
-documentation_of: ../src/algorithm/graph/maximum_independent_set.hpp
+documentation_of: ../src/algorithm/graph/constraints/maximum_independent_set.hpp
 ---
 
 無向グラフの最大独立集合を1つ求める。

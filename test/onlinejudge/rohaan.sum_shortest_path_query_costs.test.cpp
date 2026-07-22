@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/sum_shortest_path_query_costs.hpp"
+#include "../../src/algorithm/graph/shortest_path/sum_shortest_path_query_costs.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

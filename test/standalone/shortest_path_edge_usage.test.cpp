@@ -6,7 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/graph/shortest_path_edge_usage.hpp"
+#include "../../src/algorithm/graph/shortest_path/shortest_path_edge_usage.hpp"
 
 std::vector<char> brute_used(
     int n,

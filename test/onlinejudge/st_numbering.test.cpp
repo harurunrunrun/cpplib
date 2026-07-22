@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/st_numbering.hpp"
+#include "../../src/algorithm/graph/connectivity/st_numbering.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

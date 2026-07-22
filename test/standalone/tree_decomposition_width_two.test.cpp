@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/tree_decomposition_width_two.hpp"
+#include "../../src/algorithm/graph/specialized/tree_decomposition_width_two.hpp"
 
 void validate(
     int vertex_count,

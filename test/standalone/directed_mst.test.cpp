@@ -5,7 +5,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/directed_mst.hpp"
+#include "../../src/algorithm/graph/spanning_tree/directed_mst.hpp"
 
 constexpr long long INF = (1LL << 60);
 

@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/shortest_path_with_mode_switches.hpp"
+#include "../../src/algorithm/graph/shortest_path/shortest_path_with_mode_switches.hpp"
 
 void self_test(){
     assert(shortest_path_with_mode_switches(1, {}, {}) == 0);

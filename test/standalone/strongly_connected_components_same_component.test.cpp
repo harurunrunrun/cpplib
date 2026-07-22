@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/strongly_connected_components.hpp"
+#include "../../src/algorithm/graph/connectivity/strongly_connected_components.hpp"
 
 int main(){
     int vertex_count, edge_count, query_count;

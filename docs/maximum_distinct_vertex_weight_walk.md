@@ -1,6 +1,6 @@
 ---
 title: Maximum Distinct-vertex-weight Walk (異なる頂点重み和最大walk) [GOODA]
-documentation_of: ../src/algorithm/graph/maximum_distinct_vertex_weight_walk.hpp
+documentation_of: ../src/algorithm/graph/specialized/maximum_distinct_vertex_weight_walk.hpp
 ---
 
 有向グラフの始点から終点までのwalkについて、一度でも訪れた頂点の非負重みを

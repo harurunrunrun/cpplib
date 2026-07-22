@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_grid_character_changes.hpp"
+#include "../../src/algorithm/graph/shortest_path/minimum_grid_character_changes.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

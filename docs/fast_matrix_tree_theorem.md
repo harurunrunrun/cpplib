@@ -1,6 +1,6 @@
 ---
 title: Fast Matrix-Tree Theorem (高速行列木定理)
-documentation_of: ../src/algorithm/graph/fast_matrix_tree_theorem.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/fast_matrix_tree_theorem.hpp
 ---
 
 ## 概要

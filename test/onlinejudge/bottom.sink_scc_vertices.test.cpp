@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/sink_scc_vertices.hpp"
+#include "../../src/algorithm/graph/connectivity/sink_scc_vertices.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

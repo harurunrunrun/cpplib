@@ -5,7 +5,7 @@
 #include <numeric>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/two_vertex_connected_components.hpp"
+#include "../../src/algorithm/graph/connectivity/two_vertex_connected_components.hpp"
 
 void validate(
     int n,

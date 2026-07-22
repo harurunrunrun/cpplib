@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/irreducible_pairs_from_distance_matrix.hpp"
+#include "../../src/algorithm/graph/specialized/irreducible_pairs_from_distance_matrix.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

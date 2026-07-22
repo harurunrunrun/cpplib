@@ -1,6 +1,6 @@
 ---
 title: Irreducible Pairs from Distance Matrix (距離行列の既約な頂点対) [ROADNET]
-documentation_of: ../src/algorithm/graph/irreducible_pairs_from_distance_matrix.hpp
+documentation_of: ../src/algorithm/graph/specialized/irreducible_pairs_from_distance_matrix.hpp
 ---
 
 有限距離空間の距離行列から、第三の頂点を経由する等長な分解を持たない頂点対を列挙する。

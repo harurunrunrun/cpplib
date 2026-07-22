@@ -1,6 +1,6 @@
 ---
 title: Sum Shortest Path Query Costs (最短路クエリコスト総和) [ROHAAN]
-documentation_of: ../src/algorithm/graph/sum_shortest_path_query_costs.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/sum_shortest_path_query_costs.hpp
 ---
 
 静的な重み付き有向グラフについて、指定された頂点対の最短距離の総和を求める。行列向け、非負疎グラフ向け、負辺を許す疎グラフ向けの API を使い分けられる。

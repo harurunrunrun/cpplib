@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../algorithm/graph/dijkstra.hpp"
+#include "../../algorithm/graph/shortest_path/dijkstra.hpp"
 
 class CoordinateProductKnightDistances{
     int board_size_;

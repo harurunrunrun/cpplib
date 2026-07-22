@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/pairwise_disconnect_cost_sum.hpp"
+#include "../../src/algorithm/graph/connectivity/pairwise_disconnect_cost_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

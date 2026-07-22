@@ -1,6 +1,6 @@
 ---
 title: Connected Component Value Sums (連結成分頂点値和) [IAPCR2F]
-documentation_of: ../src/algorithm/graph/connected_component_value_sums.hpp
+documentation_of: ../src/algorithm/graph/connectivity/connected_component_value_sums.hpp
 ---
 
 ## connected_component_value_sums

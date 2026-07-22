@@ -1,6 +1,6 @@
 ---
 title: st-numbering (st番号付け) [st_numbering]
-documentation_of: ../src/algorithm/graph/st_numbering.hpp
+documentation_of: ../src/algorithm/graph/connectivity/st_numbering.hpp
 ---
 
 無向多重グラフの頂点を、指定した2頂点を両端とするbipolar orientationになる順に並べる。DFS low-linkからEven--Tarjanの挿入順を構成する。再帰を使わないため、深いグラフにも利用できる。

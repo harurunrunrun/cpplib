@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/chinese_postman.hpp"
+#include "../../src/algorithm/graph/specialized/chinese_postman.hpp"
 
 std::optional<long long> brute_chinese_postman(
     int vertex_count,

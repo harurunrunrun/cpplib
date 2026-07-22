@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/matrix_tree_theorem.hpp"
+#include "../../src/algorithm/graph/spanning_tree/matrix_tree_theorem.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 int main(){

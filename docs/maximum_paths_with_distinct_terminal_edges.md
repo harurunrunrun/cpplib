@@ -1,6 +1,6 @@
 ---
 title: Maximum Paths with Distinct Terminal Edges (終端辺を共有しない最大パス数) [POTHOLE]
-documentation_of: ../src/algorithm/graph/maximum_paths_with_distinct_terminal_edges.hpp
+documentation_of: ../src/algorithm/graph/flow_cut/maximum_paths_with_distinct_terminal_edges.hpp
 ---
 
 有向グラフで、始点から出る辺と終点へ入る辺だけを互いに共有しないように選べる

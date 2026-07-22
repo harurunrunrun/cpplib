@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/graph/strongly_connected_components.hpp"
+#include "../../src/algorithm/graph/connectivity/strongly_connected_components.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

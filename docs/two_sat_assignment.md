@@ -1,6 +1,6 @@
 ---
 title: 2-SAT Assignment (2-SAT充足割当) [two_sat]
-documentation_of: ../src/algorithm/graph/two_sat_assignment.hpp
+documentation_of: ../src/algorithm/graph/constraints/two_sat_assignment.hpp
 ---
 
 構築済みの2-SAT制約について、充足可能性と充足割当を1つの返り値で取得する。

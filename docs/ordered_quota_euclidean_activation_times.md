@@ -1,6 +1,6 @@
 ---
 title: Ordered Quota Euclidean Activation Times (優先順・上限付きユークリッド活性化時刻) [GONDOR]
-documentation_of: ../src/algorithm/graph/ordered_quota_euclidean_activation_times.hpp
+documentation_of: ../src/algorithm/graph/specialized/ordered_quota_euclidean_activation_times.hpp
 ---
 
 各頂点が活性化時に優先順から一定数の未活性頂点を選び、ユークリッド距離だけ

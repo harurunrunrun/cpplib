@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/horn_sat.hpp"
+#include "../../src/algorithm/graph/constraints/horn_sat.hpp"
 
 void test_satisfiable(){
     const std::vector<HornClause> clauses = {

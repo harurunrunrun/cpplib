@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/block_cut_tree.hpp"
+#include "../../src/algorithm/graph/connectivity/block_cut_tree.hpp"
 
 void validate_forest(const BlockCutTreeResult& result){
     const int nodes = result.node_count();

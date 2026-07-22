@@ -1,6 +1,6 @@
 ---
 title: Iterative Strongly Connected Components (反復強連結成分分解)
-documentation_of: ../src/algorithm/graph/iterative_strongly_connected_components.hpp
+documentation_of: ../src/algorithm/graph/connectivity/iterative_strongly_connected_components.hpp
 ---
 
 ## iterative_strongly_connected_components

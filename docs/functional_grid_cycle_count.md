@@ -1,6 +1,6 @@
 ---
 title: Functional Grid Cycle Count (関数型格子の閉路数) [HERDING]
-documentation_of: ../src/algorithm/graph/functional_grid_cycle_count.hpp
+documentation_of: ../src/algorithm/graph/traversal/functional_grid_cycle_count.hpp
 ---
 
 各マスが上下左右の隣接マスを1つ指す格子を関数グラフとみなし、その有向閉路数を返す。

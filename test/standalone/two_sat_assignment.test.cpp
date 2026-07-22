@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/two_sat_assignment.hpp"
+#include "../../src/algorithm/graph/constraints/two_sat_assignment.hpp"
 
 struct Clause{
     int left_variable;

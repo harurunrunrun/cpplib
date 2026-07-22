@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/sparse_undirected_component_count.hpp"
+#include "../../src/algorithm/graph/connectivity/sparse_undirected_component_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

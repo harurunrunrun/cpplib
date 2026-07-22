@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/dominator_tree.hpp"
+#include "../../src/algorithm/graph/connectivity/dominator_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/topological_sort.hpp"
+#include "../../src/algorithm/graph/traversal/topological_sort.hpp"
 
 bool valid_order(const std::vector<std::vector<int>>& graph, const TopologicalSortResult& result){
     const int n = static_cast<int>(graph.size());

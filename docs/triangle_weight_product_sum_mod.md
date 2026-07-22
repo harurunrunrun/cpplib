@@ -1,6 +1,6 @@
 ---
 title: Triangle Weight Product Sum Modulo (三角形頂点重み積和) [enumerate_triangles]
-documentation_of: ../src/algorithm/graph/triangle_weight_product_sum_mod.hpp
+documentation_of: ../src/algorithm/graph/specialized/triangle_weight_product_sum_mod.hpp
 ---
 
 頂点重み付き無向単純グラフの全三角形について、3頂点の重みの積を加算する。

@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/undirected_shortest_path_distance.hpp"
+#include "../../src/algorithm/graph/shortest_path/undirected_shortest_path_distance.hpp"
 
 void self_test(){
     const std::vector<UndirectedShortestPathEdge<int>> edges{

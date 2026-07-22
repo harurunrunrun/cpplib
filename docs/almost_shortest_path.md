@@ -1,6 +1,6 @@
 ---
 title: Almost Shortest Path (ほぼ最短路) [SAMER08A]
-documentation_of: ../src/algorithm/graph/almost_shortest_path.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/almost_shortest_path.hpp
 ---
 
 非負重み有向グラフで、`source` から `target` へのいずれかの最短路に含まれる辺をすべて除き、残ったグラフの最短距離を求める。

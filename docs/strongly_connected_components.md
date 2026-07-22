@@ -1,6 +1,6 @@
 ---
 title: Strongly Connected Components (強連結成分分解) [GRL_3_C] [scc]
-documentation_of: ../src/algorithm/graph/strongly_connected_components.hpp
+documentation_of: ../src/algorithm/graph/connectivity/strongly_connected_components.hpp
 ---
 
 有向グラフの強連結成分分解。

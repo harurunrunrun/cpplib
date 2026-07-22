@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/count_minimum_spanning_trees.hpp"
+#include "../../src/algorithm/graph/spanning_tree/count_minimum_spanning_trees.hpp"
 
 using Edge = MinimumSpanningTreeCountEdge<long long>;
 constexpr std::uint64_t modulus = 1'000'000'007ULL;

@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/connected_component_value_sums.hpp"
+#include "../../src/algorithm/graph/connectivity/connected_component_value_sums.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

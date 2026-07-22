@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/range_edge_graph.hpp"
+#include "../../src/algorithm/graph/specialized/range_edge_graph.hpp"
 
 namespace{
 

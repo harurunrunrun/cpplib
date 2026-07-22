@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/character_labeled_undirected_max_flow.hpp"
+#include "../../src/algorithm/graph/flow_cut/character_labeled_undirected_max_flow.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

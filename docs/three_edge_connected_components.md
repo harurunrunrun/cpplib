@@ -1,6 +1,6 @@
 ---
 title: Three-Edge-Connected Components (三辺連結成分分解) [three_edge_connected_components]
-documentation_of: ../src/algorithm/graph/three_edge_connected_components.hpp
+documentation_of: ../src/algorithm/graph/connectivity/three_edge_connected_components.hpp
 ---
 
 無向多重グラフを3-edge-connected componentsへ線形時間で分解する。2頂点は、任意の高々2辺を削除しても同じconnected componentに残るとき、同じ3-edge-connected componentに属する。

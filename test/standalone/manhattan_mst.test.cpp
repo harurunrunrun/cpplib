@@ -7,7 +7,7 @@
 #include <random>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/graph/manhattan_mst.hpp"
+#include "../../src/algorithm/graph/spanning_tree/manhattan_mst.hpp"
 
 struct Dsu{
     std::vector<int> p;

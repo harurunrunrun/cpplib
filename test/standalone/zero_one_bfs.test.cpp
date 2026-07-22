@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/zero_one_bfs.hpp"
+#include "../../src/algorithm/graph/shortest_path/zero_one_bfs.hpp"
 
 std::vector<int> dijkstra_brute(
     const std::vector<std::vector<ZeroOneBFSEdge>>& graph,

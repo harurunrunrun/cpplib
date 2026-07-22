@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-#include "../../src/algorithm/graph/cycle_detection.hpp"
+#include "../../src/algorithm/graph/traversal/cycle_detection.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

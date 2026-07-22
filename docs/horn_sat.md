@@ -1,6 +1,6 @@
 ---
 title: Horn SAT (Horn充足可能性)
-documentation_of: ../src/algorithm/graph/horn_sat.hpp
+documentation_of: ../src/algorithm/graph/constraints/horn_sat.hpp
 ---
 
 各節に正リテラルが高々1個だけ現れるHorn CNFの充足可能性を判定し、

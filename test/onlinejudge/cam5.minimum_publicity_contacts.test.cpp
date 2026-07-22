@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/undirected_component_count.hpp"
+#include "../../src/algorithm/graph/connectivity/undirected_component_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

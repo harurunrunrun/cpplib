@@ -1,6 +1,6 @@
 ---
 title: Multi Source Shortest Path (多始点最短路)
-documentation_of: ../src/algorithm/graph/multi_source_shortest_path.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/multi_source_shortest_path.hpp
 ---
 
 複数始点からの単一最短路。辺の重みは非負である必要がある。

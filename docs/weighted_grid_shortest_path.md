@@ -1,6 +1,6 @@
 ---
 title: Weighted Grid Shortest Path (重み付き格子最短路) [BYTESE1]
-documentation_of: ../src/algorithm/graph/weighted_grid_shortest_path.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/weighted_grid_shortest_path.hpp
 ---
 
 非負の頂点費用を持つ長方形格子上で、4近傍の最短路費用を求める。

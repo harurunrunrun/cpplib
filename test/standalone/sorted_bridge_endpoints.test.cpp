@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/sorted_bridge_endpoints.hpp"
+#include "../../src/algorithm/graph/specialized/sorted_bridge_endpoints.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

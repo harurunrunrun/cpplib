@@ -1,6 +1,6 @@
 ---
 title: Range Edge Graph (区間辺グラフ)
-documentation_of: ../src/algorithm/graph/range_edge_graph.hpp
+documentation_of: ../src/algorithm/graph/specialized/range_edge_graph.hpp
 ---
 
 頂点番号の半開区間を端点とする有向辺を、segment treeの補助頂点で圧縮して保持する重み付きgraph。

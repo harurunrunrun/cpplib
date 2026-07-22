@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/is_bipartite.hpp"
+#include "../../src/algorithm/graph/constraints/is_bipartite.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

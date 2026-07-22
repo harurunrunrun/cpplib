@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/is_undirected_tree.hpp"
+#include "../../src/algorithm/graph/traversal/is_undirected_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

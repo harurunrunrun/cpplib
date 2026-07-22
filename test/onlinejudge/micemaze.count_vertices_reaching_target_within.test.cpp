@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/count_vertices_reaching_target_within.hpp"
+#include "../../src/algorithm/graph/shortest_path/count_vertices_reaching_target_within.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/connected_components_of_complement_graph.hpp"
+#include "../../src/algorithm/graph/connectivity/connected_components_of_complement_graph.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

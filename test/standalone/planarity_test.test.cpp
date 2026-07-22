@@ -9,7 +9,7 @@
 #include <vector>
 #include <random>
 
-#include "../../src/algorithm/graph/planarity_test.hpp"
+#include "../../src/algorithm/graph/specialized/planarity_test.hpp"
 
 bool rotation_is_planar(
     const std::vector<std::vector<int>>& order,

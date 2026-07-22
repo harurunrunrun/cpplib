@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/functional_grid_cycle_count.hpp"
+#include "../../src/algorithm/graph/traversal/functional_grid_cycle_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/graph/steiner_tree.hpp"
+#include "../../src/algorithm/graph/specialized/steiner_tree.hpp"
 
 constexpr long long INF = (1LL << 60);
 

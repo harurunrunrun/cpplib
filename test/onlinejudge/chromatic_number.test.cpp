@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/chromatic_number.hpp"
+#include "../../src/algorithm/graph/constraints/chromatic_number.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

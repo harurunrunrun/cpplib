@@ -1,6 +1,6 @@
 ---
 title: Hierarchy from Superior Constraints (上位関係制約からの階層構築) [MAKETREE]
-documentation_of: ../src/algorithm/graph/hierarchy_from_superior_constraints.hpp
+documentation_of: ../src/algorithm/graph/traversal/hierarchy_from_superior_constraints.hpp
 ---
 
 ## hierarchy_from_superior_constraints

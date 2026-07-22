@@ -5,7 +5,7 @@
 #include <random>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/graph/three_sat.hpp"
+#include "../../src/algorithm/graph/constraints/three_sat.hpp"
 
 using ClauseTuple = std::array<std::pair<int, int>, 3>;
 

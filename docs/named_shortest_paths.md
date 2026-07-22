@@ -1,6 +1,6 @@
 ---
 title: Named Shortest Paths (名前付き頂点間最短路) [SHPATH]
-documentation_of: ../src/algorithm/graph/named_shortest_paths.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/named_shortest_paths.hpp
 ---
 
 文字列名で識別される静的な非負重み有向グラフに対し、頂点間の最短距離を問い合わせる。

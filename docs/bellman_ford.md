@@ -1,6 +1,6 @@
 ---
 title: Bellman Ford (ベルマン・フォード法) [GRL_1_B]
-documentation_of: ../src/algorithm/graph/bellman_ford.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/bellman_ford.hpp
 ---
 
 単一始点最短路。負辺に対応する。

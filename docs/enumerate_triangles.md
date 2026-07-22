@@ -1,6 +1,6 @@
 ---
 title: Enumerate Triangles (三角形列挙)
-documentation_of: ../src/algorithm/graph/enumerate_triangles.hpp
+documentation_of: ../src/algorithm/graph/specialized/enumerate_triangles.hpp
 ---
 
 単純無向グラフのtriangleを1回ずつ列挙する。辺を次数の小さい頂点から大きい頂点へ向け、長さ2の有向pathを調べる。

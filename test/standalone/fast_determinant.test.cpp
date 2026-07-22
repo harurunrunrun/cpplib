@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/matrix_tree_theorem.hpp"
+#include "../../src/algorithm/graph/spanning_tree/matrix_tree_theorem.hpp"
 #include "../../src/algorithm/math/linear_algebra/fast_determinant.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 

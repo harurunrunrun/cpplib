@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/fast_matrix_tree_theorem.hpp"
+#include "../../src/algorithm/graph/spanning_tree/fast_matrix_tree_theorem.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 using Mint = FastModint998244353;

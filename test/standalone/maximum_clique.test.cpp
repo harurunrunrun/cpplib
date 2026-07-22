@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/maximum_clique.hpp"
+#include "../../src/algorithm/graph/constraints/maximum_clique.hpp"
 
 int brute_size(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());

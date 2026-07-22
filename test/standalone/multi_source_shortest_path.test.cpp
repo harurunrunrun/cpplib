@@ -5,7 +5,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/graph/multi_source_shortest_path.hpp"
+#include "../../src/algorithm/graph/shortest_path/multi_source_shortest_path.hpp"
 
 constexpr long long INF = (1LL << 60);
 

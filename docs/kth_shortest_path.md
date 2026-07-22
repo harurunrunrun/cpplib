@@ -1,6 +1,6 @@
 ---
 title: K-th Shortest Path (K番目最短路)
-documentation_of: ../src/algorithm/graph/kth_shortest_path.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/kth_shortest_path.hpp
 ---
 
 非負重み有向グラフで、単純パスを距離の小さい順に列挙する。

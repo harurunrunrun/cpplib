@@ -1,6 +1,6 @@
 ---
 title: Functional Graph (関数グラフ)
-documentation_of: ../src/algorithm/graph/functional_graph.hpp
+documentation_of: ../src/algorithm/graph/traversal/functional_graph.hpp
 ---
 
 各頂点からちょうど1本の有向辺が出るfunctional graphを、cycleとcycleへ向かう木に分解する。

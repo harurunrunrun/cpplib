@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_forward_or_jump_cost.hpp"
+#include "../../src/algorithm/graph/shortest_path/minimum_forward_or_jump_cost.hpp"
 
 int main(){
     int n;

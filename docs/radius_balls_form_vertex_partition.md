@@ -1,6 +1,6 @@
 ---
 title: Radius Balls Form Vertex Partition (距離球による頂点分割判定) [AKBAR]
-documentation_of: ../src/algorithm/graph/radius_balls_form_vertex_partition.hpp
+documentation_of: ../src/algorithm/graph/specialized/radius_balls_form_vertex_partition.hpp
 ---
 
 無向グラフ上の複数の閉距離球が、頂点集合を重複なく過不足なく分割するかを

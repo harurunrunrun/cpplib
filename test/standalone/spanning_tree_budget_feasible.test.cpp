@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/spanning_tree_budget_feasible.hpp"
+#include "../../src/algorithm/graph/spanning_tree/spanning_tree_budget_feasible.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

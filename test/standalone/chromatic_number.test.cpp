@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/graph/chromatic_number.hpp"
+#include "../../src/algorithm/graph/constraints/chromatic_number.hpp"
 
 bool can_color(
     const std::vector<std::vector<int>>& graph,

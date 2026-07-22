@@ -5,7 +5,7 @@
 #include <random>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/graph/kruskal_mst.hpp"
+#include "../../src/algorithm/graph/spanning_tree/kruskal_mst.hpp"
 
 long long brute(
     int n,

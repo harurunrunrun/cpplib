@@ -1,6 +1,6 @@
 ---
 title: 0-1 BFS (0-1幅優先探索)
-documentation_of: ../src/algorithm/graph/zero_one_bfs.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/zero_one_bfs.hpp
 ---
 
 辺重みが $0$ または $1$ の有向グラフの最短路をdequeで求める。無向グラフは各辺を両方向に追加する。

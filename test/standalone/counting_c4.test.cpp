@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/counting_c4.hpp"
+#include "../../src/algorithm/graph/specialized/counting_c4.hpp"
 
 std::vector<long long> brute_count_c4(
     int n,

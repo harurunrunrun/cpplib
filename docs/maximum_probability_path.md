@@ -1,6 +1,6 @@
 ---
 title: Maximum Probability Path (最大確率路) [CHICAGO]
-documentation_of: ../src/algorithm/graph/maximum_probability_path.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/maximum_probability_path.hpp
 ---
 
 各有向辺に $[0,1]$ の値を持つグラフで、始点から各頂点へ至る路上の辺値の積を最大化する。

@@ -1,6 +1,6 @@
 ---
 title: Tree Decomposition of Width Two (木幅2以下の木分解)
-documentation_of: ../src/algorithm/graph/tree_decomposition_width_two.hpp
+documentation_of: ../src/algorithm/graph/specialized/tree_decomposition_width_two.hpp
 ---
 
 単純無向グラフの木幅が2以下かを判定し、該当する場合は幅2以下の木分解を構成する。

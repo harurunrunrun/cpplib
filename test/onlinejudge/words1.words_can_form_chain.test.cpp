@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/can_order_strings_by_matching_endpoints.hpp"
+#include "../../src/algorithm/graph/constraints/can_order_strings_by_matching_endpoints.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

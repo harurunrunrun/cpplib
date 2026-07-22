@@ -1,6 +1,6 @@
 ---
 title: Kruskal MST (クラスカル法) [GRL_2_A] [minimum_spanning_tree]
-documentation_of: ../src/algorithm/graph/kruskal_mst.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/kruskal_mst.hpp
 ---
 
 Kruskal法で最小全域木を求める。

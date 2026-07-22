@@ -1,6 +1,6 @@
 ---
 title: Single Failure Connectivity Oracle (単一故障連結性オラクル)
-documentation_of: ../src/algorithm/graph/single_failure_connectivity.hpp
+documentation_of: ../src/algorithm/graph/connectivity/single_failure_connectivity.hpp
 ---
 
 連結な無向グラフを前処理し、辺を1本または頂点を1個だけ削除した後の2頂点の連結性を答える。

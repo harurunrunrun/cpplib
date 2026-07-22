@@ -1,6 +1,6 @@
 ---
 title: Chromatic Number (彩色数) [chromatic_number]
-documentation_of: ../src/algorithm/graph/chromatic_number.hpp
+documentation_of: ../src/algorithm/graph/constraints/chromatic_number.hpp
 ---
 
 無向グラフの彩色数を求める。

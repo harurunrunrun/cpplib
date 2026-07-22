@@ -1,6 +1,6 @@
 ---
 title: Spanning Tree Budget Feasibility (全域木予算充足判定)
-documentation_of: ../src/algorithm/graph/spanning_tree_budget_feasible.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/spanning_tree_budget_feasible.hpp
 ---
 
 無向重み付きグラフに、辺重みの総和が予算以下となる全域木が存在するかを判定します。

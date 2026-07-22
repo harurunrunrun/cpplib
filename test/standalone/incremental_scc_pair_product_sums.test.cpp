@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/incremental_scc.hpp"
-#include "../../src/algorithm/graph/incremental_scc_pair_product_sums.hpp"
+#include "../../src/algorithm/graph/connectivity/incremental_scc.hpp"
+#include "../../src/algorithm/graph/connectivity/incremental_scc_pair_product_sums.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 struct DynamicDSU{

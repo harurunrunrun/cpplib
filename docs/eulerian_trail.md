@@ -1,6 +1,6 @@
 ---
 title: Eulerian Trail (オイラー路) [eulerian_trail_directed] [eulerian_trail_undirected]
-documentation_of: ../src/algorithm/graph/eulerian_trail.hpp
+documentation_of: ../src/algorithm/graph/traversal/eulerian_trail.hpp
 ---
 
 全辺をちょうど1回ずつ通るEulerian trailをHierholzer法で求める。有向・無向の両方で多重辺と自己loopを扱える。

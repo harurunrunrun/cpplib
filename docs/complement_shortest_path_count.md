@@ -1,6 +1,6 @@
 ---
 title: Complement Shortest Path Count (補グラフ最短路数) [ABC319_G]
-documentation_of: ../src/algorithm/graph/complement_shortest_path_count.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/complement_shortest_path_count.hpp
 ---
 
 無向単純グラフの辺集合を除外辺として、その補グラフ上の最短路数を数える。

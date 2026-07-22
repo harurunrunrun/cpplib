@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/chordal_graph_recognition.hpp"
+#include "../../src/algorithm/graph/constraints/chordal_graph_recognition.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

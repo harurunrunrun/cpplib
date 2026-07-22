@@ -1,6 +1,6 @@
 ---
 title: Topological Sort (トポロジカルソート) [GRL_4_B]
-documentation_of: ../src/algorithm/graph/topological_sort.hpp
+documentation_of: ../src/algorithm/graph/traversal/topological_sort.hpp
 ---
 
 有向グラフをトポロジカルソートする。

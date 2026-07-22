@@ -1,6 +1,6 @@
 ---
 title: K-th Shortest Walk (K番目最短歩) [k_shortest_walk]
-documentation_of: ../src/algorithm/graph/kth_shortest_walk.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/kth_shortest_walk.hpp
 ---
 
 非負重み有向グラフで、頂点と辺の再訪を許す walk の距離を小さい順に求める。

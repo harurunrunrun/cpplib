@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/bfs.hpp"
+#include "../../src/algorithm/graph/traversal/bfs.hpp"
 
 std::vector<int> brute_dist(
     const std::vector<std::vector<int>>& graph,

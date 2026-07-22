@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/hierarchy_from_superior_constraints.hpp"
+#include "../../src/algorithm/graph/traversal/hierarchy_from_superior_constraints.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

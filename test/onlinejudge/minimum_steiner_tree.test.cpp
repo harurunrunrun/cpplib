@@ -4,7 +4,7 @@
 #include <limits>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_steiner_tree.hpp"
+#include "../../src/algorithm/graph/specialized/minimum_steiner_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

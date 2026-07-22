@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/topological_sort.hpp"
+#include "../../src/algorithm/graph/traversal/topological_sort.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

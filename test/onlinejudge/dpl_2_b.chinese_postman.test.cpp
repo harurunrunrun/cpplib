@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/chinese_postman.hpp"
+#include "../../src/algorithm/graph/specialized/chinese_postman.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

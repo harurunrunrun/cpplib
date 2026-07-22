@@ -1,6 +1,6 @@
 ---
 title: Block-cut Tree (ブロックカット木)
-documentation_of: ../src/algorithm/graph/block_cut_tree.hpp
+documentation_of: ../src/algorithm/graph/connectivity/block_cut_tree.hpp
 ---
 
 無向グラフを二重頂点連結成分ごとのblock nodeと元頂点からなるforestへ変換する。

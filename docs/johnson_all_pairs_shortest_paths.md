@@ -1,6 +1,6 @@
 ---
 title: Johnson All-Pairs Shortest Paths (Johnson法による全点対最短路)
-documentation_of: ../src/algorithm/graph/johnson_all_pairs_shortest_paths.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/johnson_all_pairs_shortest_paths.hpp
 ---
 
 負辺を許す疎な有向グラフの全点対最短路をJohnson法で求める。グラフ全体に負閉路がない場合に利用できる。

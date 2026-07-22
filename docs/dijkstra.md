@@ -1,6 +1,6 @@
 ---
 title: Dijkstra (ダイクストラ法) [GRL_1_A]
-documentation_of: ../src/algorithm/graph/dijkstra.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/dijkstra.hpp
 ---
 
 単一始点最短路。辺の重みは非負である必要がある。

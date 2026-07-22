@@ -1,6 +1,6 @@
 ---
 title: Undirected Maximum Flow (無向最大流) [FASTFLOW]
-documentation_of: ../src/algorithm/graph/undirected_max_flow.hpp
+documentation_of: ../src/algorithm/graph/flow_cut/undirected_max_flow.hpp
 ---
 
 容量付き無向グラフの2頂点間最大流を返す。

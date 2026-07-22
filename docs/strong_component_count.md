@@ -1,6 +1,6 @@
 ---
 title: Strong Component Count (強連結成分数) [TJALG]
-documentation_of: ../src/algorithm/graph/strong_component_count.hpp
+documentation_of: ../src/algorithm/graph/connectivity/strong_component_count.hpp
 ---
 
 ## strong_component_count

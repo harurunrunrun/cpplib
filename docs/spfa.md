@@ -1,6 +1,6 @@
 ---
 title: SPFA Shortest Paths (SPFA最短路)
-documentation_of: ../src/algorithm/graph/spfa.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/spfa.hpp
 ---
 
 負辺を含む重み付き有向グラフの単一始点・多始点最短路を求める。

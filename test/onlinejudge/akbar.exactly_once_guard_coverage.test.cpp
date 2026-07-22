@@ -3,7 +3,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/radius_balls_form_vertex_partition.hpp"
+#include "../../src/algorithm/graph/specialized/radius_balls_form_vertex_partition.hpp"
 #include "../../src/structure/other/fastio.hpp"
 
 namespace{

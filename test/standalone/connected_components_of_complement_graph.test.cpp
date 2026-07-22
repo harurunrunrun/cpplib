@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/connected_components_of_complement_graph.hpp"
+#include "../../src/algorithm/graph/connectivity/connected_components_of_complement_graph.hpp"
 
 std::vector<std::vector<int>> normalize_groups(std::vector<std::vector<int>> groups){
     for(auto& group: groups) std::sort(group.begin(), group.end());

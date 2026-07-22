@@ -1,6 +1,6 @@
 ---
 title: Inconsistent Modulo-Three Constraints Count (法3差分制約の矛盾数) [CHAIN]
-documentation_of: ../src/algorithm/graph/count_inconsistent_modulo_three_constraints.hpp
+documentation_of: ../src/algorithm/graph/constraints/count_inconsistent_modulo_three_constraints.hpp
 ---
 
 変数間の法3差分制約を入力順に追加し、それ以前に受理した制約と両立しない制約の個数を返す。

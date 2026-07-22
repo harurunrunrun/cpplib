@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/graph/bipartite_edge_coloring.hpp"
+#include "../../src/algorithm/graph/constraints/bipartite_edge_coloring.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

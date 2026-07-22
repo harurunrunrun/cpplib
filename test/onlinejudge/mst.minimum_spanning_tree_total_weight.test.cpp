@@ -4,7 +4,7 @@
 #include <tuple>
 #include <vector>
 
-#include "../../src/algorithm/graph/minimum_spanning_tree_total_weight.hpp"
+#include "../../src/algorithm/graph/spanning_tree/minimum_spanning_tree_total_weight.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

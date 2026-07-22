@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 #include <iostream>
-#include "../../src/algorithm/graph/two_sat_assignment.hpp"
+#include "../../src/algorithm/graph/constraints/two_sat_assignment.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

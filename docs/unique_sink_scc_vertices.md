@@ -1,6 +1,6 @@
 ---
 title: Unique Sink SCC Vertices (唯一のシンク強連結成分頂点) [CAPCITY]
-documentation_of: ../src/algorithm/graph/unique_sink_scc_vertices.hpp
+documentation_of: ../src/algorithm/graph/connectivity/unique_sink_scc_vertices.hpp
 ---
 
 有向グラフの強連結成分を縮約したDAGで、出次数0の成分がただ1つだけ存在するとき、その成分の頂点を返す。

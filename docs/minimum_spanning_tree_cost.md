@@ -1,6 +1,6 @@
 ---
 title: Minimum Spanning Tree Cost (最小全域木コスト) [BLINNET] [CSTREET]
-documentation_of: ../src/algorithm/graph/minimum_spanning_tree_cost.hpp
+documentation_of: ../src/algorithm/graph/spanning_tree/minimum_spanning_tree_cost.hpp
 ---
 
 重み付き無向グラフの最小全域木の重み総和を返す。

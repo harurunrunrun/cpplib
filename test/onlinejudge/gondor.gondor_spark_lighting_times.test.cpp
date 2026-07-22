@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/ordered_quota_euclidean_activation_times.hpp"
+#include "../../src/algorithm/graph/specialized/ordered_quota_euclidean_activation_times.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/almost_shortest_path.hpp"
+#include "../../src/algorithm/graph/shortest_path/almost_shortest_path.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

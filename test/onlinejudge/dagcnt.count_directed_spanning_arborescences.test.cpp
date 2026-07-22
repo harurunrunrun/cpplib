@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/count_directed_spanning_arborescences.hpp"
+#include "../../src/algorithm/graph/spanning_tree/count_directed_spanning_arborescences.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

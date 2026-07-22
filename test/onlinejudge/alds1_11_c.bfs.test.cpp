@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/bfs.hpp"
+#include "../../src/algorithm/graph/traversal/bfs.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -1,6 +1,6 @@
 ---
 title: Grid Forest Diameter (格子森の直径) [LABYR1]
-documentation_of: ../src/algorithm/graph/grid_forest_diameter.hpp
+documentation_of: ../src/algorithm/graph/specialized/grid_forest_diameter.hpp
 ---
 
 4近傍格子で、通行可能マスが作る森の各連結成分の直径を求め、その最大値を返します。

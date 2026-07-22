@@ -7,7 +7,7 @@
 #include <random>
 #include <vector>
 
-#include "../../src/algorithm/graph/functional_graph.hpp"
+#include "../../src/algorithm/graph/traversal/functional_graph.hpp"
 
 namespace{
 

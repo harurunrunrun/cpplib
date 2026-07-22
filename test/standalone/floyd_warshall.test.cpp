@@ -4,7 +4,7 @@
 #include <iostream>
 #include <tuple>
 #include <vector>
-#include "../../src/algorithm/graph/floyd_warshall.hpp"
+#include "../../src/algorithm/graph/shortest_path/floyd_warshall.hpp"
 
 constexpr long long INF = (1LL << 60);
 

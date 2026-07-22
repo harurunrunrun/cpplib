@@ -1,6 +1,6 @@
 ---
 title: Maximum Clique (最大クリーク) [ABC002_4]
-documentation_of: ../src/algorithm/graph/maximum_clique.hpp
+documentation_of: ../src/algorithm/graph/constraints/maximum_clique.hpp
 ---
 
 無向グラフの最大クリークを1つ求める。

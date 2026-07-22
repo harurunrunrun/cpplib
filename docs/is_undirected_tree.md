@@ -1,6 +1,6 @@
 ---
 title: Is Undirected Tree (無向グラフの木判定) [PT07Y]
-documentation_of: ../src/algorithm/graph/is_undirected_tree.hpp
+documentation_of: ../src/algorithm/graph/traversal/is_undirected_tree.hpp
 ---
 
 無向グラフが木であるかを判定する。

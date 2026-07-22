@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/eulerian_trail.hpp"
+#include "../../src/algorithm/graph/traversal/eulerian_trail.hpp"
 
 bool valid_trail(
     bool directed,

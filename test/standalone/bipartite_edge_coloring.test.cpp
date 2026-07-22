@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/bipartite_edge_coloring.hpp"
+#include "../../src/algorithm/graph/constraints/bipartite_edge_coloring.hpp"
 
 int maximum_degree(
     int left_size,

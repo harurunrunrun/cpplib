@@ -1,6 +1,6 @@
 ---
 title: Irreducible Pairs from Bounded Integer Distance Matrix (有界整数距離行列の既約な頂点対)
-documentation_of: ../src/algorithm/graph/irreducible_pairs_from_bounded_integer_distance_matrix.hpp
+documentation_of: ../src/algorithm/graph/specialized/irreducible_pairs_from_bounded_integer_distance_matrix.hpp
 ---
 
 有限の非負整数距離が少数の値しか取らない距離行列から、第三の頂点を経由する等長な分解を持たない頂点対を高速に列挙する。

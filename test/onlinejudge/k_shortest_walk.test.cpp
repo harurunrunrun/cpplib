@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/kth_shortest_walk.hpp"
+#include "../../src/algorithm/graph/shortest_path/kth_shortest_walk.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

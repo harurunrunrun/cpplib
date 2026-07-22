@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
-#include "../../src/algorithm/graph/endpoint_failure_connectivity.hpp"
+#include "../../src/algorithm/graph/connectivity/endpoint_failure_connectivity.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

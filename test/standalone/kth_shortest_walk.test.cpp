@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
-#include "../../src/algorithm/graph/kth_shortest_walk.hpp"
+#include "../../src/algorithm/graph/shortest_path/kth_shortest_walk.hpp"
 
 using Graph = std::vector<std::vector<KthShortestWalkEdge<long long>>>;
 

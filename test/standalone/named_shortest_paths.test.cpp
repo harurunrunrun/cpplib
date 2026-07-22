@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/graph/named_shortest_paths.hpp"
+#include "../../src/algorithm/graph/shortest_path/named_shortest_paths.hpp"
 
 void self_test(){
     NamedShortestPaths<int> paths(

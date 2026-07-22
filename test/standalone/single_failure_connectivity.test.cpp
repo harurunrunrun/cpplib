@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/single_failure_connectivity.hpp"
+#include "../../src/algorithm/graph/connectivity/single_failure_connectivity.hpp"
 
 namespace{
 

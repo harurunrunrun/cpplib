@@ -1,6 +1,6 @@
 ---
 title: Incremental SCC Pair-Product Sums (増分強連結成分内の重み積和) [incremental_scc]
-documentation_of: ../src/algorithm/graph/incremental_scc_pair_product_sums.hpp
+documentation_of: ../src/algorithm/graph/connectivity/incremental_scc_pair_product_sums.hpp
 ---
 
 有向辺を順に追加した各時点について、同じ強連結成分に属する相異なる2頂点の

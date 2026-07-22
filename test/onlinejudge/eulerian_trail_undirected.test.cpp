@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/eulerian_trail.hpp"
+#include "../../src/algorithm/graph/traversal/eulerian_trail.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

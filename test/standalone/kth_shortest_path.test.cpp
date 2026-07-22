@@ -6,7 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/graph/kth_shortest_path.hpp"
+#include "../../src/algorithm/graph/shortest_path/kth_shortest_path.hpp"
 
 struct BrutePath{
     long long cost;

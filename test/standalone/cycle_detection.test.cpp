@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
-#include "../../src/algorithm/graph/cycle_detection.hpp"
+#include "../../src/algorithm/graph/traversal/cycle_detection.hpp"
 
 bool valid_directed_cycle(
     int n,

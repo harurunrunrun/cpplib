@@ -1,6 +1,6 @@
 ---
 title: Counting Eulerian Circuits (オイラー閉路数え上げ) [counting_eulerian_circuits]
-documentation_of: ../src/algorithm/graph/counting_eulerian_circuits.hpp
+documentation_of: ../src/algorithm/graph/traversal/counting_eulerian_circuits.hpp
 ---
 
 BEST theoremと有向Matrix-Tree theoremで、有向多重グラフのEuler circuit数を体 `T` 上で求める。辺はラベル付きとして区別し、巡回列のcyclic shiftは同一視する。すなわち、入力の0番目の辺を先頭に固定したEuler tour数を返す。

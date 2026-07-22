@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/lexicographically_smallest_topological_order.hpp"
+#include "../../src/algorithm/graph/traversal/lexicographically_smallest_topological_order.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

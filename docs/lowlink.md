@@ -1,6 +1,6 @@
 ---
 title: Lowlink (Lowlink法) [ABC075_C] [GRL_3_A] [GRL_3_B]
-documentation_of: ../src/algorithm/graph/lowlink.hpp
+documentation_of: ../src/algorithm/graph/connectivity/lowlink.hpp
 ---
 
 無向グラフの関節点と橋を求める。

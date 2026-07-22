@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/undirected_cycle_certificate.hpp"
+#include "../../src/algorithm/graph/traversal/undirected_cycle_certificate.hpp"
 
 namespace{
 

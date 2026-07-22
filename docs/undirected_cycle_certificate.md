@@ -1,6 +1,6 @@
 ---
 title: Undirected Cycle Certificate (無向閉路証明) [cycle_detection_undirected]
-documentation_of: ../src/algorithm/graph/undirected_cycle_certificate.hpp
+documentation_of: ../src/algorithm/graph/traversal/undirected_cycle_certificate.hpp
 ---
 
 無向グラフから、頂点列と入力辺番号列を対応させた閉路を1つ取得する。

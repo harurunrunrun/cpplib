@@ -1,6 +1,6 @@
 ---
 title: Floyd Warshall (ワーシャル・フロイド法) [GRL_1_C]
-documentation_of: ../src/algorithm/graph/floyd_warshall.hpp
+documentation_of: ../src/algorithm/graph/shortest_path/floyd_warshall.hpp
 ---
 
 全点対最短路。負辺を扱える。
