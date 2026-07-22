@@ -214,7 +214,7 @@ def multiplication_regression_case() -> Case:
         limbs[-1] |= 2**31
         return integer_from_limbs(limbs)
 
-    for limb_count in (191, 192, 193, 257, 384, 769):
+    for limb_count in (191, 192, 193, 257, 384, 511, 512, 513, 769):
         left = alternating(limb_count, mask, 0xAAAAAAAA)
         right = alternating(limb_count, 0x55555555, mask)
         if limb_count % 2 != 0:

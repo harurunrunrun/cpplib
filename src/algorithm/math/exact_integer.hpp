@@ -471,6 +471,193 @@ class ExactInteger{
         return product;
     }
 
+    template<std::uint32_t Modulus>
+    static std::uint32_t ntt_power(std::uint32_t base, std::uint32_t exponent){
+        std::uint64_t result = 1;
+        std::uint64_t current = base;
+        while(exponent != 0){
+            if((exponent & 1U) != 0) result = result * current % Modulus;
+            current = current * current % Modulus;
+            exponent >>= 1;
+        }
+        return static_cast<std::uint32_t>(result);
+    }
+
+    template<std::uint32_t Modulus>
+    static void number_theoretic_transform(
+        std::vector<std::uint32_t>& values,
+        bool inverse
+    ){
+        const std::size_t size = values.size();
+        for(std::size_t index = 1, reversed = 0; index < size; ++index){
+            std::size_t bit = size >> 1;
+            while((reversed & bit) != 0){
+                reversed ^= bit;
+                bit >>= 1;
+            }
+            reversed ^= bit;
+            if(index < reversed) std::swap(values[index], values[reversed]);
+        }
+        for(std::size_t length = 2; length <= size; length <<= 1){
+            std::uint32_t root = ntt_power<Modulus>(
+                3, static_cast<std::uint32_t>((Modulus - 1) / length)
+            );
+            if(inverse) root = ntt_power<Modulus>(root, Modulus - 2);
+            const std::size_t half = length >> 1;
+            for(std::size_t block = 0; block < size; block += length){
+                std::uint64_t factor = 1;
+                for(std::size_t offset = 0; offset < half; ++offset){
+                    const std::uint32_t even = values[block + offset];
+                    const std::uint32_t odd = static_cast<std::uint32_t>(
+                        factor * values[block + offset + half] % Modulus
+                    );
+                    const std::uint64_t sum =
+                        static_cast<std::uint64_t>(even) + odd;
+                    values[block + offset] = static_cast<std::uint32_t>(
+                        sum >= Modulus ? sum - Modulus : sum
+                    );
+                    values[block + offset + half] = even >= odd
+                        ? even - odd
+                        : static_cast<std::uint32_t>(
+                            static_cast<std::uint64_t>(even) + Modulus - odd
+                        );
+                    factor = factor * root % Modulus;
+                }
+            }
+        }
+        if(inverse){
+            const std::uint32_t inverse_size = ntt_power<Modulus>(
+                static_cast<std::uint32_t>(size), Modulus - 2
+            );
+            for(std::uint32_t& value: values){
+                value = static_cast<std::uint32_t>(
+                    static_cast<std::uint64_t>(value) * inverse_size % Modulus
+                );
+            }
+        }
+    }
+
+    static std::vector<std::uint32_t> limbs_to_ntt_digits(
+        const std::vector<std::uint32_t>& limbs
+    ){
+        constexpr unsigned digit_bits = 15;
+        constexpr std::uint64_t digit_mask =
+            (std::uint64_t{1} << digit_bits) - 1;
+        std::vector<std::uint32_t> digits;
+        digits.reserve((limbs.size() * 32 + digit_bits - 1) / digit_bits);
+        std::uint64_t buffer = 0;
+        unsigned buffered_bits = 0;
+        for(const std::uint32_t limb: limbs){
+            buffer |= static_cast<std::uint64_t>(limb) << buffered_bits;
+            buffered_bits += 32;
+            while(buffered_bits >= digit_bits){
+                digits.push_back(static_cast<std::uint32_t>(
+                    buffer & digit_mask
+                ));
+                buffer >>= digit_bits;
+                buffered_bits -= digit_bits;
+            }
+        }
+        if(buffered_bits != 0){
+            digits.push_back(static_cast<std::uint32_t>(buffer));
+        }
+        while(!digits.empty() && digits.back() == 0) digits.pop_back();
+        return digits;
+    }
+
+    static std::vector<std::uint32_t> ntt_digits_to_limbs(
+        const std::vector<std::uint64_t>& coefficients
+    ){
+        constexpr unsigned digit_bits = 15;
+        constexpr std::uint64_t digit_mask =
+            (std::uint64_t{1} << digit_bits) - 1;
+        std::vector<std::uint32_t> digits;
+        digits.reserve(coefficients.size() + 4);
+        std::uint64_t carry = 0;
+        for(const std::uint64_t coefficient: coefficients){
+            const std::uint64_t current = coefficient + carry;
+            digits.push_back(static_cast<std::uint32_t>(current & digit_mask));
+            carry = current >> digit_bits;
+        }
+        while(carry != 0){
+            digits.push_back(static_cast<std::uint32_t>(carry & digit_mask));
+            carry >>= digit_bits;
+        }
+        std::vector<std::uint32_t> limbs;
+        limbs.reserve((digits.size() * digit_bits + 31) / 32);
+        std::uint64_t buffer = 0;
+        unsigned buffered_bits = 0;
+        for(const std::uint32_t digit: digits){
+            buffer |= static_cast<std::uint64_t>(digit) << buffered_bits;
+            buffered_bits += digit_bits;
+            if(buffered_bits >= 32){
+                limbs.push_back(static_cast<std::uint32_t>(buffer));
+                buffer >>= 32;
+                buffered_bits -= 32;
+            }
+        }
+        if(buffered_bits != 0){
+            limbs.push_back(static_cast<std::uint32_t>(buffer));
+        }
+        trim_magnitude(limbs);
+        return limbs;
+    }
+
+    static std::vector<std::uint32_t> ntt_multiply(
+        const std::vector<std::uint32_t>& left,
+        const std::vector<std::uint32_t>& right
+    ){
+        constexpr std::uint32_t modulus_1 = 998'244'353;
+        constexpr std::uint32_t modulus_2 = 1'004'535'809;
+        constexpr std::size_t maximum_transform_size = std::size_t{1} << 21;
+        const auto left_digits = limbs_to_ntt_digits(left);
+        const auto right_digits = limbs_to_ntt_digits(right);
+        const std::size_t coefficient_count =
+            left_digits.size() + right_digits.size() - 1;
+        std::size_t transform_size = 1;
+        while(transform_size < coefficient_count) transform_size <<= 1;
+        if(transform_size > maximum_transform_size){
+            throw std::length_error("ExactInteger NTT input is too large");
+        }
+        std::vector<std::uint32_t> left_1(transform_size);
+        std::vector<std::uint32_t> right_1(transform_size);
+        std::copy(left_digits.begin(), left_digits.end(), left_1.begin());
+        std::copy(right_digits.begin(), right_digits.end(), right_1.begin());
+        std::vector<std::uint32_t> left_2 = left_1;
+        std::vector<std::uint32_t> right_2 = right_1;
+        number_theoretic_transform<modulus_1>(left_1, false);
+        number_theoretic_transform<modulus_1>(right_1, false);
+        number_theoretic_transform<modulus_2>(left_2, false);
+        number_theoretic_transform<modulus_2>(right_2, false);
+        for(std::size_t index = 0; index < transform_size; ++index){
+            left_1[index] = static_cast<std::uint32_t>(
+                static_cast<std::uint64_t>(left_1[index]) * right_1[index]
+                % modulus_1
+            );
+            left_2[index] = static_cast<std::uint32_t>(
+                static_cast<std::uint64_t>(left_2[index]) * right_2[index]
+                % modulus_2
+            );
+        }
+        number_theoretic_transform<modulus_1>(left_1, true);
+        number_theoretic_transform<modulus_2>(left_2, true);
+        const std::uint32_t inverse_modulus_1 = ntt_power<modulus_2>(
+            modulus_1 % modulus_2, modulus_2 - 2
+        );
+        std::vector<std::uint64_t> coefficients(coefficient_count);
+        for(std::size_t index = 0; index < coefficient_count; ++index){
+            const std::uint64_t residue_1 = left_1[index];
+            const std::uint64_t difference =
+                (static_cast<std::uint64_t>(left_2[index]) + modulus_2
+                    - residue_1 % modulus_2) % modulus_2;
+            const std::uint64_t multiplier =
+                difference * inverse_modulus_1 % modulus_2;
+            coefficients[index] = residue_1
+                + static_cast<std::uint64_t>(modulus_1) * multiplier;
+        }
+        return ntt_digits_to_limbs(coefficients);
+    }
+
     static std::vector<std::uint32_t> limb_range(
         const std::vector<std::uint32_t>& value,
         std::size_t first,
@@ -525,12 +712,22 @@ class ExactInteger{
         if(left.empty() || right.empty()) return {};
         constexpr std::size_t karatsuba_threshold = 32;
         constexpr std::size_t toom_cook_3_threshold = 192;
+        constexpr std::size_t ntt_threshold = 512;
+        constexpr std::size_t maximum_ntt_limb_sum = 983'039;
         const std::size_t shorter = std::min(left.size(), right.size());
         const std::size_t longer = std::max(left.size(), right.size());
         const std::size_t toom_split =
             longer / 3 + (longer % 3 != 0);
         if(shorter <= karatsuba_threshold){
             return schoolbook_multiply(left, right);
+        }
+
+        // Two exact NTTs and CRT are faster for sufficiently large values.
+        // Larger transforms keep the exact Toom-Cook/Karatsuba fallback.
+        if(shorter >= ntt_threshold
+            && left.size() <= maximum_ntt_limb_sum
+            && right.size() <= maximum_ntt_limb_sum - left.size()){
+            return ntt_multiply(left, right);
         }
 
         // Three non-trivial chunks on both sides keep all five Toom-Cook
