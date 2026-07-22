@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/discrete_logarithm_mod
 
 #include <iostream>
-#include "../../src/algorithm/math/discrete_log.hpp"
+#include "../../src/algorithm/math/number_theory/discrete_log.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/nearest_golden_ratio_power.hpp"
+#include "../../src/algorithm/math/sequence/nearest_golden_ratio_power.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

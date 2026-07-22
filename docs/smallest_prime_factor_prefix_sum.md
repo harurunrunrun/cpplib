@@ -1,6 +1,6 @@
 ---
 title: Smallest Prime Factor Prefix Sum (最小素因数の累積和) [APS]
-documentation_of: ../src/algorithm/math/smallest_prime_factor_prefix_sum.hpp
+documentation_of: ../src/algorithm/math/number_theory/smallest_prime_factor_prefix_sum.hpp
 ---
 
 `2..n` の各整数の最小素因数を合計する前計算表。

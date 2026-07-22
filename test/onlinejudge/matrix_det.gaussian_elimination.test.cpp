@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/gaussian_elimination.hpp"
+#include "../../src/algorithm/math/linear_algebra/gaussian_elimination.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 int main(){

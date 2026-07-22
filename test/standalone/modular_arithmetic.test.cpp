@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/modular_arithmetic.hpp"
+#include "../../src/algorithm/math/number_theory/modular_arithmetic.hpp"
 
 void test_chinese_remainder(){
     auto result = math::chinese_remainder(2, 3, 3, 5);

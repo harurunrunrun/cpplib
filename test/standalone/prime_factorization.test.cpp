@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/prime_factorization.hpp"
+#include "../../src/algorithm/math/number_theory/prime_factorization.hpp"
 
 using math::u64;
 

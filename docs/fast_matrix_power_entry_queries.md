@@ -1,6 +1,6 @@
 ---
 title: Fast Matrix Power Entry Queries (高速行列累乗要素クエリ)
-documentation_of: ../src/algorithm/math/fast_matrix_power_entry_queries.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/fast_matrix_power_entry_queries.hpp
 ---
 
 固定された正方整数行列について、64 bit 非負整数乗の指定要素を繰り返し求める。

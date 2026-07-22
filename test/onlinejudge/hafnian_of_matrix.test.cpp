@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/hafnian.hpp"
+#include "../../src/algorithm/math/linear_algebra/hafnian.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 int main(){

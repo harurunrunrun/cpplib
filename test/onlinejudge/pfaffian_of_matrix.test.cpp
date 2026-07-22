@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/pfaffian.hpp"
+#include "../../src/algorithm/math/linear_algebra/pfaffian.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 int main(){

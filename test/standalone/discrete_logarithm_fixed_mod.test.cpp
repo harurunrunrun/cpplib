@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/discrete_logarithm_fixed_mod.hpp"
+#include "../../src/algorithm/math/number_theory/discrete_logarithm_fixed_mod.hpp"
 
 namespace{
 

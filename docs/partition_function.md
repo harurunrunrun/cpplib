@@ -1,6 +1,6 @@
 ---
 title: Partition Function (分割数) [partition_function]
-documentation_of: ../src/algorithm/math/partition_function.hpp
+documentation_of: ../src/algorithm/math/combinatorics/partition_function.hpp
 ---
 
 ## `partition_numbers`

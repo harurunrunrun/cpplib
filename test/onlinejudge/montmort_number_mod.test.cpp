@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/montmort_number.hpp"
+#include "../../src/algorithm/math/combinatorics/montmort_number.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

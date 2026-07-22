@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/prime_counting.hpp"
+#include "../../src/algorithm/math/number_theory/prime_counting.hpp"
 
 int main(){
     int query_count;

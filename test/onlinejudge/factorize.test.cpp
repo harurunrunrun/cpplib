@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/factorize
 
 #include <iostream>
-#include "../../src/algorithm/math/prime_factorization.hpp"
+#include "../../src/algorithm/math/number_theory/prime_factorization.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

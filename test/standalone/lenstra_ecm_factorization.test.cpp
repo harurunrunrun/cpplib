@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/lenstra_ecm_factorization.hpp"
+#include "../../src/algorithm/math/number_theory/lenstra_ecm_factorization.hpp"
 
 namespace{
 

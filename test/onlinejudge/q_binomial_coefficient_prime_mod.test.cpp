@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/q_binomial_prime_mod.hpp"
+#include "../../src/algorithm/math/combinatorics/q_binomial_prime_mod.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

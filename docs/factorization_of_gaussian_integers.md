@@ -1,6 +1,6 @@
 ---
 title: Factorization of Gaussian Integers (ガウス整数の素因数分解)
-documentation_of: ../src/algorithm/math/gaussian_integer_factorization.hpp
+documentation_of: ../src/algorithm/math/number_theory/gaussian_integer_factorization.hpp
 ---
 
 非零のGauss整数を、単数と正規化されたGauss素数の冪へ分解する。

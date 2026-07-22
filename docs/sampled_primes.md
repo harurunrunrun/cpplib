@@ -1,6 +1,6 @@
 ---
 title: Sampled Primes (一定間隔の素数列) [TDPRIMES]
-documentation_of: ../src/algorithm/math/sampled_primes.hpp
+documentation_of: ../src/algorithm/math/number_theory/sampled_primes.hpp
 ---
 
 上限未満の素数列から、素数添字が一定合同類にある要素を返す。

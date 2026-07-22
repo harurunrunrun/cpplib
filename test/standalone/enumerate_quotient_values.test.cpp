@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/enumerate_quotient_values.hpp"
+#include "../../src/algorithm/math/number_theory/enumerate_quotient_values.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

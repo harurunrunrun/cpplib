@@ -6,7 +6,7 @@
 #include <optional>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/sqrt_mod.hpp"
+#include "../../src/algorithm/math/number_theory/sqrt_mod.hpp"
 
 namespace{
 

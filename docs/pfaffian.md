@@ -1,6 +1,6 @@
 ---
 title: Pfaffian (パフィアン) [pfaffian_of_matrix]
-documentation_of: ../src/algorithm/math/pfaffian.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/pfaffian.hpp
 ---
 
 偶数次交代行列$A$のPfaffianを、対称な行・列交換を伴うGaussian eliminationで求める。

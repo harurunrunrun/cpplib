@@ -1,6 +1,6 @@
 ---
 title: Matrix Power Entry Queries (行列累乗要素クエリ) [MATEX]
-documentation_of: ../src/algorithm/math/matrix_power_entry_queries.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/matrix_power_entry_queries.hpp
 ---
 
 固定された正方行列について、64 bit 非負整数乗の指定要素を繰り返し求める。

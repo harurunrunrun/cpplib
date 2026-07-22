@@ -1,6 +1,6 @@
 ---
 title: Big Integer (多倍長整数)
-documentation_of: ../src/algorithm/math/big_integer.hpp
+documentation_of: ../src/algorithm/math/integer/big_integer.hpp
 ---
 
 符号付き多倍長整数。`ExactInteger` の加減算・乗算・shiftを利用し、10進文字列の

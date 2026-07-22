@@ -1,6 +1,6 @@
 ---
 title: Counting Square-free Integers (平方因子を持たない整数の数え上げ) [counting_squarefrees]
-documentation_of: ../src/algorithm/math/counting_squarefrees.hpp
+documentation_of: ../src/algorithm/math/number_theory/counting_squarefrees.hpp
 ---
 
 $1$ 以上 $N$ 以下の無平方数（どの素数の2乗でも割り切れない整数）の個数を求める。

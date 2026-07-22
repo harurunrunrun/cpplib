@@ -5,7 +5,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../math/exact_integer.hpp"
+#include "../../math/integer/exact_integer.hpp"
 
 #include "expansion_arithmetic.hpp"
 #include "is_finite.hpp"

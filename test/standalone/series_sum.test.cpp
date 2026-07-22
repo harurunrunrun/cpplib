@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/series_sum.hpp"
+#include "../../src/algorithm/math/sequence/series_sum.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint<998244353>;

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/associative_sieve.hpp"
+#include "../../src/algorithm/math/number_theory/associative_sieve.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

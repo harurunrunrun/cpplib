@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/math/exact_integer.hpp"
+#include "../../src/algorithm/math/integer/exact_integer.hpp"
 
 namespace{
 

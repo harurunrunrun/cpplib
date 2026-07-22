@@ -1,6 +1,6 @@
 ---
 title: Fibonacci Range Sum (Fibonacci列の区間和) [FIBOSUM]
-documentation_of: ../src/algorithm/math/fibonacci_range_sum.hpp
+documentation_of: ../src/algorithm/math/sequence/fibonacci_range_sum.hpp
 ---
 
 Fibonacci列の閉区間和を指定した法で返す。

@@ -1,6 +1,6 @@
 ---
 title: Matrix Product (Mod 2) (二元体上の行列積) [matrix_product_mod_2]
-documentation_of: ../src/algorithm/math/matrix_product_mod_2.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/matrix_product_mod_2.hpp
 ---
 
 $\mathbb{F}_2$上の行列積を、行を`std::bitset`で持って計算する。

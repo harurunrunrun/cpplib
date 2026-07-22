@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/visible_lattice_points.hpp"
+#include "../../src/algorithm/math/number_theory/visible_lattice_points.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

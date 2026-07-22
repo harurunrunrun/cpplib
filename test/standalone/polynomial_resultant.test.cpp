@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/polynomial_resultant.hpp"
+#include "../../src/algorithm/math/polynomial/polynomial_resultant.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint998244353;

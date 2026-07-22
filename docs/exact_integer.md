@@ -1,6 +1,6 @@
 ---
 title: Exact Integer (任意精度整数)
-documentation_of: ../src/algorithm/math/exact_integer.hpp
+documentation_of: ../src/algorithm/math/integer/exact_integer.hpp
 ---
 
 符号と2進limbで整数を正確に保持する、外部ライブラリに依存しない任意精度整数である。

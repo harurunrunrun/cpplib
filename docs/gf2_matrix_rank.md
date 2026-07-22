@@ -1,6 +1,6 @@
 ---
 title: GF2 Matrix Rank (二元体行列の階数) [matrix_rank_mod_2]
-documentation_of: ../src/algorithm/math/gf2_matrix_rank.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/gf2_matrix_rank.hpp
 ---
 
 `0` と `1` の文字列で与えた行列の $\mathbb{F}_2$ 上の階数を求める。

@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/prime_sieve.hpp"
+#include "../../src/algorithm/math/number_theory/prime_sieve.hpp"
 
 void test_is_prime_sqrt(){
     assert(!math::is_prime_sqrt(-1));

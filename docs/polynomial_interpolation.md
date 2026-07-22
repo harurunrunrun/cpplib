@@ -1,12 +1,12 @@
 ---
 title: Polynomial Interpolation (多項式補間) [polynomial_interpolation]
-documentation_of: ../src/algorithm/math/polynomial_interpolation.hpp
+documentation_of: ../src/algorithm/math/polynomial/polynomial_interpolation.hpp
 ---
 
 固定長配列による Lagrange 補間と、積木を用いた高速な任意点補間。
 
 ```cpp
-#include "src/algorithm/math/polynomial_interpolation.hpp"
+#include "src/algorithm/math/polynomial/polynomial_interpolation.hpp"
 
 using mint = Modint998244353;
 math::PolynomialInterpolation<mint, 200000> interpolation;

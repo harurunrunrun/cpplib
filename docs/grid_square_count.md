@@ -1,6 +1,6 @@
 ---
 title: Grid Square Count (正方格子に含まれる正方形数) [SAMER08F]
-documentation_of: ../src/algorithm/math/grid_square_count.hpp
+documentation_of: ../src/algorithm/math/combinatorics/grid_square_count.hpp
 ---
 
 正方格子に含まれる軸平行な正方形の総数を返す。

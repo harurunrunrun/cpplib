@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/gaussian_elimination.hpp"
+#include "../../src/algorithm/math/linear_algebra/gaussian_elimination.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint998244353;

@@ -1,6 +1,6 @@
 ---
 title: Nearest Golden Ratio Power (黄金比冪の最近整数) [POWERPHI]
-documentation_of: ../src/algorithm/math/nearest_golden_ratio_power.hpp
+documentation_of: ../src/algorithm/math/sequence/nearest_golden_ratio_power.hpp
 ---
 
 黄金比の非負整数冪に最も近い整数を、指定した法で求める。

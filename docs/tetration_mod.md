@@ -1,6 +1,6 @@
 ---
 title: Tetration Mod (テトレーションの剰余) [tetration_mod]
-documentation_of: ../src/algorithm/math/tetration_mod.hpp
+documentation_of: ../src/algorithm/math/number_theory/tetration_mod.hpp
 ---
 
 ## `tetration_mod`

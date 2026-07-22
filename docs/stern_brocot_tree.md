@@ -1,6 +1,6 @@
 ---
 title: Stern–Brocot Tree (スターン・ブロコット木) [stern_brocot_tree]
-documentation_of: ../src/algorithm/math/stern_brocot_tree.hpp
+documentation_of: ../src/algorithm/math/combinatorics/stern_brocot_tree.hpp
 ---
 
 正の既約分数をStern--Brocot Treeの頂点として扱う。

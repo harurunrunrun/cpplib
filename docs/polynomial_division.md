@@ -1,13 +1,13 @@
 ---
 title: Division of Polynomials (多項式除算) [division_of_polynomials]
-documentation_of: ../src/algorithm/math/polynomial_division.hpp
+documentation_of: ../src/algorithm/math/polynomial/polynomial_division.hpp
 ---
 
 体上の多項式除算を、反転した多項式の形式的冪級数逆元を使って高速に行う。
 係数は定数項から昇冪順に並べる。0多項式は空の `std::vector` で表す。
 
 ```cpp
-#include "src/algorithm/math/polynomial_division.hpp"
+#include "src/algorithm/math/polynomial/polynomial_division.hpp"
 
 using polynomial = math::Polynomial<998244353>;
 ```

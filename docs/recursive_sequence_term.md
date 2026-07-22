@@ -1,6 +1,6 @@
 ---
 title: Recursive Sequence Term (線形漸化式の指定項) [SEQ]
-documentation_of: ../src/algorithm/math/recursive_sequence_term.hpp
+documentation_of: ../src/algorithm/math/sequence/recursive_sequence_term.hpp
 ---
 
 係数が一定の線形漸化式について、1始まりの指定項を法付きで求める。

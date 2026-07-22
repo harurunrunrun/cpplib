@@ -4,7 +4,7 @@
 #include <iostream>
 #include <utility>
 
-#include "../../src/algorithm/math/polynomial_division.hpp"
+#include "../../src/algorithm/math/polynomial/polynomial_division.hpp"
 
 namespace{
 

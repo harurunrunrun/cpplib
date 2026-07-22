@@ -1,6 +1,6 @@
 ---
 title: Binary GCD (二進GCD)
-documentation_of: ../src/algorithm/math/binary_gcd.hpp
+documentation_of: ../src/algorithm/math/number_theory/binary_gcd.hpp
 ---
 
 Stein法により固定幅整数の最大公約数を求める。

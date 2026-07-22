@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/sqrt_mod.hpp"
+#include "../../src/algorithm/math/number_theory/sqrt_mod.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

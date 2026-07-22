@@ -1,6 +1,6 @@
 ---
 title: Proper Divisor Sum (真の約数の総和) [DIVSUM2]
-documentation_of: ../src/algorithm/math/proper_divisor_sum.hpp
+documentation_of: ../src/algorithm/math/number_theory/proper_divisor_sum.hpp
 ---
 
 64 bit 整数を素因数分解し、自分自身を除く正の約数の総和を返す。

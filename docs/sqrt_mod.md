@@ -1,6 +1,6 @@
 ---
 title: Square Root Modulo a Prime (素数を法とする平方根) [sqrt_mod]
-documentation_of: ../src/algorithm/math/sqrt_mod.hpp
+documentation_of: ../src/algorithm/math/number_theory/sqrt_mod.hpp
 ---
 
 素数を法とする平方根をTonelli--Shanks法で求める。

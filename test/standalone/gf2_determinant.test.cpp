@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/gf2_determinant.hpp"
+#include "../../src/algorithm/math/linear_algebra/gf2_determinant.hpp"
 
 void self_test(){
     assert(gf2_determinant({}) == 1);

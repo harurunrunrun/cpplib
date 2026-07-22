@@ -1,6 +1,6 @@
 ---
 title: Small and Huge Integer GCD (小整数と巨大整数のGCD) [GCD2]
-documentation_of: ../src/algorithm/math/gcd_small_huge_integer.hpp
+documentation_of: ../src/algorithm/math/number_theory/gcd_small_huge_integer.hpp
 ---
 
 機械語整数と十進文字列整数の最大公約数を求める。

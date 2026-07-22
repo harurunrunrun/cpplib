@@ -1,6 +1,6 @@
 ---
 title: Associative Sieve Summatory Quotients (結合的篩による商ごとの総和) [ASSIEVE]
-documentation_of: ../src/algorithm/math/associative_sieve.hpp
+documentation_of: ../src/algorithm/math/number_theory/associative_sieve.hpp
 ---
 
 4状態の可換モノイド上に値を持つ乗法的関数について、`floor(n / i)` ごとの冪和をまとめて求める。

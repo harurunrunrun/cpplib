@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/count_prime_alternating_digit_sum_numbers.hpp"
+#include "../../src/algorithm/math/number_theory/count_prime_alternating_digit_sum_numbers.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

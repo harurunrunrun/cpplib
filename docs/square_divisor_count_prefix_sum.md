@@ -1,6 +1,6 @@
 ---
 title: Square Divisor Count Prefix Sum (平方数の約数個数の累積和) [DIVCNT2]
-documentation_of: ../src/algorithm/math/square_divisor_count_prefix_sum.hpp
+documentation_of: ../src/algorithm/math/number_theory/square_divisor_count_prefix_sum.hpp
 ---
 
 各正整数の平方が持つ約数の個数について、累積和を複数回求める。

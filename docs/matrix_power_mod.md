@@ -1,6 +1,6 @@
 ---
 title: Dynamic Matrix Power Modulo (動的行列の法付き累乗) [MPOW]
-documentation_of: ../src/algorithm/math/matrix_power_mod.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/matrix_power_mod.hpp
 ---
 
 実行時サイズの正方行列を、指定した法の下で整数乗する。

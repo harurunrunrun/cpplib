@@ -1,6 +1,6 @@
 ---
 title: Prime Counting (素数計数) [counting_primes]
-documentation_of: ../src/algorithm/math/prime_counting.hpp
+documentation_of: ../src/algorithm/math/number_theory/prime_counting.hpp
 ---
 
 素数の個数を数える。

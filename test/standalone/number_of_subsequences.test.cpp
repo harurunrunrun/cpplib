@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/number_of_subsequences.hpp"
+#include "../../src/algorithm/math/combinatorics/number_of_subsequences.hpp"
 
 int main(){
     try{

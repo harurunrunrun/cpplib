@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <string>
-#include "../../src/algorithm/math/prime_counting.hpp"
+#include "../../src/algorithm/math/number_theory/prime_counting.hpp"
 
 bool is_prime_naive(int n){
     if(n <= 1) return false;

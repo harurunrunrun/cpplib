@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/fibonacci_range_sum.hpp"
+#include "../../src/algorithm/math/sequence/fibonacci_range_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

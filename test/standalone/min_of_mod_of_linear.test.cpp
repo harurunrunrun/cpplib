@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/min_of_mod_of_linear.hpp"
+#include "../../src/algorithm/math/number_theory/min_of_mod_of_linear.hpp"
 
 namespace{
 

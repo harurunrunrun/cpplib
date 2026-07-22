@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/squarefree_integer_count.hpp"
+#include "../../src/algorithm/math/number_theory/squarefree_integer_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

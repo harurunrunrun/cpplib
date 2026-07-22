@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/square_divisor_count_prefix_sum.hpp"
+#include "../../src/algorithm/math/number_theory/square_divisor_count_prefix_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

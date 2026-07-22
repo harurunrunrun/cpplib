@@ -1,6 +1,6 @@
 ---
 title: Segmented Sieve (区間篩)
-documentation_of: ../src/algorithm/math/segmented_sieve.hpp
+documentation_of: ../src/algorithm/math/number_theory/segmented_sieve.hpp
 ---
 
 区間 `[l, r)` の素数判定をまとめて行う。

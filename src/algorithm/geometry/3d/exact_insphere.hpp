@@ -4,7 +4,7 @@
 #include <array>
 #include <stdexcept>
 
-#include "../../math/exact_integer.hpp"
+#include "../../math/integer/exact_integer.hpp"
 
 #include "exact_orient3d.hpp"
 

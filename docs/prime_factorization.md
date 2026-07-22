@@ -1,6 +1,6 @@
 ---
 title: Prime Factorization (素因数分解) [FACT0] [factorize] [NTL_1_A] [NTL_1_D] [primality_test]
-documentation_of: ../src/algorithm/math/prime_factorization.hpp
+documentation_of: ../src/algorithm/math/number_theory/prime_factorization.hpp
 ---
 
 64 bit 整数向けの Miller-Rabin と Pollard's rho。

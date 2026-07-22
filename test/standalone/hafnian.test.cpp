@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/hafnian.hpp"
+#include "../../src/algorithm/math/linear_algebra/hafnian.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint998244353;

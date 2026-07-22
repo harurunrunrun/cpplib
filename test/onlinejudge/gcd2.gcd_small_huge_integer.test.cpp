@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/math/gcd_small_huge_integer.hpp"
+#include "../../src/algorithm/math/number_theory/gcd_small_huge_integer.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

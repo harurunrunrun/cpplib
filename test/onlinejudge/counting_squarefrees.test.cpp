@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/counting_squarefrees.hpp"
+#include "../../src/algorithm/math/number_theory/counting_squarefrees.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/math/combinatorics.hpp"
+#include "../../src/algorithm/math/combinatorics/combinatorics.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint<998244353>;

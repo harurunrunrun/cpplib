@@ -1,6 +1,6 @@
 ---
 title: K-th Root Integer (整数のK乗根) [kth_root_integer]
-documentation_of: ../src/algorithm/math/kth_root_integer.hpp
+documentation_of: ../src/algorithm/math/number_theory/kth_root_integer.hpp
 ---
 
 符号なし64bit整数の整数k乗根を求める。

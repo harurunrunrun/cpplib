@@ -1,6 +1,6 @@
 ---
 title: Fast Matrix Multiplication (高速行列積)
-documentation_of: ../src/algorithm/math/fast_matrix_multiply.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/fast_matrix_multiply.hpp
 ---
 
 Strassen 法による、正確な体・環上の密行列積。

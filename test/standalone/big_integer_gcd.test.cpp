@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/math/big_integer_gcd.hpp"
+#include "../../src/algorithm/math/integer/big_integer_gcd.hpp"
 
 static void test_edges(){
     assert(big_integer_gcd(0, 0) == 0);

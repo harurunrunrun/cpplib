@@ -1,6 +1,6 @@
 ---
 title: Quadratic Form over GF(2) (二元体上の二次形式)
-documentation_of: ../src/algorithm/math/quadratic_form_gf2.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/quadratic_form_gf2.hpp
 ---
 
 $\mathbb F_2$ 上の二次多項式

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/fast_gaussian_elimination.hpp"
+#include "../../src/algorithm/math/linear_algebra/fast_gaussian_elimination.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 using Mint = FastModint998244353;

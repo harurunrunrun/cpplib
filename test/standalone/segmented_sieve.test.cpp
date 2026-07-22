@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/segmented_sieve.hpp"
+#include "../../src/algorithm/math/number_theory/segmented_sieve.hpp"
 
 void test_basic(){
     const auto primes = math::primes_in_range(0, 30);

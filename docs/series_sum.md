@@ -1,6 +1,6 @@
 ---
 title: Series Sum (数列和)
-documentation_of: ../src/algorithm/math/series_sum.hpp
+documentation_of: ../src/algorithm/math/sequence/series_sum.hpp
 ---
 
 等差数列、等比数列の和。

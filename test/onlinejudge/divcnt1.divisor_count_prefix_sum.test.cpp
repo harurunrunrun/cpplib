@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/divisor_count_prefix_sum.hpp"
+#include "../../src/algorithm/math/number_theory/divisor_count_prefix_sum.hpp"
 
 namespace{
 

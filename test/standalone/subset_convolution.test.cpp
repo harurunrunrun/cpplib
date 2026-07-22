@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/subset_convolution.hpp"
+#include "../../src/algorithm/math/polynomial/subset_convolution.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 int main(){

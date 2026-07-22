@@ -2,7 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LATTICE_POLYGON_DETAIL_HPP_INCLUDED
 
 #include <algorithm>
-#include "../../math/exact_integer.hpp"
+#include "../../math/integer/exact_integer.hpp"
 #include <concepts>
 #include <limits>
 #include <stdexcept>

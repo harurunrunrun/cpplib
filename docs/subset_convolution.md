@@ -1,6 +1,6 @@
 ---
 title: Subset Convolution (部分集合畳み込み) [subset_convolution]
-documentation_of: ../src/algorithm/math/subset_convolution.hpp
+documentation_of: ../src/algorithm/math/polynomial/subset_convolution.hpp
 ---
 
 ## `subset_convolution`

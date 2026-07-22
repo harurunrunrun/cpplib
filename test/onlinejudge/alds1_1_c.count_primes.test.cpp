@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/count_primes.hpp"
+#include "../../src/algorithm/math/number_theory/count_primes.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -1,6 +1,6 @@
 ---
 title: Characteristic Polynomial (特性多項式) [characteristic_polynomial]
-documentation_of: ../src/algorithm/math/characteristic_polynomial.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/characteristic_polynomial.hpp
 ---
 
 正方行列$A$の特性多項式

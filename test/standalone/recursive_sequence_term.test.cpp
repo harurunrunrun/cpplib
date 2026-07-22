@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/recursive_sequence_term.hpp"
+#include "../../src/algorithm/math/sequence/recursive_sequence_term.hpp"
 
 namespace{
 

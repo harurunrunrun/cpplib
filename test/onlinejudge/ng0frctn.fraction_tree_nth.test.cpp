@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/calkin_wilf_nth_fraction.hpp"
+#include "../../src/algorithm/math/combinatorics/calkin_wilf_nth_fraction.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

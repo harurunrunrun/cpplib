@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/pairwise_gcd_sums.hpp"
+#include "../../src/algorithm/math/number_theory/pairwise_gcd_sums.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

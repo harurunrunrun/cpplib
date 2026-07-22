@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/fast_matrix_power_mod.hpp"
+#include "../../src/algorithm/math/linear_algebra/fast_matrix_power_mod.hpp"
 
 namespace{
 

@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/quadratic_form_gf2.hpp"
+#include "../../src/algorithm/math/linear_algebra/quadratic_form_gf2.hpp"
 
 using math::QuadraticFormGF2;
 

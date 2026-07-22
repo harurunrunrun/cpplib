@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/polynomial_half_gcd.hpp"
+#include "../../src/algorithm/math/polynomial/polynomial_half_gcd.hpp"
 
 namespace{
 

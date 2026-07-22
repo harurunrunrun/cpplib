@@ -1,6 +1,6 @@
 ---
 title: Value-Bounded Constant-Time GCD (値域前処理定数時間最大公約数)
-documentation_of: ../src/algorithm/math/constant_time_gcd.hpp
+documentation_of: ../src/algorithm/math/number_theory/constant_time_gcd.hpp
 ---
 
 値域上限 $V$ を先に固定し、$0\leq a,b\leq V$ の最大公約数をworst-case

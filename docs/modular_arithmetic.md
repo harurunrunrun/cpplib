@@ -1,6 +1,6 @@
 ---
 title: Modular Arithmetic (剰余演算) [primitive_root]
-documentation_of: ../src/algorithm/math/modular_arithmetic.hpp
+documentation_of: ../src/algorithm/math/number_theory/modular_arithmetic.hpp
 ---
 
 中国剰余定理と素数modの原始根。

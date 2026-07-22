@@ -1,6 +1,6 @@
 ---
 title: Multipoint Evaluation (多点評価) [multipoint_evaluation]
-documentation_of: ../src/algorithm/math/multipoint_evaluation.hpp
+documentation_of: ../src/algorithm/math/polynomial/multipoint_evaluation.hpp
 ---
 
 積木と剰余木を使い、1個の多項式を多数の点でまとめて評価する。
@@ -9,7 +9,7 @@ documentation_of: ../src/algorithm/math/multipoint_evaluation.hpp
 ## API
 
 ```cpp
-#include "src/algorithm/math/multipoint_evaluation.hpp"
+#include "src/algorithm/math/polynomial/multipoint_evaluation.hpp"
 
 template<int MOD>
 std::vector<Modint<MOD>> math::multipoint_evaluation(

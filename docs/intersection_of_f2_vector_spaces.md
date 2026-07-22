@@ -1,6 +1,6 @@
 ---
 title: Intersection of F2 Vector Spaces (二元体ベクトル空間の共通部分) [intersection_of_f2_vector_spaces]
-documentation_of: ../src/algorithm/math/intersection_of_f2_vector_spaces.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/intersection_of_f2_vector_spaces.hpp
 ---
 
 unsigned整数を$\mathbb{F}_2$上のbit vectorとみなし、2つの生成系が張る部分空間の共通部分を求める。

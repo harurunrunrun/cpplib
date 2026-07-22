@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/math/stern_brocot_tree.hpp"
+#include "../../src/algorithm/math/combinatorics/stern_brocot_tree.hpp"
 
 using SBT = math::SternBrocotTree<long long, 64>;
 using Fraction = SBT::Fraction;

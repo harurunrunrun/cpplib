@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/euler_totient_value.hpp"
+#include "../../src/algorithm/math/number_theory/euler_totient_value.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

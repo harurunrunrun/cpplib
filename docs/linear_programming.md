@@ -1,6 +1,6 @@
 ---
 title: Linear Programming (Two-phase Simplex) (線形計画法)
-documentation_of: ../src/algorithm/math/linear_programming.hpp
+documentation_of: ../src/algorithm/math/optimization/linear_programming.hpp
 ---
 
 二段階simplex法で、次の標準形の線形計画問題を解く。

@@ -1,6 +1,6 @@
 ---
 title: Prime Alternating Digit-sum Count (交互桁和が素数となる整数の個数) [LUCIFER]
-documentation_of: ../src/algorithm/math/count_prime_alternating_digit_sum_numbers.hpp
+documentation_of: ../src/algorithm/math/number_theory/count_prime_alternating_digit_sum_numbers.hpp
 ---
 
 十進表記の偶数位置の桁和から奇数位置の桁和を引いた値が正の素数となる整数を、

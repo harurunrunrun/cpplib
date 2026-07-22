@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/proper_divisor_sum.hpp"
+#include "../../src/algorithm/math/number_theory/proper_divisor_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

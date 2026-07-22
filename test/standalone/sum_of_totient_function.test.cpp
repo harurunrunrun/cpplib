@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/sum_of_totient_function.hpp"
+#include "../../src/algorithm/math/number_theory/sum_of_totient_function.hpp"
 
 namespace{
 

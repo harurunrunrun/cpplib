@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../math/exact_integer.hpp"
+#include "../../math/integer/exact_integer.hpp"
 
 #include "base.hpp"
 #include "is_finite.hpp"

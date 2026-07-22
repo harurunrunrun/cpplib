@@ -1,6 +1,6 @@
 ---
 title: Sum of Totient Function (オイラーのトーシェント関数和) [sum_of_totient_function]
-documentation_of: ../src/algorithm/math/sum_of_totient_function.hpp
+documentation_of: ../src/algorithm/math/number_theory/sum_of_totient_function.hpp
 ---
 
 Euler のトーティエント関数の総和

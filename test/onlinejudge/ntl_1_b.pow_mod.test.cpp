@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/math/basic_number_theory.hpp"
+#include "../../src/algorithm/math/number_theory/basic_number_theory.hpp"
 
 int main(){
     long long value, exponent;

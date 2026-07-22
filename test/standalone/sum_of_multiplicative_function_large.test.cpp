@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/sum_of_multiplicative_function_large.hpp"
+#include "../../src/algorithm/math/number_theory/sum_of_multiplicative_function_large.hpp"
 
 namespace{
 

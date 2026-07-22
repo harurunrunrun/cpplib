@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/linear_recurrence.hpp"
+#include "../../src/algorithm/math/sequence/linear_recurrence.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint998244353;

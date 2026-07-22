@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/range_lcm.hpp"
+#include "../../src/algorithm/math/number_theory/range_lcm.hpp"
 
 int main(){
     int case_count;

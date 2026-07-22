@@ -1,6 +1,6 @@
 ---
 title: Polynomial Half-GCD (多項式Half-GCD)
-documentation_of: ../src/algorithm/math/polynomial_half_gcd.hpp
+documentation_of: ../src/algorithm/math/polynomial/polynomial_half_gcd.hpp
 ---
 
 体上の多項式Euclid互除法を、2次正方多項式行列と分割統治によりまとめて

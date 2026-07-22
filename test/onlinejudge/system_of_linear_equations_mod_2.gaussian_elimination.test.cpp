@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/gaussian_elimination.hpp"
+#include "../../src/algorithm/math/linear_algebra/gaussian_elimination.hpp"
 
 template<std::size_t MAX_COL>
 void print_bits(const std::bitset<MAX_COL>& value, int columns){

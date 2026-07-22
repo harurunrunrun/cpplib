@@ -12,7 +12,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/linear_programming.hpp"
+#include "../../src/algorithm/math/optimization/linear_programming.hpp"
 
 struct NaiveLinearProgram{
     int variable_count;

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/counting_squarefrees.hpp"
+#include "../../src/algorithm/math/number_theory/counting_squarefrees.hpp"
 
 namespace{
 

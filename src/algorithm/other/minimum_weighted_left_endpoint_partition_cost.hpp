@@ -1,7 +1,7 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_WEIGHTED_LEFT_ENDPOINT_PARTITION_COST_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_MINIMUM_WEIGHTED_LEFT_ENDPOINT_PARTITION_COST_HPP_INCLUDED
 
-#include "../math/exact_integer.hpp"
+#include "../math/integer/exact_integer.hpp"
 
 #include <algorithm>
 #include <cstddef>

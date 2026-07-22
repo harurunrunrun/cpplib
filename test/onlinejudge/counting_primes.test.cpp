@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/counting_primes
 
 #include <iostream>
-#include "../../src/algorithm/math/prime_counting.hpp"
+#include "../../src/algorithm/math/number_theory/prime_counting.hpp"
 
 int main(){
     long long n;

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/gf2_determinant.hpp"
+#include "../../src/algorithm/math/linear_algebra/gf2_determinant.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

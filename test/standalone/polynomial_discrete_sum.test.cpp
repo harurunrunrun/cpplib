@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/polynomial_discrete_sum.hpp"
+#include "../../src/algorithm/math/polynomial/polynomial_discrete_sum.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 #include "../../src/structure/modint/modint.hpp"
 

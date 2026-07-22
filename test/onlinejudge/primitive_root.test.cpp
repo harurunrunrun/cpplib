@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/math/modular_arithmetic.hpp"
+#include "../../src/algorithm/math/number_theory/modular_arithmetic.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

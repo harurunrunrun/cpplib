@@ -1,6 +1,6 @@
 ---
 title: Hafnian (ハフニアン) [hafnian_of_matrix]
-documentation_of: ../src/algorithm/math/hafnian.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/hafnian.hpp
 ---
 
 偶数次の対称行列 $A$ に対して、完全マッチングに対応する積の総和

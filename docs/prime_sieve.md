@@ -1,6 +1,6 @@
 ---
 title: Prime Sieve (素数篩)
-documentation_of: ../src/algorithm/math/prime_sieve.hpp
+documentation_of: ../src/algorithm/math/number_theory/prime_sieve.hpp
 ---
 
 素数判定と線形篩。

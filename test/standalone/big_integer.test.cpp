@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/math/big_integer.hpp"
+#include "../../src/algorithm/math/integer/big_integer.hpp"
 
 static void test_parse_and_arithmetic(){
     assert(BigInteger("0").to_string() == "0");

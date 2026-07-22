@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/adjugate_matrix.hpp"
+#include "../../src/algorithm/math/linear_algebra/adjugate_matrix.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint998244353;

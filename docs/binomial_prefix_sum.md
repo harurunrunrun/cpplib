@@ -1,6 +1,6 @@
 ---
 title: Binomial Prefix Sum (二項係数累積和)
-documentation_of: ../src/algorithm/math/binomial_prefix_sum.hpp
+documentation_of: ../src/algorithm/math/combinatorics/binomial_prefix_sum.hpp
 ---
 
 二項係数とその prefix sum を前計算する。

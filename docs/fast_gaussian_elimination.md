@@ -1,6 +1,6 @@
 ---
 title: Fast Gaussian Elimination (高速ガウス消去法)
-documentation_of: ../src/algorithm/math/fast_gaussian_elimination.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/fast_gaussian_elimination.hpp
 ---
 
 ## 概要

@@ -1,6 +1,6 @@
 ---
 title: Montmort Number (モンモール数) [montmort_number_mod]
-documentation_of: ../src/algorithm/math/montmort_number.hpp
+documentation_of: ../src/algorithm/math/combinatorics/montmort_number.hpp
 ---
 
 ## `montmort_numbers`

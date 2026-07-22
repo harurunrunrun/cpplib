@@ -1,6 +1,6 @@
 ---
 title: Fast Adjugate Matrix (高速余因子行列)
-documentation_of: ../src/algorithm/math/fast_adjugate_matrix.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/fast_adjugate_matrix.hpp
 ---
 
 ## 概要

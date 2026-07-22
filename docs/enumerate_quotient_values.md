@@ -1,6 +1,6 @@
 ---
 title: Enumerate Quotient Values (商の値列挙) [enumerate_quotients]
-documentation_of: ../src/algorithm/math/enumerate_quotient_values.hpp
+documentation_of: ../src/algorithm/math/number_theory/enumerate_quotient_values.hpp
 ---
 
 $1\le i\le N$ に対する $\lfloor N/i\rfloor$ の相異なる値を列挙する。

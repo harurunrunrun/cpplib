@@ -1,6 +1,6 @@
 ---
 title: Bit Population Count over Integer Ranges (整数区間のビット数え上げ)
-documentation_of: ../src/algorithm/math/bit_population_count.hpp
+documentation_of: ../src/algorithm/math/combinatorics/bit_population_count.hpp
 ---
 
 非負整数の連続区間に現れる 1-bit の個数を、bit ごとの周期性から数える。

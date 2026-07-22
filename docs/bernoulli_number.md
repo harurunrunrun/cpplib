@@ -1,6 +1,6 @@
 ---
 title: Bernoulli Number (ベルヌーイ数) [bernoulli_number]
-documentation_of: ../src/algorithm/math/bernoulli_number.hpp
+documentation_of: ../src/algorithm/math/combinatorics/bernoulli_number.hpp
 ---
 
 ## `bernoulli_numbers`

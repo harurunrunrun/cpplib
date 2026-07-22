@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/math/bit_population_count.hpp"
+#include "../../src/algorithm/math/combinatorics/bit_population_count.hpp"
 
 static std::string to_decimal(math::WideBitCount value){
     if(value == 0) return "0";

@@ -1,6 +1,6 @@
 ---
 title: Visible Lattice Points (可視格子点数) [VLATTICE]
-documentation_of: ../src/algorithm/math/visible_lattice_points.hpp
+documentation_of: ../src/algorithm/math/number_theory/visible_lattice_points.hpp
 ---
 
 立方格子の原点から、途中に別の格子点を挟まず見える点を数える前計算表。

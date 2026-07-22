@@ -1,6 +1,6 @@
 ---
 title: Fast Matrix Multiplication Modulo (高速法付き行列積)
-documentation_of: ../src/algorithm/math/fast_matrix_multiply_mod.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/fast_matrix_multiply_mod.hpp
 ---
 
 正の実行時法に対する密な整数行列積を Strassen 法で計算する。

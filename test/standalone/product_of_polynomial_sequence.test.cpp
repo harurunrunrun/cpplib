@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/polynomial_common.hpp"
-#include "../../src/algorithm/math/polynomial_product.hpp"
+#include "../../src/algorithm/math/polynomial/polynomial_common.hpp"
+#include "../../src/algorithm/math/polynomial/polynomial_product.hpp"
 
 namespace{
 

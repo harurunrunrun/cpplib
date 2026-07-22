@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/basic_number_theory.hpp"
+#include "../../src/algorithm/math/number_theory/basic_number_theory.hpp"
 
 void test_base_digits(){
     assert((math::to_base_digits(0, 2) == std::vector<int>{0}));

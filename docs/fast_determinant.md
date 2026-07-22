@@ -1,6 +1,6 @@
 ---
 title: Fast Determinant (高速行列式)
-documentation_of: ../src/algorithm/math/fast_determinant.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/fast_determinant.hpp
 ---
 
 ## 概要

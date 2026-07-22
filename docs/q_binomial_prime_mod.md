@@ -1,6 +1,6 @@
 ---
 title: q-Binomial Coefficient Modulo a Prime (素数を法とするq二項係数) [q_binomial_coefficient_prime_mod]
-documentation_of: ../src/algorithm/math/q_binomial_prime_mod.hpp
+documentation_of: ../src/algorithm/math/combinatorics/q_binomial_prime_mod.hpp
 ---
 
 素数 $p$ と $0\leq q<p$ を固定し、Gaussian 二項係数

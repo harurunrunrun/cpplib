@@ -6,7 +6,7 @@
 #include <limits>
 #include <string>
 
-#include "../../src/algorithm/math/binary_gcd.hpp"
+#include "../../src/algorithm/math/number_theory/binary_gcd.hpp"
 
 void test_binary_gcd(){
     using u64 = std::uint64_t;

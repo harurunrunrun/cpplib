@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/partial_fraction_decomposition.hpp"
+#include "../../src/algorithm/math/polynomial/partial_fraction_decomposition.hpp"
 
 using mint = Modint998244353;
 using polynomial = math::Polynomial<998244353>;

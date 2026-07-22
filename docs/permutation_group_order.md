@@ -1,6 +1,6 @@
 ---
 title: Permutation Group Order (置換群の位数)
-documentation_of: ../src/algorithm/math/permutation_group_order.hpp
+documentation_of: ../src/algorithm/math/combinatorics/permutation_group_order.hpp
 ---
 
 生成元で与えた有限置換群の位数を、Schreierの補題による安定化群列で求める。

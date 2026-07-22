@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/factorial_mod.hpp"
+#include "../../src/algorithm/math/number_theory/factorial_mod.hpp"
 
 void test_small(){
     math::FactorialModPrime fac3(3);

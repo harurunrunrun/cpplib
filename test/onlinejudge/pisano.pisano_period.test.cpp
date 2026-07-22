@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/pisano_period.hpp"
+#include "../../src/algorithm/math/number_theory/pisano_period.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

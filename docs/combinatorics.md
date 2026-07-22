@@ -1,6 +1,6 @@
 ---
 title: Combinatorics (組合せ論)
-documentation_of: ../src/algorithm/math/combinatorics.hpp
+documentation_of: ../src/algorithm/math/combinatorics/combinatorics.hpp
 ---
 
 階乗、組合せ、順列、Bell 数。

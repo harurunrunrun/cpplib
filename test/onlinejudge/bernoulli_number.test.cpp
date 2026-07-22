@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <iostream>
 
-#include "../../src/algorithm/math/bernoulli_number.hpp"
+#include "../../src/algorithm/math/combinatorics/bernoulli_number.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

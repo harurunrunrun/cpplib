@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/gf2_matrix_rank.hpp"
+#include "../../src/algorithm/math/linear_algebra/gf2_matrix_rank.hpp"
 
 
 int main(){

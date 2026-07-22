@@ -1,6 +1,6 @@
 ---
 title: Count Primes (素数個数) [ALDS1_1_C]
-documentation_of: ../src/algorithm/math/count_primes.hpp
+documentation_of: ../src/algorithm/math/number_theory/count_primes.hpp
 ---
 
 ## API

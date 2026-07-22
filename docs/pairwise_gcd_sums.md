@@ -1,6 +1,6 @@
 ---
 title: Pairwise GCD Sums (ペアごとの最大公約数総和) [GCDEX]
-documentation_of: ../src/algorithm/math/pairwise_gcd_sums.hpp
+documentation_of: ../src/algorithm/math/number_theory/pairwise_gcd_sums.hpp
 ---
 
 複数の上限について、異なる正整数ペアの最大公約数の総和を一括計算する。

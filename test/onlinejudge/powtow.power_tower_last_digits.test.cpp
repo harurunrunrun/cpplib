@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/power_tower_last_digits.hpp"
+#include "../../src/algorithm/math/number_theory/power_tower_last_digits.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

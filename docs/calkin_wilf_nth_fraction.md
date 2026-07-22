@@ -1,6 +1,6 @@
 ---
 title: Calkin-Wilf Nth Fraction (Calkin-Wilf木の第N分数) [NG0FRCTN]
-documentation_of: ../src/algorithm/math/calkin_wilf_nth_fraction.hpp
+documentation_of: ../src/algorithm/math/combinatorics/calkin_wilf_nth_fraction.hpp
 ---
 
 Calkin-Wilf木を幅優先順に番号付けし、指定位置の既約正分数を返す。

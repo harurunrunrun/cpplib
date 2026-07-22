@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/permutation_group_order.hpp"
+#include "../../src/algorithm/math/combinatorics/permutation_group_order.hpp"
 
 static std::vector<int> cycle_permutation(int degree){
     std::vector<int> result(static_cast<std::size_t>(degree));

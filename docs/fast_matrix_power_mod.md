@@ -1,6 +1,6 @@
 ---
 title: Fast Dynamic Matrix Power Modulo (高速動的行列の法付き累乗)
-documentation_of: ../src/algorithm/math/fast_matrix_power_mod.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/fast_matrix_power_mod.hpp
 ---
 
 実行時サイズの正方整数行列を、Strassen行列積を使って法付き累乗する。

@@ -1,6 +1,6 @@
 ---
 title: Polynomial Common Operations (多項式の基本演算)
-documentation_of: ../src/algorithm/math/polynomial_common.hpp
+documentation_of: ../src/algorithm/math/polynomial/polynomial_common.hpp
 ---
 
 NTT を使う多項式アルゴリズムの共通型と基本演算。
@@ -8,7 +8,7 @@ NTT を使う多項式アルゴリズムの共通型と基本演算。
 0多項式は空の `std::vector` で表す。
 
 ```cpp
-#include "src/algorithm/math/polynomial_common.hpp"
+#include "src/algorithm/math/polynomial/polynomial_common.hpp"
 
 using polynomial = math::Polynomial<998244353>;
 ```

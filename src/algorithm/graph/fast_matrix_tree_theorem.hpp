@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "matrix_tree_theorem.hpp"
-#include "../math/fast_determinant.hpp"
+#include "../math/linear_algebra/fast_determinant.hpp"
 
 namespace fast_matrix_tree_theorem_internal{
 

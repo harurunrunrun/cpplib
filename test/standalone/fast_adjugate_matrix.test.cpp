@@ -6,8 +6,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/adjugate_matrix.hpp"
-#include "../../src/algorithm/math/fast_adjugate_matrix.hpp"
+#include "../../src/algorithm/math/linear_algebra/adjugate_matrix.hpp"
+#include "../../src/algorithm/math/linear_algebra/fast_adjugate_matrix.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 using Mint = FastModint998244353;

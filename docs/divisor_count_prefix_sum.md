@@ -1,6 +1,6 @@
 ---
 title: Divisor Count Prefix Sum (約数個数の累積和) [DIVCNT1]
-documentation_of: ../src/algorithm/math/divisor_count_prefix_sum.hpp
+documentation_of: ../src/algorithm/math/number_theory/divisor_count_prefix_sum.hpp
 ---
 
 正整数の約数個数の累積和を、128 bit 整数で厳密に返す。

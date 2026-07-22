@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/matrix_power_mod.hpp"
+#include "../../src/algorithm/math/linear_algebra/matrix_power_mod.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

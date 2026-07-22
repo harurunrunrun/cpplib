@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/algorithm/math/affine_recurrence_term.hpp"
+#include "../../src/algorithm/math/sequence/affine_recurrence_term.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

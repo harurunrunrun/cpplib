@@ -4,8 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/basic_number_theory.hpp"
-#include "../../src/algorithm/math/discrete_log.hpp"
+#include "../../src/algorithm/math/number_theory/basic_number_theory.hpp"
+#include "../../src/algorithm/math/number_theory/discrete_log.hpp"
 
 void test_coprime(){
     assert(math::discrete_log(2, 1, 13) == 0);

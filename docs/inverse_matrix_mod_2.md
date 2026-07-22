@@ -1,6 +1,6 @@
 ---
 title: Inverse Matrix (Mod 2) (二元体上の逆行列) [inverse_matrix_mod_2]
-documentation_of: ../src/algorithm/math/inverse_matrix_mod_2.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/inverse_matrix_mod_2.hpp
 ---
 
 $\mathbb{F}_2$上の正方行列をbitset Gaussian eliminationで反転する。

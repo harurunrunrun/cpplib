@@ -1,6 +1,6 @@
 ---
 title: Discrete Logarithm (Fixed Mod) (法固定の離散対数) [discrete_logarithm_fixed_mod]
-documentation_of: ../src/algorithm/math/discrete_logarithm_fixed_mod.hpp
+documentation_of: ../src/algorithm/math/number_theory/discrete_logarithm_fixed_mod.hpp
 ---
 
 同じ素数法 $P$ と原始根 $g$ に対して多数の離散対数を求める前処理付きデータ構造。

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/pairwise_lcm_sum.hpp"
+#include "../../src/algorithm/math/number_theory/pairwise_lcm_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

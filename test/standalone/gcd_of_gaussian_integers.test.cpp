@@ -6,7 +6,7 @@
 #include <iostream>
 #include <random>
 
-#include "../../src/algorithm/math/gaussian_integer.hpp"
+#include "../../src/algorithm/math/number_theory/gaussian_integer.hpp"
 
 namespace{
 

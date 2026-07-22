@@ -1,6 +1,6 @@
 ---
 title: Fast Characteristic Polynomial (高速特性多項式)
-documentation_of: ../src/algorithm/math/fast_characteristic_polynomial.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/fast_characteristic_polynomial.hpp
 ---
 
 正方行列 $A$ に対する特性多項式

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/number_of_subsequences.hpp"
+#include "../../src/algorithm/math/combinatorics/number_of_subsequences.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

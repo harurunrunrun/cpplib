@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <string>
-#include "../../src/algorithm/math/binomial_prefix_sum.hpp"
+#include "../../src/algorithm/math/combinatorics/binomial_prefix_sum.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint<998244353>;

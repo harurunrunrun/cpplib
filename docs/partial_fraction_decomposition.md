@@ -1,6 +1,6 @@
 ---
 title: Polynomial Partial Fraction Decomposition (多項式部分分数分解)
-documentation_of: ../src/algorithm/math/partial_fraction_decomposition.hpp
+documentation_of: ../src/algorithm/math/polynomial/partial_fraction_decomposition.hpp
 ---
 
 多項式 $P$ と、互いに素な正次数多項式 $q_i$ の積

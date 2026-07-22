@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/math/floor_sum.hpp"
+#include "../../src/algorithm/math/number_theory/floor_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

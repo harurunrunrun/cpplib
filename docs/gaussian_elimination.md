@@ -1,6 +1,6 @@
 ---
 title: Gaussian Elimination (ガウスの消去法) [inverse_matrix] [matrix_det] [matrix_rank] [system_of_linear_equations] [system_of_linear_equations_mod_2]
-documentation_of: ../src/algorithm/math/gaussian_elimination.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/gaussian_elimination.hpp
 ---
 
 体上の行列に対する Gaussian elimination と、$\mathrm{GF}(2)$ に特化した

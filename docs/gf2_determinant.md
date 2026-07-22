@@ -1,6 +1,6 @@
 ---
 title: GF(2) Determinant (二元体上の行列式) [matrix_det_mod_2]
-documentation_of: ../src/algorithm/math/gf2_determinant.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/gf2_determinant.hpp
 ---
 
 文字列で与えたbinary正方行列の行列式を $\mathrm{GF}(2)$ 上で求める。

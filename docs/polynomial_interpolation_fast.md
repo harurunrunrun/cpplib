@@ -1,6 +1,6 @@
 ---
 title: Fast Polynomial Interpolation (高速多項式補間)
-documentation_of: ../src/algorithm/math/polynomial_interpolation_fast.hpp
+documentation_of: ../src/algorithm/math/polynomial/polynomial_interpolation_fast.hpp
 ---
 
 積木と高速多項式積を用いて、任意点の値から係数列を復元する。

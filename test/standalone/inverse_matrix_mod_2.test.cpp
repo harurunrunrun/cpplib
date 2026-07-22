@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/inverse_matrix_mod_2.hpp"
-#include "../../src/algorithm/math/inverse_matrix_mod_2.hpp"
+#include "../../src/algorithm/math/linear_algebra/inverse_matrix_mod_2.hpp"
+#include "../../src/algorithm/math/linear_algebra/inverse_matrix_mod_2.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

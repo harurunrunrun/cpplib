@@ -1,6 +1,6 @@
 ---
 title: Adjugate Matrix (余因子行列) [adjugate_matrix]
-documentation_of: ../src/algorithm/math/adjugate_matrix.hpp
+documentation_of: ../src/algorithm/math/linear_algebra/adjugate_matrix.hpp
 ---
 
 正方行列 $A$ の余因子行列

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/sum_of_totient_function.hpp"
+#include "../../src/algorithm/math/number_theory/sum_of_totient_function.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

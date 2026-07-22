@@ -1,6 +1,6 @@
 ---
 title: Pairwise LCM Sum (全ペアLCM総和) [PRLCM]
-documentation_of: ../src/algorithm/math/pairwise_lcm_sum.hpp
+documentation_of: ../src/algorithm/math/number_theory/pairwise_lcm_sum.hpp
 ---
 
 正整数列の異なる添字ペアすべてについて LCM を合計する。

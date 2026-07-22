@@ -1,6 +1,6 @@
 ---
 title: Range Least Common Multiple (列全体の最小公倍数) [NTL_1_C]
-documentation_of: ../src/algorithm/math/range_lcm.hpp
+documentation_of: ../src/algorithm/math/number_theory/range_lcm.hpp
 ---
 
 ## API

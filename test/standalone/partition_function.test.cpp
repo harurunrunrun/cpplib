@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <iostream>
 
-#include "../../src/algorithm/math/partition_function.hpp"
+#include "../../src/algorithm/math/combinatorics/partition_function.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

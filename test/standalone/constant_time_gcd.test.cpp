@@ -7,7 +7,7 @@
 #include <random>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/constant_time_gcd.hpp"
+#include "../../src/algorithm/math/number_theory/constant_time_gcd.hpp"
 
 static void test_small(){
     for(std::uint32_t maximum = 0; maximum <= 300; ++maximum){

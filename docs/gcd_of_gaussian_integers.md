@@ -1,6 +1,6 @@
 ---
 title: GCD of Gaussian Integers (ガウス整数の最大公約数) [gcd_of_gaussian_integers]
-documentation_of: ../src/algorithm/math/gaussian_integer.hpp
+documentation_of: ../src/algorithm/math/number_theory/gaussian_integer.hpp
 ---
 
 Gauss整数$\mathbb Z[i]$上のEuclid法を提供する。

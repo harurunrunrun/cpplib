@@ -1,6 +1,6 @@
 ---
 title: Product of Polynomial Sequence (多項式列の積) [product_of_polynomial_sequence]
-documentation_of: ../src/algorithm/math/polynomial_product.hpp
+documentation_of: ../src/algorithm/math/polynomial/polynomial_product.hpp
 ---
 
 複数の多項式を、積木を平衡に構築してまとめて掛け合わせる。
@@ -9,7 +9,7 @@ documentation_of: ../src/algorithm/math/polynomial_product.hpp
 ## API
 
 ```cpp
-#include "src/algorithm/math/polynomial_product.hpp"
+#include "src/algorithm/math/polynomial/polynomial_product.hpp"
 
 template<int MOD>
 math::Polynomial<MOD> math::product_of_polynomial_sequence(

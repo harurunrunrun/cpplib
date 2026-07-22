@@ -1,6 +1,6 @@
 ---
 title: Discrete Log (離散対数) [discrete_logarithm_mod]
-documentation_of: ../src/algorithm/math/discrete_log.hpp
+documentation_of: ../src/algorithm/math/number_theory/discrete_log.hpp
 ---
 
 離散対数問題。

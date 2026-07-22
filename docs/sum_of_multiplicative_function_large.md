@@ -1,6 +1,6 @@
 ---
 title: Sum of Multiplicative Function (Large) (大きなNまでの乗法的関数和) [sum_of_multiplicative_function] [sum_of_multiplicative_function_large]
-documentation_of: ../src/algorithm/math/sum_of_multiplicative_function_large.hpp
+documentation_of: ../src/algorithm/math/number_theory/sum_of_multiplicative_function_large.hpp
 ---
 
 素数冪での値と素数上の累積和が分かる乗法的関数を、

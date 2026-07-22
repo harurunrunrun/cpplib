@@ -1,6 +1,6 @@
 ---
 title: Huge-exponent Affine Recurrence (巨大指数の一次漸化式) [REC]
-documentation_of: ../src/algorithm/math/affine_recurrence_term.hpp
+documentation_of: ../src/algorithm/math/sequence/affine_recurrence_term.hpp
 ---
 
 係数と添字を十進文字列で受け取り、一次漸化式の値を法付きで返す。

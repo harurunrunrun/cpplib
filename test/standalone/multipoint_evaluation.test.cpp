@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/multipoint_evaluation.hpp"
+#include "../../src/algorithm/math/polynomial/multipoint_evaluation.hpp"
 
 namespace{
 

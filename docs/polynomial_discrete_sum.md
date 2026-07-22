@@ -1,13 +1,13 @@
 ---
 title: Polynomial Discrete Sum (多項式の離散和)
-documentation_of: ../src/algorithm/math/polynomial_discrete_sum.hpp
+documentation_of: ../src/algorithm/math/polynomial/polynomial_discrete_sum.hpp
 ---
 
 Faulhaber 多項式と、係数表示された多項式の離散不定和を扱う。すべての
 prefix sum は半開区間 $[0,n)$、すなわち添字 `0` から `n - 1` までを加える。
 
 ```cpp
-#include "src/algorithm/math/polynomial_discrete_sum.hpp"
+#include "src/algorithm/math/polynomial/polynomial_discrete_sum.hpp"
 
 using mint = Modint998244353;
 math::PolynomialDiscreteSum<mint, 200000> summation;

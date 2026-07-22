@@ -1,6 +1,6 @@
 ---
 title: Polynomial Resultant (多項式終結式)
-documentation_of: ../src/algorithm/math/polynomial_resultant.hpp
+documentation_of: ../src/algorithm/math/polynomial/polynomial_resultant.hpp
 ---
 
 体上の多項式の剰余・終結式・判別式を、固定最大容量の`std::array`で求める。

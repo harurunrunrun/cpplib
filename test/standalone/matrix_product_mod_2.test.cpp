@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/matrix_product_mod_2.hpp"
-#include "../../src/algorithm/math/matrix_product_mod_2.hpp"
+#include "../../src/algorithm/math/linear_algebra/matrix_product_mod_2.hpp"
+#include "../../src/algorithm/math/linear_algebra/matrix_product_mod_2.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

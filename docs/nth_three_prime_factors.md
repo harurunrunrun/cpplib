@@ -1,6 +1,6 @@
 ---
 title: Numbers with Three Distinct Prime Factors (異なる3素因数を持つ数) [AMR11E]
-documentation_of: ../src/algorithm/math/nth_three_prime_factors.hpp
+documentation_of: ../src/algorithm/math/number_theory/nth_three_prime_factors.hpp
 ---
 
 異なる素因数を3個以上持つ正整数を昇順に前計算する。

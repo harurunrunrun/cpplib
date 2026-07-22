@@ -1,6 +1,6 @@
 ---
 title: Factorial Mod (階乗の剰余)
-documentation_of: ../src/algorithm/math/factorial_mod.hpp
+documentation_of: ../src/algorithm/math/number_theory/factorial_mod.hpp
 ---
 
 素数 `p` に対する階乗。

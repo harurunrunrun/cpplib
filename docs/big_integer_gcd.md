@@ -1,6 +1,6 @@
 ---
 title: Big Integer GCD (多倍長整数の最大公約数)
-documentation_of: ../src/algorithm/math/big_integer_gcd.hpp
+documentation_of: ../src/algorithm/math/integer/big_integer_gcd.hpp
 ---
 
 `BigInteger` に対するEuclidの互除法、拡張Euclid、最小公倍数を提供する。

@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/count_primes.hpp"
+#include "../../src/algorithm/math/number_theory/count_primes.hpp"
 
 int main(){
     const std::vector<long long> self_values{-5, 0, 1, 2, 3, 4, 97};

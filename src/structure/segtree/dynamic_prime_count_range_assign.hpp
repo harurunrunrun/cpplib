@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../algorithm/math/prime_sieve.hpp"
+#include "../../algorithm/math/number_theory/prime_sieve.hpp"
 #include "dynamic_lazysegtree.hpp"
 #include "../types/common_monoids.hpp"
 

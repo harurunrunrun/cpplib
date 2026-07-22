@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/stern_brocot_tree.hpp"
+#include "../../src/algorithm/math/combinatorics/stern_brocot_tree.hpp"
 
 using SBT = math::SternBrocotTree<long long>;
 using Fraction = SBT::Fraction;

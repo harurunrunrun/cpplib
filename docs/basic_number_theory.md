@@ -1,6 +1,6 @@
 ---
 title: Basic Number Theory (初等整数論) [ALDS1_1_B] [NTL_1_B]
-documentation_of: ../src/algorithm/math/basic_number_theory.hpp
+documentation_of: ../src/algorithm/math/number_theory/basic_number_theory.hpp
 ---
 
 整数まわりの基本関数。

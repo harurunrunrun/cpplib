@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/gaussian_integer_factorization.hpp"
+#include "../../src/algorithm/math/number_theory/gaussian_integer_factorization.hpp"
 
 namespace{
 

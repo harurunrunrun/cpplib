@@ -1,6 +1,6 @@
 ---
 title: Power Tower Last Digits (累乗塔の末尾桁) [POWTOW]
-documentation_of: ../src/algorithm/math/power_tower_last_digits.hpp
+documentation_of: ../src/algorithm/math/number_theory/power_tower_last_digits.hpp
 ---
 
 同じ底を右結合で繰り返す累乗塔について、指定桁数超過の有無と末尾桁を求める。

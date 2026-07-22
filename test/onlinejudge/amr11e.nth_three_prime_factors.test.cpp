@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/nth_three_prime_factors.hpp"
+#include "../../src/algorithm/math/number_theory/nth_three_prime_factors.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

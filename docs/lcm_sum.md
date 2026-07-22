@@ -1,6 +1,6 @@
 ---
 title: LCM Sum Table (LCM総和表) [LCMSUM]
-documentation_of: ../src/algorithm/math/lcm_sum.hpp
+documentation_of: ../src/algorithm/math/number_theory/lcm_sum.hpp
 ---
 
 `sum(lcm(i,n), 1 <= i <= n)` を繰り返し問い合わせるための前計算表。

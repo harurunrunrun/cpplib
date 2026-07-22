@@ -1,6 +1,6 @@
 ---
 title: Pisano Period (Pisano周期) [PISANO]
-documentation_of: ../src/algorithm/math/pisano_period.hpp
+documentation_of: ../src/algorithm/math/number_theory/pisano_period.hpp
 ---
 
 Fibonacci列を法で見たときの最小正周期を返す。

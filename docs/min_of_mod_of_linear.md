@@ -1,6 +1,6 @@
 ---
 title: Minimum of a Linear Function Modulo m (一次式の剰余の最小値) [min_of_mod_of_linear]
-documentation_of: ../src/algorithm/math/min_of_mod_of_linear.hpp
+documentation_of: ../src/algorithm/math/number_theory/min_of_mod_of_linear.hpp
 ---
 
 等差数列を法で折り返した列の最小値を求める。

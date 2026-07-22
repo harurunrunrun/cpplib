@@ -7,8 +7,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/math/fast_matrix_multiply_mod.hpp"
-#include "../../src/algorithm/math/fast_matrix_power_entry_queries.hpp"
+#include "../../src/algorithm/math/linear_algebra/fast_matrix_multiply_mod.hpp"
+#include "../../src/algorithm/math/linear_algebra/fast_matrix_power_entry_queries.hpp"
 
 namespace{
 

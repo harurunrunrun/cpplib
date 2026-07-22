@@ -5,7 +5,7 @@
 #include <array>
 #include <cstdint>
 
-#include "../../math/exact_integer.hpp"
+#include "../../math/integer/exact_integer.hpp"
 
 using IntegerPoint3 = std::array<std::int64_t, 3>;
 

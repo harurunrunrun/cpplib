@@ -1,6 +1,6 @@
 ---
 title: Square-free Integer Count (平方因子を持たない整数の個数) [SQFREE]
-documentation_of: ../src/algorithm/math/squarefree_integer_count.hpp
+documentation_of: ../src/algorithm/math/number_theory/squarefree_integer_count.hpp
 ---
 
 正の square-free integer が上限以下にいくつあるかを数える。

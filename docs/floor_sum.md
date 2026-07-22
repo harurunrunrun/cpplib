@@ -1,6 +1,6 @@
 ---
 title: Floor Sum (床関数和) [sum_of_floor_of_linear]
-documentation_of: ../src/algorithm/math/floor_sum.hpp
+documentation_of: ../src/algorithm/math/number_theory/floor_sum.hpp
 ---
 
 ## 関数

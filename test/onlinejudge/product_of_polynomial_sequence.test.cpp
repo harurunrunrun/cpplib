@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/polynomial_product.hpp"
+#include "../../src/algorithm/math/polynomial/polynomial_product.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/intersection_of_f2_vector_spaces.hpp"
+#include "../../src/algorithm/math/linear_algebra/intersection_of_f2_vector_spaces.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

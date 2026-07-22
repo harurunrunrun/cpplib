@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/kth_root_integer.hpp"
+#include "../../src/algorithm/math/number_theory/kth_root_integer.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
