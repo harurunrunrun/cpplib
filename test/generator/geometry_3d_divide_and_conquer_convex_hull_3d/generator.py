@@ -9,8 +9,10 @@ CASES = (
     ("random_00", 0, 32),
     ("random_01", 1, 64),
     ("random_02", 0x9E3779B97F4A7C15, 96),
-    ("random_03", 0xD1B54A32D192ED03, 128),
-    # rounds == 1 asks the test program to construct 50,000 interior points.
+    # Every invocation also exercises dense coplanar facets, duplicate points,
+    # equal-x layers, a moment curve, and a subnormal-height bipyramid.
+    ("differential_512", 123456789, 512),
+    # rounds == 1 additionally constructs 50,000 interior points.
     ("performance_50000", 0x243F6A8885A308D3, 1),
 )
 

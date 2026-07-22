@@ -3,18 +3,17 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstddef>
+#include <limits>
 #include <map>
 #include <set>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-#include "convex_hull_3d.hpp"
 #include "../predicate/adaptive_orient3d.hpp"
 #include "../core/convex_polyhedron3.hpp"
-#include "../query/convex_polyhedron_edges.hpp"
-#include "../query/convex_polyhedron_facets.hpp"
 #include "../predicate/is_finite.hpp"
 
 namespace divide_and_conquer_convex_hull_3d_detail{
@@ -61,16 +60,6 @@ inline bool non_collinear(
     ) != 0 || exact_turn(
         first.y, first.z, second.y, second.z, third.y, third.z
     ) != 0;
-}
-
-inline std::vector<std::array<std::size_t, 2>> geometric_edges(
-    const ConvexPolyhedron3& hull
-){
-    if(hull.affine_dimension == 1 && hull.vertices.size() == 2){
-        return {{{0, 1}}};
-    }
-    if(hull.affine_dimension < 2) return {};
-    return convex_polyhedron_edges(hull);
 }
 
 struct ProjectedPoint{
@@ -179,80 +168,965 @@ inline ConvexPolyhedron3 lower_dimensional_hull(
     return {2, std::move(vertices), std::move(faces)};
 }
 
-struct SupportingFacet{
-    std::array<std::size_t, 3> plane{};
+struct SymbolicMonomial{
+    std::array<std::size_t, 4> variables{};
+    std::size_t size = 0;
 };
 
-inline void add_supporting_facet(
-    const std::array<std::size_t, 3>& candidate,
-    const std::vector<Point3>& points,
-    std::map<std::vector<std::size_t>, SupportingFacet>& facets
+struct SymbolicMonomialLess{
+    bool operator()(
+        const SymbolicMonomial& left,
+        const SymbolicMonomial& right
+    ) const{
+        std::size_t left_size = left.size;
+        std::size_t right_size = right.size;
+        while(left_size != 0 || right_size != 0){
+            std::size_t variable;
+            if(left_size == 0){
+                variable = right.variables[right_size - 1];
+            }else if(right_size == 0){
+                variable = left.variables[left_size - 1];
+            }else{
+                variable = std::max(
+                    left.variables[left_size - 1],
+                    right.variables[right_size - 1]
+                );
+            }
+            std::size_t left_count = 0;
+            while(left_size != 0
+                && left.variables[left_size - 1] == variable){
+                --left_size;
+                ++left_count;
+            }
+            std::size_t right_count = 0;
+            while(right_size != 0
+                && right.variables[right_size - 1] == variable){
+                --right_size;
+                ++right_count;
+            }
+            if(left_count != right_count) return left_count < right_count;
+        }
+        return false;
+    }
+};
+
+using SymbolicPolynomial = std::map<
+    SymbolicMonomial,
+    geometry3d_adaptive_detail::ExactDyadic,
+    SymbolicMonomialLess
+>;
+
+inline void add_symbolic_term(
+    SymbolicPolynomial& polynomial,
+    const SymbolicMonomial& monomial,
+    const geometry3d_adaptive_detail::ExactDyadic& coefficient
 ){
-    if(!non_collinear(
-        points[candidate[0]], points[candidate[1]], points[candidate[2]]
-    )) return;
-    bool has_positive = false;
-    bool has_negative = false;
-    std::vector<std::size_t> coplanar;
-    coplanar.reserve(points.size());
-    for(std::size_t index = 0; index < points.size(); ++index){
-        const int side = adaptive_orient3d(
-            points[candidate[0]], points[candidate[1]], points[candidate[2]],
-            points[index]
+    using namespace geometry3d_adaptive_detail;
+    if(sign(coefficient) == 0) return;
+    const auto iterator = polynomial.find(monomial);
+    if(iterator == polynomial.end()){
+        polynomial.emplace(monomial, coefficient);
+        return;
+    }
+    const ExactDyadic combined = add(iterator->second, coefficient);
+    if(sign(combined) == 0){
+        polynomial.erase(iterator);
+    }else{
+        iterator->second = combined;
+    }
+}
+
+inline SymbolicPolynomial symbolic_constant(long double value){
+    SymbolicPolynomial result;
+    add_symbolic_term(
+        result, {}, geometry3d_adaptive_detail::exact_dyadic(value)
+    );
+    return result;
+}
+
+inline SymbolicPolynomial symbolic_coordinate(
+    const std::vector<Point3>& points,
+    std::size_t point,
+    std::size_t coordinate,
+    int z_sign
+){
+    using namespace geometry3d_adaptive_detail;
+    long double value = coordinate == 0 ? points[point].x
+        : coordinate == 1 ? points[point].y : points[point].z;
+    int perturbation_sign = 1;
+    if(coordinate == 2 && z_sign < 0){
+        value = -value;
+        perturbation_sign = -1;
+    }
+    SymbolicPolynomial result = symbolic_constant(value);
+    SymbolicMonomial variable;
+    variable.variables[0] = point * 3 + coordinate;
+    variable.size = 1;
+    add_symbolic_term(
+        result, variable, {ExactInteger(perturbation_sign), 0}
+    );
+    return result;
+}
+
+inline SymbolicPolynomial add_symbolic(
+    SymbolicPolynomial result,
+    const SymbolicPolynomial& other,
+    int other_sign = 1
+){
+    using namespace geometry3d_adaptive_detail;
+    for(const auto& [monomial, coefficient]: other){
+        add_symbolic_term(
+            result, monomial,
+            other_sign < 0 ? negate(coefficient) : coefficient
         );
-        has_positive = has_positive || side > 0;
-        has_negative = has_negative || side < 0;
-        if(side == 0) coplanar.push_back(index);
-        if(has_positive && has_negative) return;
     }
-    if(!has_positive && !has_negative) return;
-    std::array<std::size_t, 3> outward = candidate;
-    if(has_positive) std::swap(outward[1], outward[2]);
-    facets.try_emplace(std::move(coplanar), SupportingFacet{outward});
+    return result;
 }
 
-inline void append_child_face_candidates(
-    const ConvexPolyhedron3& child,
-    std::size_t offset,
-    const std::vector<Point3>& points,
-    std::map<std::vector<std::size_t>, SupportingFacet>& facets
+inline SymbolicMonomial multiply_monomials(
+    const SymbolicMonomial& left,
+    const SymbolicMonomial& right
 ){
-    for(const ConvexPolyhedronFacet3& facet: convex_polyhedron_facets(child)){
-        const auto& face = child.faces[facet.triangles.front()];
-        add_supporting_facet({
-            offset + face[0], offset + face[1], offset + face[2]
-        }, points, facets);
+    if(left.size + right.size > 4)[[unlikely]]{
+        throw std::logic_error("symbolic perturbation degree overflow");
     }
+    SymbolicMonomial result;
+    result.size = left.size + right.size;
+    std::merge(
+        left.variables.begin(), left.variables.begin() + left.size,
+        right.variables.begin(), right.variables.begin() + right.size,
+        result.variables.begin()
+    );
+    return result;
 }
 
-inline void append_bridge_candidates(
-    const ConvexPolyhedron3& edge_child,
-    std::size_t edge_offset,
-    const ConvexPolyhedron3& vertex_child,
-    std::size_t vertex_offset,
-    const std::vector<Point3>& points,
-    std::map<std::vector<std::size_t>, SupportingFacet>& facets
+inline SymbolicPolynomial multiply_symbolic(
+    const SymbolicPolynomial& left,
+    const SymbolicPolynomial& right
 ){
-    const auto edges = geometric_edges(edge_child);
-    for(const auto& edge: edges){
-        for(std::size_t vertex = 0; vertex < vertex_child.vertices.size(); ++vertex){
-            add_supporting_facet({
-                edge_offset + edge[0], edge_offset + edge[1],
-                vertex_offset + vertex
-            }, points, facets);
+    using namespace geometry3d_adaptive_detail;
+    SymbolicPolynomial result;
+    for(const auto& [left_monomial, left_coefficient]: left){
+        for(const auto& [right_monomial, right_coefficient]: right){
+            add_symbolic_term(
+                result,
+                multiply_monomials(left_monomial, right_monomial),
+                multiply(left_coefficient, right_coefficient)
+            );
         }
     }
+    return result;
 }
 
-inline ConvexPolyhedron3 merge(
-    const ConvexPolyhedron3& left,
-    const ConvexPolyhedron3& right
+inline int symbolic_sign(const SymbolicPolynomial& polynomial){
+    if(polynomial.empty()) return 0;
+    return geometry3d_adaptive_detail::sign(polynomial.begin()->second);
+}
+
+inline geometry3d_adaptive_detail::ExactDyadic exact_coordinate(
+    const std::vector<Point3>& points,
+    std::size_t point,
+    std::size_t coordinate,
+    int z_sign
 ){
-    std::vector<Point3> points = left.vertices;
-    points.insert(points.end(), right.vertices.begin(), right.vertices.end());
+    using namespace geometry3d_adaptive_detail;
+    ExactDyadic result = exact_dyadic(
+        coordinate == 0 ? points[point].x
+        : coordinate == 1 ? points[point].y : points[point].z
+    );
+    if(coordinate == 2 && z_sign < 0) result = negate(result);
+    return result;
+}
+
+inline geometry3d_adaptive_detail::ExactDyadic exact_projected_determinant(
+    const std::vector<Point3>& points,
+    std::size_t first,
+    std::size_t second,
+    std::size_t third,
+    std::size_t first_coordinate,
+    std::size_t second_coordinate,
+    int z_sign
+){
+    using namespace geometry3d_adaptive_detail;
+    const ExactDyadic first_x = subtract(
+        exact_coordinate(points, second, first_coordinate, z_sign),
+        exact_coordinate(points, first, first_coordinate, z_sign)
+    );
+    const ExactDyadic first_y = subtract(
+        exact_coordinate(points, second, second_coordinate, z_sign),
+        exact_coordinate(points, first, second_coordinate, z_sign)
+    );
+    const ExactDyadic second_x = subtract(
+        exact_coordinate(points, third, first_coordinate, z_sign),
+        exact_coordinate(points, first, first_coordinate, z_sign)
+    );
+    const ExactDyadic second_y = subtract(
+        exact_coordinate(points, third, second_coordinate, z_sign),
+        exact_coordinate(points, first, second_coordinate, z_sign)
+    );
+    return subtract(
+        multiply(first_x, second_y),
+        multiply(first_y, second_x)
+    );
+}
+
+inline SymbolicPolynomial symbolic_projected_determinant(
+    const std::vector<Point3>& points,
+    std::size_t first,
+    std::size_t second,
+    std::size_t third,
+    std::size_t first_coordinate,
+    std::size_t second_coordinate,
+    int z_sign
+){
+    SymbolicPolynomial first_x = add_symbolic(
+        symbolic_coordinate(points, second, first_coordinate, z_sign),
+        symbolic_coordinate(points, first, first_coordinate, z_sign), -1
+    );
+    SymbolicPolynomial first_y = add_symbolic(
+        symbolic_coordinate(points, second, second_coordinate, z_sign),
+        symbolic_coordinate(points, first, second_coordinate, z_sign), -1
+    );
+    SymbolicPolynomial second_x = add_symbolic(
+        symbolic_coordinate(points, third, first_coordinate, z_sign),
+        symbolic_coordinate(points, first, first_coordinate, z_sign), -1
+    );
+    SymbolicPolynomial second_y = add_symbolic(
+        symbolic_coordinate(points, third, second_coordinate, z_sign),
+        symbolic_coordinate(points, first, second_coordinate, z_sign), -1
+    );
+    return add_symbolic(
+        multiply_symbolic(first_x, second_y),
+        multiply_symbolic(first_y, second_x), -1
+    );
+}
+
+inline int symbolic_projected_determinant_sign(
+    const std::vector<Point3>& points,
+    std::size_t first,
+    std::size_t second,
+    std::size_t third,
+    std::size_t first_coordinate,
+    std::size_t second_coordinate,
+    int z_sign
+){
+    using namespace geometry3d_adaptive_detail;
+    const ExactDyadic exact = exact_projected_determinant(
+        points, first, second, third,
+        first_coordinate, second_coordinate, z_sign
+    );
+    const int exact_result = sign(exact);
+    if(exact_result != 0) return exact_result;
+    const int result = symbolic_sign(symbolic_projected_determinant(
+        points, first, second, third,
+        first_coordinate, second_coordinate, z_sign
+    ));
+    if(result == 0)[[unlikely]]{
+        throw std::logic_error("symbolic projected determinant vanished");
+    }
+    return result;
+}
+
+struct ApproximateDeterminant{
+    long double value = 0.0L;
+    long double error = 0.0L;
+    bool available = false;
+};
+
+inline ApproximateDeterminant approximate_projected_determinant(
+    const std::vector<Point3>& points,
+    std::size_t first,
+    std::size_t second,
+    std::size_t third,
+    std::size_t first_coordinate,
+    std::size_t second_coordinate,
+    int z_sign
+){
+    Point3 first_direction = points[second] - points[first];
+    Point3 second_direction = points[third] - points[first];
+    if(z_sign < 0){
+        first_direction.z = -first_direction.z;
+        second_direction.z = -second_direction.z;
+    }
+    const std::array<long double, 3> first_values{
+        first_direction.x, first_direction.y, first_direction.z
+    };
+    const std::array<long double, 3> second_values{
+        second_direction.x, second_direction.y, second_direction.z
+    };
+    const long double first_product =
+        first_values[first_coordinate] * second_values[second_coordinate];
+    const long double second_product =
+        first_values[second_coordinate] * second_values[first_coordinate];
+    const long double value = std::fma(
+        first_values[first_coordinate],
+        second_values[second_coordinate],
+        -second_product
+    );
+    const long double magnitude =
+        std::abs(first_product) + std::abs(second_product) + 1.0L;
+    return {
+        value,
+        128.0L * std::numeric_limits<long double>::epsilon() * magnitude,
+        true,
+    };
+}
+
+inline constexpr std::size_t no_point =
+    static_cast<std::size_t>(-1);
+
+struct EventTime{
+    int infinity = 1;
+    std::array<std::size_t, 3> points{no_point, no_point, no_point};
+    int z_sign = 1;
+    ApproximateDeterminant numerator{};
+    ApproximateDeterminant denominator{};
+};
+
+inline EventTime negative_infinity(){
+    EventTime result;
+    result.infinity = -1;
+    return result;
+}
+
+inline EventTime positive_infinity(){
+    return {};
+}
+
+inline EventTime event_time(
+    const std::vector<Point3>& points,
+    std::size_t first,
+    std::size_t second,
+    std::size_t third,
+    int z_sign
+){
+    if(first == no_point || second == no_point || third == no_point){
+        return positive_infinity();
+    }
+    EventTime result;
+    result.infinity = 0;
+    result.points = {first, second, third};
+    result.z_sign = z_sign;
+    result.numerator = approximate_projected_determinant(
+        points, first, second, third, 0, 2, z_sign
+    );
+    result.denominator = approximate_projected_determinant(
+        points, first, second, third, 0, 1, z_sign
+    );
+    return result;
+}
+
+inline int event_denominator_sign(
+    const EventTime& event,
+    const std::vector<Point3>& points
+){
+    using namespace geometry3d_adaptive_detail;
+    if(event.denominator.available
+        && std::abs(event.denominator.value) > event.denominator.error){
+        return event.denominator.value > 0.0L ? 1 : -1;
+    }
+    const ExactDyadic exact = exact_projected_determinant(
+        points, event.points[0], event.points[1], event.points[2],
+        0, 1, event.z_sign
+    );
+    const int exact_result = sign(exact);
+    if(exact_result != 0) return exact_result;
+    const int result = symbolic_sign(symbolic_projected_determinant(
+        points, event.points[0], event.points[1], event.points[2],
+        0, 1, event.z_sign
+    ));
+    if(result == 0)[[unlikely]]{
+        throw std::logic_error("symbolic event denominator vanished");
+    }
+    return result;
+}
+
+inline SymbolicPolynomial event_numerator_polynomial(
+    const EventTime& event,
+    const std::vector<Point3>& points
+){
+    return symbolic_projected_determinant(
+        points, event.points[0], event.points[1], event.points[2],
+        0, 2, event.z_sign
+    );
+}
+
+inline SymbolicPolynomial event_denominator_polynomial(
+    const EventTime& event,
+    const std::vector<Point3>& points
+){
+    return symbolic_projected_determinant(
+        points, event.points[0], event.points[1], event.points[2],
+        0, 1, event.z_sign
+    );
+}
+
+inline int compare_event_times(
+    const EventTime& left,
+    const EventTime& right,
+    const std::vector<Point3>& points
+){
+    using namespace geometry3d_adaptive_detail;
+    if(left.infinity != 0 || right.infinity != 0){
+        if(left.infinity == right.infinity) return 0;
+        return left.infinity < right.infinity ? -1 : 1;
+    }
+    if(left.z_sign == right.z_sign){
+        std::array<std::size_t, 3> left_points = left.points;
+        std::array<std::size_t, 3> right_points = right.points;
+        std::sort(left_points.begin(), left_points.end());
+        std::sort(right_points.begin(), right_points.end());
+        if(left_points == right_points) return 0;
+    }
+    const int denominator_product_sign =
+        event_denominator_sign(left, points)
+        * event_denominator_sign(right, points);
+    int difference_sign = 0;
+    if(left.numerator.available && left.denominator.available
+        && right.numerator.available && right.denominator.available){
+        const long double first_product =
+            left.numerator.value * right.denominator.value;
+        const long double second_product =
+            right.numerator.value * left.denominator.value;
+        const long double difference = std::fma(
+            left.numerator.value,
+            right.denominator.value,
+            -second_product
+        );
+        const long double propagated_error =
+            std::abs(left.numerator.value) * right.denominator.error
+            + std::abs(right.denominator.value) * left.numerator.error
+            + left.numerator.error * right.denominator.error
+            + std::abs(right.numerator.value) * left.denominator.error
+            + std::abs(left.denominator.value) * right.numerator.error
+            + right.numerator.error * left.denominator.error;
+        const long double rounding_error =
+            16.0L * std::numeric_limits<long double>::epsilon()
+            * (std::abs(first_product) + std::abs(second_product) + 1.0L);
+        if(std::abs(difference) > propagated_error + rounding_error){
+            difference_sign = difference > 0.0L ? 1 : -1;
+        }
+    }
+    if(difference_sign == 0){
+        const ExactDyadic left_numerator = exact_projected_determinant(
+            points, left.points[0], left.points[1], left.points[2],
+            0, 2, left.z_sign
+        );
+        const ExactDyadic left_denominator = exact_projected_determinant(
+            points, left.points[0], left.points[1], left.points[2],
+            0, 1, left.z_sign
+        );
+        const ExactDyadic right_numerator = exact_projected_determinant(
+            points, right.points[0], right.points[1], right.points[2],
+            0, 2, right.z_sign
+        );
+        const ExactDyadic right_denominator = exact_projected_determinant(
+            points, right.points[0], right.points[1], right.points[2],
+            0, 1, right.z_sign
+        );
+        const ExactDyadic exact_difference = subtract(
+            multiply(left_numerator, right_denominator),
+            multiply(right_numerator, left_denominator)
+        );
+        difference_sign = sign(exact_difference);
+    }
+    if(difference_sign == 0){
+        const SymbolicPolynomial difference = add_symbolic(
+            multiply_symbolic(
+                event_numerator_polynomial(left, points),
+                event_denominator_polynomial(right, points)
+            ),
+            multiply_symbolic(
+                event_numerator_polynomial(right, points),
+                event_denominator_polynomial(left, points)
+            ),
+            -1
+        );
+        difference_sign = symbolic_sign(difference);
+    }
+    return difference_sign * denominator_product_sign;
+}
+
+struct KineticNode{
+    std::size_t previous = no_point;
+    std::size_t next = no_point;
+};
+
+class DeterministicLowerHull{
+public:
+    DeterministicLowerHull(
+        const std::vector<Point3>& input_points,
+        int input_z_sign
+    ):
+        points(input_points),
+        z_sign(input_z_sign),
+        order(points.size()),
+        nodes(points.size()){
+        approximate_points.reserve(points.size());
+        long double scale = 0.0L;
+        for(const Point3& point: points){
+            scale = std::max({
+                scale, std::abs(point.x), std::abs(point.y), std::abs(point.z)
+            });
+        }
+        if(scale == 0.0L) scale = 1.0L;
+        for(const Point3& point: points){
+            approximate_points.push_back({
+                point.x / scale, point.y / scale, point.z / scale
+            });
+        }
+        for(std::size_t index = 0; index < order.size(); ++index){
+            order[index] = index;
+        }
+        std::sort(order.begin(), order.end(), [&](std::size_t left,
+                                                  std::size_t right){
+            return x_less(left, right);
+        });
+    }
+
+    std::vector<std::array<std::size_t, 3>> faces(){
+        std::vector<std::size_t> events = solve(0, order.size());
+        std::vector<std::array<std::size_t, 3>> result;
+        result.reserve(events.size());
+        for(std::size_t point: events){
+            if(nodes[point].previous == no_point
+                || nodes[point].next == no_point)[[unlikely]]{
+                throw std::logic_error(
+                    "divide-and-conquer hull emitted an open event"
+                );
+            }
+            result.push_back({
+                nodes[point].previous, point, nodes[point].next
+            });
+            toggle(point);
+        }
+        return result;
+    }
+
+private:
+    bool x_less(std::size_t left, std::size_t right) const{
+        if(points[left].x != points[right].x){
+            return points[left].x < points[right].x;
+        }
+        // x_i + epsilon^(base^(3i)) is larger for the smaller index.
+        return left > right;
+    }
+
+    bool x_less_equal(std::size_t left, std::size_t right) const{
+        return left == right || x_less(left, right);
+    }
+
+    int turn(
+        std::size_t first,
+        std::size_t second,
+        std::size_t third
+    ) const{
+        if(first == no_point || second == no_point || third == no_point){
+            return 1;
+        }
+        const ApproximateDeterminant approximate =
+            approximate_projected_determinant(
+                approximate_points, first, second, third, 0, 1, z_sign
+            );
+        if(std::abs(approximate.value) > approximate.error){
+            return approximate.value > 0.0L ? 1 : -1;
+        }
+        return symbolic_projected_determinant_sign(
+            points, first, second, third, 0, 1, z_sign
+        );
+    }
+
+    EventTime time(
+        std::size_t first,
+        std::size_t second,
+        std::size_t third
+    ) const{
+        return event_time(
+            approximate_points, first, second, third, z_sign
+        );
+    }
+
+    void toggle(std::size_t point){
+        const std::size_t previous = nodes[point].previous;
+        const std::size_t next = nodes[point].next;
+        if(previous == no_point || next == no_point)[[unlikely]]{
+            throw std::logic_error(
+                "divide-and-conquer hull toggled an endpoint"
+            );
+        }
+        if(nodes[previous].next != point){
+            nodes[previous].next = point;
+            nodes[next].previous = point;
+        }else{
+            nodes[previous].next = next;
+            nodes[next].previous = previous;
+        }
+    }
+
+    void append_event(
+        std::vector<std::size_t>& events,
+        std::size_t point,
+        std::size_t point_count
+    ) const{
+        if(events.size() >= point_count * 2)[[unlikely]]{
+            throw std::logic_error(
+                "divide-and-conquer hull event bound exceeded"
+            );
+        }
+        events.push_back(point);
+    }
+
+    std::vector<std::size_t> solve(
+        std::size_t begin,
+        std::size_t end
+    ){
+        const std::size_t point_count = end - begin;
+        if(point_count == 1){
+            nodes[order[begin]].previous = no_point;
+            nodes[order[begin]].next = no_point;
+            return {};
+        }
+
+        const std::size_t middle = begin + point_count / 2;
+        std::size_t left_bridge = order[middle - 1];
+        std::size_t right_bridge = order[middle];
+        const std::size_t middle_point = right_bridge;
+        std::vector<std::size_t> left_events = solve(begin, middle);
+        std::vector<std::size_t> right_events = solve(middle, end);
+
+        std::size_t bridge_steps = 0;
+        while(true){
+            if(turn(
+                left_bridge, right_bridge, nodes[right_bridge].next
+            ) < 0){
+                right_bridge = nodes[right_bridge].next;
+            }else if(turn(
+                nodes[left_bridge].previous, left_bridge, right_bridge
+            ) < 0){
+                left_bridge = nodes[left_bridge].previous;
+            }else{
+                break;
+            }
+            if(++bridge_steps > point_count * 2 + 2)[[unlikely]]{
+                throw std::logic_error(
+                    "divide-and-conquer hull bridge search did not converge"
+                );
+            }
+        }
+
+        std::vector<std::size_t> events;
+        events.reserve(point_count * 2);
+        std::size_t left_event = 0;
+        std::size_t right_event = 0;
+        EventTime old_time = negative_infinity();
+        while(true){
+            const std::array<EventTime, 6> candidates{
+                left_event == left_events.size()
+                    ? positive_infinity()
+                    : time(
+                        nodes[left_events[left_event]].previous,
+                        left_events[left_event],
+                        nodes[left_events[left_event]].next
+                    ),
+                right_event == right_events.size()
+                    ? positive_infinity()
+                    : time(
+                        nodes[right_events[right_event]].previous,
+                        right_events[right_event],
+                        nodes[right_events[right_event]].next
+                    ),
+                time(left_bridge, nodes[left_bridge].next, right_bridge),
+                time(nodes[left_bridge].previous, left_bridge, right_bridge),
+                time(left_bridge, nodes[right_bridge].previous, right_bridge),
+                time(left_bridge, right_bridge, nodes[right_bridge].next),
+            };
+            EventTime next_time = positive_infinity();
+            std::size_t selected = candidates.size();
+            for(std::size_t index = 0; index < candidates.size(); ++index){
+                if(compare_event_times(old_time, candidates[index], points) < 0
+                    && compare_event_times(
+                        candidates[index], next_time, points
+                    ) < 0){
+                    selected = index;
+                    next_time = candidates[index];
+                }
+            }
+            if(selected == candidates.size()) break;
+
+            if(selected == 0){
+                const std::size_t point = left_events[left_event++];
+                if(x_less(point, left_bridge)){
+                    append_event(events, point, point_count);
+                }
+                toggle(point);
+            }else if(selected == 1){
+                const std::size_t point = right_events[right_event++];
+                if(x_less(right_bridge, point)){
+                    append_event(events, point, point_count);
+                }
+                toggle(point);
+            }else if(selected == 2){
+                left_bridge = nodes[left_bridge].next;
+                append_event(events, left_bridge, point_count);
+            }else if(selected == 3){
+                append_event(events, left_bridge, point_count);
+                left_bridge = nodes[left_bridge].previous;
+            }else if(selected == 4){
+                right_bridge = nodes[right_bridge].previous;
+                append_event(events, right_bridge, point_count);
+            }else{
+                append_event(events, right_bridge, point_count);
+                right_bridge = nodes[right_bridge].next;
+            }
+            old_time = next_time;
+        }
+
+        nodes[left_bridge].next = right_bridge;
+        nodes[right_bridge].previous = left_bridge;
+        for(std::size_t index = events.size(); index-- > 0;){
+            const std::size_t point = events[index];
+            if(x_less_equal(point, left_bridge)
+                || x_less_equal(right_bridge, point)){
+                toggle(point);
+                if(point == left_bridge){
+                    left_bridge = nodes[point].previous;
+                }else if(point == right_bridge){
+                    right_bridge = nodes[point].next;
+                }
+            }else{
+                nodes[left_bridge].next = point;
+                nodes[point].previous = left_bridge;
+                nodes[right_bridge].previous = point;
+                nodes[point].next = right_bridge;
+                if(x_less(point, middle_point)){
+                    left_bridge = point;
+                }else{
+                    right_bridge = point;
+                }
+            }
+        }
+        return events;
+    }
+
+    const std::vector<Point3>& points;
+    int z_sign;
+    std::vector<std::size_t> order;
+    std::vector<KineticNode> nodes;
+    std::vector<Point3> approximate_points;
+};
+
+struct ExactPlane{
+    std::array<geometry3d_adaptive_detail::ExactDyadic, 4> coefficients{};
+    std::size_t pivot = 4;
+};
+
+inline ExactPlane exact_plane(
+    const std::array<std::size_t, 3>& triangle,
+    const std::vector<Point3>& points
+){
+    using namespace geometry3d_adaptive_detail;
+    std::array<ExactDyadic, 3> first_direction;
+    std::array<ExactDyadic, 3> second_direction;
+    for(std::size_t coordinate = 0; coordinate < 3; ++coordinate){
+        first_direction[coordinate] = subtract(
+            exact_coordinate(points, triangle[1], coordinate, 1),
+            exact_coordinate(points, triangle[0], coordinate, 1)
+        );
+        second_direction[coordinate] = subtract(
+            exact_coordinate(points, triangle[2], coordinate, 1),
+            exact_coordinate(points, triangle[0], coordinate, 1)
+        );
+    }
+    ExactPlane result;
+    result.coefficients[0] = subtract(
+        multiply(first_direction[1], second_direction[2]),
+        multiply(first_direction[2], second_direction[1])
+    );
+    result.coefficients[1] = subtract(
+        multiply(first_direction[2], second_direction[0]),
+        multiply(first_direction[0], second_direction[2])
+    );
+    result.coefficients[2] = subtract(
+        multiply(first_direction[0], second_direction[1]),
+        multiply(first_direction[1], second_direction[0])
+    );
+    result.coefficients[3] = negate(add(
+        add(
+            multiply(
+                result.coefficients[0],
+                exact_coordinate(points, triangle[0], 0, 1)
+            ),
+            multiply(
+                result.coefficients[1],
+                exact_coordinate(points, triangle[0], 1, 1)
+            )
+        ),
+        multiply(
+            result.coefficients[2],
+            exact_coordinate(points, triangle[0], 2, 1)
+        )
+    ));
+    for(std::size_t index = 0; index < result.coefficients.size(); ++index){
+        if(sign(result.coefficients[index]) != 0){
+            result.pivot = index;
+            break;
+        }
+    }
+    if(result.pivot == result.coefficients.size())[[unlikely]]{
+        throw std::logic_error(
+            "divide-and-conquer hull constructed a zero plane"
+        );
+    }
+    if(sign(result.coefficients[result.pivot]) < 0){
+        for(ExactDyadic& coefficient: result.coefficients){
+            coefficient = negate(coefficient);
+        }
+    }
+    return result;
+}
+
+struct ExactPlaneLess{
+    bool operator()(const ExactPlane& left, const ExactPlane& right) const{
+        using namespace geometry3d_adaptive_detail;
+        if(left.pivot != right.pivot) return left.pivot < right.pivot;
+        for(std::size_t index = 0; index < left.coefficients.size(); ++index){
+            const ExactDyadic difference = subtract(
+                multiply(
+                    left.coefficients[index],
+                    right.coefficients[right.pivot]
+                ),
+                multiply(
+                    right.coefficients[index],
+                    left.coefficients[left.pivot]
+                )
+            );
+            const int comparison = sign(difference);
+            if(comparison != 0) return comparison < 0;
+        }
+        return false;
+    }
+};
+
+struct FacetPoints{
+    std::array<std::size_t, 3> plane{};
+    std::vector<std::size_t> points;
+};
+
+inline bool outward_boundary(
+    const std::vector<std::size_t>& boundary,
+    const std::array<std::size_t, 4>& witnesses,
+    const std::vector<Point3>& points
+){
+    for(std::size_t witness: witnesses){
+        const int side = adaptive_orient3d(
+            points[boundary[0]], points[boundary[1]], points[boundary[2]],
+            points[witness]
+        );
+        if(side != 0) return side < 0;
+    }
+    throw std::logic_error(
+        "divide-and-conquer hull facet has no orientation witness"
+    );
+}
+
+inline ConvexPolyhedron3 spatial_hull(
+    const std::vector<Point3>& points,
+    const std::array<std::size_t, 4>& witnesses
+){
+    std::vector<std::array<std::size_t, 3>> candidates =
+        DeterministicLowerHull(points, 1).faces();
+    std::vector<std::array<std::size_t, 3>> upper =
+        DeterministicLowerHull(points, -1).faces();
+    candidates.insert(candidates.end(), upper.begin(), upper.end());
+
+    std::map<ExactPlane, FacetPoints, ExactPlaneLess> facets;
+    for(const std::array<std::size_t, 3>& triangle: candidates){
+        if(!non_collinear(
+            points[triangle[0]], points[triangle[1]], points[triangle[2]]
+        )) continue;
+        const auto [iterator, inserted] = facets.try_emplace(
+            exact_plane(triangle, points), FacetPoints{triangle, {}}
+        );
+        static_cast<void>(inserted);
+        iterator->second.points.insert(
+            iterator->second.points.end(), triangle.begin(), triangle.end()
+        );
+    }
+    if(facets.empty())[[unlikely]]{
+        throw std::logic_error(
+            "divide-and-conquer hull produced no spatial facets"
+        );
+    }
+
+    std::vector<std::array<std::size_t, 3>> point_faces;
+    for(auto& [plane, facet]: facets){
+        static_cast<void>(plane);
+        std::sort(facet.points.begin(), facet.points.end());
+        facet.points.erase(std::unique(
+            facet.points.begin(), facet.points.end()
+        ), facet.points.end());
+        std::vector<std::size_t> boundary = planar_boundary(
+            points, facet.points, facet.plane
+        );
+        if(boundary.size() < 3)[[unlikely]]{
+            throw std::logic_error(
+                "divide-and-conquer hull facet has no planar boundary"
+            );
+        }
+        if(!outward_boundary(boundary, witnesses, points)){
+            std::reverse(boundary.begin() + 1, boundary.end());
+        }
+        for(std::size_t index = 1; index + 1 < boundary.size(); ++index){
+            point_faces.push_back({
+                boundary[0], boundary[index], boundary[index + 1]
+            });
+        }
+    }
+
+    std::set<std::size_t> used;
+    for(const auto& face: point_faces) used.insert(face.begin(), face.end());
+    std::vector<std::size_t> remap(points.size(), points.size());
+    std::vector<Point3> vertices;
+    vertices.reserve(used.size());
+    for(std::size_t point: used){
+        remap[point] = vertices.size();
+        vertices.push_back(points[point]);
+    }
+    std::vector<std::array<std::size_t, 3>> result_faces;
+    result_faces.reserve(point_faces.size());
+    for(const auto& face: point_faces){
+        result_faces.push_back({
+            remap[face[0]], remap[face[1]], remap[face[2]]
+        });
+    }
+    return {3, std::move(vertices), std::move(result_faces)};
+}
+
+}  // namespace divide_and_conquer_convex_hull_3d_detail
+
+inline ConvexPolyhedron3 divide_and_conquer_convex_hull_3d(
+    std::vector<Point3> points
+){
+    using namespace divide_and_conquer_convex_hull_3d_detail;
+    for(const Point3& point: points){
+        if(!geometry3d_is_finite(point))[[unlikely]]{
+            throw std::invalid_argument(
+                "divide_and_conquer_convex_hull_3d requires finite points"
+            );
+        }
+    }
     std::sort(points.begin(), points.end());
-    points.erase(std::unique(points.begin(), points.end(), same_point), points.end());
-    if(points.size() < 4) return lower_dimensional_hull(points);
+    points.erase(std::unique(
+        points.begin(), points.end(), same_point
+    ), points.end());
+    if(points.size() <= 1){
+        return {points.empty() ? -1 : 0, std::move(points), {}};
+    }
+    if(points.size() > (std::numeric_limits<std::size_t>::max() - 2) / 3){
+        throw std::length_error(
+            "divide_and_conquer_convex_hull_3d has too many points"
+        );
+    }
 
     std::size_t third = points.size();
     for(std::size_t index = 2; index < points.size(); ++index){
@@ -262,127 +1136,19 @@ inline ConvexPolyhedron3 merge(
         }
     }
     if(third == points.size()) return lower_dimensional_hull(points);
-    bool full_dimensional = false;
+
+    std::size_t fourth = points.size();
     for(std::size_t index = 0; index < points.size(); ++index){
         if(adaptive_orient3d(
             points[0], points[1], points[third], points[index]
         ) != 0){
-            full_dimensional = true;
+            fourth = index;
             break;
         }
     }
-    if(!full_dimensional) return lower_dimensional_hull(points);
+    if(fourth == points.size()) return lower_dimensional_hull(points);
 
-    // Candidate indices refer to the children before the deterministic sort.
-    std::vector<Point3> concatenated = left.vertices;
-    concatenated.insert(
-        concatenated.end(), right.vertices.begin(), right.vertices.end()
-    );
-    std::map<std::vector<std::size_t>, SupportingFacet> concatenated_facets;
-    append_child_face_candidates(
-        left, 0, concatenated, concatenated_facets
-    );
-    append_child_face_candidates(
-        right, left.vertices.size(), concatenated, concatenated_facets
-    );
-    append_bridge_candidates(
-        left, 0, right, left.vertices.size(), concatenated,
-        concatenated_facets
-    );
-    append_bridge_candidates(
-        right, left.vertices.size(), left, 0, concatenated,
-        concatenated_facets
-    );
-
-    std::map<std::vector<std::size_t>, SupportingFacet> facets;
-    for(const auto& [coplanar, facet]: concatenated_facets){
-        static_cast<void>(coplanar);
-        std::array<std::size_t, 3> remapped{};
-        for(std::size_t index = 0; index < 3; ++index){
-            const auto iterator = std::lower_bound(
-                points.begin(), points.end(), concatenated[facet.plane[index]]
-            );
-            if(iterator == points.end()
-                || !same_point(*iterator, concatenated[facet.plane[index]]))[[unlikely]]{
-                throw std::logic_error("divide-and-conquer hull remap failed");
-            }
-            remapped[index] = static_cast<std::size_t>(iterator - points.begin());
-        }
-        add_supporting_facet(remapped, points, facets);
-    }
-    if(facets.empty())[[unlikely]]{
-        throw std::logic_error("divide-and-conquer hull merge found no facets");
-    }
-
-    std::vector<std::array<std::size_t, 3>> point_faces;
-    for(const auto& [coplanar, facet]: facets){
-        std::vector<std::size_t> boundary = planar_boundary(
-            points, coplanar, facet.plane
-        );
-        if(boundary.size() < 3) continue;
-        bool reversed = false;
-        for(std::size_t index = 0; index < points.size(); ++index){
-            const int side = adaptive_orient3d(
-                points[boundary[0]], points[boundary[1]], points[boundary[2]],
-                points[index]
-            );
-            if(side != 0){
-                reversed = side > 0;
-                break;
-            }
-        }
-        if(reversed) std::reverse(boundary.begin() + 1, boundary.end());
-        for(std::size_t index = 1; index + 1 < boundary.size(); ++index){
-            point_faces.push_back({
-                boundary[0], boundary[index], boundary[index + 1]
-            });
-        }
-    }
-    if(point_faces.empty())[[unlikely]]{
-        throw std::logic_error("divide-and-conquer hull triangulation failed");
-    }
-
-    std::set<std::size_t> used;
-    for(const auto& face: point_faces) used.insert(face.begin(), face.end());
-    std::vector<std::size_t> remap(points.size(), points.size());
-    std::vector<Point3> vertices;
-    vertices.reserve(used.size());
-    for(std::size_t index: used){
-        remap[index] = vertices.size();
-        vertices.push_back(points[index]);
-    }
-    std::vector<std::array<std::size_t, 3>> faces;
-    faces.reserve(point_faces.size());
-    for(const auto& face: point_faces){
-        faces.push_back({remap[face[0]], remap[face[1]], remap[face[2]]});
-    }
-    return {3, std::move(vertices), std::move(faces)};
-}
-
-inline ConvexPolyhedron3 solve(
-    const std::vector<Point3>& points,
-    std::size_t begin,
-    std::size_t end
-){
-    if(begin == end) return {};
-    if(end - begin == 1) return {0, {points[begin]}, {}};
-    const std::size_t middle = begin + (end - begin) / 2;
-    return merge(solve(points, begin, middle), solve(points, middle, end));
-}
-
-}  // namespace divide_and_conquer_convex_hull_3d_detail
-
-inline ConvexPolyhedron3 divide_and_conquer_convex_hull_3d(
-    std::vector<Point3> points
-){
-    for(const Point3& point: points){
-        if(!geometry3d_is_finite(point))[[unlikely]]{
-            throw std::invalid_argument(
-                "divide_and_conquer_convex_hull_3d requires finite points"
-            );
-        }
-    }
-    return convex_hull_3d(std::move(points));
+    return spatial_hull(points, {0, 1, third, fourth});
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SHAPE_DIVIDE_AND_CONQUER_CONVEX_HULL_3D_HPP_INCLUDED
