@@ -1,5 +1,5 @@
 ---
-title: Subcubic Irreducible Pairs from Distance Matrix (距離行列の部分三乗既約対) [ROADNET]
+title: Subcubic Irreducible Pairs from Distance Matrix (距離行列の部分三乗既約対)
 documentation_of: ../src/algorithm/graph/specialized/irreducible_pairs_from_distance_matrix_subcubic.hpp
 ---
 
