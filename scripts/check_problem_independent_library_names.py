@@ -290,14 +290,14 @@ def check_file(path: Path, *, is_documentation: bool | None = None) -> list[Viol
 
 
 def public_files(src_root: Path, docs_root: Path) -> tuple[list[Path], list[Path]]:
-    """Collect the exact public surface: recursive headers and flat docs."""
+    """Collect the exact public surface recursively."""
 
     headers = sorted(
         (path for path in src_root.rglob("*.hpp") if path.is_file()),
         key=lambda path: path.as_posix(),
     )
     documents = sorted(
-        (path for path in docs_root.glob("*.md") if path.is_file()),
+        (path for path in docs_root.rglob("*.md") if path.is_file()),
         key=lambda path: path.as_posix(),
     )
     return headers, documents
@@ -316,7 +316,7 @@ def parse_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "docs_root", nargs="?", type=Path, default=Path("docs"),
-        help="flat documentation directory (default: docs)",
+        help="recursive documentation directory (default: docs)",
     )
     return parser.parse_args()
 

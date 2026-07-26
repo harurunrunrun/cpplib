@@ -124,7 +124,7 @@ def main() -> int:
     if not docs.is_dir():
         errors.append(f"{display(docs, root)}: docs directory does not exist")
 
-    markdown_files = sorted(docs.glob("*.md"), key=lambda path: path.as_posix())
+    markdown_files = sorted(docs.rglob("*.md"), key=lambda path: path.as_posix())
     for path in markdown_files:
         target, target_errors = documentation_target(path)
         errors.extend(f"{display(path, root)}: {error}" for error in target_errors)

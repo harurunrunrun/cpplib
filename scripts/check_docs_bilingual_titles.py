@@ -160,7 +160,7 @@ def markdown_files(arguments: list[str]) -> list[Path]:
     files: set[Path] = set()
     for path in paths:
         if path.is_dir():
-            files.update(candidate for candidate in path.glob("*.md") if candidate.is_file())
+            files.update(candidate for candidate in path.rglob("*.md") if candidate.is_file())
         else:
             files.add(path)
     return sorted(files, key=lambda path: str(path))
@@ -184,7 +184,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         "paths",
         nargs="*",
-        help="Markdown files or flat documentation directories (default: docs)",
+        help="Markdown files or recursive documentation directories (default: docs)",
     )
     return parser.parse_args()
 

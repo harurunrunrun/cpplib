@@ -258,7 +258,7 @@ def update_docs(
     tags_by_source = source_problem_tags(onlinejudge_dir)
     violations: list[str] = []
 
-    for document in sorted(docs_dir.glob("*.md")):
+    for document in sorted(docs_dir.rglob("*.md")):
         try:
             source = document.read_text(encoding="utf-8")
         except (OSError, UnicodeError) as error:

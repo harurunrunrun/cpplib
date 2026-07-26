@@ -318,11 +318,13 @@ class CheckProblemIndependentLibraryNamesTest(unittest.TestCase):
         nested_header = self.write("src/structure/x/b.hpp", "#pragma once\n")
         self.write("src/algorithm/not_public.cpp", "")
         document = self.write("docs/a.md", self.valid_doc())
-        self.write("docs/nested/ignored.md", self.valid_doc())
+        nested_document = self.write(
+            "docs/nested/included.md", self.valid_doc()
+        )
 
         headers, documents = public_files(self.root / "src", self.root / "docs")
         self.assertEqual(headers, [header, nested_header])
-        self.assertEqual(documents, [document])
+        self.assertEqual(documents, [document, nested_document])
 
 
 if __name__ == "__main__":

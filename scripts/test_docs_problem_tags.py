@@ -70,6 +70,39 @@ class DocsProblemTagsTest(unittest.TestCase):
             )
             self.assertEqual(update_docs(docs, onlinejudge, write=False), [])
 
+    def test_nested_documentation_is_updated(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "src" / "algorithm" / "tree.hpp"
+            docs = root / "docs"
+            nested_docs = docs / "algorithm"
+            onlinejudge = root / "test" / "onlinejudge"
+            source.parent.mkdir(parents=True)
+            nested_docs.mkdir(parents=True)
+            onlinejudge.mkdir(parents=True)
+            source.write_text("#pragma once\n", encoding="utf-8")
+            document = nested_docs / "tree.md"
+            document.write_text(
+                "---\n"
+                "title: Tree (?)\n"
+                "documentation_of: ../../src/algorithm/tree.hpp\n"
+                "---\n",
+                encoding="utf-8",
+            )
+            (onlinejudge / "tree.test.cpp").write_text(
+                "// competitive-verifier: PROBLEM "
+                "https://judge.yosupo.jp/problem/jump_on_tree\n"
+                '#include "../../src/algorithm/tree.hpp"\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(update_docs(docs, onlinejudge, write=True), [])
+            self.assertIn(
+                "title: Tree (?) [jump_on_tree]",
+                document.read_text(encoding="utf-8"),
+            )
+            self.assertEqual(update_docs(docs, onlinejudge, write=False), [])
+
 
     def test_quoted_front_matter_is_preserved_and_body_fields_are_ignored(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
