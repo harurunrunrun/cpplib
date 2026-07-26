@@ -1,0 +1,13 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON3_HPP_INCLUDED
+
+#include "point3.hpp"
+
+struct Tetrahedron3{
+    Point3 a;
+    Point3 b;
+    Point3 c;
+    Point3 d;
+};
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_TETRAHEDRON3_HPP_INCLUDED

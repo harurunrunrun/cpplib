@@ -1,0 +1,11 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY3_HPP_INCLUDED
+
+#include "point3.hpp"
+
+struct Ray3{
+    Point3 origin;
+    Point3 through;
+};
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY3_HPP_INCLUDED
