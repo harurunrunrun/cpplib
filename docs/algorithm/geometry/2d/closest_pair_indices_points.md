@@ -1,5 +1,5 @@
 ---
-title: Closest Pair Indices from Integer Points (整数点列の最近点対添字) [closest_pair]
+title: Closest Pair Indices from Integer Points (整数点列の最近点対添字)
 documentation_of: ../../../../src/algorithm/geometry/2d/closest_pair_indices_points.hpp
 ---
 

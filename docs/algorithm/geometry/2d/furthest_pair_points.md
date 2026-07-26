@@ -1,5 +1,5 @@
 ---
-title: Furthest Pair from Integer Points (整数点列の最遠点対) [furthest_pair]
+title: Furthest Pair from Integer Points (整数点列の最遠点対)
 documentation_of: ../../../../src/algorithm/geometry/2d/furthest_pair_points.hpp
 ---
 

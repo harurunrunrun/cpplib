@@ -84,7 +84,8 @@ ExactInteger& operator*=(Integer value);
 NTT・Toom-Cook-3・Karatsuba法を入力長に応じて切り替える。
 短い方が512 limb以上で、15bit digit列の畳み込み長が $2^{32}$ 以下なら、
 $p=2^{64}-2^{32}+1$ を法とするGoldilocks NTTを使う。この素数は原始
-$2^{32}$ 乗根を持つ。各係数の上界は $p$ 未満なので、1回の変換だけで整数係数を
+$2^{32}$ 乗根を持つ。短いdigit列は最大 $2^{31}$ 要素なので、各係数は
+$2^{31}(2^{15}-1)^2<p$ を満たす。したがって1回の変換だけで整数係数を
 一意に復元でき、CRTや浮動小数点丸めを必要としない。この経路は
 $O(P\log P)$ 時間、$O(P)$ 追加領域である。
 
@@ -145,8 +146,10 @@ ostream& operator<<(ostream& stream, const ExactInteger& value);
 $D$ を10進桁数、$M_{10}(n)$ を $n$ 個の10進chunkの乗算時間とすると、
 時間計算量は $O(M_{10}(L)\log L + D)$、追加領域は
 $O(L\log L+D)$ である。10進chunkを3個のbase-1000 digitへ分解し、
-256 chunk以上ではGoldilocks NTTで内部乗算する。したがってNTT対応範囲では
-$M_{10}(n)=O(n\log n)$ であり、10進変換全体は $O(L\log^2 L+D)$ となる。
+256 chunk以上ではGoldilocks NTTで内部乗算する。base-1000係数も
+$2^{31}\cdot999^2<p$ なので1回の変換で正確に復元できる。したがって
+NTT対応範囲では $M_{10}(n)=O(n\log n)$ であり、10進変換全体は
+$O(L\log^2 L+D)$ となる。
 小入力では学校式またはKaratsuba法へ切り替える。
 
 2進limbを1個ずつ10進へ変換し、隣接ブロックを
