@@ -19,17 +19,18 @@ template<
     class Y,
     int MAX_SIZE,
     int MAX_VERSION,
-    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits,
-    int BLOCK_SIZE = 512
+    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits
 >
 struct PersistentWaveletMatrix2D{
     static_assert(std::is_integral_v<X>);
     static_assert(std::is_integral_v<Y>);
+    static_assert(!std::is_same_v<std::remove_cv_t<X>, bool>);
+    static_assert(!std::is_same_v<std::remove_cv_t<Y>, bool>);
     static_assert(MAX_SIZE >= 0);
     static_assert(MAX_VERSION >= 0);
 
 private:
-    using Matrix = PersistentWaveletMatrix<Y, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH, BLOCK_SIZE>;
+    using Matrix = PersistentWaveletMatrix<Y, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH>;
 
     struct State{
         std::array<X, MAX_SIZE> x{};

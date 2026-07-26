@@ -15,11 +15,11 @@ constexpr int max_version = 30000;
 constexpr int block_size = 8;
 
 using Plain = PersistentWaveletMatrix<
-    int, max_size, max_version, 32, block_size>;
+    int, max_size, max_version, 32>;
 using Weighted = PersistentWeightedWaveletMatrix<
     int, long long, max_size, max_version, 32, block_size>;
 
-static_assert(sizeof(Plain) < 16 * 1024 * 1024);
+static_assert(sizeof(Plain) < 64 * 1024);
 static_assert(sizeof(Weighted) < 32 * 1024 * 1024);
 
 } // namespace

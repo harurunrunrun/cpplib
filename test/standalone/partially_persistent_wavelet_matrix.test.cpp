@@ -10,7 +10,7 @@
 
 namespace{
 
-using Matrix = PartiallyPersistentWaveletMatrix<int, 256, 512, 32, 17>;
+using Matrix = PartiallyPersistentWaveletMatrix<int, 256, 512, 32>;
 
 template<class F>
 bool throws_runtime_error(F&& operation){
@@ -23,7 +23,7 @@ bool throws_runtime_error(F&& operation){
 }
 
 void self_test(){
-    PartiallyPersistentWaveletMatrix<unsigned, 8, 1, 5, 3> matrix(
+    PartiallyPersistentWaveletMatrix<unsigned, 8, 1, 5> matrix(
         std::vector<unsigned>{0, 3, 31, 7}
     );
     int version = matrix.set(2, 5);

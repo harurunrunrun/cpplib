@@ -55,7 +55,7 @@ int main(){
                       << dictionary.get(0, 0) << ' ' << dictionary.get(version, 0) << ' '
                       << dictionary.get(version, 1) << '\n';
         }else if(type == "PWM_SET"){
-            PersistentWaveletMatrix<int, 8, 1, 32, 4> matrix(
+            PersistentWaveletMatrix<int, 8, 1, 32> matrix(
                 std::vector<int>{1, 2}
             );
             int version = matrix.set(0, 0, 3);
@@ -64,7 +64,7 @@ int main(){
                       << matrix.access(0, 0) << ' ' << matrix.access(version, 0) << ' '
                       << matrix.access(version, 1) << '\n';
         }else if(type == "PWM_FORK"){
-            PersistentWaveletMatrix<int, 8, 1, 32, 4> matrix(
+            PersistentWaveletMatrix<int, 8, 1, 32> matrix(
                 std::vector<int>{1, 2}
             );
             int version = matrix.fork(0);
@@ -72,7 +72,7 @@ int main(){
             std::cout << thrown << ' ' << matrix.versions() << ' '
                       << matrix.access(version, 1) << '\n';
         }else if(type == "PPWM_SET"){
-            PartiallyPersistentWaveletMatrix<int, 8, 1, 32, 4> matrix(
+            PartiallyPersistentWaveletMatrix<int, 8, 1, 32> matrix(
                 std::vector<int>{1, 2}
             );
             int version = matrix.set(0, 3);

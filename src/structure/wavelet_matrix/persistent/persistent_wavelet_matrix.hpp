@@ -1,204 +1,152 @@
 #ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_PERSISTENT_WAVELET_MATRIX_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_PERSISTENT_WAVELET_MATRIX_HPP_INCLUDED
 
-#include <algorithm>
 #include <array>
 #include <cstddef>
+#include <deque>
 #include <limits>
 #include <optional>
 #include <stdexcept>
 #include <type_traits>
+#include <utility>
 #include <vector>
-#include "../detail/persistent_block_reference.hpp"
+#include "../detail/persistent_btree_bit_sequence.hpp"
 
 template<
     class T,
     int MAX_SIZE,
     int MAX_VERSION,
-    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits,
-    int BLOCK_SIZE = 512
+    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 struct PersistentWaveletMatrix{
     static_assert(std::is_integral_v<T>);
+    static_assert(!std::is_same_v<std::remove_cv_t<T>, bool>);
     static_assert(MAX_SIZE >= 0);
     static_assert(MAX_VERSION >= 0);
-    static_assert(BLOCK_SIZE > 0);
+
     using U = std::make_unsigned_t<T>;
     static constexpr int digits = std::numeric_limits<U>::digits;
     static_assert(0 < BIT_WIDTH && BIT_WIDTH <= digits);
     static_assert(!std::is_signed_v<T> || BIT_WIDTH == digits);
 
 private:
-    static constexpr int block_count_max = (MAX_SIZE + BLOCK_SIZE - 1) / BLOCK_SIZE;
-    static constexpr int block_node_max = block_count_max + MAX_VERSION + 2;
+    using BitVector = wavelet_matrix_detail::PersistentBTreeBitVector<>;
+    using Root = typename BitVector::Root;
+    using Snapshot = typename BitVector::Snapshot;
+
+    struct VersionState{
+        std::array<Root, static_cast<std::size_t>(BIT_WIDTH)> root{};
+        std::array<int, static_cast<std::size_t>(BIT_WIDTH)> zero{};
+    };
 
     int _n = 0;
-    int block_count = 0;
     int _versions = 0;
-    int block_nodes = 0;
-    std::array<int, MAX_VERSION + 1> version_root{};
-    wavelet_matrix_detail::PersistentBlockReference<
-        block_count_max, MAX_VERSION> block_reference;
-    std::array<std::array<U, BLOCK_SIZE>, block_node_max> block_value{};
-    std::array<std::array<U, BLOCK_SIZE>, block_node_max> block_sorted{};
-    std::array<int, block_node_max> block_size{};
+    std::array<BitVector, static_cast<std::size_t>(BIT_WIDTH)> bit_vector{};
+    std::deque<VersionState> version_state;
 
-    static constexpr U sign_mask = std::is_signed_v<T>
-        ? U{1} << (digits - 1) : U{0};
+    static constexpr U sign_mask = std::is_signed_v<T> ? U{1} << (digits - 1) : U{0};
     static U encode(T value){ return static_cast<U>(value) ^ sign_mask; }
     static T decode(U value){ return static_cast<T>(value ^ sign_mask); }
-
     static bool fits(U value){
         if constexpr(BIT_WIDTH < digits) return (value >> BIT_WIDTH) == 0;
         else return true;
     }
-
     static U encode_checked(T value, const char* message){
-        U result = encode(value);
+        const U result = encode(value);
         if(!fits(result))[[unlikely]] throw std::runtime_error(message);
         return result;
+    }
+    static bool bit_at(U value, int level){
+        return static_cast<bool>((value >> (BIT_WIDTH - 1 - level)) & U{1});
     }
 
     void check_version(int version, const char* message) const{
         if(version < 0 || _versions <= version)[[unlikely]] throw std::runtime_error(message);
     }
-
     void check_index(int k, const char* message) const{
         if(k < 0 || _n <= k)[[unlikely]] throw std::runtime_error(message);
     }
-
     void check_range(int l, int r, const char* message) const{
         if(l < 0 || r < l || _n < r)[[unlikely]] throw std::runtime_error(message);
     }
-
     void check_version_capacity() const{
         if(_versions > MAX_VERSION)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity violation (version).");
         }
     }
 
-    int new_block(){
-        if(block_nodes >= block_node_max)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: capacity violation (block).");
+    std::pair<int, int> descend(int version, int level, int left, int right, bool bit) const{
+        const Root root = version_state[static_cast<std::size_t>(version)].root[static_cast<std::size_t>(level)];
+        const auto rank = bit_vector[static_cast<std::size_t>(level)].rank_pair(root, left, right);
+        if(bit){
+            const int zeros = version_state[static_cast<std::size_t>(version)].zero[static_cast<std::size_t>(level)];
+            return {zeros + rank.ones_l, zeros + rank.ones_r};
         }
-        return block_nodes++;
+        return {left - rank.ones_l, right - rank.ones_r};
     }
 
-    int block_index(int k) const{ return k / BLOCK_SIZE; }
-    int local_index(int k) const{ return k % BLOCK_SIZE; }
-
-    int actual_block_size(int block) const{
-        int first = block * BLOCK_SIZE;
-        return std::min(_n - first, BLOCK_SIZE);
-    }
-
-    void rebuild_block(int node){
-        for(int i = 0; i < block_size[static_cast<std::size_t>(node)]; i++){
-            block_sorted[static_cast<std::size_t>(node)][static_cast<std::size_t>(i)] =
-                block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(i)];
-        }
-        auto begin = block_sorted[static_cast<std::size_t>(node)].begin();
-        std::sort(begin, begin + block_size[static_cast<std::size_t>(node)]);
-    }
-
-    int copy_block(int old_node){
-        int node = new_block();
-        block_size[static_cast<std::size_t>(node)] = block_size[static_cast<std::size_t>(old_node)];
-        for(int i = 0; i < block_size[static_cast<std::size_t>(node)]; i++){
-            block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(i)] =
-                block_value[static_cast<std::size_t>(old_node)][static_cast<std::size_t>(i)];
-        }
-        return node;
-    }
-
-    int block_at(int version, int block) const{
-        return block_reference.get(
-            version_root[static_cast<std::size_t>(version)], block
-        );
-    }
-
-    int count_less_encoded(int version, int l, int r, U upper) const{
+    int count_less_encoded(int version, int left, int right, U upper) const{
         int result = 0;
-        while(l < r){
-            int block = block_index(l);
-            int node = block_at(version, block);
-            int block_end = std::min(r, (block + 1) * BLOCK_SIZE);
-            int first = local_index(l);
-            int count = block_end - l;
-            if(first == 0 && count == block_size[static_cast<std::size_t>(node)]){
-                auto begin = block_sorted[static_cast<std::size_t>(node)].begin();
-                result += static_cast<int>(
-                    std::lower_bound(begin, begin + count, upper) - begin);
+        for(int level = 0; level < BIT_WIDTH; level++){
+            const Root root = version_state[static_cast<std::size_t>(version)].root[static_cast<std::size_t>(level)];
+            const auto rank = bit_vector[static_cast<std::size_t>(level)].rank_pair(root, left, right);
+            const int zero_left = left - rank.ones_l;
+            const int zero_right = right - rank.ones_r;
+            if(bit_at(upper, level)){
+                result += zero_right - zero_left;
+                const int zeros = version_state[static_cast<std::size_t>(version)].zero[static_cast<std::size_t>(level)];
+                left = zeros + rank.ones_l;
+                right = zeros + rank.ones_r;
             }else{
-                for(int i = 0; i < count; i++){
-                    if(block_value[static_cast<std::size_t>(node)][
-                        static_cast<std::size_t>(first + i)] < upper
-                    ) result++;
-                }
+                left = zero_left;
+                right = zero_right;
             }
-            l = block_end;
         }
         return result;
     }
 
-    int count_less_value(int version, int l, int r, T upper) const{
-        U key = encode(upper);
-        if(!fits(key)) return r - l;
-        return count_less_encoded(version, l, r, key);
+    int count_less_value(int version, int left, int right, T upper) const{
+        const U key = encode(upper);
+        if(!fits(key)) return right - left;
+        return count_less_encoded(version, left, right, key);
     }
 
-    int count_equal_encoded(int version, int l, int r, U key) const{
-        int result = 0;
-        while(l < r){
-            int block = block_index(l);
-            int node = block_at(version, block);
-            int block_end = std::min(r, (block + 1) * BLOCK_SIZE);
-            int first = local_index(l);
-            int count = block_end - l;
-            if(first == 0 && count == block_size[static_cast<std::size_t>(node)]){
-                auto begin = block_sorted[static_cast<std::size_t>(node)].begin();
-                auto range = std::equal_range(begin, begin + count, key);
-                result += static_cast<int>(range.second - range.first);
-            }else{
-                for(int i = 0; i < count; i++){
-                    if(block_value[static_cast<std::size_t>(node)][
-                        static_cast<std::size_t>(first + i)] == key
-                    ) result++;
+    void build(const std::vector<T>& sequence){
+        _n = static_cast<int>(sequence.size());
+        if(sequence.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (constructor).");
+        }
+        std::vector<U> current(sequence.size());
+        for(std::size_t index = 0; index < sequence.size(); index++){
+            current[index] = encode_checked(sequence[index], "library assertion fault: bit width violation (constructor).");
+        }
+        version_state.emplace_back();
+        for(int level = 0; level < BIT_WIDTH; level++){
+            std::vector<unsigned char> bits(current.size());
+            std::vector<U> next;
+            next.reserve(current.size());
+            int zeros = 0;
+            for(std::size_t index = 0; index < current.size(); index++){
+                const bool bit = bit_at(current[index], level);
+                bits[index] = static_cast<unsigned char>(bit);
+                if(!bit){
+                    next.push_back(current[index]);
+                    zeros++;
                 }
             }
-            l = block_end;
+            for(U value : current){
+                if(bit_at(value, level)) next.push_back(value);
+            }
+            version_state[0].root[static_cast<std::size_t>(level)] = bit_vector[static_cast<std::size_t>(level)].build(bits);
+            version_state[0].zero[static_cast<std::size_t>(level)] = zeros;
+            current = std::move(next);
         }
-        return result;
+        _versions = 1;
     }
 
 public:
     PersistentWaveletMatrix(): PersistentWaveletMatrix(std::vector<T>{}){}
-
-    explicit PersistentWaveletMatrix(const std::vector<T>& sequence):
-        _n(static_cast<int>(sequence.size())),
-        block_count((_n + BLOCK_SIZE - 1) / BLOCK_SIZE),
-        _versions(1){
-        if(sequence.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (constructor).");
-        }
-        std::array<int, block_count_max> initial_block{};
-        for(int block = 0; block < block_count; block++){
-            int node = new_block();
-            block_size[static_cast<std::size_t>(node)] = actual_block_size(block);
-            int first = block * BLOCK_SIZE;
-            for(int i = 0; i < block_size[static_cast<std::size_t>(node)]; i++){
-                block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(i)] =
-                    encode_checked(
-                        sequence[static_cast<std::size_t>(first + i)],
-                        "library assertion fault: bit width violation (constructor)."
-                    );
-            }
-            rebuild_block(node);
-            initial_block[static_cast<std::size_t>(block)] = node;
-        }
-        version_root[0] = block_reference.build(initial_block, block_count);
-    }
-
+    explicit PersistentWaveletMatrix(const std::vector<T>& sequence){ build(sequence); }
     template<std::size_t N>
     explicit PersistentWaveletMatrix(const std::array<T, N>& sequence):
         PersistentWaveletMatrix(std::vector<T>(sequence.begin(), sequence.end())){
@@ -212,81 +160,141 @@ public:
     T access(int version, int k) const{
         check_version(version, "library assertion fault: range violation (access).");
         check_index(k, "library assertion fault: range violation (access).");
-        int node = block_at(version, block_index(k));
-        return decode(block_value[static_cast<std::size_t>(node)][static_cast<std::size_t>(local_index(k))]);
+        U value = 0;
+        int position = k;
+        for(int level = 0; level < BIT_WIDTH; level++){
+            const std::size_t index = static_cast<std::size_t>(level);
+            const Root root = version_state[static_cast<std::size_t>(version)].root[index];
+            const bool bit = bit_vector[index].access(root, position).bit;
+            if(bit) value |= U{1} << (BIT_WIDTH - 1 - level);
+            const int ones_before = bit_vector[index].rank(root, true, position);
+            position = bit ? version_state[static_cast<std::size_t>(version)].zero[index] + ones_before : position - ones_before;
+        }
+        return decode(value);
     }
 
     int set(int version, int k, T value){
         check_version(version, "library assertion fault: range violation (set).");
         check_index(k, "library assertion fault: range violation (set).");
-        U encoded = encode_checked(value, "library assertion fault: bit width violation (set).");
+        const U encoded = encode_checked(value, "library assertion fault: bit width violation (set).");
         check_version_capacity();
-        int block_snapshot = block_nodes;
-        int reference_snapshot = block_reference.nodes_used();
-        int block = block_index(k);
+
+        const int next_version = _versions;
+        const VersionState base = version_state[static_cast<std::size_t>(version)];
+        version_state.push_back(base);
+        std::array<Snapshot, static_cast<std::size_t>(BIT_WIDTH)> snapshot{};
+        for(int level = 0; level < BIT_WIDTH; level++){
+            snapshot[static_cast<std::size_t>(level)] = bit_vector[static_cast<std::size_t>(level)].snapshot();
+        }
+        auto next_root = base.root;
+        auto next_zero = base.zero;
         try{
-            int node = copy_block(block_at(version, block));
-            block_value[static_cast<std::size_t>(node)][
-                static_cast<std::size_t>(local_index(k))] = encoded;
-            rebuild_block(node);
-            int root = block_reference.set(
-                version_root[static_cast<std::size_t>(version)], block, node
-            );
-            int next_version = _versions;
-            version_root[static_cast<std::size_t>(next_version)] = root;
-            _versions++;
-            return next_version;
+            int old_position = k;
+            for(int level = 0; level < BIT_WIDTH; level++){
+                const std::size_t index = static_cast<std::size_t>(level);
+                const Root root = next_root[index];
+                const bool old_bit = bit_vector[index].access(root, old_position).bit;
+                const int ones_before = bit_vector[index].rank(root, true, old_position);
+                const int next_position = old_bit ? next_zero[index] + ones_before : old_position - ones_before;
+                next_root[index] = bit_vector[index].erase(root, old_position).root;
+                if(!old_bit) next_zero[index]--;
+                old_position = next_position;
+            }
+            int new_position = k;
+            for(int level = 0; level < BIT_WIDTH; level++){
+                const std::size_t index = static_cast<std::size_t>(level);
+                const Root root = next_root[index];
+                const bool new_bit = bit_at(encoded, level);
+                const int ones_before = bit_vector[index].rank(root, true, new_position);
+                const int next_position = new_bit ? next_zero[index] + ones_before : new_position - ones_before;
+                next_root[index] = bit_vector[index].insert(root, new_position, new_bit);
+                if(!new_bit) next_zero[index]++;
+                new_position = next_position;
+            }
         }catch(...){
-            block_nodes = block_snapshot;
-            block_reference.rollback(reference_snapshot);
+            for(int level = 0; level < BIT_WIDTH; level++){
+                bit_vector[static_cast<std::size_t>(level)].rollback(snapshot[static_cast<std::size_t>(level)]);
+            }
+            version_state.pop_back();
             throw;
         }
+        version_state.back().root = next_root;
+        version_state.back().zero = next_zero;
+        _versions++;
+        return next_version;
     }
 
     int fork(int version){
         check_version(version, "library assertion fault: range violation (fork).");
         check_version_capacity();
-        int next_version = _versions;
-        version_root[static_cast<std::size_t>(next_version)] =
-            version_root[static_cast<std::size_t>(version)];
+        const int next_version = _versions;
+        const VersionState base = version_state[static_cast<std::size_t>(version)];
+        version_state.push_back(base);
         _versions++;
         return next_version;
     }
-
     int rank(int version, T value, int r) const{ return rank(version, value, 0, r); }
     int rank(int version, T value, int l, int r) const{
         check_version(version, "library assertion fault: range violation (rank).");
         check_range(l, r, "library assertion fault: range violation (rank).");
-        U key = encode(value);
+        const U key = encode(value);
         if(!fits(key)) return 0;
-        return count_equal_encoded(version, l, r, key);
+        for(int level = 0; level < BIT_WIDTH; level++){
+            const auto next = descend(version, level, l, r, bit_at(key, level));
+            l = next.first;
+            r = next.second;
+        }
+        return r - l;
     }
 
     int select(int version, T value, int k) const{
         check_version(version, "library assertion fault: range violation (select).");
-        if(k < 0)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (select).");
+        if(k < 0)[[unlikely]] throw std::runtime_error("library assertion fault: range violation (select).");
+        const U key = encode(value);
+        if(!fits(key)) return _n;
+        int left = 0;
+        int right = _n;
+        for(int level = 0; level < BIT_WIDTH; level++){
+            const auto next = descend(version, level, left, right, bit_at(key, level));
+            left = next.first;
+            right = next.second;
         }
-        if(rank(version, value, _n) <= k) return _n;
-        int low = 0, high = _n;
-        while(low < high){
-            int mid = low + (high - low) / 2;
-            if(rank(version, value, mid + 1) <= k) low = mid + 1;
-            else high = mid;
+        if(right - left <= k) return _n;
+        int position = left + k;
+        for(int level = BIT_WIDTH - 1; level >= 0; level--){
+            const bool bit = bit_at(key, level);
+            const int occurrence = bit ? position - version_state[static_cast<std::size_t>(version)].zero[static_cast<std::size_t>(level)] : position;
+            position = bit_vector[static_cast<std::size_t>(level)].select(
+                version_state[static_cast<std::size_t>(version)].root[static_cast<std::size_t>(level)],
+                bit,
+                occurrence
+            );
         }
-        return low;
+        return position;
     }
 
     T kth_smallest(int version, int l, int r, int k) const{
         check_version(version, "library assertion fault: range violation (kth_smallest).");
         check_range(l, r, "library assertion fault: range violation (kth_smallest).");
-        if(k < 0 || r - l <= k)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (kth_smallest).");
-        }
+        if(k < 0 || r - l <= k)[[unlikely]] throw std::runtime_error("library assertion fault: range violation (kth_smallest).");
         U value = 0;
-        for(int bit = BIT_WIDTH - 1; bit >= 0; bit--){
-            U candidate = value | (U{1} << bit);
-            if(count_less_encoded(version, l, r, candidate) <= k) value = candidate;
+        for(int level = 0; level < BIT_WIDTH; level++){
+            const std::size_t index = static_cast<std::size_t>(level);
+            const Root root = version_state[static_cast<std::size_t>(version)].root[index];
+            const auto rank = bit_vector[index].rank_pair(root, l, r);
+            const int zero_left = l - rank.ones_l;
+            const int zero_right = r - rank.ones_r;
+            const int zero_size = zero_right - zero_left;
+            if(k < zero_size){
+                l = zero_left;
+                r = zero_right;
+            }else{
+                value |= U{1} << (BIT_WIDTH - 1 - level);
+                k -= zero_size;
+                const int zeros = version_state[static_cast<std::size_t>(version)].zero[index];
+                l = zeros + rank.ones_l;
+                r = zeros + rank.ones_r;
+            }
         }
         return decode(value);
     }
@@ -294,9 +302,7 @@ public:
     T kth_largest(int version, int l, int r, int k) const{
         check_version(version, "library assertion fault: range violation (kth_largest).");
         check_range(l, r, "library assertion fault: range violation (kth_largest).");
-        if(k < 0 || r - l <= k)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (kth_largest).");
-        }
+        if(k < 0 || r - l <= k)[[unlikely]] throw std::runtime_error("library assertion fault: range violation (kth_largest).");
         return kth_smallest(version, l, r, r - l - 1 - k);
     }
 
@@ -309,20 +315,18 @@ public:
     int range_freq(int version, int l, int r, T lower, T upper) const{
         check_version(version, "library assertion fault: range violation (range_freq).");
         check_range(l, r, "library assertion fault: range violation (range_freq).");
-        if(upper < lower)[[unlikely]]{
-            throw std::runtime_error("library assertion fault: range violation (range_freq).");
-        }
+        if(upper < lower)[[unlikely]] throw std::runtime_error("library assertion fault: range violation (range_freq).");
         return count_less_value(version, l, r, upper) - count_less_value(version, l, r, lower);
     }
 
     std::optional<T> prev_value(int version, int l, int r, T upper) const{
-        int count = range_freq(version, l, r, upper);
+        const int count = range_freq(version, l, r, upper);
         if(count == 0) return std::nullopt;
         return kth_smallest(version, l, r, count - 1);
     }
 
     std::optional<T> next_value(int version, int l, int r, T lower) const{
-        int count = range_freq(version, l, r, lower);
+        const int count = range_freq(version, l, r, lower);
         if(count == r - l) return std::nullopt;
         return kth_smallest(version, l, r, count);
     }

@@ -3,60 +3,75 @@ title: Persistent Wavelet Matrix 2D (完全永続二次元ウェーブレット�
 documentation_of: ../../../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix_2d.hpp
 ---
 
-x座標を固定し、y座標を完全永続に更新できる2次元wavelet matrix。
+入力点の x 座標を固定し、y 座標を完全永続に点更新する二次元 Wavelet Matrix。
+点 id は入力順のまま保持し、x 座標で安定した検索順を内部に構築する。
 
-## 更新
-
-```cpp
-wm.set_y(version, k, y)
-wm.fork(version)
-```
-
-元の点番号 `k` のy座標を更新する。x座標は変えない。
-
-## クエリ
+## テンプレート引数
 
 ```cpp
-wm.rectangle_count(version, xl, xr, yl, yr)
-wm.range_freq(version, xl, xr, yl, yr)
-wm.kth_smallest_y(version, xl, xr, k)
-wm.prev_y(version, xl, xr, upper)
-wm.next_y(version, xl, xr, lower)
+PersistentWaveletMatrix2D<X, Y, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH>
 ```
 
-## 時間計算量
+`X`, `Y` は `bool` 以外の整数型。`MAX_SIZE` は点数、`MAX_VERSION` は version 作成回数の
+上限。`Y_BIT_WIDTH` は y 座標を表す bit 数で、省略時は `Y` の全 bit 数である。
 
-x 座標の範囲取得に $O(\log N)$、以降は `PersistentWaveletMatrix` と同じ。
-`set_y` は $O(B\log B + \log M)$、`fork` は $O(1)$。
-
-## 計算量（公開操作別）
-
-$B=\mathtt{BLOCK\_SIZE}$、$D=\mathtt{Y\_BIT\_WIDTH}$、$M=\lceil N/B\rceil$、
-$M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$ とする。
-x範囲に入る $L$ 点が触れるblock数を $C$ とし、
-$Q(L)=B+C(\log B+\log(M+1))$ とおく。
-
-- 3種類のconstructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSION}(B+\log(M_{max}+1))+N(\log N+\log B))$
-- `size`, `versions`, `latest_version`, `x`, `fork`: $O(1)$
-- `y`: $O(\log(M+1))$
-- `set_y`: $O(B\log B+\log(M+1))$
-- `rectangle_count`, `range_freq`: $O(\log N+Q(L))$
-- `kth_smallest_y`, `prev_y`, `next_y`: $O(\log N+DQ(L))$
-
-## 注意点
-
-点idは入力順、x座標は全versionで固定。`x(k)` はx、`y(version,k)` は指定versionのy。
-`set_y` は指定versionから新versionを返し、`fork` は同内容で分岐する。
-矩形は `[xl,xr) x [yl,yr)`、順序統計は0-indexed、前後値は該当なしなら `nullopt`。
-
-不正なversion・点・矩形・順序、vector長不一致、点数/version/block容量、yのbit幅では
-`runtime_error`。失敗した更新はversionと使用量を戻す。copyは禁止、moveは可能。
-各APIの計算量は上記表の通り。
-
-## Constructor signature
+## コンストラクタ
 
 ```cpp
 PersistentWaveletMatrix2D()
 PersistentWaveletMatrix2D(const vector<X>& xs, const vector<Y>& ys)
 PersistentWaveletMatrix2D(const vector<pair<X,Y>>& points)
 ```
+
+`xs[k]` と `ys[k]`、または `points[k]` を点 id `k` として version 0 を構築する。
+
+## バージョン・座標・更新
+
+```cpp
+int wm.size() const
+int wm.versions() const
+int wm.latest_version() const
+X wm.x(k) const
+Y wm.y(version, k) const
+int new_version = wm.set_y(version, k, y)
+int new_version = wm.fork(version)
+```
+
+`set_y` は任意の `version` の点 `k` の y 座標だけを更新する。`fork` は指定 version と同じ
+内容の新 version を作る。x 座標は全 version で不変である。
+
+## 矩形・順序クエリ
+
+```cpp
+int wm.rectangle_count(version, xl, xr, yl, yr) const
+int wm.range_freq(version, xl, xr, yl, yr) const
+Y wm.kth_smallest_y(version, xl, xr, k) const
+optional<Y> wm.prev_y(version, xl, xr, upper) const
+optional<Y> wm.next_y(version, xl, xr, lower) const
+```
+
+- `rectangle_count`, `range_freq`: `[xl,xr) × [yl,yr)` に含まれる点数を返す。
+- `kth_smallest_y`: x が `[xl,xr)` に入る点の y の 0-indexed な第 `k` 小要素を返す。
+- `prev_y`: 対象 x 範囲で `upper` 未満の最大 y。存在しなければ `nullopt`。
+- `next_y`: 対象 x 範囲で `lower` 以上の最小 y。存在しなければ `nullopt`。
+
+## 時間計算量
+
+`N = size()`、`D = Y_BIT_WIDTH`、version 数を `V`、実際の `set_y` 回数を `U` とする。
+
+- constructor: `O(N log N + D N)`
+- `size`, `versions`, `latest_version`, `x`: `O(1)`
+- `y`: `O(D log(N+1))`
+- `fork`: `O(D)`
+- `set_y`: `O(D log(N+1))`
+- `rectangle_count`, `range_freq`: `O(log(N+1) + D log(N+1))`
+- `kth_smallest_y`, `prev_y`, `next_y`: `O(log(N+1) + D log(N+1))`
+
+全メモリは `O(D N + U D log(N+1) + V D + N)`。
+
+## 注意点
+
+矩形は半開区間。点 id と順序統計は 0-indexed。作成済み version は後の更新で変化しない。
+不正な version・点・矩形・順序、vector 長不一致、点数・version 容量、y の bit 幅違反では
+`runtime_error`。失敗した更新は新 version を作らない。copy は禁止、move は可能。
+標準 C++20 で実装され、GCC 13 で利用できる。

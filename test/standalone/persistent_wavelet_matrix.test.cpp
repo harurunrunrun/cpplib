@@ -17,7 +17,7 @@ int main(){
     if(std::cin >> input_n >> input_q){
         std::vector<int> input(static_cast<std::size_t>(input_n));
         for(int& value: input) std::cin >> value;
-        PersistentWaveletMatrix<int, 128, 700, 32, 24> matrix(input);
+        PersistentWaveletMatrix<int, 128, 700, 32> matrix(input);
         auto print_optional = [](std::optional<int> value){
             if(value.has_value()){
                 std::cout << *value << '\n';
@@ -78,7 +78,7 @@ int main(){
     std::vector<int> initial(n);
     for(int& value: initial) value = static_cast<int>(rng() % 401) - 200;
 
-    PersistentWaveletMatrix<int, 220, max_version, 32, 24> persistent(initial);
+    PersistentWaveletMatrix<int, 220, max_version, 32> persistent(initial);
     std::vector<std::vector<int>> versions(1, initial);
 
     for(int q = 0; q < max_version; q++){
@@ -153,14 +153,14 @@ int main(){
     assert(persistent.versions() == static_cast<int>(versions.size()));
     assert(persistent.latest_version() == static_cast<int>(versions.size()) - 1);
 
-    PartiallyPersistentWaveletMatrix<int, 220, max_version, 32, 24> partial(initial);
+    PartiallyPersistentWaveletMatrix<int, 220, max_version, 32> partial(initial);
     std::vector<std::vector<int>> history(1, initial);
     for(int q = 0; q < max_version; q++){
         int k = static_cast<int>(rng() % n);
-        int value = static_cast<int>(rng() % 401) - 200;
+        int new_value = static_cast<int>(rng() % 401) - 200;
         auto next = history.back();
-        next[k] = value;
-        int version = partial.set(k, value);
+        next[k] = new_value;
+        int version = partial.set(k, new_value);
         history.push_back(std::move(next));
         assert(version == static_cast<int>(history.size()) - 1);
         assert(partial.latest_version() == version);
@@ -190,7 +190,7 @@ int main(){
     assert(partial.latest_version() == static_cast<int>(history.size()) - 1);
 
     std::vector<unsigned> small = {0, 1, 7, 3, 12, 31, 4, 8};
-    PersistentWaveletMatrix<unsigned, 16, 4, 5, 4> small_matrix(small);
+    PersistentWaveletMatrix<unsigned, 16, 4, 5> small_matrix(small);
     int small_version = small_matrix.set(0, 2, 15U);
     assert(small_matrix.access(0, 2) == 7U);
     assert(small_matrix.access(small_version, 2) == 15U);

@@ -34,7 +34,7 @@ int main(){
             );
         }
         PersistentWaveletMatrix2D<
-            int, int, 128, 700, 32, 20
+            int, int, 128, 700, 32
         > plain(input_points);
         PersistentWaveletMatrix2DWeighted<
             int, int, long long, 128, 700, 32, 20
@@ -130,7 +130,7 @@ int main(){
         weighted_points.emplace_back(xs[i], ys[i], weights[i]);
     }
 
-    PersistentWaveletMatrix2D<int, int, 160, max_version, 32, 20> plain(points);
+    PersistentWaveletMatrix2D<int, int, 160, max_version, 32> plain(points);
     PersistentWaveletMatrix2DWeighted<int, int, long long, 160, max_version, 32, 20> weighted(xs, ys, weights);
     PersistentRectangleSum<int, int, long long, 160, max_version, 32, 20> rectangle_sum(weighted_points);
     std::vector<std::vector<int>> y_versions(1, ys);
@@ -215,7 +215,7 @@ int main(){
     assert(weighted.latest_version() == static_cast<int>(y_versions.size()) - 1);
     assert(rectangle_sum.latest_version() == static_cast<int>(y_versions.size()) - 1);
 
-    PartiallyPersistentWaveletMatrix2D<int, int, 160, max_version, 32, 20> partial_plain(xs, ys);
+    PartiallyPersistentWaveletMatrix2D<int, int, 160, max_version, 32> partial_plain(xs, ys);
     PartiallyPersistentWaveletMatrix2DWeighted<int, int, long long, 160, max_version, 32, 20> partial_weighted(xs, ys, weights);
     PartiallyPersistentRectangleSum<int, int, long long, 160, max_version, 32, 20> partial_sum(weighted_points);
     std::vector<std::vector<int>> history_y(1, ys);
