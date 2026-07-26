@@ -7,7 +7,7 @@
 #include <set>
 #include <stdexcept>
 #include <string>
-#include "../../src/structure/tree/treap.hpp"
+#include "../../src/structure/tree/treap/treap.hpp"
 
 std::optional<int> kth_naive(const std::set<int>& s, int k){
     if(k < 0 || static_cast<int>(s.size()) <= k) return std::nullopt;

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/tree/incremental_tree_centroid.hpp"
+#include "../../src/structure/tree/centroid/incremental_tree_centroid.hpp"
 
 using Tree = IncrementalTreeCentroid<200000>;
 

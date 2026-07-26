@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://br.spoj.com/SPOJ/problems/QTREE5/
 
 #include <iostream>
-#include "../../src/structure/tree/nearest_marked_tree_queries.hpp"
+#include "../../src/structure/tree/centroid/nearest_marked_tree_queries.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

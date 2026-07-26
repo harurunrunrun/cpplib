@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://www.spoj.com/problems/QTREE4/
 
 #include <iostream>
-#include "../../src/structure/tree/marked_tree_diameter_queries.hpp"
+#include "../../src/structure/tree/centroid/marked_tree_diameter_queries.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

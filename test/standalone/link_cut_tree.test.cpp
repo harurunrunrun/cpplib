@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/structure/tree/link_cut_tree.hpp"
+#include "../../src/structure/tree/dynamic_forest/link_cut_tree.hpp"
 #include "../../src/structure/types/monoid.hpp"
 
 long long add_ll(long long a, long long b){ return a + b; }

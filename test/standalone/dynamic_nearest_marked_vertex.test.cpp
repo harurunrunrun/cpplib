@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/structure/tree/dynamic_nearest_marked_vertex.hpp"
+#include "../../src/structure/tree/centroid/dynamic_nearest_marked_vertex.hpp"
 
 namespace{
 

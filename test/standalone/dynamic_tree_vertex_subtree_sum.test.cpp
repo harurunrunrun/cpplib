@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/tree/dynamic_tree_vertex_subtree_sum.hpp"
+#include "../../src/structure/tree/query/dynamic_tree_vertex_subtree_sum.hpp"
 
 void self_test(){
     const std::vector<long long> values = {2, -1, 4, 3, 5};

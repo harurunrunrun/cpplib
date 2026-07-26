@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/tree/compressed_ordered_set.hpp"
+#include "../../src/structure/ordered_set/compressed_ordered_set.hpp"
 
 void self_test(){
     CompressedOrderedSet<int, 4> set({40, 10, 30, 20}, {20, 40, 20});

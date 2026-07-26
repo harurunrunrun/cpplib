@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include "../../src/structure/tree/dynamic_forest_connectivity.hpp"
+#include "../../src/structure/tree/dynamic_forest/dynamic_forest_connectivity.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

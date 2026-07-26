@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/tree/dynamic_monochromatic_tree.hpp"
+#include "../../src/structure/tree/query/dynamic_monochromatic_tree.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 using Value = long long;

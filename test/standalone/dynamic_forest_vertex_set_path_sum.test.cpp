@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/tree/dynamic_forest_vertex_set_path_sum.hpp"
+#include "../../src/structure/tree/dynamic_forest/dynamic_forest_vertex_set_path_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

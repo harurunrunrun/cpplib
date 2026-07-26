@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://br.spoj.com/SPOJ/problems/QTREE7/
 
 #include <iostream>
-#include "../../src/structure/tree/monochromatic_component_max_tree.hpp"
+#include "../../src/structure/tree/query/monochromatic_component_max_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

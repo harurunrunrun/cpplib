@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../tree/link_cut_tree.hpp"
+#include "../tree/dynamic_forest/link_cut_tree.hpp"
 
 namespace incremental_component_affine_internal{
 

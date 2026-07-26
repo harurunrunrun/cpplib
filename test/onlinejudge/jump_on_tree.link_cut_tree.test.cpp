@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/tree/link_cut_tree.hpp"
+#include "../../src/structure/tree/dynamic_forest/link_cut_tree.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 

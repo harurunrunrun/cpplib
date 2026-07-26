@@ -32,6 +32,10 @@ ALLOWED_STRUCTURE_CATEGORIES = frozenset({
     "wavelet_matrix",
 })
 
+NESTED_STRUCTURE_CATEGORIES = {
+    "tree": frozenset({"centroid", "dynamic_forest", "query", "treap"}),
+}
+
 FLAT_STRUCTURE_CATEGORIES = frozenset({
     "bit",
     "fenwick_tree",
@@ -81,7 +85,42 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "static_range_sum_sqrt_tree": "range_query",
     "threshold_updated_indexed_multiset": "ordered_set",
     "xor_basis": "bit",
+    "centroid_distance_index": "tree/centroid",
+    "compressed_ordered_set": "ordered_set",
+    "dynamic_forest_connectivity": "tree/dynamic_forest",
+    "dynamic_forest_vertex_add_path_sum": "tree/dynamic_forest",
+    "dynamic_forest_vertex_set_path_sum": "tree/dynamic_forest",
+    "dynamic_marked_tree_diameter": "tree/centroid",
+    "dynamic_monochromatic_tree": "tree/query",
+    "dynamic_nearest_marked_vertex": "tree/centroid",
+    "dynamic_tree_edge_path_sum": "tree/query",
+    "dynamic_tree_vertex_path_sum": "tree/query",
+    "dynamic_tree_vertex_subtree_sum": "tree/query",
+    "implicit_treap": "tree/treap",
+    "implicit_treap_deque": "tree/treap",
+    "incremental_tree_centroid": "tree/centroid",
+    "integer_set": "ordered_set",
+    "lazy_link_cut_tree": "tree/dynamic_forest",
+    "lazy_top_tree": "tree/dynamic_forest",
+    "link_cut_tree": "tree/dynamic_forest",
+    "marked_tree_diameter_queries": "tree/centroid",
+    "monochromatic_component_max_tree": "tree/query",
+    "monochromatic_component_size_tree": "tree/query",
+    "nearest_marked_tree_queries": "tree/centroid",
+    "root_path_first_marked": "tree/query",
+    "subtree_add_sum_minimum_tree": "tree/query",
+    "top_tree": "tree/dynamic_forest",
+    "top_tree_internal": "tree/dynamic_forest",
+    "treap": "tree/treap",
+    "tree_edge_point_set_path_maximum": "tree/query",
+    "tree_path_assign_max_subarray": "tree/query",
 }
+
+RECLASSIFIED_TREE_STEMS = frozenset({
+    stem
+    for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
+    if category.startswith("tree/")
+}) | frozenset({"compressed_ordered_set", "integer_set"})
 
 ALGORITHM_EXCEPTIONS = {
     "incremental_interval_scheduling": Path(
@@ -145,6 +184,35 @@ def check_layout(root: Path) -> list[str]:
                             f"{relative(path, root)}: {category.name} must not have subcategories"
                         )
 
+    for family, allowed_subcategories in NESTED_STRUCTURE_CATEGORIES.items():
+        for base, suffix, label in (
+            (source_root, ".hpp", "header"),
+            (docs_root, ".md", "documentation"),
+        ):
+            family_root = base / family
+            if not family_root.is_dir():
+                continue
+            for path in sorted(family_root.glob(f"*{suffix}")):
+                violations.append(
+                    f"{relative(path, root)}: structure {label} must be in a {family} subcategory"
+                )
+            for subcategory in sorted(
+                path for path in family_root.iterdir() if path.is_dir()
+            ):
+                files = public_files(subcategory, suffix)
+                if not files:
+                    continue
+                if subcategory.name not in allowed_subcategories:
+                    violations.append(
+                        f"{relative(subcategory, root)}: unknown {family} subcategory"
+                    )
+                    continue
+                for path in files:
+                    if path.parent != subcategory:
+                        violations.append(
+                            f"{relative(path, root)}: {family}/{subcategory.name} must not have nested subcategories"
+                        )
+
     for stem, category in EXPECTED_STRUCTURE_CATEGORY.items():
         expected_header = source_root / category / f"{stem}.hpp"
         for path in sorted((root / "src").rglob(f"{stem}.hpp")):
@@ -190,8 +258,16 @@ def check_layout(root: Path) -> list[str]:
             except UnicodeDecodeError:
                 continue
             legacy_references = [LEGACY_STRUCTURE_REFERENCE]
+            legacy_references.extend(
+                f"structure/tree/{stem}.hpp"
+                for stem in RECLASSIFIED_TREE_STEMS
+            )
             if path.is_relative_to(source_root):
                 legacy_references.append(LEGACY_RELATIVE_STRUCTURE_REFERENCE)
+                legacy_references.extend(
+                    f"../tree/{stem}.hpp"
+                    for stem in RECLASSIFIED_TREE_STEMS
+                )
             for legacy_reference in legacy_references:
                 if legacy_reference in text:
                     violations.append(

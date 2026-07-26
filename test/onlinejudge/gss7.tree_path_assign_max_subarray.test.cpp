@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/structure/tree/tree_path_assign_max_subarray.hpp"
+#include "../../src/structure/tree/query/tree_path_assign_max_subarray.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

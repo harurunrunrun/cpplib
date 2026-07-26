@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../src/structure/tree/lazy_link_cut_tree.hpp"
+#include "../../src/structure/tree/dynamic_forest/lazy_link_cut_tree.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr AssignMaxSubarrayMonoidAct<long long> max_subarray_assignment{};

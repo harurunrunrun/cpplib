@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "../../src/structure/io/fastio.hpp"
-#include "../../src/structure/tree/implicit_treap.hpp"
+#include "../../src/structure/tree/treap/implicit_treap.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 

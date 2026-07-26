@@ -6,7 +6,7 @@
 #include <string>
 
 #include "../../src/structure/io/fastio.hpp"
-#include "../../src/structure/tree/integer_set.hpp"
+#include "../../src/structure/ordered_set/integer_set.hpp"
 
 using namespace std;
 

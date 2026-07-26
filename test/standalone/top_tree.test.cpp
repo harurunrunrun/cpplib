@@ -8,8 +8,8 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/structure/tree/top_tree_internal.hpp"
-#include "../../src/structure/tree/top_tree.hpp"
+#include "../../src/structure/tree/dynamic_forest/top_tree_internal.hpp"
+#include "../../src/structure/tree/dynamic_forest/top_tree.hpp"
 #include "../../src/structure/types/monoid.hpp"
 
 long long add_ll(long long a, long long b){ return a + b; }

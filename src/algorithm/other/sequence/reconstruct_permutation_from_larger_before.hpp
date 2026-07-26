@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../../structure/tree/integer_set.hpp"
+#include "../../../structure/ordered_set/integer_set.hpp"
 
 template<int MAX_SIZE = 200000>
 std::vector<int> reconstruct_permutation_from_larger_before(

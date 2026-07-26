@@ -35,6 +35,10 @@ class CheckStructureLayoutTest(unittest.TestCase):
             "docs/algorithm/other/scheduling/incremental_interval_scheduling.md"
         )
         self.write("src/structure/segtree/basic/lazysegtree.hpp")
+        self.write("src/structure/tree/dynamic_forest/link_cut_tree.hpp")
+        self.write("docs/structure/tree/dynamic_forest/link_cut_tree.md")
+        self.write("src/structure/ordered_set/integer_set.hpp")
+        self.write("docs/structure/ordered_set/integer_set.md")
         self.assertEqual(self.messages(), [])
 
     def test_legacy_other_header_and_document_are_rejected(self) -> None:
@@ -59,6 +63,22 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("src/structure/heap/sparse_table.hpp")
         self.assertTrue(any("expected src/structure/range_query" in item for item in self.messages()))
 
+    def test_tree_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/tree/link_cut_tree.hpp")
+        self.assertTrue(any("tree subcategory" in item for item in self.messages()))
+
+    def test_unknown_tree_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/tree/misc/example.hpp")
+        self.assertTrue(any("unknown tree subcategory" in item for item in self.messages()))
+
+    def test_tree_subcategory_cannot_be_split_further(self) -> None:
+        self.write("src/structure/tree/query/static/example.hpp")
+        self.assertTrue(any("must not have nested subcategories" in item for item in self.messages()))
+
+    def test_tree_header_in_wrong_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/tree/query/link_cut_tree.hpp")
+        self.assertTrue(any("expected src/structure/tree/dynamic_forest" in item for item in self.messages()))
+
     def test_algorithm_exception_in_structure_is_rejected(self) -> None:
         self.write("src/structure/interval/incremental_interval_scheduling.hpp")
         self.assertTrue(any("expected src/algorithm/other/scheduling" in item for item in self.messages()))
@@ -67,6 +87,20 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write(
             "test/standalone/example.test.cpp",
             '#include "../../src/structure/other/sparse_table.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_legacy_tree_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/tree.test.cpp",
+            '#include "../../src/structure/tree/link_cut_tree.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_relative_legacy_tree_include_is_rejected(self) -> None:
+        self.write(
+            "src/structure/dsu/example.hpp",
+            '#include "../tree/link_cut_tree.hpp"\n',
         )
         self.assertTrue(any("legacy reference" in item for item in self.messages()))
 

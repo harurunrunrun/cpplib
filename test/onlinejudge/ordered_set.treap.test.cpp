@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/ordered_set
 
 #include "../../src/structure/io/fastio.hpp"
-#include "../../src/structure/tree/treap.hpp"
+#include "../../src/structure/tree/treap/treap.hpp"
 
 int main(){
     fastio io;

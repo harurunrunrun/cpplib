@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/structure/tree/implicit_treap_deque.hpp"
+#include "../../src/structure/tree/treap/implicit_treap_deque.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 void self_test(){

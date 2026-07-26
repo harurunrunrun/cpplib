@@ -12,8 +12,8 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include "../../tree/implicit_treap.hpp"
-#include "../../tree/treap.hpp"
+#include "../../tree/treap/implicit_treap.hpp"
+#include "../../tree/treap/treap.hpp"
 #include "dynamic_weighted_wavelet_matrix.hpp"
 
 template<class X, class Y, class W, int MAX_SIZE,

@@ -7,7 +7,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/tree/implicit_treap.hpp"
+#include "../../src/structure/tree/treap/implicit_treap.hpp"
 #include "../../src/structure/types/monoid.hpp"
 
 long long add_ll(long long a, long long b){ return a + b; }

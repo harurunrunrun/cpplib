@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/structure/tree/lazy_link_cut_tree.hpp"
+#include "../../src/structure/tree/dynamic_forest/lazy_link_cut_tree.hpp"
 #include "../../src/structure/types/monoid_act_len.hpp"
 
 long long op_sum(long long a, long long, long long b, long long){ return a + b; }

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/tree/subtree_add_sum_minimum_tree.hpp"
+#include "../../src/structure/tree/query/subtree_add_sum_minimum_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

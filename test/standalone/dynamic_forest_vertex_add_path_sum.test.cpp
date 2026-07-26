@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/tree/dynamic_forest_vertex_add_path_sum.hpp"
+#include "../../src/structure/tree/dynamic_forest/dynamic_forest_vertex_add_path_sum.hpp"
 
 namespace{
 

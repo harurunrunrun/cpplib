@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/structure/tree/tree_edge_point_set_path_maximum.hpp"
+#include "../../src/structure/tree/query/tree_edge_point_set_path_maximum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

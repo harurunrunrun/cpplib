@@ -11,8 +11,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/tree/lazy_link_cut_tree.hpp"
-#include "../../src/structure/tree/link_cut_tree.hpp"
+#include "../../src/structure/tree/dynamic_forest/lazy_link_cut_tree.hpp"
+#include "../../src/structure/tree/dynamic_forest/link_cut_tree.hpp"
 #include "../../src/structure/types/monoid.hpp"
 #include "../../src/structure/types/monoid_act_len.hpp"
 

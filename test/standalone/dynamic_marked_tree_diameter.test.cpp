@@ -12,8 +12,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/tree/centroid_distance_index.hpp"
-#include "../../src/structure/tree/dynamic_marked_tree_diameter.hpp"
+#include "../../src/structure/tree/centroid/centroid_distance_index.hpp"
+#include "../../src/structure/tree/centroid/dynamic_marked_tree_diameter.hpp"
 
 using Distance = long long;
 

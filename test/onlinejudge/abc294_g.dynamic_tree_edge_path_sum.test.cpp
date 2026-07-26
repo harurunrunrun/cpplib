@@ -4,7 +4,7 @@
 #include <tuple>
 #include <vector>
 
-#include "../../src/structure/tree/dynamic_tree_edge_path_sum.hpp"
+#include "../../src/structure/tree/query/dynamic_tree_edge_path_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

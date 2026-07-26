@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://www.spoj.com/problems/QTREE3/
 
 #include <iostream>
-#include "../../src/structure/tree/root_path_first_marked.hpp"
+#include "../../src/structure/tree/query/root_path_first_marked.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
