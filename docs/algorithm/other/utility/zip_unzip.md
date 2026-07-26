@@ -1,0 +1,34 @@
+---
+title: Zip Unzip (圧縮・展開)
+documentation_of: ../../../../src/algorithm/other/utility/zip_unzip.hpp
+---
+
+配列をソースコードに埋め込みやすい形にするための run-length zip/unzip。
+
+## 関数
+
+```cpp
+run_length_zip(data)
+run_length_unzip(data)
+```
+
+`run_length_zip` は連続する同じ値を `(value, count)` にまとめる。
+
+## 時間計算量
+
+- $O(N)$
+
+## API別の時間計算量・空間計算量
+
+$N$ を展開後の要素数、$R$ をrun数とする。
+
+| API | 時間計算量 | 出力領域 |
+| --- | --- | --- |
+| `run_length_zip(data)` | $O(N)$ | $O(R)$ |
+| `run_length_unzip(data)` | $O(R+N)$ | $O(N)$ |
+
+`run_length_unzip` は最初に全 $R$ runの長さを検査し、その後 $N$ 要素を列挙する。
+
+## 注意点
+
+空入力、退化入力、範囲外のindexと容量超過の扱いは各APIの説明に従う。参照・iterator・callbackを受け渡すAPIでは、変更可否とobjectの寿命を守る。

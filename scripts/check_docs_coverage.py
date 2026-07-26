@@ -28,6 +28,29 @@ def library_headers(source: Path) -> set[Path]:
     }
 
 
+def documentation_files(docs: Path) -> list[Path]:
+    """Return every Markdown document below *docs* in stable order."""
+
+    return sorted(
+        (path for path in docs.rglob("*.md") if path.is_file()),
+        key=lambda path: path.as_posix(),
+    )
+
+
+def expected_documentation_path(
+    target: Path,
+    source: Path,
+    docs: Path,
+) -> Path | None:
+    """Return the source-mirroring documentation path for *target*."""
+
+    try:
+        relative = target.resolve().relative_to(source.resolve())
+    except ValueError:
+        return None
+    return (docs.resolve() / relative).with_suffix(".md")
+
+
 def documentation_target(path: Path) -> tuple[Path | None, list[str]]:
     """Read the unique ``documentation_of`` target from one Markdown file."""
 
@@ -124,7 +147,7 @@ def main() -> int:
     if not docs.is_dir():
         errors.append(f"{display(docs, root)}: docs directory does not exist")
 
-    markdown_files = sorted(docs.rglob("*.md"), key=lambda path: path.as_posix())
+    markdown_files = documentation_files(docs)
     for path in markdown_files:
         target, target_errors = documentation_target(path)
         errors.extend(f"{display(path, root)}: {error}" for error in target_errors)
@@ -133,6 +156,12 @@ def main() -> int:
         )
         if target is not None:
             mappings[target].append(path.resolve())
+            expected = expected_documentation_path(target, source, docs)
+            if expected is not None and path.resolve() != expected:
+                errors.append(
+                    f"{display(path, root)}: documentation path must mirror "
+                    f"the source path: {display(expected, root)}"
+                )
 
     for header in sorted(headers - mappings.keys(), key=lambda path: path.as_posix()):
         errors.append(f"{display(header, root)}: documentation is missing")

@@ -212,6 +212,7 @@ docs-title-check: no-boost-dependency-check
 	$(PYTHON) scripts/docs_problem_tags.py docs test/onlinejudge
 
 docs-coverage-check:
+	$(PYTHON) scripts/test_check_docs_coverage.py
 	$(PYTHON) scripts/test_check_docs_markdown.py
 	$(PYTHON) scripts/check_docs_markdown.py docs
 	$(PYTHON) scripts/check_docs_coverage.py src docs
