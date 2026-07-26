@@ -3,6 +3,10 @@ title: Hemisphere Containment (半球包含判定)
 documentation_of: ../../../../src/algorithm/geometry/3d/points_in_hemisphere.hpp
 ---
 
+このheaderは `points_in_hemisphere_default.hpp` と
+`points_in_hemisphere_with_seed.hpp` をまとめて読み込む後方互換aggregatorである。
+利用経路が一つなら対応するleafを直接includeできる。
+
 ## API
 
 ```cpp

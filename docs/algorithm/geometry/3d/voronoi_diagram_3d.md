@@ -5,6 +5,10 @@ documentation_of: ../../../../src/algorithm/geometry/3d/voronoi_diagram_3d.hpp
 
 三次元Delaunay四面体分割の双対として、描画・包含処理に使えるVoronoi図を構築する。
 
+このheaderは `voronoi_diagram_3d_default.hpp` と
+`voronoi_diagram_3d_randomized.hpp` をまとめて読み込む後方互換aggregatorである。
+利用経路が一つなら対応するleafを直接includeできる。
+
 ## API
 
 - `voronoi_diagram_3d(points)`: `long double` の3座標が完全一致する外心を

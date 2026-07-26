@@ -11,6 +11,12 @@
 #include <random>
 #include <vector>
 
+#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_detail.hpp"
+#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_four_points.hpp"
+#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_one_point.hpp"
+#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_points.hpp"
+#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_three_points.hpp"
+#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_two_points.hpp"
 #include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere.hpp"
 
 namespace{
@@ -93,8 +99,11 @@ int main(){
         {10, 10, 7}, {14, 10, 7}, {14, 14, 7}, {10, 14, 7}, {12, 12, 7},
     }};
     const Sphere3 square = minimum_enclosing_sphere(coplanar, seed);
+    const Sphere3 square_default = minimum_enclosing_sphere(coplanar);
     if(!close_point(square.center, {12, 12, 7}) ||
-       !close_value(square.radius, std::sqrt(8.0L))) return 1;
+       !close_value(square.radius, std::sqrt(8.0L)) ||
+       !close_point(square_default.center, square.center) ||
+       !close_value(square_default.radius, square.radius)) return 1;
 
     const std::vector<Point3> degenerate{{
         {5, 6, 7}, {5, 6, 7}, {7, 6, 7}, {11, 6, 7}, {9, 6, 7},

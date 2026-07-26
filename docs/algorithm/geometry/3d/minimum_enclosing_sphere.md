@@ -6,6 +6,14 @@ documentation_of: ../../../../src/algorithm/geometry/3d/minimum_enclosing_sphere
 有限な三次元点集合をすべて含む半径最小の閉球を求める。1〜4点のoverloadは
 support球を定数時間で求め、vector overloadはそれらを使う乱択増分法を実行する。
 
+このheaderは1点・2点・3点・4点・vector入力の公開leafをまとめて読み込む
+後方互換aggregatorである。必要な引数種別だけを使う場合は
+`minimum_enclosing_sphere_one_point.hpp`、
+`minimum_enclosing_sphere_two_points.hpp`、
+`minimum_enclosing_sphere_three_points.hpp`、
+`minimum_enclosing_sphere_four_points.hpp`、
+`minimum_enclosing_sphere_points.hpp` の対応leafを直接includeできる。
+
 ## API
 
 - `minimum_enclosing_sphere(point)`: 1点の最小包含球を返す。

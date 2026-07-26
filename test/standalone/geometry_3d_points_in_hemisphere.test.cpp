@@ -8,6 +8,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include "../../src/algorithm/geometry/3d/points_in_hemisphere_default.hpp"
+#include "../../src/algorithm/geometry/3d/points_in_hemisphere_detail.hpp"
+#include "../../src/algorithm/geometry/3d/points_in_hemisphere_with_seed.hpp"
 #include "../../src/algorithm/geometry/3d/points_in_hemisphere.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

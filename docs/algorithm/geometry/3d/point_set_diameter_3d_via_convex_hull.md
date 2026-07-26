@@ -6,6 +6,10 @@ documentation_of: ../../../../src/algorithm/geometry/3d/point_set_diameter_3d_vi
 三次元点集合の凸包を先に構築して内点・面内部点・辺上内部点を除き、残った極点を
 AABB分枝限定法で調べる。返す直径は厳密であり、近似は行わない。
 
+このheaderは `point_set_diameter_3d_via_convex_hull_default.hpp` と
+`point_set_diameter_3d_via_convex_hull_with_seed.hpp` をまとめて読み込む
+後方互換aggregatorである。利用経路が一つなら対応するleafを直接includeできる。
+
 ## API
 
 - `point_set_diameter_3d_via_convex_hull(points)`: 再現可能な固定seedで凸包を構築し、

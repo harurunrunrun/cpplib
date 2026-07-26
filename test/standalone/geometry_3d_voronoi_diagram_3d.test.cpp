@@ -11,6 +11,9 @@
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
 #include "../../src/algorithm/geometry/3d/dot.hpp"
 #include "../../src/algorithm/geometry/3d/three_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/voronoi_diagram_3d_default.hpp"
+#include "../../src/algorithm/geometry/3d/voronoi_diagram_3d_detail.hpp"
+#include "../../src/algorithm/geometry/3d/voronoi_diagram_3d_randomized.hpp"
 #include "../../src/algorithm/geometry/3d/voronoi_diagram_3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
