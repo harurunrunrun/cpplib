@@ -1,9 +1,24 @@
 ---
-title: Convex Polygon Diameter (凸多角形の直径) [CGL_4_B]
+title: Convex Polygon Diameter Aggregator (凸多角形の直径集約ヘッダ) [CGL_4_B]
 documentation_of: ../../../../src/algorithm/geometry/2d/convex_polygon_diameter.hpp
 ---
 
-凸多角形の最遠点対と直径。
+凸多角形の直径に関する型と2種類の入力APIをまとめて読み込む互換集約ヘッダ。
+既存の `#include` はそのまま利用できる。
+
+## 構成
+
+| leaf header | 提供するAPI |
+| --- | --- |
+| `convex_polygon_diameter_result.hpp` | `ConvexPolygonDiameterResult` |
+| `convex_polygon_diameter_normalized.hpp` | 正規化済み凸多角形を受け取る overload |
+| `convex_polygon_diameter_points.hpp` | `vector<Point>` を受け取る overload |
+
+依存を最小にしたい場合は、必要なleaf headerだけを直接includeする。
+
+## 集約されるAPI
+
+凸多角形の最遠点対と直径を返す。
 
 ```cpp
 #include "src/algorithm/geometry/2d/convex_polygon_diameter.hpp"

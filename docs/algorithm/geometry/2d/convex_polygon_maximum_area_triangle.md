@@ -1,9 +1,24 @@
 ---
-title: Convex Polygon Maximum Area Triangle (凸多角形内の最大面積三角形)
+title: Convex Polygon Maximum Area Triangle Aggregator (凸多角形内の最大面積三角形集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle.hpp
 ---
 
-凸多角形の頂点から選べる最大面積三角形。
+凸多角形内の最大面積三角形に関する型と2種類の入力APIをまとめて読み込む
+互換集約ヘッダ。既存の `#include` はそのまま利用できる。
+
+## 構成
+
+| leaf header | 提供するAPI |
+| --- | --- |
+| `convex_polygon_maximum_area_triangle_result.hpp` | `ConvexPolygonMaximumAreaTriangleResult` |
+| `convex_polygon_maximum_area_triangle_normalized.hpp` | 正規化済み凸多角形を受け取る overload |
+| `convex_polygon_maximum_area_triangle_points.hpp` | `vector<Point>` を受け取る overload |
+
+依存を最小にしたい場合は、必要なleaf headerだけを直接includeする。
+
+## 集約されるAPI
+
+凸多角形の頂点から選べる最大面積三角形を返す。
 
 ```cpp
 #include "src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle.hpp"
