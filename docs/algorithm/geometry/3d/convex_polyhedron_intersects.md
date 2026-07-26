@@ -3,6 +3,9 @@ title: Convex Polyhedron Intersects (凸多面体同士の交差判定)
 documentation_of: ../../../../src/algorithm/geometry/3d/convex_polyhedron_intersects.hpp
 ---
 
+このheaderはGJK版・乱択厳密版・seed指定厳密版・厳密SAT版のleafをまとめる
+後方互換aggregatorである。新規コードでは必要な判定法のleafだけをincludeできる。
+
 ## API
 
 ```cpp

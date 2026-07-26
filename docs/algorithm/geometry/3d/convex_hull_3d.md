@@ -3,6 +3,9 @@ title: 3D Convex Hull (三次元凸包)
 documentation_of: ../../../../src/algorithm/geometry/3d/convex_hull_3d.hpp
 ---
 
+このheaderは `convex_hull_3d_default.hpp` と `convex_hull_3d_with_seed.hpp`
+をまとめてincludeする後方互換aggregatorである。新規コードでは必要なleafだけをincludeできる。
+
 ## API
 
 ```cpp

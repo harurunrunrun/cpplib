@@ -11,6 +11,11 @@
 #include <string>
 #include <vector>
 
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersects_default.hpp"
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersects_detail.hpp"
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersects_exact.hpp"
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersects_exact_sat.hpp"
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersects_exact_with_seed.hpp"
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_intersects.hpp"
 
 namespace{

@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_diameter_aabb_branch_and_bound.hpp"
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_diameter_default.hpp"
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_diameter.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_convex_polyhedron_test_common.hpp"

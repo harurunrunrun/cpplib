@@ -3,6 +3,9 @@ title: Convex Polyhedron Diameter (凸多面体の直径)
 documentation_of: ../../../../src/algorithm/geometry/3d/convex_polyhedron_diameter.hpp
 ---
 
+このheaderは全頂点対走査版とAABB分枝限定版のleafをまとめる後方互換aggregatorである。
+新規コードでは必要な計算法のleafだけをincludeできる。
+
 凸多面体のEuclidean直径を、直径を達成する頂点対とともに求める。
 
 ## API

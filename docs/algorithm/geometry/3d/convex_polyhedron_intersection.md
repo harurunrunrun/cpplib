@@ -3,6 +3,9 @@ title: Convex Polyhedron Intersection (凸多面体同士の共通部分)
 documentation_of: ../../../../src/algorithm/geometry/3d/convex_polyhedron_intersection.hpp
 ---
 
+このheaderは候補点列挙版・半空間版・狭義内点付き半空間版のleafをまとめる
+後方互換aggregatorである。新規コードでは必要な構築法のleafだけをincludeできる。
+
 外向き三角形面で表された二つの凸多面体の共通部分を
 `ConvexPolyhedron3` として返す。
 

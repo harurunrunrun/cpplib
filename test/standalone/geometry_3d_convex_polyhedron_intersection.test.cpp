@@ -9,6 +9,10 @@
 #include <vector>
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_point_distance.hpp"
 
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersection_default.hpp"
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersection_detail.hpp"
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersection_via_halfspaces.hpp"
+#include "../../src/algorithm/geometry/3d/convex_polyhedron_intersection_with_interior_point.hpp"
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_intersection.hpp"
 #include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
 #include "geometry_3d_api_test_common.hpp"
