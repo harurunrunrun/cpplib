@@ -1,12 +1,12 @@
-#ifndef CPPLIB_SRC_ALGORITHM_INTEGER_GEOMETRY_CONVEX_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_INTEGER_GEOMETRY_CONVEX_HPP_INCLUDED
+#ifndef CPPLIB_SRC_INTEGER_GEOMETRY_2D_CONVEX_HPP_INCLUDED
+#define CPPLIB_SRC_INTEGER_GEOMETRY_2D_CONVEX_HPP_INCLUDED
 
 #include <algorithm>
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
-#include <vector>
 #include <utility>
+#include <vector>
 
 #include "polygon.hpp"
 
@@ -16,14 +16,11 @@ inline std::vector<Point> convex_hull(std::vector<Point> points){
     std::sort(points.begin(), points.end());
     points.erase(std::unique(points.begin(), points.end()), points.end());
     if(points.size() <= 1) return points;
-
-    if(points.size()
-        > std::numeric_limits<std::size_t>::max() / 2)[[unlikely]]{
-        throw std::length_error(
-            "integer geometry convex hull input is too large"
-        );
+    if(points.size() > std::numeric_limits<std::size_t>::max() / 2){
+        throw std::length_error("integer geometry convex hull is too large");
     }
-    std::vector<Point> hull(2 * points.size());
+
+    std::vector<Point> hull(points.size() * 2);
     std::size_t size = 0;
     for(const Point& point: points){
         while(size >= 2
@@ -47,7 +44,7 @@ inline std::vector<Point> convex_hull(std::vector<Point> points){
 
 inline bool is_convex(const std::vector<Point>& polygon, bool strict = false){
     if(polygon.size() < 3) return false;
-    int direction = 0;
+    int direction_sign = 0;
     for(std::size_t index = 0; index < polygon.size(); ++index){
         const int turn = orientation(
             polygon[index],
@@ -58,30 +55,14 @@ inline bool is_convex(const std::vector<Point>& polygon, bool strict = false){
             if(strict) return false;
             continue;
         }
-        if(direction != 0 && direction != turn) return false;
-        direction = turn;
+        if(direction_sign != 0 && direction_sign != turn) return false;
+        direction_sign = turn;
     }
-    return direction != 0;
+    return direction_sign != 0;
 }
-
-namespace detail{
-
-inline Point checked_point(Wide x, Wide y){
-    constexpr Wide minimum = std::numeric_limits<Coordinate>::min();
-    constexpr Wide maximum = std::numeric_limits<Coordinate>::max();
-    if(x < minimum || maximum < x || y < minimum || maximum < y){
-        throw std::overflow_error("integer geometry coordinate overflow");
-    }
-    return {static_cast<Coordinate>(x), static_cast<Coordinate>(y)};
-}
-}  // namespace detail
-
 
 inline Point add_points(const Point& first, const Point& second){
-    return detail::checked_point(
-        static_cast<Wide>(first.x) + static_cast<Wide>(second.x),
-        static_cast<Wide>(first.y) + static_cast<Wide>(second.y)
-    );
+    return {first.x + second.x, first.y + second.y};
 }
 
 namespace detail{
@@ -98,21 +79,18 @@ inline void canonicalize_convex_polygon(std::vector<Point>& polygon){
         }
         return;
     }
-    int direction = 0;
+    int turn = 0;
     for(std::size_t index = 0; index < polygon.size(); ++index){
-        direction = orientation(
+        turn = orientation(
             polygon[index],
             polygon[(index + 1) % polygon.size()],
             polygon[(index + 2) % polygon.size()]
         );
-        if(direction != 0) break;
+        if(turn != 0) break;
     }
-    if(direction < 0){
-        std::reverse(polygon.begin(), polygon.end());
-    }
+    if(turn < 0) std::reverse(polygon.begin(), polygon.end());
     const auto first = std::min_element(
-        polygon.begin(), polygon.end(),
-        by_y_then_x
+        polygon.begin(), polygon.end(), by_y_then_x
     );
     std::rotate(polygon.begin(), first, polygon.end());
 }
@@ -144,11 +122,10 @@ inline std::vector<Point> minkowski_sum_convex(
         return result;
     }
     if(second.size() > std::numeric_limits<std::size_t>::max()
-            - first.size())[[unlikely]]{
-        throw std::length_error(
-            "integer geometry Minkowski sum input is too large"
-        );
+            - first.size()){
+        throw std::length_error("integer geometry Minkowski sum is too large");
     }
+
     std::vector<Point> result;
     result.reserve(first.size() + second.size());
     Point current = add_points(first.front(), second.front());
@@ -156,32 +133,22 @@ inline std::vector<Point> minkowski_sum_convex(
     std::size_t first_index = 0;
     std::size_t second_index = 0;
     while(first_index < first.size() || second_index < second.size()){
-        Vector step{};
+        Vector step;
         if(first_index == first.size()){
-            step = vector_from(
-                second[second_index],
-                second[(second_index + 1) % second.size()]
-            );
+            step = second[(second_index + 1) % second.size()]
+                - second[second_index];
             ++second_index;
         }else if(second_index == second.size()){
-            step = vector_from(
-                first[first_index],
-                first[(first_index + 1) % first.size()]
-            );
+            step = first[(first_index + 1) % first.size()]
+                - first[first_index];
             ++first_index;
         }else{
-            const Vector first_edge = vector_from(
-                first[first_index],
-                first[(first_index + 1) % first.size()]
-            );
-            const Vector second_edge = vector_from(
-                second[second_index],
+            const Vector first_edge =
+                first[(first_index + 1) % first.size()] - first[first_index];
+            const Vector second_edge =
                 second[(second_index + 1) % second.size()]
-            );
-            const int determinant = detail::product_difference_sign(
-                first_edge.x, second_edge.y,
-                first_edge.y, second_edge.x
-            );
+                    - second[second_index];
+            const int determinant = cross(first_edge, second_edge).sign();
             if(determinant > 0){
                 step = first_edge;
                 ++first_index;
@@ -194,10 +161,7 @@ inline std::vector<Point> minkowski_sum_convex(
                 ++second_index;
             }
         }
-        current = detail::checked_point(
-            static_cast<Wide>(current.x) + step.x,
-            static_cast<Wide>(current.y) + step.y
-        );
+        current = current + step;
         if(first_index < first.size() || second_index < second.size()){
             result.push_back(current);
         }
@@ -217,4 +181,4 @@ inline std::vector<Point> minkowski_sum(
 
 }  // namespace integer_geometry
 
-#endif  // CPPLIB_SRC_ALGORITHM_INTEGER_GEOMETRY_CONVEX_HPP_INCLUDED
+#endif  // CPPLIB_SRC_INTEGER_GEOMETRY_2D_CONVEX_HPP_INCLUDED

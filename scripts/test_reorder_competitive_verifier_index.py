@@ -30,6 +30,11 @@ class NormalizeIndexTest(unittest.TestCase):
                         "type": "Library Files",
                         "categories": [
                             {"name": "src/structure/", "pages": []},
+                            {"name": "src/approximate/", "pages": []},
+                            {
+                                "name": "src/integer_geometry/",
+                                "pages": [],
+                            },
                             {"name": "src/algorithm/", "pages": [library_page]},
                             {
                                 "name": "test/onlinejudge/",
@@ -51,7 +56,12 @@ class NormalizeIndexTest(unittest.TestCase):
         )
         self.assertEqual(
             [category["name"] for category in top[0]["categories"]],
-            ["src/algorithm/", "src/structure/"],
+            [
+                "src/algorithm/",
+                "src/structure/",
+                "src/integer_geometry/",
+                "src/approximate/",
+            ],
         )
         verification_pages = top[1]["categories"][0]["pages"]
         self.assertEqual(

@@ -10,7 +10,6 @@ from pathlib import Path
 
 MINIMUM = -(1 << 63)
 MAXIMUM = (1 << 63) - 1
-MAXIMUM_U128 = (1 << 128) - 1
 Point = tuple[int, int]
 
 
@@ -79,7 +78,7 @@ def answer(polygon: list[Point]) -> str:
         for first in polygon
         for second in polygon
     )
-    return str(diameter) if diameter <= MAXIMUM_U128 else "overflow"
+    return str(diameter)
 
 
 def cyclic_variants(polygon: list[Point]) -> list[list[Point]]:

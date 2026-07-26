@@ -1,27 +1,36 @@
 // competitive-verifier: STANDALONE
 
-#include <algorithm>
+#include <cctype>
 #include <cstddef>
-#include <cstdint>
 #include <iostream>
-#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/integer_geometry/distance.hpp"
+#include "../../src/integer_geometry/2d/distance.hpp"
 
 namespace{
 
-std::string to_decimal(integer_geometry::UnsignedWide value){
-    if(value == 0) return "0";
-    std::string result;
-    while(value != 0){
-        result.push_back(static_cast<char>('0' + value % 10));
-        value /= 10;
+integer_geometry::Integer parse_integer(const std::string& text){
+    if(text.empty()) throw std::invalid_argument("empty integer");
+    std::size_t index = 0;
+    bool negative = false;
+    if(text[index] == '-' || text[index] == '+'){
+        negative = text[index] == '-';
+        ++index;
     }
-    std::reverse(result.begin(), result.end());
-    return result;
+    if(index == text.size()) throw std::invalid_argument("missing digits");
+    integer_geometry::Integer result = 0;
+    for(; index < text.size(); ++index){
+        const unsigned char character =
+            static_cast<unsigned char>(text[index]);
+        if(!std::isdigit(character)){
+            throw std::invalid_argument("invalid integer digit");
+        }
+        result *= 10;
+        result += static_cast<int>(character - '0');
+    }
+    return negative ? -result : result;
 }
 
 }  // namespace
@@ -35,17 +44,18 @@ int main(){
     while(test_count-- > 0){
         std::size_t size = 0;
         std::cin >> size;
-        std::vector<integer_geometry::Point> polygon(size);
-        for(auto& point: polygon){
-            std::cin >> point.x >> point.y;
+        std::vector<integer_geometry::Point> polygon;
+        polygon.reserve(size);
+        for(std::size_t index = 0; index < size; ++index){
+            std::string x;
+            std::string y;
+            std::cin >> x >> y;
+            polygon.emplace_back(
+                integer_geometry::Rational(parse_integer(x)),
+                integer_geometry::Rational(parse_integer(y))
+            );
         }
-
-        try{
-            const std::optional<integer_geometry::UnsignedWide> answer =
-                integer_geometry::convex_diameter_squared(polygon);
-            std::cout << (answer ? to_decimal(*answer) : "none") << '\n';
-        }catch(const std::overflow_error&){
-            std::cout << "overflow\n";
-        }
+        const auto answer = integer_geometry::convex_diameter_squared(polygon);
+        std::cout << (answer ? answer->to_string() : "none") << '\n';
     }
 }

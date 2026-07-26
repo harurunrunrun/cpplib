@@ -9,7 +9,7 @@ from typing import Any
 import yaml
 
 
-SECTION_ORDER = ("algorithm", "structure", "approximate")
+SECTION_ORDER = ("algorithm", "structure", "integer_geometry", "approximate")
 VERIFICATION_PATH_PREFIXES = ("test/onlinejudge/", "test/standalone/")
 VERIFICATION_CATEGORY_ORDER = VERIFICATION_PATH_PREFIXES
 

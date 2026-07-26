@@ -10,7 +10,7 @@ from collections import defaultdict
 from pathlib import Path
 
 
-LIBRARY_SECTIONS = ("algorithm", "structure", "approximate")
+LIBRARY_SECTIONS = ("algorithm", "structure", "integer_geometry", "approximate")
 FRONT_MATTER_FIELD = re.compile(r"^documentation_of:\s*(.*?)\s*$")
 MARKDOWN_HEADING = re.compile(r"^#{1,6}\s+(.+?)\s*$")
 CAUTION_WORDS = ("API契約", "前提", "例外")
