@@ -128,8 +128,10 @@ public:
         for(std::size_t state_bit = 0; state_bit < StateBits; ++state_bit){
             unsigned int parity = 0;
             for(std::size_t word = 0; word < word_count; ++word){
-                parity ^= std::popcount(
-                    inverse_rows_[state_bit][word] & observations[word]
+                parity ^= static_cast<unsigned int>(
+                    std::popcount(
+                        inverse_rows_[state_bit][word] & observations[word]
+                    )
                 ) & 1U;
             }
             if(parity != 0) set_bit(recovered, state_bit);
