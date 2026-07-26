@@ -13,6 +13,17 @@ void add_edge(std::vector<std::vector<int>>& graph, int u, int v){
     graph[v].push_back(u);
 }
 
+template<class Function>
+void assert_runtime_error(Function function){
+    bool thrown = false;
+    try{
+        function();
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+}
+
 void test_centers(){
     std::vector<std::vector<int>> path(6);
     for(int v = 0; v + 1 < 6; v++){
@@ -26,6 +37,12 @@ void test_centers(){
     }
     assert(tree_centers(star) == std::vector<int>{0});
     assert(tree_centers({}).empty());
+
+    std::vector<std::vector<int>> singleton(1);
+    assert(tree_centers(singleton) == std::vector<int>{0});
+    std::vector<std::vector<int>> edge(2);
+    add_edge(edge, 0, 1);
+    assert((tree_centers(edge) == std::vector<int>{0, 1}));
 }
 
 void test_unrooted_isomorphism(){
@@ -92,39 +109,71 @@ void test_labels(){
 }
 
 void test_exceptions(){
-    bool thrown = false;
-    try{
+    assert_runtime_error([]{
         std::vector<std::vector<int>> graph(3);
         add_edge(graph, 0, 1);
         (void)tree_centers(graph);
-    }catch(const std::runtime_error&){
-        thrown = true;
-    }
-    assert(thrown);
+    });
 
-    thrown = false;
-    try{
-        std::vector<std::vector<int>> graph(3);
+    assert_runtime_error([]{
+        std::vector<std::vector<int>> graph(4);
         add_edge(graph, 0, 1);
         add_edge(graph, 1, 2);
         add_edge(graph, 2, 0);
         (void)tree_isomorphic(graph, graph);
-    }catch(const std::runtime_error&){
-        thrown = true;
-    }
-    assert(thrown);
+    });
 
-    thrown = false;
-    try{
+    assert_runtime_error([]{
         std::vector<std::vector<int>> graph(1);
         (void)rooted_tree_isomorphism_labels(graph, 1);
-    }catch(const std::runtime_error&){
-        thrown = true;
-    }
-    assert(thrown);
+    });
+
+    assert_runtime_error([]{
+        const std::vector<std::vector<int>> graph = {
+            {1, 1},
+            {0, 0}
+        };
+        (void)rooted_tree_isomorphism_labels(graph, 0);
+    });
+
+    assert_runtime_error([]{
+        const std::vector<std::vector<int>> graph = {
+            {1},
+            {2},
+            {0, 1}
+        };
+        (void)tree_centers(graph);
+    });
+
+    assert_runtime_error([]{
+        const std::vector<std::vector<int>> graph = {{0}, {1}};
+        (void)tree_centers(graph);
+    });
+
+    // Previously passed validation, produced no centers, then indexed an
+    // empty center vector in tree_isomorphic.
+    assert_runtime_error([]{
+        const std::vector<std::vector<int>> graph = {
+            {1, 2},
+            {0, 0},
+            {}
+        };
+        (void)tree_isomorphic(graph, graph);
+    });
+
+    assert_runtime_error([]{
+        const std::vector<std::vector<int>> graph = {{1}, {2}};
+        (void)tree_centers(graph);
+    });
 }
 
 int main(){
+    test_centers();
+    test_unrooted_isomorphism();
+    test_rooted_isomorphism();
+    test_labels();
+    test_exceptions();
+
     int case_count;
     if(std::cin >> case_count){
         while(case_count--){
@@ -153,9 +202,4 @@ int main(){
         }
         return 0;
     }
-    test_centers();
-    test_unrooted_isomorphism();
-    test_rooted_isomorphism();
-    test_labels();
-    test_exceptions();
 }

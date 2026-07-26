@@ -89,3 +89,8 @@ $V$ を使用中state数、$L$ を現在の文字列長、$Q$ をquery文字列�
 ## 注意点
 
 文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。
+
+同じheader内でbyte文字列向けAPIが内部利用するautomatonはstate idを `int` で
+保持する。入力長 `N` は `(numeric_limits<int>::max() / 2) + 1` 以下でなければ
+ならず、超える入力はreserveや入力文字に対応するstate追加より前に `std::length_error` で拒否する。
+状態数の上限は `N == 1` で2、それ以外の非空入力で `2 * N - 1` である。

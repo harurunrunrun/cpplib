@@ -32,7 +32,8 @@ $N$ を列の長さとする。
 
 - 一般列の `Sequence` は `suffix_array` と `lcp_array` が受理する型でなければならない。
 - `string` 版は各要素を `unsigned char` に変換するため、全256 byteを区別する。
-- `string` 版の入力長は `int` で表現できなければならず、超える場合は
-  `std::length_error` を送出する。
+- `string` 版でsuffix automatonを構築する入力長 `N` は
+  `(numeric_limits<int>::max() / 2) + 1` 以下でなければならない。
+  超える場合は入力文字に対応するstate追加前に `std::length_error` を送出する。
 - 戻り値には空部分列を含めない。
 - 戻り値型は `long long` である。

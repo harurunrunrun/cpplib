@@ -3,12 +3,43 @@
 #include "../../src/algorithm/string/suffix/suffix_automaton.hpp"
 
 #include <cassert>
+#include <cstddef>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
+void test_byte_suffix_automaton_capacity(){
+    using suffix_automaton_internal::
+        byte_suffix_automaton_max_text_size;
+    using suffix_automaton_internal::
+        checked_byte_suffix_automaton_state_capacity;
+
+    const std::size_t int_max =
+        static_cast<std::size_t>(std::numeric_limits<int>::max());
+    assert(byte_suffix_automaton_max_text_size == int_max / 2 + 1);
+    assert(checked_byte_suffix_automaton_state_capacity(0) == 1);
+    assert(checked_byte_suffix_automaton_state_capacity(1) == 2);
+    assert(checked_byte_suffix_automaton_state_capacity(2) == 3);
+    assert(checked_byte_suffix_automaton_state_capacity(
+        byte_suffix_automaton_max_text_size
+    ) == int_max);
+
+    bool thrown = false;
+    try{
+        (void)checked_byte_suffix_automaton_state_capacity(
+            byte_suffix_automaton_max_text_size + 1
+        );
+    }catch(const std::length_error&){
+        thrown = true;
+    }
+    assert(thrown);
+}
+
 void self_test(){
+    test_byte_suffix_automaton_capacity();
+
     SuffixAutomaton<3, 16> empty;
     assert(empty.size() == 1);
     assert(empty.last() == 0);

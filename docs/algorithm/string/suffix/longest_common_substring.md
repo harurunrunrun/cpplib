@@ -46,5 +46,7 @@ $S=|a|+|b|$ とする。
 
 - 文字は `unsigned char` として扱うため、全256 byteを利用できる。
 - 返すindexと区間は0-indexedである。
-- どちらかの入力長が `int` で表現できない場合は
-  `std::length_error` を送出する。
+- 第1文字列 `a` の長さは `(numeric_limits<int>::max() / 2) + 1` 以下、
+  第2文字列 `b` の長さは `numeric_limits<int>::max()` 以下でなければならない。
+  違反時は `std::length_error` を送出し、`a` の違反は入力文字に対応する
+  state追加前に検出する。

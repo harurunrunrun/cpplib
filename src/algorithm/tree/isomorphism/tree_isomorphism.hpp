@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_TREE_ISOMORPHISM_TREE_ISOMORPHISM_HPP_INCLUDED
 
 #include <algorithm>
+#include <cstddef>
 #include <limits>
 #include <stdexcept>
 #include <utility>
@@ -9,45 +10,72 @@
 
 namespace tree_isomorphism_detail{
 
-inline void validate_tree(const std::vector<std::vector<int>>& graph, const char* message){
-    const int n = (int)graph.size();
-    if(n == 0){
+inline void validate_tree(
+    const std::vector<std::vector<int>>& graph,
+    const char* message
+){
+    const std::size_t vertex_count = graph.size();
+    if(vertex_count >
+       static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
+        throw std::runtime_error(message);
+    }
+    if(vertex_count == 0){
         return;
     }
 
-    long long edge_twice = 0;
-    for(int v = 0; v < n; v++){
-        edge_twice += (int)graph[v].size();
-        for(int to: graph[v]){
+    const int n = static_cast<int>(vertex_count);
+    const std::size_t expected_arc_count = 2 * (vertex_count - 1);
+    std::size_t arc_count = 0;
+    std::vector<int> seen_neighbor(vertex_count, -1);
+    for(int v = 0; v < n; ++v){
+        const auto& adjacency = graph[static_cast<std::size_t>(v)];
+        if(adjacency.size() > expected_arc_count - arc_count)[[unlikely]]{
+            throw std::runtime_error(message);
+        }
+        arc_count += adjacency.size();
+        for(int to: adjacency){
             if(to < 0 || n <= to)[[unlikely]]{
                 throw std::runtime_error(message);
             }
+            if(to == v ||
+               seen_neighbor[static_cast<std::size_t>(to)] == v)[[unlikely]]{
+                throw std::runtime_error(message);
+            }
+            seen_neighbor[static_cast<std::size_t>(to)] = v;
         }
     }
-    if(edge_twice != 2LL * (n - 1))[[unlikely]]{
+    if(arc_count != expected_arc_count)[[unlikely]]{
         throw std::runtime_error(message);
     }
 
-    std::vector<int> parent(n, -1);
+    // Every non-parent arc must discover a new vertex. Requiring the reverse
+    // parent arc then proves one-to-one symmetry without sorting or hashing.
+
+    std::vector<int> parent(vertex_count, -1);
     std::vector<int> stack = {0};
     parent[0] = -2;
-    int count = 0;
+    std::size_t visited_count = 0;
     while(!stack.empty()){
-        int v = stack.back();
+        const int v = stack.back();
         stack.pop_back();
-        count++;
-        for(int to: graph[v]){
-            if(to == parent[v]){
+        ++visited_count;
+        bool has_reverse_arc = (v == 0);
+        for(int to: graph[static_cast<std::size_t>(v)]){
+            if(to == parent[static_cast<std::size_t>(v)]){
+                has_reverse_arc = true;
                 continue;
             }
-            if(parent[to] != -1)[[unlikely]]{
+            if(parent[static_cast<std::size_t>(to)] != -1)[[unlikely]]{
                 throw std::runtime_error(message);
             }
-            parent[to] = v;
+            parent[static_cast<std::size_t>(to)] = v;
             stack.push_back(to);
         }
+        if(!has_reverse_arc)[[unlikely]]{
+            throw std::runtime_error(message);
+        }
     }
-    if(count != n)[[unlikely]]{
+    if(visited_count != vertex_count)[[unlikely]]{
         throw std::runtime_error(message);
     }
 }
@@ -65,11 +93,11 @@ inline RootedTreeInfo build_rooted_tree(
     int root,
     const char* message
 ){
-    const int n = (int)graph.size();
+    validate_tree(graph, message);
+    const int n = static_cast<int>(graph.size());
     if(root < 0 || n <= root)[[unlikely]]{
         throw std::runtime_error(message);
     }
-    validate_tree(graph, message);
 
     RootedTreeInfo info;
     info.children.assign(n, {});
@@ -272,14 +300,14 @@ inline std::pair<std::vector<int>, std::vector<int>> rooted_labels_pair(
 }
 
 inline std::vector<int> tree_centers(const std::vector<std::vector<int>>& graph){
-    const int n = (int)graph.size();
-    if(n == 0){
-        return {};
-    }
     tree_isomorphism_detail::validate_tree(
         graph,
         "library assertion fault: graph is not a tree (tree_centers)."
     );
+    if(graph.empty()){
+        return {};
+    }
+    const int n = static_cast<int>(graph.size());
     if(n <= 2){
         std::vector<int> res(n);
         for(int i = 0; i < n; i++){
@@ -291,7 +319,9 @@ inline std::vector<int> tree_centers(const std::vector<std::vector<int>>& graph)
     std::vector<int> degree(n), leaves;
     leaves.reserve(n);
     for(int v = 0; v < n; v++){
-        degree[v] = (int)graph[v].size();
+        degree[v] = static_cast<int>(
+            graph[static_cast<std::size_t>(v)].size()
+        );
         if(degree[v] <= 1){
             leaves.push_back(v);
         }
@@ -299,7 +329,7 @@ inline std::vector<int> tree_centers(const std::vector<std::vector<int>>& graph)
 
     int remain = n;
     while(remain > 2){
-        remain -= (int)leaves.size();
+        remain -= static_cast<int>(leaves.size());
         std::vector<int> next;
         for(int v: leaves){
             for(int to: graph[v]){
@@ -365,6 +395,12 @@ inline bool tree_isomorphic(
 
     const auto center_a = tree_centers(a);
     const auto center_b = tree_centers(b);
+    if(center_a.empty() || center_b.empty())[[unlikely]]{
+        throw std::logic_error(
+            "library assertion fault: empty center set "
+            "(tree_isomorphic)."
+        );
+    }
     if(center_a.size() != center_b.size()){
         return false;
     }

@@ -256,6 +256,27 @@ public:
 
 namespace suffix_automaton_internal{
 
+inline constexpr std::size_t byte_suffix_automaton_max_text_size =
+    static_cast<std::size_t>(std::numeric_limits<int>::max() / 2) + 1;
+
+inline std::size_t checked_byte_suffix_automaton_state_capacity(
+    std::size_t text_size
+){
+    if(text_size > byte_suffix_automaton_max_text_size)[[unlikely]]{
+        throw std::length_error(
+            "library assertion fault: text is too long for int state "
+            "identifiers (ByteSuffixAutomaton)."
+        );
+    }
+    if(text_size == 0){
+        return 1;
+    }
+    if(text_size == 1){
+        return 2;
+    }
+    return 2 * text_size - 1;
+}
+
 class ByteSuffixAutomaton{
 public:
     struct State{
@@ -268,6 +289,19 @@ public:
 private:
     std::vector<State> states_{{}};
     int last_ = 0;
+
+    int append_state(State state){
+        if(states_.size() >=
+           static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
+            throw std::length_error(
+                "library assertion fault: state capacity exceeded "
+                "(ByteSuffixAutomaton)."
+            );
+        }
+        const int state_id = static_cast<int>(states_.size());
+        states_.push_back(std::move(state));
+        return state_id;
+    }
 
     int transition(int state, unsigned char byte) const{
         for(const auto& [label, target]:
@@ -292,20 +326,15 @@ public:
     ByteSuffixAutomaton() = default;
 
     explicit ByteSuffixAutomaton(std::string_view text){
-        if(text.size() >
-           static_cast<std::size_t>(std::numeric_limits<int>::max())){
-            throw std::length_error(
-                "library assertion fault: text is too long."
-            );
-        }
-        states_.reserve(2 * text.size() + 1);
+        states_.reserve(
+            checked_byte_suffix_automaton_state_capacity(text.size())
+        );
         int position = 0;
         for(const unsigned char byte: text) extend(byte, position++);
     }
 
     void extend(unsigned char byte, int position){
-        const int current = static_cast<int>(states_.size());
-        states_.push_back({});
+        const int current = append_state(State{});
         states_[static_cast<std::size_t>(current)].length =
             states_[static_cast<std::size_t>(last_)].length + 1;
         states_[static_cast<std::size_t>(current)].first_end = position;
@@ -323,8 +352,9 @@ public:
                states_[static_cast<std::size_t>(target)].length){
                 states_[static_cast<std::size_t>(current)].link = target;
             }else{
-                const int clone = static_cast<int>(states_.size());
-                states_.push_back(states_[static_cast<std::size_t>(target)]);
+                const int clone = append_state(
+                    states_[static_cast<std::size_t>(target)]
+                );
                 states_[static_cast<std::size_t>(clone)].length =
                     states_[static_cast<std::size_t>(suffix)].length + 1;
                 while(suffix != -1 && transition(suffix, byte) == target){
