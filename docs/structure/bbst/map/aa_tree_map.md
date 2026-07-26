@@ -100,4 +100,3 @@ const value_type& kth(int index) const
 
 keyは重複しない。objectの保存領域は常に $O(MAX\_SIZE)$。再帰の深さはAA treeの
 高さ $O(\log(N+1))$。`Key` と `T` はcopy可能である必要がある。
-

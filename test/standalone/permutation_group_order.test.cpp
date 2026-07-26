@@ -97,4 +97,3 @@ int main(){
         std::cout << permutation_group_order(degree, generators).order << '\n';
     }
 }
-

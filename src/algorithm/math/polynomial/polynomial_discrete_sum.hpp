@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../fft/convolution.hpp"
+#include "../../fft/transform/convolution.hpp"
 #include "polynomial_interpolation.hpp"
 
 template<int mod>

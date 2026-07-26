@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <utility>
 
-#include "../../fft/formal_power_series.hpp"
+#include "../../fft/formal_power_series/formal_power_series.hpp"
 #include "polynomial_common.hpp"
 
 namespace math{

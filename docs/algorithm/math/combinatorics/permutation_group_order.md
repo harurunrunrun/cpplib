@@ -42,4 +42,3 @@ PermutationGroupOrderResult permutation_group_order(
 サイズ不一致、範囲外、重複像では `runtime_error`。基本Schreier--Simsであり、
 生成元をランダムに圧縮する版ではないため、冗長な生成元が非常に多い入力では
 中間の安定化群生成元が増えることがある。
-

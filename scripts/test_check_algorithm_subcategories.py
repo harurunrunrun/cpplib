@@ -18,6 +18,21 @@ def main() -> None:
     assert Path(
         "src/algorithm/sequence"
     ) in check_algorithm_subcategories.FORBIDDEN_ALGORITHM_ROOTS
+    number_theory_root = Path("src/algorithm/math/number_theory")
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[number_theory_root] == (
+        frozenset({
+            "arithmetic", "gaussian", "modular", "multiplicative", "prime",
+        })
+    )
+    assert len(
+        check_algorithm_subcategories.NUMBER_THEORY_SUBCATEGORY_BY_STEM
+    ) == 42
+    assert (
+        check_algorithm_subcategories.NUMBER_THEORY_SUBCATEGORY_BY_STEM[
+            "gaussian_integer"
+        ]
+        == "gaussian"
+    )
 
     with TemporaryDirectory() as directory:
         root = Path(directory)
@@ -104,6 +119,89 @@ def main() -> None:
             root, missing_layout
         )
         assert any("directory is missing" in error for error in errors)
+
+    with TemporaryDirectory() as directory:
+        root = Path(directory)
+        layout = {
+            Path("src/algorithm/math"): frozenset({"number_theory"}),
+        }
+        nested_root = Path("src/algorithm/math/number_theory")
+        nested_layouts = {
+            nested_root: frozenset({"arithmetic", "prime"}),
+        }
+        expected_stems = {
+            nested_root: {
+                "basic_number_theory": "arithmetic",
+                "prime_sieve": "prime",
+            },
+        }
+        source_basic = root / nested_root / "arithmetic/basic_number_theory.hpp"
+        source_prime = root / nested_root / "prime/prime_sieve.hpp"
+        docs_root = Path("docs/algorithm/math/number_theory")
+        doc_basic = root / docs_root / "arithmetic/basic_number_theory.md"
+        doc_prime = root / docs_root / "prime/prime_sieve.md"
+        for file in (source_basic, source_prime, doc_basic, doc_prime):
+            file.parent.mkdir(parents=True, exist_ok=True)
+            file.write_text("valid\n", encoding="utf-8")
+
+        def nested_errors() -> list[str]:
+            return check_algorithm_subcategories.layout_violations(
+                root,
+                layout,
+                frozenset(),
+                frozenset(),
+                nested_layouts=nested_layouts,
+                expected_nested_stems=expected_stems,
+                check_nested_docs=True,
+            )
+
+        assert nested_errors() == []
+
+        direct = root / nested_root / "basic_number_theory.hpp"
+        source_basic.rename(direct)
+        errors = nested_errors()
+        assert any(
+            "declared number_theory subcategory" in error
+            for error in errors
+        )
+        direct.rename(source_basic)
+
+        unknown = root / nested_root / "misc/extra.hpp"
+        unknown.parent.mkdir()
+        unknown.write_text("unknown\n", encoding="utf-8")
+        assert any(
+            "unknown number_theory subcategory" in error
+            for error in nested_errors()
+        )
+        unknown.unlink()
+        unknown.parent.rmdir()
+
+        deeper = root / nested_root / "arithmetic/detail/extra.hpp"
+        deeper.parent.mkdir()
+        deeper.write_text("nested\n", encoding="utf-8")
+        assert any(
+            "must not be nested more finely" in error
+            for error in nested_errors()
+        )
+        deeper.unlink()
+        deeper.parent.rmdir()
+
+        wrong = root / nested_root / "arithmetic/prime_sieve.hpp"
+        source_prime.rename(wrong)
+        assert any(
+            "expected src/algorithm/math/number_theory/prime/prime_sieve.hpp"
+            in error
+            for error in nested_errors()
+        )
+        wrong.rename(source_prime)
+
+        legacy = root / "test/standalone/legacy.test.cpp"
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text(
+            '#include "../../src/algorithm/math/number_theory/basic_number_theory.hpp"\n',
+            encoding="utf-8",
+        )
+        assert any("legacy reference" in error for error in nested_errors())
 
     print("algorithm subcategory checker tests passed")
 

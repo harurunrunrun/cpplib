@@ -99,4 +99,3 @@ std::size_t explicit_key_count() const
 `add` の引数は `long long` だが、同じkeyへの累積値と密表現の差分係数は `__int128_t` で保持する。
 `count_wide` の最終結果も `__int128_t`。object全体の保存領域は
 $O(D+E)$。同じkeyへの加算結果が0になった疎nodeは削除される。
-

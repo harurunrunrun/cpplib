@@ -126,4 +126,3 @@ std::istream& operator>>(std::istream&, BigInteger&)
 
 保存領域は値のbit長に比例する。除算は巨大乗算向けのFFTやHalf-GCDを使用しない
 2進long divisionである。
-

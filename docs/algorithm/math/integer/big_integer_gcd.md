@@ -56,4 +56,3 @@ BigInteger big_integer_lcm(
 
 内部では `BigInteger::divmod` を使うため、除算の丸め規則は0方向である。
 符号付き入力でもGCDとLCMは常に非負。
-

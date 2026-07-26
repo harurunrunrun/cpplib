@@ -24,4 +24,3 @@ long double circle_union_area(const std::vector<Circle>& circles)
 `invalid_argument`。接触・包含判定にはgeometry共通のscale付き許容誤差を使う。
 極端に座標scaleが異なる入力では、面積を原点付近へ平行移動してから計算すると
 数値誤差を抑えられる。
-

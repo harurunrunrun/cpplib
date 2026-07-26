@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/math/number_theory/pairwise_gcd_sums.hpp"
+#include "../../src/algorithm/math/number_theory/multiplicative/pairwise_gcd_sums.hpp"
 
 int main(){
     std::vector<int> upper_bounds;

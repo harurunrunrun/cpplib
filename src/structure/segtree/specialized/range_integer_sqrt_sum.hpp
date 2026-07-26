@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../../algorithm/math/number_theory/basic_number_theory.hpp"
+#include "../../../algorithm/math/number_theory/arithmetic/basic_number_theory.hpp"
 #include "../basic/segtree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 

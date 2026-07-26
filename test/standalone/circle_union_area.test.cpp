@@ -92,4 +92,3 @@ int main(){
         std::cout << close(circle_union_area(circles), expected, tolerance) << '\n';
     }
 }
-

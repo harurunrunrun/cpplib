@@ -148,4 +148,3 @@ T pop_bucket(std::size_t index)
 添字は $0\le index<B$、区間は $0\le left\le right\le B$ を満たす必要がある。
 違反時は `runtime_error`。要素全体の保存領域は $O(N)$、segment tree と queue
 管理領域は $O(B)$。
-

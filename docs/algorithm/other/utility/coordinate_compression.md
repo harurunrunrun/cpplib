@@ -112,4 +112,3 @@ std::vector<std::size_t> compress(const std::vector<T>& source) const
 $0\le K\le MAX\_SIZE$。object の保存領域は $O(MAX\_SIZE)$。`build` は入力の
 要素数に対して容量を検査するため、重複除去後に収まる場合でも
 `values.size() > MAX_SIZE` は許可しない。
-

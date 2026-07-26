@@ -9,7 +9,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
-#include "../../fft/convolution.hpp"
+#include "../../fft/transform/convolution.hpp"
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
 #endif

@@ -85,4 +85,3 @@ $[0,right)$ の全整数の `popcount` の和を返す。
 
 bit 番号は $0\le bit<64$。違反時は `runtime_error`。`WideBitCount` の入出力は
 標準streamに直接対応していないため、必要なら10進文字列への変換を用意する。
-

@@ -113,4 +113,3 @@ BivariateFormalPowerSeries square_root(
 各演算は $0\le i\le XDegree$, $0\le j\le YDegree$ の長方形で打ち切る。
 指数・対数の級数は、定数項0の級数の $k$ 乗がtotal degree $k$ 未満を持たない
 ことを使い、$k=XDegree+YDegree$ で停止する。
-

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/algorithm/math/number_theory/discrete_logarithm_fixed_mod.hpp"
+#include "../../src/algorithm/math/number_theory/modular/discrete_logarithm_fixed_mod.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

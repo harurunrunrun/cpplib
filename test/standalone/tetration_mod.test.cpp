@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/math/number_theory/tetration_mod.hpp"
+#include "../../src/algorithm/math/number_theory/modular/tetration_mod.hpp"
 
 int main(){
     try{
