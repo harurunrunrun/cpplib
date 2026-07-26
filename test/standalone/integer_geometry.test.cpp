@@ -9,7 +9,14 @@
 #include <stdexcept>
 #include <vector>
 
+#include "../../src/integer_geometry/2d/convex.hpp"
+#include "../../src/integer_geometry/2d/polygon.hpp"
+#include "../../src/integer_geometry/2d/predicates.hpp"
+#include "../../src/integer_geometry/2d/types.hpp"
 #include "../../src/integer_geometry/integer_geometry.hpp"
+#include "../../src/integer_geometry/lattice/polygon.hpp"
+#include "../../src/integer_geometry/lattice/types.hpp"
+#include "../../src/integer_geometry/number/rational.hpp"
 
 namespace{
 
