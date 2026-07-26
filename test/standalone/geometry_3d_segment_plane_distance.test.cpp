@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/segment_plane_distance_segment_plane.hpp"
+#include "../../src/algorithm/geometry/3d/segment_plane_distance_plane_segment.hpp"
 #include "../../src/algorithm/geometry/3d/segment_plane_distance.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

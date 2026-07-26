@@ -6,6 +6,7 @@ documentation_of: ../../../../src/algorithm/geometry/3d/line_ray_distance.hpp
 ## API
 
 - `distance(first, second)`: `Line3` と `Ray3` の集合間距離を返す。異種型では逆順overloadも提供する。
+- この互換集約ヘッダは `line_ray` 順と `ray_line` 順の両leafを提供する。
 
 ## API別の時間計算量・空間計算量
 

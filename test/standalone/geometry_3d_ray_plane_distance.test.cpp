@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/ray_plane_distance_ray_plane.hpp"
+#include "../../src/algorithm/geometry/3d/ray_plane_distance_plane_ray.hpp"
 #include "../../src/algorithm/geometry/3d/ray_plane_distance.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

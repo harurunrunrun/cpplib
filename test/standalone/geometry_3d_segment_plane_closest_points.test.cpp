@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/segment_plane_closest_points_segment_plane.hpp"
+#include "../../src/algorithm/geometry/3d/segment_plane_closest_points_plane_segment.hpp"
 #include "../../src/algorithm/geometry/3d/segment_plane_closest_points.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
@@ -8,7 +10,10 @@ int main(){
         const Segment3 segment{{0, 0, 2}, {1, 0, 3}};
         const Plane3 plane{{}, {0, 0, 1}};
         const auto points = closest_points(segment, plane);
+        const auto reversed = closest_points(plane, segment);
         return geometry3d_api_close(points.first, segment.a) &&
-            geometry3d_api_close(points.second, {});
+            geometry3d_api_close(points.second, {}) &&
+            geometry3d_api_close(reversed.first, {}) &&
+            geometry3d_api_close(reversed.second, segment.a);
     });
 }

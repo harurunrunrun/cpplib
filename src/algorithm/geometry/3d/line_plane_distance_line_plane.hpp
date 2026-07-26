@@ -1,0 +1,13 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_DISTANCE_LINE_PLANE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_DISTANCE_LINE_PLANE_HPP_INCLUDED
+
+#include "abs.hpp"
+#include "geometry_primitives.hpp"
+#include "line_plane_closest_points_line_plane.hpp"
+
+inline long double distance(const Line3& line, const Plane3& plane){
+    const auto points = closest_points(line, plane);
+    return abs(points.first - points.second);
+}
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_PLANE_DISTANCE_LINE_PLANE_HPP_INCLUDED

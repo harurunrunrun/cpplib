@@ -1,17 +1,7 @@
 #ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_PLANE_DISTANCE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_PLANE_DISTANCE_HPP_INCLUDED
 
-#include "abs.hpp"
-#include "geometry_primitives.hpp"
-#include "ray_plane_closest_points.hpp"
-
-inline long double distance(const Ray3& ray, const Plane3& plane){
-    const auto points = closest_points(ray, plane);
-    return abs(points.first - points.second);
-}
-
-inline long double distance(const Plane3& plane, const Ray3& ray){
-    return distance(ray, plane);
-}
+#include "ray_plane_distance_ray_plane.hpp"
+#include "ray_plane_distance_plane_ray.hpp"
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RAY_PLANE_DISTANCE_HPP_INCLUDED
