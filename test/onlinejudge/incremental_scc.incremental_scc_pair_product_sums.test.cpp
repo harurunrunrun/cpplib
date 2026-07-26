@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/connectivity/incremental_scc_pair_product_sums.hpp"
+#include "../../src/algorithm/graph/connectivity/strongly_connected/incremental_scc_pair_product_sums.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 int main(){

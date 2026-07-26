@@ -50,6 +50,23 @@ def main() -> None:
         == "source"
     )
 
+    connectivity_root = Path("src/algorithm/graph/connectivity")
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[connectivity_root] == (
+        frozenset({
+            "components", "decomposition", "resilience",
+            "strongly_connected",
+        })
+    )
+    assert len(
+        check_algorithm_subcategories.CONNECTIVITY_SUBCATEGORY_BY_STEM
+    ) == 22
+    assert (
+        check_algorithm_subcategories.CONNECTIVITY_SUBCATEGORY_BY_STEM[
+            "lowlink"
+        ]
+        == "decomposition"
+    )
+
 
     with TemporaryDirectory() as directory:
         root = Path(directory)
@@ -219,6 +236,53 @@ def main() -> None:
             encoding="utf-8",
         )
         assert any("legacy reference" in error for error in nested_errors())
+
+    with TemporaryDirectory() as directory:
+        root = Path(directory)
+        graph_root = Path("src/algorithm/graph")
+        connectivity_root = graph_root / "connectivity"
+        categories = {
+            "undirected_component_count": "components",
+            "lowlink": "decomposition",
+            "single_failure_connectivity": "resilience",
+            "strongly_connected_components": "strongly_connected",
+        }
+        layout = {graph_root: frozenset({"connectivity"})}
+        nested_layouts = {
+            connectivity_root: frozenset(categories.values()),
+        }
+        expected_stems = {connectivity_root: categories}
+        docs_root = Path("docs/algorithm/graph/connectivity")
+        for stem, category in categories.items():
+            source = root / connectivity_root / category / f"{stem}.hpp"
+            document = root / docs_root / category / f"{stem}.md"
+            source.parent.mkdir(parents=True, exist_ok=True)
+            document.parent.mkdir(parents=True, exist_ok=True)
+            source.write_text("valid\n", encoding="utf-8")
+            document.write_text("valid\n", encoding="utf-8")
+
+        def connectivity_errors() -> list[str]:
+            return check_algorithm_subcategories.layout_violations(
+                root,
+                layout,
+                frozenset(),
+                frozenset(),
+                nested_layouts=nested_layouts,
+                expected_nested_stems=expected_stems,
+                check_nested_docs=True,
+            )
+
+        assert connectivity_errors() == []
+        legacy = root / "test/standalone/legacy_connectivity.test.cpp"
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text(
+            '#include "../../src/algorithm/graph/connectivity/lowlink.hpp"\n',
+            encoding="utf-8",
+        )
+        assert any(
+            "legacy reference" in error
+            for error in connectivity_errors()
+        )
 
     print("algorithm subcategory checker tests passed")
 

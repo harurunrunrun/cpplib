@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../connectivity/iterative_strongly_connected_components.hpp"
+#include "../connectivity/strongly_connected/iterative_strongly_connected_components.hpp"
 
 inline std::optional<long long> maximum_distinct_vertex_weight_walk(
     const std::vector<std::vector<int>>& graph,

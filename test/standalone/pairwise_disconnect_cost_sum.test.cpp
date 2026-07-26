@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/connectivity/pairwise_disconnect_cost_sum.hpp"
+#include "../../src/algorithm/graph/connectivity/resilience/pairwise_disconnect_cost_sum.hpp"
 
 using Edge = PairwiseDisconnectCostEdge<long long>;
 

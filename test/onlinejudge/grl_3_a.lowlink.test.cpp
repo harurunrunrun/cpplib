@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/connectivity/lowlink.hpp"
+#include "../../src/algorithm/graph/connectivity/decomposition/lowlink.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

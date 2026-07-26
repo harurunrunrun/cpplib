@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 #include <vector>
-#include "../connectivity/strongly_connected_components.hpp"
+#include "../connectivity/strongly_connected/strongly_connected_components.hpp"
 
 struct TwoSat{
     int n;

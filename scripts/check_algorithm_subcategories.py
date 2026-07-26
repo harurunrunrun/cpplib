@@ -131,9 +131,39 @@ SHORTEST_PATH_SUBCATEGORIES = frozenset(
     SHORTEST_PATH_SUBCATEGORY_BY_STEM.values()
 )
 
+CONNECTIVITY_SUBCATEGORY_BY_STEM: dict[str, str] = {
+    "undirected_component_count": "components",
+    "sparse_undirected_component_count": "components",
+    "connected_components_of_complement_graph": "components",
+    "connected_component_value_sums": "components",
+    "strongly_connected_components": "strongly_connected",
+    "iterative_strongly_connected_components": "strongly_connected",
+    "strong_component_count": "strongly_connected",
+    "sink_scc_vertices": "strongly_connected",
+    "unique_sink_scc_vertices": "strongly_connected",
+    "incremental_scc": "strongly_connected",
+    "incremental_scc_pair_product_sums": "strongly_connected",
+    "lowlink": "decomposition",
+    "articulation_vertex_count": "decomposition",
+    "two_edge_connected_components": "decomposition",
+    "two_vertex_connected_components": "decomposition",
+    "three_edge_connected_components": "decomposition",
+    "block_cut_tree": "decomposition",
+    "st_numbering": "decomposition",
+    "single_failure_connectivity": "resilience",
+    "endpoint_failure_connectivity": "resilience",
+    "dominator_tree": "resilience",
+    "pairwise_disconnect_cost_sum": "resilience",
+}
+
+CONNECTIVITY_SUBCATEGORIES = frozenset(
+    CONNECTIVITY_SUBCATEGORY_BY_STEM.values()
+)
+
 NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     Path("src/algorithm/math/number_theory"): NUMBER_THEORY_SUBCATEGORIES,
     Path("src/algorithm/graph/shortest_path"): SHORTEST_PATH_SUBCATEGORIES,
+    Path("src/algorithm/graph/connectivity"): CONNECTIVITY_SUBCATEGORIES,
 }
 
 EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
@@ -142,6 +172,9 @@ EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
     ),
     Path("src/algorithm/graph/shortest_path"): (
         SHORTEST_PATH_SUBCATEGORY_BY_STEM
+    ),
+    Path("src/algorithm/graph/connectivity"): (
+        CONNECTIVITY_SUBCATEGORY_BY_STEM
     ),
 }
 

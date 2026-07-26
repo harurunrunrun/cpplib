@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../connectivity/lowlink.hpp"
+#include "../connectivity/decomposition/lowlink.hpp"
 
 inline std::vector<std::pair<int, int>> sorted_bridge_endpoints(
     int vertex_count,
