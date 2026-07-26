@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/2d/convex_polygon_minimum_width_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/convex_polygon_minimum_width_points.hpp"
 #include "../../src/algorithm/geometry/2d/convex_polygon_minimum_width.hpp"
 #include "geometry_2d_test_common.hpp"
 
@@ -14,6 +16,13 @@ int main(){
         std::cin >> count;
         std::vector<Point> polygon(static_cast<std::size_t>(count));
         for(Point& point: polygon) std::cin >> point.x >> point.y;
-        geometry_test_print_real(convex_polygon_minimum_width(polygon));
+        const long double from_points = convex_polygon_minimum_width(polygon);
+        const NormalizedConvexPolygon normalized(polygon);
+        const long double from_normalized =
+            convex_polygon_minimum_width(normalized);
+        if(from_points != from_normalized){
+            throw std::runtime_error("minimum-width overload mismatch");
+        }
+        geometry_test_print_real(from_points);
     }
 }

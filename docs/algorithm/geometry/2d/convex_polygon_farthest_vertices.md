@@ -1,50 +1,41 @@
 ---
-title: Convex Polygon Farthest Vertices (凸多角形の最遠頂点)
+title: Convex Polygon Farthest Vertices Aggregator (凸多角形の最遠頂点集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices.hpp
 ---
 
-凸多角形の各頂点に対する最遠頂点を一括して求める。
+正規化済み凸多角形入力と頂点列入力の最遠頂点APIをまとめる後方互換集約ヘッダ。
 
-```cpp
-#include "src/algorithm/geometry/2d/convex_polygon_farthest_vertices.hpp"
+## 構成
 
-std::vector<std::size_t> farthest =
-    convex_polygon_farthest_vertices(polygon);
-```
+| leaf header | 提供するoverload |
+| --- | --- |
+| `convex_polygon_farthest_vertices_normalized.hpp` | `convex_polygon_farthest_vertices(const NormalizedConvexPolygon&)` |
+| `convex_polygon_farthest_vertices_points.hpp` | `convex_polygon_farthest_vertices(std::vector<Point>)` |
 
-## API
+## 集約されるAPI
 
 ```cpp
 std::vector<std::size_t> convex_polygon_farthest_vertices(
     const NormalizedConvexPolygon& polygon
 );
-
 std::vector<std::size_t> convex_polygon_farthest_vertices(
     std::vector<Point> polygon
 );
 ```
 
-返り値の長さは正規化後の頂点数であり、`result[i]` は `vertices()[i]` から
-最も遠い頂点の添字である。同距離の頂点が複数ある場合は、`i` から反時計回りに
-最初に現れるものを返す。
-
-距離列は一般の凸多角形では unimodal とは限らない。実装は距離行列を
-$N\times(2N-1)$ の暗黙 totally monotone matrix として扱い、SMAWK で各行最大を
-線形時間で求める。行列自体は構築しない。
-
-## 退化入力
-
-- 0点: 空列。
-- 1点: `{0}`。
-- 2点または全点 collinear: `{1, 0}`。
+返り値の要素 `result[i]` は正規化後の頂点 `i` から最も遠い頂点の添字である。
 
 ## API別の時間計算量・空間計算量
 
-| API | 時間計算量 | 空間計算量（追加領域） |
+正規化後の頂点数を $N$ とする。
+
+| overload | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| 正規化済み overload | $O(N)$ | $O(N)$ |
-| `vector<Point>` overload | $O(N)$ | $O(N)$ |
+| `NormalizedConvexPolygon` | $O(N)$ | $O(N)$ |
+| `std::vector<Point>` | $O(N)$ | $O(N)$ |
 
 ## 注意点
 
-座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。
+- 0点では空列、1点では `{0}`、2点では `{1, 0}` を返す。
+- 同距離なら対象頂点から反時計回りに最初に現れる頂点を選ぶ。
+- 座標と距離計算は有限な `long double` の範囲に収まらなければならない。

@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/2d/convex_polygon_support_vertex_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/convex_polygon_support_vertex_points.hpp"
 #include "../../src/algorithm/geometry/2d/convex_polygon_support_vertex.hpp"
 #include "convex_calipers_test_common.hpp"
 
@@ -13,8 +15,13 @@ int main(){
         std::vector<Point> input = read_calipers_polygon();
         Point direction;
         std::cin >> direction.x >> direction.y;
+        const std::size_t from_points =
+            convex_polygon_support_vertex(input, direction);
         NormalizedConvexPolygon polygon(std::move(input));
         const std::size_t index = convex_polygon_support_vertex(polygon, direction);
+        if(index != from_points){
+            throw std::runtime_error("support-vertex overload mismatch");
+        }
         if(polygon.empty()){
             if(index != CONVEX_POLYGON_NPOS){
                 throw std::runtime_error("an empty polygon has a support vertex");

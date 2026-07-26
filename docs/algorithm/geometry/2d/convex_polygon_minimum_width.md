@@ -1,26 +1,38 @@
 ---
-title: Convex Polygon Minimum Width (凸多角形の最小幅)
+title: Convex Polygon Minimum Width Aggregator (凸多角形の最小幅集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/convex_polygon_minimum_width.hpp
 ---
 
-## API
+正規化済み凸多角形入力と頂点列入力の最小幅APIをまとめる後方互換集約ヘッダ。
 
-- `convex_polygon_minimum_width(polygon)`: 平行な2支持直線で挟む幅の最小値を返す。
+## 構成
 
-## 引数
+| leaf header | 提供するoverload |
+| --- | --- |
+| `convex_polygon_minimum_width_normalized.hpp` | `convex_polygon_minimum_width(const NormalizedConvexPolygon&)` |
+| `convex_polygon_minimum_width_points.hpp` | `convex_polygon_minimum_width(std::vector<Point>)` |
 
-`polygon` は `NormalizedConvexPolygon` または弱凸な周回列である。
+## 集約されるAPI
 
-## 戻り値
+```cpp
+long double convex_polygon_minimum_width(
+    const NormalizedConvexPolygon& polygon
+);
+long double convex_polygon_minimum_width(std::vector<Point> polygon);
+```
 
-最小幅を `long double` で返す。
+平行な2支持直線で凸集合を挟む幅の最小値を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 正規化済みoverload: 時間 $O(N)$、追加領域 $O(1)$。
-- 頂点列overload: 時間・領域 $O(N)$。
+頂点数を $N$ とする。
+
+| overload | 時間計算量 | 空間計算量（追加領域） |
+| --- | --- | --- |
+| `NormalizedConvexPolygon` | $O(N)$ | $O(1)$ |
+| `std::vector<Point>` | $O(N)$ | $O(N)$ |
 
 ## 注意点
 
-点・線分へ退化した凸集合の幅は0。非凸入力には `std::invalid_argument` を送出する。
-rotating calipersの面積差は、比較する面積と同じ二次元scaleに対する相対許容誤差で判定する。
+点または線分へ退化した凸集合の幅は0。頂点列overloadへの非凸入力には
+`std::invalid_argument` を送出する。

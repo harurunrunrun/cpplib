@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices_points.hpp"
 #include "../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices.hpp"
 #include "convex_calipers_test_common.hpp"
 
@@ -10,8 +12,13 @@ int main(){
     int query_count;
     if(!(std::cin >> query_count)) return 0;
     while(query_count-- > 0){
-        NormalizedConvexPolygon polygon(read_calipers_polygon());
+        const std::vector<Point> input = read_calipers_polygon();
+        NormalizedConvexPolygon polygon(input);
         const auto farthest = convex_polygon_farthest_vertices(polygon);
+        const auto from_points = convex_polygon_farthest_vertices(input);
+        if(farthest != from_points){
+            throw std::runtime_error("farthest-vertex overload mismatch");
+        }
         if(farthest.size() != polygon.size()){
             throw std::runtime_error("invalid farthest-vertex result size");
         }
