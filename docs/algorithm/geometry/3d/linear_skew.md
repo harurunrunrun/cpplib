@@ -1,11 +1,12 @@
 ---
-title: 3D Skew Linear Primitives (三次元線形図形のねじれ判定)
+title: 3D Linear Skewness Umbrella (三次元線形図形のねじれ判定集約)
 documentation_of: ../../../../src/algorithm/geometry/3d/linear_skew.hpp
 ---
 
 ## API
 
 - `skew(first, second)`: `Line3`, `Ray3`, `Segment3` の支持直線同士が非平行かつ交わらないかを返す。
+- このヘッダは型ペア別の `*_skew.hpp` をまとめてincludeする互換用集約ヘッダである。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +14,4 @@ documentation_of: ../../../../src/algorithm/geometry/3d/linear_skew.hpp
 
 ## 注意点
 
-有限範囲が交わらないだけではねじれとしない。線分を含むoverloadで退化線分を渡すと `std::invalid_argument` を送出する。
+必要な型ペアだけを使う場合は対応するleafヘッダを直接includeできる。有限範囲が交わらないだけではねじれとしない。

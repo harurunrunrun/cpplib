@@ -11,7 +11,7 @@
 #include "deduplicate_points_3d.hpp"
 #include "is_finite.hpp"
 #include "line_line_intersection.hpp"
-#include "linear_coincident.hpp"
+#include "line_line_coincident.hpp"
 #include "on_plane.hpp"
 #include "parallel.hpp"
 #include "plane3_unit_normal.hpp"

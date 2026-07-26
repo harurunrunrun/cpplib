@@ -1,13 +1,14 @@
 ---
-title: 3D Linear Coincidence Test (三次元線形図形の一致判定)
+title: 3D Linear Coincidence Umbrella (三次元線形図形の一致判定集約)
 documentation_of: ../../../../src/algorithm/geometry/3d/linear_coincident.hpp
 ---
 
 ## API
 
-- `coincident(Line3, Line3)`: 無限直線が集合として一致するかを返す。
-- `coincident(Ray3, Ray3)`: 始点と向きが一致するかを返す。
+- `coincident(Line3, Line3)`: 無限直線が点集合として一致するかを返す。
+- `coincident(Ray3, Ray3)`: 始点と向きを含めて半直線が一致するかを返す。
 - `coincident(Segment3, Segment3)`: 端点順を無視して閉線分が一致するかを返す。
+- このヘッダは同じ型同士の `*_coincident.hpp` をまとめてincludeする互換用集約ヘッダである。
 
 ## API別の時間計算量・空間計算量
 
@@ -15,4 +16,4 @@ documentation_of: ../../../../src/algorithm/geometry/3d/linear_coincident.hpp
 
 ## 注意点
 
-退化直線・半直線には `std::invalid_argument` を送出する。退化線分同士には対応する。
+必要な型だけを使う場合は対応するleafヘッダを直接includeできる。退化直線・半直線には `std::invalid_argument` を送出する。

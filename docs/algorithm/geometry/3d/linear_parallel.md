@@ -1,11 +1,12 @@
 ---
-title: 3D Linear Parallel Test (三次元線形図形の平行判定)
+title: 3D Linear Parallelism Umbrella (三次元線形図形の平行判定集約)
 documentation_of: ../../../../src/algorithm/geometry/3d/linear_parallel.hpp
 ---
 
 ## API
 
 - `parallel(first, second)`: `Line3`, `Ray3`, `Segment3` の全順序付き組合せについて方向が平行かを返す。
+- このヘッダは型ペア別の `*_parallel.hpp` をまとめてincludeする互換用集約ヘッダである。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +14,4 @@ documentation_of: ../../../../src/algorithm/geometry/3d/linear_parallel.hpp
 
 ## 注意点
 
-いずれかが退化して方向を持たない場合は `std::invalid_argument` を送出する。同一直線上かどうかは判定しない。
+必要な型ペアだけを使う場合は対応するleafヘッダを直接includeできる。退化して方向を持たない図形には `std::invalid_argument` を送出する。
