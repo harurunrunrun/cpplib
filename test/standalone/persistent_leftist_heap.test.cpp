@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/heap/persistent_leftist_heap.hpp"
+#include "../../src/structure/heap/meldable/persistent_leftist_heap.hpp"
 
 void self_test(){
     {

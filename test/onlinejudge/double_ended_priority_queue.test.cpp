@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../src/structure/heap/double_ended_priority_queue.hpp"
+#include "../../src/structure/heap/priority_queue/double_ended_priority_queue.hpp"
 #include "../../src/structure/io/fastio.hpp"
 
 int main(){

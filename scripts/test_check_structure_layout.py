@@ -49,6 +49,8 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("docs/structure/bbst/map/red_black_tree.md")
         self.write("src/structure/trie/binary/binary_trie.hpp")
         self.write("docs/structure/trie/binary/binary_trie.md")
+        self.write("src/structure/heap/meldable/persistent_leftist_heap.hpp")
+        self.write("docs/structure/heap/meldable/persistent_leftist_heap.md")
         self.assertEqual(self.messages(), [])
 
     def test_legacy_other_header_and_document_are_rejected(self) -> None:
@@ -106,6 +108,28 @@ class CheckStructureLayoutTest(unittest.TestCase):
 
     def test_bbst_subcategory_cannot_be_split_further(self) -> None:
         self.write("src/structure/bbst/map/internal/example.hpp")
+        self.assertTrue(any(
+            "must not have nested subcategories" in item
+            for item in self.messages()
+        ))
+
+    def test_heap_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/heap/persistent_leftist_heap.hpp")
+        self.assertTrue(any("heap subcategory" in item for item in self.messages()))
+
+    def test_unknown_heap_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/heap/misc/example.hpp")
+        self.assertTrue(any("unknown heap subcategory" in item for item in self.messages()))
+
+    def test_heap_header_in_wrong_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/heap/priority_queue/persistent_leftist_heap.hpp")
+        self.assertTrue(any(
+            "expected src/structure/heap/meldable" in item
+            for item in self.messages()
+        ))
+
+    def test_heap_subcategory_cannot_be_split_further(self) -> None:
+        self.write("src/structure/heap/meldable/internal/example.hpp")
         self.assertTrue(any(
             "must not have nested subcategories" in item
             for item in self.messages()
@@ -222,6 +246,13 @@ class CheckStructureLayoutTest(unittest.TestCase):
         )
         self.assertTrue(any("legacy reference" in item for item in self.messages()))
 
+
+    def test_legacy_heap_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/heap.test.cpp",
+            '#include "../../src/structure/heap/persistent_leftist_heap.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
 
     def test_legacy_trie_include_is_rejected(self) -> None:
         self.write(

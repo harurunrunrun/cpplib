@@ -1,6 +1,6 @@
 ---
 title: Double-Ended Priority Queue (両端優先度付きキュー) [double_ended_priority_queue]
-documentation_of: ../../../src/structure/heap/double_ended_priority_queue.hpp
+documentation_of: ../../../../src/structure/heap/priority_queue/double_ended_priority_queue.hpp
 ---
 
 min-max heap による両端priority queue。重複する値を保持する。

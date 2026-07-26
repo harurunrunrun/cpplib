@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/heap/kinetic_tournament.hpp"
+#include "../../src/structure/heap/priority_queue/kinetic_tournament.hpp"
 
 using Tournament = KineticTournament<long long, 32768>;
 

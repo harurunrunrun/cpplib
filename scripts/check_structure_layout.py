@@ -38,6 +38,7 @@ NESTED_STRUCTURE_CATEGORIES = {
         "li_chao", "line_container", "slope_trick",
     }),
     "dsu": frozenset({"basic", "persistent", "range", "rollback", "specialized"}),
+    "heap": frozenset({"meldable", "priority_queue"}),
     "trie": frozenset({"binary", "string"}),
     "tree": frozenset({"centroid", "dynamic_forest", "query", "treap"}),
 }
@@ -45,7 +46,6 @@ NESTED_STRUCTURE_CATEGORIES = {
 FLAT_STRUCTURE_CATEGORIES = frozenset({
     "bit",
     "fenwick_tree",
-    "heap",
     "interval",
     "io",
     "ordered_set",
@@ -59,13 +59,13 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "bitset_xor_shift": "bit",
     "dice": "types",
     "disjoint_sparse_table": "range_query",
-    "double_ended_priority_queue": "heap",
+    "double_ended_priority_queue": "heap/priority_queue",
     "dynamic_median_multiset": "ordered_set",
     "fastio": "io",
     "fenwick_tree": "fenwick_tree",
     "fenwick_tree_2d": "fenwick_tree",
     "kd_tree_2d": "spatial",
-    "kinetic_tournament": "heap",
+    "kinetic_tournament": "heap/priority_queue",
     "modulo_multiset_counter": "ordered_set",
     "monoid_merge_sort_tree": "range_query",
     "monotone_queue": "range_query",
@@ -79,7 +79,9 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "priority_sum_structure": "ordered_set",
     "range_add_point_get": "fenwick_tree",
     "range_assign_frequency": "interval",
-    "range_priority_queue": "heap",
+    "range_priority_queue": "heap/priority_queue",
+    "partially_retroactive_priority_queue": "heap/priority_queue",
+    "persistent_leftist_heap": "heap/meldable",
     "sparse_table": "range_query",
     "sqrt_tree": "range_query",
     "static_interval_coverage": "interval",
@@ -191,6 +193,12 @@ RECLASSIFIED_TRIE_STEMS = frozenset({
     for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
     if category.startswith("trie/")
 })
+RECLASSIFIED_HEAP_STEMS = frozenset({
+    stem
+    for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
+    if category.startswith("heap/")
+})
+
 
 RECLASSIFIED_TREE_STEMS = frozenset({
     stem
@@ -347,6 +355,10 @@ def check_layout(root: Path) -> list[str]:
                 for stem in RECLASSIFIED_CONVEX_HULL_TRICK_STEMS
             )
             legacy_references.extend(
+                f"structure/heap/{stem}.hpp"
+                for stem in RECLASSIFIED_HEAP_STEMS
+            )
+            legacy_references.extend(
                 f"structure/trie/{stem}.hpp"
                 for stem in RECLASSIFIED_TRIE_STEMS
             )
@@ -367,6 +379,10 @@ def check_layout(root: Path) -> list[str]:
                 legacy_references.extend(
                     f"../convex_hull_trick/{stem}.hpp"
                     for stem in RECLASSIFIED_CONVEX_HULL_TRICK_STEMS
+                )
+                legacy_references.extend(
+                    f"../heap/{stem}.hpp"
+                    for stem in RECLASSIFIED_HEAP_STEMS
                 )
                 legacy_references.extend(
                     f"../trie/{stem}.hpp"

@@ -1,6 +1,6 @@
 ---
 title: Persistent Leftist Heap (完全永続左偏ヒープ)
-documentation_of: ../../../src/structure/heap/persistent_leftist_heap.hpp
+documentation_of: ../../../../src/structure/heap/meldable/persistent_leftist_heap.hpp
 ---
 
 leftist heapをpath copyingして、過去のversionを保持したままmeld可能なpriority queueを構成する。nodeとversionは固定容量の `std::array` に保存する。

@@ -1,6 +1,6 @@
 ---
 title: Range Priority Queue (区間優先度付きキュー)
-documentation_of: ../../../src/structure/heap/range_priority_queue.hpp
+documentation_of: ../../../../src/structure/heap/priority_queue/range_priority_queue.hpp
 ---
 
 複数の priority queue を添字順に保持し、queue の半開区間 $[l,r)$ に含まれる

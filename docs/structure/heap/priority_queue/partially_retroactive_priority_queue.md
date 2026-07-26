@@ -1,6 +1,6 @@
 ---
 title: Partially Retroactive Priority Queue (部分遡及優先度付きキュー)
-documentation_of: ../../../src/structure/heap/partially_retroactive_priority_queue.hpp
+documentation_of: ../../../../src/structure/heap/priority_queue/partially_retroactive_priority_queue.hpp
 ---
 
 priority queueへのpush・pop操作を時刻順に保持し、過去時刻への操作追加と操作削除を反映した現在状態を扱う。query対象が現在状態だけなので部分retroactiveである。

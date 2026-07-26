@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/heap/partially_retroactive_priority_queue.hpp"
+#include "../../src/structure/heap/priority_queue/partially_retroactive_priority_queue.hpp"
 
 using Queue = PartiallyRetroactivePriorityQueue<long long, int, 4096>;
 

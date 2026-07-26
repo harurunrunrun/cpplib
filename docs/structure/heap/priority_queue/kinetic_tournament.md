@@ -1,6 +1,6 @@
 ---
 title: Kinetic Tournament (動的トーナメント木)
-documentation_of: ../../../src/structure/heap/kinetic_tournament.hpp
+documentation_of: ../../../../src/structure/heap/priority_queue/kinetic_tournament.hpp
 ---
 
 添字ごとに一次関数 `slope * time + intercept` を持ち、単調に進む共通時刻での区間最小値または区間最大値を保つ。
