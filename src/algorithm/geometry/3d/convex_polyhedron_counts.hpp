@@ -3,17 +3,9 @@
 
 #include <cstddef>
 
+#include "convex_polyhedron_counts3.hpp"
 #include "convex_polyhedron_edges.hpp"
 #include "convex_polyhedron_facets.hpp"
-
-struct ConvexPolyhedronCounts3{
-    std::size_t vertices = 0;
-    std::size_t edges = 0;
-    // Backward-compatible name for triangulated_face_count.
-    std::size_t triangular_faces = 0;
-    std::size_t facet_count = 0;
-    std::size_t triangulated_face_count = 0;
-};
 
 inline ConvexPolyhedronCounts3 convex_polyhedron_counts(
     const ConvexPolyhedron3& polyhedron

@@ -11,7 +11,6 @@ Gaussian eliminationを行う。入力全体を最大絶対値で正規化して
 
 - `gaussian_elimination_real(matrix, relative_epsilon)`: reduced row echelon form、
   pivot列を持つ `RealGaussianEliminationResult` を返す。
-- `result.rank()`: pivot数、すなわち数値rankを返す。
 - `solve_square_linear_system_real(matrix, rhs, relative_epsilon)`: 正方な
   $Ax=b$ の一意解を返す。数値的に特異なら `std::nullopt`。
 

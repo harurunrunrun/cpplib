@@ -5,7 +5,6 @@ documentation_of: ../../../../src/algorithm/geometry/3d/convex_polyhedron_facets
 
 ## API
 
-- `ConvexPolyhedronFacet3`: 同一平面上の三角形群について、外向きの境界頂点ループ `boundary` と元の三角形添字列 `triangles` を保持する。
 - `convex_polyhedron_facets(polyhedron)`: 三角形分割の内部対角線を除去し、幾何学的な面ごとにまとめる。
 
 ## API別の時間計算量・空間計算量

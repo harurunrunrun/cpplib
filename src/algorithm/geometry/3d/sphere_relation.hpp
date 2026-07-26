@@ -8,15 +8,7 @@
 #include "geometry_primitives.hpp"
 #include "is_finite.hpp"
 #include "geometry3d_sign.hpp"
-
-enum SphereRelation{
-    SPHERE_INSIDE = 0,
-    SPHERE_INTERNALLY_TANGENT = 1,
-    SPHERE_INTERSECT = 2,
-    SPHERE_EXTERNALLY_TANGENT = 3,
-    SPHERE_SEPARATE = 4,
-    SPHERE_COINCIDENT = 5,
-};
+#include "sphere_relation_result.hpp"
 
 inline SphereRelation sphere_relation(
     const Sphere3& first,

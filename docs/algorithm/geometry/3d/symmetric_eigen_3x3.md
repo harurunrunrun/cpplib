@@ -7,9 +7,7 @@ documentation_of: ../../../../src/algorithm/geometry/3d/symmetric_eigen_3x3.hpp
 
 ## API
 
-- `symmetric_eigen_3x3(matrix, relative_epsilon)`: `SymmetricEigen3` を返す。
-  `eigenvalues` は降順、`eigenvectors` の第 $i$ 列が対応する固有ベクトル。
-- `result.eigenvector(i)`: 第 $i$ 固有ベクトルを `Point3` で返す。
+- `symmetric_eigen_3x3(matrix, relative_epsilon)`: 固有値を降順に並べた `SymmetricEigen3` を返す。
 
 ## 時間計算量
 

@@ -5,7 +5,7 @@ documentation_of: ../../../../src/algorithm/geometry/3d/sphere_relation.hpp
 
 ## API
 
-- `sphere_relation(first, second)`: 球面同士を `SPHERE_INSIDE`, `SPHERE_INTERNALLY_TANGENT`, `SPHERE_INTERSECT`, `SPHERE_EXTERNALLY_TANGENT`, `SPHERE_SEPARATE`, `SPHERE_COINCIDENT` に分類する。
+- `sphere_relation(first, second)`: 球面同士の位置関係を `SphereRelation` で返す。
 
 ## API別の時間計算量・空間計算量
 

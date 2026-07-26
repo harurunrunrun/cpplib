@@ -9,20 +9,7 @@
 #include <stdexcept>
 
 #include "matrix3.hpp"
-
-struct SymmetricEigen3{
-    std::array<long double, 3> eigenvalues{};
-    Matrix3 eigenvectors = Matrix3::identity();
-
-    Point3 eigenvector(std::size_t index) const{
-        if(index >= 3) throw std::out_of_range("eigenvector index must be below three");
-        return {
-            eigenvectors[0][index],
-            eigenvectors[1][index],
-            eigenvectors[2][index],
-        };
-    }
-};
+#include "symmetric_eigen3.hpp"
 
 inline SymmetricEigen3 symmetric_eigen_3x3(
     const Matrix3& input,

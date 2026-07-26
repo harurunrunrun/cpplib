@@ -10,12 +10,8 @@
 
 #include "adaptive_orient3d.hpp"
 #include "convex_polyhedron3.hpp"
+#include "convex_polyhedron_facet3.hpp"
 #include "is_finite.hpp"
-
-struct ConvexPolyhedronFacet3{
-    std::vector<std::size_t> boundary;
-    std::vector<std::size_t> triangles;
-};
 
 namespace convex_polyhedron_facets_detail{
 

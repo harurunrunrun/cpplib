@@ -5,7 +5,6 @@ documentation_of: ../../../../src/algorithm/geometry/3d/convex_polyhedron_counts
 
 ## API
 
-- `ConvexPolyhedronCounts3`: `vertices`, 幾何学的 `edges`, 幾何面数 `facet_count`, 格納三角形数 `triangulated_face_count` を保持する。`triangular_faces` は後方互換のため `triangulated_face_count` と同じ値を保持する。
 - `convex_polyhedron_counts(polyhedron)`: 頂点・幾何辺・幾何面・三角形分割後の面の各個数を返す。
 
 ## API別の時間計算量・空間計算量

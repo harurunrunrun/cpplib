@@ -7,12 +7,13 @@
 #include <stdexcept>
 #include <vector>
 
+#include "../../src/algorithm/geometry/3d/real_gaussian_elimination_result.hpp"
 #include "../../src/algorithm/geometry/3d/gaussian_elimination_real.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){
     return geometry3d_api_test_main([](std::mt19937_64& random, std::size_t rounds){
-        const auto reduced = gaussian_elimination_real({
+        const RealGaussianEliminationResult reduced = gaussian_elimination_real({
             {1, 2, 3}, {2, 4, 6}, {0, 1, 1}
         });
         if(reduced.rank() != 2 || reduced.pivot_columns != std::vector<std::size_t>{0, 1}){

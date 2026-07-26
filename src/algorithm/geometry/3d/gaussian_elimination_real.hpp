@@ -11,13 +11,7 @@
 #include <vector>
 
 #include "geometry_primitives.hpp"
-
-struct RealGaussianEliminationResult{
-    std::vector<std::vector<long double>> reduced_row_echelon_form;
-    std::vector<std::size_t> pivot_columns;
-
-    std::size_t rank() const noexcept{ return pivot_columns.size(); }
-};
+#include "real_gaussian_elimination_result.hpp"
 
 namespace geometry3d_linear_algebra_detail{
 

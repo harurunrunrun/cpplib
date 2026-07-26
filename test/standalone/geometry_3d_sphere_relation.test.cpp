@@ -1,5 +1,6 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/sphere_relation_result.hpp"
 #include "../../src/algorithm/geometry/3d/sphere_relation.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_circle_sphere_validation_test_common.hpp"
@@ -13,7 +14,8 @@ int main(){
     })) return 1;
     return geometry3d_api_test_main([](std::mt19937_64&, std::size_t){
         const Sphere3 base{{}, 3};
-        if(sphere_relation(base, base) != SPHERE_COINCIDENT) return false;
+        const SphereRelation same = sphere_relation(base, base);
+        if(same != SPHERE_COINCIDENT) return false;
         if(sphere_relation(base, {{7, 0, 0}, 3}) != SPHERE_SEPARATE ||
             sphere_relation(base, {{6, 0, 0}, 3}) != SPHERE_EXTERNALLY_TANGENT ||
             sphere_relation(base, {{4, 0, 0}, 3}) != SPHERE_INTERSECT ||
