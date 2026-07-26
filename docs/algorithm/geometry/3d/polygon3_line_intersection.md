@@ -5,9 +5,6 @@ documentation_of: ../../../../src/algorithm/geometry/3d/polygon3_line_intersecti
 
 ## API
 
-- `Polygon3LinearIntersection3`: 共通部分のうち、どの線分にも含まれない孤立交点を
-  `points`、互いに内部が交わらない閉区間を `segments` に保持する。
-  `empty()` は両方が空かを返す。
 - `polygon3_line_intersection(polygon, line)`: 単純な平面多角形と直線の共通部分を返す。
   多角形は凸でなくてもよく、複数の区間を返せる。
 
@@ -19,7 +16,6 @@ documentation_of: ../../../../src/algorithm/geometry/3d/polygon3_line_intersecti
 - 直線が多角形の平面上にある場合は event と境界重複区間をソートするため、
   最悪時間 $O(N+K\log K)=O(N\log N)$、追加領域 $O(N+K)=O(N)$。
   各区間に対する多角形包含判定や、各点から全線分を走査する処理は行わない。
-- `Polygon3LinearIntersection3::empty()` は時間・領域ともに $O(1)$。
 
 ## 注意点
 

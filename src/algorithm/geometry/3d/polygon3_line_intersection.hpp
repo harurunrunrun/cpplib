@@ -22,15 +22,9 @@
 #include "on_plane.hpp"
 #include "polygon3_coplanar.hpp"
 #include "polygon3_contains.hpp"
+#include "polygon3_linear_intersection3.hpp"
 #include "polygon3_normal.hpp"
 #include "polygon3_to_2d_with_plane_coordinate_system.hpp"
-
-struct Polygon3LinearIntersection3{
-    std::vector<Point3> points;
-    std::vector<Segment3> segments;
-
-    bool empty() const noexcept{ return points.empty() && segments.empty(); }
-};
 
 namespace polygon3_line_intersection_detail{
 

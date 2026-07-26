@@ -5,9 +5,6 @@ documentation_of: ../../../../src/algorithm/geometry/3d/polygon3_plane_intersect
 
 ## API
 
-- `Polygon3PlaneIntersection3`: 二平面が一致するときの `coplanar_polygon` と、
-  それ以外の孤立 `points`・閉区間 `segments` を保持する。`empty()` は共通部分が
-  空かを返す。
 - `polygon3_plane_intersection(polygon, plane)`: 単純な平面多角形と平面の
   共通部分を返す。
 
@@ -15,7 +12,7 @@ documentation_of: ../../../../src/algorithm/geometry/3d/polygon3_plane_intersect
 
 頂点数を $N$ とする。二平面が平行な場合は時間 $O(N)$、追加領域 $O(1)$。
 交線が存在する場合は多角形と直線の event をソートするため、最悪時間 $O(N\log N)$、
-追加領域 $O(N)$。`Polygon3PlaneIntersection3::empty()` は時間・領域ともに $O(1)$。
+追加領域 $O(N)$。
 
 ## 注意点
 

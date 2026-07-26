@@ -13,12 +13,7 @@
 #include <vector>
 
 #include "geometry_primitives.hpp"
-
-struct PointSetDiameter3DResult{
-    std::size_t first;
-    std::size_t second;
-    long double distance;
-};
+#include "point_set_diameter_3d_result.hpp"
 
 namespace point_set_diameter_3d_detail{
 

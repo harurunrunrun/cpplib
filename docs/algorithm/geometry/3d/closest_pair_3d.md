@@ -9,9 +9,9 @@ $x$ 座標で分ける分割統治と、中央 slab に対する $y$ 帯・$z$ �
 
 ## API
 
-- `closest_pair_3d(points)`: `ClosestPair3DResult{first, second, distance}` を返す。
-  `first < second` であり、同距離ならindex対が辞書順最小のものを返す。点が2個未満
-  なら `nullopt`。
+- `closest_pair_3d(points)`: 最小距離の点対を `ClosestPair3DResult` で返す。
+  同距離ならindex対が辞書順最小のものを選ぶ。点が2個未満なら
+  `std::nullopt` を返す。
 
 完全に同一の座標は事前sortで検出し、距離0を直ちに返す。
 

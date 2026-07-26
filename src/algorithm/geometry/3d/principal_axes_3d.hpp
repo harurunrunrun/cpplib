@@ -9,13 +9,8 @@
 #include <vector>
 
 #include "geometry_primitives.hpp"
+#include "principal_axes3.hpp"
 #include "symmetric_eigen_3x3.hpp"
-
-struct PrincipalAxes3{
-    Point3 centroid;
-    std::array<Point3, 3> axes{};
-    std::array<long double, 3> variances{};
-};
 
 inline PrincipalAxes3 principal_axes_3d(
     const std::vector<Point3>& points,

@@ -12,6 +12,7 @@
 #include <utility>
 #include <vector>
 
+#include "../../src/algorithm/geometry/3d/point_set_diameter_3d_result.hpp"
 #include "../../src/algorithm/geometry/3d/point_set_diameter_3d_via_convex_hull.hpp"
 
 namespace{

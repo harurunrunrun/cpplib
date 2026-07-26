@@ -8,9 +8,9 @@ documentation_of: ../../../../src/algorithm/geometry/3d/point_set_diameter_3d.hp
 
 ## API
 
-- `point_set_diameter_3d(points)`: 最大距離の
-  `PointSetDiameter3DResult{first, second, distance}` を返す。`first < second` で、
-  同距離ならindex対が辞書順最小のものを返す。点が2個未満なら `nullopt`。
+- `point_set_diameter_3d(points)`: 最大距離の点対を
+  `PointSetDiameter3DResult` で返す。同距離ならindex対が辞書順最小のものを選ぶ。
+  点が2個未満なら `std::nullopt` を返す。
 - `point_set_diameter_3d_aabb_branch_and_bound(points)`: 各部分集合の軸平行境界箱から
   得られる距離上界で、直径を更新できない部分集合対を除外する。返り値と同距離時の
   規則は単純版と同じであり、近似は行わない。

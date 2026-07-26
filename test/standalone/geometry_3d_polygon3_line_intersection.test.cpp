@@ -7,6 +7,7 @@
 #include <variant>
 #include <vector>
 
+#include "../../src/algorithm/geometry/3d/polygon3_linear_intersection3.hpp"
 #include "../../src/algorithm/geometry/3d/polygon3_line_intersection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

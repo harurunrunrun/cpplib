@@ -7,8 +7,8 @@ documentation_of: ../../../../src/algorithm/geometry/3d/principal_axes_3d.hpp
 
 ## API
 
-- `principal_axes_3d(points, relative_epsilon)`: `centroid`、`axes[3]`、
-  `variances[3]` を持つ `PrincipalAxes3` を返す。各axisは単位ベクトル。
+- `principal_axes_3d(points, relative_epsilon)`: 点集合の母共分散行列を分解し、
+  重心・主成分軸・分散を `PrincipalAxes3` で返す。
 
 ## 時間計算量
 

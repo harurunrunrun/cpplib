@@ -12,13 +12,8 @@
 #include <utility>
 #include <vector>
 
+#include "closest_pair_3d_result.hpp"
 #include "geometry_primitives.hpp"
-
-struct ClosestPair3DResult{
-    std::size_t first;
-    std::size_t second;
-    long double distance;
-};
 
 namespace closest_pair_3d_detail{
 

@@ -2,22 +2,17 @@
 #define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYGON3_PLANE_INTERSECTION_HPP_INCLUDED
 
 #include <optional>
+#include <stdexcept>
+#include <utility>
 
 #include "cross.hpp"
 #include "is_zero_vector.hpp"
 #include "on_plane.hpp"
 #include "plane_plane_intersection.hpp"
+#include "polygon3_coplanar.hpp"
 #include "polygon3_line_intersection.hpp"
-
-struct Polygon3PlaneIntersection3{
-    std::optional<Polygon3> coplanar_polygon;
-    std::vector<Point3> points;
-    std::vector<Segment3> segments;
-
-    bool empty() const noexcept{
-        return !coplanar_polygon && points.empty() && segments.empty();
-    }
-};
+#include "polygon3_normal.hpp"
+#include "polygon3_plane_intersection3.hpp"
 
 inline Polygon3PlaneIntersection3 polygon3_plane_intersection(
     const Polygon3& polygon,
