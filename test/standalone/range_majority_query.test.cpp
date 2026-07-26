@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../../src/algorithm/range/range_majority_query.hpp"
+#include "../../src/algorithm/range/static_query/range_majority_query.hpp"
 
 std::optional<int> naive_majority(
     const std::vector<int>& values,

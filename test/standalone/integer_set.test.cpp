@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/ordered_set/integer_set.hpp"
+#include "../../src/structure/ordered_set/set/integer_set.hpp"
 
 #if defined(INT_SET_GNU_X86_TARGET) || defined(INT_SET_TARGET_AVX512F) || defined(INT_SET_TARGET_AVX2)
 #error integer_set internal macro leaked

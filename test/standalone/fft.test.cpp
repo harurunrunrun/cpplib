@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/fft/fft.hpp"
+#include "../../src/algorithm/fft/transform/fft.hpp"
 
 std::vector<long long> naive_ll(const std::vector<long long>& a, const std::vector<long long>& b){
     if(a.empty() || b.empty()){

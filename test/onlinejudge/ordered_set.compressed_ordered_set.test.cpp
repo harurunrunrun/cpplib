@@ -4,7 +4,7 @@
 #include <utility>
 
 #include "../../src/structure/io/fastio.hpp"
-#include "../../src/structure/ordered_set/compressed_ordered_set.hpp"
+#include "../../src/structure/ordered_set/set/compressed_ordered_set.hpp"
 
 using namespace std;
 

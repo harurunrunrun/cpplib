@@ -6,7 +6,7 @@
 #include <functional>
 #include <limits>
 #include <algorithm>
-#include "../../types/monoid.hpp"
+#include "../../types/monoid/monoid.hpp"
 
 
 template<auto Monoid, long long MAX_SIZE>

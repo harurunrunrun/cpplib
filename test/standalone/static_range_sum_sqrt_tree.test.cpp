@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/range_query/static_range_sum_sqrt_tree.hpp"
+#include "../../src/structure/range_query/aggregation/static_range_sum_sqrt_tree.hpp"
 
 void self_test(){
     StaticRangeSumSqrtTree<long long, 16> tree({3, -1, 4});

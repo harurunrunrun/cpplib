@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "reversible_splay_tree.hpp"
-#include "../../types/power_moment_monoid.hpp"
+#include "../../types/monoid/power_moment_monoid.hpp"
 
 template<class T, std::size_t MAX_POWER, int MAX_SIZE>
 class DynamicPowerMomentSequence{

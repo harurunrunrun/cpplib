@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/fft/min_plus_convolution_concave.hpp"
+#include "../../src/algorithm/fft/min_plus/min_plus_convolution_concave.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

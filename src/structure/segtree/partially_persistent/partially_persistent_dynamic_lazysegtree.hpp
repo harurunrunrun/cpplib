@@ -9,7 +9,7 @@
 #include <utility>
 
 #include "../../persistence/partially_persistent_storage.hpp"
-#include "../../types/monoid_act_len.hpp"
+#include "../../types/monoid/monoid_act_len.hpp"
 
 template<auto Monoid, long long MAX_SIZE, int MAX_NODES, int MAX_VERSIONS, int MAX_CHANGES>
 struct PartiallyPersistentDynamicLazySegtree{

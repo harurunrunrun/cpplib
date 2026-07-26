@@ -7,6 +7,18 @@ import check_algorithm_subcategories
 
 
 def main() -> None:
+    assert check_algorithm_subcategories.EXPECTED_LAYOUT[
+        Path("src/algorithm/fft")
+    ] == frozenset({"formal_power_series", "min_plus", "transform"})
+    assert check_algorithm_subcategories.EXPECTED_LAYOUT[
+        Path("src/algorithm/range")
+    ] == frozenset({
+        "interval", "offline_query", "sliding_window", "static_query",
+    })
+    assert Path(
+        "src/algorithm/sequence"
+    ) in check_algorithm_subcategories.FORBIDDEN_ALGORITHM_ROOTS
+
     with TemporaryDirectory() as directory:
         root = Path(directory)
         layout = {
@@ -21,6 +33,20 @@ def main() -> None:
         assert check_algorithm_subcategories.layout_violations(
             root, layout
         ) == []
+
+        forbidden_root = Path("src/algorithm/legacy_sequence")
+        forbidden = root / forbidden_root / "value.hpp"
+        forbidden.parent.mkdir(parents=True)
+        forbidden.write_text("#ifndef FORBIDDEN\n#define FORBIDDEN\n#endif\n")
+        errors = check_algorithm_subcategories.layout_violations(
+            root,
+            layout,
+            frozenset(),
+            frozenset({forbidden_root}),
+        )
+        assert any("forbidden top-level" in error for error in errors)
+        forbidden.unlink()
+        forbidden.parent.rmdir()
 
         flat = root / "src/algorithm/sample/flat.hpp"
         flat.write_text("#ifndef FLAT\n#define FLAT\n#endif\n")

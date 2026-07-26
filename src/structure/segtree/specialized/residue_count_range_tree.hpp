@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "../basic/lazysegtree.hpp"
-#include "../../types/residue_count_monoid.hpp"
+#include "../../types/monoid/residue_count_monoid.hpp"
 
 template<class Count, int MOD, int MAX_SIZE>
 class ResidueCountRangeTree{

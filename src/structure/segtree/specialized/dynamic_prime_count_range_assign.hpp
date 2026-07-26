@@ -6,7 +6,7 @@
 
 #include "../../../algorithm/math/number_theory/prime_sieve.hpp"
 #include "../dynamic/dynamic_lazysegtree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<int MAX_SIZE, int MAX_VALUE>
 class DynamicPrimeCountRangeAssign{

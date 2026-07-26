@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "../../src/structure/tree/dynamic_forest/link_cut_tree.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 
 int main(){

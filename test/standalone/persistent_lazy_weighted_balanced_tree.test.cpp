@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/bbst/sequence/persistent_lazy_weighted_balanced_tree.hpp"
-#include "../../src/structure/types/monoid_act_len.hpp"
+#include "../../src/structure/types/monoid/monoid_act_len.hpp"
 
 long long op_sum(long long a, long long, long long b, long long){ return a + b; }
 long long e_sum(){ return 0; }

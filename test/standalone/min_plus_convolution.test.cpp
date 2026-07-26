@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/fft/min_plus_convolution.hpp"
+#include "../../src/algorithm/fft/min_plus/min_plus_convolution.hpp"
 
 std::vector<long long> naive_min_plus(const std::vector<long long>& left,
                                       const std::vector<long long>& right){

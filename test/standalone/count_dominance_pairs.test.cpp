@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/range/count_dominance_pairs.hpp"
+#include "../../src/algorithm/range/offline_query/count_dominance_pairs.hpp"
 
 void self_test(){
     assert(count_dominance_pairs(std::vector<int>{}, std::vector<int>{}) == 0);

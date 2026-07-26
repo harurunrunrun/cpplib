@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/fft/bitwise_convolution.hpp"
+#include "../../src/algorithm/fft/transform/bitwise_convolution.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 int main(){

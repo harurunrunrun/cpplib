@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/range/sliding_window_maximum.hpp"
+#include "../../src/algorithm/range/sliding_window/sliding_window_maximum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

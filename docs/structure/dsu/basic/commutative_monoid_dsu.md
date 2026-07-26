@@ -12,7 +12,7 @@ documentation_of: ../../../../src/structure/dsu/basic/commutative_monoid_dsu.hpp
 CommutativeMonoidDSU<Monoid, MAX_SIZE>
 ```
 
-- `Monoid` は `structure/types/monoid.hpp` の `Monoid` と同じく、型 `S`、単位元 `e()`、二項演算 `op(a,b)` を持つオブジェクト
+- `Monoid` は `structure/types/monoid/monoid.hpp` の `Monoid` と同じく、型 `S`、単位元 `e()`、二項演算 `op(a,b)` を持つオブジェクト
 - `Monoid::op` は結合的かつ可換で、`Monoid::e()` は単位元
 - S はデフォルト構築、コピー、代入ができる型
 - `MAX_SIZE` は頂点数の上限で、正でなければならない

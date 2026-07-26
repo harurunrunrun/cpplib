@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "../../src/structure/dsu/basic/commutative_monoid_dsu.hpp"
-#include "../../src/structure/types/monoid.hpp"
+#include "../../src/structure/types/monoid/monoid.hpp"
 
 constexpr long long sum_operation(long long first, long long second){
     return first + second;

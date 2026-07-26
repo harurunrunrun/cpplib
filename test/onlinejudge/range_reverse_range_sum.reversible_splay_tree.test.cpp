@@ -3,7 +3,7 @@
 #include <vector>
 #include "../../src/structure/bbst/sequence/reversible_splay_tree.hpp"
 #include "../../src/structure/io/fastio.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 
 int main(){

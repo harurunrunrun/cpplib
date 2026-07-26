@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/structure/types/dice.hpp"
+#include "../../src/structure/types/simulation/dice.hpp"
 
 namespace{
 

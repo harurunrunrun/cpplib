@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/fft/min_plus_convolution_concave.hpp"
+#include "../../src/algorithm/fft/min_plus/min_plus_convolution_concave.hpp"
 
 namespace{
 

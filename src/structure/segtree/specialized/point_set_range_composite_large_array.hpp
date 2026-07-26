@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 #include "../dynamic/dynamic_segtree.hpp"
 
 template<class T, long long MAX_SIZE>

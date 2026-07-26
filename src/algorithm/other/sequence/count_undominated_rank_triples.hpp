@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "../../../structure/segtree/basic/segtree.hpp"
-#include "../../../structure/types/common_monoids.hpp"
+#include "../../../structure/types/monoid/common_monoids.hpp"
 
 template<int MAX_SIZE = 100000>
 int count_undominated_rank_triples(

@@ -6,7 +6,7 @@
 #include <utility>
 
 #include "static_tree_path_fold.hpp"
-#include "../../../structure/types/monoid.hpp"
+#include "../../../structure/types/monoid/monoid.hpp"
 
 template<class Weight>
 constexpr std::pair<Weight, Weight> tree_path_minmax_op(

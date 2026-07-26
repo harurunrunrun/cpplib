@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/fft/convolution.hpp"
+#include "../../src/algorithm/fft/transform/convolution.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

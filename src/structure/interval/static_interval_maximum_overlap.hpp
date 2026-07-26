@@ -6,8 +6,8 @@
 #include <utility>
 #include <vector>
 
-#include "../range_query/sparse_table.hpp"
-#include "../types/common_monoids.hpp"
+#include "../range_query/aggregation/sparse_table.hpp"
+#include "../types/monoid/common_monoids.hpp"
 
 template<class Coordinate, int MAX_ENDPOINTS>
 class StaticIntervalMaximumOverlap{

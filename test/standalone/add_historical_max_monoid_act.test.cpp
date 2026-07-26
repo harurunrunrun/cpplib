@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "../../src/structure/segtree/basic/lazysegtree.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 template<class T>
 inline constexpr AddHistoricalMaxMonoidAct<T> add_historical_max{};

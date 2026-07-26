@@ -7,7 +7,7 @@
 
 #include "../../src/structure/persistence/persistent_queue.hpp"
 #include "../../src/structure/persistence/persistent_queue_queries.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 using HeapBackedQueueQueries = PersistentQueueQueries<
     PersistentArrayQueue<int, 512, 512>,
     512

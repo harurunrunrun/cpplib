@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/fft/formal_power_series.hpp"
+#include "../../src/algorithm/fft/formal_power_series/formal_power_series.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

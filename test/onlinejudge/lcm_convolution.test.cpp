@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/fft/divisor_convolution.hpp"
+#include "../../src/algorithm/fft/transform/divisor_convolution.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 int main(){

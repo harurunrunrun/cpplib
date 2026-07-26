@@ -2,7 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_TREE_QUERY_WEIGHTED_TREE_DISTANCE_KTH_VERTEX_HPP_INCLUDED
 
 #include "static_tree_path_fold.hpp"
-#include "../../../structure/types/common_monoids.hpp"
+#include "../../../structure/types/monoid/common_monoids.hpp"
 
 template<class Weight, int MAX_SIZE>
 struct WeightedTreeDistanceKthVertex{

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "../basic/lazysegtree.hpp"
-#include "../../types/sum_squares_monoid.hpp"
+#include "../../types/monoid/sum_squares_monoid.hpp"
 
 template<class T, int MAX_SIZE>
 class RangeAssignAddSumSquares{

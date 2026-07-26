@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/range/maximum_interval_overlap.hpp"
+#include "../../src/algorithm/range/interval/maximum_interval_overlap.hpp"
 
 void self_test(){
     using Interval = std::pair<int, int>;

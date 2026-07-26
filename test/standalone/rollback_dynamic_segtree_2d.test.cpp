@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "../../src/structure/segtree/rollback/rollback_dynamic_segtree_2d.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 constexpr AddMonoid<long long> rollback_dynamic_2d_sum{};
 using Tree = RollbackDynamicSegtree2D<

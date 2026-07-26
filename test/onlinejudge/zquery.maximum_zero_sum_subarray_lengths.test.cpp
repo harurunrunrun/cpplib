@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/range/maximum_zero_sum_subarray_lengths.hpp"
+#include "../../src/algorithm/range/offline_query/maximum_zero_sum_subarray_lengths.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

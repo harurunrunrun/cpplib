@@ -5,7 +5,7 @@
 #include <string>
 
 #include "../../src/structure/segtree/dynamic/dynamic_segtree_2d.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 constexpr AddMonoid<long long> dynamic_add_monoid_2d{};
 

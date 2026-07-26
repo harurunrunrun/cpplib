@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "../../src/structure/dsu/specialized/incremental_component_affine.hpp"
-#include "../../src/structure/types/monoid_act_len.hpp"
+#include "../../src/structure/types/monoid/monoid_act_len.hpp"
 
 struct AffineAction{
     long long multiplier = 1;

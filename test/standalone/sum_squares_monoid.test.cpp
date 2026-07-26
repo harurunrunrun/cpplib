@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "../../src/structure/segtree/basic/lazysegtree.hpp"
-#include "../../src/structure/types/sum_squares_monoid.hpp"
+#include "../../src/structure/types/monoid/sum_squares_monoid.hpp"
 
 template<class T>
 inline constexpr AffineSumSquaresMonoidAct<T> affine_sum_squares{};

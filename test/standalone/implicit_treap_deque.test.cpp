@@ -6,7 +6,7 @@
 #include <string>
 
 #include "../../src/structure/tree/treap/implicit_treap_deque.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 void self_test(){
     ImplicitTreapDeque<AddMonoid<long long>{}, 8> deque;

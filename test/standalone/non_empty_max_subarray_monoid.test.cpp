@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 constexpr NonEmptyMaxSubarrayMonoid<long long> non_empty_max_subarray{};
 

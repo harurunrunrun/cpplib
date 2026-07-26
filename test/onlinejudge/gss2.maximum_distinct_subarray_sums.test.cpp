@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/range/maximum_distinct_subarray_sums.hpp"
+#include "../../src/algorithm/range/offline_query/maximum_distinct_subarray_sums.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

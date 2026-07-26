@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "../dynamic/dynamic_lazysegtree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<class T, int MAX_SIZE>
 class RangeAddRangeSum{

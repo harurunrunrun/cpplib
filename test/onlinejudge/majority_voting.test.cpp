@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/range/range_majority_query.hpp"
+#include "../../src/algorithm/range/static_query/range_majority_query.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

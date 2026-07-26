@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/fft/convolution.hpp"
+#include "../../src/algorithm/fft/transform/convolution.hpp"
 
 template<int MOD>
 std::vector<Modint<MOD>> naive_convolution(const std::vector<Modint<MOD>>& a, const std::vector<Modint<MOD>>& b){

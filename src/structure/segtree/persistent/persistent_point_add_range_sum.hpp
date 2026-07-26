@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "persistent_segtree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 namespace persistent_point_add_range_sum_internal{
 

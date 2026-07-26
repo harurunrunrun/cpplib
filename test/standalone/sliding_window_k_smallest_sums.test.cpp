@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/sequence/sliding_window_k_smallest_sums.hpp"
+#include "../../src/algorithm/range/sliding_window/sliding_window_k_smallest_sums.hpp"
 
 void self_test(){
     assert((sliding_window_k_smallest_sums<int, long long>({4, 1, 3, 2}, 3, 2)

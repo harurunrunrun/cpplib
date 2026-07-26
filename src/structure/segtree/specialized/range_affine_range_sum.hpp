@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 #include "../basic/lazysegtree.hpp"
 
 template<class T, int MAX_SIZE>

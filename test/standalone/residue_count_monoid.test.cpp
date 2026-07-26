@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "../../src/structure/segtree/basic/lazysegtree.hpp"
-#include "../../src/structure/types/residue_count_monoid.hpp"
+#include "../../src/structure/types/monoid/residue_count_monoid.hpp"
 
 template<class Count, int MOD>
 inline constexpr AddResidueCountMonoidAct<Count, MOD> residue_count_action{};

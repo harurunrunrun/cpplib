@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 #include "lazy_link_cut_tree.hpp"
 #include "lazy_top_tree.hpp"
 #include "link_cut_tree.hpp"

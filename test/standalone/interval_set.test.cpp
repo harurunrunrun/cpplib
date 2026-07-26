@@ -5,7 +5,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/range/interval_set.hpp"
+#include "../../src/algorithm/range/interval/interval_set.hpp"
 
 bool covered_naive(const std::vector<char>& used, int l, int r){
     for(int i = l; i < r; i++){

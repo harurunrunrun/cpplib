@@ -97,7 +97,7 @@ class DocsProblemTagsPrimarySourcesTest(unittest.TestCase):
             monoid.write_text("#pragma once\n", encoding="utf-8")
             source = (
                 '#include "../../src/structure/segtree/basic/segtree.hpp"\n'
-                '#include "../../src/structure/types/common_monoids.hpp"\n'
+                '#include "../../src/structure/types/monoid/common_monoids.hpp"\n'
             )
 
             self.assertEqual(

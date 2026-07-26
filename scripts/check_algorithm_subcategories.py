@@ -12,7 +12,18 @@ FLAT_LAYOUTS: frozenset[Path] = frozenset({
 })
 
 
+FORBIDDEN_ALGORITHM_ROOTS: frozenset[Path] = frozenset({
+    Path("src/algorithm/sequence"),
+})
+
+
 EXPECTED_LAYOUT: dict[Path, frozenset[str]] = {
+    Path("src/algorithm/fft"): frozenset({
+        "formal_power_series", "min_plus", "transform",
+    }),
+    Path("src/algorithm/range"): frozenset({
+        "interval", "offline_query", "sliding_window", "static_query",
+    }),
     Path("src/algorithm/string"): frozenset({
         "automata", "palindrome", "sequence", "suffix",
     }),
@@ -43,12 +54,27 @@ def layout_violations(
     repository_root: Path,
     expected_layout: dict[Path, frozenset[str]] = EXPECTED_LAYOUT,
     flat_layouts: frozenset[Path] | None = None,
+    forbidden_roots: frozenset[Path] | None = None,
 ) -> list[str]:
     if flat_layouts is None:
         flat_layouts = (
             FLAT_LAYOUTS if expected_layout is EXPECTED_LAYOUT else frozenset()
         )
+    if forbidden_roots is None:
+        forbidden_roots = (
+            FORBIDDEN_ALGORITHM_ROOTS
+            if expected_layout is EXPECTED_LAYOUT
+            else frozenset()
+        )
     errors: list[str] = []
+    for relative_root in forbidden_roots:
+        root = repository_root / relative_root
+        for header in sorted(root.rglob("*.hpp")):
+            if header.is_file():
+                errors.append(
+                    f"{header.relative_to(repository_root)}: forbidden "
+                    "top-level algorithm category"
+                )
     for relative_root in flat_layouts:
         root = repository_root / relative_root
         if not root.is_dir():

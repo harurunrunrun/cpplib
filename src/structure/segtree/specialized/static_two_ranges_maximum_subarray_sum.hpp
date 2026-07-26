@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "../basic/segtree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<class T, int MAX_SIZE>
 class StaticTwoRangesMaximumSubarraySum{

@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../../types/monoid_act_len.hpp"
+#include "../../types/monoid/monoid_act_len.hpp"
 
 template<auto Monoid, long long MAX_SIZE, int MAX_NODES, int MAX_VERSIONS>
 struct PersistentDynamicLazySegtree{

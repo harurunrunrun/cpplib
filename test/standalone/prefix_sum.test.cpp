@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/range_query/prefix_sum.hpp"
+#include "../../src/structure/range_query/aggregation/prefix_sum.hpp"
 
 void test_prefix_sum(){
     PrefixSum<long long, 8> empty;

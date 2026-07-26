@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/fft/polya_exponential.hpp"
+#include "../../src/algorithm/fft/formal_power_series/polya_exponential.hpp"
 
 namespace{
 

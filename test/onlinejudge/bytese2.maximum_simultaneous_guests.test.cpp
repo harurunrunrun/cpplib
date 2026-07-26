@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/range/maximum_interval_overlap.hpp"
+#include "../../src/algorithm/range/interval/maximum_interval_overlap.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

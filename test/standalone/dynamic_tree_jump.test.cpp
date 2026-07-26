@@ -13,8 +13,8 @@
 
 #include "../../src/structure/tree/dynamic_forest/lazy_link_cut_tree.hpp"
 #include "../../src/structure/tree/dynamic_forest/link_cut_tree.hpp"
-#include "../../src/structure/types/monoid.hpp"
-#include "../../src/structure/types/monoid_act_len.hpp"
+#include "../../src/structure/types/monoid/monoid.hpp"
+#include "../../src/structure/types/monoid/monoid_act_len.hpp"
 
 long long add_values(long long left, long long right){ return left + right; }
 long long zero_value(){ return 0; }

@@ -2,7 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_DYNAMIC_FOREST_CONNECTIVITY_HPP_INCLUDED
 
 #include "link_cut_tree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<int MAX_SIZE>
 struct DynamicForestConnectivity{

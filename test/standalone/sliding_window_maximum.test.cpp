@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/range/sliding_window_maximum.hpp"
+#include "../../src/algorithm/range/sliding_window/sliding_window_maximum.hpp"
 
 int main(){
     assert((sliding_window_maximum(std::vector<int>{4, 2, 2, 5, 1}, 3) ==

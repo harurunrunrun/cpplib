@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/range_query/monotone_queue.hpp"
+#include "../../src/structure/range_query/extrema/monotone_queue.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

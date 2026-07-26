@@ -26,8 +26,8 @@ class CheckStructureLayoutTest(unittest.TestCase):
         return check_layout(self.root)
 
     def test_valid_moderate_layout(self) -> None:
-        self.write("src/structure/range_query/sparse_table.hpp")
-        self.write("docs/structure/range_query/sparse_table.md")
+        self.write("src/structure/range_query/aggregation/sparse_table.hpp")
+        self.write("docs/structure/range_query/aggregation/sparse_table.md")
         self.write(
             "src/algorithm/other/scheduling/incremental_interval_scheduling.hpp"
         )
@@ -39,8 +39,12 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("docs/structure/dsu/basic/dsu.md")
         self.write("src/structure/tree/dynamic_forest/link_cut_tree.hpp")
         self.write("docs/structure/tree/dynamic_forest/link_cut_tree.md")
-        self.write("src/structure/ordered_set/integer_set.hpp")
-        self.write("docs/structure/ordered_set/integer_set.md")
+        self.write("src/structure/ordered_set/set/integer_set.hpp")
+        self.write("docs/structure/ordered_set/set/integer_set.md")
+        self.write("src/structure/types/monoid/monoid.hpp")
+        self.write("docs/structure/types/monoid/monoid.md")
+        self.write("src/structure/types/simulation/dice.hpp")
+        self.write("docs/structure/types/simulation/dice.md")
         self.write(
             "src/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.hpp"
         )
@@ -79,13 +83,42 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("src/structure/example.hpp")
         self.assertTrue(any("must be in a category" in item for item in self.messages()))
 
-    def test_flat_category_cannot_be_split_further(self) -> None:
+    def test_nested_family_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/range_query/sparse_table.hpp")
+        self.assertTrue(any(
+            "range_query subcategory" in item for item in self.messages()
+        ))
+
+    def test_unknown_range_query_subcategory_is_rejected(self) -> None:
         self.write("src/structure/range_query/static/sparse_table.hpp")
-        self.assertTrue(any("must not have subcategories" in item for item in self.messages()))
+        self.assertTrue(any(
+            "unknown range_query subcategory" in item
+            for item in self.messages()
+        ))
+
+    def test_range_query_subcategory_cannot_be_split_further(self) -> None:
+        self.write("src/structure/range_query/aggregation/detail/example.hpp")
+        self.assertTrue(any(
+            "must not have nested subcategories" in item
+            for item in self.messages()
+        ))
+
+    def test_ordered_set_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/ordered_set/integer_set.hpp")
+        self.assertTrue(any(
+            "ordered_set subcategory" in item for item in self.messages()
+        ))
+
+    def test_types_header_in_wrong_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/types/simulation/monoid.hpp")
+        self.assertTrue(any(
+            "expected src/structure/types/monoid" in item
+            for item in self.messages()
+        ))
 
     def test_known_header_in_wrong_category_is_rejected(self) -> None:
         self.write("src/structure/heap/sparse_table.hpp")
-        self.assertTrue(any("expected src/structure/range_query" in item for item in self.messages()))
+        self.assertTrue(any("expected src/structure/range_query/aggregation" in item for item in self.messages()))
 
     def test_dsu_header_must_be_in_a_subcategory(self) -> None:
         self.write("src/structure/dsu/dsu.hpp")
@@ -267,6 +300,20 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write(
             "test/standalone/dsu.test.cpp",
             '#include "../../src/structure/dsu/dsu.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_legacy_range_query_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/range.test.cpp",
+            '#include "../../src/structure/range_query/sparse_table.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_relative_legacy_types_include_is_rejected(self) -> None:
+        self.write(
+            "src/structure/segtree/basic/example.hpp",
+            '#include "../../types/monoid.hpp"\n',
         )
         self.assertTrue(any("legacy reference" in item for item in self.messages()))
 

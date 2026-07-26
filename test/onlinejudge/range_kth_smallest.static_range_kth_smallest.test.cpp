@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/range_query/static_range_kth_smallest.hpp"
+#include "../../src/structure/range_query/value_query/static_range_kth_smallest.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

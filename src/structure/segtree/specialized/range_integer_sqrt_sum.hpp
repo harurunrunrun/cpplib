@@ -8,7 +8,7 @@
 
 #include "../../../algorithm/math/number_theory/basic_number_theory.hpp"
 #include "../basic/segtree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<int MAX_SIZE>
 class RangeIntegerSqrtSum{

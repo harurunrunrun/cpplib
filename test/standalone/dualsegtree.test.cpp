@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/segtree/basic/dualsegtree.hpp"
-#include "../../src/structure/types/monoid_act.hpp"
+#include "../../src/structure/types/monoid/monoid_act.hpp"
 
 long long op_dummy(long long, long long){ return 0; }
 long long e_zero(){ return 0; }

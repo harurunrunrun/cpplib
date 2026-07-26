@@ -11,8 +11,8 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/bbst/sequence/persistent_reversible_splay_tree.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
-#include "../../src/structure/types/monoid.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
+#include "../../src/structure/types/monoid/monoid.hpp"
 
 constexpr AddMonoid<long long> add_monoid{};
 using Tree = PersistentReversibleSplayTree<add_monoid, 350000, 2000>;

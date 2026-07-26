@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/range/interval_set.hpp"
+#include "../../src/algorithm/range/interval/interval_set.hpp"
 
 struct ConcatenationMonoid{
     using S = std::string;

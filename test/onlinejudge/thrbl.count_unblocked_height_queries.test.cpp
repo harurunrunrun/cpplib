@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/range/count_unblocked_height_queries.hpp"
+#include "../../src/algorithm/range/offline_query/count_unblocked_height_queries.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/range/static_range_count_distinct.hpp"
+#include "../../src/algorithm/range/static_query/static_range_count_distinct.hpp"
 
 struct ConstantHash{
     std::size_t operator()(int) const{ return 0; }

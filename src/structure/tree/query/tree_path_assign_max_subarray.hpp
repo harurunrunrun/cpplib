@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../dynamic_forest/lazy_link_cut_tree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<class Value, int MAX_SIZE>
 struct TreePathAssignMaxSubarray{

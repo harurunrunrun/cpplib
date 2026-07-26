@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "../../src/structure/segtree/partially_persistent/partially_persistent_dynamic_segtree_2d.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 constexpr AddMonoid<long long> partially_persistent_dynamic_2d_sum{};
 using Tree = PartiallyPersistentDynamicSegtree2D<

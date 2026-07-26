@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../../src/structure/persistence/persistent_queue.hpp"
 #include "../../src/structure/persistence/persistent_queue_queries.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 constexpr int MAX_Q = 500000;
 

@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/ordered_set/threshold_updated_indexed_multiset.hpp"
+#include "../../src/structure/ordered_set/transform_multiset/threshold_updated_indexed_multiset.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

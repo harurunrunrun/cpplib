@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/fft/divisor_convolution.hpp"
+#include "../../src/algorithm/fft/transform/divisor_convolution.hpp"
 
 void test_basic(){
     const std::vector<long long> a = {1, 2, 3, 4};

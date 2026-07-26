@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../../structure/ordered_set/integer_set.hpp"
+#include "../../../structure/ordered_set/set/integer_set.hpp"
 
 template<int MAX_SIZE = 20000>
 std::vector<int> cyclic_order_statistic_placement_permutation(int size){

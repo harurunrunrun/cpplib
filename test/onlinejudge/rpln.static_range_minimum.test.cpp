@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/range_query/static_range_minimum.hpp"
+#include "../../src/structure/range_query/extrema/static_range_minimum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

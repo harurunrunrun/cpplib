@@ -4,7 +4,7 @@
 #include <limits>
 
 #include "../../src/structure/segtree/basic/segtree.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 constexpr MinMonoid<int> aoj_range_min_monoid{};
 

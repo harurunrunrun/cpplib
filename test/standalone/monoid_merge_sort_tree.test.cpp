@@ -10,9 +10,9 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/range_query/monoid_merge_sort_tree.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
-#include "../../src/structure/types/monoid.hpp"
+#include "../../src/structure/range_query/value_query/monoid_merge_sort_tree.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
+#include "../../src/structure/types/monoid/monoid.hpp"
 
 constexpr AddMonoid<long long> add_monoid{};
 

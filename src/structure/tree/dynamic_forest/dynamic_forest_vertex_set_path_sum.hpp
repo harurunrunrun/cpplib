@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "link_cut_tree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<int MAX_SIZE>
 struct DynamicForestVertexSetPathSum{

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/range/static_range_count_distinct.hpp"
+#include "../../src/algorithm/range/static_query/static_range_count_distinct.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

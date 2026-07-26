@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/range_query/sqrt_tree.hpp"
+#include "../../src/structure/range_query/aggregation/sqrt_tree.hpp"
 
 struct AffineSemigroup{
     using S = std::pair<long long, long long>;

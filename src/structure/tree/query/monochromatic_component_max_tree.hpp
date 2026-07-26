@@ -2,7 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_TREE_QUERY_MONOCHROMATIC_COMPONENT_MAX_TREE_HPP_INCLUDED
 
 #include "dynamic_monochromatic_tree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<class Value, int MAX_SIZE>
 struct MonochromaticComponentMaxTree{

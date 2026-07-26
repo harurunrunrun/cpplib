@@ -1,7 +1,7 @@
 #ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_SPECIALIZED_RANGE_AFFINE_RANGE_SUM_LARGE_ARRAY_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_SEGTREE_SPECIALIZED_RANGE_AFFINE_RANGE_SUM_LARGE_ARRAY_HPP_INCLUDED
 
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 #include "../dynamic/dynamic_lazysegtree.hpp"
 
 template<class T, long long MAX_SIZE>

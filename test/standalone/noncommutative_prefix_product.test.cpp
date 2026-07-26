@@ -8,8 +8,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/range_query/noncommutative_prefix_product.hpp"
-#include "../../src/structure/types/monoid.hpp"
+#include "../../src/structure/range_query/aggregation/noncommutative_prefix_product.hpp"
+#include "../../src/structure/types/monoid/monoid.hpp"
 
 constexpr long long MOD = 1000000007LL;
 using Matrix2 = std::array<long long, 4>;

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/sequence/sliding_window_k_smallest_sums.hpp"
+#include "../../src/algorithm/range/sliding_window/sliding_window_k_smallest_sums.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

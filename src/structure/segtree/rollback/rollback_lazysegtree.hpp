@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "../../types/monoid_act.hpp"
+#include "../../types/monoid/monoid_act.hpp"
 
 template<auto Monoid_act, int MAX_SIZE, int MAX_UPDATE>
 struct RollbackLazySegtree{

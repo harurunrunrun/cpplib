@@ -8,7 +8,7 @@
 
 #include "../../../algorithm/tree/decomposition/heavy_light_decomposition.hpp"
 #include "../../segtree/basic/segtree.hpp"
-#include "../../types/common_monoids.hpp"
+#include "../../types/monoid/common_monoids.hpp"
 
 template<class Weight, int MAX_SIZE>
 struct TreeEdgePointSetPathMaximum{

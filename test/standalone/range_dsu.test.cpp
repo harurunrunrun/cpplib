@@ -6,7 +6,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/range/range_dsu.hpp"
+#include "../../src/algorithm/range/interval/range_dsu.hpp"
 
 struct NaiveDSU{
     std::vector<int> parent;

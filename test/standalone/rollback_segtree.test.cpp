@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/segtree/rollback/rollback_segtree.hpp"
-#include "../../src/structure/types/monoid.hpp"
+#include "../../src/structure/types/monoid/monoid.hpp"
 
 long long op_sum(long long a, long long b){ return a + b; }
 long long e_sum(){ return 0; }

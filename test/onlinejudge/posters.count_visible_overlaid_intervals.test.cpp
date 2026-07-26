@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/range/count_visible_overlaid_intervals.hpp"
+#include "../../src/algorithm/range/interval/count_visible_overlaid_intervals.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

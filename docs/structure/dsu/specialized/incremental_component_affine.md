@@ -13,7 +13,7 @@ documentation_of: ../../../../src/structure/dsu/specialized/incremental_componen
 IncrementalComponentAffine<MonoidActLen, MAX_SIZE>
 ```
 
-`MonoidActLen` は `structure/types/monoid_act_len.hpp` と同じ次の要素を持つ。
+`MonoidActLen` は `structure/types/monoid/monoid_act_len.hpp` と同じ次の要素を持つ。
 
 - 集約値型 `S` と作用型 `T`
 - 可換な成分集約 `op(first, first_length, second, second_length)` と単位元 `e()`

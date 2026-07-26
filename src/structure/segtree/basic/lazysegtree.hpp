@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <functional>
-#include "../../types/monoid_act.hpp"
+#include "../../types/monoid/monoid_act.hpp"
 
 
 template<auto Monoid_act, int MAX_SIZE>

@@ -1,7 +1,7 @@
 #ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_DETAIL_WIDE_SEGTREE_PERSISTENCE_COMMON_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_SEGTREE_DETAIL_WIDE_SEGTREE_PERSISTENCE_COMMON_HPP_INCLUDED
 
-#include "../../types/monoid.hpp"
+#include "../../types/monoid/monoid.hpp"
 
 namespace wide_segtree_persistence_internal{
 

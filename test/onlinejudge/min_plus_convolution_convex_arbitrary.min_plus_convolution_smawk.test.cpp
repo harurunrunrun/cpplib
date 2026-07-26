@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/fft/min_plus_convolution_smawk.hpp"
+#include "../../src/algorithm/fft/min_plus/min_plus_convolution_smawk.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

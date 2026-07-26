@@ -6,8 +6,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/range/sliding_window_maximum.hpp"
-#include "../../src/structure/range_query/monotone_queue.hpp"
+#include "../../src/algorithm/range/sliding_window/sliding_window_maximum.hpp"
+#include "../../src/structure/range_query/extrema/monotone_queue.hpp"
 
 template<class T>
 void print_vector(const std::vector<T>& values){

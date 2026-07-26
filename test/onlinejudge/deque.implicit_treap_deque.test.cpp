@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "../../src/structure/tree/treap/implicit_treap_deque.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

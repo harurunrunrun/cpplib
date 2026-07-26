@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/range/count_dominance_pairs.hpp"
+#include "../../src/algorithm/range/offline_query/count_dominance_pairs.hpp"
 
 int main(){
     int n;

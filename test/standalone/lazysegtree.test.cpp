@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/segtree/basic/lazysegtree.hpp"
-#include "../../src/structure/types/monoid_act.hpp"
+#include "../../src/structure/types/monoid/monoid_act.hpp"
 
 struct SumSize{
     long long sum;

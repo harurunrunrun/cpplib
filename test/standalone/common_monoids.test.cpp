@@ -11,7 +11,7 @@
 #include "../../src/structure/segtree/dynamic/dynamic_lazysegtree.hpp"
 #include "../../src/structure/segtree/basic/lazysegtree.hpp"
 #include "../../src/structure/segtree/basic/segtree.hpp"
-#include "../../src/structure/types/common_monoids.hpp"
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 
 constexpr AddMonoid<long long> add_monoid{};
 constexpr MulMonoid<long long> mul_monoid{};

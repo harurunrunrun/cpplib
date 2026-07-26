@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/algorithm/fft/bivariate_formal_power_series.hpp"
+#include "../../src/algorithm/fft/formal_power_series/bivariate_formal_power_series.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using Mint = Modint998244353;

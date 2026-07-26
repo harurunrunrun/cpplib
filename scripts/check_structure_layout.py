@@ -40,6 +40,9 @@ NESTED_STRUCTURE_CATEGORIES = {
     "dsu": frozenset({"basic", "persistent", "range", "rollback", "specialized"}),
     "graph": frozenset({"dynamic_connectivity"}),
     "heap": frozenset({"meldable", "priority_queue"}),
+    "ordered_set": frozenset({"aggregate_multiset", "set", "transform_multiset"}),
+    "range_query": frozenset({"aggregation", "extrema", "value_query"}),
+    "types": frozenset({"monoid", "simulation"}),
     "trie": frozenset({"binary", "string"}),
     "tree": frozenset({"centroid", "dynamic_forest", "query", "treap"}),
 }
@@ -49,53 +52,57 @@ FLAT_STRUCTURE_CATEGORIES = frozenset({
     "fenwick_tree",
     "interval",
     "io",
-    "ordered_set",
     "persistence",
-    "range_query",
     "spatial",
-    "types",
 })
 
 EXPECTED_STRUCTURE_CATEGORY = {
     "bitset_xor_shift": "bit",
-    "dice": "types",
-    "disjoint_sparse_table": "range_query",
+    "dice": "types/simulation",
+    "common_monoids": "types/monoid",
+    "monoid": "types/monoid",
+    "monoid_act": "types/monoid",
+    "monoid_act_len": "types/monoid",
+    "power_moment_monoid": "types/monoid",
+    "residue_count_monoid": "types/monoid",
+    "sum_squares_monoid": "types/monoid",
+    "disjoint_sparse_table": "range_query/aggregation",
     "double_ended_priority_queue": "heap/priority_queue",
-    "dynamic_median_multiset": "ordered_set",
+    "dynamic_median_multiset": "ordered_set/aggregate_multiset",
     "fastio": "io",
     "fenwick_tree": "fenwick_tree",
     "fenwick_tree_2d": "fenwick_tree",
     "kd_tree_2d": "spatial",
     "kinetic_tournament": "heap/priority_queue",
-    "modulo_multiset_counter": "ordered_set",
-    "monoid_merge_sort_tree": "range_query",
-    "monotone_queue": "range_query",
-    "noncommutative_prefix_product": "range_query",
+    "modulo_multiset_counter": "ordered_set/transform_multiset",
+    "monoid_merge_sort_tree": "range_query/value_query",
+    "monotone_queue": "range_query/extrema",
+    "noncommutative_prefix_product": "range_query/aggregation",
     "online_rectangle_add_rectangle_sum": "spatial",
     "partially_persistent_storage": "persistence",
     "persistent_queue": "persistence",
     "persistent_queue_queries": "persistence",
     "point_add_rectangle_affine_rectangle_sum": "spatial",
-    "prefix_sum": "range_query",
-    "priority_sum_structure": "ordered_set",
+    "prefix_sum": "range_query/aggregation",
+    "priority_sum_structure": "ordered_set/aggregate_multiset",
     "range_add_point_get": "fenwick_tree",
     "range_assign_frequency": "interval",
     "range_priority_queue": "heap/priority_queue",
     "partially_retroactive_priority_queue": "heap/priority_queue",
     "persistent_leftist_heap": "heap/meldable",
-    "sparse_table": "range_query",
-    "sqrt_tree": "range_query",
+    "sparse_table": "range_query/aggregation",
+    "sqrt_tree": "range_query/aggregation",
     "static_interval_coverage": "interval",
     "static_interval_maximum_overlap": "interval",
-    "static_range_kth_smallest": "range_query",
-    "static_range_maximum_frequency": "range_query",
-    "static_range_minimum": "range_query",
-    "static_range_product_less_equal_mod": "range_query",
-    "static_range_sum_sqrt_tree": "range_query",
-    "threshold_updated_indexed_multiset": "ordered_set",
+    "static_range_kth_smallest": "range_query/value_query",
+    "static_range_maximum_frequency": "range_query/value_query",
+    "static_range_minimum": "range_query/extrema",
+    "static_range_product_less_equal_mod": "range_query/value_query",
+    "static_range_sum_sqrt_tree": "range_query/aggregation",
+    "threshold_updated_indexed_multiset": "ordered_set/transform_multiset",
     "xor_basis": "bit",
     "centroid_distance_index": "tree/centroid",
-    "compressed_ordered_set": "ordered_set",
+    "compressed_ordered_set": "ordered_set/set",
     "dynamic_forest_connectivity": "tree/dynamic_forest",
     "dynamic_forest_vertex_add_path_sum": "tree/dynamic_forest",
     "dynamic_forest_vertex_set_path_sum": "tree/dynamic_forest",
@@ -108,7 +115,7 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "implicit_treap": "tree/treap",
     "implicit_treap_deque": "tree/treap",
     "incremental_tree_centroid": "tree/centroid",
-    "integer_set": "ordered_set",
+    "integer_set": "ordered_set/set",
     "lazy_link_cut_tree": "tree/dynamic_forest",
     "lazy_top_tree": "tree/dynamic_forest",
     "link_cut_tree": "tree/dynamic_forest",
@@ -216,6 +223,15 @@ RECLASSIFIED_TREE_STEMS = frozenset({
     for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
     if category.startswith("tree/")
 }) | frozenset({"compressed_ordered_set", "integer_set"})
+
+RECLASSIFIED_MODERATE_FAMILY_STEMS = {
+    family: frozenset({
+        stem
+        for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
+        if category.startswith(f"{family}/")
+    })
+    for family in ("ordered_set", "range_query", "types")
+}
 
 ALGORITHM_EXCEPTIONS = {
     "incremental_interval_scheduling": Path(
@@ -384,8 +400,20 @@ def check_layout(root: Path) -> list[str]:
                 f"structure/tree/{stem}.hpp"
                 for stem in RECLASSIFIED_TREE_STEMS
             )
+            for family, stems in RECLASSIFIED_MODERATE_FAMILY_STEMS.items():
+                legacy_references.extend(
+                    f"structure/{family}/{stem}.hpp"
+                    for stem in stems
+                )
             if path.is_relative_to(source_root):
                 legacy_references.append(LEGACY_RELATIVE_STRUCTURE_REFERENCE)
+                for family, stems in RECLASSIFIED_MODERATE_FAMILY_STEMS.items():
+                    for parent_depth in range(1, 5):
+                        prefix = "../" * parent_depth
+                        legacy_references.extend(
+                            f"{prefix}{family}/{stem}.hpp"
+                            for stem in stems
+                        )
                 legacy_references.extend(
                     f"../bbst/{stem}.hpp"
                     for stem in RECLASSIFIED_BBST_STEMS

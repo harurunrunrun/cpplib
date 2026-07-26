@@ -7,7 +7,7 @@
 #include <limits>
 #include <algorithm>
 #include <utility>
-#include "../../types/monoid_act_len.hpp"
+#include "../../types/monoid/monoid_act_len.hpp"
 
 
 template<auto Monoid, long long MAX_SIZE>

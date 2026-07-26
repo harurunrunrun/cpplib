@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 #include "../../persistence/partially_persistent_storage.hpp"
-#include "../../types/monoid.hpp"
+#include "../../types/monoid/monoid.hpp"
 
 template<auto Monoid, int MAX_SIZE, int MAX_UPDATE>
 struct PartiallyPersistentSegtree{

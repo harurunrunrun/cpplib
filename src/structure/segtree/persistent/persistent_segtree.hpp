@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
-#include "../../types/monoid.hpp"
+#include "../../types/monoid/monoid.hpp"
 
 template<auto Monoid, int MAX_SIZE, int MAX_VERSION>
 struct PersistentSegtree{

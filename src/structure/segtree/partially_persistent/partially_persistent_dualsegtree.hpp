@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 #include "../../persistence/partially_persistent_storage.hpp"
-#include "../../types/monoid_act.hpp"
+#include "../../types/monoid/monoid_act.hpp"
 
 template<auto Monoid_act, int MAX_SIZE, int MAX_UPDATE>
 struct PartiallyPersistentDualSegtree{

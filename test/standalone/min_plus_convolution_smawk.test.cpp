@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/fft/min_plus_convolution_smawk.hpp"
+#include "../../src/algorithm/fft/min_plus/min_plus_convolution_smawk.hpp"
 
 void self_test(){
     assert(min_plus_convolution_convex_arbitrary_smawk<int>({}, {1}).empty());
