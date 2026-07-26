@@ -6,6 +6,10 @@ documentation_of: ../../../../src/algorithm/geometry/3d/point_set_diameter_3d.hp
 三次元点集合のEuclidean直径と、その両端のindexを正確に求める。
 全点対を列挙する単純版と、入力の空間的な分離を利用する厳密なAABB分枝限定版を提供する。
 
+このheaderは `point_set_diameter_3d_default.hpp` と
+`point_set_diameter_3d_aabb_branch_and_bound.hpp` をまとめて読み込む
+後方互換aggregatorである。利用する経路が一つなら対応するleafを直接includeできる。
+
 ## API
 
 - `point_set_diameter_3d(points)`: 最大距離の点対を

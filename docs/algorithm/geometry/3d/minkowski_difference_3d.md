@@ -5,6 +5,11 @@ documentation_of: ../../../../src/algorithm/geometry/3d/minkowski_difference_3d.
 
 二つの凸形状について $\{a-b\mid a\in A,b\in B\}$ の凸包を構築する。
 
+このheaderはdefault・seed指定・直接構築の三leafをまとめて読み込む
+後方互換aggregatorである。必要な経路だけを使う場合は
+`minkowski_difference_3d_default.hpp`、`minkowski_difference_3d_with_seed.hpp`、
+`minkowski_difference_3d_direct.hpp` のいずれかを直接includeできる。
+
 ## API
 
 ```cpp

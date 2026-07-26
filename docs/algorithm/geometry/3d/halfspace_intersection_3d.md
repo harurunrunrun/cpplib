@@ -6,6 +6,10 @@ documentation_of: ../../../../src/algorithm/geometry/3d/halfspace_intersection_3
 平面が表す閉半空間の共通部分を、点・平面の極双対と三次元凸包を用いて
 有界凸多面体として列挙する。
 
+このheaderは `halfspace_intersection_3d_default.hpp` と
+`halfspace_intersection_3d_with_interior_point.hpp` をまとめて読み込む
+後方互換aggregatorである。利用する経路が一つなら対応するleafを直接includeできる。
+
 ## API
 
 - `halfspace_intersection_3d_with_interior_point(halfspaces, interior)`:
