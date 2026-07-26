@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "../detail/persistent_btree_bit_sequence.hpp"
+#include "../detail/immutable_btree_bit_sequence.hpp"
 
 template<
     class T,
@@ -30,7 +30,7 @@ struct PartiallyPersistentWaveletMatrix{
     static_assert(!std::is_signed_v<T> || BIT_WIDTH == digits);
 
 private:
-    using BitVector = wavelet_matrix_detail::PersistentBTreeBitVector<>;
+    using BitVector = wavelet_matrix_detail::ImmutableBTreeBitVector<>;
     using Root = typename BitVector::Root;
     using Snapshot = typename BitVector::Snapshot;
 

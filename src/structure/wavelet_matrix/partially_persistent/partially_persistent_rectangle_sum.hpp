@@ -11,12 +11,11 @@ template<
     class W,
     int MAX_SIZE,
     int MAX_VERSION,
-    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits,
-    int BLOCK_SIZE = 512
+    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits
 >
 struct PartiallyPersistentRectangleSum :
-    PartiallyPersistentWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH, BLOCK_SIZE>{
-    using Base = PartiallyPersistentWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH, BLOCK_SIZE>;
+    PartiallyPersistentWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH>{
+    using Base = PartiallyPersistentWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH>;
     using Base::Base;
 };
 

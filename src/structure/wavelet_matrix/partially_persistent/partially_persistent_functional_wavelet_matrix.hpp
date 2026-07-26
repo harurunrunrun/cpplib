@@ -13,13 +13,12 @@ template<
     int MAX_SIZE,
     int MAX_VERSION,
     class Sum = long long,
-    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits,
-    int BLOCK_SIZE = 512
+    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 struct PartiallyPersistentFunctionalWaveletMatrix :
-    PartiallyPersistentWeightedWaveletMatrix<T, Sum, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>{
+    PartiallyPersistentWeightedWaveletMatrix<T, Sum, MAX_SIZE, MAX_VERSION, BIT_WIDTH>{
     static_assert(std::is_constructible_v<Sum, T> || std::is_convertible_v<T, Sum>);
-    using Base = PartiallyPersistentWeightedWaveletMatrix<T, Sum, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>;
+    using Base = PartiallyPersistentWeightedWaveletMatrix<T, Sum, MAX_SIZE, MAX_VERSION, BIT_WIDTH>;
 
 private:
     static std::vector<Sum> make_weights(const std::vector<T>& sequence){

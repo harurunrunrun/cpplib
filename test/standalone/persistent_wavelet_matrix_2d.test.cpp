@@ -37,10 +37,10 @@ int main(){
             int, int, 128, 700, 32
         > plain(input_points);
         PersistentWaveletMatrix2DWeighted<
-            int, int, long long, 128, 700, 32, 20
+            int, int, long long, 128, 700, 32
         > weighted(input_x, input_y, input_weight);
         PersistentRectangleSum<
-            int, int, long long, 128, 700, 32, 20
+            int, int, long long, 128, 700, 32
         > rectangle_sum(input_weighted_points);
         auto print_optional = [](std::optional<int> value){
             if(value.has_value()){
@@ -131,8 +131,8 @@ int main(){
     }
 
     PersistentWaveletMatrix2D<int, int, 160, max_version, 32> plain(points);
-    PersistentWaveletMatrix2DWeighted<int, int, long long, 160, max_version, 32, 20> weighted(xs, ys, weights);
-    PersistentRectangleSum<int, int, long long, 160, max_version, 32, 20> rectangle_sum(weighted_points);
+    PersistentWaveletMatrix2DWeighted<int, int, long long, 160, max_version, 32> weighted(xs, ys, weights);
+    PersistentRectangleSum<int, int, long long, 160, max_version, 32> rectangle_sum(weighted_points);
     std::vector<std::vector<int>> y_versions(1, ys);
     std::vector<std::vector<long long>> weight_versions(1, weights);
 
@@ -216,8 +216,8 @@ int main(){
     assert(rectangle_sum.latest_version() == static_cast<int>(y_versions.size()) - 1);
 
     PartiallyPersistentWaveletMatrix2D<int, int, 160, max_version, 32> partial_plain(xs, ys);
-    PartiallyPersistentWaveletMatrix2DWeighted<int, int, long long, 160, max_version, 32, 20> partial_weighted(xs, ys, weights);
-    PartiallyPersistentRectangleSum<int, int, long long, 160, max_version, 32, 20> partial_sum(weighted_points);
+    PartiallyPersistentWaveletMatrix2DWeighted<int, int, long long, 160, max_version, 32> partial_weighted(xs, ys, weights);
+    PartiallyPersistentRectangleSum<int, int, long long, 160, max_version, 32> partial_sum(weighted_points);
     std::vector<std::vector<int>> history_y(1, ys);
     std::vector<std::vector<long long>> history_weight(1, weights);
 

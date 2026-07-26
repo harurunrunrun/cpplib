@@ -81,7 +81,7 @@ int main(){
                       << matrix.access(0, 0) << ' ' << matrix.access(version, 0) << ' '
                       << matrix.access(version, 1) << '\n';
         }else if(type == "PWWM_SET"){
-            PersistentWeightedWaveletMatrix<int, long long, 8, 1, 32, 4> matrix(
+            PersistentWeightedWaveletMatrix<int, long long, 8, 1, 32> matrix(
                 std::vector<int>{1, 2}, std::vector<long long>{10, 20}
             );
             int version = matrix.set(0, 0, 3, 30);
@@ -90,7 +90,7 @@ int main(){
                       << matrix.access(0, 0) << ' ' << matrix.weight(0, 0) << ' '
                       << matrix.access(version, 0) << ' ' << matrix.weight(version, 0) << '\n';
         }else if(type == "PWWM_FORK"){
-            PersistentWeightedWaveletMatrix<int, long long, 8, 1, 32, 4> matrix(
+            PersistentWeightedWaveletMatrix<int, long long, 8, 1, 32> matrix(
                 std::vector<int>{1, 2}, std::vector<long long>{10, 20}
             );
             int version = matrix.fork(0);
@@ -98,7 +98,7 @@ int main(){
             std::cout << thrown << ' ' << matrix.versions() << ' '
                       << matrix.access(version, 1) << ' ' << matrix.weight(version, 1) << '\n';
         }else if(type == "PPWWM_SET"){
-            PartiallyPersistentWeightedWaveletMatrix<int, long long, 8, 1, 32, 4> matrix(
+            PartiallyPersistentWeightedWaveletMatrix<int, long long, 8, 1, 32> matrix(
                 std::vector<int>{1, 2}, std::vector<long long>{10, 20}
             );
             int version = matrix.set(0, 3, 30);

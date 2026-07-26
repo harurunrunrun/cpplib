@@ -13,14 +13,13 @@ template<
     class W,
     int MAX_SIZE,
     int MAX_VERSION,
-    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits,
-    int BLOCK_SIZE = 512
+    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 struct PersistentWeightedWaveletMatrix :
     wavelet_matrix_detail::PersistentWeightedWaveletMatrixBase<
-        T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>{
+        T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH>{
     using Base = wavelet_matrix_detail::PersistentWeightedWaveletMatrixBase<
-        T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>;
+        T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH>;
     using Base::Base;
 
     PersistentWeightedWaveletMatrix() = default;
@@ -43,7 +42,7 @@ struct PersistentWeightedWaveletMatrix :
         return set(version, k, value, Base::weight(version, k));
     }
     int set_weight(int version, int k, W weight){
-        return set(version, k, Base::access(version, k), weight);
+        return Base::set_weight_from_version(version, k, weight);
     }
     int fork(int version){ return Base::fork_from_version(version); }
 };

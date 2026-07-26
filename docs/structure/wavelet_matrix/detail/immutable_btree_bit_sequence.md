@@ -1,9 +1,9 @@
 ---
-title: Persistent B-tree Bit Sequence (永続B木ビット列)
-documentation_of: ../../../../src/structure/wavelet_matrix/detail/persistent_btree_bit_sequence.hpp
+title: Immutable B-tree Bit Sequence (不変B木ビット列)
+documentation_of: ../../../../src/structure/wavelet_matrix/detail/immutable_btree_bit_sequence.hpp
 ---
 
-完全永続な動的ビット列を、固定次数のB+木として管理する内部部品。
+不変rootを返す動的ビット列を、固定次数のB+木として管理する中立な内部部品。
 葉はビット列と任意のpayloadを保持し、内部nodeは部分木長・1の個数・bit別payload和を保持する。
 乱数優先度や平方分割は使用しない。
 
@@ -12,7 +12,7 @@ documentation_of: ../../../../src/structure/wavelet_matrix/detail/persistent_btr
 ## テンプレート引数
 
 ```cpp
-wavelet_matrix_detail::PersistentBTreeBitSequence<
+wavelet_matrix_detail::ImmutableBTreeBitSequence<
     Payload,
     Sum,
     Lift,
@@ -33,14 +33,14 @@ wavelet_matrix_detail::PersistentBTreeBitSequence<
 payloadを持たない用途には次のaliasを使用する。
 
 ```cpp
-wavelet_matrix_detail::PersistentBTreeBitVector<> bits;
+wavelet_matrix_detail::ImmutableBTreeBitVector<> bits;
 ```
 
 このaliasでは葉にpayload配列を確保しない。
 
 ## 公開型
 
-- `Root`：ある版のB+木root。copyしても木本体は共有される。
+- `Root`：ある状態のB+木root。copyしても木本体は共有される。
 - `Snapshot`：node poolの巻き戻し位置。
 - `Entry`：`bit`と`payload`。
 - `RankPair`：`[0,l)`と`[0,r)`の1の個数。
@@ -52,7 +52,7 @@ wavelet_matrix_detail::PersistentBTreeBitVector<> bits;
 
 ```cpp
 Root build(bits, payloads);
-Root build(bits); // PersistentBTreeBitVector
+Root build(bits); // ImmutableBTreeBitVector
 Snapshot snapshot() const;
 void rollback(Snapshot snapshot);
 std::size_t nodes_used() const;
@@ -87,7 +87,7 @@ Sum weight_of_first(
 - 4引数の`weight_of_first`は列全体で先頭から`count`個、5引数版は位置`left`以後にある指定bitを先頭から`count`個選び、そのpayload和を返す。
 - payloadを持たないaliasでは`sum`と`weight_of_first`を提供しない。
 
-## 永続更新
+## 不変更新
 
 ```cpp
 Root insert(Root root, int position, bool bit, Payload payload);
@@ -118,8 +118,8 @@ PayloadUpdateResult set_payload(
 
 ## 注意点
 
-- rootは同じ`PersistentBTreeBitSequence` objectのnode poolと組でのみ有効。
+- rootは同じ`ImmutableBTreeBitSequence` objectのnode poolと組でのみ有効。
 - `rollback`より後に作られたrootを再利用してはならない。
 - root以外の葉は半分以上、root以外の内部nodeは最大子数の半分以上を保つ。
-- `insert` / `erase`は入力rootを変更しないため、過去版へのquery結果は更新後も変化しない。
+- `insert` / `erase`は入力rootを変更しないため、既存rootへのquery結果は更新後も変化しない。
 - 標準C++20だけで実装され、GCC 13で利用できる。

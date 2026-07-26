@@ -13,7 +13,7 @@
 namespace{
 
 using Matrix = PartiallyPersistentWeightedWaveletMatrix<
-    int, long long, 256, 384, 32, 19>;
+    int, long long, 256, 384, 32>;
 
 template<class F>
 bool throws_runtime_error(F&& operation){
@@ -26,7 +26,7 @@ bool throws_runtime_error(F&& operation){
 }
 
 void self_test(){
-    PartiallyPersistentWeightedWaveletMatrix<unsigned, int, 8, 1, 5, 3> matrix(
+    PartiallyPersistentWeightedWaveletMatrix<unsigned, int, 8, 1, 5> matrix(
         std::vector<unsigned>{0, 3, 31, 7},
         std::vector<int>{1, 2, 3, 4}
     );
@@ -43,7 +43,7 @@ void self_test(){
     assert(matrix.access(1, 2) == 31);
     assert(matrix.weight(1, 2) == 9);
 
-    PartiallyPersistentWeightedWaveletMatrix<unsigned, int, 4, 2, 3, 2> narrow(
+    PartiallyPersistentWeightedWaveletMatrix<unsigned, int, 4, 2, 3> narrow(
         std::vector<unsigned>{1, 7}, std::vector<int>{4, 5}
     );
     assert(throws_runtime_error([&]{ narrow.set_value(0, 8); }));
@@ -53,7 +53,7 @@ void self_test(){
     assert(narrow.access(0, 0) == 1);
     assert(narrow.weight(0, 0) == 4);
 
-    PartiallyPersistentFunctionalWaveletMatrix<int, 8, 2, long long, 32, 3>
+    PartiallyPersistentFunctionalWaveletMatrix<int, 8, 2, long long, 32>
         functional(std::vector<int>{3, -1, 4});
     int functional_version = functional.set(1, 5);
     assert(functional.sum(0, 0, 3) == 6);

@@ -3,50 +3,42 @@ title: Persistent Weighted Wavelet Matrix 2D (完全永続二次元重み付き�
 documentation_of: ../../../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix_2d_weighted.hpp
 ---
 
-x座標を固定し、y座標と重みを完全永続に更新できる2次元wavelet matrix。
+入力順の点idとx座標を固定し、y座標と重みを任意versionから更新できる完全永続二次元Wavelet Matrix。
+x順に並べた点列を永続重み付きWavelet Matrixで管理する。
+
+## API
 
 ```cpp
-wm.set(version, k, y, weight)
-wm.set_y(version, k, y)
-wm.set_weight(version, k, weight)
-wm.rectangle_count(version, xl, xr, yl, yr)
-wm.rectangle_sum(version, xl, xr, yl, yr)
+PersistentWaveletMatrix2DWeighted<X,Y,W,MAX_SIZE,MAX_VERSION,Y_BIT_WIDTH> wm(xs, ys, weights)
+X x = wm.x(k)
+Y y = wm.y(version, k)
+W weight = wm.weight(version, k)
+int version2 = wm.set(version, k, y, weight)
+int version2 = wm.set_y(version, k, y)
+int version2 = wm.set_weight(version, k, weight)
+int version2 = wm.fork(version)
+int count = wm.rectangle_count(version, xl, xr, yl, yr)
+W total = wm.rectangle_sum(version, xl, xr, yl, yr)
 ```
+
+`range_freq` は `rectangle_count`、`range_sum` は `rectangle_sum` と同じ。
+コンストラクタは3本のvectorまたは `tuple<X,Y,W>` のvectorも受け取る。
+矩形は $[x_l,x_r)\times[y_l,y_r)$。
 
 ## 時間計算量
 
-x 座標の範囲取得に $O(\log N)$、以降は
-`PersistentWeightedWaveletMatrix` と同じ。
-`set`, `set_y`, `set_weight` は $O(B\log B + \log M)$、
-`fork` は $O(1)$。
+$D=\mathtt{Y\_BIT\_WIDTH}$、$H=O(\log(N+1))$。
 
-## 計算量（公開操作別）
+- 構築: $O(\mathtt{MAX\_SIZE}+N\log N+DN)$
+- `size/versions/latest_version/x`: $O(1)$
+- `weight`: $O(H)$、`y`: $O(DH)$、`fork`: $O(D)$
+- `set/set_y/set_weight`: $O(DH)$
+- 矩形count/sumと別名: $O(\log N+DH)$
 
-$B=\mathtt{BLOCK\_SIZE}$、$M=\lceil N/B\rceil$、
-$M_{max}=\lceil\mathtt{MAX\_SIZE}/B\rceil$ とする。
-x範囲に入る $L$ 点が触れるblock数を $C$ とし、
-$Q(L)=B+C(\log B+\log(M+1))$ とおく。
-
-- 3種類のconstructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSION}(B+\log(M_{max}+1))+N(\log N+\log B))$
-- `size`, `versions`, `latest_version`, `x`, `fork`: $O(1)$
-- `y`, `weight`: $O(\log(M+1))$
-- `set`, `set_y`, `set_weight`: $O(B\log B+\log(M+1))$
-- `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+Q(L))$
+更新1回の追加メモリは $O(DH)$。平方分割は使用しない。
 
 ## 注意点
 
-点idは入力順、xは全versionで固定。`x(k)`、`y(version,k)`、`weight(version,k)` は1点を返す。
-`set` は指定versionのyと重み、`set_y/set_weight` は片方を更新した新versionを返し、
-`fork` は同内容で分岐する。count/freqは半開矩形の点数、sumは重み総和。
-
-不正なversion・点・矩形、vector長不一致、点数/version/block容量、yのbit幅では
-`runtime_error`。失敗時にversionと使用量は増えない。copyは禁止、moveは可能。
-各APIの計算量は上記表の通り。
-
-## Constructor signature
-
-```cpp
-PersistentWaveletMatrix2DWeighted()
-PersistentWaveletMatrix2DWeighted(const vector<X>& xs, const vector<Y>& ys, const vector<W>& weights)
-PersistentWaveletMatrix2DWeighted(const vector<tuple<X,Y,W>>& points)
-```
+同じxの点も入力idで区別する。copyは禁止、moveは可能。
+不正なversion・点・矩形、入力長不一致、yのbit幅、容量では `runtime_error`。
+失敗した更新はversion数と全bit段のnode使用量を戻す。

@@ -3,39 +3,31 @@ title: Persistent Weighted Wavelet Matrix Base (完全永続重み付きウェ�
 documentation_of: ../../../../src/structure/wavelet_matrix/detail/persistent_weighted_wavelet_matrix_base.hpp
 ---
 
-完全永続Wavelet Matrixラッパーが共有する値・重みqueryの基底実装。
+完全永続重み付きWavelet Matrixの内部基底。各bit段に
+`ImmutableBTreeBitSequence<W,W>` を持ち、bitのrankと重みの部分和を同じ永続B+木で管理する。
+通常は公開ラッパーを使用する。
 
 ## API
 
-- constructor：空列、または同じ長さの値列と重み列からversion 0を作る。
-- `size()` / `versions()` / `latest_version()`：列長・version数・最新versionを返す。
-- `access(version,k)` / `weight(version,k)`：指定versionの値・重みを返す。
-- `rank(version,value,r)` / `rank(version,value,l,r)`：範囲内の `value` の出現数を返す。
-- `kth_smallest` / `kth_largest`：`[l,r)` の0-indexed順序統計量を返す。
-- `range_freq`：上限未満、または値域 `[lower,upper)` の個数を返す。
-- `sum` / `range_sum`：全値域、または指定値域に属する重みの総和を返す。
-- `sum_k_smallest` / `sum_k_largest`：値が小さい／大きい先頭 `k` 要素の重み和を返す。
-- `prev_value` / `next_value`：`upper` 未満の最大値／`lower` 以上の最小値を返し、存在しなければ `nullopt`。
-
-派生型はprotected `set_from_version(version,k,value,weight)` と
-`fork_from_version(version)` を使って新versionを作る。
+公開queryは `size/versions/latest_version/access/weight/rank/select/kth_smallest/kth_largest/`
+`range_freq/sum/range_sum/sum_k_smallest/sum_k_largest/prev_value/next_value`。
+派生型はprotected `set_from_version`, `set_weight_from_version`, `fork_from_version` を使う。
 
 ## 時間計算量
 
-$B=\mathtt{BLOCK\_SIZE}$、$M=\lceil N/B\rceil$、長さ $L$ の区間が触れるblock数を $C$ とする。
+$D=\mathtt{BIT\_WIDTH}$、$H=O(\log(N+1))$。
 
-- constructor：$O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSION}(B+\log(M+1))+N\log B)$
-- `size`, `versions`, `latest_version`, `fork_from_version`：$O(1)$
-- `access`, `weight`：$O(\log(M+1))$
-- `rank`, `range_freq`, `range_sum`：$O(B+C(\log B+\log(M+1)))$
-- `sum`：$O(B+C\log(M+1))$
-- 順序統計と前後値：count時間の $\mathtt{BIT\_WIDTH}$ 倍
-- `sum_k_smallest`, `sum_k_largest`：順序統計時間に $O(L)$ を加えた時間
-- `set_from_version`：$O(B\log B+\log(M+1))$
+- 構築: $O(DN)$
+- `size/versions/latest_version`: $O(1)$
+- `weight/sum`: $O(H)$
+- その他の公開query: $O(DH)$
+- `set_from_version/set_weight_from_version`: $O(DH)$
+- `fork_from_version`: $O(D)$
+
+構築メモリは $O(DN)$、更新の追加メモリは $O(DH)$。平方分割は使用しない。
 
 ## 注意点
 
-- 公開完全永続Wavelet Matrix群の内部基底であり、通常は直接使用しない。
-- 任意の有効versionから分岐でき、既存versionは変更されない。
-- `T` は整数型。符号付き型では `BIT_WIDTH` を型の全bit幅にする。値列と重み列は同じ長さで最大 `MAX_SIZE`。
-- 区間は `0 <= l <= r <= size()`、順序 `k` は `[0,r-l)`、値域は `[lower,upper)`。version・点・区間・順序・bit幅・block・version容量の違反では `runtime_error`。
+任意の有効versionから分岐し、既存versionは不変。`W{}`, 加算、減算を重み和に使う。
+符号付き `T` は全bit幅を指定する。不正なversion・範囲・順序・bit幅・容量は `runtime_error`。
+更新失敗時は各B+木のsnapshotへrollbackする。

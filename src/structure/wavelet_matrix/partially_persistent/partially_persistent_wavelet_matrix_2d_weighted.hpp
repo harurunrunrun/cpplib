@@ -20,8 +20,7 @@ template<
     class W,
     int MAX_SIZE,
     int MAX_VERSION,
-    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits,
-    int BLOCK_SIZE = 512
+    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits
 >
 struct PartiallyPersistentWaveletMatrix2DWeighted{
     static_assert(std::is_integral_v<X>);
@@ -30,7 +29,7 @@ struct PartiallyPersistentWaveletMatrix2DWeighted{
     static_assert(MAX_VERSION >= 0);
 
 private:
-    using Matrix = PartiallyPersistentWeightedWaveletMatrix<Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH, BLOCK_SIZE>;
+    using Matrix = PartiallyPersistentWeightedWaveletMatrix<Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH>;
     struct State{
         std::array<X, MAX_SIZE> x{};
         std::array<X, MAX_SIZE> original_x{};
@@ -97,8 +96,20 @@ public:
     Y y(int version, int k) const{ check_index(k, "library assertion fault: range violation (y)."); return state->matrix->access(version, state->original_to_sorted[static_cast<std::size_t>(k)]); }
     W weight(int version, int k) const{ check_index(k, "library assertion fault: range violation (weight)."); return state->matrix->weight(version, state->original_to_sorted[static_cast<std::size_t>(k)]); }
     int set(int k, Y y_value, W weight_value){ check_index(k, "library assertion fault: range violation (set)."); return state->matrix->set(state->original_to_sorted[static_cast<std::size_t>(k)], y_value, weight_value); }
-    int set_y(int k, Y value){ return set(k, value, weight(latest_version(), k)); }
-    int set_weight(int k, W value){ return set(k, y(latest_version(), k), value); }
+    int set_y(int k, Y value){
+        check_index(k, "library assertion fault: range violation (set_y).");
+        return state->matrix->set_value(
+            state->original_to_sorted[static_cast<std::size_t>(k)],
+            value
+        );
+    }
+    int set_weight(int k, W value){
+        check_index(k, "library assertion fault: range violation (set_weight).");
+        return state->matrix->set_weight(
+            state->original_to_sorted[static_cast<std::size_t>(k)],
+            value
+        );
+    }
     int rectangle_count(int version, X xl, X xr, Y yl, Y yr) const{
         check_rect(xl, xr, yl, yr, "library assertion fault: range violation (rectangle_count)."); auto [l, r] = x_range(xl, xr); return state->matrix->range_freq(version, l, r, yl, yr);
     }

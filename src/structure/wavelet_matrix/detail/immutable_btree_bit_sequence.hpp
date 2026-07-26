@@ -1,5 +1,5 @@
-#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DETAIL_PERSISTENT_BTREE_BIT_SEQUENCE_HPP_INCLUDED
-#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DETAIL_PERSISTENT_BTREE_BIT_SEQUENCE_HPP_INCLUDED
+#ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DETAIL_IMMUTABLE_BTREE_BIT_SEQUENCE_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DETAIL_IMMUTABLE_BTREE_BIT_SEQUENCE_HPP_INCLUDED
 
 #include <array>
 #include <bit>
@@ -14,58 +14,58 @@
 
 namespace wavelet_matrix_detail{
 
-struct PersistentBTreeNoPayload{};
+struct ImmutableBTreeNoPayload{};
 
-struct PersistentBTreeNoSum{
-    friend constexpr PersistentBTreeNoSum operator+(
-        PersistentBTreeNoSum,
-        PersistentBTreeNoSum
+struct ImmutableBTreeNoSum{
+    friend constexpr ImmutableBTreeNoSum operator+(
+        ImmutableBTreeNoSum,
+        ImmutableBTreeNoSum
     ){
         return {};
     }
 
-    friend constexpr PersistentBTreeNoSum operator-(
-        PersistentBTreeNoSum,
-        PersistentBTreeNoSum
+    friend constexpr ImmutableBTreeNoSum operator-(
+        ImmutableBTreeNoSum,
+        ImmutableBTreeNoSum
     ){
         return {};
     }
 };
 
 template<class Payload, class Sum>
-struct PersistentBTreeDefaultLift{
+struct ImmutableBTreeDefaultLift{
     constexpr Sum operator()(const Payload& value) const{
         return static_cast<Sum>(value);
     }
 };
 
-struct PersistentBTreeNoPayloadLift{
-    constexpr PersistentBTreeNoSum operator()(
-        PersistentBTreeNoPayload
+struct ImmutableBTreeNoPayloadLift{
+    constexpr ImmutableBTreeNoSum operator()(
+        ImmutableBTreeNoPayload
     ) const{
         return {};
     }
 };
 
 template<class Payload, std::size_t Capacity, bool StoresPayload>
-struct PersistentBTreePayloadStorage;
+struct ImmutableBTreePayloadStorage;
 
 template<class Payload, std::size_t Capacity>
-struct PersistentBTreePayloadStorage<Payload, Capacity, true>{
+struct ImmutableBTreePayloadStorage<Payload, Capacity, true>{
     std::array<Payload, Capacity> value{};
 };
 
 template<class Payload, std::size_t Capacity>
-struct PersistentBTreePayloadStorage<Payload, Capacity, false>{};
+struct ImmutableBTreePayloadStorage<Payload, Capacity, false>{};
 
 template<
     class Payload,
     class Sum,
-    class Lift = PersistentBTreeDefaultLift<Payload, Sum>,
+    class Lift = ImmutableBTreeDefaultLift<Payload, Sum>,
     int LEAF_WORDS = 2,
     int INTERNAL_CAPACITY = 16
 >
-class PersistentBTreeBitSequence{
+class ImmutableBTreeBitSequence{
     static_assert(LEAF_WORDS > 0);
     static_assert(INTERNAL_CAPACITY >= 3);
     static_assert(std::is_default_constructible_v<Payload>);
@@ -80,7 +80,7 @@ public:
     static constexpr int leaf_capacity = leaf_words * 64;
     static constexpr int internal_capacity = INTERNAL_CAPACITY;
     static constexpr bool stores_payload =
-        !std::is_same_v<Payload, PersistentBTreeNoPayload>;
+        !std::is_same_v<Payload, ImmutableBTreeNoPayload>;
 
     struct Root{
         bool is_leaf = true;
@@ -127,7 +127,7 @@ private:
     static constexpr int leaf_minimum = leaf_capacity / 2;
     static constexpr int internal_minimum = internal_capacity / 2;
 
-    using PayloadStorage = PersistentBTreePayloadStorage<
+    using PayloadStorage = ImmutableBTreePayloadStorage<
         Payload,
         static_cast<std::size_t>(leaf_capacity),
         stores_payload
@@ -466,7 +466,7 @@ private:
 
     static bool is_underfull(
         Root root,
-        const PersistentBTreeBitSequence& sequence
+        const ImmutableBTreeBitSequence& sequence
     ){
         if(root.is_leaf){
             return sequence.get_leaf(root).length < leaf_minimum;
@@ -476,7 +476,7 @@ private:
 
     static bool can_lend(
         Root root,
-        const PersistentBTreeBitSequence& sequence
+        const ImmutableBTreeBitSequence& sequence
     ){
         if(root.is_leaf){
             return sequence.get_leaf(root).length > leaf_minimum;
@@ -795,7 +795,7 @@ private:
                 }
             }
             throw std::logic_error(
-                "PersistentBTreeBitSequence select inconsistency."
+                "ImmutableBTreeBitSequence select inconsistency."
             );
         }
 
@@ -814,7 +814,7 @@ private:
             offset += child_summary.size;
         }
         throw std::logic_error(
-            "PersistentBTreeBitSequence select inconsistency."
+            "ImmutableBTreeBitSequence select inconsistency."
         );
     }
 
@@ -935,9 +935,9 @@ private:
     }
 
 public:
-    PersistentBTreeBitSequence() = default;
+    ImmutableBTreeBitSequence() = default;
 
-    explicit PersistentBTreeBitSequence(const Lift& lift_function):
+    explicit ImmutableBTreeBitSequence(const Lift& lift_function):
         lift(lift_function){}
 
     Snapshot snapshot() const noexcept{
@@ -1207,14 +1207,14 @@ public:
 };
 
 template<int LEAF_WORDS = 2, int INTERNAL_CAPACITY = 16>
-using PersistentBTreeBitVector = PersistentBTreeBitSequence<
-    PersistentBTreeNoPayload,
-    PersistentBTreeNoSum,
-    PersistentBTreeNoPayloadLift,
+using ImmutableBTreeBitVector = ImmutableBTreeBitSequence<
+    ImmutableBTreeNoPayload,
+    ImmutableBTreeNoSum,
+    ImmutableBTreeNoPayloadLift,
     LEAF_WORDS,
     INTERNAL_CAPACITY
 >;
 
 } // namespace wavelet_matrix_detail
 
-#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DETAIL_PERSISTENT_BTREE_BIT_SEQUENCE_HPP_INCLUDED
+#endif  // CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DETAIL_IMMUTABLE_BTREE_BIT_SEQUENCE_HPP_INCLUDED

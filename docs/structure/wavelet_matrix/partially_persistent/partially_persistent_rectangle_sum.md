@@ -3,22 +3,20 @@ title: Partially Persistent Rectangle Sum (部分永続長方形和)
 documentation_of: ../../../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_rectangle_sum.hpp
 ---
 
-`PartiallyPersistentWaveletMatrix2DWeighted` の矩形和用の別名。
+`PartiallyPersistentWaveletMatrix2DWeighted` の矩形和向け派生名。
+`size/versions/latest_version/x/y/weight/set/set_y/set_weight/`
+`rectangle_count/range_freq/rectangle_sum/range_sum` をそのまま利用できる。
 
-## 時間計算量（公開操作別）
+## 時間計算量
 
-$B=\mathtt{BLOCK\_SIZE}$、$V$ を現在のversion数、x範囲に入る点数を $L$、触れるblock数を $C$ とし、
-$Q_0(L)=B+C\log B$、$Q_V(L)=B+C(\log B+\log(V+1))$ とおく。
+$D=\mathtt{Y\_BIT\_WIDTH}$、$H=O(\log(N+1))$。
 
-- 3種類のconstructor: $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_VERSION}B+N(\log N+\log B))$
-- `size`, `versions`, `latest_version`, `x`: $O(1)$
-- `y`, `weight`: 最新versionは $O(1)$、過去versionは $O(\log(V+1))$
-- `set`, `set_y`, `set_weight`: 償却 $O(B\log B)$。履歴vector再確保時の1回の最悪は $O(B\log B+V)$
-- `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: 最新versionは $O(\log N+Q_0(L))$、過去versionは $O(\log N+Q_V(L))$
+- 構築: $O(\mathtt{MAX\_SIZE}+N\log N+DN)$
+- 定数情報と `x`: $O(1)$、`weight`: $O(H)$、`y`: $O(DH)$
+- 最新版への更新: $O(DH)$
+- 任意versionの半開矩形count/sum: $O(\log N+DH)$
 
 ## 注意点
 
-基底型の `size/versions/latest_version/x/y/weight/set/set_y/set_weight/`
-`rectangle_count/range_freq/rectangle_sum/range_sum` を利用できる。更新は最新版から新versionを作り、
-queryは任意versionを読む。矩形は `[xl,xr) x [yl,yr)`。不正version・点・容量・bit幅・矩形では
-`runtime_error`。各APIの計算量は上記表の通り。
+更新元は最新版だけで、過去versionは不変。型・範囲・容量・rollbackの契約は基底型と同じ。
+固定ブロック幅のtemplate引数は存在しない。

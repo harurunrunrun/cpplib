@@ -20,8 +20,7 @@ template<
     class W,
     int MAX_SIZE,
     int MAX_VERSION,
-    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits,
-    int BLOCK_SIZE = 512
+    int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits
 >
 struct PersistentWaveletMatrix2DWeighted{
     static_assert(std::is_integral_v<X>);
@@ -30,7 +29,7 @@ struct PersistentWaveletMatrix2DWeighted{
     static_assert(MAX_VERSION >= 0);
 
 private:
-    using Matrix = PersistentWeightedWaveletMatrix<Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH, BLOCK_SIZE>;
+    using Matrix = PersistentWeightedWaveletMatrix<Y, W, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH>;
 
     struct State{
         std::array<X, MAX_SIZE> x{};
@@ -129,8 +128,22 @@ public:
         int sorted_index = state->original_to_sorted[static_cast<std::size_t>(k)];
         return state->matrix->set(version, sorted_index, y_value, weight_value);
     }
-    int set_y(int version, int k, Y value){ return set(version, k, value, weight(version, k)); }
-    int set_weight(int version, int k, W value){ return set(version, k, y(version, k), value); }
+    int set_y(int version, int k, Y value){
+        check_index(k, "library assertion fault: range violation (set_y).");
+        return state->matrix->set_value(
+            version,
+            state->original_to_sorted[static_cast<std::size_t>(k)],
+            value
+        );
+    }
+    int set_weight(int version, int k, W value){
+        check_index(k, "library assertion fault: range violation (set_weight).");
+        return state->matrix->set_weight(
+            version,
+            state->original_to_sorted[static_cast<std::size_t>(k)],
+            value
+        );
+    }
     int fork(int version){ return state->matrix->fork(version); }
     int rectangle_count(int version, X xl, X xr, Y yl, Y yr) const{
         check_rect(xl, xr, yl, yr, "library assertion fault: range violation (rectangle_count).");

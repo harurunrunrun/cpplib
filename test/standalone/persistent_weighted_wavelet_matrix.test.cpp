@@ -22,7 +22,7 @@ int main(){
         for(int& value: input_value) std::cin >> value;
         for(long long& weight: input_weight) std::cin >> weight;
         PersistentWeightedWaveletMatrix<
-            int, long long, 128, 700, 32, 20
+            int, long long, 128, 700, 32
         > matrix(input_value, input_weight);
         while(input_q--){
             std::string type;
@@ -87,7 +87,7 @@ int main(){
         initial_weight[i] = static_cast<int>(rng() % 2001) - 1000;
     }
 
-    PersistentWeightedWaveletMatrix<int, long long, 180, max_version, 32, 20> persistent(
+    PersistentWeightedWaveletMatrix<int, long long, 180, max_version, 32> persistent(
         initial, initial_weight);
     std::vector<std::vector<int>> values(1, initial);
     std::vector<std::vector<long long>> weights(1, initial_weight);
@@ -168,7 +168,7 @@ int main(){
     assert(persistent.versions() == static_cast<int>(values.size()));
     assert(persistent.latest_version() == static_cast<int>(values.size()) - 1);
 
-    PartiallyPersistentWeightedWaveletMatrix<int, long long, 180, max_version, 32, 20> partial(
+    PartiallyPersistentWeightedWaveletMatrix<int, long long, 180, max_version, 32> partial(
         initial, initial_weight);
     std::vector<std::vector<int>> history_value(1, initial);
     std::vector<std::vector<long long>> history_weight(1, initial_weight);
@@ -220,7 +220,7 @@ int main(){
 
     bool thrown = false;
     try{
-        PersistentWeightedWaveletMatrix<unsigned, int, 4, 3, 3, 2> small({0U, 7U}, {1, 2});
+        PersistentWeightedWaveletMatrix<unsigned, int, 4, 3, 3> small({0U, 7U}, {1, 2});
         small.set_value(0, 0, 8U);
     }catch(const std::runtime_error&){
         thrown = true;

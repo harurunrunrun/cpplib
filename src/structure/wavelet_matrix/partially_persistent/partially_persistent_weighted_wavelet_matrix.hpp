@@ -13,14 +13,13 @@ template<
     class W,
     int MAX_SIZE,
     int MAX_VERSION,
-    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits,
-    int BLOCK_SIZE = 512
+    int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 struct PartiallyPersistentWeightedWaveletMatrix :
     wavelet_matrix_detail::PartiallyPersistentWeightedWaveletMatrixBase<
-        T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>{
+        T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH>{
     using Base = wavelet_matrix_detail::PartiallyPersistentWeightedWaveletMatrixBase<
-        T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH, BLOCK_SIZE>;
+        T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH>;
     using Base::Base;
 
     PartiallyPersistentWeightedWaveletMatrix() = default;
@@ -43,7 +42,7 @@ struct PartiallyPersistentWeightedWaveletMatrix :
         return set(k, value, Base::weight(Base::latest_version(), k));
     }
     int set_weight(int k, W weight){
-        return set(k, Base::access(Base::latest_version(), k), weight);
+        return Base::set_weight_latest(k, weight);
     }
 };
 

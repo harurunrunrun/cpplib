@@ -6,13 +6,13 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/detail/persistent_btree_bit_sequence.hpp"
+#include "../../src/structure/wavelet_matrix/detail/immutable_btree_bit_sequence.hpp"
 
 namespace{
 
 using WeightedSequence =
-    wavelet_matrix_detail::PersistentBTreeBitSequence<long long, long long>;
-using PlainSequence = wavelet_matrix_detail::PersistentBTreeBitVector<>;
+    wavelet_matrix_detail::ImmutableBTreeBitSequence<long long, long long>;
+using PlainSequence = wavelet_matrix_detail::ImmutableBTreeBitVector<>;
 
 struct TaggedPayload{
     std::string tag;
@@ -26,7 +26,7 @@ struct TaggedLift{
 };
 
 void self_test_non_trivial_payload(){
-    using Sequence = wavelet_matrix_detail::PersistentBTreeBitSequence<
+    using Sequence = wavelet_matrix_detail::ImmutableBTreeBitSequence<
         TaggedPayload,
         long long,
         TaggedLift,
