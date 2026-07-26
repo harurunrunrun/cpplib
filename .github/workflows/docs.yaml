@@ -152,8 +152,10 @@ jobs:
           fetch-depth: 0
           ref: ${{ needs.route.outputs.head_sha }}
 
-      - name: Reject forbidden Boost dependencies
+      - name: Reject broken includes and forbidden Boost dependencies
         run: |
+          python3 scripts/test_check_relative_includes.py
+          python3 scripts/check_relative_includes.py src test
           python3 scripts/test_check_no_boost_dependency.py
           python3 scripts/check_no_boost_dependency.py src test docs
 
