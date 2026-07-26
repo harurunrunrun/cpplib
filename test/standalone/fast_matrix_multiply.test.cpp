@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/math/linear_algebra/fast_matrix_multiply.hpp"
+#include "../../src/algorithm/math/linear_algebra/matrix_operations/fast_matrix_multiply.hpp"
 
 namespace{
 

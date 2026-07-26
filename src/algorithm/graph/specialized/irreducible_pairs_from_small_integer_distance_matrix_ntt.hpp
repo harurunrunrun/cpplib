@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../math/linear_algebra/fast_matrix_multiply_mod.hpp"
+#include "../../math/linear_algebra/matrix_operations/fast_matrix_multiply_mod.hpp"
 
 namespace irreducible_pairs_small_integer_ntt_detail{
 

@@ -6,8 +6,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/math/linear_algebra/characteristic_polynomial.hpp"
-#include "../../src/algorithm/math/linear_algebra/characteristic_polynomial.hpp"
+#include "../../src/algorithm/math/linear_algebra/elimination/characteristic_polynomial.hpp"
+#include "../../src/algorithm/math/linear_algebra/elimination/characteristic_polynomial.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint998244353;

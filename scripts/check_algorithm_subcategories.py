@@ -160,10 +160,73 @@ CONNECTIVITY_SUBCATEGORIES = frozenset(
     CONNECTIVITY_SUBCATEGORY_BY_STEM.values()
 )
 
+LINEAR_ALGEBRA_SUBCATEGORY_BY_STEM: dict[str, str] = {
+    "fast_matrix_multiply": "matrix_operations",
+    "fast_matrix_multiply_mod": "matrix_operations",
+    "matrix_power_mod": "matrix_operations",
+    "fast_matrix_power_mod": "matrix_operations",
+    "matrix_power_entry_queries": "matrix_operations",
+    "fast_matrix_power_entry_queries": "matrix_operations",
+    "gaussian_elimination": "elimination",
+    "fast_gaussian_elimination": "elimination",
+    "characteristic_polynomial": "elimination",
+    "fast_characteristic_polynomial": "elimination",
+    "fast_determinant": "elimination",
+    "adjugate_matrix": "elimination",
+    "fast_adjugate_matrix": "elimination",
+    "intersection_of_f2_vector_spaces": "gf2",
+    "gf2_determinant": "gf2",
+    "gf2_matrix_rank": "gf2",
+    "inverse_matrix_mod_2": "gf2",
+    "matrix_product_mod_2": "gf2",
+    "quadratic_form_gf2": "gf2",
+    "hafnian": "combinatorial",
+    "pfaffian": "combinatorial",
+}
+
+LINEAR_ALGEBRA_SUBCATEGORIES = frozenset(
+    LINEAR_ALGEBRA_SUBCATEGORY_BY_STEM.values()
+)
+
+DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM: dict[str, str] = {
+    "minimum_weighted_left_endpoint_partition_cost": "interval_partition",
+    "minimum_rectangle_batch_cost": "interval_partition",
+    "maximum_time_weighted_endpoint_removal_score": "interval_partition",
+    "parenthesized_expression_extrema": "interval_partition",
+    "minimum_adjacent_modular_merge_cost": "interval_partition",
+    "minimize_maximum_partition_sum": "interval_partition",
+    "minimum_total_interval_cut_cost": "interval_partition",
+    "maximum_quadratic_partition_score": "interval_partition",
+    "knapsack_max_value_min_cost": "resource",
+    "minimum_exact_weight_cost_with_item_limit": "resource",
+    "minimum_cost_two_resource_cover": "resource",
+    "minimum_cost_path_with_resource_limit": "resource",
+    "count_three_row_domino_tilings": "profile_grid",
+    "count_four_row_domino_tilings": "profile_grid",
+    "maximum_downward_grid_path_sum": "profile_grid",
+    "minimum_ordered_pair_assignment_cost": "assignment_subset",
+    "count_perfect_assignments": "assignment_subset",
+    "maximum_histogram_perimeter_permutations": "assignment_subset",
+    "maximum_weight_nonoverlapping_intervals": "sequence_selection",
+    "maximum_disjoint_equal_pair_counts": "sequence_selection",
+    "maximum_noncrossing_bipartite_segments": "sequence_selection",
+    "minimum_rank_removal_sort_cost": "sequence_selection",
+}
+
+DYNAMIC_PROGRAMMING_SUBCATEGORIES = frozenset(
+    DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM.values()
+)
+
 NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     Path("src/algorithm/math/number_theory"): NUMBER_THEORY_SUBCATEGORIES,
     Path("src/algorithm/graph/shortest_path"): SHORTEST_PATH_SUBCATEGORIES,
     Path("src/algorithm/graph/connectivity"): CONNECTIVITY_SUBCATEGORIES,
+    Path("src/algorithm/math/linear_algebra"): (
+        LINEAR_ALGEBRA_SUBCATEGORIES
+    ),
+    Path("src/algorithm/other/dynamic_programming"): (
+        DYNAMIC_PROGRAMMING_SUBCATEGORIES
+    ),
 }
 
 EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
@@ -175,6 +238,12 @@ EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
     ),
     Path("src/algorithm/graph/connectivity"): (
         CONNECTIVITY_SUBCATEGORY_BY_STEM
+    ),
+    Path("src/algorithm/math/linear_algebra"): (
+        LINEAR_ALGEBRA_SUBCATEGORY_BY_STEM
+    ),
+    Path("src/algorithm/other/dynamic_programming"): (
+        DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM
     ),
 }
 

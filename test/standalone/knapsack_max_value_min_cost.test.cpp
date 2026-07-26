@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/other/dynamic_programming/knapsack_max_value_min_cost.hpp"
+#include "../../src/algorithm/other/dynamic_programming/resource/knapsack_max_value_min_cost.hpp"
 
 int main(){
     int capacity;

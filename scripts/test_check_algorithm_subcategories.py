@@ -67,6 +67,41 @@ def main() -> None:
         == "decomposition"
     )
 
+    linear_algebra_root = Path("src/algorithm/math/linear_algebra")
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[
+        linear_algebra_root
+    ] == frozenset({
+        "combinatorial", "elimination", "gf2", "matrix_operations",
+    })
+    assert len(
+        check_algorithm_subcategories.LINEAR_ALGEBRA_SUBCATEGORY_BY_STEM
+    ) == 21
+    assert (
+        check_algorithm_subcategories.LINEAR_ALGEBRA_SUBCATEGORY_BY_STEM[
+            "fast_characteristic_polynomial"
+        ]
+        == "elimination"
+    )
+
+    dynamic_programming_root = Path(
+        "src/algorithm/other/dynamic_programming"
+    )
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[
+        dynamic_programming_root
+    ] == frozenset({
+        "assignment_subset", "interval_partition", "profile_grid",
+        "resource", "sequence_selection",
+    })
+    assert len(
+        check_algorithm_subcategories.DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM
+    ) == 22
+    assert (
+        check_algorithm_subcategories.DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM[
+            "count_perfect_assignments"
+        ]
+        == "assignment_subset"
+    )
+
 
     with TemporaryDirectory() as directory:
         root = Path(directory)
@@ -282,6 +317,54 @@ def main() -> None:
         assert any(
             "legacy reference" in error
             for error in connectivity_errors()
+        )
+
+    with TemporaryDirectory() as directory:
+        root = Path(directory)
+        math_root = Path("src/algorithm/math")
+        linear_algebra_root = math_root / "linear_algebra"
+        categories = {
+            "hafnian": "combinatorial",
+            "gaussian_elimination": "elimination",
+            "gf2_matrix_rank": "gf2",
+            "fast_matrix_multiply": "matrix_operations",
+        }
+        layout = {math_root: frozenset({"linear_algebra"})}
+        nested_layouts = {
+            linear_algebra_root: frozenset(categories.values()),
+        }
+        expected_stems = {linear_algebra_root: categories}
+        docs_root = Path("docs/algorithm/math/linear_algebra")
+        for stem, category in categories.items():
+            source = root / linear_algebra_root / category / f"{stem}.hpp"
+            document = root / docs_root / category / f"{stem}.md"
+            source.parent.mkdir(parents=True, exist_ok=True)
+            document.parent.mkdir(parents=True, exist_ok=True)
+            source.write_text("valid\n", encoding="utf-8")
+            document.write_text("valid\n", encoding="utf-8")
+
+        def linear_algebra_errors() -> list[str]:
+            return check_algorithm_subcategories.layout_violations(
+                root,
+                layout,
+                frozenset(),
+                frozenset(),
+                nested_layouts=nested_layouts,
+                expected_nested_stems=expected_stems,
+                check_nested_docs=True,
+            )
+
+        assert linear_algebra_errors() == []
+        legacy = root / "test/standalone/legacy_linear_algebra.test.cpp"
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text(
+            '#include "../../src/algorithm/math/linear_algebra/'
+            'gaussian_elimination.hpp"\n',
+            encoding="utf-8",
+        )
+        assert any(
+            "legacy reference" in error
+            for error in linear_algebra_errors()
         )
 
     print("algorithm subcategory checker tests passed")
