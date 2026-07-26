@@ -6,6 +6,14 @@
 #include <utility>
 
 #include "../../src/algorithm/geometry/3d/expansion_arithmetic.hpp"
+#include "../../src/algorithm/geometry/3d/expansion_arithmetic_detail.hpp"
+#include "../../src/algorithm/geometry/3d/geometry3d_expansion.hpp"
+#include "../../src/algorithm/geometry/3d/geometry3d_expansion_binary.hpp"
+#include "../../src/algorithm/geometry/3d/geometry3d_expansion_estimate.hpp"
+#include "../../src/algorithm/geometry/3d/geometry3d_expansion_from_two_scalars.hpp"
+#include "../../src/algorithm/geometry/3d/geometry3d_expansion_scale.hpp"
+#include "../../src/algorithm/geometry/3d/geometry3d_expansion_sign.hpp"
+#include "../../src/algorithm/geometry/3d/geometry3d_expansion_unary.hpp"
 #include "../../src/algorithm/math/integer/exact_integer.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
@@ -84,6 +92,10 @@ int main(){
         if(!equal(exact_value(sum), add(exact_value(large), exact_value(1.0L)))){
             return false;
         }
+        const auto difference = geometry3d_two_diff(large, 1.0L);
+        if(!equal(
+            exact_value(difference), add(exact_value(large), exact_value(-1.0L))
+        )) return false;
         const long double first = 1.0e10L + 1.0L;
         const long double second = 1.0e10L - 1.0L;
         const auto product = geometry3d_two_product(first, second);
@@ -101,10 +113,21 @@ int main(){
             exact_value(multiplied),
             multiply(exact_value(sum), exact_value(product))
         )) return false;
+        const auto scaled = geometry3d_expansion_scale(sum, -2.0L);
+        if(!equal(
+            exact_value(scaled),
+            multiply(exact_value(sum), exact_value(-2.0L))
+        )) return false;
+        if(!geometry3d_api_close(
+            geometry3d_expansion_estimate({0.5L, 2.0L}), 2.5L
+        )) return false;
         if(geometry3d_expansion_sign(multiplied) != 1) return false;
         if(geometry3d_expansion_sign(
             geometry3d_expansion_negate(multiplied)
         ) != -1) return false;
+        if(geometry3d_expansion_sign(
+            geometry3d_expansion_negate({})
+        ) != 0) return false;
         return true;
     });
 }

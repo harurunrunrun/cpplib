@@ -1,17 +1,19 @@
 ---
-title: Intersection of Three 3D Planes (三次元の三平面の共通部分)
+title: Intersection of Three 3D Planes (3次元3平面の共通部分)
 documentation_of: ../../../../src/algorithm/geometry/3d/three_plane_intersection.hpp
 ---
 
+3平面の共通部分結果型と計算関数をまとめて読み込む互換aggregatorです。
+
 ## API
 
-- `ThreePlaneIntersection3`: 空、点、直線、平面を表すvariant。
-- `three_plane_intersection(first, second, third)`: 三平面の共通部分を返す。
+- `ThreePlaneIntersection3`: 空集合・一点・直線・平面のvariantです。
+- `three_plane_intersection(first, second, third)`: 3平面すべての共通部分を返します。
 
 ## API別の時間計算量・空間計算量
 
-- 構築・判別・関数実行はいずれも時間・追加領域 $O(1)$。
+型操作と計算関数はいずれも時間・追加空間 $O(1)$ です。
 
 ## 注意点
 
-零法線には `std::invalid_argument` を送出する。一致平面や、2平面が一致して交線が残る場合も型を失わず返す。
+従来の一括include用headerです。結果型と計算関数は個別leafからも利用できます。入力平面は有限で、法線は非零でなければなりません。

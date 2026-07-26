@@ -1,0 +1,11 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_THREE_PLANE_INTERSECTION_RESULT3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_THREE_PLANE_INTERSECTION_RESULT3_HPP_INCLUDED
+
+#include <variant>
+
+#include "geometry_primitives.hpp"
+
+using ThreePlaneIntersection3 =
+    std::variant<std::monostate, Point3, Line3, Plane3>;
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_THREE_PLANE_INTERSECTION_RESULT3_HPP_INCLUDED

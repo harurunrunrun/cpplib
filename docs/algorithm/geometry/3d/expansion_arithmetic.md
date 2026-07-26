@@ -1,27 +1,22 @@
 ---
-title: Floating-Point Expansion Arithmetic (浮動小数点展開演算)
+title: Floating-Point Expansion Arithmetic (浮動小数点展開算術)
 documentation_of: ../../../../src/algorithm/geometry/3d/expansion_arithmetic.hpp
 ---
 
-## 公開型
-
-- `Geometry3DExpansion`: 小さい成分から並ぶ `vector<long double>`。
+浮動小数点展開型と全演算leafをまとめて読み込む互換aggregatorです。
 
 ## API
 
-- `geometry3d_two_sum(a,b)` / `geometry3d_two_diff(a,b)`: 和・差を最大2成分へ展開する。
-- `geometry3d_two_product(a,b)`: `std::fma` を使い積と丸め残差を返す。
-- `geometry3d_expansion_sum(a,b)`: 展開同士の和。
-- `geometry3d_expansion_negate(a)`: 符号反転。
-- `geometry3d_expansion_scale(a,s)`: scalar倍。
-- `geometry3d_expansion_product(a,b)`: 展開同士の積。
-- `geometry3d_expansion_estimate(a)`: 成分和による近似値。
-- `geometry3d_expansion_sign(a)`: 最上位非零成分の符号。
+- `Geometry3DExpansion`: 展開の成分列です。
+- `geometry3d_two_sum`, `geometry3d_two_diff`, `geometry3d_two_product`: 2スカラーを展開へ変換します。
+- `geometry3d_expansion_sum`, `geometry3d_expansion_product`: 2展開の二項演算です。
+- `geometry3d_expansion_negate`, `geometry3d_expansion_scale`: 符号反転とスカラー倍です。
+- `geometry3d_expansion_estimate`, `geometry3d_expansion_sign`: 近似値と符号を返します。
 
 ## API別の時間計算量・空間計算量
 
-成分数を $N,M$ とする。two-sum/diff/productは $O(1)$。negate/estimate/signは $O(N)$。sumは $O(NM)$、scaleは最悪 $O(N^2)$、productは最悪 $O(N^2M^2)$。戻り値を含む領域は生成成分数に比例する。
+成分数を $N,M$ とすると、2スカラー演算は $O(1)$、`negate`、`estimate`、`sign` は $O(N)$、`sum` は $O(M(N+M))$、`scale` は $O(N^2)$、`product` は最悪 $O(N^2M^2)$ です。返却展開を除く空間は生成される中間展開の大きさに比例します。
 
 ## 注意点
 
-入力展開は絶対値が小さい非零成分から順に並べ、成分を重複させない。入力成分は有限でなければならず、非有限値は `std::invalid_argument`、演算overflowは `std::overflow_error`。underflowで消えた情報と正確変換前に丸められた入力情報は復元できない。適応的述語は不確実な場合に正確なdyadic多倍長計算で符号を確定する。
+従来の一括include用headerです。必要なAPIだけを使う場合は対応するleafを直接includeできます。入力は有限値かつ絶対値の小さい成分から並ぶ展開を前提とします。

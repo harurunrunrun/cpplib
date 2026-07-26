@@ -1,22 +1,19 @@
 ---
-title: 3D Plane-Plane Common Intersection (三次元平面同士の共通部分)
+title: 3D Plane-Plane Common Intersection (3次元2平面の共通部分)
 documentation_of: ../../../../src/algorithm/geometry/3d/plane_plane_common_intersection.hpp
 ---
 
-## 概要
-
-二平面の共通部分を、空集合・直線・平面のすべてについて返す。
+2平面の共通部分結果型と計算関数をまとめて読み込む互換aggregatorです。
 
 ## API
 
-- `PlanePlaneIntersection3`: `std::variant<std::monostate, Line3, Plane3>`。
-- `plane_plane_common_intersection(first, second)`: 二平面の共通部分を返す。
+- `PlanePlaneIntersection3`: 空集合・直線・平面のvariantです。
+- `plane_plane_common_intersection(first, second)`: 2平面の共通部分を返します。
 
 ## API別の時間計算量・空間計算量
 
-- 型エイリアスの利用: 時間・追加領域ともに $O(1)$。
-- `plane_plane_common_intersection`: 時間・追加領域ともに $O(1)$。
+型操作と計算関数はいずれも時間・追加空間 $O(1)$ です。
 
 ## 注意点
 
-両平面の法線は非零でなければならない。非有限入力には `std::invalid_argument` を送出する。
+従来の一括include用headerです。結果型と計算関数は個別leafからも利用できます。入力平面は有限で、法線は非零でなければなりません。

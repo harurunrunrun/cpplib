@@ -3,6 +3,8 @@
 #include <variant>
 
 #include "../../src/algorithm/geometry/3d/plane_plane_common_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/plane_plane_common_intersection_planes.hpp"
+#include "../../src/algorithm/geometry/3d/plane_plane_common_intersection_result3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

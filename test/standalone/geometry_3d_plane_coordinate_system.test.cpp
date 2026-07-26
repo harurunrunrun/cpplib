@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include "../../src/algorithm/geometry/3d/plane_coordinate_system.hpp"
+#include "../../src/algorithm/geometry/3d/plane_coordinate_system3.hpp"
+#include "../../src/algorithm/geometry/3d/plane_coordinate_system_from_plane.hpp"
 #include "../../src/algorithm/geometry/3d/cross.hpp"
 #include "../../src/algorithm/geometry/3d/dot.hpp"
 #include "geometry_3d_api_test_common.hpp"
@@ -12,6 +14,8 @@ int main(){
             && geometry3d_api_close(abs(system.first_axis), 1)
             && geometry3d_api_close(abs(system.second_axis), 1)
             && geometry3d_api_close(dot(system.first_axis, system.second_axis), 0)
-            && geometry3d_api_close(cross(system.first_axis, system.second_axis), system.normal);
+            && geometry3d_api_close(
+                cross(system.first_axis, system.second_axis), system.normal
+            );
     });
 }
