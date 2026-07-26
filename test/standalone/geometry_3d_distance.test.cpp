@@ -3,6 +3,14 @@
 #include <limits>
 
 #include "../../src/algorithm/geometry/3d/distance.hpp"
+#include "../../src/algorithm/geometry/3d/line_line_distance.hpp"
+#include "../../src/algorithm/geometry/3d/line_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/plane_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/point_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/ray_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/segment_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/segment_segment_distance.hpp"
+#include "../../src/algorithm/geometry/3d/triangle_point_distance.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_test_common.hpp"
 
