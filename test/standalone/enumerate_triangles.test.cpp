@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/specialized/enumerate_triangles.hpp"
+#include "../../src/algorithm/graph/specialized/subgraph_analysis/enumerate_triangles.hpp"
 
 std::set<std::array<int, 3>> naive_triangles(
     int n,

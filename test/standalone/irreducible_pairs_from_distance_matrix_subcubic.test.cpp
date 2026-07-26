@@ -5,8 +5,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/specialized/irreducible_pairs_from_distance_matrix.hpp"
-#include "../../src/algorithm/graph/specialized/irreducible_pairs_from_distance_matrix_subcubic.hpp"
+#include "../../src/algorithm/graph/specialized/metric_analysis/irreducible_pairs_from_distance_matrix.hpp"
+#include "../../src/algorithm/graph/specialized/metric_analysis/irreducible_pairs_from_distance_matrix_subcubic.hpp"
 
 namespace{
 

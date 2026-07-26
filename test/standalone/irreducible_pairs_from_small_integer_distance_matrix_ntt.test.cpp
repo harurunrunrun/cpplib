@@ -5,8 +5,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/specialized/irreducible_pairs_from_distance_matrix.hpp"
-#include "../../src/algorithm/graph/specialized/irreducible_pairs_from_small_integer_distance_matrix_ntt.hpp"
+#include "../../src/algorithm/graph/specialized/metric_analysis/irreducible_pairs_from_distance_matrix.hpp"
+#include "../../src/algorithm/graph/specialized/metric_analysis/irreducible_pairs_from_small_integer_distance_matrix_ntt.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

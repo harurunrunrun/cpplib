@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "../../src/algorithm/graph/specialized/minimum_steiner_tree.hpp"
+#include "../../src/algorithm/graph/specialized/route_optimization/minimum_steiner_tree.hpp"
 
 constexpr long long minimum_steiner_infinity =
     std::numeric_limits<long long>::max() / 4;

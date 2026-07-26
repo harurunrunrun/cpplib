@@ -217,6 +217,37 @@ DYNAMIC_PROGRAMMING_SUBCATEGORIES = frozenset(
     DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM.values()
 )
 
+GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM: dict[str, str] = {
+    "counting_c4": "subgraph_analysis",
+    "enumerate_triangles": "subgraph_analysis",
+    "sorted_bridge_endpoints": "subgraph_analysis",
+    "triangle_weight_product_sum_mod": "subgraph_analysis",
+    "grid_forest_diameter": "metric_analysis",
+    "irreducible_pairs_from_bounded_integer_distance_matrix": (
+        "metric_analysis"
+    ),
+    "irreducible_pairs_from_distance_matrix": "metric_analysis",
+    "irreducible_pairs_from_distance_matrix_subcubic": "metric_analysis",
+    "irreducible_pairs_from_small_integer_distance_matrix_ntt": (
+        "metric_analysis"
+    ),
+    "ordered_quota_euclidean_activation_times": "metric_analysis",
+    "radius_balls_form_vertex_partition": "metric_analysis",
+    "chinese_postman": "route_optimization",
+    "maximum_distinct_vertex_weight_walk": "route_optimization",
+    "minimum_steiner_tree": "route_optimization",
+    "steiner_tree": "route_optimization",
+    "planarity_test": "structural_analysis",
+    "tree_decomposition_width_two": "structural_analysis",
+    "treewidth_two_distance_oracle": "structural_analysis",
+    "range_edge_graph": "construction",
+    "rearrange_rows_into_permutation_columns": "construction",
+}
+
+GRAPH_SPECIALIZED_SUBCATEGORIES = frozenset(
+    GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM.values()
+)
+
 NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     Path("src/algorithm/math/number_theory"): NUMBER_THEORY_SUBCATEGORIES,
     Path("src/algorithm/graph/shortest_path"): SHORTEST_PATH_SUBCATEGORIES,
@@ -226,6 +257,9 @@ NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     ),
     Path("src/algorithm/other/dynamic_programming"): (
         DYNAMIC_PROGRAMMING_SUBCATEGORIES
+    ),
+    Path("src/algorithm/graph/specialized"): (
+        GRAPH_SPECIALIZED_SUBCATEGORIES
     ),
 }
 
@@ -244,6 +278,9 @@ EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
     ),
     Path("src/algorithm/other/dynamic_programming"): (
         DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM
+    ),
+    Path("src/algorithm/graph/specialized"): (
+        GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM
     ),
 }
 

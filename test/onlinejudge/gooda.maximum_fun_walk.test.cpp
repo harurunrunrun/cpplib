@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../../src/algorithm/graph/specialized/maximum_distinct_vertex_weight_walk.hpp"
+#include "../../src/algorithm/graph/specialized/route_optimization/maximum_distinct_vertex_weight_walk.hpp"
 #include "../../src/structure/io/fastio.hpp"
 
 namespace{

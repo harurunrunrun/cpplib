@@ -102,6 +102,23 @@ def main() -> None:
         == "assignment_subset"
     )
 
+    graph_specialized_root = Path("src/algorithm/graph/specialized")
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[
+        graph_specialized_root
+    ] == frozenset({
+        "construction", "metric_analysis", "route_optimization",
+        "structural_analysis", "subgraph_analysis",
+    })
+    assert len(
+        check_algorithm_subcategories.GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM
+    ) == 20
+    assert (
+        check_algorithm_subcategories.GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM[
+            "treewidth_two_distance_oracle"
+        ]
+        == "structural_analysis"
+    )
+
 
     with TemporaryDirectory() as directory:
         root = Path(directory)
