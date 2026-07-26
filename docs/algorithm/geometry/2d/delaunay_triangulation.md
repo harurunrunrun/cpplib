@@ -1,9 +1,21 @@
 ---
-title: 2D Delaunay Triangulation (二次元Delaunay三角形分割)
+title: 2D Delaunay Triangulation Aggregator (二次元Delaunay三角形分割集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/delaunay_triangulation.hpp
 ---
 
-## API
+公開結果型と点列入力APIをまとめて読み込む後方互換集約ヘッダ。
+
+## 構成
+
+| leaf header | 提供するAPI |
+| --- | --- |
+| `delaunay_triangulation_result.hpp` | `DelaunayTriangulationResult` |
+| `delaunay_triangulation_points.hpp` | `delaunay_triangulation(points)` |
+
+必要なleafだけを直接includeできる。従来の `delaunay_triangulation.hpp` は
+引き続き全APIを提供する。
+
+## 集約されるAPI
 
 ```cpp
 DelaunayTriangulationResult delaunay_triangulation(

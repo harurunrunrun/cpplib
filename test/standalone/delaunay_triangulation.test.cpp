@@ -12,6 +12,8 @@
 #include <utility>
 #include <vector>
 
+#include "../../src/algorithm/geometry/2d/delaunay_triangulation_result.hpp"
+#include "../../src/algorithm/geometry/2d/delaunay_triangulation_points.hpp"
 #include "../../src/algorithm/geometry/2d/delaunay_triangulation.hpp"
 
 namespace{
@@ -215,6 +217,12 @@ void verify(const std::vector<IntegerPoint>& integer_points){
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
+    const DelaunayTriangulationResult default_result;
+    assert(default_result.triangles.empty());
+    assert(default_result.edges.empty());
+    assert(default_result.representative.empty());
+    assert(default_result.sites.empty());
 
     bool invalid_thrown = false;
     try{

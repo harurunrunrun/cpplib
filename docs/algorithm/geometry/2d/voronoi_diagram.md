@@ -1,9 +1,24 @@
 ---
-title: 2D Voronoi Diagram (二次元Voronoi図)
+title: 2D Voronoi Diagram Aggregator (二次元Voronoi図集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/voronoi_diagram.hpp
 ---
 
-## API
+Voronoi辺の種類、辺、図全体の結果型と点列入力APIをまとめて読み込む
+後方互換集約ヘッダ。
+
+## 構成
+
+| leaf header | 提供するAPI |
+| --- | --- |
+| `voronoi_edge_kind.hpp` | `VoronoiEdgeKind` |
+| `voronoi_edge.hpp` | `VORONOI_NO_VERTEX`, `VoronoiEdge` |
+| `voronoi_diagram_result.hpp` | `VoronoiDiagramResult` |
+| `voronoi_diagram_points.hpp` | `voronoi_diagram(points)` |
+
+必要なleafだけを直接includeできる。従来の `voronoi_diagram.hpp` は引き続き
+全APIを提供する。
+
+## 集約されるAPI
 
 ```cpp
 VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points);

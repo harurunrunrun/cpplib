@@ -9,7 +9,9 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/euclidean_mst.hpp"
+#include "../../src/algorithm/geometry/2d/euclidean_mst_edge.hpp"
+#include "../../src/algorithm/geometry/2d/euclidean_mst_result.hpp"
+#include "../../src/algorithm/geometry/2d/euclidean_mst_points.hpp"
 #include "../../src/algorithm/geometry/2d/euclidean_mst.hpp"
 
 namespace{
@@ -56,6 +58,14 @@ private:
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
+    const EuclideanMstEdge sample_edge{
+        0, 1, static_cast<__uint128_t>(25)
+    };
+    assert(sample_edge.from == 0 && sample_edge.to == 1
+        && sample_edge.squared_distance == 25);
+    const EuclideanMstResult default_result;
+    assert(default_result.edges.empty());
 
     int test_count;
     std::cin >> test_count;

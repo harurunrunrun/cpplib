@@ -1,7 +1,23 @@
 ---
-title: Euclidean Minimum Spanning Tree (ユークリッド最小全域木) [euclidean_mst]
+title: Euclidean Minimum Spanning Tree Aggregator (ユークリッド最小全域木集約ヘッダ) [euclidean_mst]
 documentation_of: ../../../../src/algorithm/geometry/2d/euclidean_mst.hpp
 ---
+
+整数座標点のユークリッド最小全域木に関する型と関数をまとめて読み込む
+後方互換集約ヘッダ。
+
+## 構成
+
+| leaf header | 提供するAPI |
+| --- | --- |
+| `euclidean_mst_edge.hpp` | `EuclideanMstEdge` |
+| `euclidean_mst_result.hpp` | `EuclideanMstResult` |
+| `euclidean_mst_points.hpp` | `euclidean_mst(points)` |
+
+必要なleafだけを直接includeできる。従来の `euclidean_mst.hpp` は引き続き
+全APIを提供する。
+
+## 集約されるAPI
 
 二次元整数座標点の完全グラフについて、辺重みをユークリッド距離とした最小全域木を求める。
 Delaunay三角形分割の辺だけを候補にしてKruskal法を行う。座標が一致する点も別頂点として扱う。
@@ -46,4 +62,5 @@ $N$を点数とする。
 
 ## 注意点
 
-座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。
+`Coordinate` は整数型でなければならない。向き・外接円判定は128-bit符号付き整数、
+平方距離は128-bit符号なし整数の範囲に収まる必要がある。

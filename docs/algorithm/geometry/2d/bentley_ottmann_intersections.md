@@ -1,7 +1,21 @@
 ---
-title: Bentley Ottmann Intersections (Bentley–Ottmann交差列挙)
+title: Bentley Ottmann Intersections Aggregator (Bentley–Ottmann交差列挙集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/bentley_ottmann_intersections.hpp
 ---
+
+交差記録型と線分列入力APIをまとめて読み込む後方互換集約ヘッダ。
+
+## 構成
+
+| leaf header | 提供するAPI |
+| --- | --- |
+| `segment_intersection_record.hpp` | `SegmentIntersectionRecord` |
+| `bentley_ottmann_intersections_segments.hpp` | `bentley_ottmann_intersections(segments)` |
+
+必要なleafだけを直接includeできる。従来の
+`bentley_ottmann_intersections.hpp` は引き続き全APIを提供する。
+
+## 集約されるAPI
 
 Bentley–Ottmann法によって、交差する線分対とその交差形状を列挙する。
 

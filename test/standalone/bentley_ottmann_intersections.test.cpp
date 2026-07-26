@@ -1,11 +1,26 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/2d/segment_intersection_record.hpp"
+#include "../../src/algorithm/geometry/2d/bentley_ottmann_intersections_segments.hpp"
 #include "../../src/algorithm/geometry/2d/bentley_ottmann_intersections.hpp"
 
 #include <iostream>
 #include <vector>
 
 int main(){
+    const SegmentIntersectionRecord sample{
+        0,
+        1,
+        SEGMENT_INTERSECTION_POINT,
+        Point{1, 1},
+        Point{1, 1},
+    };
+    if(sample.first != 0 || sample.second != 1
+        || sample.kind != SEGMENT_INTERSECTION_POINT
+        || !(sample.first_point == sample.second_point)){
+        return 1;
+    }
+
     int queries;
     std::cin >> queries;
     while(queries-- > 0){

@@ -12,6 +12,10 @@
 #include <utility>
 #include <vector>
 
+#include "../../src/algorithm/geometry/2d/voronoi_edge_kind.hpp"
+#include "../../src/algorithm/geometry/2d/voronoi_edge.hpp"
+#include "../../src/algorithm/geometry/2d/voronoi_diagram_result.hpp"
+#include "../../src/algorithm/geometry/2d/voronoi_diagram_points.hpp"
 #include "../../src/algorithm/geometry/2d/voronoi_diagram.hpp"
 
 namespace{
@@ -219,6 +223,18 @@ void verify(const std::vector<Point>& points){
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
+    const VoronoiEdge default_edge;
+    assert(default_edge.kind == VoronoiEdgeKind::SEGMENT);
+    assert(default_edge.first_site == 0 && default_edge.second_site == 0);
+    assert(default_edge.origin == Point{});
+    assert(default_edge.endpoint_or_direction == Point{});
+    assert(default_edge.first_vertex == VORONOI_NO_VERTEX);
+    assert(default_edge.second_vertex == VORONOI_NO_VERTEX);
+    const VoronoiDiagramResult default_result;
+    assert(default_result.vertices.empty() && default_result.edges.empty());
+    assert(default_result.cell_edges.empty());
+    assert(default_result.representative.empty() && default_result.sites.empty());
 
     bool invalid_thrown = false;
     try{
