@@ -1,6 +1,9 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/line_point_reflection.hpp"
+#include "../../src/algorithm/geometry/3d/plane_point_reflection.hpp"
 #include "../../src/algorithm/geometry/3d/reflection.hpp"
+#include "../../src/algorithm/geometry/3d/reflection_detail.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_test_common.hpp"
 
