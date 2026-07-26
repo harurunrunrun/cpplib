@@ -10,7 +10,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
 #endif
-#include "../../fft/formal_power_series.hpp"
+#include "../../fft/formal_power_series/formal_power_series.hpp"
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
 #endif

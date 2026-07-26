@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../fft/convolution.hpp"
+#include "../../fft/transform/convolution.hpp"
 
 namespace linear_recurrence_internal{
 

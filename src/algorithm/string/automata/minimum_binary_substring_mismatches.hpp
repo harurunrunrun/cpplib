@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../fft/convolution.hpp"
+#include "../../fft/transform/convolution.hpp"
 
 inline int minimum_binary_substring_mismatches(
     const std::string& text,

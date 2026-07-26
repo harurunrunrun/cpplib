@@ -7,7 +7,7 @@
 
 #include "../decomposition/euler_tour.hpp"
 #include "lca.hpp"
-#include "../../range/static_range_count_distinct.hpp"
+#include "../../range/static_query/static_range_count_distinct.hpp"
 
 template<class Color, int MAX_SIZE>
 struct LcaSubtreeDistinctColors{

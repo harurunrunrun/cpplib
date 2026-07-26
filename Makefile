@@ -34,7 +34,7 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help gcc13-check verifier-setup verifier-wrapper-test header-guard-check algorithm-layout-check structure-layout-check wavelet-matrix-design-check no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help gcc13-check verifier-setup verifier-wrapper-test header-guard-check relative-include-check algorithm-layout-check structure-layout-check wavelet-matrix-design-check no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
@@ -43,6 +43,7 @@ help:
 	@echo "make standalone-results-prune  削除・改名済みstandaloneの古いmanifestを除去"
 	@echo "make standalone-results-check  standalone全件の最新成功manifestを検査"
 	@echo "make header-guard-check  全headerの一意なinclude guardを検査"
+	@echo "make relative-include-check  quoted includeの参照先を検査"
 	@echo "make algorithm-layout-check  validate algorithm subcategories"
 	@echo "make structure-layout-check  validate structure subcategories"
 	@echo "make wavelet-matrix-design-check  reject obsolete dynamic/persistent designs"
@@ -81,6 +82,10 @@ header-guard-check:
 	$(PYTHON) scripts/test_check_header_guards.py
 	$(PYTHON) scripts/check_header_guards.py src test
 
+relative-include-check:
+	$(PYTHON) scripts/test_check_relative_includes.py
+	$(PYTHON) scripts/check_relative_includes.py src test
+
 algorithm-layout-check:
 	$(PYTHON) scripts/test_check_algorithm_subcategories.py
 	$(PYTHON) scripts/check_algorithm_subcategories.py
@@ -93,7 +98,7 @@ wavelet-matrix-design-check:
 	$(PYTHON) scripts/test_check_wavelet_matrix_design.py
 	$(PYTHON) scripts/check_wavelet_matrix_design.py src/structure/wavelet_matrix
 
-no-boost-dependency-check: header-guard-check algorithm-layout-check structure-layout-check wavelet-matrix-design-check
+no-boost-dependency-check: header-guard-check relative-include-check algorithm-layout-check structure-layout-check wavelet-matrix-design-check
 	$(PYTHON) scripts/test_check_no_boost_dependency.py
 	$(PYTHON) scripts/check_no_boost_dependency.py src test docs
 
