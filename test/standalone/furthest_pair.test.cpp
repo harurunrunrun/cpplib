@@ -7,11 +7,20 @@
 #include <utility>
 #include <vector>
 
+#include "../../src/algorithm/geometry/2d/furthest_pair_result.hpp"
+#include "../../src/algorithm/geometry/2d/furthest_pair_points.hpp"
 #include "../../src/algorithm/geometry/2d/furthest_pair.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
+    const FurthestPairResult empty_result;
+    const std::size_t no_index = std::numeric_limits<std::size_t>::max();
+    assert(empty_result.first == no_index);
+    assert(empty_result.second == no_index);
+    assert(empty_result.squared_distance == 0);
+    assert(!empty_result.exists());
 
     assert(!furthest_pair(std::vector<std::pair<long long, long long>>{}).exists());
     assert(!furthest_pair(

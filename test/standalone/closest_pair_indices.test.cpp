@@ -7,11 +7,20 @@
 #include <utility>
 #include <vector>
 
+#include "../../src/algorithm/geometry/2d/closest_pair_result.hpp"
+#include "../../src/algorithm/geometry/2d/closest_pair_indices_points.hpp"
 #include "../../src/algorithm/geometry/2d/closest_pair_indices.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+
+    const ClosestPairResult empty_result;
+    const std::size_t no_index = std::numeric_limits<std::size_t>::max();
+    assert(empty_result.first == no_index);
+    assert(empty_result.second == no_index);
+    assert(empty_result.squared_distance == 0);
+    assert(!empty_result.exists());
 
     assert(!closest_pair_indices(
         std::vector<std::pair<long long, long long>>{}

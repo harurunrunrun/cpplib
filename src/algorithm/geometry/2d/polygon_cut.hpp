@@ -14,11 +14,7 @@
 #include "cross.hpp"
 #include "cross_point.hpp"
 #include "dot.hpp"
-
-struct PolygonLineCutResult{
-    std::vector<std::vector<Point>> left;
-    std::vector<std::vector<Point>> right;
-};
+#include "polygon_line_cut_result.hpp"
 
 namespace polygon_line_cut_detail{
 

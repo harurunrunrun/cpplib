@@ -10,6 +10,7 @@
 
 #include "../../src/algorithm/geometry/2d/contains.hpp"
 #include "../../src/algorithm/geometry/2d/polygon_area.hpp"
+#include "../../src/algorithm/geometry/2d/polygon_line_cut_result.hpp"
 #include "../../src/algorithm/geometry/2d/polygon_cut.hpp"
 #include "geometry_2d_test_common.hpp"
 
@@ -238,6 +239,9 @@ bool same_components(
 }
 
 bool internal_tests(){
+    const PolygonLineCutResult empty_result;
+    if(!empty_result.left.empty() || !empty_result.right.empty()) return false;
+
     std::mt19937_64 random(0xD1B54A32D192ED03ULL);
     const long double turn = 2.0L * std::acos(-1.0L);
     for(std::size_t iteration = 0; iteration < 128; ++iteration){
