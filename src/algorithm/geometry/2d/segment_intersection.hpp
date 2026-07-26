@@ -24,7 +24,7 @@ inline Point segment_intersection(
     if(geometry_sign(abs(first_direction)) != 0 &&
         geometry_sign(abs(second_direction)) != 0 &&
         !parallel(first_direction, second_direction)){
-        return cross_point(first, second);
+        return cross_point(supporting_line(first), supporting_line(second));
     }
     std::vector<Point> candidates;
     for(const Point& point: {first.a, first.b, second.a, second.b}){

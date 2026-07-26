@@ -25,8 +25,8 @@ inline std::optional<Segment> segment_overlap(
         if(on_segment(first, second.a)) return Segment{second.a, second.a};
         return std::nullopt;
     }
-    if(side_of_directed_line(first, second.a) != 0 ||
-       side_of_directed_line(first, second.b) != 0){
+    if(side_of_directed_line(supporting_line(first), second.a) != 0 ||
+       side_of_directed_line(supporting_line(first), second.b) != 0){
         return std::nullopt;
     }
     Point first_low = first.a;

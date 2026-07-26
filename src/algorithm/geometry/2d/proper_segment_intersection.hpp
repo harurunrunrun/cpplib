@@ -10,7 +10,7 @@ inline bool proper_segment_intersection(
 ){
     const auto side = [](const Segment& segment, const Point& point){
         if(geometry_sign(abs(segment.b - segment.a)) == 0) return 0;
-        return side_of_directed_line(segment, point);
+        return side_of_directed_line(supporting_line(segment), point);
     };
     const int first_a = side(first, second.a);
     const int first_b = side(first, second.b);

@@ -26,7 +26,7 @@ inline std::vector<Point> circle_segment_cross_points(
     }
     const long double direction_squared = direction_length * direction_length;
     std::vector<Point> result;
-    for(const Point& point: circle_line_cross_points(circle, segment)){
+    for(const Point& point: circle_line_cross_points(circle, supporting_line(segment))){
         const long double parameter =
             dot(point - segment.a, direction) / direction_squared;
         if(geometry_sign(parameter) >= 0

@@ -31,7 +31,7 @@ inline Point line_segment_intersection(
     )) == 0){
         throw std::domain_error("line and segment do not have a unique intersection");
     }
-    return cross_point(line, segment);
+    return cross_point(line, supporting_line(segment));
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_LINE_SEGMENT_INTERSECTION_HPP_INCLUDED

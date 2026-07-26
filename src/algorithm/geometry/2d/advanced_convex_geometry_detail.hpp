@@ -138,7 +138,7 @@ inline long double direction_angle(const Point& direction){
 
 inline bool on_segment_scaled(const Segment& segment, const Point& point){
     if(point_equal(segment.a, segment.b)) return point_equal(segment.a, point);
-    if(side_sign(segment, point) != 0) return false;
+    if(side_sign(supporting_line(segment), point) != 0) return false;
     // A line intersection can round just beyond its shared endpoint.
     if(point_equal(segment.a, point) || point_equal(segment.b, point)){
         return true;
@@ -163,13 +163,13 @@ inline std::vector<Point> segment_intersection_set(
                                                   : std::vector<Point>{};
     }
     if(cross_sign(first_direction, second_direction) != 0){
-        const Point intersection = line_intersection_unchecked(first, second);
+        const Point intersection = line_intersection_unchecked(supporting_line(first), supporting_line(second));
         if(on_segment_scaled(first, intersection) && on_segment_scaled(second, intersection)){
             return {intersection};
         }
         return {};
     }
-    if(side_sign(first, second.a) != 0) return {};
+    if(side_sign(supporting_line(first), second.a) != 0) return {};
 
     std::vector<Point> candidates;
     for(const Point& point: {first.a, first.b, second.a, second.b}){

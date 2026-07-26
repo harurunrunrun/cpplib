@@ -1,5 +1,9 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/2d/circle.hpp"
+#include "../../src/algorithm/geometry/2d/line.hpp"
+#include "../../src/algorithm/geometry/2d/point.hpp"
+#include "../../src/algorithm/geometry/2d/segment.hpp"
 #include "../../src/algorithm/geometry/2d/types.hpp"
 #include "geometry_2d_test_common.hpp"
 
@@ -55,9 +59,20 @@ int main(){
         }else if(operation == "LINE" || operation == "SEGMENT"){
             long double ax, ay, bx, by;
             std::cin >> ax >> ay >> bx >> by;
-            const Line line{{ax, ay}, {bx, by}};
-            geometry_test_print_point(line.a);
-            geometry_test_print_point(line.b);
+            if(operation == "LINE"){
+                const Line line{{ax, ay}, {bx, by}};
+                geometry_test_print_point(line.a);
+                geometry_test_print_point(line.b);
+            }else{
+                const Segment segment{{ax, ay}, {bx, by}};
+                geometry_test_print_point(segment.a);
+                geometry_test_print_point(segment.b);
+                const Line line = supporting_line(segment);
+                if(line.a.x != segment.a.x || line.a.y != segment.a.y ||
+                   line.b.x != segment.b.x || line.b.y != segment.b.y){
+                    return 1;
+                }
+            }
         }else{
             long double x, y, radius;
             std::cin >> x >> y >> radius;

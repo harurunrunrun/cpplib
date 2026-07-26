@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/2d/parallel_lines.hpp"
+#include "../../src/algorithm/geometry/2d/parallel_vectors.hpp"
 #include "../../src/algorithm/geometry/2d/parallel.hpp"
 #include "geometry_2d_test_common.hpp"
 
