@@ -5,6 +5,8 @@ documentation_of: ../../../../src/algorithm/geometry/2d/geometry_scaled_sign.hpp
 
 幾何的な入力scaleと丸め誤差scaleに応じた許容幅で値を-1、0、1へ符号化する。
 
+旧ヘッダは2引数wrapperと3引数coreの両leafを提供する互換aggregatorである。
+
 ## API
 
 ```cpp
