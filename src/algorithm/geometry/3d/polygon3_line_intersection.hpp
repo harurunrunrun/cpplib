@@ -23,7 +23,7 @@
 #include "polygon3_coplanar.hpp"
 #include "polygon3_contains.hpp"
 #include "polygon3_normal.hpp"
-#include "polygon3_to_2d.hpp"
+#include "polygon3_to_2d_with_plane_coordinate_system.hpp"
 
 struct Polygon3LinearIntersection3{
     std::vector<Point3> points;

@@ -3,7 +3,7 @@
 
 #include "../2d/polygon_centroid.hpp"
 #include "from_plane_coordinates.hpp"
-#include "polygon3_to_2d.hpp"
+#include "polygon3_to_2d_without_plane_coordinate_system.hpp"
 
 inline Point3 polygon3_centroid(const Polygon3& polygon){
     const auto [system, projected] = polygon3_to_2d(polygon);

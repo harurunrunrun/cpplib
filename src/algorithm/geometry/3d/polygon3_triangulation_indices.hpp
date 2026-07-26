@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "../2d/simple_polygon_triangulation.hpp"
-#include "polygon3_to_2d.hpp"
+#include "polygon3_to_2d_without_plane_coordinate_system.hpp"
 
 inline std::vector<std::array<std::size_t, 3>> polygon3_triangulation_indices(
     const Polygon3& polygon
