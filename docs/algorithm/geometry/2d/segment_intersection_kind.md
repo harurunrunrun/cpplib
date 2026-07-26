@@ -1,24 +1,32 @@
 ---
-title: Segment Intersection Kind (線分交差部分の分類)
+title: Segment Intersection Kind Aggregator (線分交差分類集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/segment_intersection_kind.hpp
 ---
 
-## API
+線分交差分類の結果型と2線分入力APIをまとめる後方互換集約ヘッダ。
 
-`SegmentIntersectionKind segment_intersection_kind(first, second)`
+## 構成
 
-## 引数
+| leaf header | 提供するAPI |
+| --- | --- |
+| `segment_intersection_kind_result.hpp` | `SegmentIntersectionKind` |
+| `segment_intersection_kind_segments.hpp` | `segment_intersection_kind(first, second)` |
 
-2線分を渡す。
+## 集約されるAPI
 
-## 戻り値
-
-交差なし、1点、非零長の線分を `SEGMENT_INTERSECTION_NONE`, `POINT`, `SEGMENT` で返す。
+```cpp
+SegmentIntersectionKind segment_intersection_kind(
+    const Segment& first,
+    const Segment& second
+);
+```
 
 ## API別の時間計算量・空間計算量
 
-- `segment_intersection_kind`: 時間 $O(1)$、追加領域 $O(1)$。
+| API・操作 | 時間計算量 | 追加空間計算量 |
+| --- | --- | --- |
+| `segment_intersection_kind`、結果値の参照 | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-端点接触と同一点の退化線分は `POINT` に分類する。
+既存コードはこのヘッダを変更せず利用できる。

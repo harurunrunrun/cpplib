@@ -1,11 +1,11 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_CROSS_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_CROSS_HPP_INCLUDED
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_INTEGER_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_INTEGER_POINTS_HPP_INCLUDED
 
 #include "geometry_integer_wide.hpp"
 #include "integer_point.hpp"
 
 template<std::integral Coordinate>
-inline GeometryIntegerWide integer_cross(
+inline GeometryIntegerWide integer_dot(
     const IntegerPoint<Coordinate>& first,
     const IntegerPoint<Coordinate>& second
 ){
@@ -13,8 +13,8 @@ inline GeometryIntegerWide integer_cross(
     const __int128_t first_y = static_cast<__int128_t>(first.y);
     const __int128_t second_x = static_cast<__int128_t>(second.x);
     const __int128_t second_y = static_cast<__int128_t>(second.y);
-    return GeometryIntegerWide(first_x) * GeometryIntegerWide(second_y) -
-        GeometryIntegerWide(first_y) * GeometryIntegerWide(second_x);
+    return GeometryIntegerWide(first_x) * GeometryIntegerWide(second_x) +
+        GeometryIntegerWide(first_y) * GeometryIntegerWide(second_y);
 }
 
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_CROSS_HPP_INCLUDED
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_INTEGER_POINTS_HPP_INCLUDED

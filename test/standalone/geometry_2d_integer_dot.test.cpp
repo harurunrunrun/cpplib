@@ -1,4 +1,30 @@
 // competitive-verifier: STANDALONE
-#include "../../src/algorithm/geometry/2d/integer_dot.hpp"
+
+#include <concepts>
 #include <iostream>
-int main(){ int q; std::cin>>q; while(q--){ long long ax,ay,bx,by; std::cin>>ax>>ay>>bx>>by; std::cout<<integer_dot(IntegerPoint<long long>{ax,ay},IntegerPoint<long long>{bx,by})<<'\n'; } }
+
+#include "../../src/algorithm/geometry/2d/geometry_integer_wide.hpp"
+#include "../../src/algorithm/geometry/2d/integer_dot_integer_points.hpp"
+#include "../../src/algorithm/geometry/2d/integer_dot.hpp"
+
+int main(){
+    static_assert(std::same_as<GeometryIntegerWide, ExactInteger>);
+    static_assert(std::same_as<
+        decltype(integer_dot(IntegerPoint<int>{}, IntegerPoint<int>{})),
+        GeometryIntegerWide
+    >);
+
+    int query_count;
+    std::cin >> query_count;
+    while(query_count--){
+        long long first_x;
+        long long first_y;
+        long long second_x;
+        long long second_y;
+        std::cin >> first_x >> first_y >> second_x >> second_y;
+        std::cout << integer_dot(
+            IntegerPoint<long long>{first_x, first_y},
+            IntegerPoint<long long>{second_x, second_y}
+        ) << '\n';
+    }
+}
