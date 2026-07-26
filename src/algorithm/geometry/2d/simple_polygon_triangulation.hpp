@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "ear_clipping_triangulation.hpp"
+#include "ear_clipping_triangulation_points.hpp"
 
 inline std::vector<EarClippingTriangle> simple_polygon_triangulation(
     const std::vector<Point>& polygon

@@ -1,15 +1,7 @@
 #ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_HPP_INCLUDED
 
-#include "line.hpp"
-
-struct Segment{
-    Point a;
-    Point b;
-};
-
-inline Line supporting_line(const Segment& segment){
-    return {segment.a, segment.b};
-}
+#include "segment_type.hpp"
+#include "supporting_line_segment.hpp"
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SEGMENT_HPP_INCLUDED

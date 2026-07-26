@@ -3,6 +3,8 @@
 #include "../../src/algorithm/geometry/2d/circle.hpp"
 #include "../../src/algorithm/geometry/2d/line.hpp"
 #include "../../src/algorithm/geometry/2d/point.hpp"
+#include "../../src/algorithm/geometry/2d/segment_type.hpp"
+#include "../../src/algorithm/geometry/2d/supporting_line_segment.hpp"
 #include "../../src/algorithm/geometry/2d/segment.hpp"
 #include "../../src/algorithm/geometry/2d/types.hpp"
 #include "geometry_2d_test_common.hpp"
