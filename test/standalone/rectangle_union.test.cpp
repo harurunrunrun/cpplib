@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "../../src/algorithm/other/offline_query/rectangle_union.hpp"
+#include "../../src/algorithm/other/offline_query/grid_aggregation/rectangle_union.hpp"
 
 using Rect = RectangleUnionRectangle<long long>;
 

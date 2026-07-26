@@ -268,6 +268,26 @@ GRAPH_CONSTRAINTS_SUBCATEGORIES = frozenset(
     GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM.values()
 )
 
+OFFLINE_QUERY_SUBCATEGORY_BY_STEM: dict[str, str] = {
+    "mo": "batch_framework",
+    "parallel_binary_search": "batch_framework",
+    "time_segment_tree": "batch_framework",
+    "earliest_circular_range_requirement_times": "batch_framework",
+    "offline_point_add_rectangle_sum": "point_rectangle",
+    "dynamic_point_add_rectangle_sum": "point_rectangle",
+    "dynamic_rectangle_add_point_get": "point_rectangle",
+    "offline_rectangle_add_point_get": "point_rectangle",
+    "offline_dynamic_range_count_at_least": "range_count",
+    "offline_dynamic_range_count_less_equal": "range_count",
+    "rectangle_xor": "grid_aggregation",
+    "rectangle_union": "grid_aggregation",
+    "multidimensional_prefix_sum": "grid_aggregation",
+}
+
+OFFLINE_QUERY_SUBCATEGORIES = frozenset(
+    OFFLINE_QUERY_SUBCATEGORY_BY_STEM.values()
+)
+
 NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     Path("src/algorithm/math/number_theory"): NUMBER_THEORY_SUBCATEGORIES,
     Path("src/algorithm/graph/shortest_path"): SHORTEST_PATH_SUBCATEGORIES,
@@ -284,6 +304,7 @@ NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     Path("src/algorithm/graph/constraints"): (
         GRAPH_CONSTRAINTS_SUBCATEGORIES
     ),
+    Path("src/algorithm/other/offline_query"): OFFLINE_QUERY_SUBCATEGORIES,
 }
 
 EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
@@ -307,6 +328,9 @@ EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
     ),
     Path("src/algorithm/graph/constraints"): (
         GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM
+    ),
+    Path("src/algorithm/other/offline_query"): (
+        OFFLINE_QUERY_SUBCATEGORY_BY_STEM
     ),
 }
 

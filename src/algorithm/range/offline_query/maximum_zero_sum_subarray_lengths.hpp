@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../other/offline_query/mo.hpp"
+#include "../../other/offline_query/batch_framework/mo.hpp"
 
 inline std::vector<int> maximum_zero_sum_subarray_lengths(
     const std::vector<int>& values,

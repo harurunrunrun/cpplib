@@ -135,6 +135,23 @@ def main() -> None:
         == "systems"
     )
 
+    offline_query_root = Path("src/algorithm/other/offline_query")
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[
+        offline_query_root
+    ] == frozenset({
+        "batch_framework", "grid_aggregation", "point_rectangle",
+        "range_count",
+    })
+    assert len(
+        check_algorithm_subcategories.OFFLINE_QUERY_SUBCATEGORY_BY_STEM
+    ) == 13
+    assert (
+        check_algorithm_subcategories.OFFLINE_QUERY_SUBCATEGORY_BY_STEM[
+            "parallel_binary_search"
+        ]
+        == "batch_framework"
+    )
+
 
     with TemporaryDirectory() as directory:
         root = Path(directory)

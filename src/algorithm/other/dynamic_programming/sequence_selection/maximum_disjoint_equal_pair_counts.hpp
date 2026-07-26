@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../offline_query/mo.hpp"
+#include "../../offline_query/batch_framework/mo.hpp"
 
 template<class T>
 std::vector<int> maximum_disjoint_equal_pair_counts(
