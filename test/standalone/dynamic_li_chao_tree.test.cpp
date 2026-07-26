@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp"
+#include "../../src/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.hpp"
 
 int main(){
     int q;

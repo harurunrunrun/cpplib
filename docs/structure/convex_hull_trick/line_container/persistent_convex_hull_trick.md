@@ -1,6 +1,6 @@
 ---
 title: Persistent Convex Hull Trick (完全永続凸包トリック)
-documentation_of: ../../../src/structure/convex_hull_trick/persistent_convex_hull_trick.hpp
+documentation_of: ../../../../src/structure/convex_hull_trick/line_container/persistent_convex_hull_trick.hpp
 ---
 
 直線追加永続 Convex Hull Trick。最小値を返す。

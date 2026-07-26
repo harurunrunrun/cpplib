@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/convex_hull_trick/slope_trick.hpp"
+#include "../../src/structure/convex_hull_trick/slope_trick/slope_trick.hpp"
 
 namespace{
 

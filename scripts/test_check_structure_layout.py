@@ -41,6 +41,10 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("docs/structure/tree/dynamic_forest/link_cut_tree.md")
         self.write("src/structure/ordered_set/integer_set.hpp")
         self.write("docs/structure/ordered_set/integer_set.md")
+        self.write(
+            "src/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.hpp"
+        )
+        self.write("docs/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.md")
         self.assertEqual(self.messages(), [])
 
     def test_legacy_other_header_and_document_are_rejected(self) -> None:
@@ -80,6 +84,32 @@ class CheckStructureLayoutTest(unittest.TestCase):
     def test_dsu_header_in_wrong_subcategory_is_rejected(self) -> None:
         self.write("src/structure/dsu/rollback/dsu.hpp")
         self.assertTrue(any("expected src/structure/dsu/basic" in item for item in self.messages()))
+    def test_convex_hull_trick_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp")
+        self.assertTrue(any(
+            "convex_hull_trick subcategory" in item for item in self.messages()
+        ))
+
+    def test_unknown_convex_hull_trick_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/convex_hull_trick/misc/example.hpp")
+        self.assertTrue(any(
+            "unknown convex_hull_trick subcategory" in item
+            for item in self.messages()
+        ))
+
+    def test_convex_hull_trick_header_in_wrong_subcategory_is_rejected(self) -> None:
+        self.write(
+            "src/structure/convex_hull_trick/line_container/dynamic_li_chao_tree.hpp"
+        )
+        self.assertTrue(any(
+            "expected src/structure/convex_hull_trick/li_chao" in item
+            for item in self.messages()
+        ))
+
+    def test_convex_hull_trick_subcategory_cannot_be_split_further(self) -> None:
+        self.write("src/structure/convex_hull_trick/li_chao/internal/example.hpp")
+        self.assertTrue(any("must not have nested subcategories" in item for item in self.messages()))
+
 
     def test_tree_header_must_be_in_a_subcategory(self) -> None:
         self.write("src/structure/tree/link_cut_tree.hpp")
@@ -128,6 +158,13 @@ class CheckStructureLayoutTest(unittest.TestCase):
             '#include "../../src/structure/tree/link_cut_tree.hpp"\n',
         )
         self.assertTrue(any("legacy reference" in item for item in self.messages()))
+    def test_legacy_convex_hull_trick_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/cht.test.cpp",
+            '#include "../../src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
 
     def test_relative_legacy_tree_include_is_rejected(self) -> None:
         self.write(

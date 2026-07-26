@@ -1,6 +1,6 @@
 ---
 title: Dynamic Li Chao Tree (動的Li Chao木) [line_add_get_min]
-documentation_of: ../../../src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp
+documentation_of: ../../../../src/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.hpp
 ---
 
 動的 Li Chao Tree。

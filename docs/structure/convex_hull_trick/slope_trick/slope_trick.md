@@ -1,6 +1,6 @@
 ---
 title: Slope Trick (傾きトリック)
-documentation_of: ../../../src/structure/convex_hull_trick/slope_trick.hpp
+documentation_of: ../../../../src/structure/convex_hull_trick/slope_trick/slope_trick.hpp
 ---
 
 整数上の凸区分線形関数を、最小値と左右の傾き変化点で保持する。

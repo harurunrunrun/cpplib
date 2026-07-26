@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/convex_hull_trick/segment_li_chao_tree.hpp"
+#include "../../src/structure/convex_hull_trick/li_chao/segment_li_chao_tree.hpp"
 
 struct StoredSegment{
     long long left;

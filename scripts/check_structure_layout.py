@@ -33,6 +33,9 @@ ALLOWED_STRUCTURE_CATEGORIES = frozenset({
 })
 
 NESTED_STRUCTURE_CATEGORIES = {
+    "convex_hull_trick": frozenset({
+        "li_chao", "line_container", "slope_trick",
+    }),
     "dsu": frozenset({"basic", "persistent", "range", "rollback", "specialized"}),
     "tree": frozenset({"centroid", "dynamic_forest", "query", "treap"}),
 }
@@ -133,12 +136,25 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "rollback_weighted_dsu": "dsu/rollback",
     "weighted_dsu": "dsu/basic",
     "weighted_parent_forest_distance": "dsu/specialized",
+    "convex_hull_trick": "convex_hull_trick/line_container",
+    "persistent_convex_hull_trick": "convex_hull_trick/line_container",
+    "dynamic_li_chao_tree": "convex_hull_trick/li_chao",
+    "offline_segment_add_get_min": "convex_hull_trick/li_chao",
+    "persistent_dynamic_li_chao_tree": "convex_hull_trick/li_chao",
+    "segment_li_chao_tree": "convex_hull_trick/li_chao",
+    "slope_trick": "convex_hull_trick/slope_trick",
 }
 
 RECLASSIFIED_DSU_STEMS = frozenset({
     stem
     for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
     if category.startswith("dsu/")
+})
+
+RECLASSIFIED_CONVEX_HULL_TRICK_STEMS = frozenset({
+    stem
+    for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
+    if category.startswith("convex_hull_trick/")
 })
 
 RECLASSIFIED_TREE_STEMS = frozenset({
@@ -288,6 +304,10 @@ def check_layout(root: Path) -> list[str]:
                 for stem in RECLASSIFIED_DSU_STEMS
             )
             legacy_references.extend(
+                f"structure/convex_hull_trick/{stem}.hpp"
+                for stem in RECLASSIFIED_CONVEX_HULL_TRICK_STEMS
+            )
+            legacy_references.extend(
                 f"structure/tree/{stem}.hpp"
                 for stem in RECLASSIFIED_TREE_STEMS
             )
@@ -296,6 +316,10 @@ def check_layout(root: Path) -> list[str]:
                 legacy_references.extend(
                     f"../dsu/{stem}.hpp"
                     for stem in RECLASSIFIED_DSU_STEMS
+                )
+                legacy_references.extend(
+                    f"../convex_hull_trick/{stem}.hpp"
+                    for stem in RECLASSIFIED_CONVEX_HULL_TRICK_STEMS
                 )
                 legacy_references.extend(
                     f"../tree/{stem}.hpp"

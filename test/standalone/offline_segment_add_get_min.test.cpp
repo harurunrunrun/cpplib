@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/convex_hull_trick/offline_segment_add_get_min.hpp"
+#include "../../src/structure/convex_hull_trick/li_chao/offline_segment_add_get_min.hpp"
 
 void self_test(){
     OfflineSegmentAddGetMin solver;

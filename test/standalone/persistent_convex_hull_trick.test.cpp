@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/structure/convex_hull_trick/persistent_convex_hull_trick.hpp"
+#include "../../src/structure/convex_hull_trick/line_container/persistent_convex_hull_trick.hpp"
 
 long long naive_query(const std::vector<std::pair<long long, long long>>& lines, long long x){
     long long result = std::numeric_limits<long long>::max();

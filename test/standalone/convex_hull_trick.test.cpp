@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
-#include "../../src/structure/convex_hull_trick/convex_hull_trick.hpp"
+#include "../../src/structure/convex_hull_trick/line_container/convex_hull_trick.hpp"
 
 int main(){
     int line_count, query_count, monotone_count;

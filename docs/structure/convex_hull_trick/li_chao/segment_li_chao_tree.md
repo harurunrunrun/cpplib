@@ -1,6 +1,6 @@
 ---
 title: Segment Li Chao Tree (線分Li Chao木)
-documentation_of: ../../../src/structure/convex_hull_trick/segment_li_chao_tree.hpp
+documentation_of: ../../../../src/structure/convex_hull_trick/li_chao/segment_li_chao_tree.hpp
 ---
 
 追加した直線または定義域付き線分のうち、指定した$x$で最小となる値を求める。query座標を構築時に圧縮するため、座標の大きさには依存しない。

@@ -1,6 +1,6 @@
 ---
 title: Offline Segment Add Get Min (オフライン線分追加一点最小値) [segment_add_get_min]
-documentation_of: ../../../src/structure/convex_hull_trick/offline_segment_add_get_min.hpp
+documentation_of: ../../../../src/structure/convex_hull_trick/li_chao/offline_segment_add_get_min.hpp
 ---
 
 定義域付き一次関数の追加と一点最小値取得からなる操作列を登録し、まとめて評価する。

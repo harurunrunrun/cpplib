@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/line_add_get_min
 
 #include <iostream>
-#include "../../src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp"
+#include "../../src/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.hpp"
 
 constexpr long long X_MIN = -1000000000LL;
 constexpr long long X_MAX = 1000000000LL;

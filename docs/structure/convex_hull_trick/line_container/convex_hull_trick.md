@@ -1,6 +1,6 @@
 ---
 title: Convex Hull Trick (凸包トリック)
-documentation_of: ../../../src/structure/convex_hull_trick/convex_hull_trick.hpp
+documentation_of: ../../../../src/structure/convex_hull_trick/line_container/convex_hull_trick.hpp
 ---
 
 直線追加と最小値クエリ。

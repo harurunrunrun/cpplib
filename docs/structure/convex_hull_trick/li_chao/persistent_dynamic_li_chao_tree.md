@@ -1,6 +1,6 @@
 ---
 title: Persistent Dynamic Li Chao Tree (完全永続動的Li Chao木)
-documentation_of: ../../../src/structure/convex_hull_trick/persistent_dynamic_li_chao_tree.hpp
+documentation_of: ../../../../src/structure/convex_hull_trick/li_chao/persistent_dynamic_li_chao_tree.hpp
 ---
 
 完全永続 Dynamic Li Chao Tree。

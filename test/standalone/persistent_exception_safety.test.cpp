@@ -5,8 +5,8 @@
 #include <string>
 
 #include "../../src/structure/array/persistent_array.hpp"
-#include "../../src/structure/convex_hull_trick/persistent_convex_hull_trick.hpp"
-#include "../../src/structure/convex_hull_trick/persistent_dynamic_li_chao_tree.hpp"
+#include "../../src/structure/convex_hull_trick/line_container/persistent_convex_hull_trick.hpp"
+#include "../../src/structure/convex_hull_trick/li_chao/persistent_dynamic_li_chao_tree.hpp"
 #include "../../src/structure/dsu/persistent/persistent_dsu.hpp"
 #include "../../src/structure/trie/persistent_binary_trie.hpp"
 #include "../../src/structure/trie/persistent_trie.hpp"
