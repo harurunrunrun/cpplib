@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <limits>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -167,6 +168,16 @@ void test_contracts(){
         thrown = true;
     }
     if(!thrown) fail("negative vertex count was accepted");
+
+    thrown = false;
+    try{
+        [[maybe_unused]] MicaliVaziraniMatching too_large(
+            std::numeric_limits<int>::max()
+        );
+    }catch(const std::length_error&){
+        thrown = true;
+    }
+    if(!thrown) fail("INT_MAX vertex count was accepted");
 
     MicaliVaziraniMatching graph(4);
     if(graph.vertex_count() != 4 || graph.edge_count() != 0){

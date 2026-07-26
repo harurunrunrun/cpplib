@@ -280,13 +280,16 @@ class IncrementalTreeSetUnion{
         const int count = static_cast<int>(old_nodes.size());
 
         for(int index = 0; index < count; index++){
-            local_number_[static_cast<std::size_t>(old_nodes[index])] = index + 1;
+            local_number_[static_cast<std::size_t>(
+                old_nodes[static_cast<std::size_t>(index)]
+            )] = index + 1;
         }
         std::vector<std::vector<int>> children(static_cast<std::size_t>(count));
         std::vector<int> roots;
         for(int index = 0; index < count; index++){
-            const int parent_vertex =
-                node_[static_cast<std::size_t>(old_nodes[index])].tree_parent;
+            const int parent_vertex = node_[static_cast<std::size_t>(
+                old_nodes[static_cast<std::size_t>(index)]
+            )].tree_parent;
             const int parent_number = parent_vertex < 0
                 ? 0
                 : local_number_[static_cast<std::size_t>(parent_vertex)];
@@ -1113,17 +1116,27 @@ public:
 }  // namespace micali_vazirani_matching_detail
 
 class MicaliVaziraniMatching{
+    static int validate_vertex_count(int vertex_count){
+        if(vertex_count < 0)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation "
+                "(MicaliVaziraniMatching)."
+            );
+        }
+        if(vertex_count == std::numeric_limits<int>::max())[[unlikely]]{
+            throw std::length_error(
+                "MicaliVaziraniMatching vertex count is too large"
+            );
+        }
+        return vertex_count;
+    }
+
     int vertex_count_;
     std::vector<std::pair<int, int>> edges_;
 
 public:
     explicit MicaliVaziraniMatching(int vertex_count)
-        : vertex_count_(vertex_count < 0
-            ? throw std::runtime_error(
-                "library assertion fault: range violation "
-                "(MicaliVaziraniMatching)."
-            )
-            : vertex_count){}
+        : vertex_count_(validate_vertex_count(vertex_count)){}
 
     int vertex_count() const noexcept{
         return vertex_count_;

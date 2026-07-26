@@ -34,6 +34,7 @@ explicit MicaliVaziraniMatching(int vertex_count)
 - 時間計算量: $O(1)$
 - 追加領域: $O(1)$
 - `vertex_count < 0` なら `std::runtime_error`
+- `vertex_count == std::numeric_limits<int>::max()` なら `std::length_error`
 
 オブジェクトのコピー構築・コピー代入は追加済み辺をコピーするため $O(M)$。ムーブ構築・ムーブ代入は $O(1)$、破棄は $O(M)$。
 
@@ -155,4 +156,5 @@ $N$ を頂点数、$M$ を自己ループを除いて追加された辺数とす
 - 自己ループは無視し、多重辺を許す。多重辺が答えの濃度を変えることはない。
 - `mate[mate[v]] == v` が成立し、未マッチ頂点だけが `-1` を持つ。
 - 計算量は、$\Omega(\log N)$ bitの整数・ポインタ操作を $O(1)$ と数えるunit-cost RAMを仮定する。
-- 頂点数と辺数、および内部配列長が `int` と `std::size_t` の表現範囲に収まり、必要なメモリを確保できることを前提とする。
+- 頂点数は `0 <= N < std::numeric_limits<int>::max()` を満たす必要がある。内部で頂点番号 `N` の人工根と長さ `N + 1` の配列を使用する。
+- 辺数と内部配列長が `std::size_t` の表現範囲に収まり、必要なメモリを確保できることを前提とする。
