@@ -6,7 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <new>
-#include "../../src/structure/graph/online_dynamic_connectivity.hpp"
+#include "../../src/structure/graph/dynamic_connectivity/online_dynamic_connectivity.hpp"
 
 namespace allocation_monitor{
 

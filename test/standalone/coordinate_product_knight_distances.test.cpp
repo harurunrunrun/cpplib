@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/structure/graph/coordinate_product_knight_distances.hpp"
+#include "../../src/algorithm/graph/shortest_path/coordinate_product_knight_distances.hpp"
 
 void self_test(){
     CoordinateProductKnightDistances board(8);

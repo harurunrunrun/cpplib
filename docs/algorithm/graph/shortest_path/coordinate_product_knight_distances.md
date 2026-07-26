@@ -1,6 +1,6 @@
 ---
 title: Coordinate Product Knight Distances (座標積コストのナイト最短路) [CCHESS]
-documentation_of: ../../../src/structure/graph/coordinate_product_knight_distances.hpp
+documentation_of: ../../../../src/algorithm/graph/shortest_path/coordinate_product_knight_distances.hpp
 ---
 
 正方形盤上のナイト移動について、移動前後の座標積をコストとする最短距離を問い合わせる。

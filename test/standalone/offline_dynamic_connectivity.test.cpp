@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/structure/graph/offline_dynamic_connectivity.hpp"
+#include "../../src/structure/graph/dynamic_connectivity/offline_dynamic_connectivity.hpp"
 
 bool naive_same(
     int s,

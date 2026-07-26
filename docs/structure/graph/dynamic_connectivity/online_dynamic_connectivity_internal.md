@@ -1,6 +1,6 @@
 ---
 title: Online Dynamic Connectivity Internal (オンライン動的連結性内部実装)
-documentation_of: ../../../src/structure/graph/online_dynamic_connectivity_internal.hpp
+documentation_of: ../../../../src/structure/graph/dynamic_connectivity/online_dynamic_connectivity_internal.hpp
 ---
 
 `OnlineDynamicConnectivity` が各レベルの全域森を管理するために使う splay Euler Tour Forest。

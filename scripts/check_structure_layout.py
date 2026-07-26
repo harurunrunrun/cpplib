@@ -38,6 +38,7 @@ NESTED_STRUCTURE_CATEGORIES = {
         "li_chao", "line_container", "slope_trick",
     }),
     "dsu": frozenset({"basic", "persistent", "range", "rollback", "specialized"}),
+    "graph": frozenset({"dynamic_connectivity"}),
     "heap": frozenset({"meldable", "priority_queue"}),
     "trie": frozenset({"binary", "string"}),
     "tree": frozenset({"centroid", "dynamic_forest", "query", "treap"}),
@@ -140,6 +141,10 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "rollback_weighted_dsu": "dsu/rollback",
     "weighted_dsu": "dsu/basic",
     "weighted_parent_forest_distance": "dsu/specialized",
+    "dynamic_graph_connectivity": "graph/dynamic_connectivity",
+    "offline_dynamic_connectivity": "graph/dynamic_connectivity",
+    "online_dynamic_connectivity": "graph/dynamic_connectivity",
+    "online_dynamic_connectivity_internal": "graph/dynamic_connectivity",
     "convex_hull_trick": "convex_hull_trick/line_container",
     "persistent_convex_hull_trick": "convex_hull_trick/line_container",
     "dynamic_li_chao_tree": "convex_hull_trick/li_chao",
@@ -199,6 +204,12 @@ RECLASSIFIED_HEAP_STEMS = frozenset({
     if category.startswith("heap/")
 })
 
+RECLASSIFIED_GRAPH_STEMS = frozenset({
+    stem
+    for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
+    if category.startswith("graph/")
+}) | frozenset({"coordinate_product_knight_distances"})
+
 
 RECLASSIFIED_TREE_STEMS = frozenset({
     stem
@@ -209,6 +220,9 @@ RECLASSIFIED_TREE_STEMS = frozenset({
 ALGORITHM_EXCEPTIONS = {
     "incremental_interval_scheduling": Path(
         "src/algorithm/other/scheduling/incremental_interval_scheduling.hpp"
+    ),
+    "coordinate_product_knight_distances": Path(
+        "src/algorithm/graph/shortest_path/coordinate_product_knight_distances.hpp"
     ),
 }
 
@@ -359,6 +373,10 @@ def check_layout(root: Path) -> list[str]:
                 for stem in RECLASSIFIED_HEAP_STEMS
             )
             legacy_references.extend(
+                f"structure/graph/{stem}.hpp"
+                for stem in RECLASSIFIED_GRAPH_STEMS
+            )
+            legacy_references.extend(
                 f"structure/trie/{stem}.hpp"
                 for stem in RECLASSIFIED_TRIE_STEMS
             )
@@ -383,6 +401,10 @@ def check_layout(root: Path) -> list[str]:
                 legacy_references.extend(
                     f"../heap/{stem}.hpp"
                     for stem in RECLASSIFIED_HEAP_STEMS
+                )
+                legacy_references.extend(
+                    f"../graph/{stem}.hpp"
+                    for stem in RECLASSIFIED_GRAPH_STEMS
                 )
                 legacy_references.extend(
                     f"../trie/{stem}.hpp"

@@ -51,6 +51,18 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("docs/structure/trie/binary/binary_trie.md")
         self.write("src/structure/heap/meldable/persistent_leftist_heap.hpp")
         self.write("docs/structure/heap/meldable/persistent_leftist_heap.md")
+        self.write(
+            "src/structure/graph/dynamic_connectivity/online_dynamic_connectivity.hpp"
+        )
+        self.write(
+            "docs/structure/graph/dynamic_connectivity/online_dynamic_connectivity.md"
+        )
+        self.write(
+            "src/algorithm/graph/shortest_path/coordinate_product_knight_distances.hpp"
+        )
+        self.write(
+            "docs/algorithm/graph/shortest_path/coordinate_product_knight_distances.md"
+        )
         self.assertEqual(self.messages(), [])
 
     def test_legacy_other_header_and_document_are_rejected(self) -> None:
@@ -135,6 +147,36 @@ class CheckStructureLayoutTest(unittest.TestCase):
             for item in self.messages()
         ))
 
+    def test_graph_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/graph/online_dynamic_connectivity.hpp")
+        self.assertTrue(any(
+            "graph subcategory" in item for item in self.messages()
+        ))
+
+    def test_unknown_graph_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/graph/misc/example.hpp")
+        self.assertTrue(any(
+            "unknown graph subcategory" in item for item in self.messages()
+        ))
+
+    def test_graph_header_in_wrong_subcategory_is_rejected(self) -> None:
+        self.write(
+            "src/structure/graph/misc/online_dynamic_connectivity.hpp"
+        )
+        self.assertTrue(any(
+            "expected src/structure/graph/dynamic_connectivity" in item
+            for item in self.messages()
+        ))
+
+    def test_graph_subcategory_cannot_be_split_further(self) -> None:
+        self.write(
+            "src/structure/graph/dynamic_connectivity/detail/example.hpp"
+        )
+        self.assertTrue(any(
+            "must not have nested subcategories" in item
+            for item in self.messages()
+        ))
+
     def test_convex_hull_trick_header_must_be_in_a_subcategory(self) -> None:
         self.write("src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp")
         self.assertTrue(any(
@@ -204,6 +246,16 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("src/structure/interval/incremental_interval_scheduling.hpp")
         self.assertTrue(any("expected src/algorithm/other/scheduling" in item for item in self.messages()))
 
+    def test_graph_algorithm_in_structure_is_rejected(self) -> None:
+        self.write(
+            "src/structure/graph/dynamic_connectivity/"
+            "coordinate_product_knight_distances.hpp"
+        )
+        self.assertTrue(any(
+            "expected src/algorithm/graph/shortest_path" in item
+            for item in self.messages()
+        ))
+
     def test_legacy_include_is_rejected(self) -> None:
         self.write(
             "test/standalone/example.test.cpp",
@@ -215,6 +267,28 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write(
             "test/standalone/dsu.test.cpp",
             '#include "../../src/structure/dsu/dsu.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_legacy_graph_structure_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/graph.test.cpp",
+            '#include "../../src/structure/graph/online_dynamic_connectivity.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_legacy_graph_algorithm_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/graph.test.cpp",
+            '#include "../../src/structure/graph/'
+            'coordinate_product_knight_distances.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_relative_legacy_graph_include_is_rejected(self) -> None:
+        self.write(
+            "src/structure/array/example.hpp",
+            '#include "../graph/online_dynamic_connectivity.hpp"\n',
         )
         self.assertTrue(any("legacy reference" in item for item in self.messages()))
 

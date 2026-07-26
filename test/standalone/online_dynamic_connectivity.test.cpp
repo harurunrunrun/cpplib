@@ -8,8 +8,8 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../../src/structure/graph/online_dynamic_connectivity_internal.hpp"
-#include "../../src/structure/graph/online_dynamic_connectivity.hpp"
+#include "../../src/structure/graph/dynamic_connectivity/online_dynamic_connectivity_internal.hpp"
+#include "../../src/structure/graph/dynamic_connectivity/online_dynamic_connectivity.hpp"
 
 bool naive_same(
     int s,

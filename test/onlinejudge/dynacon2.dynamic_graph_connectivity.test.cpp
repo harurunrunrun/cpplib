@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include "../../src/structure/graph/dynamic_graph_connectivity.hpp"
+#include "../../src/structure/graph/dynamic_connectivity/dynamic_graph_connectivity.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

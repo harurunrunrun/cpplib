@@ -1,6 +1,6 @@
 ---
 title: Online Dynamic Connectivity (オンライン動的連結性)
-documentation_of: ../../../src/structure/graph/online_dynamic_connectivity.hpp
+documentation_of: ../../../../src/structure/graph/dynamic_connectivity/online_dynamic_connectivity.hpp
 ---
 
 一般無向グラフの辺追加・辺削除・連結性判定をオンラインに処理する。Holm--de Lichtenberg--Thorup のレベル構造を使い、各レベルの全域森を splay Euler Tour Tree で管理する。
@@ -77,7 +77,7 @@ int edge_multiplicity(int u, int v)
 
 ## 空間計算量
 
-n- constructor: level pointer列 O(log MAX_SIZE) を本体へ保存し、一時領域は O(1)
+- constructor: level pointer列 O(log MAX_SIZE) を本体へ保存し、一時領域は O(1)
 - add_edge / link: 辺entryと必要なlevel・Euler Tour nodeを本体へ保存する。全操作列を通した総量は下記 O(N log N + M) の範囲内で、一時領域は O(1)
 - erase_edge / cut: 置換探索・昇格後も総保存量は同じ上界内で、一時領域は O(1)
 - same、component_size、groups、active_levels、edge_multiplicity、size: 追加領域 O(1)

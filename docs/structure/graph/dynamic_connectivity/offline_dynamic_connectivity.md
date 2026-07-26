@@ -1,6 +1,6 @@
 ---
 title: Offline Dynamic Connectivity (オフライン動的連結性)
-documentation_of: ../../../src/structure/graph/offline_dynamic_connectivity.hpp
+documentation_of: ../../../../src/structure/graph/dynamic_connectivity/offline_dynamic_connectivity.hpp
 ---
 
 辺の追加削除が先にすべて分かっている動的連結性。
