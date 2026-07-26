@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/partially_persistent_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_wavelet_matrix.hpp"
 
 namespace{
 

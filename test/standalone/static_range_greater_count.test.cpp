@@ -5,7 +5,7 @@
 #include <limits>
 #include <vector>
 
-#include "../../src/structure/wavelet_matrix/static_range_greater_count.hpp"
+#include "../../src/structure/wavelet_matrix/static/static_range_greater_count.hpp"
 
 void self_test(){
     const std::vector<int> values = {

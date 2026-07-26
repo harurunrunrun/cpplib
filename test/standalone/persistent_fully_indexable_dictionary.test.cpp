@@ -8,8 +8,8 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/partially_persistent_fully_indexable_dictionary.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_fully_indexable_dictionary.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_fully_indexable_dictionary.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_fully_indexable_dictionary.hpp"
 
 int main(){
     int input_n, input_q;

@@ -15,8 +15,8 @@
 #include <tuple>
 #include <utility>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/dynamic_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/dynamic_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/dynamic/dynamic_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/dynamic/dynamic_wavelet_matrix.hpp"
 
 namespace{
 

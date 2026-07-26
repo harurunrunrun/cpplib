@@ -5,8 +5,8 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/persistent_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_weighted_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_weighted_wavelet_matrix.hpp"
 
 namespace{
 

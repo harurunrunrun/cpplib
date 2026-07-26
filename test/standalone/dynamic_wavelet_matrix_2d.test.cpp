@@ -10,9 +10,9 @@
 #include <tuple>
 #include <utility>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/dynamic_rectangle_sum.hpp"
-#include "../../src/structure/wavelet_matrix/dynamic_wavelet_matrix_2d.hpp"
-#include "../../src/structure/wavelet_matrix/dynamic_wavelet_matrix_2d_weighted.hpp"
+#include "../../src/structure/wavelet_matrix/dynamic/dynamic_rectangle_sum.hpp"
+#include "../../src/structure/wavelet_matrix/dynamic/dynamic_wavelet_matrix_2d.hpp"
+#include "../../src/structure/wavelet_matrix/dynamic/dynamic_wavelet_matrix_2d_weighted.hpp"
 
 int main(){
     int input_n, q;

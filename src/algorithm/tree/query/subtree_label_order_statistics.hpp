@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "../decomposition/euler_tour.hpp"
-#include "../../../structure/wavelet_matrix/compressed_wavelet_matrix.hpp"
+#include "../../../structure/wavelet_matrix/static/compressed_wavelet_matrix.hpp"
 
 template<int MAX_SIZE>
 struct SubtreeLabelOrderStatistics{

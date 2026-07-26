@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/wavelet_matrix/static_range_count_sum_leq.hpp"
+#include "../../src/structure/wavelet_matrix/static/static_range_count_sum_leq.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

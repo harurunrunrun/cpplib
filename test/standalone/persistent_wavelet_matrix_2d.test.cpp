@@ -9,12 +9,12 @@
 #include <string>
 #include <tuple>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/partially_persistent_rectangle_sum.hpp"
-#include "../../src/structure/wavelet_matrix/partially_persistent_wavelet_matrix_2d.hpp"
-#include "../../src/structure/wavelet_matrix/partially_persistent_wavelet_matrix_2d_weighted.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_rectangle_sum.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_wavelet_matrix_2d.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_wavelet_matrix_2d_weighted.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_rectangle_sum.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_wavelet_matrix_2d.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_wavelet_matrix_2d_weighted.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_rectangle_sum.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix_2d.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix_2d_weighted.hpp"
 
 int main(){
     int input_n, input_q;

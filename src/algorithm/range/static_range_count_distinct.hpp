@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../../structure/wavelet_matrix/wavelet_matrix.hpp"
+#include "../../structure/wavelet_matrix/static/wavelet_matrix.hpp"
 
 template<
     class T,

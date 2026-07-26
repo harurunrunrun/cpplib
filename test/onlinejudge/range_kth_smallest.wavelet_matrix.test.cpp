@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/static/wavelet_matrix.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

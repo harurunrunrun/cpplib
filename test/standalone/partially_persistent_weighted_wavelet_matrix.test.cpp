@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/detail/partially_persistent_weighted_wavelet_matrix_base.hpp"
-#include "../../src/structure/wavelet_matrix/partially_persistent_functional_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/partially_persistent_weighted_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_functional_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_weighted_wavelet_matrix.hpp"
 
 namespace{
 

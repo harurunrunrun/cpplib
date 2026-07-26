@@ -8,9 +8,9 @@
 #include <string>
 #include <tuple>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/wavelet_matrix_2d.hpp"
-#include "../../src/structure/wavelet_matrix/wavelet_matrix_2d_weighted.hpp"
-#include "../../src/structure/wavelet_matrix/rectangle_sum.hpp"
+#include "../../src/structure/wavelet_matrix/static/wavelet_matrix_2d.hpp"
+#include "../../src/structure/wavelet_matrix/static/wavelet_matrix_2d_weighted.hpp"
+#include "../../src/structure/wavelet_matrix/static/rectangle_sum.hpp"
 
 int main(){
     int input_n, q;

@@ -6,8 +6,8 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/dynamic_fully_indexable_dictionary.hpp"
-#include "../../src/structure/wavelet_matrix/fully_indexable_dictionary.hpp"
+#include "../../src/structure/wavelet_matrix/dynamic/dynamic_fully_indexable_dictionary.hpp"
+#include "../../src/structure/wavelet_matrix/static/fully_indexable_dictionary.hpp"
 
 int main(){
     int input_n, q;

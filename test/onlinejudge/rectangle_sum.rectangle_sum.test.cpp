@@ -3,7 +3,7 @@
 #include <iostream>
 #include <tuple>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/rectangle_sum.hpp"
+#include "../../src/structure/wavelet_matrix/static/rectangle_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

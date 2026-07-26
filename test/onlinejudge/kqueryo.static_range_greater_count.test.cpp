@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/wavelet_matrix/static_range_greater_count.hpp"
+#include "../../src/structure/wavelet_matrix/static/static_range_greater_count.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

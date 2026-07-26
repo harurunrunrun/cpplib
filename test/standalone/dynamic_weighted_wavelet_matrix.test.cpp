@@ -8,8 +8,8 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/dynamic_functional_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/dynamic_weighted_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/dynamic/dynamic_functional_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/dynamic/dynamic_weighted_wavelet_matrix.hpp"
 
 int main(){
     int input_n, q;

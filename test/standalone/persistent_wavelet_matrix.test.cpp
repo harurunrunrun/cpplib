@@ -9,8 +9,8 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/detail/persistent_block_reference.hpp"
-#include "../../src/structure/wavelet_matrix/partially_persistent_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix.hpp"
 
 int main(){
     int input_n, input_q;

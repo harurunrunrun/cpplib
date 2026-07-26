@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/wavelet_matrix/static_range_count_sum_leq.hpp"
+#include "../../src/structure/wavelet_matrix/static/static_range_count_sum_leq.hpp"
 
 void self_test(){
     const int int_min = std::numeric_limits<int>::min();

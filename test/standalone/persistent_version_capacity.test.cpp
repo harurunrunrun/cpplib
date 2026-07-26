@@ -5,12 +5,12 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/wavelet_matrix/partially_persistent_fully_indexable_dictionary.hpp"
-#include "../../src/structure/wavelet_matrix/partially_persistent_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/partially_persistent_weighted_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_fully_indexable_dictionary.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/persistent_weighted_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_fully_indexable_dictionary.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_weighted_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_fully_indexable_dictionary.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/persistent/persistent_weighted_wavelet_matrix.hpp"
 
 template<class F>
 bool throws_capacity(F&& operation){

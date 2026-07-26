@@ -7,7 +7,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/compressed_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/static/compressed_wavelet_matrix.hpp"
 
 void check_fifteen_bit_ids(){
     constexpr int distinct_count = 1 << 15;

@@ -7,8 +7,8 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/wavelet_matrix/compressed_weighted_wavelet_matrix.hpp"
-#include "../../src/structure/wavelet_matrix/functional_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/static/compressed_weighted_wavelet_matrix.hpp"
+#include "../../src/structure/wavelet_matrix/static/functional_wavelet_matrix.hpp"
 
 int main(){
     int input_n, q;
