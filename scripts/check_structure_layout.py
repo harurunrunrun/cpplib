@@ -238,7 +238,7 @@ ALGORITHM_EXCEPTIONS = {
         "src/algorithm/other/scheduling/incremental_interval_scheduling.hpp"
     ),
     "coordinate_product_knight_distances": Path(
-        "src/algorithm/graph/shortest_path/coordinate_product_knight_distances.hpp"
+        "src/algorithm/graph/shortest_path/specialized/coordinate_product_knight_distances.hpp"
     ),
 }
 

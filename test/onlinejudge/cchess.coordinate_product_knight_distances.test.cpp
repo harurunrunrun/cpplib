@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/graph/shortest_path/coordinate_product_knight_distances.hpp"
+#include "../../src/algorithm/graph/shortest_path/specialized/coordinate_product_knight_distances.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

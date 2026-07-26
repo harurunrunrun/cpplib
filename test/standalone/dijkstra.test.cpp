@@ -5,7 +5,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../src/algorithm/graph/shortest_path/dijkstra.hpp"
+#include "../../src/algorithm/graph/shortest_path/source/dijkstra.hpp"
 
 struct BruteDistance{
     bool reachable;

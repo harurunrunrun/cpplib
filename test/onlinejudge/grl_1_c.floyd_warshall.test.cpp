@@ -5,7 +5,7 @@
 #include <limits>
 #include <vector>
 
-#include "../../src/algorithm/graph/shortest_path/floyd_warshall.hpp"
+#include "../../src/algorithm/graph/shortest_path/all_pairs/floyd_warshall.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

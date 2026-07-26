@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/shortest_path/almost_shortest_path.hpp"
+#include "../../src/algorithm/graph/shortest_path/enumeration/almost_shortest_path.hpp"
 
 using Edge = AlmostShortestPathEdge<long long>;
 

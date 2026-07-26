@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/graph/shortest_path/spfa.hpp"
+#include "../../src/algorithm/graph/shortest_path/source/spfa.hpp"
 
 using Weight = long long;
 using Graph = std::vector<std::vector<SpfaEdge<Weight>>>;

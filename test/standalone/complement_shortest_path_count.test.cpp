@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/graph/shortest_path/complement_shortest_path_count.hpp"
+#include "../../src/algorithm/graph/shortest_path/state_space/complement_shortest_path_count.hpp"
 
 void self_test(){
     constexpr long long MOD = 998244353;

@@ -33,6 +33,23 @@ def main() -> None:
         ]
         == "gaussian"
     )
+    shortest_path_root = Path("src/algorithm/graph/shortest_path")
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[shortest_path_root] == (
+        frozenset({
+            "all_pairs", "enumeration", "source", "specialized",
+            "state_space",
+        })
+    )
+    assert len(
+        check_algorithm_subcategories.SHORTEST_PATH_SUBCATEGORY_BY_STEM
+    ) == 25
+    assert (
+        check_algorithm_subcategories.SHORTEST_PATH_SUBCATEGORY_BY_STEM[
+            "dijkstra"
+        ]
+        == "source"
+    )
+
 
     with TemporaryDirectory() as directory:
         root = Path(directory)

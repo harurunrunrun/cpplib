@@ -99,13 +99,49 @@ NUMBER_THEORY_SUBCATEGORIES = frozenset(
     NUMBER_THEORY_SUBCATEGORY_BY_STEM.values()
 )
 
+SHORTEST_PATH_SUBCATEGORY_BY_STEM: dict[str, str] = {
+    "bellman_ford": "source",
+    "dijkstra": "source",
+    "multi_source_shortest_path": "source",
+    "spfa": "source",
+    "zero_one_bfs": "source",
+    "floyd_warshall": "all_pairs",
+    "johnson_all_pairs_shortest_paths": "all_pairs",
+    "sum_shortest_path_query_costs": "all_pairs",
+    "almost_shortest_path": "enumeration",
+    "kth_shortest_path": "enumeration",
+    "kth_shortest_walk": "enumeration",
+    "shortest_path_edge_usage": "enumeration",
+    "complement_shortest_path": "state_space",
+    "complement_shortest_path_count": "state_space",
+    "maximum_probability_path": "state_space",
+    "minimum_forward_or_jump_cost": "state_space",
+    "shortest_path_with_mode_switches": "state_space",
+    "shortest_path_with_optional_edge": "state_space",
+    "coordinate_product_knight_distances": "specialized",
+    "count_vertices_reaching_target_within": "specialized",
+    "directed_shortest_path_route": "specialized",
+    "minimum_grid_character_changes": "specialized",
+    "named_shortest_paths": "specialized",
+    "undirected_shortest_path_distance": "specialized",
+    "weighted_grid_shortest_path": "specialized",
+}
+
+SHORTEST_PATH_SUBCATEGORIES = frozenset(
+    SHORTEST_PATH_SUBCATEGORY_BY_STEM.values()
+)
+
 NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     Path("src/algorithm/math/number_theory"): NUMBER_THEORY_SUBCATEGORIES,
+    Path("src/algorithm/graph/shortest_path"): SHORTEST_PATH_SUBCATEGORIES,
 }
 
 EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
     Path("src/algorithm/math/number_theory"): (
         NUMBER_THEORY_SUBCATEGORY_BY_STEM
+    ),
+    Path("src/algorithm/graph/shortest_path"): (
+        SHORTEST_PATH_SUBCATEGORY_BY_STEM
     ),
 }
 
@@ -195,6 +231,7 @@ def layout_violations(
             errors.append(f"{relative_root / category}: category has no header")
 
     for relative_root, expected_categories in nested_layouts.items():
+        family = relative_root.name
         trees = [(relative_root, ".hpp", "header")]
         if check_nested_docs:
             docs_root = Path(
@@ -215,7 +252,7 @@ def layout_violations(
                 if len(relative.parts) == 1:
                     errors.append(
                         f"{file.relative_to(repository_root)}: {label} must be "
-                        "placed in a declared number_theory subcategory"
+                        f"placed in a declared {family} subcategory"
                     )
                     continue
                 category = relative.parts[0]
@@ -223,11 +260,11 @@ def layout_violations(
                 if category not in expected_categories:
                     errors.append(
                         f"{file.relative_to(repository_root)}: unknown "
-                        f"number_theory subcategory '{category}'"
+                        f"{family} subcategory '{category}'"
                     )
                 if len(relative.parts) != 2:
                     errors.append(
-                        f"{file.relative_to(repository_root)}: number_theory "
+                        f"{file.relative_to(repository_root)}: {family} "
                         "subcategories must not be nested more finely"
                     )
             for category in sorted(expected_categories - present_categories):

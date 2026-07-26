@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/graph/shortest_path/directed_shortest_path_route.hpp"
+#include "../../src/algorithm/graph/shortest_path/specialized/directed_shortest_path_route.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

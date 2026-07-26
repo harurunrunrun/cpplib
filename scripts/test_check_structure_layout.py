@@ -62,10 +62,10 @@ class CheckStructureLayoutTest(unittest.TestCase):
             "docs/structure/graph/dynamic_connectivity/online_dynamic_connectivity.md"
         )
         self.write(
-            "src/algorithm/graph/shortest_path/coordinate_product_knight_distances.hpp"
+            "src/algorithm/graph/shortest_path/specialized/coordinate_product_knight_distances.hpp"
         )
         self.write(
-            "docs/algorithm/graph/shortest_path/coordinate_product_knight_distances.md"
+            "docs/algorithm/graph/shortest_path/specialized/coordinate_product_knight_distances.md"
         )
         self.assertEqual(self.messages(), [])
 
