@@ -471,21 +471,59 @@ class ExactInteger{
         return product;
     }
 
-    template<std::uint32_t Modulus>
-    static std::uint32_t ntt_power(std::uint32_t base, std::uint32_t exponent){
-        std::uint64_t result = 1;
-        std::uint64_t current = base;
-        while(exponent != 0){
-            if((exponent & 1U) != 0) result = result * current % Modulus;
-            current = current * current % Modulus;
-            exponent >>= 1;
-        }
-        return static_cast<std::uint32_t>(result);
+    static constexpr std::uint64_t goldilocks_modulus =
+        18'446'744'069'414'584'321ULL;
+    static constexpr std::uint64_t goldilocks_primitive_root = 7;
+    static constexpr std::uint64_t goldilocks_maximum_transform_size =
+        std::uint64_t{1} << 32;
+
+    static std::uint64_t goldilocks_multiply(
+        std::uint64_t left,
+        std::uint64_t right
+    ){
+#if defined(__SIZEOF_INT128__)
+        return static_cast<std::uint64_t>(
+            static_cast<__uint128_t>(left) * right % goldilocks_modulus
+        );
+#else
+#error "ExactInteger requires GCC 13 with unsigned 128-bit integers"
+#endif
     }
 
-    template<std::uint32_t Modulus>
-    static void number_theoretic_transform(
-        std::vector<std::uint32_t>& values,
+    static std::uint64_t goldilocks_power(
+        std::uint64_t base,
+        std::uint64_t exponent
+    ){
+        std::uint64_t result = 1;
+        while(exponent != 0){
+            if((exponent & 1U) != 0){
+                result = goldilocks_multiply(result, base);
+            }
+            base = goldilocks_multiply(base, base);
+            exponent >>= 1;
+        }
+        return result;
+    }
+
+    static std::uint64_t goldilocks_add(
+        std::uint64_t left,
+        std::uint64_t right
+    ){
+        const std::uint64_t complement = goldilocks_modulus - right;
+        return left >= complement ? left - complement : left + right;
+    }
+
+    static std::uint64_t goldilocks_subtract(
+        std::uint64_t left,
+        std::uint64_t right
+    ){
+        return left >= right
+            ? left - right
+            : goldilocks_modulus - (right - left);
+    }
+
+    static void goldilocks_transform(
+        std::vector<std::uint64_t>& values,
         bool inverse
     ){
         const std::size_t size = values.size();
@@ -499,40 +537,36 @@ class ExactInteger{
             if(index < reversed) std::swap(values[index], values[reversed]);
         }
         for(std::size_t length = 2; length <= size; length <<= 1){
-            std::uint32_t root = ntt_power<Modulus>(
-                3, static_cast<std::uint32_t>((Modulus - 1) / length)
+            std::uint64_t root = goldilocks_power(
+                goldilocks_primitive_root,
+                (goldilocks_modulus - 1) / length
             );
-            if(inverse) root = ntt_power<Modulus>(root, Modulus - 2);
+            if(inverse){
+                root = goldilocks_power(root, goldilocks_modulus - 2);
+            }
             const std::size_t half = length >> 1;
             for(std::size_t block = 0; block < size; block += length){
                 std::uint64_t factor = 1;
                 for(std::size_t offset = 0; offset < half; ++offset){
-                    const std::uint32_t even = values[block + offset];
-                    const std::uint32_t odd = static_cast<std::uint32_t>(
-                        factor * values[block + offset + half] % Modulus
+                    const std::uint64_t even = values[block + offset];
+                    const std::uint64_t odd = goldilocks_multiply(
+                        factor, values[block + offset + half]
                     );
-                    const std::uint64_t sum =
-                        static_cast<std::uint64_t>(even) + odd;
-                    values[block + offset] = static_cast<std::uint32_t>(
-                        sum >= Modulus ? sum - Modulus : sum
-                    );
-                    values[block + offset + half] = even >= odd
-                        ? even - odd
-                        : static_cast<std::uint32_t>(
-                            static_cast<std::uint64_t>(even) + Modulus - odd
-                        );
-                    factor = factor * root % Modulus;
+                    values[block + offset] = goldilocks_add(even, odd);
+                    values[block + offset + half] =
+                        goldilocks_subtract(even, odd);
+                    factor = goldilocks_multiply(factor, root);
                 }
             }
+            if(length == size) break;
         }
         if(inverse){
-            const std::uint32_t inverse_size = ntt_power<Modulus>(
-                static_cast<std::uint32_t>(size), Modulus - 2
+            const std::uint64_t inverse_size = goldilocks_power(
+                static_cast<std::uint64_t>(size),
+                goldilocks_modulus - 2
             );
-            for(std::uint32_t& value: values){
-                value = static_cast<std::uint32_t>(
-                    static_cast<std::uint64_t>(value) * inverse_size % Modulus
-                );
+            for(std::uint64_t& value: values){
+                value = goldilocks_multiply(value, inverse_size);
             }
         }
     }
@@ -563,6 +597,57 @@ class ExactInteger{
         }
         while(!digits.empty() && digits.back() == 0) digits.pop_back();
         return digits;
+    }
+
+    static std::vector<std::uint64_t> goldilocks_convolution(
+        const std::vector<std::uint32_t>& left,
+        const std::vector<std::uint32_t>& right,
+        std::uint32_t maximum_digit
+    ){
+        if(left.empty() || right.empty()) return {};
+        const std::size_t maximum_size =
+            (std::numeric_limits<std::size_t>::max)();
+        if(left.size() > maximum_size - (right.size() - 1)){
+            throw std::length_error("ExactInteger convolution is too large");
+        }
+        const std::size_t coefficient_count =
+            left.size() + right.size() - 1;
+        if(coefficient_count > goldilocks_maximum_transform_size){
+            throw std::length_error("ExactInteger NTT input is too large");
+        }
+        const std::uint64_t transform_size_64 = std::bit_ceil(
+            static_cast<std::uint64_t>(coefficient_count)
+        );
+        std::vector<std::uint64_t> capacity_probe;
+        if(transform_size_64 > capacity_probe.max_size()){
+            throw std::length_error("ExactInteger NTT input is too large");
+        }
+#if defined(__SIZEOF_INT128__)
+        const __uint128_t coefficient_bound =
+            static_cast<__uint128_t>(std::min(left.size(), right.size()))
+            * maximum_digit * maximum_digit;
+        if(coefficient_bound >= goldilocks_modulus){
+            throw std::length_error(
+                "ExactInteger NTT coefficient is too large"
+            );
+        }
+#endif
+        const std::size_t transform_size =
+            static_cast<std::size_t>(transform_size_64);
+        std::vector<std::uint64_t> left_values(transform_size, 0);
+        std::vector<std::uint64_t> right_values(transform_size, 0);
+        std::copy(left.begin(), left.end(), left_values.begin());
+        std::copy(right.begin(), right.end(), right_values.begin());
+        goldilocks_transform(left_values, false);
+        goldilocks_transform(right_values, false);
+        for(std::size_t index = 0; index < transform_size; ++index){
+            left_values[index] = goldilocks_multiply(
+                left_values[index], right_values[index]
+            );
+        }
+        goldilocks_transform(left_values, true);
+        left_values.resize(coefficient_count);
+        return left_values;
     }
 
     static std::vector<std::uint32_t> ntt_digits_to_limbs(
@@ -603,60 +688,34 @@ class ExactInteger{
         return limbs;
     }
 
+    static bool ntt_multiply_supported(
+        const std::vector<std::uint32_t>& left,
+        const std::vector<std::uint32_t>& right
+    ){
+        if(left.empty() || right.empty()) return true;
+#if defined(__SIZEOF_INT128__)
+        const __uint128_t left_digits =
+            (static_cast<__uint128_t>(left.size()) * 32 + 14) / 15;
+        const __uint128_t right_digits =
+            (static_cast<__uint128_t>(right.size()) * 32 + 14) / 15;
+        return left_digits + right_digits - 1
+            <= goldilocks_maximum_transform_size;
+#else
+        return false;
+#endif
+    }
+
     static std::vector<std::uint32_t> ntt_multiply(
         const std::vector<std::uint32_t>& left,
         const std::vector<std::uint32_t>& right
     ){
-        constexpr std::uint32_t modulus_1 = 998'244'353;
-        constexpr std::uint32_t modulus_2 = 1'004'535'809;
-        constexpr std::size_t maximum_transform_size = std::size_t{1} << 21;
+        constexpr std::uint32_t maximum_digit =
+            (std::uint32_t{1} << 15) - 1;
         const auto left_digits = limbs_to_ntt_digits(left);
         const auto right_digits = limbs_to_ntt_digits(right);
-        if(left_digits.empty() || right_digits.empty()) return {};
-        const std::size_t coefficient_count =
-            left_digits.size() + right_digits.size() - 1;
-        std::size_t transform_size = 1;
-        while(transform_size < coefficient_count) transform_size <<= 1;
-        if(transform_size > maximum_transform_size){
-            throw std::length_error("ExactInteger NTT input is too large");
-        }
-        std::vector<std::uint32_t> left_1(transform_size);
-        std::vector<std::uint32_t> right_1(transform_size);
-        std::copy(left_digits.begin(), left_digits.end(), left_1.begin());
-        std::copy(right_digits.begin(), right_digits.end(), right_1.begin());
-        std::vector<std::uint32_t> left_2 = left_1;
-        std::vector<std::uint32_t> right_2 = right_1;
-        number_theoretic_transform<modulus_1>(left_1, false);
-        number_theoretic_transform<modulus_1>(right_1, false);
-        number_theoretic_transform<modulus_2>(left_2, false);
-        number_theoretic_transform<modulus_2>(right_2, false);
-        for(std::size_t index = 0; index < transform_size; ++index){
-            left_1[index] = static_cast<std::uint32_t>(
-                static_cast<std::uint64_t>(left_1[index]) * right_1[index]
-                % modulus_1
-            );
-            left_2[index] = static_cast<std::uint32_t>(
-                static_cast<std::uint64_t>(left_2[index]) * right_2[index]
-                % modulus_2
-            );
-        }
-        number_theoretic_transform<modulus_1>(left_1, true);
-        number_theoretic_transform<modulus_2>(left_2, true);
-        const std::uint32_t inverse_modulus_1 = ntt_power<modulus_2>(
-            modulus_1 % modulus_2, modulus_2 - 2
-        );
-        std::vector<std::uint64_t> coefficients(coefficient_count);
-        for(std::size_t index = 0; index < coefficient_count; ++index){
-            const std::uint64_t residue_1 = left_1[index];
-            const std::uint64_t difference =
-                (static_cast<std::uint64_t>(left_2[index]) + modulus_2
-                    - residue_1 % modulus_2) % modulus_2;
-            const std::uint64_t multiplier =
-                difference * inverse_modulus_1 % modulus_2;
-            coefficients[index] = residue_1
-                + static_cast<std::uint64_t>(modulus_1) * multiplier;
-        }
-        return ntt_digits_to_limbs(coefficients);
+        return ntt_digits_to_limbs(goldilocks_convolution(
+            left_digits, right_digits, maximum_digit
+        ));
     }
 
     static std::vector<std::uint32_t> limb_range(
@@ -716,7 +775,6 @@ class ExactInteger{
         constexpr std::size_t karatsuba_threshold = 32;
         constexpr std::size_t toom_cook_3_threshold = 192;
         constexpr std::size_t ntt_threshold = 512;
-        constexpr std::size_t maximum_ntt_limb_sum = 983'039;
         const std::size_t shorter = std::min(left.size(), right.size());
         const std::size_t longer = std::max(left.size(), right.size());
         const std::size_t toom_split =
@@ -725,11 +783,9 @@ class ExactInteger{
             return schoolbook_multiply(left, right);
         }
 
-        // Two exact NTTs and CRT are faster for sufficiently large values.
-        // Larger transforms keep the exact Toom-Cook/Karatsuba fallback.
-        if(shorter >= ntt_threshold
-            && left.size() <= maximum_ntt_limb_sum
-            && right.size() <= maximum_ntt_limb_sum - left.size()){
+        // A single exact transform over the 64-bit Goldilocks prime handles
+        // every practical allocation while keeping all coefficients unique.
+        if(shorter >= ntt_threshold && ntt_multiply_supported(left, right)){
             return ntt_multiply(left, right);
         }
 
@@ -923,14 +979,93 @@ class ExactInteger{
         trim_decimal(destination);
     }
 
+    static std::vector<std::uint32_t> decimals_to_ntt_digits(
+        const DecimalMagnitude& value
+    ){
+        constexpr std::uint32_t digit_base = 1'000;
+        if(value.size() >
+            (std::numeric_limits<std::size_t>::max)() / 3){
+            throw std::length_error(
+                "ExactInteger decimal conversion is too large"
+            );
+        }
+        std::vector<std::uint32_t> digits;
+        digits.reserve(value.size() * 3);
+        for(std::uint32_t chunk: value){
+            digits.push_back(chunk % digit_base);
+            chunk /= digit_base;
+            digits.push_back(chunk % digit_base);
+            digits.push_back(chunk / digit_base);
+        }
+        while(!digits.empty() && digits.back() == 0) digits.pop_back();
+        return digits;
+    }
+
+    static DecimalMagnitude ntt_digits_to_decimals(
+        const std::vector<std::uint64_t>& coefficients
+    ){
+        constexpr std::uint32_t digit_base = 1'000;
+        std::vector<std::uint32_t> digits;
+        digits.reserve(coefficients.size() + 8);
+#if defined(__SIZEOF_INT128__)
+        __uint128_t carry = 0;
+        for(const std::uint64_t coefficient: coefficients){
+            const __uint128_t current = coefficient + carry;
+            digits.push_back(static_cast<std::uint32_t>(
+                current % digit_base
+            ));
+            carry = current / digit_base;
+        }
+        while(carry != 0){
+            digits.push_back(static_cast<std::uint32_t>(
+                carry % digit_base
+            ));
+            carry /= digit_base;
+        }
+#endif
+        DecimalMagnitude result;
+        result.reserve(digits.size() / 3 + (digits.size() % 3 != 0));
+        for(std::size_t index = 0; index < digits.size(); index += 3){
+            std::uint32_t chunk = digits[index];
+            if(index + 1 < digits.size()){
+                chunk += digits[index + 1] * digit_base;
+            }
+            if(index + 2 < digits.size()){
+                chunk += digits[index + 2] * digit_base * digit_base;
+            }
+            result.push_back(chunk);
+        }
+        trim_decimal(result);
+        return result;
+    }
+
+    static DecimalMagnitude ntt_multiply_decimals(
+        const DecimalMagnitude& left,
+        const DecimalMagnitude& right
+    ){
+        constexpr std::uint32_t maximum_digit = 999;
+        const auto left_digits = decimals_to_ntt_digits(left);
+        const auto right_digits = decimals_to_ntt_digits(right);
+        return ntt_digits_to_decimals(goldilocks_convolution(
+            left_digits, right_digits, maximum_digit
+        ));
+    }
+
     static DecimalMagnitude multiply_decimals(
         const DecimalMagnitude& left,
         const DecimalMagnitude& right
     ){
         if(left.empty() || right.empty()) return {};
         constexpr std::size_t karatsuba_threshold = 32;
+        constexpr std::size_t ntt_threshold = 256;
         const std::size_t shorter = std::min(left.size(), right.size());
         const std::size_t longer = std::max(left.size(), right.size());
+        const bool ntt_supported =
+            (static_cast<__uint128_t>(left.size()) + right.size()) * 3
+                <= goldilocks_maximum_transform_size;
+        if(shorter >= ntt_threshold && ntt_supported){
+            return ntt_multiply_decimals(left, right);
+        }
         if(shorter <= karatsuba_threshold || longer / shorter >= 2){
             return schoolbook_multiply_decimals(left, right);
         }
@@ -1045,7 +1180,9 @@ public:
     std::size_t bit_length() const{
         if(limbs_.empty()) return 0;
         const std::size_t complete_bits = (limbs_.size() - 1) * 32;
-        return complete_bits + (32 - std::countl_zero(limbs_.back()));
+        return complete_bits + static_cast<std::size_t>(
+            32 - std::countl_zero(limbs_.back())
+        );
     }
 
     ExactInteger absolute() const{
