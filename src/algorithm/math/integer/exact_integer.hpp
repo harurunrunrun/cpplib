@@ -612,6 +612,7 @@ class ExactInteger{
         constexpr std::size_t maximum_transform_size = std::size_t{1} << 21;
         const auto left_digits = limbs_to_ntt_digits(left);
         const auto right_digits = limbs_to_ntt_digits(right);
+        if(left_digits.empty() || right_digits.empty()) return {};
         const std::size_t coefficient_count =
             left_digits.size() + right_digits.size() - 1;
         std::size_t transform_size = 1;
@@ -666,10 +667,12 @@ class ExactInteger{
         first = std::min(first, value.size());
         last = std::min(last, value.size());
         if(first >= last) return {};
-        return std::vector<std::uint32_t>(
+        std::vector<std::uint32_t> result(
             value.begin() + static_cast<std::ptrdiff_t>(first),
             value.begin() + static_cast<std::ptrdiff_t>(last)
         );
+        trim_magnitude(result);
+        return result;
     }
 
     static void add_shifted_magnitude(
