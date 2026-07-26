@@ -68,6 +68,15 @@ def asset_command(
     return [str(native_executable)]
 
 
+def checker_cxxflags_arguments(checker: Path, cxxflags: str) -> list[str]:
+    """Encode compiler flags without changing either checker CLI contract."""
+
+    if checker.suffix == ".py":
+        # argparse treats a separate value beginning with '-' as another option.
+        return [f"--cxxflags={cxxflags}"]
+    return ["--cxxflags", cxxflags]
+
+
 def run_with_failure_diagnostic(command: list[str]) -> tuple[int, str]:
     """Run COMMAND without retaining successful output; return failure tail."""
 
@@ -241,8 +250,7 @@ def main(argv: list[str] | None = None) -> int:
                     str(build_dir),
                     "--cxx",
                     args.cxx,
-                    "--cxxflags",
-                    args.cxxflags,
+                    *checker_cxxflags_arguments(checker, args.cxxflags),
                 ]
                 checker_returncode, checker_diagnostic = run_with_failure_diagnostic(
                     checker_command

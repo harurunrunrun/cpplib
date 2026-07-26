@@ -57,6 +57,20 @@ args.build_dir.mkdir(parents=True, exist_ok=True)
 (args.build_dir / "checked").write_text(args.test.name + "\\n", encoding="utf-8")
 """
 
+CXXFLAGS_CHECKER = """\\
+import argparse
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--test", type=Path, required=True)
+parser.add_argument("--case-dir", type=Path, required=True)
+parser.add_argument("--build-dir", type=Path, required=True)
+parser.add_argument("--cxx", required=True)
+parser.add_argument("--cxxflags", required=True)
+args = parser.parse_args()
+Path("received-cxxflags").write_text(args.cxxflags, encoding="utf-8")
+"""
+
 EMPTY_GENERATOR = """\\
 import argparse
 parser = argparse.ArgumentParser()
@@ -108,6 +122,40 @@ def add_test(root: Path, name: str) -> None:
 
 
 class RunStandaloneAssetsTest(unittest.TestCase):
+    def test_dash_prefixed_cxxflags_reach_python_checker_unchanged(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            name = "dash_prefixed_cxxflags"
+            add_test(root, name)
+            (root / "test" / "checker" / name / "checker.py").write_text(
+                CXXFLAGS_CHECKER, encoding="utf-8"
+            )
+            cxxflags = "-std=c++20 -O0 -Werror"
+
+            with working_directory(root):
+                status = runner.main(
+                    [
+                        "--cache-dir",
+                        "cache",
+                        "--result-dir",
+                        "results",
+                        f"--cxxflags={cxxflags}",
+                    ]
+                )
+
+            self.assertEqual(status, 0)
+            self.assertEqual(
+                (root / "received-cxxflags").read_text(encoding="utf-8"),
+                cxxflags,
+            )
+
+    def test_native_checker_keeps_two_argument_cxxflags_contract(self) -> None:
+        cxxflags = "-std=c++20 -O2"
+        self.assertEqual(
+            runner.checker_cxxflags_arguments(Path("checker.cpp"), cxxflags),
+            ["--cxxflags", cxxflags],
+        )
+
     def test_split_processes_exact_disjoint_slice(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
