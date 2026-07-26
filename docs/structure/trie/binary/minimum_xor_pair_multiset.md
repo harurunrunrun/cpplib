@@ -1,6 +1,6 @@
 ---
 title: Minimum XOR Pair Multiset (最小XOR対付き多重集合) [ABC308_G]
-documentation_of: ../../../src/structure/trie/minimum_xor_pair_multiset.hpp
+documentation_of: ../../../../src/structure/trie/binary/minimum_xor_pair_multiset.hpp
 ---
 
 符号なし整数の多重集合を更新しながら、異なる2要素を選んだときのXORの最小値を管理する。

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/structure/trie/trie.hpp"
+#include "../../src/structure/trie/string/trie.hpp"
 
 void test_api(){
     Trie<10, 64, '0'> trie;

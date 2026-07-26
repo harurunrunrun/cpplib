@@ -6,7 +6,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/trie/trie.hpp"
+#include "../../src/structure/trie/string/trie.hpp"
 
 template<class Function>
 void expect_trie_error(Function&& function){

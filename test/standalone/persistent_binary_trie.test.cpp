@@ -7,7 +7,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/trie/persistent_binary_trie.hpp"
+#include "../../src/structure/trie/binary/persistent_binary_trie.hpp"
 
 std::optional<int> kth_naive(std::vector<int> values, int k, int xor_value){
     if(k < 0 || static_cast<int>(values.size()) <= k) return std::nullopt;

@@ -1,6 +1,6 @@
 ---
 title: Persistent Trie (完全永続トライ)
-documentation_of: ../../../src/structure/trie/persistent_trie.hpp
+documentation_of: ../../../../src/structure/trie/string/persistent_trie.hpp
 ---
 
 永続 Trie。重複を持つ。

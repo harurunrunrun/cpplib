@@ -47,6 +47,8 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("docs/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.md")
         self.write("src/structure/bbst/map/red_black_tree.hpp")
         self.write("docs/structure/bbst/map/red_black_tree.md")
+        self.write("src/structure/trie/binary/binary_trie.hpp")
+        self.write("docs/structure/trie/binary/binary_trie.md")
         self.assertEqual(self.messages(), [])
 
     def test_legacy_other_header_and_document_are_rejected(self) -> None:
@@ -136,6 +138,28 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.assertTrue(any("must not have nested subcategories" in item for item in self.messages()))
 
 
+    def test_trie_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/trie/trie.hpp")
+        self.assertTrue(any("trie subcategory" in item for item in self.messages()))
+
+    def test_unknown_trie_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/trie/misc/example.hpp")
+        self.assertTrue(any("unknown trie subcategory" in item for item in self.messages()))
+
+    def test_trie_header_in_wrong_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/trie/string/binary_trie.hpp")
+        self.assertTrue(any(
+            "expected src/structure/trie/binary" in item
+            for item in self.messages()
+        ))
+
+    def test_trie_subcategory_cannot_be_split_further(self) -> None:
+        self.write("src/structure/trie/binary/internal/example.hpp")
+        self.assertTrue(any(
+            "must not have nested subcategories" in item
+            for item in self.messages()
+        ))
+
     def test_tree_header_must_be_in_a_subcategory(self) -> None:
         self.write("src/structure/tree/link_cut_tree.hpp")
         self.assertTrue(any("tree subcategory" in item for item in self.messages()))
@@ -198,6 +222,13 @@ class CheckStructureLayoutTest(unittest.TestCase):
         )
         self.assertTrue(any("legacy reference" in item for item in self.messages()))
 
+
+    def test_legacy_trie_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/trie.test.cpp",
+            '#include "../../src/structure/trie/trie.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
 
     def test_relative_legacy_tree_include_is_rejected(self) -> None:
         self.write(

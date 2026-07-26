@@ -1,6 +1,6 @@
 ---
 title: Binary Trie (二進トライ)
-documentation_of: ../../../src/structure/trie/binary_trie.hpp
+documentation_of: ../../../../src/structure/trie/binary/binary_trie.hpp
 ---
 
 整数の Binary Trie。重複を持つ。

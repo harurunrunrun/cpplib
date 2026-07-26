@@ -1,6 +1,6 @@
 ---
 title: Trie (トライ)
-documentation_of: ../../../src/structure/trie/trie.hpp
+documentation_of: ../../../../src/structure/trie/string/trie.hpp
 ---
 
 文字列の Trie。重複を持つ。

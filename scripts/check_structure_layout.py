@@ -38,6 +38,7 @@ NESTED_STRUCTURE_CATEGORIES = {
         "li_chao", "line_container", "slope_trick",
     }),
     "dsu": frozenset({"basic", "persistent", "range", "rollback", "specialized"}),
+    "trie": frozenset({"binary", "string"}),
     "tree": frozenset({"centroid", "dynamic_forest", "query", "treap"}),
 }
 
@@ -160,6 +161,11 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "persistent_lazy_weighted_balanced_tree": "bbst/sequence",
     "persistent_reversible_splay_tree": "bbst/sequence",
     "reversible_splay_tree": "bbst/sequence",
+    "binary_trie": "trie/binary",
+    "minimum_xor_pair_multiset": "trie/binary",
+    "persistent_binary_trie": "trie/binary",
+    "persistent_trie": "trie/string",
+    "trie": "trie/string",
 }
 
 RECLASSIFIED_DSU_STEMS = frozenset({
@@ -178,6 +184,12 @@ RECLASSIFIED_BBST_STEMS = frozenset({
     stem
     for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
     if category.startswith("bbst/")
+})
+
+RECLASSIFIED_TRIE_STEMS = frozenset({
+    stem
+    for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
+    if category.startswith("trie/")
 })
 
 RECLASSIFIED_TREE_STEMS = frozenset({
@@ -335,6 +347,10 @@ def check_layout(root: Path) -> list[str]:
                 for stem in RECLASSIFIED_CONVEX_HULL_TRICK_STEMS
             )
             legacy_references.extend(
+                f"structure/trie/{stem}.hpp"
+                for stem in RECLASSIFIED_TRIE_STEMS
+            )
+            legacy_references.extend(
                 f"structure/tree/{stem}.hpp"
                 for stem in RECLASSIFIED_TREE_STEMS
             )
@@ -351,6 +367,10 @@ def check_layout(root: Path) -> list[str]:
                 legacy_references.extend(
                     f"../convex_hull_trick/{stem}.hpp"
                     for stem in RECLASSIFIED_CONVEX_HULL_TRICK_STEMS
+                )
+                legacy_references.extend(
+                    f"../trie/{stem}.hpp"
+                    for stem in RECLASSIFIED_TRIE_STEMS
                 )
                 legacy_references.extend(
                     f"../tree/{stem}.hpp"

@@ -6,7 +6,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/trie/persistent_trie.hpp"
+#include "../../src/structure/trie/string/persistent_trie.hpp"
 
 std::string random_string(std::mt19937& rng){
     int n = static_cast<int>(rng() % 8);

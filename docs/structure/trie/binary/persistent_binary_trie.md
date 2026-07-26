@@ -1,6 +1,6 @@
 ---
 title: Persistent Binary Trie (完全永続二進トライ)
-documentation_of: ../../../src/structure/trie/persistent_binary_trie.hpp
+documentation_of: ../../../../src/structure/trie/binary/persistent_binary_trie.hpp
 ---
 
 永続 Binary Trie。重複を持つ。

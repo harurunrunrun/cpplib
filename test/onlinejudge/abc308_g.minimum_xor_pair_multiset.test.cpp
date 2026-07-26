@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/trie/minimum_xor_pair_multiset.hpp"
+#include "../../src/structure/trie/binary/minimum_xor_pair_multiset.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

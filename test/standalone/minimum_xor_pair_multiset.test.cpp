@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/structure/trie/minimum_xor_pair_multiset.hpp"
+#include "../../src/structure/trie/binary/minimum_xor_pair_multiset.hpp"
 
 void self_test(){
     MinimumXorPairMultiset<unsigned> values;
