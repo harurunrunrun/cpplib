@@ -3,11 +3,15 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <cstdint>
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
+
+#include "../../../structure/modint/modint.hpp"
 
 namespace count_directed_spanning_arborescences_internal{
 
@@ -59,7 +63,137 @@ inline __int128_t exact_determinant(
     return sign * matrix.back().back();
 }
 
+template<class T>
+void validate_square_matrix(const std::vector<std::vector<T>>& matrix){
+    if(matrix.empty())[[unlikely]]{
+        throw std::runtime_error(
+            "library assertion fault: empty matrix "
+            "(count_directed_spanning_arborescences)."
+        );
+    }
+    const std::size_t size = matrix.size();
+    for(const auto& row: matrix){
+        if(row.size() != size)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: non-square matrix "
+                "(count_directed_spanning_arborescences)."
+            );
+        }
+    }
+}
+
+template<class Field>
+Field field_determinant(std::vector<std::vector<Field>> matrix){
+    const std::size_t size = matrix.size();
+    Field determinant = Field(1);
+    for(std::size_t column = 0; column < size; ++column){
+        std::size_t pivot = column;
+        while(pivot < size && matrix[pivot][column] == Field{}) ++pivot;
+        if(pivot == size) return Field{};
+        if(pivot != column){
+            std::swap(matrix[pivot], matrix[column]);
+            determinant = -determinant;
+        }
+        const Field pivot_value = matrix[column][column];
+        determinant *= pivot_value;
+        const Field inverse_pivot = Field(1) / pivot_value;
+        for(std::size_t row = column + 1; row < size; ++row){
+            if(matrix[row][column] == Field{}) continue;
+            const Field factor = matrix[row][column] * inverse_pivot;
+            matrix[row][column] = Field{};
+            for(std::size_t next = column + 1; next < size; ++next){
+                matrix[row][next] -= factor * matrix[column][next];
+            }
+        }
+    }
+    return determinant;
+}
+
+constexpr bool is_prime(int value){
+    if(value < 2) return false;
+    if(value % 2 == 0) return value == 2;
+    for(long long divisor = 3;
+        divisor * divisor <= value;
+        divisor += 2){
+        if(value % divisor == 0) return false;
+    }
+    return true;
+}
+
+template<int MOD, class Integer>
+Modint<MOD> modular_weight(Integer value){
+    static_assert(std::is_integral_v<Integer>);
+    static_assert(sizeof(Integer) <= sizeof(std::uintmax_t));
+    if constexpr(std::is_signed_v<Integer>){
+        const std::intmax_t reduced =
+            static_cast<std::intmax_t>(value) % static_cast<std::intmax_t>(MOD);
+        return Modint<MOD>(static_cast<long long>(reduced));
+    }else{
+        const std::uintmax_t reduced = static_cast<std::uintmax_t>(value)
+            % static_cast<std::uintmax_t>(MOD);
+        return Modint<MOD>(static_cast<long long>(reduced));
+    }
+}
+
 } // namespace count_directed_spanning_arborescences_internal
+
+template<class Field>
+Field count_directed_spanning_arborescences(
+    const std::vector<std::vector<Field>>& adjacency
+){
+    static_assert(
+        !std::is_integral_v<Field>,
+        "integral weights require count_directed_spanning_arborescences_mod"
+    );
+    count_directed_spanning_arborescences_internal::validate_square_matrix(
+        adjacency
+    );
+    const std::size_t vertex_count = adjacency.size();
+    std::vector<std::vector<Field>> laplacian(
+        vertex_count, std::vector<Field>(vertex_count, Field{})
+    );
+    for(std::size_t from = 0; from < vertex_count; ++from){
+        for(std::size_t to = 0; to < vertex_count; ++to){
+            if(from == to) continue;
+            const Field& weight = adjacency[from][to];
+            laplacian[to][to] += weight;
+            laplacian[to][from] -= weight;
+        }
+    }
+    // det(L + 1 e_0^T) is the sum of all rooted arborescence weights.
+    // This rank-one update avoids division by the vertex count.
+    for(std::size_t row = 0; row < vertex_count; ++row){
+        laplacian[row][0] += Field(1);
+    }
+    return count_directed_spanning_arborescences_internal::field_determinant(
+        std::move(laplacian)
+    );
+}
+
+template<int MOD, class Integer>
+int count_directed_spanning_arborescences_mod(
+    const std::vector<std::vector<Integer>>& adjacency
+){
+    static_assert(std::is_integral_v<Integer>);
+    static_assert(
+        count_directed_spanning_arborescences_internal::is_prime(MOD),
+        "MOD must be prime"
+    );
+    std::vector<std::vector<Modint<MOD>>> reduced;
+    reduced.reserve(adjacency.size());
+    for(const auto& row: adjacency){
+        std::vector<Modint<MOD>> reduced_row;
+        reduced_row.reserve(row.size());
+        for(const Integer weight: row){
+            reduced_row.push_back(
+                count_directed_spanning_arborescences_internal::
+                    modular_weight<MOD>(weight)
+            );
+        }
+        reduced.push_back(std::move(reduced_row));
+    }
+    return count_directed_spanning_arborescences(reduced).val();
+}
 
 inline long long count_directed_spanning_arborescences(
     const std::vector<std::string>& adjacency
@@ -106,22 +240,13 @@ inline long long count_directed_spanning_arborescences(
         }
     }
 
-    // L * 1 = 0.  The adjugate of L therefore has identical rows, and its
-    // diagonal entries are the directed Matrix-Tree cofactors.  Consequently
-    //
-    //   det(L + 1 1^T) = 1^T adj(L) 1
-    //                    = n * sum_root cofactor(root).
-    //
-    // This evaluates the sum for every root with one determinant instead of
-    // evaluating n different minors.
-    for(auto& row: laplacian){
-        for(auto& value: row) value++;
-    }
-    const __int128_t determinant =
+    // The single-column rank-one update returns the sum for every root
+    // directly and does not require division by the vertex count.
+    for(auto& row: laplacian) row[0]++;
+    const __int128_t answer =
         count_directed_spanning_arborescences_internal::exact_determinant(
             std::move(laplacian)
         );
-    const __int128_t answer = determinant / vertex_count;
     if(answer < 0 || answer > std::numeric_limits<long long>::max())[[unlikely]]{
         throw std::overflow_error(
             "count_directed_spanning_arborescences overflow"
