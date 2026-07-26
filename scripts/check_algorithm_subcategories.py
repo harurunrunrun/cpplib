@@ -248,6 +248,26 @@ GRAPH_SPECIALIZED_SUBCATEGORIES = frozenset(
     GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM.values()
 )
 
+GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM: dict[str, str] = {
+    "horn_sat": "logical",
+    "three_sat": "logical",
+    "two_sat": "logical",
+    "two_sat_assignment": "logical",
+    "chromatic_number": "coloring",
+    "is_bipartite": "coloring",
+    "bipartite_edge_coloring": "coloring",
+    "maximum_clique": "selection",
+    "maximum_independent_set": "selection",
+    "difference_constraints": "systems",
+    "count_inconsistent_modulo_three_constraints": "systems",
+    "chordal_graph_recognition": "recognition",
+    "can_order_strings_by_matching_endpoints": "recognition",
+}
+
+GRAPH_CONSTRAINTS_SUBCATEGORIES = frozenset(
+    GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM.values()
+)
+
 NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     Path("src/algorithm/math/number_theory"): NUMBER_THEORY_SUBCATEGORIES,
     Path("src/algorithm/graph/shortest_path"): SHORTEST_PATH_SUBCATEGORIES,
@@ -260,6 +280,9 @@ NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     ),
     Path("src/algorithm/graph/specialized"): (
         GRAPH_SPECIALIZED_SUBCATEGORIES
+    ),
+    Path("src/algorithm/graph/constraints"): (
+        GRAPH_CONSTRAINTS_SUBCATEGORIES
     ),
 }
 
@@ -281,6 +304,9 @@ EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
     ),
     Path("src/algorithm/graph/specialized"): (
         GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM
+    ),
+    Path("src/algorithm/graph/constraints"): (
+        GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM
     ),
 }
 

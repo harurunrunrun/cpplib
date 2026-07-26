@@ -119,6 +119,22 @@ def main() -> None:
         == "structural_analysis"
     )
 
+    graph_constraints_root = Path("src/algorithm/graph/constraints")
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[
+        graph_constraints_root
+    ] == frozenset({
+        "coloring", "logical", "recognition", "selection", "systems",
+    })
+    assert len(
+        check_algorithm_subcategories.GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM
+    ) == 13
+    assert (
+        check_algorithm_subcategories.GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM[
+            "difference_constraints"
+        ]
+        == "systems"
+    )
+
 
     with TemporaryDirectory() as directory:
         root = Path(directory)

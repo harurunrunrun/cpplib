@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../constraints/bipartite_edge_coloring.hpp"
+#include "../../constraints/coloring/bipartite_edge_coloring.hpp"
 
 inline std::vector<std::vector<int>> rearrange_rows_into_permutation_columns(
     const std::vector<std::vector<int>>& matrix

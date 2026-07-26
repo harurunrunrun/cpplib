@@ -1,6 +1,6 @@
 ---
 title: Difference Constraints (差分制約、牛ゲー)
-documentation_of: ../../../../src/algorithm/graph/constraints/difference_constraints.hpp
+documentation_of: ../../../../../src/algorithm/graph/constraints/systems/difference_constraints.hpp
 ---
 
 差分制約だけからなる線形計画問題。

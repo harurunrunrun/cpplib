@@ -1,9 +1,9 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CONSTRAINTS_TWO_SAT_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GRAPH_CONSTRAINTS_TWO_SAT_HPP_INCLUDED
+#ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CONSTRAINTS_LOGICAL_TWO_SAT_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GRAPH_CONSTRAINTS_LOGICAL_TWO_SAT_HPP_INCLUDED
 
 #include <stdexcept>
 #include <vector>
-#include "../connectivity/strongly_connected/strongly_connected_components.hpp"
+#include "../../connectivity/strongly_connected/strongly_connected_components.hpp"
 
 struct TwoSat{
     int n;
@@ -50,4 +50,4 @@ struct TwoSat{
     }
 };
 
-#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CONSTRAINTS_TWO_SAT_HPP_INCLUDED
+#endif  // CPPLIB_SRC_ALGORITHM_GRAPH_CONSTRAINTS_LOGICAL_TWO_SAT_HPP_INCLUDED

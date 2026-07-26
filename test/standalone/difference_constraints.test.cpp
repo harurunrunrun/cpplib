@@ -5,7 +5,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/algorithm/graph/constraints/difference_constraints.hpp"
+#include "../../src/algorithm/graph/constraints/systems/difference_constraints.hpp"
 
 constexpr long long INF = (1LL << 60);
 
