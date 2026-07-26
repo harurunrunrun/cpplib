@@ -477,17 +477,28 @@ class ExactInteger{
     static constexpr std::uint64_t goldilocks_maximum_transform_size =
         std::uint64_t{1} << 32;
 
+#if defined(__SIZEOF_INT128__)
+    static std::uint64_t goldilocks_reduce(__uint128_t value){
+        constexpr std::uint64_t low_mask =
+            (std::uint64_t{1} << 32) - 1;
+        const std::uint64_t low = static_cast<std::uint64_t>(value);
+        const std::uint64_t high = static_cast<std::uint64_t>(value >> 64);
+        __uint128_t reduced = static_cast<__uint128_t>(low)
+            + static_cast<__uint128_t>(high & low_mask) * low_mask
+            + goldilocks_modulus - (high >> 32);
+        if(reduced >= goldilocks_modulus) reduced -= goldilocks_modulus;
+        if(reduced >= goldilocks_modulus) reduced -= goldilocks_modulus;
+        return static_cast<std::uint64_t>(reduced);
+    }
+#else
+#error "ExactInteger requires GCC 13 with unsigned 128-bit integers"
+#endif
+
     static std::uint64_t goldilocks_multiply(
         std::uint64_t left,
         std::uint64_t right
     ){
-#if defined(__SIZEOF_INT128__)
-        return static_cast<std::uint64_t>(
-            static_cast<__uint128_t>(left) * right % goldilocks_modulus
-        );
-#else
-#error "ExactInteger requires GCC 13 with unsigned 128-bit integers"
-#endif
+        return goldilocks_reduce(static_cast<__uint128_t>(left) * right);
     }
 
     static std::uint64_t goldilocks_power(
@@ -578,7 +589,13 @@ class ExactInteger{
         constexpr std::uint64_t digit_mask =
             (std::uint64_t{1} << digit_bits) - 1;
         std::vector<std::uint32_t> digits;
-        digits.reserve((limbs.size() * 32 + digit_bits - 1) / digit_bits);
+        const __uint128_t digit_count =
+            (static_cast<__uint128_t>(limbs.size()) * 32
+                + digit_bits - 1) / digit_bits;
+        if(digit_count > digits.max_size()){
+            throw std::length_error("ExactInteger NTT input is too large");
+        }
+        digits.reserve(static_cast<std::size_t>(digit_count));
         std::uint64_t buffer = 0;
         unsigned buffered_bits = 0;
         for(const std::uint32_t limb: limbs){
@@ -657,6 +674,9 @@ class ExactInteger{
         constexpr std::uint64_t digit_mask =
             (std::uint64_t{1} << digit_bits) - 1;
         std::vector<std::uint32_t> digits;
+        if(coefficients.size() > digits.max_size() - 4){
+            throw std::length_error("ExactInteger NTT output is too large");
+        }
         digits.reserve(coefficients.size() + 4);
         std::uint64_t carry = 0;
         for(const std::uint64_t coefficient: coefficients){
@@ -669,7 +689,12 @@ class ExactInteger{
             carry >>= digit_bits;
         }
         std::vector<std::uint32_t> limbs;
-        limbs.reserve((digits.size() * digit_bits + 31) / 32);
+        const __uint128_t limb_count =
+            (static_cast<__uint128_t>(digits.size()) * digit_bits + 31) / 32;
+        if(limb_count > limbs.max_size()){
+            throw std::length_error("ExactInteger NTT output is too large");
+        }
+        limbs.reserve(static_cast<std::size_t>(limb_count));
         std::uint64_t buffer = 0;
         unsigned buffered_bits = 0;
         for(const std::uint32_t digit: digits){
@@ -983,13 +1008,12 @@ class ExactInteger{
         const DecimalMagnitude& value
     ){
         constexpr std::uint32_t digit_base = 1'000;
-        if(value.size() >
-            (std::numeric_limits<std::size_t>::max)() / 3){
+        std::vector<std::uint32_t> digits;
+        if(value.size() > digits.max_size() / 3){
             throw std::length_error(
                 "ExactInteger decimal conversion is too large"
             );
         }
-        std::vector<std::uint32_t> digits;
         digits.reserve(value.size() * 3);
         for(std::uint32_t chunk: value){
             digits.push_back(chunk % digit_base);
@@ -1006,6 +1030,11 @@ class ExactInteger{
     ){
         constexpr std::uint32_t digit_base = 1'000;
         std::vector<std::uint32_t> digits;
+        if(coefficients.size() > digits.max_size() - 8){
+            throw std::length_error(
+                "ExactInteger decimal conversion is too large"
+            );
+        }
         digits.reserve(coefficients.size() + 8);
 #if defined(__SIZEOF_INT128__)
         __uint128_t carry = 0;
