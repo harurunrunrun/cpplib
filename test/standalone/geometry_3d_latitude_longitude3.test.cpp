@@ -1,6 +1,9 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/latitude_longitude3_result.hpp"
+#include "../../src/algorithm/geometry/3d/latitude_longitude_from_point3.hpp"
 #include "../../src/algorithm/geometry/3d/latitude_longitude3.hpp"
+#include "../../src/algorithm/geometry/3d/point3_from_latitude_longitude.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){
