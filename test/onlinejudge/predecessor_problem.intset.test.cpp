@@ -5,7 +5,7 @@
 #include <utility>
 #include <string>
 
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 #include "../../src/structure/tree/integer_set.hpp"
 
 using namespace std;

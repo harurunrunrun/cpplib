@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/other/incremental_interval_scheduling.hpp"
+#include "../../src/algorithm/other/scheduling/incremental_interval_scheduling.hpp"
 
 using Scheduler = IncrementalIntervalScheduling<long long>;
 

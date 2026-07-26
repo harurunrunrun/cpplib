@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/other/static_interval_maximum_overlap.hpp"
+#include "../../src/structure/interval/static_interval_maximum_overlap.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

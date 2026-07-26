@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/other/kd_tree_2d.hpp"
+#include "../../src/structure/spatial/kd_tree_2d.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

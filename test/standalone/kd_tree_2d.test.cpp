@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/other/kd_tree_2d.hpp"
+#include "../../src/structure/spatial/kd_tree_2d.hpp"
 
 void self_test(){
     std::vector<KdTreePoint2D<int>> points{

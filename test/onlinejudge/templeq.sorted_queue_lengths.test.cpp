@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/other/threshold_updated_indexed_multiset.hpp"
+#include "../../src/structure/ordered_set/threshold_updated_indexed_multiset.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

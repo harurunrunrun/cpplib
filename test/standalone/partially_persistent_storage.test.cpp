@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/other/partially_persistent_storage.hpp"
+#include "../../src/structure/persistence/partially_persistent_storage.hpp"
 
 void self_test(){
     PartiallyPersistentStorage<std::string, 3, 8> storage;

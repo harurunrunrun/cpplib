@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../../structure/other/fenwick_tree.hpp"
+#include "../../../structure/fenwick_tree/fenwick_tree.hpp"
 
 template<class T, int MAX_SIZE = 100000>
 long long count_decreasing_triplets(const std::vector<T>& values){

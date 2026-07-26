@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../structure/other/sparse_table.hpp"
+#include "../../structure/range_query/sparse_table.hpp"
 #include "../../structure/types/common_monoids.hpp"
 
 template<int MAX_SIZE = 50000>

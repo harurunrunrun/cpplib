@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/other/xor_basis.hpp"
+#include "../../src/structure/bit/xor_basis.hpp"
 
 void test_basic(){
     XorBasis<unsigned, 8> basis;

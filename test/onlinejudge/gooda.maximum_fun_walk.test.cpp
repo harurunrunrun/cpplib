@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "../../src/algorithm/graph/specialized/maximum_distinct_vertex_weight_walk.hpp"
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 
 namespace{
 fastio io;

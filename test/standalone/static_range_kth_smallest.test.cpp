@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/other/static_range_kth_smallest.hpp"
+#include "../../src/structure/range_query/static_range_kth_smallest.hpp"
 
 void self_test(){
     {

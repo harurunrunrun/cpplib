@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
-#include "../../other/partially_persistent_storage.hpp"
+#include "../../persistence/partially_persistent_storage.hpp"
 #include "../detail/segtree_beats_node.hpp"
 
 template<class T, int MAX_SIZE, int MAX_VERSIONS, int MAX_CHANGES>

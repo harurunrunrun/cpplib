@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/other/static_range_maximum_frequency.hpp"
+#include "../../src/structure/range_query/static_range_maximum_frequency.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

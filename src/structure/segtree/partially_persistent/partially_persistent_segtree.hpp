@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "../../other/partially_persistent_storage.hpp"
+#include "../../persistence/partially_persistent_storage.hpp"
 #include "../../types/monoid.hpp"
 
 template<auto Monoid, int MAX_SIZE, int MAX_UPDATE>

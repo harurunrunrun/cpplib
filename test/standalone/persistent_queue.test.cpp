@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/structure/other/persistent_queue.hpp"
+#include "../../src/structure/persistence/persistent_queue.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 template<class Function>

@@ -34,7 +34,7 @@ JEKYLL_BUILD_ARGS := $(strip \
 	$(if $(strip $(JEKYLL_BASEURL)),--baseurl "$(JEKYLL_BASEURL)") \
 )
 
-.PHONY: help gcc13-check verifier-setup verifier-wrapper-test header-guard-check algorithm-layout-check no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
+.PHONY: help gcc13-check verifier-setup verifier-wrapper-test header-guard-check algorithm-layout-check structure-layout-check no-boost-dependency-check test-verifier-markers verifier-resolve docs-verifier-resolve test-coverage-check standalone-generator-interface-check standalone-assets-test standalone-results-prune standalone-results-check standalone-assets verify docs-title-check docs-coverage-check docs-source docs-prerequisites docs docs-serve verifier-clean
 
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
@@ -44,6 +44,7 @@ help:
 	@echo "make standalone-results-check  standalone全件の最新成功manifestを検査"
 	@echo "make header-guard-check  全headerの一意なinclude guardを検査"
 	@echo "make algorithm-layout-check  validate algorithm subcategories"
+	@echo "make structure-layout-check  validate structure subcategories"
 	@echo "make no-boost-dependency-check  reject Boost dependencies in src/test/docs"
 	@echo "make docs-title-check  docsの英日併記タイトルを検査"
 	@echo "make test-coverage-check  全headerに直接対象テストがあることを検査"
@@ -83,7 +84,11 @@ algorithm-layout-check:
 	$(PYTHON) scripts/test_check_algorithm_subcategories.py
 	$(PYTHON) scripts/check_algorithm_subcategories.py
 
-no-boost-dependency-check: header-guard-check algorithm-layout-check
+structure-layout-check:
+	$(PYTHON) scripts/test_check_structure_layout.py
+	$(PYTHON) scripts/check_structure_layout.py
+
+no-boost-dependency-check: header-guard-check algorithm-layout-check structure-layout-check
 	$(PYTHON) scripts/test_check_no_boost_dependency.py
 	$(PYTHON) scripts/check_no_boost_dependency.py src test docs
 

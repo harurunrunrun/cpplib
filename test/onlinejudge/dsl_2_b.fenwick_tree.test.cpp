@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/other/fenwick_tree.hpp"
+#include "../../src/structure/fenwick_tree/fenwick_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

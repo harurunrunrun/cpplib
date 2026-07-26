@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Tests for check_structure_layout.py."""
+
+from __future__ import annotations
+
+import tempfile
+import unittest
+from pathlib import Path
+
+from check_structure_layout import check_layout
+
+
+class CheckStructureLayoutTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temporary_directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary_directory.cleanup)
+        self.root = Path(self.temporary_directory.name)
+
+    def write(self, relative_path: str, body: str = "") -> Path:
+        path = self.root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(body, encoding="utf-8")
+        return path
+
+    def messages(self) -> list[str]:
+        return check_layout(self.root)
+
+    def test_valid_moderate_layout(self) -> None:
+        self.write("src/structure/range_query/sparse_table.hpp")
+        self.write("docs/structure/range_query/sparse_table.md")
+        self.write(
+            "src/algorithm/other/scheduling/incremental_interval_scheduling.hpp"
+        )
+        self.write(
+            "docs/algorithm/other/scheduling/incremental_interval_scheduling.md"
+        )
+        self.write("src/structure/segtree/basic/lazysegtree.hpp")
+        self.assertEqual(self.messages(), [])
+
+    def test_legacy_other_header_and_document_are_rejected(self) -> None:
+        self.write("src/structure/other/sparse_table.hpp")
+        self.write("docs/structure/other/sparse_table.md")
+        messages = self.messages()
+        self.assertTrue(any("legacy structure/other category" in item for item in messages))
+
+    def test_unknown_category_is_rejected(self) -> None:
+        self.write("src/structure/misc/example.hpp")
+        self.assertTrue(any("unknown structure category" in item for item in self.messages()))
+
+    def test_uncategorized_header_is_rejected(self) -> None:
+        self.write("src/structure/example.hpp")
+        self.assertTrue(any("must be in a category" in item for item in self.messages()))
+
+    def test_flat_category_cannot_be_split_further(self) -> None:
+        self.write("src/structure/range_query/static/sparse_table.hpp")
+        self.assertTrue(any("must not have subcategories" in item for item in self.messages()))
+
+    def test_known_header_in_wrong_category_is_rejected(self) -> None:
+        self.write("src/structure/heap/sparse_table.hpp")
+        self.assertTrue(any("expected src/structure/range_query" in item for item in self.messages()))
+
+    def test_algorithm_exception_in_structure_is_rejected(self) -> None:
+        self.write("src/structure/interval/incremental_interval_scheduling.hpp")
+        self.assertTrue(any("expected src/algorithm/other/scheduling" in item for item in self.messages()))
+
+    def test_legacy_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/example.test.cpp",
+            '#include "../../src/structure/other/sparse_table.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_relative_legacy_include_is_rejected(self) -> None:
+        self.write(
+            "src/structure/array/example.hpp",
+            '#include "../other/sparse_table.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+
+if __name__ == "__main__":
+    unittest.main()

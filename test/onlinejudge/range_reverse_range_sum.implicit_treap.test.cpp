@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/range_reverse_range_sum
 
 #include <vector>
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 #include "../../src/structure/tree/implicit_treap.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "../../src/structure/bbst/reversible_splay_tree.hpp"
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 

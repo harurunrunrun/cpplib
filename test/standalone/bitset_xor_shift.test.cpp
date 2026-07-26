@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/other/bitset_xor_shift.hpp"
+#include "../../src/structure/bit/bitset_xor_shift.hpp"
 
 template<class Function>
 bool throws_runtime_error(Function&& function){

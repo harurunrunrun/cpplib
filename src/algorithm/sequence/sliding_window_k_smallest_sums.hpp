@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../structure/other/priority_sum_structure.hpp"
+#include "../../structure/ordered_set/priority_sum_structure.hpp"
 
 template<
     class T,

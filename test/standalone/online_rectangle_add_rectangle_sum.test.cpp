@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/structure/other/online_rectangle_add_rectangle_sum.hpp"
+#include "../../src/structure/spatial/online_rectangle_add_rectangle_sum.hpp"
 
 using RectangleStructure = OnlineRectangleAddRectangleSum<long long>;
 

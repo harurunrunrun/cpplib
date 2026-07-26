@@ -5,7 +5,7 @@
 #include <utility>
 
 #include "../decomposition/heavy_light_decomposition.hpp"
-#include "../../../structure/other/fenwick_tree.hpp"
+#include "../../../structure/fenwick_tree/fenwick_tree.hpp"
 
 template<class T, int MAX_SIZE>
 class PathAddEdgeGetTree{

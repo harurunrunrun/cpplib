@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/other/range_priority_queue.hpp"
+#include "../../src/structure/heap/range_priority_queue.hpp"
 
 static std::pair<int, std::size_t> naive_best(
     const std::vector<std::multiset<int>>& values,

@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <stdexcept>
 
-#include "../../other/partially_persistent_storage.hpp"
+#include "../../persistence/partially_persistent_storage.hpp"
 
 namespace bit_range_tree_detail{
 

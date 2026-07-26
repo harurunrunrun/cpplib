@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/other/sparse_table.hpp"
+#include "../../src/structure/range_query/sparse_table.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr MinMonoid<int> min_monoid{};

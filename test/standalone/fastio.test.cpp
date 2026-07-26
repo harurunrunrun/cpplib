@@ -2,7 +2,7 @@
 
 #define PROBLEM "https://example.com/standalone/fastio"
 
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 
 int main(){
     fastio io;

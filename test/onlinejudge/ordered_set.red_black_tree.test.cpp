@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/ordered_set
 
 #include "../../src/structure/bbst/red_black_tree.hpp"
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 
 int main(){
     fastio io;

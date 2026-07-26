@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/other/prefix_sum.hpp"
+#include "../../src/structure/range_query/prefix_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/other/static_range_product_less_equal_mod.hpp"
+#include "../../src/structure/range_query/static_range_product_less_equal_mod.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

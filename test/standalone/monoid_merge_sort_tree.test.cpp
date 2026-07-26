@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/other/monoid_merge_sort_tree.hpp"
+#include "../../src/structure/range_query/monoid_merge_sort_tree.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 #include "../../src/structure/types/monoid.hpp"
 

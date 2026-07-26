@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "../../other/partially_persistent_storage.hpp"
+#include "../../persistence/partially_persistent_storage.hpp"
 
 namespace wavelet_matrix_detail{
 

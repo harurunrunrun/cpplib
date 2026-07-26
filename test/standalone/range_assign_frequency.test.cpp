@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/other/range_assign_frequency.hpp"
+#include "../../src/structure/interval/range_assign_frequency.hpp"
 
 void verify(const RangeAssignFrequency<int>& structure, const std::vector<int>& values){
     assert(structure.size() == values.size());

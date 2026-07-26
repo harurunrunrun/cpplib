@@ -5,7 +5,7 @@
 #include <limits>
 #include <stdexcept>
 #include <utility>
-#include "../other/partially_persistent_storage.hpp"
+#include "../persistence/partially_persistent_storage.hpp"
 
 template<int MAX_SIZE, int MAX_UPDATE>
 struct PartiallyPersistentDSU{

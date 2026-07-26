@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 
-#include "../../src/structure/other/modulo_multiset_counter.hpp"
+#include "../../src/structure/ordered_set/modulo_multiset_counter.hpp"
 
 static std::string to_decimal(ModuloMultisetCounter::WideCount value){
     if(value == 0) return "0";

@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../../src/algorithm/graph/specialized/radius_balls_form_vertex_partition.hpp"
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 
 namespace{
 fastio io;

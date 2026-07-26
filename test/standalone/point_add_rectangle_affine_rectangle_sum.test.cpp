@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/other/point_add_rectangle_affine_rectangle_sum.hpp"
+#include "../../src/structure/spatial/point_add_rectangle_affine_rectangle_sum.hpp"
 
 using PointStructure = PointAddRectangleAffineRectangleSum<long long>;
 

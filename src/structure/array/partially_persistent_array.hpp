@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <vector>
-#include "../other/partially_persistent_storage.hpp"
+#include "../persistence/partially_persistent_storage.hpp"
 
 template<class T, int MAX_SIZE, int MAX_UPDATE>
 struct PartiallyPersistentArray{

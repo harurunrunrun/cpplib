@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/other/disjoint_sparse_table.hpp"
+#include "../../src/structure/range_query/disjoint_sparse_table.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr AddMonoid<long long> add_monoid{};

@@ -13,7 +13,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/other/priority_sum_structure.hpp"
+#include "../../src/structure/ordered_set/priority_sum_structure.hpp"
 
 long long naive_smallest(const std::multiset<long long>& values, std::size_t k){
     long long result = 0;

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/other/noncommutative_prefix_product.hpp"
+#include "../../src/structure/range_query/noncommutative_prefix_product.hpp"
 #include "../../src/structure/types/monoid.hpp"
 
 constexpr long long MOD = 1000000007LL;

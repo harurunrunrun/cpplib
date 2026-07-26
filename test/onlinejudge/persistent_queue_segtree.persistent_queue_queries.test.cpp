@@ -1,8 +1,8 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/persistent_queue
 
 #include <iostream>
-#include "../../src/structure/other/persistent_queue.hpp"
-#include "../../src/structure/other/persistent_queue_queries.hpp"
+#include "../../src/structure/persistence/persistent_queue.hpp"
+#include "../../src/structure/persistence/persistent_queue_queries.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr int MAX_Q = 500000;

@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../../structure/other/fenwick_tree.hpp"
+#include "../../../structure/fenwick_tree/fenwick_tree.hpp"
 
 template<int MAX_TASKS = 50000>
 std::vector<long long> round_robin_completion_times(

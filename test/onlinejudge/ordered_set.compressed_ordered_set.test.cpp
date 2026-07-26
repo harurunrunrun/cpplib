@@ -3,7 +3,7 @@
 #include <vector>
 #include <utility>
 
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 #include "../../src/structure/tree/compressed_ordered_set.hpp"
 
 using namespace std;

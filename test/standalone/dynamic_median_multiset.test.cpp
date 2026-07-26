@@ -12,7 +12,7 @@
 #include <string>
 #include <utility>
 
-#include "../../src/structure/other/dynamic_median_multiset.hpp"
+#include "../../src/structure/ordered_set/dynamic_median_multiset.hpp"
 
 namespace{
 

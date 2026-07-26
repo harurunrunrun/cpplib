@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/unionfind
 
 #include "../../src/structure/dsu/dsu.hpp"
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 
 int main(){
     fastio io;

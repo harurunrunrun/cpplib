@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include "../../src/structure/other/fenwick_tree_2d.hpp"
+#include "../../src/structure/fenwick_tree/fenwick_tree_2d.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

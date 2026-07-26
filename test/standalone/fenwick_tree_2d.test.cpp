@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/other/fenwick_tree_2d.hpp"
+#include "../../src/structure/fenwick_tree/fenwick_tree_2d.hpp"
 
 void test_basic(){
     FenwickTree2D<long long, 4, 5> fw(std::vector<std::vector<long long>>{

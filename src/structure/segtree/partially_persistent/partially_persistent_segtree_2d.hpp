@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../other/partially_persistent_storage.hpp"
+#include "../../persistence/partially_persistent_storage.hpp"
 
 namespace partially_persistent_segtree_2d_internal{
 

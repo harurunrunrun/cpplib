@@ -2,7 +2,7 @@
 
 
 
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/io/fastio.hpp"
 #include "../../src/structure/segtree/basic/widesegtree.hpp"
 
 using ll=long long;

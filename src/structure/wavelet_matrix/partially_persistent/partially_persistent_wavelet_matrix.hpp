@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
-#include "../../other/partially_persistent_storage.hpp"
+#include "../../persistence/partially_persistent_storage.hpp"
 
 template<
     class T,

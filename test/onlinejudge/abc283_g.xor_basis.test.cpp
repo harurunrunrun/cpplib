@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <iostream>
 
-#include "../../src/structure/other/xor_basis.hpp"
+#include "../../src/structure/bit/xor_basis.hpp"
 
 int main(){
     int n;

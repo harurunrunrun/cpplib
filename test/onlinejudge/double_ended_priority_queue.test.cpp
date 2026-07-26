@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "../../src/structure/other/double_ended_priority_queue.hpp"
-#include "../../src/structure/other/fastio.hpp"
+#include "../../src/structure/heap/double_ended_priority_queue.hpp"
+#include "../../src/structure/io/fastio.hpp"
 
 int main(){
     fastio io;

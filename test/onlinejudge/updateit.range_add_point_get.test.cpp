@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/other/range_add_point_get.hpp"
+#include "../../src/structure/fenwick_tree/range_add_point_get.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
