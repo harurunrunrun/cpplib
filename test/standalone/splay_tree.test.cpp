@@ -7,7 +7,7 @@
 #include <set>
 #include <stdexcept>
 #include <string>
-#include "../../src/structure/bbst/splay_tree.hpp"
+#include "../../src/structure/bbst/map/splay_tree.hpp"
 
 std::optional<int> kth_naive(const std::set<int>& s, int k){
     if(k < 0 || static_cast<int>(s.size()) <= k) return std::nullopt;

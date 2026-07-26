@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/bbst/dynamic_power_moment_sequence.hpp"
+#include "../../src/structure/bbst/sequence/dynamic_power_moment_sequence.hpp"
 
 namespace{
 

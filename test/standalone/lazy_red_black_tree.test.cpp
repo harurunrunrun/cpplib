@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/bbst/lazy_red_black_tree.hpp"
+#include "../../src/structure/bbst/map/lazy_red_black_tree.hpp"
 #include "../../src/structure/types/monoid_act_len.hpp"
 
 long long op_sum(long long a, long long, long long b, long long){ return a + b; }

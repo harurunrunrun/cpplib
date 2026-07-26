@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/bbst/persistent_reversible_splay_tree.hpp"
+#include "../../src/structure/bbst/sequence/persistent_reversible_splay_tree.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 #include "../../src/structure/types/monoid.hpp"
 

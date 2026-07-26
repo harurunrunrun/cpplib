@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/bbst/reversible_splay_tree.hpp"
+#include "../../src/structure/bbst/sequence/reversible_splay_tree.hpp"
 #include "../../src/structure/types/monoid.hpp"
 
 long long add_ll(long long a, long long b){ return a + b; }

@@ -6,7 +6,7 @@
 #include <random>
 #include <set>
 #include <vector>
-#include "../../src/structure/bbst/persistent_red_black_tree.hpp"
+#include "../../src/structure/bbst/map/persistent_red_black_tree.hpp"
 
 std::optional<int> kth_naive(const std::set<int>& s, int k){
     if(k < 0 || static_cast<int>(s.size()) <= k) return std::nullopt;

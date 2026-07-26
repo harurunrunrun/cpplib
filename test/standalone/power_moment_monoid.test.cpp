@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/bbst/reversible_splay_tree.hpp"
+#include "../../src/structure/bbst/sequence/reversible_splay_tree.hpp"
 #include "../../src/structure/types/power_moment_monoid.hpp"
 
 namespace{

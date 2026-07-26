@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/bbst/persistent_splay_tree.hpp"
+#include "../../src/structure/bbst/map/persistent_splay_tree.hpp"
 
 using Tree = PersistentSplaySet<int, 200000, 5000>;
 

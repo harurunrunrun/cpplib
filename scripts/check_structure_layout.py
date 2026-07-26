@@ -33,6 +33,7 @@ ALLOWED_STRUCTURE_CATEGORIES = frozenset({
 })
 
 NESTED_STRUCTURE_CATEGORIES = {
+    "bbst": frozenset({"map", "sequence"}),
     "convex_hull_trick": frozenset({
         "li_chao", "line_container", "slope_trick",
     }),
@@ -143,6 +144,22 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "persistent_dynamic_li_chao_tree": "convex_hull_trick/li_chao",
     "segment_li_chao_tree": "convex_hull_trick/li_chao",
     "slope_trick": "convex_hull_trick/slope_trick",
+    "aa_tree_map": "bbst/map",
+    "aa_tree_monoid_map": "bbst/map",
+    "lazy_red_black_tree": "bbst/map",
+    "persistent_lazy_red_black_tree": "bbst/map",
+    "persistent_red_black_tree": "bbst/map",
+    "persistent_splay_tree": "bbst/map",
+    "red_black_tree": "bbst/map",
+    "splay_tree": "bbst/map",
+    "dynamic_maximum_subarray_sum_sequence": "bbst/sequence",
+    "dynamic_power_moment_sequence": "bbst/sequence",
+    "lazy_reversible_splay_tree": "bbst/sequence",
+    "lazy_weighted_balanced_tree": "bbst/sequence",
+    "persistent_lazy_reversible_splay_tree": "bbst/sequence",
+    "persistent_lazy_weighted_balanced_tree": "bbst/sequence",
+    "persistent_reversible_splay_tree": "bbst/sequence",
+    "reversible_splay_tree": "bbst/sequence",
 }
 
 RECLASSIFIED_DSU_STEMS = frozenset({
@@ -155,6 +172,12 @@ RECLASSIFIED_CONVEX_HULL_TRICK_STEMS = frozenset({
     stem
     for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
     if category.startswith("convex_hull_trick/")
+})
+
+RECLASSIFIED_BBST_STEMS = frozenset({
+    stem
+    for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
+    if category.startswith("bbst/")
 })
 
 RECLASSIFIED_TREE_STEMS = frozenset({
@@ -300,6 +323,10 @@ def check_layout(root: Path) -> list[str]:
                 continue
             legacy_references = [LEGACY_STRUCTURE_REFERENCE]
             legacy_references.extend(
+                f"structure/bbst/{stem}.hpp"
+                for stem in RECLASSIFIED_BBST_STEMS
+            )
+            legacy_references.extend(
                 f"structure/dsu/{stem}.hpp"
                 for stem in RECLASSIFIED_DSU_STEMS
             )
@@ -313,6 +340,10 @@ def check_layout(root: Path) -> list[str]:
             )
             if path.is_relative_to(source_root):
                 legacy_references.append(LEGACY_RELATIVE_STRUCTURE_REFERENCE)
+                legacy_references.extend(
+                    f"../bbst/{stem}.hpp"
+                    for stem in RECLASSIFIED_BBST_STEMS
+                )
                 legacy_references.extend(
                     f"../dsu/{stem}.hpp"
                     for stem in RECLASSIFIED_DSU_STEMS

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/bbst/red_black_tree.hpp"
+#include "../../src/structure/bbst/map/red_black_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

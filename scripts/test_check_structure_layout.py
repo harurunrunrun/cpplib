@@ -45,6 +45,8 @@ class CheckStructureLayoutTest(unittest.TestCase):
             "src/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.hpp"
         )
         self.write("docs/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.md")
+        self.write("src/structure/bbst/map/red_black_tree.hpp")
+        self.write("docs/structure/bbst/map/red_black_tree.md")
         self.assertEqual(self.messages(), [])
 
     def test_legacy_other_header_and_document_are_rejected(self) -> None:
@@ -84,6 +86,29 @@ class CheckStructureLayoutTest(unittest.TestCase):
     def test_dsu_header_in_wrong_subcategory_is_rejected(self) -> None:
         self.write("src/structure/dsu/rollback/dsu.hpp")
         self.assertTrue(any("expected src/structure/dsu/basic" in item for item in self.messages()))
+
+    def test_bbst_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/bbst/red_black_tree.hpp")
+        self.assertTrue(any("bbst subcategory" in item for item in self.messages()))
+
+    def test_unknown_bbst_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/bbst/misc/example.hpp")
+        self.assertTrue(any("unknown bbst subcategory" in item for item in self.messages()))
+
+    def test_bbst_header_in_wrong_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/bbst/sequence/red_black_tree.hpp")
+        self.assertTrue(any(
+            "expected src/structure/bbst/map" in item
+            for item in self.messages()
+        ))
+
+    def test_bbst_subcategory_cannot_be_split_further(self) -> None:
+        self.write("src/structure/bbst/map/internal/example.hpp")
+        self.assertTrue(any(
+            "must not have nested subcategories" in item
+            for item in self.messages()
+        ))
+
     def test_convex_hull_trick_header_must_be_in_a_subcategory(self) -> None:
         self.write("src/structure/convex_hull_trick/dynamic_li_chao_tree.hpp")
         self.assertTrue(any(
@@ -158,6 +183,14 @@ class CheckStructureLayoutTest(unittest.TestCase):
             '#include "../../src/structure/tree/link_cut_tree.hpp"\n',
         )
         self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_legacy_bbst_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/bbst.test.cpp",
+            '#include "../../src/structure/bbst/red_black_tree.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
     def test_legacy_convex_hull_trick_include_is_rejected(self) -> None:
         self.write(
             "test/standalone/cht.test.cpp",

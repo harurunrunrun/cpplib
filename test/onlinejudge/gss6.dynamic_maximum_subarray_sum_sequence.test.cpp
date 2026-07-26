@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/bbst/dynamic_maximum_subarray_sum_sequence.hpp"
+#include "../../src/structure/bbst/sequence/dynamic_maximum_subarray_sum_sequence.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

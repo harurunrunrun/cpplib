@@ -12,7 +12,7 @@
 #include <string>
 #include <utility>
 
-#include "../../src/structure/bbst/aa_tree_map.hpp"
+#include "../../src/structure/bbst/map/aa_tree_map.hpp"
 
 static void verify(
     const AATreeMap<int, long long, 500>& tree,
