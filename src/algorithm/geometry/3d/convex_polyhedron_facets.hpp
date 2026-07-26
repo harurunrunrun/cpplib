@@ -10,6 +10,7 @@
 
 #include "adaptive_orient3d.hpp"
 #include "convex_polyhedron3.hpp"
+#include "is_finite.hpp"
 
 struct ConvexPolyhedronFacet3{
     std::vector<std::size_t> boundary;
@@ -83,12 +84,32 @@ inline bool opposite_directions(const EdgeUse& first, const EdgeUse& second){
     return first.from == second.to && first.to == second.from;
 }
 
+inline bool nondegenerate_triangle(
+    const Point3& first,
+    const Point3& second,
+    const Point3& third
+){
+    // Four affinely independent witnesses cannot all lie on the plane of a
+    // nondegenerate triangle. Testing them avoids a rounded cross product.
+    return adaptive_orient3d(first, second, third, Point3{0, 0, 0}) != 0
+        || adaptive_orient3d(first, second, third, Point3{1, 0, 0}) != 0
+        || adaptive_orient3d(first, second, third, Point3{0, 1, 0}) != 0
+        || adaptive_orient3d(first, second, third, Point3{0, 0, 1}) != 0;
+}
+
 }  // namespace convex_polyhedron_facets_detail
 
 inline std::vector<ConvexPolyhedronFacet3> convex_polyhedron_facets(
     const ConvexPolyhedron3& polyhedron
 ){
     using namespace convex_polyhedron_facets_detail;
+    for(const Point3& point: polyhedron.vertices){
+        if(!geometry3d_is_finite(point))[[unlikely]]{
+            throw std::invalid_argument(
+                "convex polyhedron facets require finite vertices"
+            );
+        }
+    }
     if(polyhedron.affine_dimension < 2 || polyhedron.faces.empty()) return {};
 
     const std::size_t vertex_count = polyhedron.vertices.size();
@@ -107,6 +128,13 @@ inline std::vector<ConvexPolyhedronFacet3> convex_polyhedron_facets(
             }
         }
         if(face[0] == face[1] || face[1] == face[2] || face[2] == face[0]){
+            throw std::domain_error("degenerate convex polyhedron triangle");
+        }
+        if(!nondegenerate_triangle(
+            polyhedron.vertices[face[0]],
+            polyhedron.vertices[face[1]],
+            polyhedron.vertices[face[2]]
+        ))[[unlikely]]{
             throw std::domain_error("degenerate convex polyhedron triangle");
         }
         for(std::size_t index = 0; index < 3; ++index){

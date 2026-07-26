@@ -139,12 +139,12 @@ int main(){
     }
     std::mt19937_64 random(seed);
 
-    const ConvexPolyhedron3 point = convex_hull_3d({{2, -3, 5}});
+    const ConvexPolyhedron3 point_polyhedron = convex_hull_3d({{2, -3, 5}});
     const ConvexPolyhedron3 segment = convex_hull_3d({{-2, 1, 4}, {3, 1, 4}});
     const ConvexPolyhedron3 polygon = convex_hull_3d({
         {-2, -1, 3}, {2, -1, 3}, {2, 1, 3}, {-2, 1, 3}, {0, 0, 3},
     });
-    if(!compare_queries(point, random, 4)
+    if(!compare_queries(point_polyhedron, random, 4)
        || !compare_queries(segment, random, 8)
        || !compare_queries(polygon, random, 12)) return 1;
     {

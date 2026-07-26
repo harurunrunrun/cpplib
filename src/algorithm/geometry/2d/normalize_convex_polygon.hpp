@@ -23,14 +23,14 @@ inline std::vector<Point> normalize_convex_polygon(std::vector<Point> polygon){
     }
     if(vertices.size() <= 1) return vertices;
 
-    const int count = static_cast<int>(vertices.size());
+    const std::size_t count = vertices.size();
     int orientation = 0;
-    for(int index = 0; index < count; ++index){
+    for(std::size_t index = 0; index < count; ++index){
         const int turn = cross_sign(
-            vertices[static_cast<std::size_t>((index + 1) % count)]
-                - vertices[static_cast<std::size_t>(index)],
-            vertices[static_cast<std::size_t>((index + 2) % count)]
-                - vertices[static_cast<std::size_t>((index + 1) % count)]
+            vertices[(index + 1) % count]
+                - vertices[index],
+            vertices[(index + 2) % count]
+                - vertices[(index + 1) % count]
         );
         if(turn == 0) continue;
         if(orientation == 0) orientation = turn;
@@ -46,13 +46,13 @@ inline std::vector<Point> normalize_convex_polygon(std::vector<Point> polygon){
     }
     if(orientation < 0) std::reverse(vertices.begin(), vertices.end());
 
-    int start = 0;
-    for(int index = 0; index < count; ++index){
+    std::size_t start = 0;
+    for(std::size_t index = 0; index < count; ++index){
         if(cross_sign(
-            vertices[static_cast<std::size_t>((index + 1) % count)]
-                - vertices[static_cast<std::size_t>(index)],
-            vertices[static_cast<std::size_t>((index + 2) % count)]
-                - vertices[static_cast<std::size_t>((index + 1) % count)]
+            vertices[(index + 1) % count]
+                - vertices[index],
+            vertices[(index + 2) % count]
+                - vertices[(index + 1) % count]
         ) > 0){
             start = (index + 1) % count;
             break;
@@ -61,8 +61,8 @@ inline std::vector<Point> normalize_convex_polygon(std::vector<Point> polygon){
 
     std::vector<Point> result;
     result.reserve(vertices.size() + 1);
-    for(int offset = 0; offset <= count; ++offset){
-        const Point& point = vertices[static_cast<std::size_t>((start + offset) % count)];
+    for(std::size_t offset = 0; offset <= count; ++offset){
+        const Point& point = vertices[(start + offset) % count];
         if(!result.empty() && point_equal(result.back(), point)) continue;
         while(result.size() >= 2 && cross_sign(
             result.back() - result[result.size() - 2],

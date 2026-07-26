@@ -17,11 +17,14 @@ documentation_of: ../../../../src/algorithm/geometry/3d/convex_polyhedron_facets
 
 ## 注意点
 
+- 全頂点の座標は有限でなければならず、違反時は
+  `std::invalid_argument` を送出する。
 - 面添字は範囲内で、同じ幾何面に属する三角形は一貫した向きに並ぶ
   必要がある。
 - アフィン次元2では外周に一度だけ現れる辺を受理する。アフィン次元3
   以上では全ての辺がちょうど二つの三角形に属する必要がある。
-- 非多様体辺、退化三角形、開いた境界には `std::domain_error`、
+- 異なる添字が同一直線上にある場合を含む退化三角形、非多様体辺、
+  開いた境界には `std::domain_error`、
   範囲外添字には `std::out_of_range` を送出する。
 - 戻り値のfacet順、各 `boundary` の始点、`triangles` の順序は
   API契約に含まれない。
