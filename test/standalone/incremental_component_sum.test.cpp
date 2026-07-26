@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/dsu/incremental_component_sum.hpp"
+#include "../../src/structure/dsu/specialized/incremental_component_sum.hpp"
 
 using ComponentSum = IncrementalComponentSum<long long, 100000>;
 

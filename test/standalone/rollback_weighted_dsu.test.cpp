@@ -5,7 +5,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/dsu/rollback_weighted_dsu.hpp"
+#include "../../src/structure/dsu/rollback/rollback_weighted_dsu.hpp"
 
 struct Naive{
     int groups;

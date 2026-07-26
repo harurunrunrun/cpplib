@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/dsu/offline_tree_edge_deletion_disconnected_pairs.hpp"
+#include "../../src/structure/dsu/specialized/offline_tree_edge_deletion_disconnected_pairs.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

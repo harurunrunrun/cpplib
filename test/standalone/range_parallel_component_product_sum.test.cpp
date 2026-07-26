@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/dsu/range_parallel_component_product_sum.hpp"
+#include "../../src/structure/dsu/range/range_parallel_component_product_sum.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 void self_test(){

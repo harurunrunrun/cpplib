@@ -8,7 +8,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/dsu/edge_count_dsu.hpp"
+#include "../../src/structure/dsu/basic/edge_count_dsu.hpp"
 
 struct NaiveGraph{
     int n;

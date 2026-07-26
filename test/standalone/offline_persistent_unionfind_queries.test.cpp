@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/dsu/offline_persistent_unionfind_queries.hpp"
+#include "../../src/structure/dsu/persistent/offline_persistent_unionfind_queries.hpp"
 
 using LargeOfflinePersistentUnionFindQueries =
     OfflinePersistentUnionFindQueries<200000, 200000, 200000>;

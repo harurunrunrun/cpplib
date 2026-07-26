@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/dsu/range_parallel_unionfind.hpp"
+#include "../../src/structure/dsu/range/range_parallel_unionfind.hpp"
 
 struct NaiveDSU{
     std::vector<int> parent;

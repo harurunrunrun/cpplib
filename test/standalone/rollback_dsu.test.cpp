@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/dsu/rollback_dsu.hpp"
+#include "../../src/structure/dsu/rollback/rollback_dsu.hpp"
 
 struct NaiveDSU{
     int groups;

@@ -1,6 +1,6 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/unionfind_with_potential
 
-#include "../../src/structure/dsu/modular_potential_dsu.hpp"
+#include "../../src/structure/dsu/basic/modular_potential_dsu.hpp"
 #include "../../src/structure/io/fastio.hpp"
 
 int main(){

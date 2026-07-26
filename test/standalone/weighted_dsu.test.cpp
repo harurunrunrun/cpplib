@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/dsu/weighted_dsu.hpp"
+#include "../../src/structure/dsu/basic/weighted_dsu.hpp"
 
 struct NaiveWeighted{
     int groups;

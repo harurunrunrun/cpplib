@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/dsu/weighted_dsu.hpp"
+#include "../../src/structure/dsu/basic/weighted_dsu.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

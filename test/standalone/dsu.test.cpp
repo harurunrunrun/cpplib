@@ -6,9 +6,9 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/dsu/dsu.hpp"
-#include "../../src/structure/dsu/rollback_dsu.hpp"
-#include "../../src/structure/dsu/weighted_dsu.hpp"
+#include "../../src/structure/dsu/basic/dsu.hpp"
+#include "../../src/structure/dsu/rollback/rollback_dsu.hpp"
+#include "../../src/structure/dsu/basic/weighted_dsu.hpp"
 
 struct NaiveDSU{
     std::array<int, 20> parent{};

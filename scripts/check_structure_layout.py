@@ -33,6 +33,7 @@ ALLOWED_STRUCTURE_CATEGORIES = frozenset({
 })
 
 NESTED_STRUCTURE_CATEGORIES = {
+    "dsu": frozenset({"basic", "persistent", "range", "rollback", "specialized"}),
     "tree": frozenset({"centroid", "dynamic_forest", "query", "treap"}),
 }
 
@@ -114,7 +115,31 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "treap": "tree/treap",
     "tree_edge_point_set_path_maximum": "tree/query",
     "tree_path_assign_max_subarray": "tree/query",
+    "commutative_monoid_dsu": "dsu/basic",
+    "dsu": "dsu/basic",
+    "edge_count_dsu": "dsu/basic",
+    "incremental_component_affine": "dsu/specialized",
+    "incremental_component_sum": "dsu/specialized",
+    "modular_potential_dsu": "dsu/basic",
+    "offline_persistent_dsu": "dsu/persistent",
+    "offline_persistent_unionfind_queries": "dsu/persistent",
+    "offline_tree_edge_deletion_disconnected_pairs": "dsu/specialized",
+    "partially_persistent_dsu": "dsu/persistent",
+    "persistent_dsu": "dsu/persistent",
+    "persistent_unionfind_queries": "dsu/persistent",
+    "range_parallel_component_product_sum": "dsu/range",
+    "range_parallel_unionfind": "dsu/range",
+    "rollback_dsu": "dsu/rollback",
+    "rollback_weighted_dsu": "dsu/rollback",
+    "weighted_dsu": "dsu/basic",
+    "weighted_parent_forest_distance": "dsu/specialized",
 }
+
+RECLASSIFIED_DSU_STEMS = frozenset({
+    stem
+    for stem, category in EXPECTED_STRUCTURE_CATEGORY.items()
+    if category.startswith("dsu/")
+})
 
 RECLASSIFIED_TREE_STEMS = frozenset({
     stem
@@ -259,11 +284,19 @@ def check_layout(root: Path) -> list[str]:
                 continue
             legacy_references = [LEGACY_STRUCTURE_REFERENCE]
             legacy_references.extend(
+                f"structure/dsu/{stem}.hpp"
+                for stem in RECLASSIFIED_DSU_STEMS
+            )
+            legacy_references.extend(
                 f"structure/tree/{stem}.hpp"
                 for stem in RECLASSIFIED_TREE_STEMS
             )
             if path.is_relative_to(source_root):
                 legacy_references.append(LEGACY_RELATIVE_STRUCTURE_REFERENCE)
+                legacy_references.extend(
+                    f"../dsu/{stem}.hpp"
+                    for stem in RECLASSIFIED_DSU_STEMS
+                )
                 legacy_references.extend(
                     f"../tree/{stem}.hpp"
                     for stem in RECLASSIFIED_TREE_STEMS

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/dsu/incremental_component_affine.hpp"
+#include "../../src/structure/dsu/specialized/incremental_component_affine.hpp"
 #include "../../src/structure/types/monoid_act_len.hpp"
 
 struct AffineAction{

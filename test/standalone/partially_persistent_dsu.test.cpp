@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/dsu/partially_persistent_dsu.hpp"
+#include "../../src/structure/dsu/persistent/partially_persistent_dsu.hpp"
 
 struct NaiveDSU{
     std::array<int, 30> parent{};

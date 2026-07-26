@@ -7,7 +7,7 @@
 #include "../../src/structure/array/persistent_array.hpp"
 #include "../../src/structure/convex_hull_trick/persistent_convex_hull_trick.hpp"
 #include "../../src/structure/convex_hull_trick/persistent_dynamic_li_chao_tree.hpp"
-#include "../../src/structure/dsu/persistent_dsu.hpp"
+#include "../../src/structure/dsu/persistent/persistent_dsu.hpp"
 #include "../../src/structure/trie/persistent_binary_trie.hpp"
 #include "../../src/structure/trie/persistent_trie.hpp"
 #include "../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_functional_wavelet_matrix.hpp"

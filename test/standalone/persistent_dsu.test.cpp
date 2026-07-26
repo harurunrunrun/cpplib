@@ -9,7 +9,7 @@
 #include <random>
 #include <string>
 #include <vector>
-#include "../../src/structure/dsu/persistent_dsu.hpp"
+#include "../../src/structure/dsu/persistent/persistent_dsu.hpp"
 
 struct NaiveDSU{
     std::vector<int> parent_or_size;

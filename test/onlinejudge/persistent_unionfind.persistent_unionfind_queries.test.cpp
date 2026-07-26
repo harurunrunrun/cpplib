@@ -1,7 +1,7 @@
 // competitive-verifier: PROBLEM https://judge.yosupo.jp/problem/persistent_unionfind
 
 #include <iostream>
-#include "../../src/structure/dsu/persistent_unionfind_queries.hpp"
+#include "../../src/structure/dsu/persistent/persistent_unionfind_queries.hpp"
 
 constexpr int MAX_N = 200000;
 constexpr int MAX_Q = 200000;

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/dsu/weighted_parent_forest_distance.hpp"
+#include "../../src/structure/dsu/specialized/weighted_parent_forest_distance.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

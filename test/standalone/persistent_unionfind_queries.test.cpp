@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/structure/dsu/persistent_unionfind_queries.hpp"
+#include "../../src/structure/dsu/persistent/persistent_unionfind_queries.hpp"
 static_assert(
     sizeof(PersistentUnionFindQueries<200000, 200000>) <=
     4 * sizeof(void*)

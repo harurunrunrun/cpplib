@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
-#include "../dsu/rollback_dsu.hpp"
+#include "../dsu/rollback/rollback_dsu.hpp"
 
 template<int MAX_SIZE, int MAX_TIME, int MAX_HISTORY>
 struct OfflineDynamicConnectivity{

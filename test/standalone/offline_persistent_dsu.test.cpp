@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/structure/dsu/offline_persistent_dsu.hpp"
+#include "../../src/structure/dsu/persistent/offline_persistent_dsu.hpp"
 
 void self_test(){
     OfflinePersistentDSU<8, 8, 8> dsu(5);

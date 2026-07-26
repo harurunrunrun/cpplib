@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/structure/dsu/modular_potential_dsu.hpp"
+#include "../../src/structure/dsu/basic/modular_potential_dsu.hpp"
 
 void self_test(){
     constexpr int large_mod = 2147483647;

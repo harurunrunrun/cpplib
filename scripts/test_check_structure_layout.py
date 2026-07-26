@@ -35,6 +35,8 @@ class CheckStructureLayoutTest(unittest.TestCase):
             "docs/algorithm/other/scheduling/incremental_interval_scheduling.md"
         )
         self.write("src/structure/segtree/basic/lazysegtree.hpp")
+        self.write("src/structure/dsu/basic/dsu.hpp")
+        self.write("docs/structure/dsu/basic/dsu.md")
         self.write("src/structure/tree/dynamic_forest/link_cut_tree.hpp")
         self.write("docs/structure/tree/dynamic_forest/link_cut_tree.md")
         self.write("src/structure/ordered_set/integer_set.hpp")
@@ -63,6 +65,22 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("src/structure/heap/sparse_table.hpp")
         self.assertTrue(any("expected src/structure/range_query" in item for item in self.messages()))
 
+    def test_dsu_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/dsu/dsu.hpp")
+        self.assertTrue(any("dsu subcategory" in item for item in self.messages()))
+
+    def test_unknown_dsu_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/dsu/misc/example.hpp")
+        self.assertTrue(any("unknown dsu subcategory" in item for item in self.messages()))
+
+    def test_dsu_subcategory_cannot_be_split_further(self) -> None:
+        self.write("src/structure/dsu/basic/internal/example.hpp")
+        self.assertTrue(any("must not have nested subcategories" in item for item in self.messages()))
+
+    def test_dsu_header_in_wrong_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/dsu/rollback/dsu.hpp")
+        self.assertTrue(any("expected src/structure/dsu/basic" in item for item in self.messages()))
+
     def test_tree_header_must_be_in_a_subcategory(self) -> None:
         self.write("src/structure/tree/link_cut_tree.hpp")
         self.assertTrue(any("tree subcategory" in item for item in self.messages()))
@@ -87,6 +105,20 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write(
             "test/standalone/example.test.cpp",
             '#include "../../src/structure/other/sparse_table.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_legacy_dsu_include_is_rejected(self) -> None:
+        self.write(
+            "test/standalone/dsu.test.cpp",
+            '#include "../../src/structure/dsu/dsu.hpp"\n',
+        )
+        self.assertTrue(any("legacy reference" in item for item in self.messages()))
+
+    def test_relative_legacy_dsu_include_is_rejected(self) -> None:
+        self.write(
+            "src/structure/graph/example.hpp",
+            '#include "../dsu/rollback_dsu.hpp"\n',
         )
         self.assertTrue(any("legacy reference" in item for item in self.messages()))
 

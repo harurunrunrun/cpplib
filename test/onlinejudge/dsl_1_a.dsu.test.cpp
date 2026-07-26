@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/dsu/dsu.hpp"
+#include "../../src/structure/dsu/basic/dsu.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
