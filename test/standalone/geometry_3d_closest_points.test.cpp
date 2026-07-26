@@ -3,6 +3,8 @@
 #include <limits>
 
 #include "../../src/algorithm/geometry/3d/closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/line_line_closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/segment_segment_closest_points.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_test_common.hpp"
 

@@ -1,31 +1,7 @@
 #ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINTS_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINTS_HPP_INCLUDED
 
-#include <utility>
-
-#include "geometry_primitives.hpp"
-#include "projection.hpp"
-
-inline std::pair<Point3, Point3> closest_points(
-    const Line3& first,
-    const Line3& second
-){
-    using namespace geometry3d_linear_closest_detail;
-    return query(
-        {first.a, first.b, Kind::line},
-        {second.a, second.b, Kind::line}
-    );
-}
-
-inline std::pair<Point3, Point3> closest_points(
-    const Segment3& first,
-    const Segment3& second
-){
-    using namespace geometry3d_linear_closest_detail;
-    return query(
-        {first.a, first.b, Kind::segment},
-        {second.a, second.b, Kind::segment}
-    );
-}
+#include "line_line_closest_points.hpp"
+#include "segment_segment_closest_points.hpp"
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINTS_HPP_INCLUDED
