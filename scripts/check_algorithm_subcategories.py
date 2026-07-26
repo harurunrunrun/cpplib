@@ -6,15 +6,13 @@ import sys
 from pathlib import Path
 
 
+FLAT_LAYOUTS: frozenset[Path] = frozenset({
+    Path("src/algorithm/geometry/2d"),
+    Path("src/algorithm/geometry/3d"),
+})
+
+
 EXPECTED_LAYOUT: dict[Path, frozenset[str]] = {
-    Path("src/algorithm/geometry/2d"): frozenset({
-        "core", "detail", "point", "point_collection", "predicate",
-        "query", "scalar", "shape",
-    }),
-    Path("src/algorithm/geometry/3d"): frozenset({
-        "core", "detail", "point", "point_collection", "predicate",
-        "query", "scalar", "shape",
-    }),
     Path("src/algorithm/string"): frozenset({
         "automata", "palindrome", "sequence", "suffix",
     }),
@@ -44,8 +42,27 @@ EXPECTED_LAYOUT: dict[Path, frozenset[str]] = {
 def layout_violations(
     repository_root: Path,
     expected_layout: dict[Path, frozenset[str]] = EXPECTED_LAYOUT,
+    flat_layouts: frozenset[Path] | None = None,
 ) -> list[str]:
+    if flat_layouts is None:
+        flat_layouts = (
+            FLAT_LAYOUTS if expected_layout is EXPECTED_LAYOUT else frozenset()
+        )
     errors: list[str] = []
+    for relative_root in flat_layouts:
+        root = repository_root / relative_root
+        if not root.is_dir():
+            errors.append(f"{relative_root}: flat directory is missing")
+            continue
+        headers = sorted(path for path in root.rglob("*.hpp") if path.is_file())
+        if not headers:
+            errors.append(f"{relative_root}: flat directory has no header")
+        for header in headers:
+            if len(header.relative_to(root).parts) != 1:
+                errors.append(
+                    f"{header.relative_to(repository_root)}: header must be "
+                    "placed directly in the dimension directory"
+                )
     for relative_root, expected_categories in expected_layout.items():
         root = repository_root / relative_root
         if not root.is_dir():
@@ -86,17 +103,17 @@ def run(repository_root: Path) -> int:
         for error in errors:
             print(error, file=sys.stderr)
         print(
-            f"algorithm subcategory check failed: {len(errors)} violation(s)",
+            f"algorithm layout check failed: {len(errors)} violation(s)",
             file=sys.stderr,
         )
         return 1
     header_count = sum(
         1
-        for relative_root in EXPECTED_LAYOUT
+        for relative_root in (*FLAT_LAYOUTS, *EXPECTED_LAYOUT)
         for path in (repository_root / relative_root).rglob("*.hpp")
         if path.is_file()
     )
-    print(f"algorithm subcategory check passed: {header_count} header(s)")
+    print(f"algorithm layout check passed: {header_count} header(s)")
     return 0
 
 

@@ -48,6 +48,29 @@ def main() -> None:
         errors = check_algorithm_subcategories.layout_violations(root, layout)
         assert any("category has no header" in error for error in errors)
 
+        flat_layouts = frozenset({
+            Path("src/algorithm/geometry/2d"),
+            Path("src/algorithm/geometry/3d"),
+        })
+        for relative, name in zip(flat_layouts, ("two.hpp", "three.hpp")):
+            header = root / relative / name
+            header.parent.mkdir(parents=True)
+            header.write_text("#ifndef FLAT\n#define FLAT\n#endif\n")
+        assert check_algorithm_subcategories.layout_violations(
+            root, {}, flat_layouts
+        ) == []
+        nested_geometry = (
+            root / "src/algorithm/geometry/2d/predicate/nested.hpp"
+        )
+        nested_geometry.parent.mkdir()
+        nested_geometry.write_text(
+            "#ifndef NESTED_GEOMETRY\n#define NESTED_GEOMETRY\n#endif\n"
+        )
+        errors = check_algorithm_subcategories.layout_violations(
+            root, {}, flat_layouts
+        )
+        assert any("dimension directory" in error for error in errors)
+
         missing_layout = {
             Path("src/algorithm/missing"): frozenset({"category"}),
         }

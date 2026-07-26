@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/scalar/distance.hpp"
+#include "../../src/algorithm/geometry/2d/distance.hpp"
 
 int main(){
     int query_count;

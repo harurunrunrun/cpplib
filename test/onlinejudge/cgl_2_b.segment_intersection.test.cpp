@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/predicate/intersect.hpp"
+#include "../../src/algorithm/geometry/2d/intersect.hpp"
 
 int main(){
     int query_count;
