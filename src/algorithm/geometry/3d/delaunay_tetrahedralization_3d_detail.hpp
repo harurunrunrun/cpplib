@@ -589,7 +589,10 @@ build_randomized(
     const std::vector<Point3> normalized = normalized_points(vertices);
     long double super_extent = 16.0L;
     for(int attempt = 0; attempt < 12; ++attempt){
-        auto tetrahedra = bowyer_watson(normalized, super_extent, seed + attempt);
+        auto tetrahedra = bowyer_watson(
+            normalized, super_extent,
+            seed + static_cast<std::uint64_t>(attempt)
+        );
         if(is_complete_tetrahedralization(tetrahedra, normalized)){
             return {3, std::move(vertices), std::move(tetrahedra)};
         }
