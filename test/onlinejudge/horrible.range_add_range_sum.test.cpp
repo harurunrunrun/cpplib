@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/segtree/range_add_range_sum.hpp"
+#include "../../src/structure/segtree/specialized/range_add_range_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

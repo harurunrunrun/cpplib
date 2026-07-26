@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
-#include "../../src/structure/segtree/rollback_dynamic_segtree.hpp"
+#include "../../src/structure/segtree/rollback/rollback_dynamic_segtree.hpp"
 
 constexpr long long rollback_sum_op(long long a, long long b){ return a + b; }
 constexpr long long rollback_sum_e(){ return 0; }

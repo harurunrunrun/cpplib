@@ -5,15 +5,15 @@
 #include <vector>
 
 #define Bit01WST BitAssignRangeSumTree
-#include "../../src/structure/segtree/bitassign_rangesum.hpp"
+#include "../../src/structure/segtree/specialized/bitassign_rangesum.hpp"
 #undef Bit01WST
 #define Bit01WST BitAssignFlipRangeSumTree
-#include "../../src/structure/segtree/bitassign_rangesum_rangeflip.hpp"
+#include "../../src/structure/segtree/specialized/bitassign_rangesum_rangeflip.hpp"
 #undef Bit01WST
-#include "../../src/structure/segtree/bitoverwrite_rangesum.hpp"
-#include "../../src/structure/segtree/dynamic_bitassign_rangesum.hpp"
-#include "../../src/structure/segtree/dynamic_bitassign_rangesum_rangeflip.hpp"
-#include "../../src/structure/segtree/dynamic_bitoverwrite_rangesum.hpp"
+#include "../../src/structure/segtree/specialized/bitoverwrite_rangesum.hpp"
+#include "../../src/structure/segtree/dynamic/dynamic_bitassign_rangesum.hpp"
+#include "../../src/structure/segtree/dynamic/dynamic_bitassign_rangesum_rangeflip.hpp"
+#include "../../src/structure/segtree/dynamic/dynamic_bitoverwrite_rangesum.hpp"
 
 int main(){
     std::string mode;

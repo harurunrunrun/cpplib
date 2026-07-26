@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/segtree/dynamic_prime_count_range_assign.hpp"
+#include "../../src/structure/segtree/specialized/dynamic_prime_count_range_assign.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

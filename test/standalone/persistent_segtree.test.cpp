@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/structure/segtree/persistent_segtree.hpp"
+#include "../../src/structure/segtree/persistent/persistent_segtree.hpp"
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -13,8 +13,8 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "../../src/structure/segtree/partially_persistent_segtree.hpp"
-#include "../../src/structure/segtree/rollback_segtree.hpp"
+#include "../../src/structure/segtree/partially_persistent/partially_persistent_segtree.hpp"
+#include "../../src/structure/segtree/rollback/rollback_segtree.hpp"
 
 using ll = long long;
 

@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../src/structure/segtree/lazysegtree.hpp"
+#include "../../src/structure/segtree/basic/lazysegtree.hpp"
 #include "../../src/structure/types/residue_count_monoid.hpp"
 
 template<class Count, int MOD>

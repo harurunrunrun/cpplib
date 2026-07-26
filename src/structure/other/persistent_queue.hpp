@@ -9,7 +9,7 @@
 #include <utility>
 
 #include "../array/persistent_array.hpp"
-#include "../segtree/persistent_segtree.hpp"
+#include "../segtree/persistent/persistent_segtree.hpp"
 
 template<class PersistentStorage, int MAX_VERSION>
 struct PersistentQueue{

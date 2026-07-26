@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/segtree/range_assign_add_sum_squares.hpp"
+#include "../../src/structure/segtree/specialized/range_assign_add_sum_squares.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-#include "../../src/structure/segtree/residue_count_range_tree.hpp"
+#include "../../src/structure/segtree/specialized/residue_count_range_tree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

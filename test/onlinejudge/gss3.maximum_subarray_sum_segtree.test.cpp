@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/segtree/maximum_subarray_sum_segtree.hpp"
+#include "../../src/structure/segtree/specialized/maximum_subarray_sum_segtree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

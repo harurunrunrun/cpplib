@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "../../src/structure/modint/modint.hpp"
-#include "../../src/structure/segtree/range_affine_range_sum_large_array.hpp"
+#include "../../src/structure/segtree/specialized/range_affine_range_sum_large_array.hpp"
 
 
 using namespace std;

@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../src/structure/segtree/two_maximum_segtree.hpp"
+#include "../../src/structure/segtree/specialized/two_maximum_segtree.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

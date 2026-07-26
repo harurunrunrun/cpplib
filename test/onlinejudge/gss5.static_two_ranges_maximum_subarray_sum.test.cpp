@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/segtree/static_two_ranges_maximum_subarray_sum.hpp"
+#include "../../src/structure/segtree/specialized/static_two_ranges_maximum_subarray_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

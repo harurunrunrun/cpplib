@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "../../src/structure/modint/modint.hpp"
-#include "../../src/structure/segtree/point_set_range_composite_large_array.hpp"
+#include "../../src/structure/segtree/specialized/point_set_range_composite_large_array.hpp"
 
 using mint = Modint998244353;
 

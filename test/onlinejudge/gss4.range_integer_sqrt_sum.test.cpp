@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/structure/segtree/range_integer_sqrt_sum.hpp"
+#include "../../src/structure/segtree/specialized/range_integer_sqrt_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/segtree/persistent_segtree_2d.hpp"
+#include "../../src/structure/segtree/persistent/persistent_segtree_2d.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr AddMonoid<long long> persistent_sum_2d{};

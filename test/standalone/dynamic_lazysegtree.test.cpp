@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/structure/segtree/dynamic_lazysegtree.hpp"
+#include "../../src/structure/segtree/dynamic/dynamic_lazysegtree.hpp"
 
 using Sum = long long;
 using Add = long long;

@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../src/structure/segtree/segtree_beats.hpp"
+#include "../../src/structure/segtree/basic/segtree_beats.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

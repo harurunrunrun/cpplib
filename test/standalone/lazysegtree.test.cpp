@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/segtree/lazysegtree.hpp"
+#include "../../src/structure/segtree/basic/lazysegtree.hpp"
 #include "../../src/structure/types/monoid_act.hpp"
 
 struct SumSize{

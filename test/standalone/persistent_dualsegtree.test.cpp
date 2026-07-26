@@ -9,8 +9,8 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/segtree/partially_persistent_dualsegtree.hpp"
-#include "../../src/structure/segtree/persistent_dualsegtree.hpp"
+#include "../../src/structure/segtree/partially_persistent/partially_persistent_dualsegtree.hpp"
+#include "../../src/structure/segtree/persistent/persistent_dualsegtree.hpp"
 
 constexpr std::int64_t mod = 998244353;
 

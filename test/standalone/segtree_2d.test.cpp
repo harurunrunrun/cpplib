@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/segtree/segtree_2d.hpp"
+#include "../../src/structure/segtree/basic/segtree_2d.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr AddMonoid<long long> add_monoid_2d{};

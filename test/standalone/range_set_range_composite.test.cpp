@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "../../src/structure/modint/modint.hpp"
-#include "../../src/structure/segtree/range_set_range_composite.hpp"
+#include "../../src/structure/segtree/specialized/range_set_range_composite.hpp"
 
 using mint = Modint998244353;
 

@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "../../algorithm/tree/decomposition/euler_tour.hpp"
-#include "../segtree/lazysegtree.hpp"
+#include "../segtree/basic/lazysegtree.hpp"
 #include "../types/monoid_act.hpp"
 
 namespace subtree_add_sum_minimum_tree_internal{

@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 #include <cassert>
 #include <iostream>
-#include "../../src/structure/segtree/rollback_widesegtree.hpp"
+#include "../../src/structure/segtree/rollback/rollback_widesegtree.hpp"
 
 using Tree = RollbackWideSegtree<1000000000039LL, 10000, 12000>;
 int main(){

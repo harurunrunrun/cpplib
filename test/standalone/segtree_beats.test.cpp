@@ -11,7 +11,7 @@
 #include <string>
 #include <type_traits>
 #include <vector>
-#include "../../src/structure/segtree/segtree_beats.hpp"
+#include "../../src/structure/segtree/basic/segtree_beats.hpp"
 
 using ll = long long;
 using Beats = SegmentTreeBeats<ll, 64>;

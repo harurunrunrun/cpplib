@@ -65,7 +65,7 @@ class DocsProblemTagsPrimarySourcesTest(unittest.TestCase):
             wrapper.parent.mkdir(parents=True)
             source = (
                 '#include "../../src/structure/modint/modint.hpp"\n'
-                '#include "../../src/structure/segtree/lazysegtree.hpp"\n'
+                '#include "../../src/structure/segtree/basic/lazysegtree.hpp"\n'
             )
             self.assertEqual(
                 [path.stem for path in primary_sources(wrapper, source)],
@@ -96,7 +96,7 @@ class DocsProblemTagsPrimarySourcesTest(unittest.TestCase):
             )
             monoid.write_text("#pragma once\n", encoding="utf-8")
             source = (
-                '#include "../../src/structure/segtree/segtree.hpp"\n'
+                '#include "../../src/structure/segtree/basic/segtree.hpp"\n'
                 '#include "../../src/structure/types/common_monoids.hpp"\n'
             )
 

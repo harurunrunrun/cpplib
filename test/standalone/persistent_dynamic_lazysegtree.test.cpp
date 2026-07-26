@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
-#include "../../src/structure/segtree/persistent_dynamic_lazysegtree.hpp"
+#include "../../src/structure/segtree/persistent/persistent_dynamic_lazysegtree.hpp"
 
 constexpr long long lazy_op(long long a, long long, long long b, long long){ return a + b; }
 constexpr long long lazy_e(){ return 0; }

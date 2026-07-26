@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../src/structure/segtree/persistent_point_add_range_sum.hpp"
+#include "../../src/structure/segtree/persistent/persistent_point_add_range_sum.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

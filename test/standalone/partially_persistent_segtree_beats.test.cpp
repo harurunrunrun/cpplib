@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/segtree/partially_persistent_segtree_beats.hpp"
+#include "../../src/structure/segtree/partially_persistent/partially_persistent_segtree_beats.hpp"
 
 using Beats = PartiallyPersistentSegmentTreeBeats<long long, 64, 2000, 200000>;
 

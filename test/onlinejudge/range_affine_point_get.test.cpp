@@ -7,7 +7,7 @@
 
 
 #include "../../src/structure/modint/modint.hpp"
-#include "../../src/structure/segtree/range_affine_point_get.hpp"
+#include "../../src/structure/segtree/specialized/range_affine_point_get.hpp"
 
 
 using namespace std;

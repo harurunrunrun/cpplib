@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../structure/segtree/dualsegtree.hpp"
+#include "../../structure/segtree/basic/dualsegtree.hpp"
 #include "../../structure/types/common_monoids.hpp"
 
 template<class Coordinate, int MAX_ATOMS>

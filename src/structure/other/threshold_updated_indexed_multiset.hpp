@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../segtree/lazysegtree.hpp"
+#include "../segtree/basic/lazysegtree.hpp"
 #include "../types/common_monoids.hpp"
 
 template<int MAX_SIZE = 100000>

@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../../src/structure/segtree/lazysegtree.hpp"
+#include "../../src/structure/segtree/basic/lazysegtree.hpp"
 #include "../../src/structure/types/sum_squares_monoid.hpp"
 
 template<class T>

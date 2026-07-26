@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include "../../src/structure/segtree/persistent_dynamic_segtree.hpp"
+#include "../../src/structure/segtree/persistent/persistent_dynamic_segtree.hpp"
 
 constexpr long long sum_op(long long a, long long b){ return a + b; }
 constexpr long long sum_e(){ return 0; }

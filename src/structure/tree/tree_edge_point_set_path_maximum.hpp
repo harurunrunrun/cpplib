@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "../../algorithm/tree/decomposition/heavy_light_decomposition.hpp"
-#include "../segtree/segtree.hpp"
+#include "../segtree/basic/segtree.hpp"
 #include "../types/common_monoids.hpp"
 
 template<class Weight, int MAX_SIZE>

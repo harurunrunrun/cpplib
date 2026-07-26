@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 #include <cassert>
 #include <iostream>
-#include "../../src/structure/segtree/partially_persistent_widesegtree.hpp"
+#include "../../src/structure/segtree/partially_persistent/partially_persistent_widesegtree.hpp"
 
 using Tree = PartiallyPersistentWideSegtree<1000000000039LL, 10000, 256, 12000>;
 int main(){

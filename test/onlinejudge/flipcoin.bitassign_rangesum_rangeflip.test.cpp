@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <iostream>
 
-#include "../../src/structure/segtree/bitassign_rangesum_rangeflip.hpp"
+#include "../../src/structure/segtree/specialized/bitassign_rangesum_rangeflip.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/segtree/dualsegtree.hpp"
+#include "../../src/structure/segtree/basic/dualsegtree.hpp"
 #include "../../src/structure/types/monoid_act.hpp"
 
 long long op_dummy(long long, long long){ return 0; }

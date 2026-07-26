@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../../src/structure/segtree/dynamic_parentheses_sequence.hpp"
+#include "../../src/structure/segtree/specialized/dynamic_parentheses_sequence.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

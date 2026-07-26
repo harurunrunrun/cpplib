@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/segtree/rollback_segtree_beats.hpp"
+#include "../../src/structure/segtree/rollback/rollback_segtree_beats.hpp"
 
 using Beats = RollbackSegmentTreeBeats<long long, 64, 200000, 2000>;
 

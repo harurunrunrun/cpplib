@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/segtree/detail/segtree_beats_node.hpp"
-#include "../../src/structure/segtree/persistent_segtree_beats.hpp"
+#include "../../src/structure/segtree/persistent/persistent_segtree_beats.hpp"
 
 using Beats = PersistentSegmentTreeBeats<long long, 64, 200000, 2000>;
 

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/segtree/segtree.hpp"
+#include "../../src/structure/segtree/basic/segtree.hpp"
 #include "../../src/structure/types/monoid.hpp"
 
 long long op_sum(long long a, long long b){ return a + b; }

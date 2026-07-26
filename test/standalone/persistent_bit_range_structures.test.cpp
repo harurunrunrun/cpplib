@@ -5,12 +5,12 @@
 #include <string>
 
 #include "../../src/structure/segtree/detail/persistent_bit_range_tree.hpp"
-#include "../../src/structure/segtree/persistent_bitassign_rangesum.hpp"
-#include "../../src/structure/segtree/persistent_bitassign_rangesum_rangeflip.hpp"
-#include "../../src/structure/segtree/persistent_bitoverwrite_rangesum.hpp"
-#include "../../src/structure/segtree/persistent_dynamic_bitassign_rangesum.hpp"
-#include "../../src/structure/segtree/persistent_dynamic_bitassign_rangesum_rangeflip.hpp"
-#include "../../src/structure/segtree/persistent_dynamic_bitoverwrite_rangesum.hpp"
+#include "../../src/structure/segtree/persistent/persistent_bitassign_rangesum.hpp"
+#include "../../src/structure/segtree/persistent/persistent_bitassign_rangesum_rangeflip.hpp"
+#include "../../src/structure/segtree/persistent/persistent_bitoverwrite_rangesum.hpp"
+#include "../../src/structure/segtree/persistent/persistent_dynamic_bitassign_rangesum.hpp"
+#include "../../src/structure/segtree/persistent/persistent_dynamic_bitassign_rangesum_rangeflip.hpp"
+#include "../../src/structure/segtree/persistent/persistent_dynamic_bitoverwrite_rangesum.hpp"
 
 template<class Tree>
 void check_persistent_state_api(){

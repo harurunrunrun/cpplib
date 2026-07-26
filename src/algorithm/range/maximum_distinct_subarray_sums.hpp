@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../structure/segtree/lazysegtree.hpp"
+#include "../../structure/segtree/basic/lazysegtree.hpp"
 #include "../../structure/types/common_monoids.hpp"
 
 template<class T, int MAX_SIZE>

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../../structure/segtree/segtree.hpp"
+#include "../../../structure/segtree/basic/segtree.hpp"
 #include "../../../structure/types/common_monoids.hpp"
 
 template<int MAX_SIZE = 100000>

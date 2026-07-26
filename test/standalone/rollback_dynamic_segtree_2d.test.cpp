@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/segtree/rollback_dynamic_segtree_2d.hpp"
+#include "../../src/structure/segtree/rollback/rollback_dynamic_segtree_2d.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr AddMonoid<long long> rollback_dynamic_2d_sum{};

@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "../../src/structure/segtree/widesegtree.hpp"
+#include "../../src/structure/segtree/basic/widesegtree.hpp"
 
 long long naive_prod(const std::vector<long long>& a, int l, int r){
     return std::accumulate(a.begin() + l, a.begin() + r, 0LL);

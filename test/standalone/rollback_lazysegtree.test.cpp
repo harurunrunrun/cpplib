@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/segtree/rollback_lazysegtree.hpp"
+#include "../../src/structure/segtree/rollback/rollback_lazysegtree.hpp"
 
 struct SumLen{
     std::int64_t sum;

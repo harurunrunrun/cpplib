@@ -5,7 +5,7 @@
 #include <vector>
 #include "../../src/structure/modint/modint.hpp"
 
-#include "../../src/structure/segtree/point_set_range_composite.hpp"
+#include "../../src/structure/segtree/specialized/point_set_range_composite.hpp"
 
 
 using namespace std;

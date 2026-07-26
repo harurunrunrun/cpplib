@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/segtree/persistent_dynamic_segtree_2d.hpp"
+#include "../../src/structure/segtree/persistent/persistent_dynamic_segtree_2d.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr AddMonoid<long long> persistent_dynamic_2d_sum{};

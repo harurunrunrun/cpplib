@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../../src/structure/segtree/residue_count_range_tree.hpp"
+#include "../../src/structure/segtree/specialized/residue_count_range_tree.hpp"
 
 template<int MOD>
 void run_case(int size, int operation_count){

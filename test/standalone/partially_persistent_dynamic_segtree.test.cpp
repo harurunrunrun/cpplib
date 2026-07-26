@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
-#include "../../src/structure/segtree/partially_persistent_dynamic_segtree.hpp"
+#include "../../src/structure/segtree/partially_persistent/partially_persistent_dynamic_segtree.hpp"
 
 constexpr long long partial_sum_op(long long a, long long b){ return a + b; }
 constexpr long long partial_sum_e(){ return 0; }

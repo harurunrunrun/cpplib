@@ -8,9 +8,9 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/structure/segtree/dynamic_lazysegtree.hpp"
-#include "../../src/structure/segtree/lazysegtree.hpp"
-#include "../../src/structure/segtree/segtree.hpp"
+#include "../../src/structure/segtree/dynamic/dynamic_lazysegtree.hpp"
+#include "../../src/structure/segtree/basic/lazysegtree.hpp"
+#include "../../src/structure/segtree/basic/segtree.hpp"
 #include "../../src/structure/types/common_monoids.hpp"
 
 constexpr AddMonoid<long long> add_monoid{};

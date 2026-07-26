@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/structure/segtree/rollback_dualsegtree.hpp"
+#include "../../src/structure/segtree/rollback/rollback_dualsegtree.hpp"
 
 struct Affine{
     std::int64_t a;

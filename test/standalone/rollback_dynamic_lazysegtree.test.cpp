@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
-#include "../../src/structure/segtree/rollback_dynamic_lazysegtree.hpp"
+#include "../../src/structure/segtree/rollback/rollback_dynamic_lazysegtree.hpp"
 
 constexpr long long rollback_lazy_op(long long a, long long, long long b, long long){ return a + b; }
 constexpr long long rollback_lazy_e(){ return 0; }
