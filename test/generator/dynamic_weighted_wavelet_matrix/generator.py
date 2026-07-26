@@ -1,3 +1,5 @@
+
+
 #!/usr/bin/env python3
 # competitive-verifier: DISPLAY hidden
 
@@ -10,6 +12,11 @@ from pathlib import Path
 
 def optional(value: int | None) -> str:
     return "NONE" if value is None else str(value)
+
+
+def select(values: list[int], value: int, occurrence: int) -> int:
+    positions = [index for index, item in enumerate(values) if item == value]
+    return positions[occurrence] if occurrence < len(positions) else len(values)
 
 
 def main() -> None:
@@ -29,7 +36,8 @@ def main() -> None:
     kinds = [
         "SET", "SETV", "SETW", "INSERT", "ERASE", "PUSH", "POP",
         "GET", "SUM", "FREQ", "RSUM", "KTH", "KLARG", "KSMALL",
-        "KLARGE", "PREV", "NEXT",
+        "KLARGE", "PREV", "NEXT", "RANK", "RANKP", "SELECT", "ACCESS",
+        "FREQP", "RSUMP", "SIZE", "COPY", "MOVE", "SPECIAL",
     ]
 
     for _ in range(1500):
@@ -77,6 +85,49 @@ def main() -> None:
             k = rng.randrange(current_n)
             commands.append(f"GET {k}")
             outputs.append(f"{values[k]} {weights[k]}")
+        elif kind == "RANK":
+            value = rng.randrange(-400, 401)
+            l, r = sorted((rng.randrange(current_n + 1), rng.randrange(current_n + 1)))
+            commands.append(f"RANK {value} {l} {r}")
+            outputs.append(str(values[l:r].count(value)))
+        elif kind == "SELECT":
+            value = rng.randrange(-400, 401)
+            occurrence = rng.randrange(current_n + 20)
+            commands.append(f"SELECT {value} {occurrence}")
+            outputs.append(str(select(values, value, occurrence)))
+        elif kind == "SIZE":
+            commands.append("SIZE")
+            outputs.append(str(current_n))
+        elif kind == "COPY":
+            commands.append("COPY")
+            outputs.append(
+                f"{current_n} {sum(weights)} {weights[0]} "
+                f"{weights[0] + 1} {weights[0] - 1}"
+            )
+        elif kind == "MOVE":
+            commands.append("MOVE")
+            outputs.append(
+                f"{current_n} {sum(weights)} {values[0]} {weights[0]} "
+                f"{values[-1]} {weights[-1]}"
+            )
+        elif kind == "ACCESS":
+            k = rng.randrange(current_n)
+            commands.append(f"ACCESS {k}")
+            outputs.append(str(values[k]))
+        elif kind == "RANKP":
+            value = rng.randrange(-400, 401)
+            r = rng.randrange(current_n + 1)
+            commands.append(f"RANKP {value} {r}")
+            outputs.append(str(values[:r].count(value)))
+        elif kind in {"FREQP", "RSUMP"}:
+            l, r = sorted((rng.randrange(current_n + 1), rng.randrange(current_n + 1)))
+            upper = rng.randrange(-400, 401)
+            commands.append(f"{kind} {l} {r} {upper}")
+            indices = [i for i in range(l, r) if values[i] < upper]
+            outputs.append(str(len(indices) if kind == "FREQP" else sum(weights[i] for i in indices)))
+        elif kind == "SPECIAL":
+            commands.append("SPECIAL")
+            outputs.append("3 15 -2 3 1 7")
         elif kind == "SUM":
             l, r = sorted((rng.randrange(current_n + 1), rng.randrange(current_n + 1)))
             commands.append(f"SUM {l} {r}")
@@ -111,6 +162,59 @@ def main() -> None:
     input_text = f"{n} {len(commands)}\n" + " ".join(map(str, initial_values)) + "\n" + " ".join(map(str, initial_weights)) + "\n" + "\n".join(commands) + "\n"
     (out_dir / "case_00.in").write_text(input_text, encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
+
+    boundary_values = [index % 17 - 8 for index in range(510)]
+    boundary_weights = [index - 255 for index in range(510)]
+    boundary_negative_sum = -1000 + sum(
+        weight
+        for value, weight in zip(boundary_values, boundary_weights)
+        if value < 0
+    )
+    boundary_commands = [
+        "PUSH 9 1000",
+        "INSERT 0 -9 -1000",
+        "SIZE",
+        "ACCESS 0",
+        "RANKP -9 512",
+        "FREQP 0 512 0",
+        "RSUMP 0 512 0",
+        "SPECIAL",
+        "RANK -9 0 512",
+        "SELECT -9 0",
+        "COPY",
+        "MOVE",
+        "ERASE 0",
+        "POP",
+        "SIZE",
+    ]
+    boundary_outputs = [
+        "512",
+        "-9",
+        "1",
+        "241",
+        str(boundary_negative_sum),
+        "3 15 -2 3 1 7",
+        "1",
+        "0",
+        "512 -255 -1000 -999 -1001",
+        "512 -255 -9 -1000 9 1000",
+        "-9 -1000",
+        "9 1000",
+        "510",
+    ]
+    boundary_input = (
+        f"510 {len(boundary_commands)}\n"
+        + " ".join(map(str, boundary_values))
+        + "\n"
+        + " ".join(map(str, boundary_weights))
+        + "\n"
+        + "\n".join(boundary_commands)
+        + "\n"
+    )
+    (out_dir / "case_01.in").write_text(boundary_input, encoding="utf-8")
+    (out_dir / "case_01.out").write_text(
+        "\n".join(boundary_outputs) + "\n", encoding="utf-8"
+    )
 
 
 if __name__ == "__main__":

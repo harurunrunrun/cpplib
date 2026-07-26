@@ -4,7 +4,8 @@ documentation_of: ../../../../src/structure/wavelet_matrix/dynamic/dynamic_weigh
 ---
 
 整数列への挿入・削除・置換と、各要素に付随する重みの更新を扱う。
-動的 bitvector の平衡木を各 bit level に持つため、列全体の再構築や平方分割を行わない。
+固定容量の葉を持つ決定的な平衡 B+ 木を各 bit level に持つため、
+列全体の再構築や平方分割を行わない。
 
 ## テンプレート引数
 
@@ -20,6 +21,10 @@ DynamicWeightedWaveletMatrix<T, W, MAX_SIZE, BIT_WIDTH>
 DynamicWeightedWaveletMatrix()
 DynamicWeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
 DynamicWeightedWaveletMatrix(const array<T, N>& values, const array<W, N>& weights)
+DynamicWeightedWaveletMatrix(const DynamicWeightedWaveletMatrix&)
+DynamicWeightedWaveletMatrix(DynamicWeightedWaveletMatrix&&)
+DynamicWeightedWaveletMatrix& operator=(const DynamicWeightedWaveletMatrix&)
+DynamicWeightedWaveletMatrix& operator=(DynamicWeightedWaveletMatrix&&)
 int size() const
 T access(int k) const
 T operator[](int k) const
@@ -77,9 +82,11 @@ W sum_k_largest(int l, int r, int k) const
 ## 時間計算量
 
 $D = BIT_WIDTH$、現在の列長を $N$ とする。動的 bitvector は
-randomized implicit treap なので、以下は期待時間計算量である。
+決定的な平衡 B+ 木なので、以下は worst-case 計算量である。
 
 - vector/array constructor: $O(DN)$
+- コピー構築・コピー代入: $O(DN)$
+- ムーブ構築・ムーブ代入: $O(D)$
 - default constructor, `size`: $O(1)$
 - `weight`, `sum`: $O(\log N)$
 - `access`, `operator[]`: $O(D\log N)$

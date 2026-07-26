@@ -4,14 +4,18 @@ documentation_of: ../../../../src/structure/wavelet_matrix/dynamic/dynamic_fully
 ---
 
 bit列への挿入・削除・置換と、rank/selectを扱う動的完備辞書。
-randomized implicit treap の部分木に長さと1の個数を保持するため、
-挿入・削除時に後続要素を移動したり列全体を再構築したりしない。
+固定容量の葉を持つ決定的な平衡 B+ 木に長さと1の個数を保持するため、
+挿入・削除時に後続要素全体を移動したり列全体を再構築したりしない。
 
 ## 構築と取得
 
 ```cpp
 DynamicFullyIndexableDictionary(int n = 0)
 DynamicFullyIndexableDictionary(const vector<bool>& values)
+DynamicFullyIndexableDictionary(const DynamicFullyIndexableDictionary&)
+DynamicFullyIndexableDictionary(DynamicFullyIndexableDictionary&&)
+DynamicFullyIndexableDictionary& operator=(const DynamicFullyIndexableDictionary&)
+DynamicFullyIndexableDictionary& operator=(DynamicFullyIndexableDictionary&&)
 int size() const
 bool operator[](int k) const
 ```
@@ -47,10 +51,12 @@ int select(bool value, int occurrence) const
 
 ## 時間計算量
 
-現在の列長を $N$ とする。randomized implicit treap による期待時間計算量は次の通り。
+現在の列長を $N$ とする。次は決定的な B+ 木による worst-case 計算量である。
 
 - vector constructor: $O(N)$
 - int constructor: $O(N)$
+- コピー構築・コピー代入: $O(N)$
+- ムーブ構築・ムーブ代入: $O(1)$
 - `size`: $O(1)$
 - `operator[]`, `set`, `flip`: $O(\log N)$
 - `insert`, `erase`, `push_back`, `pop_back`: $O(\log N)$

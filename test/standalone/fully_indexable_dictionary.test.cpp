@@ -4,8 +4,11 @@
 #include <cassert>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
+#include "../../src/structure/wavelet_matrix/detail/mutable_btree_bit_sequence.hpp"
 #include "../../src/structure/wavelet_matrix/dynamic/dynamic_fully_indexable_dictionary.hpp"
 #include "../../src/structure/wavelet_matrix/static/fully_indexable_dictionary.hpp"
 
@@ -32,6 +35,10 @@ int main(){
                 std::cin >> value >> l >> r;
                 if(type == "FRANK") std::cout << fixed.rank(value, l, r) << '\n';
                 else std::cout << dynamic.rank(value, l, r) << '\n';
+            }else if(type == "DRANKP"){
+                int value, r;
+                std::cin >> value >> r;
+                std::cout << dynamic.rank(value, r) << '\n';
             }else if(type == "FSELECT" || type == "DSELECT"){
                 int value, k;
                 std::cin >> value >> k;
@@ -59,6 +66,29 @@ int main(){
                 dynamic.push_back(value != 0);
             }else if(type == "DPOP"){
                 std::cout << dynamic.pop_back() << '\n';
+            }else if(type == "DSIZE"){
+                std::cout << dynamic.size() << '\n';
+            }else if(type == "DCOPY"){
+                DynamicFullyIndexableDictionary<512> constructed(dynamic);
+                DynamicFullyIndexableDictionary<512> assigned;
+                assigned = dynamic;
+                const bool original = dynamic[0];
+                constructed.flip(0);
+                assigned.set(0, !original);
+                std::cout << dynamic.size() << ' '
+                    << dynamic.rank(true, dynamic.size()) << ' '
+                    << constructed[0] << ' ' << dynamic[0] << ' '
+                    << assigned[0] << '\n';
+            }else if(type == "DMOVE"){
+                DynamicFullyIndexableDictionary<512> source(dynamic);
+                DynamicFullyIndexableDictionary<512> moved(
+                    std::move(source)
+                );
+                DynamicFullyIndexableDictionary<512> assigned;
+                assigned = std::move(moved);
+                std::cout << assigned.size() << ' '
+                    << assigned.rank(true, assigned.size()) << ' '
+                    << assigned.select(false, 0) << '\n';
             }
         }
         return 0;
@@ -190,4 +220,15 @@ int main(){
             assert(sequence.select(value, occurrence) == expected);
         }
     }
+
+    DynamicFullyIndexableDictionary<2> capacity(
+        std::vector<bool>{false, true}
+    );
+    bool capacity_thrown = false;
+    try{
+        capacity.insert(1, true);
+    }catch(const std::runtime_error&){
+        capacity_thrown = true;
+    }
+    assert(capacity_thrown);
 }

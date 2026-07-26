@@ -11,6 +11,8 @@
 #include <utility>
 #include <vector>
 
+#include "../detail/mutable_btree_bit_sequence.hpp"
+
 template<
     class T,
     class W,
@@ -26,320 +28,7 @@ struct DynamicWeightedWaveletMatrix{
     static_assert(!std::is_signed_v<T> || BIT_WIDTH == digits);
 
 private:
-    class DynamicWeightedBitVector{
-        struct Node{
-            bool bit = false;
-            W weight{};
-            std::uint64_t priority = 0;
-            Node* left = nullptr;
-            Node* right = nullptr;
-            int size = 1;
-            int ones = 0;
-            W sum{};
-            W zero_sum{};
-            W one_sum{};
-
-            Node(bool bit_value, const W& weight_value, std::uint64_t priority_value):
-                bit(bit_value), weight(weight_value), priority(priority_value),
-                ones(bit_value ? 1 : 0), sum(weight_value),
-                zero_sum(bit_value ? W{} : weight_value),
-                one_sum(bit_value ? weight_value : W{}){}
-        };
-
-    public:
-        struct Stats{
-            int size = 0;
-            int ones = 0;
-            W sum{};
-            W zero_sum{};
-            W one_sum{};
-        };
-
-    private:
-        Node* root = nullptr;
-        std::uint64_t random_state = 0x9e3779b97f4a7c15ULL;
-
-        static int node_size(const Node* node){ return node == nullptr ? 0 : node->size; }
-        static int node_ones(const Node* node){ return node == nullptr ? 0 : node->ones; }
-        static W node_sum(const Node* node){ return node == nullptr ? W{} : node->sum; }
-        static W node_zero_sum(const Node* node){ return node == nullptr ? W{} : node->zero_sum; }
-        static W node_one_sum(const Node* node){ return node == nullptr ? W{} : node->one_sum; }
-
-        static void pull(Node* node){
-            if(node == nullptr) return;
-            node->size = 1 + node_size(node->left) + node_size(node->right);
-            node->ones = (node->bit ? 1 : 0) + node_ones(node->left) + node_ones(node->right);
-            node->sum = node_sum(node->left) + node->weight + node_sum(node->right);
-            node->zero_sum = node_zero_sum(node->left) +
-                (node->bit ? W{} : node->weight) + node_zero_sum(node->right);
-            node->one_sum = node_one_sum(node->left) +
-                (node->bit ? node->weight : W{}) + node_one_sum(node->right);
-        }
-
-        std::uint64_t next_priority(){
-            random_state += 0x9e3779b97f4a7c15ULL;
-            std::uint64_t value = random_state;
-            value = (value ^ (value >> 30)) * 0xbf58476d1ce4e5b9ULL;
-            value = (value ^ (value >> 27)) * 0x94d049bb133111ebULL;
-            return value ^ (value >> 31);
-        }
-
-        static std::pair<Node*, Node*> split(Node* node, int left_size){
-            if(node == nullptr) return {nullptr, nullptr};
-            if(node_size(node->left) >= left_size){
-                auto [left, middle] = split(node->left, left_size);
-                node->left = middle;
-                pull(node);
-                return {left, node};
-            }
-            auto [middle, right] = split(
-                node->right, left_size - node_size(node->left) - 1
-            );
-            node->right = middle;
-            pull(node);
-            return {node, right};
-        }
-
-        static Node* merge(Node* left, Node* right){
-            if(left == nullptr) return right;
-            if(right == nullptr) return left;
-            if(left->priority > right->priority){
-                left->right = merge(left->right, right);
-                pull(left);
-                return left;
-            }
-            right->left = merge(left, right->left);
-            pull(right);
-            return right;
-        }
-
-        static void destroy(Node* node){
-            if(node == nullptr) return;
-            destroy(node->left);
-            destroy(node->right);
-            delete node;
-        }
-
-        static Node* clone(const Node* node){
-            if(node == nullptr) return nullptr;
-            Node* result = new Node(node->bit, node->weight, node->priority);
-            result->left = clone(node->left);
-            result->right = clone(node->right);
-            pull(result);
-            return result;
-        }
-
-        static void pull_all(Node* node){
-            if(node == nullptr) return;
-            pull_all(node->left);
-            pull_all(node->right);
-            pull(node);
-        }
-
-        static void add_subtree(Stats& result, const Node* node){
-            if(node == nullptr) return;
-            result.size += node->size;
-            result.ones += node->ones;
-            result.sum += node->sum;
-            result.zero_sum += node->zero_sum;
-            result.one_sum += node->one_sum;
-        }
-
-        Stats prefix_stats(int end) const{
-            Stats result;
-            const Node* node = root;
-            while(node != nullptr && end > 0){
-                const int left_size = node_size(node->left);
-                if(end <= left_size){
-                    node = node->left;
-                    continue;
-                }
-                add_subtree(result, node->left);
-                result.size++;
-                result.ones += node->bit ? 1 : 0;
-                result.sum += node->weight;
-                if(node->bit) result.one_sum += node->weight;
-                else result.zero_sum += node->weight;
-                end -= left_size + 1;
-                node = node->right;
-            }
-            return result;
-        }
-
-        static bool set_weight_recursive(Node* node, int position, const W& value){
-            const int left_size = node_size(node->left);
-            bool result;
-            if(position < left_size){
-                result = set_weight_recursive(node->left, position, value);
-            }else if(position == left_size){
-                node->weight = value;
-                result = node->bit;
-            }else{
-                result = set_weight_recursive(node->right, position - left_size - 1, value);
-            }
-            pull(node);
-            return result;
-        }
-
-    public:
-        DynamicWeightedBitVector() = default;
-
-        DynamicWeightedBitVector(const DynamicWeightedBitVector& other):
-            root(clone(other.root)), random_state(other.random_state){}
-
-        DynamicWeightedBitVector& operator=(const DynamicWeightedBitVector& other){
-            if(this == &other) return *this;
-            Node* copied = clone(other.root);
-            destroy(root);
-            root = copied;
-            random_state = other.random_state;
-            return *this;
-        }
-
-        DynamicWeightedBitVector(DynamicWeightedBitVector&& other) noexcept:
-            root(other.root), random_state(other.random_state){
-            other.root = nullptr;
-        }
-
-        DynamicWeightedBitVector& operator=(DynamicWeightedBitVector&& other) noexcept{
-            if(this == &other) return *this;
-            destroy(root);
-            root = other.root;
-            random_state = other.random_state;
-            other.root = nullptr;
-            return *this;
-        }
-
-        ~DynamicWeightedBitVector(){ destroy(root); }
-
-        int size() const{ return node_size(root); }
-        int ones() const{ return node_ones(root); }
-
-        void assign(const std::vector<unsigned char>& bits, const std::vector<W>& weights){
-            destroy(root);
-            root = nullptr;
-            std::vector<Node*> stack;
-            stack.reserve(bits.size());
-            for(std::size_t i = 0; i < bits.size(); i++){
-                Node* current = new Node(bits[i] != 0, weights[i], next_priority());
-                Node* last = nullptr;
-                while(!stack.empty() && stack.back()->priority < current->priority){
-                    last = stack.back();
-                    stack.pop_back();
-                }
-                current->left = last;
-                if(stack.empty()) root = current;
-                else stack.back()->right = current;
-                stack.push_back(current);
-            }
-            pull_all(root);
-        }
-
-        std::pair<bool, W> access(int position) const{
-            const Node* node = root;
-            while(node != nullptr){
-                const int left_size = node_size(node->left);
-                if(position < left_size) node = node->left;
-                else if(position == left_size) return {node->bit, node->weight};
-                else{
-                    position -= left_size + 1;
-                    node = node->right;
-                }
-            }
-            throw std::logic_error("DynamicWeightedBitVector access failure.");
-        }
-
-        Stats range_stats(int left, int right) const{
-            Stats lhs = prefix_stats(left);
-            Stats rhs = prefix_stats(right);
-            rhs.size -= lhs.size;
-            rhs.ones -= lhs.ones;
-            rhs.sum = rhs.sum - lhs.sum;
-            rhs.zero_sum = rhs.zero_sum - lhs.zero_sum;
-            rhs.one_sum = rhs.one_sum - lhs.one_sum;
-            return rhs;
-        }
-
-        int rank(bool value, int end) const{
-            Stats stats = prefix_stats(end);
-            return value ? stats.ones : end - stats.ones;
-        }
-
-        int select(bool value, int kth) const{
-            if(kth < 0) return size();
-            const int total = value ? ones() : size() - ones();
-            if(total <= kth) return size();
-            const Node* node = root;
-            int offset = 0;
-            while(node != nullptr){
-                const int left_count = value
-                    ? node_ones(node->left)
-                    : node_size(node->left) - node_ones(node->left);
-                if(kth < left_count){
-                    node = node->left;
-                    continue;
-                }
-                kth -= left_count;
-                const int left_size = node_size(node->left);
-                if(node->bit == value){
-                    if(kth == 0) return offset + left_size;
-                    kth--;
-                }
-                offset += left_size + 1;
-                node = node->right;
-            }
-            return size();
-        }
-
-        W weight_of_first(bool value, int count) const{
-            W result{};
-            const Node* node = root;
-            while(node != nullptr && count > 0){
-                const int left_count = value
-                    ? node_ones(node->left)
-                    : node_size(node->left) - node_ones(node->left);
-                if(count <= left_count){
-                    node = node->left;
-                    continue;
-                }
-                result += value ? node_one_sum(node->left) : node_zero_sum(node->left);
-                count -= left_count;
-                if(node->bit == value){
-                    result += node->weight;
-                    if(--count == 0) break;
-                }
-                node = node->right;
-            }
-            return result;
-        }
-
-        W weight_of_first(bool value, int left, int count) const{
-            const int skipped = rank(value, left);
-            return weight_of_first(value, skipped + count) - weight_of_first(value, skipped);
-        }
-
-        void insert(int position, bool value, const W& weight){
-            auto [left, right] = split(root, position);
-            Node* middle = new Node(value, weight, next_priority());
-            root = merge(merge(left, middle), right);
-        }
-
-        std::pair<bool, W> erase(int position){
-            auto [left, suffix] = split(root, position);
-            auto [middle, right] = split(suffix, 1);
-            if(middle == nullptr) throw std::logic_error("DynamicWeightedBitVector erase failure.");
-            std::pair<bool, W> result{middle->bit, middle->weight};
-            middle->left = nullptr;
-            middle->right = nullptr;
-            delete middle;
-            root = merge(left, right);
-            return result;
-        }
-
-        bool set_weight(int position, const W& value){
-            return set_weight_recursive(root, position, value);
-        }
-    };
+    using DynamicWeightedBitVector = wavelet_matrix_detail::MutableBTreeBitSequence<W, W>;
 
     int _n = 0;
     std::array<DynamicWeightedBitVector, static_cast<std::size_t>(BIT_WIDTH)> bit_vectors{};
@@ -500,6 +189,19 @@ public:
         static_assert(N <= static_cast<std::size_t>(MAX_SIZE));
     }
 
+    DynamicWeightedWaveletMatrix(
+        const DynamicWeightedWaveletMatrix&
+    ) = default;
+    DynamicWeightedWaveletMatrix& operator=(
+        const DynamicWeightedWaveletMatrix&
+    ) = default;
+    DynamicWeightedWaveletMatrix(
+        DynamicWeightedWaveletMatrix&&
+    ) noexcept = default;
+    DynamicWeightedWaveletMatrix& operator=(
+        DynamicWeightedWaveletMatrix&&
+    ) noexcept = default;
+
     int size() const{ return _n; }
 
     T access(int k) const{
@@ -510,7 +212,7 @@ public:
 
     W weight(int k) const{
         check_index(k, "library assertion fault: range violation (weight).");
-        return bit_vectors[0].access(k).second;
+        return bit_vectors[0].access(k).payload;
     }
 
     void insert(int position, T value, const W& weight_value){
@@ -586,7 +288,7 @@ public:
         for(int level = 0; level < BIT_WIDTH; level++){
             auto& bits = bit_vectors[static_cast<std::size_t>(level)];
             const int ones_before = bits.rank(true, current);
-            const bool bit = bits.set_weight(current, weight_value);
+            const bool bit = bits.set_payload(current, weight_value);
             current = bit
                 ? zero_count[static_cast<std::size_t>(level)] + ones_before
                 : current - ones_before;
@@ -737,10 +439,10 @@ public:
             const int ones_l = bits.rank(true, l);
             if(level == BIT_WIDTH - 1){
                 if(k <= zeros){
-                    result += bits.weight_of_first(false, l, k);
+                    result += bits.sum_first(false, l, k);
                 }else{
                     result += stats.zero_sum;
-                    result += bits.weight_of_first(true, l, k - zeros);
+                    result += bits.sum_first(true, l, k - zeros);
                 }
                 return result;
             }

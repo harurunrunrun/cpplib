@@ -1,12 +1,14 @@
 // competitive-verifier: STANDALONE
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <iostream>
 #include <numeric>
 #include <random>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/dynamic/dynamic_functional_wavelet_matrix.hpp"
 #include "../../src/structure/wavelet_matrix/dynamic/dynamic_weighted_wavelet_matrix.hpp"
@@ -64,10 +66,70 @@ int main(){
                 int k;
                 std::cin >> k;
                 std::cout << matrix[k] << ' ' << matrix.weight(k) << '\n';
+            }else if(type == "ACCESS"){
+                int k;
+                std::cin >> k;
+                std::cout << matrix.access(k) << '\n';
+            }else if(type == "RANK"){
+                int value, l, r;
+                std::cin >> value >> l >> r;
+                std::cout << matrix.rank(value, l, r) << '\n';
+            }else if(type == "RANKP"){
+                int value, r;
+                std::cin >> value >> r;
+                std::cout << matrix.rank(value, r) << '\n';
+            }else if(type == "SELECT"){
+                int value, occurrence;
+                std::cin >> value >> occurrence;
+                std::cout << matrix.select(value, occurrence) << '\n';
+            }else if(type == "SIZE"){
+                std::cout << matrix.size() << '\n';
+            }else if(type == "COPY"){
+                DynamicWeightedWaveletMatrix<int, long long, 512, 32>
+                    constructed(matrix), assigned;
+                assigned = matrix;
+                const long long original_weight = matrix.weight(0);
+                constructed.set_weight(0, original_weight + 1);
+                assigned.set_weight(0, original_weight - 1);
+                std::cout << matrix.size() << ' ' << matrix.sum(0, matrix.size())
+                    << ' ' << matrix.weight(0)
+                    << ' ' << constructed.weight(0)
+                    << ' ' << assigned.weight(0) << '\n';
+            }else if(type == "MOVE"){
+                DynamicWeightedWaveletMatrix<int, long long, 512, 32> source(matrix);
+                DynamicWeightedWaveletMatrix<int, long long, 512, 32> moved(
+                    std::move(source)
+                );
+                DynamicWeightedWaveletMatrix<int, long long, 512, 32> assigned;
+                assigned = std::move(moved);
+                std::cout << assigned.size() << ' '
+                    << assigned.sum(0, assigned.size()) << ' '
+                    << assigned[0] << ' ' << assigned.weight(0) << ' '
+                    << assigned[assigned.size() - 1] << ' '
+                    << assigned.weight(assigned.size() - 1) << '\n';
+            }else if(type == "SPECIAL"){
+                const std::array<int, 3> values = {-2, 0, 3};
+                const std::array<long long, 3> weights = {4, 5, 6};
+                DynamicWeightedWaveletMatrix<int, long long, 512, 32>
+                    from_array(values, weights), empty;
+                empty.push_back(1, 7);
+                std::cout << from_array.size() << ' '
+                    << from_array.sum(0, from_array.size()) << ' '
+                    << from_array.access(0) << ' ' << from_array[2] << ' '
+                    << empty.size() << ' ' << empty.sum(0, empty.size())
+                    << '\n';
             }else if(type == "SUM"){
                 int l, r;
                 std::cin >> l >> r;
                 std::cout << matrix.sum(l, r) << '\n';
+            }else if(type == "FREQP" || type == "RSUMP"){
+                int l, r, upper;
+                std::cin >> l >> r >> upper;
+                if(type == "FREQP"){
+                    std::cout << matrix.range_freq(l, r, upper) << '\n';
+                }else{
+                    std::cout << matrix.range_sum(l, r, upper) << '\n';
+                }
             }else if(type == "FREQ" || type == "RSUM"){
                 int l, r, lower, upper;
                 std::cin >> l >> r >> lower >> upper;
@@ -325,4 +387,15 @@ int main(){
         thrown = true;
     }
     assert(thrown);
+
+    DynamicWeightedWaveletMatrix<int, long long, 2> capacity(
+        std::vector<int>{1, 2}, std::vector<long long>{3, 4}
+    );
+    bool capacity_thrown = false;
+    try{
+        capacity.insert(1, 0, 5);
+    }catch(const std::runtime_error&){
+        capacity_thrown = true;
+    }
+    assert(capacity_thrown);
 }

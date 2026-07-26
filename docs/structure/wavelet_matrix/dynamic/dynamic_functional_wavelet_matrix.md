@@ -38,8 +38,8 @@ T pop_back()
 
 ## 時間計算量
 
-$D = BIT_WIDTH$、現在の列長を $N$ とする。以下は randomized implicit treap
-による期待時間計算量である。
+$D = BIT_WIDTH$、現在の列長を $N$ とする。基底型の動的 bitvector は
+決定的な平衡 B+ 木なので、以下は worst-case 計算量である。
 
 - vector/array constructor: $O(DN)$
 - default constructor, `size`: $O(1)$

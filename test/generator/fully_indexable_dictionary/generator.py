@@ -28,7 +28,7 @@ def main() -> None:
     outputs: list[str] = []
 
     for _ in range(1400):
-        kind = rng.randrange(14)
+        kind = rng.randrange(17)
         if kind == 0:
             index = rng.randrange(n)
             commands.append(f"FGET {index}")
@@ -85,6 +85,22 @@ def main() -> None:
         elif kind == 13 and len(dynamic) > 1:
             commands.append("DPOP")
             outputs.append(str(dynamic.pop()))
+        elif kind == 14:
+            commands.append("DCOPY")
+            outputs.append(
+                f"{len(dynamic)} {sum(dynamic)} {1 - dynamic[0]} "
+                f"{dynamic[0]} {1 - dynamic[0]}"
+            )
+        elif kind == 15:
+            commands.append("DMOVE")
+            outputs.append(
+                f"{len(dynamic)} {sum(dynamic)} {select(dynamic, 0, 0)}"
+            )
+        elif kind == 16:
+            value = rng.randrange(2)
+            r = rng.randrange(len(dynamic) + 1)
+            commands.append(f"DRANKP {value} {r}")
+            outputs.append(str(dynamic[:r].count(value)))
         else:
             index = rng.randrange(len(dynamic))
             commands.append(f"DGET {index}")
@@ -98,6 +114,39 @@ def main() -> None:
     )
     (out_dir / "case_00.in").write_text(input_text, encoding="utf-8")
     (out_dir / "case_00.out").write_text("\n".join(outputs) + "\n", encoding="utf-8")
+
+    boundary = [index & 1 for index in range(510)]
+    boundary_commands = [
+        "DINSERT 0 1",
+        "DPUSH 0",
+        "DSIZE",
+        "DRANKP 1 512",
+        "DCOPY",
+        "DMOVE",
+        "DERASE 511",
+        "DPOP",
+        "DSIZE",
+    ]
+    boundary_outputs = [
+        "512",
+        "256",
+        "512 256 0 1 0",
+        "512 256 1",
+        "0",
+        "1",
+        "510",
+    ]
+    boundary_input = (
+        f"510 {len(boundary_commands)}\n"
+        + " ".join(map(str, boundary))
+        + "\n"
+        + "\n".join(boundary_commands)
+        + "\n"
+    )
+    (out_dir / "case_01.in").write_text(boundary_input, encoding="utf-8")
+    (out_dir / "case_01.out").write_text(
+        "\n".join(boundary_outputs) + "\n", encoding="utf-8"
+    )
 
 
 if __name__ == "__main__":
