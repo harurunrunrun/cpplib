@@ -10,6 +10,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d_default.hpp"
+#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d_detail.hpp"
+#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d_randomized.hpp"
 #include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d.hpp"
 #include "../../src/algorithm/geometry/3d/adaptive_insphere.hpp"
 #include "../../src/algorithm/geometry/3d/adaptive_orient3d.hpp"

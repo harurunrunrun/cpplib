@@ -8,6 +8,9 @@
 #include <vector>
 
 #include "../../src/algorithm/geometry/3d/real_gaussian_elimination_result.hpp"
+#include "../../src/algorithm/geometry/3d/gaussian_elimination_real_detail.hpp"
+#include "../../src/algorithm/geometry/3d/gaussian_elimination_real_rref.hpp"
+#include "../../src/algorithm/geometry/3d/solve_square_linear_system_real.hpp"
 #include "../../src/algorithm/geometry/3d/gaussian_elimination_real.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

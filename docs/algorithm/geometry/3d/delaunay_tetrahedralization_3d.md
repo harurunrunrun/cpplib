@@ -3,6 +3,9 @@ title: 3D Delaunay Tetrahedralization (三次元Delaunay四面体分割)
 documentation_of: ../../../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d.hpp
 ---
 
+このheaderは固定seed版とseed指定版のleafをまとめる後方互換aggregatorである。
+新規コードでは必要な構築法のleafだけをincludeできる。
+
 ランダム増分 Bowyer--Watson 法で有限点集合の Delaunay 四面体分割を構築する。
 各四面体の隣接関係と未挿入点との conflict graph を保持し、点位置探索後は実際の
 空洞だけを走査する。包含球判定には `adaptive_insphere`、向き判定には

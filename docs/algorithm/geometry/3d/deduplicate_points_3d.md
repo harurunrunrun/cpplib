@@ -3,6 +3,9 @@ title: 3D Point Deduplication (三次元点の重複除去)
 documentation_of: ../../../../src/algorithm/geometry/3d/deduplicate_points_3d.hpp
 ---
 
+このheaderは既定法とrelative range tree法のleafをまとめる後方互換aggregatorである。
+新規コードでは必要な計算法のleafだけをincludeできる。
+
 ## API
 
 ```cpp

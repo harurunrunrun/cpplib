@@ -3,6 +3,9 @@ title: Real Gaussian Elimination (実数ガウス消去法)
 documentation_of: ../../../../src/algorithm/geometry/3d/gaussian_elimination_real.hpp
 ---
 
+このheaderはRREF構築と正方連立一次方程式solverのleafをまとめる後方互換aggregatorである。
+新規コードでは必要な返り値型のleafだけをincludeできる。
+
 `long double` 行列に対し、絶対値最大の要素を pivot に選ぶ部分 pivoting 付き
 Gaussian eliminationを行う。入力全体を最大絶対値で正規化してから計算するため、
 一様な座標scaleの変更に対してrank判定が不変になる。

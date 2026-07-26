@@ -3,6 +3,9 @@ title: Convex Polyhedron Query Hierarchy 3D (三次元凸多面体クエリ階�
 documentation_of: ../../../../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d.hpp
 ---
 
+このheaderは4つのmember実装leafをまとめる後方互換aggregatorである。
+利用側には従来どおり `ConvexPolyhedronQueryHierarchy3D` の完全な定義を提供する。
+
 同じ閉凸多面体に対する支持点、包含、最近点の多数queryを処理する。
 3次元の支持点と包含には、球面三角形分割を低次数独立集合で縮約する
 Dobkin--Kirkpatrick型階層を用いる。最近点には厳密な距離下界を持つAABB階層を用いる。
