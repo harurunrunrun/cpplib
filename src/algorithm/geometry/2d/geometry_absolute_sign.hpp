@@ -1,0 +1,12 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_ABSOLUTE_SIGN_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_ABSOLUTE_SIGN_HPP_INCLUDED
+
+#include "constants.hpp"
+
+inline int geometry_sign(long double value){
+    if(value > GEOMETRY_EPS) return 1;
+    if(value < -GEOMETRY_EPS) return -1;
+    return 0;
+}
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_ABSOLUTE_SIGN_HPP_INCLUDED

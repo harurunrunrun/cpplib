@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/2d/intersect_line_convex_polygon_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/intersect_line_convex_polygon_points.hpp"
 #include "../../src/algorithm/geometry/2d/intersect_line_convex_polygon.hpp"
 
 #include <iostream>
