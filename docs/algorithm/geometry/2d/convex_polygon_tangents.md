@@ -1,9 +1,24 @@
 ---
-title: Convex Polygon Tangents from Point (点から凸多角形への接線)
+title: Convex Polygon Tangents Aggregator (点から凸多角形への接線集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/convex_polygon_tangents.hpp
 ---
 
-外点から凸多角形へ引いた左右の接線の接点。
+外点から凸多角形への接線に関する型と2種類の入力APIをまとめて読み込む
+後方互換集約ヘッダ。
+
+## 構成
+
+| leaf header | 提供するAPI |
+| --- | --- |
+| `convex_polygon_tangents_result.hpp` | `ConvexPolygonTangentResult` |
+| `convex_polygon_tangents_normalized.hpp` | 正規化済み凸多角形と点を受け取るoverload |
+| `convex_polygon_tangents_points.hpp` | `vector<Point>` と点を受け取るoverload |
+
+依存を最小にしたい場合は必要なleaf headerだけを直接includeする。従来の
+`convex_polygon_tangents.hpp` は引き続き全APIを提供する。
+
+## 集約されるAPI
+
 
 ```cpp
 #include "src/algorithm/geometry/2d/convex_polygon_tangents.hpp"

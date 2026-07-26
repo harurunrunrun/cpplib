@@ -1,9 +1,24 @@
 ---
-title: Minimum Enclosing Rectangle (最小外接長方形)
+title: Minimum Enclosing Rectangle Aggregator (最小外接長方形集約ヘッダ)
 documentation_of: ../../../../src/algorithm/geometry/2d/minimum_enclosing_rectangle.hpp
 ---
 
-## API
+凸集合の最小外接長方形に関する型と2種類の入力APIをまとめて読み込む
+後方互換集約ヘッダ。
+
+## 構成
+
+| leaf header | 提供するAPI |
+| --- | --- |
+| `minimum_enclosing_rectangle_result.hpp` | `MinimumEnclosingRectangleResult` |
+| `minimum_enclosing_rectangle_normalized.hpp` | 正規化済み凸多角形を受け取るoverload |
+| `minimum_enclosing_rectangle_points.hpp` | `vector<Point>` を受け取るoverload |
+
+依存を最小にしたい場合は必要なleaf headerだけを直接includeする。従来の
+`minimum_enclosing_rectangle.hpp` は引き続き全APIを提供する。
+
+## 集約されるAPI
+
 
 - `minimum_enclosing_rectangle(polygon)`: 凸集合を含む面積最小の長方形を返す。
 - `MinimumEnclosingRectangleResult`: `corners`, `width`, `height`, `area`, `valid` を保持する。
