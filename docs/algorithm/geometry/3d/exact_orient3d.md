@@ -15,6 +15,8 @@ int exact_orient3d(first, second, third, fourth)
 
 `det(second-first, third-first, fourth-first)` の正確な符号を `-1, 0, 1` で返す。
 
+この互換集約ヘッダは `IntegerPoint3` 型と整数点predicateの両leafを提供する。
+
 ## API別の時間計算量・空間計算量
 
 差の絶対値がすべて $2^{40}$ 以下なら時間・追加領域 $O(1)$ の `__int128` fast path。それ以外はbit長を $B$ として多倍長整数演算時間、追加領域 $O(B)$。

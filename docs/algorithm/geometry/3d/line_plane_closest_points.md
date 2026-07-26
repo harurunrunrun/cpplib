@@ -6,6 +6,7 @@ documentation_of: ../../../../src/algorithm/geometry/3d/line_plane_closest_point
 ## API
 
 - `closest_points(first, second)`: `Line3` と `Plane3` 上の最近点を引数と同じ順のpairで返す。異種型では逆順overloadも提供する。
+- この互換集約ヘッダは `(Line3, Plane3)` と `(Plane3, Line3)` の両leafを提供する。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +14,4 @@ documentation_of: ../../../../src/algorithm/geometry/3d/line_plane_closest_point
 
 ## 注意点
 
-最近点対が複数ある場合はそのうち1組を返す。退化した直線・半直線または零法線の平面には `std::invalid_argument` を送出し、退化線分には対応する。
+最近点対が複数ある場合はそのうち1組を返す。退化直線または零法線平面には `std::invalid_argument` を送出する。

@@ -1,5 +1,7 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/line_plane_closest_points_line_plane.hpp"
+#include "../../src/algorithm/geometry/3d/line_plane_closest_points_plane_line.hpp"
 #include "../../src/algorithm/geometry/3d/line_plane_closest_points.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
@@ -8,7 +10,10 @@ int main(){
         const Line3 line{{0, 0, 2}, {1, 0, 2}};
         const Plane3 plane{{}, {0, 0, 1}};
         const auto points = closest_points(line, plane);
+        const auto reversed = closest_points(plane, line);
         return geometry3d_api_close(points.first, {0, 0, 2}) &&
-            geometry3d_api_close(points.second, {});
+            geometry3d_api_close(points.second, {}) &&
+            geometry3d_api_close(reversed.first, {}) &&
+            geometry3d_api_close(reversed.second, {0, 0, 2});
     });
 }

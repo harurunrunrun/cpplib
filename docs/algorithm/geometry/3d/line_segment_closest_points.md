@@ -6,6 +6,7 @@ documentation_of: ../../../../src/algorithm/geometry/3d/line_segment_closest_poi
 ## API
 
 - `closest_points(first, second)`: `Line3` と `Segment3` 上の最近点を引数と同じ順のpairで返す。異種型では逆順overloadも提供する。
+- この互換集約ヘッダは `(Line3, Segment3)` と `(Segment3, Line3)` の両leafを提供する。
 
 ## API別の時間計算量・空間計算量
 

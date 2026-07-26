@@ -7,6 +7,7 @@ documentation_of: ../../../../src/algorithm/geometry/3d/epa_3d.hpp
 
 - `epa_3d(first, second, gjk_result, tolerance=1e-10L, max_iterations=128)`: GJK 終了単体から Minkowski 差境界を拡張し、貫通深度・接触法線・接触点を返す。
 - `epa_3d(first, second, tolerance=1e-10L, max_iterations=128)`: 内部で GJK を実行する簡便版。
+- この互換集約ヘッダは、形状対overloadとGJK結果付きoverloadの両leafを提供する。
 
 ## API別の時間計算量・空間計算量
 

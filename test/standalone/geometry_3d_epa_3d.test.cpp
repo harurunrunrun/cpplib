@@ -1,5 +1,8 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/algorithm/geometry/3d/epa_3d_detail.hpp"
+#include "../../src/algorithm/geometry/3d/epa_3d_shapes.hpp"
+#include "../../src/algorithm/geometry/3d/epa_3d_with_gjk_result.hpp"
 #include "../../src/algorithm/geometry/3d/epa_3d.hpp"
 #include "geometry_3d_collision_test_common.hpp"
 
