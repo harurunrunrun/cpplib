@@ -168,6 +168,7 @@ CONNECTIVITY_SUBCATEGORY_BY_STEM: dict[str, str] = {
     "core_decomposition": "decomposition",
     "strong_orientation": "decomposition",
     "cactus_decomposition": "decomposition",
+    "nagamochi_ibaraki_sparsification": "decomposition",
     "single_failure_connectivity": "resilience",
     "endpoint_failure_connectivity": "resilience",
     "dominator_tree": "resilience",
@@ -238,6 +239,7 @@ DYNAMIC_PROGRAMMING_SUBCATEGORIES = frozenset(
 GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM: dict[str, str] = {
     "counting_c4": "subgraph_analysis",
     "enumerate_triangles": "subgraph_analysis",
+    "maximum_density_subgraph": "subgraph_analysis",
     "sorted_bridge_endpoints": "subgraph_analysis",
     "triangle_weight_product_sum_mod": "subgraph_analysis",
     "grid_forest_diameter": "metric_analysis",
