@@ -16,3 +16,7 @@ Euclid互除法型の行・列基本変形でSmith標準形を求める。$r=\mi
 ## 注意点
 
 `Integer` は符号付き整数と同じ比較・四則演算・剰余を提供する必要がある。固定長整数では基本変形の中間値が範囲内であることが前提。非矩形入力には `std::invalid_argument` を送出する。
+
+## 時間計算量
+
+The bound is stated in the API section above.

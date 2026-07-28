@@ -16,3 +16,7 @@ pivot列の下をEuclid互除法で0にし、上側を $[0,pivot)$ に正規化�
 ## 注意点
 
 `Integer` は符号付き整数と同じ比較・四則演算・剰余を提供する必要がある。固定長整数では中間値overflowに注意する。非矩形入力には `std::invalid_argument` を送出する。
+
+## 時間計算量
+
+The bound is stated in the API section above.

@@ -12,3 +12,7 @@ documentation_of: ../../../../../src/algorithm/other/combinatorial_optimization/
 ## 注意点
 
 同一要素は高々1 groupに入る。`copy_count == 0` では全要素が `uncovered`。
+
+## 時間計算量
+
+The bound is stated in the API section above.

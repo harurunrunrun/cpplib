@@ -16,3 +16,7 @@ $x^2-n$ がfactor base上でsmoothになる関係を集め、$\mathbb F_2$ 線�
 ## 注意点
 
 確率的・資源上限制約付きの因数探索なので、上限内に十分なsmooth関係が得られない場合は `factor == nullopt`。`value < 2`、0の試行上限などには `std::invalid_argument` を送出する。
+
+## 時間計算量
+
+The bound is stated in the API section above.
