@@ -4,6 +4,7 @@
 #include <cassert>
 #include <random>
 #include <set>
+#include <stdexcept>
 #include <utility>
 #include <vector>
 
@@ -112,6 +113,70 @@ int main(){
                 brute.push_back(i);
             assert(three_sided == brute);
         }
+    }
+
+    {
+        using Priority = PrioritySearchTree<int, int>;
+        const Priority empty;
+        assert(empty.size() == 0);
+        assert(empty.report(-1, 1, 1).empty());
+
+        bool invalid_range_thrown = false;
+        try{
+            (void)empty.report(1, 0, 1);
+        }catch(const std::invalid_argument&){
+            invalid_range_thrown = true;
+        }
+        assert(invalid_range_thrown);
+
+        for(int repetition = 0; repetition < 160; ++repetition){
+            const int point_count =
+                static_cast<int>(random() % 181);
+            std::vector<Priority::Point> points;
+            points.reserve(static_cast<std::size_t>(point_count));
+            for(int index = 0; index < point_count; ++index){
+                points.push_back({
+                    static_cast<int>(random() % 41) - 20,
+                    static_cast<int>(random() % 41) - 20,
+                    index
+                });
+            }
+            const Priority tree(points);
+            assert(tree.size() == point_count);
+            for(int query = 0; query < 180; ++query){
+                int lower_x =
+                    static_cast<int>(random() % 51) - 25;
+                int upper_x =
+                    static_cast<int>(random() % 51) - 25;
+                if(lower_x > upper_x){
+                    std::swap(lower_x, upper_x);
+                }
+                const int upper_y =
+                    static_cast<int>(random() % 51) - 25;
+                auto actual =
+                    tree.report(lower_x, upper_x, upper_y);
+                std::sort(actual.begin(), actual.end());
+                std::vector<int> expected;
+                for(const auto& point: points){
+                    if(lower_x <= point.x && point.x < upper_x
+                        && point.y < upper_y){
+                        expected.push_back(point.payload);
+                    }
+                }
+                std::sort(expected.begin(), expected.end());
+                assert(actual == expected);
+            }
+        }
+
+        std::vector<Priority::Point> duplicates;
+        for(int index = 0; index < 256; ++index){
+            duplicates.push_back({7, -3, index});
+        }
+        const Priority duplicate_tree(duplicates);
+        assert(duplicate_tree.report(7, 8, -2).size() == 256);
+        assert(duplicate_tree.report(7, 8, -3).empty());
+        assert(duplicate_tree.report(6, 7, 0).empty());
+        assert(duplicate_tree.report(8, 9, 0).empty());
     }
 
     FractionalCascading<int> cascading({{1, 4, 9}, {2, 6}, {}, {0, 7, 8}});
