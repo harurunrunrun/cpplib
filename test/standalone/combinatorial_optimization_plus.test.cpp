@@ -44,6 +44,37 @@ struct Dsu {
 }  // namespace
 
 int main() {
+    {
+        constexpr std::size_t large_size = 80;
+        std::size_t oracle_calls = 0;
+        const auto modular_oracle =
+            [&](const std::vector<unsigned char>& set){
+                ++oracle_calls;
+                long long value = 0;
+                for(std::size_t element = 0;
+                    element < large_size;
+                    ++element){
+                    if(set[element]){
+                        value += (element % 3 == 0 ? -3LL : 2LL);
+                    }
+                }
+                return value;
+            };
+        const auto result =
+            combinatorial_optimization::submodular_function_minimization(
+                large_size, modular_oracle
+            );
+        assert(result.value == -81);
+        assert(result.exact_certificate_used);
+        assert(oracle_calls < 1000);
+        std::vector<unsigned char> selected(large_size, 0);
+        for(const std::size_t element : result.elements){
+            selected[element] = 1;
+        }
+        for(std::size_t element = 0; element < large_size; ++element){
+            assert(selected[element] == (element % 3 == 0));
+        }
+    }
     std::uint64_t seed;
     int rounds;
     if(!(std::cin >> seed >> rounds)) return 0;

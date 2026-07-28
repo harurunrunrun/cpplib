@@ -22,9 +22,20 @@ struct SubmodularMinimizationResult {
     std::size_t iterations = 0;
     long double dual_gap = 0.0L;
     bool minimum_norm_converged = false;
+    bool exact_certificate_used = false;
 };
 
 namespace submodular_minimization_internal {
+
+template<class Value>
+inline constexpr bool supports_integral_certificate =
+    std::is_integral_v<Value> && sizeof(Value) <= sizeof(unsigned long long);
+
+template<class Value>
+struct GreedyBase {
+    std::vector<long double> floating;
+    std::vector<__int128_t> exact_integral;
+};
 
 inline long double dot(
     const std::vector<long double>& first,
@@ -37,8 +48,8 @@ inline long double dot(
     return result;
 }
 
-template<class Oracle>
-std::vector<long double> greedy_base(
+template<class Value, class Oracle>
+GreedyBase<Value> greedy_base(
     std::size_t size,
     const std::vector<long double>& weight,
     Oracle& oracle
@@ -52,22 +63,79 @@ std::vector<long double> greedy_base(
         }
     );
     std::vector<unsigned char> set(size, 0);
-    long double previous =
-        static_cast<long double>(std::invoke(oracle, set));
-    std::vector<long double> base(size);
+    const Value initial = std::invoke(oracle, set);
+    long double previous = static_cast<long double>(initial);
+    if(!std::isfinite(previous)){
+        throw std::invalid_argument(
+            "submodular oracle returned a non-finite value"
+        );
+    }
+    GreedyBase<Value> base;
+    base.floating.resize(size);
+    if constexpr(supports_integral_certificate<Value>){
+        base.exact_integral.resize(size);
+    }
+    __int128_t previous_exact = 0;
+    if constexpr(supports_integral_certificate<Value>){
+        previous_exact = static_cast<__int128_t>(initial);
+    }
     for(const std::size_t element : order){
         set[element] = 1;
-        const long double current =
-            static_cast<long double>(std::invoke(oracle, set));
+        const Value current_value = std::invoke(oracle, set);
+        const long double current = static_cast<long double>(current_value);
         if(!std::isfinite(current)){
             throw std::invalid_argument(
                 "submodular oracle returned a non-finite value"
             );
         }
-        base[element] = current - previous;
+        base.floating[element] = current - previous;
+        if constexpr(supports_integral_certificate<Value>){
+            const __int128_t current_exact =
+                static_cast<__int128_t>(current_value);
+            base.exact_integral[element] = current_exact - previous_exact;
+            previous_exact = current_exact;
+        }
         previous = current;
     }
     return base;
+}
+
+inline std::vector<unsigned long long> dyadic_weights(
+    const std::vector<long double>& coefficient
+) {
+    constexpr unsigned long long scale =
+        static_cast<unsigned long long>(1) << 48;
+    std::vector<unsigned long long> weight(coefficient.size());
+    std::vector<std::pair<long double, std::size_t>> remainder;
+    remainder.reserve(coefficient.size());
+    long double sum = 0.0L;
+    for(const long double value : coefficient){
+        sum += std::max(0.0L, value);
+    }
+    if(!(sum > 0.0L) || !std::isfinite(sum)) return {};
+
+    unsigned long long assigned = 0;
+    for(std::size_t index = 0; index < coefficient.size(); ++index){
+        const long double scaled =
+            std::max(0.0L, coefficient[index]) / sum
+            * static_cast<long double>(scale);
+        unsigned long long integral =
+            static_cast<unsigned long long>(std::floor(scaled));
+        integral = std::min(integral, scale - assigned);
+        weight[index] = integral;
+        assigned += integral;
+        remainder.emplace_back(scaled - std::floor(scaled), index);
+    }
+    std::stable_sort(
+        remainder.begin(), remainder.end(),
+        [](const auto& first, const auto& second){
+            return first.first > second.first;
+        }
+    );
+    for(std::size_t offset = 0; assigned < scale; ++assigned, ++offset){
+        ++weight[remainder[offset % remainder.size()].second];
+    }
+    return weight;
 }
 
 inline std::vector<long double> affine_minimizer(
@@ -171,11 +239,19 @@ auto submodular_function_minimization(
 
     std::vector<long double> initial_weight(ground_set_size);
     std::iota(initial_weight.begin(), initial_weight.end(), 0.0L);
-    std::vector<std::vector<long double>> active{
-        submodular_minimization_internal::greedy_base(
+    auto initial_base =
+        submodular_minimization_internal::greedy_base<Value>(
             ground_set_size, initial_weight, oracle
-        )
+        );
+    std::vector<std::vector<long double>> active{
+        std::move(initial_base.floating)
     };
+    std::vector<std::vector<__int128_t>> exact_active;
+    if constexpr(
+        submodular_minimization_internal::supports_integral_certificate<Value>
+    ){
+        exact_active.push_back(std::move(initial_base.exact_integral));
+    }
     std::vector<long double> coefficient{1.0L};
     std::vector<long double> point = active.front();
 
@@ -183,10 +259,11 @@ auto submodular_function_minimization(
         iteration < maximum_iterations;
         ++iteration){
         result.iterations = iteration + 1;
-        std::vector<long double> extreme =
-            submodular_minimization_internal::greedy_base(
+        auto greedy =
+            submodular_minimization_internal::greedy_base<Value>(
                 ground_set_size, point, oracle
             );
+        std::vector<long double> extreme = std::move(greedy.floating);
         const long double norm =
             submodular_minimization_internal::dot(point, point);
         const long double support =
@@ -214,6 +291,11 @@ auto submodular_function_minimization(
         }
         if(duplicate) break;
         active.push_back(std::move(extreme));
+        if constexpr(
+            submodular_minimization_internal::supports_integral_certificate<Value>
+        ){
+            exact_active.push_back(std::move(greedy.exact_integral));
+        }
         coefficient.push_back(0.0L);
 
         while(true){
@@ -269,6 +351,18 @@ auto submodular_function_minimization(
                         std::vector<std::vector<long double>>::difference_type
                     >(offset)
                 );
+                if constexpr(
+                    submodular_minimization_internal::
+                        supports_integral_certificate<Value>
+                ){
+                    exact_active.erase(
+                        exact_active.begin()
+                        + static_cast<
+                            std::vector<std::vector<__int128_t>>::
+                                difference_type
+                        >(offset)
+                    );
+                }
             }
             point = submodular_minimization_internal::convex_combination(
                 active, coefficient
@@ -286,9 +380,20 @@ auto submodular_function_minimization(
         }
     );
     std::vector<unsigned char> candidate(ground_set_size, 0);
-    for(const std::size_t element : order){
+    std::vector<Value> chain_value;
+    chain_value.reserve(ground_set_size + 1);
+    chain_value.push_back(result.value);
+    std::size_t last_decrease = 0;
+    std::size_t first_increase = ground_set_size + 1;
+    for(std::size_t offset = 0; offset < order.size(); ++offset){
+        const std::size_t element = order[offset];
         candidate[element] = 1;
         const Value value = std::invoke(oracle, candidate);
+        if(value < chain_value.back()) last_decrease = offset + 1;
+        if(chain_value.back() < value){
+            first_increase = std::min(first_increase, offset + 1);
+        }
+        chain_value.push_back(value);
         if(value < result.value){
             result.value = value;
             result.elements.clear();
@@ -296,6 +401,67 @@ auto submodular_function_minimization(
                 index < ground_set_size;
                 ++index){
                 if(candidate[index]) result.elements.push_back(index);
+            }
+        }
+    }
+
+    if(last_decrease < first_increase){
+        candidate.assign(ground_set_size, 0);
+        result.elements.clear();
+        for(std::size_t offset = 0; offset < last_decrease; ++offset){
+            candidate[order[offset]] = 1;
+        }
+        for(std::size_t element = 0; element < ground_set_size; ++element){
+            if(candidate[element]) result.elements.push_back(element);
+        }
+        result.value = chain_value[last_decrease];
+        result.exact_certificate_used = true;
+        return result;
+    }
+
+    if constexpr(
+        submodular_minimization_internal::supports_integral_certificate<Value>
+    ){
+        constexpr __int128_t scale = static_cast<__int128_t>(1) << 48;
+        const auto weight =
+            submodular_minimization_internal::dyadic_weights(coefficient);
+        if(!weight.empty() && exact_active.size() == weight.size()){
+            std::vector<__int128_t> aggregate(ground_set_size);
+            for(std::size_t base = 0; base < exact_active.size(); ++base){
+                for(std::size_t element = 0;
+                    element < ground_set_size;
+                    ++element){
+                    aggregate[element] +=
+                        static_cast<__int128_t>(weight[base])
+                        * exact_active[base][element];
+                }
+            }
+            candidate.assign(ground_set_size, 0);
+            __int128_t lower_bound = 0;
+            for(std::size_t element = 0;
+                element < ground_set_size;
+                ++element){
+                if(aggregate[element] < 0){
+                    candidate[element] = 1;
+                    lower_bound += aggregate[element];
+                }
+            }
+            const Value certified_value = std::invoke(oracle, candidate);
+            const __int128_t normalized_value =
+                static_cast<__int128_t>(certified_value)
+                - static_cast<__int128_t>(chain_value.front());
+            if(scale * normalized_value == lower_bound){
+                result.value = certified_value;
+                result.elements.clear();
+                for(std::size_t element = 0;
+                    element < ground_set_size;
+                    ++element){
+                    if(candidate[element]){
+                        result.elements.push_back(element);
+                    }
+                }
+                result.exact_certificate_used = true;
+                return result;
             }
         }
     }

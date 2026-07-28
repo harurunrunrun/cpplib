@@ -10,8 +10,15 @@ def main() -> None:
     arguments = parser.parse_args()
     output = Path(arguments.out_dir)
     output.mkdir(parents=True, exist_ok=True)
-    for index, seed in enumerate((1, 31, 998244353, 0xA7B01D)):
-        (output / f"{index}.in").write_text(f"{seed} 60\n")
+    cases = (
+        (1, 60),
+        (31, 60),
+        (998244353, 60),
+        (0xA7B01D, 60),
+        (0, 0),
+    )
+    for index, (seed, rounds) in enumerate(cases):
+        (output / f"{index}.in").write_text(f"{seed} {rounds}\n")
         (output / f"{index}.out").write_text("OK\n")
 
 
