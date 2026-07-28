@@ -55,6 +55,39 @@ bool is_palindrome(const std::string& text, int left, int right){
     return true;
 }
 
+std::vector<std::string> brute_minimal_absent_words(
+    const std::string& text,
+    const std::string& alphabet
+){
+    std::vector<std::string> result;
+    std::vector<std::string> previous{std::string()};
+    for(std::size_t length = 1; length <= text.size() + 1; ++length){
+        std::vector<std::string> current;
+        current.reserve(previous.size() * alphabet.size());
+        for(const std::string& prefix: previous){
+            for(char symbol: alphabet){
+                std::string word = prefix;
+                word.push_back(symbol);
+                current.push_back(std::move(word));
+            }
+        }
+        for(const std::string& word: current){
+            if(text.find(word) != std::string::npos) continue;
+            if(word.size() == 1
+                || (text.find(word.substr(0, word.size() - 1))
+                        != std::string::npos
+                    && text.find(word.substr(1))
+                        != std::string::npos)){
+                result.push_back(word);
+            }
+        }
+        previous = std::move(current);
+    }
+    std::sort(result.begin(), result.end());
+    result.erase(std::unique(result.begin(), result.end()), result.end());
+    return result;
+}
+
 std::vector<StringRun> brute_runs(const std::string& text){
     const int size = static_cast<int>(text.size());
     std::vector<StringRun> result;
@@ -169,6 +202,11 @@ bool verify(const std::string& text){
                 || text.find(word.substr(1)) == std::string::npos)){
             return false;
         }
+    }
+    if(text.size() <= 6){
+        const auto expected_absent =
+            brute_minimal_absent_words(text, "abc");
+        if(absent != expected_absent) return false;
     }
     const PalindromicFactorizationResult factorization =
         palindromic_factorization(text);
