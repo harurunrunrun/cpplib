@@ -23,12 +23,13 @@ def main() -> None:
     number_theory_root = Path("src/algorithm/math/number_theory")
     assert check_algorithm_subcategories.NESTED_LAYOUTS[number_theory_root] == (
         frozenset({
-            "arithmetic", "gaussian", "modular", "multiplicative", "prime",
+            "arithmetic", "finite_field", "gaussian", "modular",
+            "multiplicative", "prime",
         })
     )
     assert len(
         check_algorithm_subcategories.NUMBER_THEORY_SUBCATEGORY_BY_STEM
-    ) == 42
+    ) == 43
     assert (
         check_algorithm_subcategories.NUMBER_THEORY_SUBCATEGORY_BY_STEM[
             "gaussian_integer"
@@ -73,11 +74,12 @@ def main() -> None:
     assert check_algorithm_subcategories.NESTED_LAYOUTS[
         linear_algebra_root
     ] == frozenset({
-        "combinatorial", "elimination", "gf2", "matrix_operations",
+        "combinatorial", "elimination", "gf2", "integer_normal_forms",
+        "lattice", "matrix_operations",
     })
     assert len(
         check_algorithm_subcategories.LINEAR_ALGEBRA_SUBCATEGORY_BY_STEM
-    ) == 21
+    ) == 24
     assert (
         check_algorithm_subcategories.LINEAR_ALGEBRA_SUBCATEGORY_BY_STEM[
             "fast_characteristic_polynomial"
@@ -91,12 +93,12 @@ def main() -> None:
     assert check_algorithm_subcategories.NESTED_LAYOUTS[
         dynamic_programming_root
     ] == frozenset({
-        "assignment_subset", "interval_partition", "profile_grid",
-        "resource", "sequence_selection",
+        "assignment_subset", "bitset", "digit", "interval_partition",
+        "profile_grid", "resource", "sequence_selection",
     })
     assert len(
         check_algorithm_subcategories.DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM
-    ) == 22
+    ) == 24
     assert (
         check_algorithm_subcategories.DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM[
             "count_perfect_assignments"
@@ -154,6 +156,21 @@ def main() -> None:
         == "batch_framework"
     )
 
+    combinatorial_root = Path(
+        "src/algorithm/other/combinatorial_optimization"
+    )
+    assert check_algorithm_subcategories.NESTED_LAYOUTS[
+        combinatorial_root
+    ] == frozenset({"matroid", "submodular"})
+    assert len(
+        check_algorithm_subcategories.
+        COMBINATORIAL_OPTIMIZATION_SUBCATEGORY_BY_STEM
+    ) == 5
+    assert (
+        check_algorithm_subcategories.
+        COMBINATORIAL_OPTIMIZATION_SUBCATEGORY_BY_STEM["matroid_union"]
+        == "matroid"
+    )
 
     with TemporaryDirectory() as directory:
         root = Path(directory)

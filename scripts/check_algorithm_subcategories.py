@@ -40,7 +40,7 @@ EXPECTED_LAYOUT: dict[Path, frozenset[str]] = {
         "interval", "offline_query", "sliding_window", "static_query",
     }),
     Path("src/algorithm/string"): frozenset({
-        "automata", "palindrome", "sequence", "suffix",
+        "automata", "compression", "palindrome", "sequence", "suffix",
     }),
     Path("src/algorithm/tree"): frozenset({
         "construction", "decomposition", "dynamic_programming",
@@ -58,8 +58,8 @@ EXPECTED_LAYOUT: dict[Path, frozenset[str]] = {
         "bipartite", "flow", "general",
     }),
     Path("src/algorithm/other"): frozenset({
-        "dynamic_programming", "offline_query", "scheduling", "sequence",
-        "utility",
+        "combinatorial_optimization", "dynamic_programming", "offline_query",
+        "scheduling", "sequence", "utility",
     }),
     Path("src/algorithm/random"): frozenset({"crack", "engine"}),
 }
@@ -108,6 +108,7 @@ NUMBER_THEORY_SUBCATEGORY_BY_STEM: dict[str, str] = {
     "visible_lattice_points": "multiplicative",
     "gaussian_integer": "gaussian",
     "gaussian_integer_factorization": "gaussian",
+    "finite_field_extension": "finite_field",
 }
 
 NUMBER_THEORY_SUBCATEGORIES = frozenset(
@@ -202,6 +203,9 @@ LINEAR_ALGEBRA_SUBCATEGORY_BY_STEM: dict[str, str] = {
     "quadratic_form_gf2": "gf2",
     "hafnian": "combinatorial",
     "pfaffian": "combinatorial",
+    "hermite_normal_form": "integer_normal_forms",
+    "smith_normal_form": "integer_normal_forms",
+    "lll_lattice_reduction": "lattice",
 }
 
 LINEAR_ALGEBRA_SUBCATEGORIES = frozenset(
@@ -231,6 +235,8 @@ DYNAMIC_PROGRAMMING_SUBCATEGORY_BY_STEM: dict[str, str] = {
     "maximum_disjoint_equal_pair_counts": "sequence_selection",
     "maximum_noncrossing_bipartite_segments": "sequence_selection",
     "minimum_rank_removal_sort_cost": "sequence_selection",
+    "four_russians_boolean_matrix": "bitset",
+    "digit_dp": "digit",
 }
 
 DYNAMIC_PROGRAMMING_SUBCATEGORIES = frozenset(
@@ -313,6 +319,18 @@ OFFLINE_QUERY_SUBCATEGORIES = frozenset(
     OFFLINE_QUERY_SUBCATEGORY_BY_STEM.values()
 )
 
+COMBINATORIAL_OPTIMIZATION_SUBCATEGORY_BY_STEM: dict[str, str] = {
+    "matroid_intersection": "matroid",
+    "matroid_partition": "matroid",
+    "matroid_union": "matroid",
+    "weighted_matroid_intersection": "matroid",
+    "submodular_function_minimization": "submodular",
+}
+
+COMBINATORIAL_OPTIMIZATION_SUBCATEGORIES = frozenset(
+    COMBINATORIAL_OPTIMIZATION_SUBCATEGORY_BY_STEM.values()
+)
+
 NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
     Path("src/algorithm/math/number_theory"): NUMBER_THEORY_SUBCATEGORIES,
     Path("src/algorithm/graph/shortest_path"): SHORTEST_PATH_SUBCATEGORIES,
@@ -330,6 +348,9 @@ NESTED_LAYOUTS: dict[Path, frozenset[str]] = {
         GRAPH_CONSTRAINTS_SUBCATEGORIES
     ),
     Path("src/algorithm/other/offline_query"): OFFLINE_QUERY_SUBCATEGORIES,
+    Path("src/algorithm/other/combinatorial_optimization"): (
+        COMBINATORIAL_OPTIMIZATION_SUBCATEGORIES
+    ),
 }
 
 EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
@@ -356,6 +377,9 @@ EXPECTED_NESTED_STEMS: dict[Path, dict[str, str]] = {
     ),
     Path("src/algorithm/other/offline_query"): (
         OFFLINE_QUERY_SUBCATEGORY_BY_STEM
+    ),
+    Path("src/algorithm/other/combinatorial_optimization"): (
+        COMBINATORIAL_OPTIMIZATION_SUBCATEGORY_BY_STEM
     ),
 }
 
