@@ -1,9 +1,10 @@
 ---
-title: Minkowski Difference 3D with Default Seed (固定seedによる三次元Minkowski差)
+title: Minkowski Difference 3D (三次元Minkowski差)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/polyhedron/polyhedron_polyhedron/minkowski_difference_3d_default.hpp
 ---
 
-全頂点対の差を候補とし、固定seedの三次元凸包としてMinkowski差を構築する。
+第二入力を原点について反転し、一般位置では法線扇を直接マージする。
+退化した法線扇または低次元入力では、全頂点対の差の凸包へ自動的に切り替える。
 
 ## API
 
@@ -12,13 +13,18 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/polyhedron/polyhed
 
 ## API別の時間計算量・空間計算量
 
-$V_1,V_2$ を頂点数、$P=V_1V_2$、$K$ を出力サイズとする。候補生成は
-$O(P)$ 時間・領域。固定seedに対する全体の最悪時間は
-$O(P^2\log P+K)$、最悪追加領域は $O(P^2+K)$。既定seedに敵対しない
-入力では期待 $O(P\log P+K)$ 時間・$O(P+K)$ 領域。
+$V_i,E_i,F_i$ を各入力の頂点・辺・面数、$N_i=V_i+E_i+F_i$、
+$K$ を出力サイズとする。一般位置の直接構築は
+$O(F_1V_2+F_2V_1+E_1E_2+K)=O(N_1N_2+K)$ 時間、
+$O(N_1+N_2+K)$ 追加領域。
+
+退化時のfallbackは $P=V_1V_2$ として、固定seedに対する最悪
+$O(P^2\log P+K)$ 時間・$O(P^2+K)$ 追加領域。固定seedに敵対しない入力では
+期待 $O(P\log P+K)$ 時間・$O(P+K)$ 追加領域。
 
 ## 注意点
 
 両入力は空でなく、全頂点が有限でなければならない。空入力は
 `std::invalid_argument`、候補数がvector上限を超えると
-`std::length_error`。退化次元と重複点は凸包側で処理する。
+`std::length_error`。直接構築が一般位置条件を満たさない場合は例外を外へ出さず、
+凸包fallbackで退化次元と重複点を処理する。
