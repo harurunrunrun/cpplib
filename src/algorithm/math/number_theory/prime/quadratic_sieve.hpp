@@ -11,6 +11,7 @@
 #include <utility>
 #include <vector>
 
+#include "../modular/sqrt_mod.hpp"
 #include "prime_factorization.hpp"
 
 namespace math {
@@ -148,6 +149,7 @@ inline QuadraticSieveResult quadratic_sieve_factor(
     }
 
     std::vector<std::uint32_t> factor_base;
+    std::vector<std::pair<std::uint32_t, std::uint32_t>> factor_roots;
     for(const std::uint32_t prime :
         quadratic_sieve_internal::primes_up_to(factor_base_bound)){
         if(value % prime == 0){
@@ -158,6 +160,20 @@ inline QuadraticSieveResult quadratic_sieve_factor(
         if(prime == 2
            || pow_mod_u64(value % prime, (prime - 1) / 2, prime) == 1){
             factor_base.push_back(prime);
+            if(prime == 2){
+                factor_roots.emplace_back(1, 1);
+            }else{
+                const auto root = sqrt_mod(value % prime, prime);
+                if(!root){
+                    throw std::logic_error(
+                        "quadratic sieve factor-base root is missing"
+                    );
+                }
+                factor_roots.emplace_back(
+                    static_cast<std::uint32_t>(*root),
+                    static_cast<std::uint32_t>(prime - *root)
+                );
+            }
         }
     }
     result.factor_base_size = factor_base.size();
@@ -182,76 +198,135 @@ inline QuadraticSieveResult quadratic_sieve_factor(
     std::vector<unsigned char> has_basis(factor_base.size(), 0);
 
     const u64 start = quadratic_sieve_internal::ceiling_square_root(value);
-    for(std::size_t offset = 0;
-        offset < maximum_tested_values
-        && relations.size() < relation_limit;
-        ++offset){
-        if(offset > std::numeric_limits<u64>::max() - start) break;
-        const u64 x = start + static_cast<u64>(offset);
-        const unsigned __int128 square =
-            static_cast<unsigned __int128>(x) * x;
-        const unsigned __int128 difference = square - value;
-        if(difference > std::numeric_limits<u64>::max()) break;
-        u64 remaining = static_cast<u64>(difference);
-        ++result.tested_values;
-        if(remaining == 0){
-            const u64 divisor = std::gcd(x, value);
-            if(divisor != 1 && divisor != value) result.factor = divisor;
-            return result;
-        }
-
-        quadratic_sieve_internal::Relation relation;
-        relation.x = x % value;
-        relation.exponents.assign(factor_base.size(), 0);
-        relation.parity.assign(parity_blocks, 0);
-        for(std::size_t index = 0; index < factor_base.size(); ++index){
-            const std::uint32_t prime = factor_base[index];
-            while(remaining % prime == 0){
-                remaining /= prime;
-                ++relation.exponents[index];
-            }
-            if(relation.exponents[index] & 1U){
-                relation.parity[index >> 6] |=
-                    u64{1} << (index & 63U);
-            }
-        }
-        if(remaining != 1) continue;
-        const std::size_t relation_index = relations.size();
-        relations.push_back(std::move(relation));
-        result.smooth_relations = relations.size();
-
-        std::vector<u64> reduced = relations.back().parity;
-        std::vector<u64> combination(relation_blocks);
-        combination[relation_index >> 6] |=
-            u64{1} << (relation_index & 63U);
-        bool inserted = false;
-        for(std::size_t reverse = 0;
-            reverse < factor_base.size();
-            ++reverse){
-            const std::size_t pivot = factor_base.size() - 1 - reverse;
-            if(!quadratic_sieve_internal::bit(reduced, pivot)) continue;
-            if(!has_basis[pivot]){
-                has_basis[pivot] = 1;
-                basis_value[pivot] = std::move(reduced);
-                basis_combination[pivot] = std::move(combination);
-                inserted = true;
+    constexpr std::size_t sieve_block_size = 1U << 16;
+    std::size_t offset = 0;
+    while(offset < maximum_tested_values
+          && relations.size() < relation_limit){
+        const std::size_t requested = std::min(
+            sieve_block_size, maximum_tested_values - offset
+        );
+        std::vector<u64> residual;
+        residual.reserve(requested);
+        for(std::size_t local = 0; local < requested; ++local){
+            if(offset + local
+               > std::numeric_limits<u64>::max() - start){
                 break;
             }
-            quadratic_sieve_internal::xor_into(
-                reduced, basis_value[pivot]
-            );
-            quadratic_sieve_internal::xor_into(
-                combination, basis_combination[pivot]
-            );
+            const u64 x = start + static_cast<u64>(offset + local);
+            const unsigned __int128 difference =
+                static_cast<unsigned __int128>(x) * x - value;
+            if(difference > std::numeric_limits<u64>::max()) break;
+            const u64 current = static_cast<u64>(difference);
+            if(current == 0){
+                const u64 divisor = std::gcd(x, value);
+                if(divisor != 1 && divisor != value){
+                    result.factor = divisor;
+                }
+                result.tested_values += local + 1;
+                return result;
+            }
+            residual.push_back(current);
         }
-        if(inserted || !quadratic_sieve_internal::all_zero(reduced)){
-            continue;
+        if(residual.empty()) break;
+
+        const u64 block_start = start + static_cast<u64>(offset);
+        for(std::size_t prime_index = 0;
+            prime_index < factor_base.size();
+            ++prime_index){
+            const std::uint32_t prime = factor_base[prime_index];
+            const auto [first_root, second_root] =
+                factor_roots[prime_index];
+            const auto sieve_root = [&](std::uint32_t root){
+                const std::uint32_t remainder =
+                    static_cast<std::uint32_t>(block_start % prime);
+                std::size_t local = static_cast<std::size_t>(
+                    (root + prime - remainder) % prime
+                );
+                for(; local < residual.size(); local += prime){
+                    while(residual[local] % prime == 0){
+                        residual[local] /= prime;
+                    }
+                }
+            };
+            sieve_root(first_root);
+            if(second_root != first_root) sieve_root(second_root);
         }
-        result.factor =
-            quadratic_sieve_internal::dependency_factor(
-                value, factor_base, relations, combination
+        result.tested_values += residual.size();
+
+        for(std::size_t local = 0;
+            local < residual.size()
+                && relations.size() < relation_limit;
+            ++local){
+            if(residual[local] != 1) continue;
+            const u64 x = block_start + static_cast<u64>(local);
+            u64 remaining = static_cast<u64>(
+                static_cast<unsigned __int128>(x) * x - value
             );
-        if(result.factor) return result;
+            quadratic_sieve_internal::Relation relation;
+            relation.x = x % value;
+            relation.exponents.assign(factor_base.size(), 0);
+            relation.parity.assign(parity_blocks, 0);
+            for(std::size_t index = 0;
+                index < factor_base.size();
+                ++index){
+                const std::uint32_t prime = factor_base[index];
+                while(remaining % prime == 0){
+                    remaining /= prime;
+                    ++relation.exponents[index];
+                }
+                if(relation.exponents[index] & 1U){
+                    relation.parity[index >> 6] |=
+                        u64{1} << (index & 63U);
+                }
+            }
+            if(remaining != 1){
+                throw std::logic_error(
+                    "quadratic sieve smoothness mismatch"
+                );
+            }
+            const std::size_t relation_index = relations.size();
+            relations.push_back(std::move(relation));
+            result.smooth_relations = relations.size();
+
+            std::vector<u64> reduced = relations.back().parity;
+            std::vector<u64> combination(relation_blocks);
+            combination[relation_index >> 6] |=
+                u64{1} << (relation_index & 63U);
+            bool inserted = false;
+            for(std::size_t reverse = 0;
+                reverse < factor_base.size();
+                ++reverse){
+                const std::size_t pivot =
+                    factor_base.size() - 1 - reverse;
+                if(!quadratic_sieve_internal::bit(reduced, pivot)){
+                    continue;
+                }
+                if(!has_basis[pivot]){
+                    has_basis[pivot] = 1;
+                    basis_value[pivot] = std::move(reduced);
+                    basis_combination[pivot] = std::move(combination);
+                    inserted = true;
+                    break;
+                }
+                quadratic_sieve_internal::xor_into(
+                    reduced, basis_value[pivot]
+                );
+                quadratic_sieve_internal::xor_into(
+                    combination, basis_combination[pivot]
+                );
+            }
+            if(inserted
+               || !quadratic_sieve_internal::all_zero(reduced)){
+                continue;
+            }
+            result.factor =
+                quadratic_sieve_internal::dependency_factor(
+                    value, factor_base, relations, combination
+                );
+            if(result.factor) return result;
+        }
+        offset += residual.size();
+        if(residual.size() < requested) break;
     }
     return result;
 }
