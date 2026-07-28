@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/polygon3_plane_intersection3.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/polygon3_plane_intersection3.hpp"
+#include "../../src/algorithm/geometry/3d/result/polygon_plane/polygon3_plane_intersection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

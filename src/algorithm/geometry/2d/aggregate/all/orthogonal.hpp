@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_ORTHOGONAL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_ORTHOGONAL_HPP_INCLUDED
+
+#include "../../predicate/line_line/orthogonal_lines.hpp"
+#include "../../predicate/point_point/orthogonal_vectors.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_ORTHOGONAL_HPP_INCLUDED

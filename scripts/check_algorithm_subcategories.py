@@ -2,14 +2,27 @@
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
 
-FLAT_LAYOUTS: frozenset[Path] = frozenset({
+FLAT_LAYOUTS: frozenset[Path] = frozenset()
+
+GEOMETRY_LAYOUTS: tuple[Path, ...] = (
     Path("src/algorithm/geometry/2d"),
     Path("src/algorithm/geometry/3d"),
+)
+
+GEOMETRY_RETURN_CATEGORIES: frozenset[str] = frozenset({
+    "aggregate", "boolean_set", "circle", "constant", "detail",
+    "enumeration", "index", "index_set", "integer", "integer_set",
+    "line", "line_set", "matrix", "plane", "point", "point_set",
+    "polygon", "polyhedron", "predicate", "quaternion", "result",
+    "scalar", "segment", "sphere", "transform", "triangle", "type",
+    "void",
 })
+GEOMETRY_ARGUMENT_RE = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 
 
 FORBIDDEN_ALGORITHM_ROOTS: frozenset[Path] = frozenset({
@@ -343,6 +356,7 @@ def layout_violations(
     nested_layouts: dict[Path, frozenset[str]] | None = None,
     expected_nested_stems: dict[Path, dict[str, str]] | None = None,
     check_nested_docs: bool | None = None,
+    geometry_layouts: tuple[Path, ...] | None = None,
 ) -> list[str]:
     repository_defaults = expected_layout is EXPECTED_LAYOUT
     if flat_layouts is None:
@@ -364,6 +378,8 @@ def layout_violations(
     if check_nested_docs is None:
         check_nested_docs = repository_defaults
     errors: list[str] = []
+    if geometry_layouts is None:
+        geometry_layouts = GEOMETRY_LAYOUTS if repository_defaults else ()
     for relative_root in forbidden_roots:
         root = repository_root / relative_root
         for header in sorted(root.rglob("*.hpp")):
@@ -386,6 +402,51 @@ def layout_violations(
                     f"{header.relative_to(repository_root)}: header must be "
                     "placed directly in the dimension directory"
                 )
+    for source_relative_root in geometry_layouts:
+        trees = (
+            (source_relative_root, ".hpp", "header"),
+            (
+                Path(source_relative_root.as_posix().replace(
+                    "src/", "docs/", 1
+                )),
+                ".md",
+                "documentation",
+            ),
+        )
+        for relative_root, suffix, label in trees:
+            root = repository_root / relative_root
+            if not root.is_dir():
+                errors.append(
+                    f"{relative_root}: geometry directory is missing"
+                )
+                continue
+            files = sorted(
+                path for path in root.rglob(f"*{suffix}")
+                if path.is_file()
+            )
+            if not files:
+                errors.append(
+                    f"{relative_root}: geometry directory has no {label}"
+                )
+            for file in files:
+                relative = file.relative_to(root)
+                if len(relative.parts) != 3:
+                    errors.append(
+                        f"{file.relative_to(repository_root)}: geometry "
+                        f"{label} must use <return-type>/<argument-types>"
+                    )
+                    continue
+                return_category, argument_category, _ = relative.parts
+                if return_category not in GEOMETRY_RETURN_CATEGORIES:
+                    errors.append(
+                        f"{file.relative_to(repository_root)}: unknown "
+                        f"geometry return category '{return_category}'"
+                    )
+                if not GEOMETRY_ARGUMENT_RE.fullmatch(argument_category):
+                    errors.append(
+                        f"{file.relative_to(repository_root)}: invalid "
+                        f"geometry argument category '{argument_category}'"
+                    )
     for relative_root, expected_categories in expected_layout.items():
         root = repository_root / relative_root
         if not root.is_dir():
@@ -537,7 +598,7 @@ def run(repository_root: Path) -> int:
         return 1
     header_count = sum(
         1
-        for relative_root in (*FLAT_LAYOUTS, *EXPECTED_LAYOUT)
+        for relative_root in (*GEOMETRY_LAYOUTS, *FLAT_LAYOUTS, *EXPECTED_LAYOUT)
         for path in (repository_root / relative_root).rglob("*.hpp")
         if path.is_file()
     )

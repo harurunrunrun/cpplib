@@ -1,12 +1,12 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/dot.hpp"
-#include "../../src/algorithm/geometry/3d/projection.hpp"
-#include "../../src/algorithm/geometry/3d/closest_point.hpp"
-#include "../../src/algorithm/geometry/3d/sphere_volume.hpp"
-#include "../../src/algorithm/geometry/3d/geometry_3d.hpp"
-#include "../../src/algorithm/geometry/3d/cross.hpp"
-#include "../../src/algorithm/geometry/3d/contains.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point/dot.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/projection.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/closest_point.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/sphere/sphere_volume.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/geometry_3d.hpp"
+#include "../../src/algorithm/geometry/3d/point/point_point/cross.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/contains.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

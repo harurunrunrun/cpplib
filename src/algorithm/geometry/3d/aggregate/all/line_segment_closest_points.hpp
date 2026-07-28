@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_SEGMENT_CLOSEST_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_SEGMENT_CLOSEST_POINTS_HPP_INCLUDED
+
+#include "../../point_set/line_segment/line_segment_closest_points_line_segment.hpp"
+#include "../../point_set/segment_line/line_segment_closest_points_segment_line.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_SEGMENT_CLOSEST_POINTS_HPP_INCLUDED

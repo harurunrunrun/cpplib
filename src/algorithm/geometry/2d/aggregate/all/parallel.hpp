@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_PARALLEL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_PARALLEL_HPP_INCLUDED
+
+#include "../../predicate/line_line/parallel_lines.hpp"
+#include "../../predicate/point_point/parallel_vectors.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_PARALLEL_HPP_INCLUDED

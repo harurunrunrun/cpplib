@@ -1,0 +1,46 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RESULT_RAY_RAY_RAY_RAY_INTERSECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RESULT_RAY_RAY_RAY_RAY_INTERSECTION_HPP_INCLUDED
+
+#include <algorithm>
+#include <variant>
+
+#include "../../aggregate/all/geometry_primitives.hpp"
+#include "../../scalar/point_point/dot.hpp"
+#include "../../integer/scalar/geometry3d_sign.hpp"
+#include "../line_line/line_line_intersection.hpp"
+#include "../../type/definition/linear_intersection3.hpp"
+#include "../../scalar/point/norm.hpp"
+#include "../../predicate/ray_point/on_ray.hpp"
+#include "../../point/ray/ray3_direction.hpp"
+
+inline LinearIntersection3 ray_ray_intersection(
+    const Ray3& first,
+    const Ray3& second
+){
+    const Point3 first_direction = ray3_direction(first);
+    const Point3 second_direction = ray3_direction(second);
+    const LinearIntersection3 support = line_line_intersection(
+        Line3{first.origin, first.through},
+        Line3{second.origin, second.through}
+    );
+    if(const auto* point = std::get_if<Point3>(&support)){
+        return on_ray(first, *point) && on_ray(second, *point)
+            ? LinearIntersection3{*point}
+            : LinearIntersection3{std::monostate{}};
+    }
+    if(!std::holds_alternative<Line3>(support)) return std::monostate{};
+
+    const long double second_origin_parameter = dot(
+        second.origin - first.origin, first_direction
+    ) / norm(first_direction);
+    if(geometry3d_sign(dot(first_direction, second_direction)) > 0){
+        if(geometry3d_sign(second_origin_parameter) > 0) return second;
+        return first;
+    }
+    const int endpoint_sign = geometry3d_sign(second_origin_parameter);
+    if(endpoint_sign < 0) return std::monostate{};
+    if(endpoint_sign == 0) return first.origin;
+    return Segment3{first.origin, second.origin};
+}
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_RESULT_RAY_RAY_RAY_RAY_INTERSECTION_HPP_INCLUDED

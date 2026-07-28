@@ -1,10 +1,10 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_rectangle_result.hpp"
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_rectangle_normalized.hpp"
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_rectangle_points.hpp"
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_rectangle.hpp"
-#include "../../src/algorithm/geometry/2d/distance.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/minimum_enclosing_rectangle_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/minimum_enclosing_rectangle_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/minimum_enclosing_rectangle_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/minimum_enclosing_rectangle.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/distance.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <cmath>

@@ -1,11 +1,11 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_calipers_detail.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_diameter.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_diameter_normalized.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_diameter_points.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_diameter_result.hpp"
-#include "../../src/algorithm/geometry/2d/rotating_calipers.hpp"
+#include "../../src/algorithm/geometry/2d/detail/point_set_point/convex_calipers_detail.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/convex_polygon_diameter.hpp"
+#include "../../src/algorithm/geometry/2d/result/polygon/convex_polygon_diameter_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/convex_polygon_diameter_points.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/convex_polygon_diameter_result.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/rotating_calipers.hpp"
 #include "convex_calipers_test_common.hpp"
 
 namespace{

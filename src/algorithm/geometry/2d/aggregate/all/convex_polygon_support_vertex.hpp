@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_SUPPORT_VERTEX_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_SUPPORT_VERTEX_HPP_INCLUDED
+
+#include "../../index/point/convex_polygon_support_vertex_normalized.hpp"
+#include "../../index/point_set_point/convex_polygon_support_vertex_points.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_SUPPORT_VERTEX_HPP_INCLUDED

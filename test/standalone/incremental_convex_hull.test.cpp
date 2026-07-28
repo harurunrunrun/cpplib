@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/incremental_convex_hull.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/incremental_convex_hull.hpp"
 
 using Point = IntegerPoint<long long>;
 using Wide = GeometryIntegerWide;

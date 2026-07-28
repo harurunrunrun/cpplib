@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CIRCLE_RELATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CIRCLE_RELATION_HPP_INCLUDED
+
+#include "../../type/definition/circle_relation_result.hpp"
+#include "../../integer/circle_circle/circle_relation_circles.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CIRCLE_RELATION_HPP_INCLUDED

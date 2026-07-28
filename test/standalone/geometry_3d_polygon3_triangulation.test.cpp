@@ -1,10 +1,10 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/polygon3_triangulation_indices.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_triangulation_triangles.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_triangulation.hpp"
-#include "../../src/algorithm/geometry/3d/area.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_area.hpp"
+#include "../../src/algorithm/geometry/3d/index_set/polygon/polygon3_triangulation_indices.hpp"
+#include "../../src/algorithm/geometry/3d/triangle/polygon/polygon3_triangulation_triangles.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/polygon3_triangulation.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/triangle/area.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/polygon/polygon3_area.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

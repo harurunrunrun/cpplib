@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_facets.hpp"
+#include "../../src/algorithm/geometry/3d/result/polyhedron/convex_polyhedron_facets.hpp"
 
 int main(){
     int affine_dimension;

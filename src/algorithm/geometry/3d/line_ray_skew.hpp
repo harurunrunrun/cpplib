@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_RAY_SKEW_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_RAY_SKEW_HPP_INCLUDED
-
-#include "line_ray_skew_line_ray.hpp"
-#include "line_ray_skew_ray_line.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_RAY_SKEW_HPP_INCLUDED

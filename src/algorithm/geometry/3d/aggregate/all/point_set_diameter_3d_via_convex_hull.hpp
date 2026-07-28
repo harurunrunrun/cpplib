@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_POINT_SET_DIAMETER_3D_VIA_CONVEX_HULL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_POINT_SET_DIAMETER_3D_VIA_CONVEX_HULL_HPP_INCLUDED
+
+#include "../../result/point_set/point_set_diameter_3d_via_convex_hull_default.hpp"
+#include "../../result/point_set/point_set_diameter_3d_via_convex_hull_with_seed.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_POINT_SET_DIAMETER_3D_VIA_CONVEX_HULL_HPP_INCLUDED

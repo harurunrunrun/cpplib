@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/2d/common_tangents.hpp"
+#include "../../src/algorithm/geometry/2d/line_set/circle_circle/common_tangents.hpp"
 
 namespace{
 

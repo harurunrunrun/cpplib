@@ -11,13 +11,13 @@
 #include <random>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_detail.hpp"
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_four_points.hpp"
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_one_point.hpp"
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_points.hpp"
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_three_points.hpp"
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_two_points.hpp"
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere.hpp"
+#include "../../src/algorithm/geometry/3d/detail/point/minimum_enclosing_sphere_detail.hpp"
+#include "../../src/algorithm/geometry/3d/sphere/point_point_point_point/minimum_enclosing_sphere_four_points.hpp"
+#include "../../src/algorithm/geometry/3d/sphere/point/minimum_enclosing_sphere_one_point.hpp"
+#include "../../src/algorithm/geometry/3d/sphere/point_set/minimum_enclosing_sphere_points.hpp"
+#include "../../src/algorithm/geometry/3d/sphere/point_point_point/minimum_enclosing_sphere_three_points.hpp"
+#include "../../src/algorithm/geometry/3d/sphere/point_point/minimum_enclosing_sphere_two_points.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/minimum_enclosing_sphere.hpp"
 
 namespace{
 

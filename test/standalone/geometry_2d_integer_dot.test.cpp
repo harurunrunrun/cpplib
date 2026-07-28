@@ -3,9 +3,9 @@
 #include <concepts>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/geometry_integer_wide.hpp"
-#include "../../src/algorithm/geometry/2d/integer_dot_integer_points.hpp"
-#include "../../src/algorithm/geometry/2d/integer_dot.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/geometry_integer_wide.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/scalar/integer_dot_integer_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/integer_dot.hpp"
 
 int main(){
     static_assert(std::same_as<GeometryIntegerWide, ExactInteger>);

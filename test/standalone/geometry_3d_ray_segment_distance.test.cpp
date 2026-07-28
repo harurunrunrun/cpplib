@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/ray_segment_distance_ray_segment.hpp"
-#include "../../src/algorithm/geometry/3d/ray_segment_distance_segment_ray.hpp"
-#include "../../src/algorithm/geometry/3d/ray_segment_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/ray_segment/ray_segment_distance_ray_segment.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/segment_ray/ray_segment_distance_segment_ray.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/ray_segment_distance.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

@@ -1,0 +1,13 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TYPE_DEFINITION_EUCLIDEAN_MST_EDGE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TYPE_DEFINITION_EUCLIDEAN_MST_EDGE_HPP_INCLUDED
+
+#include <cstddef>
+#include <cstdint>
+
+struct EuclideanMstEdge{
+    std::size_t from;
+    std::size_t to;
+    __uint128_t squared_distance;
+};
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TYPE_DEFINITION_EUCLIDEAN_MST_EDGE_HPP_INCLUDED

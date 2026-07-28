@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_PICK_THEOREM_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_PICK_THEOREM_HPP_INCLUDED
+
+#include "../../type/definition/pick_theorem_result.hpp"
+#include "../../result/scalar/pick_theorem_counts.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_PICK_THEOREM_HPP_INCLUDED

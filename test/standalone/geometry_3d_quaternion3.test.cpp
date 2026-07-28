@@ -3,9 +3,9 @@
 #include <cmath>
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/quaternion3.hpp"
-#include "../../src/algorithm/geometry/3d/quaternion3_dot.hpp"
-#include "../../src/algorithm/geometry/3d/quaternion3_type.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/quaternion3.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/quaternion_quaternion/quaternion3_dot.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/quaternion3_type.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

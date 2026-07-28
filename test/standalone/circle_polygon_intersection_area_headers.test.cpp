@@ -4,11 +4,11 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
-#include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area_detail.hpp"
+#include "../../src/algorithm/geometry/2d/detail/point_point/circle_polygon_intersection_area_detail.hpp"
 
-#include "../../src/algorithm/geometry/2d/signed_circle_polygon_intersection_area.hpp"
-#include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area.hpp"
-#include "../../src/algorithm/geometry/2d/circle_polygon_intersection_area_value.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_point_set/signed_circle_polygon_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/circle_polygon_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_point_set/circle_polygon_intersection_area_value.hpp"
 
 long double circle_polygon_intersection_area_odr_signed(
     const Circle& circle,

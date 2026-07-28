@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/is_convex.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/point_set/is_convex.hpp"
 
 int main(){
     int size;

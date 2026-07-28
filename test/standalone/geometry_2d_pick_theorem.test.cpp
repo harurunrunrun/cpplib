@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/pick_theorem_result.hpp"
-#include "../../src/algorithm/geometry/2d/pick_theorem_counts.hpp"
-#include "../../src/algorithm/geometry/2d/pick_theorem.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/pick_theorem_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/scalar/pick_theorem_counts.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/pick_theorem.hpp"
 
 #include <cassert>
 #include <exception>

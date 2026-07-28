@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED
-
-#include "segment_plane_distance_segment_plane.hpp"
-#include "segment_plane_distance_plane_segment.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED

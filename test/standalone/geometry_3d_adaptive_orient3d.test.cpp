@@ -4,8 +4,8 @@
 #include <limits>
 #include <random>
 
-#include "../../src/algorithm/geometry/3d/adaptive_orient3d.hpp"
-#include "../../src/algorithm/geometry/3d/exact_orient3d.hpp"
+#include "../../src/algorithm/geometry/3d/integer/point_point_point_point/adaptive_orient3d.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/exact_orient3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

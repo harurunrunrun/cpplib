@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/dominant_axis3.hpp"
-#include "../../src/algorithm/geometry/3d/dominant_axis_from_point3.hpp"
-#include "../../src/algorithm/geometry/3d/dominant_axis_projection_to_point.hpp"
-#include "../../src/algorithm/geometry/3d/dominant_axis_projection.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/dominant_axis3.hpp"
+#include "../../src/algorithm/geometry/3d/result/point/dominant_axis_from_point3.hpp"
+#include "../../src/algorithm/geometry/3d/point/point/dominant_axis_projection_to_point.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/dominant_axis_projection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

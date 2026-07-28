@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/on_circle.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/circle_point/on_circle.hpp"
 
 #include <iostream>
 

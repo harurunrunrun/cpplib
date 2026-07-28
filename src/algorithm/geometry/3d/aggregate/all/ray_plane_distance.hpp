@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_RAY_PLANE_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_RAY_PLANE_DISTANCE_HPP_INCLUDED
+
+#include "../../scalar/ray_plane/ray_plane_distance_ray_plane.hpp"
+#include "../../scalar/plane_ray/ray_plane_distance_plane_ray.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_RAY_PLANE_DISTANCE_HPP_INCLUDED

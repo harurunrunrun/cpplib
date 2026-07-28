@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED
+
+#include "../../scalar/segment_plane/segment_plane_distance_segment_plane.hpp"
+#include "../../scalar/plane_segment/segment_plane_distance_plane_segment.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_SEGMENT_PLANE_DISTANCE_HPP_INCLUDED

@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/insphere.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point_point_point_point/insphere.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/on_convex_hull_query.hpp"
-#include "../../src/algorithm/geometry/2d/on_convex_hull_points.hpp"
-#include "../../src/algorithm/geometry/2d/on_convex_hull.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/on_convex_hull_query.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/point_set_point/on_convex_hull_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/on_convex_hull.hpp"
 
 #include <iostream>
 #include <vector>

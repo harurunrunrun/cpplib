@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_ray_closest_points_line_ray.hpp"
-#include "../../src/algorithm/geometry/3d/line_ray_closest_points_ray_line.hpp"
-#include "../../src/algorithm/geometry/3d/line_ray_closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/line_ray/line_ray_closest_points_line_ray.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/ray_line/line_ray_closest_points_ray_line.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/line_ray_closest_points.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

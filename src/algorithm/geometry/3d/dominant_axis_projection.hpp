@@ -1,8 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DOMINANT_AXIS_PROJECTION_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DOMINANT_AXIS_PROJECTION_HPP_INCLUDED
-
-#include "dominant_axis3.hpp"
-#include "dominant_axis_from_point3.hpp"
-#include "dominant_axis_projection_to_point.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DOMINANT_AXIS_PROJECTION_HPP_INCLUDED

@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CIRCLE_POLYGON_INTERSECTION_AREA_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CIRCLE_POLYGON_INTERSECTION_AREA_HPP_INCLUDED
+
+#include "../../scalar/circle_point_set/signed_circle_polygon_intersection_area.hpp"
+#include "../../scalar/circle_point_set/circle_polygon_intersection_area_value.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CIRCLE_POLYGON_INTERSECTION_AREA_HPP_INCLUDED

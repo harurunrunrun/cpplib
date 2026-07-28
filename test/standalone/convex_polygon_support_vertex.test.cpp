@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_support_vertex_normalized.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_support_vertex_points.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_support_vertex.hpp"
+#include "../../src/algorithm/geometry/2d/index/point/convex_polygon_support_vertex_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/index/point_set_point/convex_polygon_support_vertex_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/convex_polygon_support_vertex.hpp"
 #include "convex_calipers_test_common.hpp"
 
 int main(){

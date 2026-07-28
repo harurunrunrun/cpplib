@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_SCALED_SIGN_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_SCALED_SIGN_HPP_INCLUDED
-
-#include "geometry_scaled_sign_value_tolerance_roundoff_scales.hpp"
-#include "geometry_scaled_sign_value_scale.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_GEOMETRY_SCALED_SIGN_HPP_INCLUDED

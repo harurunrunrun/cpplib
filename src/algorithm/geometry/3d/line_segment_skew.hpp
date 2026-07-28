@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_SKEW_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_SKEW_HPP_INCLUDED
-
-#include "line_segment_skew_line_segment.hpp"
-#include "line_segment_skew_segment_line.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_SKEW_HPP_INCLUDED

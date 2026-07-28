@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_FARTHEST_VERTICES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_FARTHEST_VERTICES_HPP_INCLUDED
+
+#include "../../index_set/polygon/convex_polygon_farthest_vertices_normalized.hpp"
+#include "../../index_set/point_set/convex_polygon_farthest_vertices_points.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_FARTHEST_VERTICES_HPP_INCLUDED

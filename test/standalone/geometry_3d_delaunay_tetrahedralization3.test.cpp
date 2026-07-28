@@ -3,7 +3,7 @@
 #include <array>
 #include <cstddef>
 
-#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_result3.hpp"
+#include "../../src/algorithm/geometry/3d/result/point_set/delaunay_tetrahedralization_result3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

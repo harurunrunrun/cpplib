@@ -5,13 +5,13 @@
 #include <utility>
 #include <cstdint>
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_point_distance.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
-#include "../../src/algorithm/geometry/3d/minkowski_difference_3d_default.hpp"
-#include "../../src/algorithm/geometry/3d/minkowski_difference_3d_detail.hpp"
-#include "../../src/algorithm/geometry/3d/minkowski_difference_3d_direct.hpp"
-#include "../../src/algorithm/geometry/3d/minkowski_difference_3d_with_seed.hpp"
-#include "../../src/algorithm/geometry/3d/minkowski_difference_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/polyhedron_point/convex_polyhedron_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/polyhedron/convex_polyhedron_volume.hpp"
+#include "../../src/algorithm/geometry/3d/polyhedron/polyhedron_polyhedron/minkowski_difference_3d_default.hpp"
+#include "../../src/algorithm/geometry/3d/detail/polyhedron_polyhedron/minkowski_difference_3d_detail.hpp"
+#include "../../src/algorithm/geometry/3d/polyhedron/polyhedron_polyhedron/minkowski_difference_3d_direct.hpp"
+#include "../../src/algorithm/geometry/3d/polyhedron/polyhedron_polyhedron/minkowski_difference_3d_with_seed.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/minkowski_difference_3d.hpp"
 #include "geometry_3d_collision_test_common.hpp"
 
 namespace{

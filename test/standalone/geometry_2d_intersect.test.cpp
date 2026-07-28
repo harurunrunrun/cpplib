@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/intersect_line_point.hpp"
-#include "../../src/algorithm/geometry/2d/intersect_segment_segment.hpp"
-#include "../../src/algorithm/geometry/2d/intersect.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/line_point/intersect_line_point.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/segment_segment/intersect_segment_segment.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/intersect.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

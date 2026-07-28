@@ -4,9 +4,9 @@
 #include <exception>
 #include <type_traits>
 
-#include "../../src/algorithm/geometry/2d/normalized_line_result.hpp"
-#include "../../src/algorithm/geometry/2d/normalized_line_line.hpp"
-#include "../../src/algorithm/geometry/2d/normalized_line.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/normalized_line_result.hpp"
+#include "../../src/algorithm/geometry/2d/line/line/normalized_line_line.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/normalized_line.hpp"
 #include "geometry_2d_test_common.hpp"
 
 int main(){

@@ -9,10 +9,10 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/deduplicate_points_3d_default.hpp"
-#include "../../src/algorithm/geometry/3d/deduplicate_points_3d_detail.hpp"
-#include "../../src/algorithm/geometry/3d/deduplicate_points_3d_relative_range_tree.hpp"
-#include "../../src/algorithm/geometry/3d/deduplicate_points_3d.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/point_set/deduplicate_points_3d_default.hpp"
+#include "../../src/algorithm/geometry/3d/detail/point_set/deduplicate_points_3d_detail.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/point_set/deduplicate_points_3d_relative_range_tree.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/deduplicate_points_3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

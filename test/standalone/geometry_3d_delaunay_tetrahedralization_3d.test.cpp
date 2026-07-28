@@ -10,15 +10,15 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d_default.hpp"
-#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d_detail.hpp"
-#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d_randomized.hpp"
-#include "../../src/algorithm/geometry/3d/delaunay_tetrahedralization_3d.hpp"
-#include "../../src/algorithm/geometry/3d/adaptive_insphere.hpp"
-#include "../../src/algorithm/geometry/3d/adaptive_orient3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
-#include "../../src/algorithm/geometry/3d/signed_volume.hpp"
+#include "../../src/algorithm/geometry/3d/result/point_set/delaunay_tetrahedralization_3d_default.hpp"
+#include "../../src/algorithm/geometry/3d/detail/point_set/delaunay_tetrahedralization_3d_detail.hpp"
+#include "../../src/algorithm/geometry/3d/result/point_set/delaunay_tetrahedralization_3d_randomized.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/delaunay_tetrahedralization_3d.hpp"
+#include "../../src/algorithm/geometry/3d/integer/point_point_point_point_point/adaptive_insphere.hpp"
+#include "../../src/algorithm/geometry/3d/integer/point_point_point_point/adaptive_orient3d.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/polyhedron/convex_polyhedron_volume.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/tetrahedron/signed_volume.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

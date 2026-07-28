@@ -5,9 +5,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_circle_result.hpp"
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_circle_points.hpp"
-#include "../../src/algorithm/geometry/2d/minimum_enclosing_circle.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/minimum_enclosing_circle_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/minimum_enclosing_circle_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/minimum_enclosing_circle.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

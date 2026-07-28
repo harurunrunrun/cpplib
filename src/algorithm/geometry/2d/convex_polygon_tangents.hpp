@@ -1,8 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_TANGENTS_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_TANGENTS_HPP_INCLUDED
-
-#include "convex_polygon_tangents_result.hpp"
-#include "convex_polygon_tangents_normalized.hpp"
-#include "convex_polygon_tangents_points.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_TANGENTS_HPP_INCLUDED

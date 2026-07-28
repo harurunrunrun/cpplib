@@ -2,9 +2,9 @@
 
 #include <variant>
 
-#include "../../src/algorithm/geometry/3d/three_plane_intersection.hpp"
-#include "../../src/algorithm/geometry/3d/three_plane_intersection_planes.hpp"
-#include "../../src/algorithm/geometry/3d/three_plane_intersection_result3.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/three_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/result/plane_plane_plane/three_plane_intersection_planes.hpp"
+#include "../../src/algorithm/geometry/3d/result/plane/three_plane_intersection_result3.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

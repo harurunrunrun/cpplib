@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_FURTHEST_PAIR_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_FURTHEST_PAIR_HPP_INCLUDED
+
+#include "../../type/definition/furthest_pair_result.hpp"
+#include "../../result/point_set/furthest_pair_points.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_FURTHEST_PAIR_HPP_INCLUDED

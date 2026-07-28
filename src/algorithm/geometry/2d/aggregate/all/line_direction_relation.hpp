@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_LINE_DIRECTION_RELATION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_LINE_DIRECTION_RELATION_HPP_INCLUDED
+
+#include "../../type/definition/line_direction_relation_result.hpp"
+#include "../../enumeration/line_line/line_direction_relation_lines.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_LINE_DIRECTION_RELATION_HPP_INCLUDED

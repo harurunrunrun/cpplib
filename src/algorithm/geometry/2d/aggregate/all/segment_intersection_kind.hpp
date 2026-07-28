@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_SEGMENT_INTERSECTION_KIND_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_SEGMENT_INTERSECTION_KIND_HPP_INCLUDED
+
+#include "../../type/definition/segment_intersection_kind_result.hpp"
+#include "../../enumeration/segment_segment/segment_intersection_kind_segments.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_SEGMENT_INTERSECTION_KIND_HPP_INCLUDED

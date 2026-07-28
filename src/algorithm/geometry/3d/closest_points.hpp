@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINTS_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINTS_HPP_INCLUDED
-
-#include "line_line_closest_points.hpp"
-#include "segment_segment_closest_points.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CLOSEST_POINTS_HPP_INCLUDED

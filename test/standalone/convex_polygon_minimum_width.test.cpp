@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_minimum_width_normalized.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_minimum_width_points.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_minimum_width.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/polygon/convex_polygon_minimum_width_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/point_set/convex_polygon_minimum_width_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/convex_polygon_minimum_width.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

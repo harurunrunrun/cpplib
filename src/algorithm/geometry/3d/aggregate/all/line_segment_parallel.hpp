@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_SEGMENT_PARALLEL_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_SEGMENT_PARALLEL_HPP_INCLUDED
+
+#include "../../predicate/line_segment/line_segment_parallel_line_segment.hpp"
+#include "../../predicate/segment_line/line_segment_parallel_segment_line.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_SEGMENT_PARALLEL_HPP_INCLUDED

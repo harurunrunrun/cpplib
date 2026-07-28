@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_RAY_DISTANCE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_RAY_DISTANCE_HPP_INCLUDED
+
+#include "../../scalar/line_ray/line_ray_distance_line_ray.hpp"
+#include "../../scalar/ray_line/line_ray_distance_ray_line.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_LINE_RAY_DISTANCE_HPP_INCLUDED

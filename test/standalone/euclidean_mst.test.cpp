@@ -9,10 +9,10 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/euclidean_mst_edge.hpp"
-#include "../../src/algorithm/geometry/2d/euclidean_mst_result.hpp"
-#include "../../src/algorithm/geometry/2d/euclidean_mst_points.hpp"
-#include "../../src/algorithm/geometry/2d/euclidean_mst.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/euclidean_mst_edge.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/euclidean_mst_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/euclidean_mst_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/euclidean_mst.hpp"
 
 namespace{
 

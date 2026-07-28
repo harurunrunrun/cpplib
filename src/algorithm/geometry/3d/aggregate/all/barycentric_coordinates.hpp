@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_BARYCENTRIC_COORDINATES_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_BARYCENTRIC_COORDINATES_HPP_INCLUDED
+
+#include "../../scalar/tetrahedron_point/tetrahedron_point_barycentric_coordinates.hpp"
+#include "../../scalar/triangle_point/triangle_point_barycentric_coordinates.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_BARYCENTRIC_COORDINATES_HPP_INCLUDED

@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_QUATERNION3_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_QUATERNION3_HPP_INCLUDED
+
+#include "../../type/definition/quaternion3_type.hpp"
+#include "../../scalar/quaternion_quaternion/quaternion3_dot.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_QUATERNION3_HPP_INCLUDED

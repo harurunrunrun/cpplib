@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_VISIBILITY_GRAPH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_VISIBILITY_GRAPH_HPP_INCLUDED
+
+#include "../../type/definition/visibility_graph_edge.hpp"
+#include "../../result/point_set/visibility_graph_points.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_VISIBILITY_GRAPH_HPP_INCLUDED

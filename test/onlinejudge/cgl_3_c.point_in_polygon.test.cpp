@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/contains.hpp"
+#include "../../src/algorithm/geometry/2d/integer/point_set_point/contains.hpp"
 
 int main(){
     int size;

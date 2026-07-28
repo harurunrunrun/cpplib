@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_REFLECTION_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_REFLECTION_HPP_INCLUDED
+
+#include "../../point/line_point/line_point_reflection.hpp"
+#include "../../point/plane_point/plane_point_reflection.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_REFLECTION_HPP_INCLUDED

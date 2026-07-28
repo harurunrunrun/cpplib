@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/intersect.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/intersect.hpp"
 
 int main(){
     int query_count;

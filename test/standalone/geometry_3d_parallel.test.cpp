@@ -4,7 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/parallel.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/point_point/parallel.hpp"
 #include "geometry_3d_test_common.hpp"
 
 int main(){

@@ -1,10 +1,10 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/geometry_absolute_sign.hpp"
-#include "../../src/algorithm/geometry/2d/geometry_scaled_sign_value_tolerance_roundoff_scales.hpp"
-#include "../../src/algorithm/geometry/2d/geometry_scaled_sign_value_scale.hpp"
-#include "../../src/algorithm/geometry/2d/geometry_scaled_sign.hpp"
-#include "../../src/algorithm/geometry/2d/geometry_sign.hpp"
+#include "../../src/algorithm/geometry/2d/integer/scalar/geometry_absolute_sign.hpp"
+#include "../../src/algorithm/geometry/2d/integer/scalar/geometry_scaled_sign_value_tolerance_roundoff_scales.hpp"
+#include "../../src/algorithm/geometry/2d/integer/scalar/geometry_scaled_sign_value_scale.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/geometry_scaled_sign.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/geometry_sign.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <cassert>

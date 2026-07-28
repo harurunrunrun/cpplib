@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_MINIMUM_ENCLOSING_CIRCLE_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_MINIMUM_ENCLOSING_CIRCLE_HPP_INCLUDED
+
+#include "../../type/definition/minimum_enclosing_circle_result.hpp"
+#include "../../result/point_set/minimum_enclosing_circle_points.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_MINIMUM_ENCLOSING_CIRCLE_HPP_INCLUDED

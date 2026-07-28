@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_POLYGON_BOUNDARY_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_POLYGON_BOUNDARY_POINTS_HPP_INCLUDED
+
+#include "../../integer_set/point_set_point_set/enumerate_points_on_polygon_boundary.hpp"
+#include "../../type/definition/polygon_boundary_point_query.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_POLYGON_BOUNDARY_POINTS_HPP_INCLUDED

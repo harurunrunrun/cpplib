@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/signed_circle_polygon_intersection_area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/circle_point_set/signed_circle_polygon_intersection_area.hpp"
 
 int main(){
     int n;

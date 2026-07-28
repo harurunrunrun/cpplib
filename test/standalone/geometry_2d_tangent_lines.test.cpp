@@ -3,7 +3,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/tangent_lines.hpp"
+#include "../../src/algorithm/geometry/2d/line_set/circle_point/tangent_lines.hpp"
 
 namespace{
 

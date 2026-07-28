@@ -7,8 +7,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/quickhull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
+#include "../../src/algorithm/geometry/3d/polyhedron/point_set/quickhull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/polyhedron/convex_polyhedron_volume.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 

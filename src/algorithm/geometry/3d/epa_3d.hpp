@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_3D_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_3D_HPP_INCLUDED
-
-#include "epa_3d_shapes.hpp"
-#include "epa_3d_with_gjk_result.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_EPA_3D_HPP_INCLUDED

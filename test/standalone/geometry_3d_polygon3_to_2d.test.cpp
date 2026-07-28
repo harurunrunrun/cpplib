@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/polygon3_to_2d_with_plane_coordinate_system.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_to_2d_without_plane_coordinate_system.hpp"
-#include "../../src/algorithm/geometry/3d/polygon3_to_2d.hpp"
-#include "../../src/algorithm/geometry/3d/from_plane_coordinates.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/polygon3_to_2d_with_plane_coordinate_system.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/polygon3_to_2d_without_plane_coordinate_system.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/polygon3_to_2d.hpp"
+#include "../../src/algorithm/geometry/3d/point/point/from_plane_coordinates.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

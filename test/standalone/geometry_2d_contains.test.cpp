@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/contains.hpp"
+#include "../../src/algorithm/geometry/2d/integer/point_set_point/contains.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

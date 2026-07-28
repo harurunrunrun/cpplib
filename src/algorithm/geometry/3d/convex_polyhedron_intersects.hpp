@@ -1,9 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_INTERSECTS_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_INTERSECTS_HPP_INCLUDED
-
-#include "convex_polyhedron_intersects_default.hpp"
-#include "convex_polyhedron_intersects_exact.hpp"
-#include "convex_polyhedron_intersects_exact_sat.hpp"
-#include "convex_polyhedron_intersects_exact_with_seed.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_CONVEX_POLYHEDRON_INTERSECTS_HPP_INCLUDED

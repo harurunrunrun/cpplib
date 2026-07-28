@@ -8,7 +8,7 @@
 #include <random>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/minimum_enclosing_sphere_welzl.hpp"
+#include "../../src/algorithm/geometry/3d/sphere/point_set/minimum_enclosing_sphere_welzl.hpp"
 
 namespace{
 

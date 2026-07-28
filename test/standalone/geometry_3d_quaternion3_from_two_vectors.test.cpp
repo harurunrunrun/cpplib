@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/quaternion3_from_two_vectors.hpp"
-#include "../../src/algorithm/geometry/3d/quaternion3_rotate.hpp"
-#include "../../src/algorithm/geometry/3d/spherical_central_angle.hpp"
+#include "../../src/algorithm/geometry/3d/quaternion/point_point/quaternion3_from_two_vectors.hpp"
+#include "../../src/algorithm/geometry/3d/point/quaternion_point/quaternion3_rotate.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point/spherical_central_angle.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

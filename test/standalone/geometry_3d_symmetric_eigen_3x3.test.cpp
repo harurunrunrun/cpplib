@@ -5,9 +5,9 @@
 #include <random>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/symmetric_eigen3.hpp"
-#include "../../src/algorithm/geometry/3d/symmetric_eigen_3x3.hpp"
-#include "../../src/algorithm/geometry/3d/dot.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/symmetric_eigen3.hpp"
+#include "../../src/algorithm/geometry/3d/result/matrix/symmetric_eigen_3x3.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point/dot.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

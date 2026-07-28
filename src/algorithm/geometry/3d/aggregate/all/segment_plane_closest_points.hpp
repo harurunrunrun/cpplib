@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_SEGMENT_PLANE_CLOSEST_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_SEGMENT_PLANE_CLOSEST_POINTS_HPP_INCLUDED
+
+#include "../../point_set/segment_plane/segment_plane_closest_points_segment_plane.hpp"
+#include "../../point_set/plane_segment/segment_plane_closest_points_plane_segment.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_SEGMENT_PLANE_CLOSEST_POINTS_HPP_INCLUDED

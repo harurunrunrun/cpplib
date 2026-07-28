@@ -6,9 +6,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/visibility_graph_edge.hpp"
-#include "../../src/algorithm/geometry/2d/visibility_graph_points.hpp"
-#include "../../src/algorithm/geometry/2d/visibility_graph.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/visibility_graph_edge.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/visibility_graph_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/visibility_graph.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

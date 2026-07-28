@@ -10,10 +10,10 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_counts.hpp"
-#include "../../src/algorithm/geometry/3d/divide_and_conquer_convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/quickhull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/polyhedron_point/convex_polyhedron_contains.hpp"
+#include "../../src/algorithm/geometry/3d/result/polyhedron/convex_polyhedron_counts.hpp"
+#include "../../src/algorithm/geometry/3d/polyhedron/point_set/divide_and_conquer_convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/polyhedron/point_set/quickhull_3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

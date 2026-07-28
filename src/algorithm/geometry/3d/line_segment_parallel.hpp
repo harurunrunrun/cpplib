@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_PARALLEL_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_PARALLEL_HPP_INCLUDED
-
-#include "line_segment_parallel_line_segment.hpp"
-#include "line_segment_parallel_segment_line.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINE_SEGMENT_PARALLEL_HPP_INCLUDED

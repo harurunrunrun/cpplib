@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_RAY_PLANE_CLOSEST_POINTS_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_RAY_PLANE_CLOSEST_POINTS_HPP_INCLUDED
+
+#include "../../point_set/ray_plane/ray_plane_closest_points_ray_plane.hpp"
+#include "../../point_set/plane_ray/ray_plane_closest_points_plane_ray.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_RAY_PLANE_CLOSEST_POINTS_HPP_INCLUDED

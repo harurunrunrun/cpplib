@@ -1,8 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_COINCIDENT_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_COINCIDENT_HPP_INCLUDED
-
-#include "line_line_coincident.hpp"
-#include "ray_ray_coincident.hpp"
-#include "segment_segment_coincident.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_LINEAR_COINCIDENT_HPP_INCLUDED

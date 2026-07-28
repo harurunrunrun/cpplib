@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_HALFSPACE_INTERSECTION_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_HALFSPACE_INTERSECTION_3D_HPP_INCLUDED
+
+#include "../../polyhedron/plane/halfspace_intersection_3d_default.hpp"
+#include "../../polyhedron/plane_point/halfspace_intersection_3d_with_interior_point.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_HALFSPACE_INTERSECTION_3D_HPP_INCLUDED

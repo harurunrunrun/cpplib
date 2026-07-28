@@ -1,8 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MAXIMUM_AREA_TRIANGLE_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MAXIMUM_AREA_TRIANGLE_HPP_INCLUDED
-
-#include "convex_polygon_maximum_area_triangle_result.hpp"
-#include "convex_polygon_maximum_area_triangle_normalized.hpp"
-#include "convex_polygon_maximum_area_triangle_points.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_CONVEX_POLYGON_MAXIMUM_AREA_TRIANGLE_HPP_INCLUDED

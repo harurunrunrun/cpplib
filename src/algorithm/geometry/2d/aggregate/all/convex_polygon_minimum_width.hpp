@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_MINIMUM_WIDTH_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_MINIMUM_WIDTH_HPP_INCLUDED
+
+#include "../../scalar/polygon/convex_polygon_minimum_width_normalized.hpp"
+#include "../../scalar/point_set/convex_polygon_minimum_width_points.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_CONVEX_POLYGON_MINIMUM_WIDTH_HPP_INCLUDED

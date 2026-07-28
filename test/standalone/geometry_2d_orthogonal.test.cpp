@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/orthogonal_lines.hpp"
-#include "../../src/algorithm/geometry/2d/orthogonal_vectors.hpp"
-#include "../../src/algorithm/geometry/2d/orthogonal.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/line_line/orthogonal_lines.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/point_point/orthogonal_vectors.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/orthogonal.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

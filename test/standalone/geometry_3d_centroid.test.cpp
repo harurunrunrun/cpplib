@@ -3,10 +3,10 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/centroid_detail.hpp"
-#include "../../src/algorithm/geometry/3d/centroid.hpp"
-#include "../../src/algorithm/geometry/3d/tetrahedron_centroid.hpp"
-#include "../../src/algorithm/geometry/3d/triangle_centroid.hpp"
+#include "../../src/algorithm/geometry/3d/detail/point/centroid_detail.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/centroid.hpp"
+#include "../../src/algorithm/geometry/3d/point/tetrahedron/tetrahedron_centroid.hpp"
+#include "../../src/algorithm/geometry/3d/point/triangle/triangle_centroid.hpp"
 #include "geometry_3d_test_common.hpp"
 
 namespace{

@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_CONVEX_POLYHEDRON_DIAMETER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_CONVEX_POLYHEDRON_DIAMETER_HPP_INCLUDED
+
+#include "../../result/polyhedron/convex_polyhedron_diameter_aabb_branch_and_bound.hpp"
+#include "../../result/polyhedron/convex_polyhedron_diameter_default.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_CONVEX_POLYHEDRON_DIAMETER_HPP_INCLUDED

@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/segment_plane_closest_points_segment_plane.hpp"
-#include "../../src/algorithm/geometry/3d/segment_plane_closest_points_plane_segment.hpp"
-#include "../../src/algorithm/geometry/3d/segment_plane_closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/segment_plane/segment_plane_closest_points_segment_plane.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/plane_segment/segment_plane_closest_points_plane_segment.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/segment_plane_closest_points.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

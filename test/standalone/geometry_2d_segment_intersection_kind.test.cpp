@@ -3,9 +3,9 @@
 #include <concepts>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/segment_intersection_kind_result.hpp"
-#include "../../src/algorithm/geometry/2d/segment_intersection_kind_segments.hpp"
-#include "../../src/algorithm/geometry/2d/segment_intersection_kind.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/segment_intersection_kind_result.hpp"
+#include "../../src/algorithm/geometry/2d/enumeration/segment_segment/segment_intersection_kind_segments.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/segment_intersection_kind.hpp"
 
 int main(){
     static_assert(SEGMENT_INTERSECTION_NONE == 0);

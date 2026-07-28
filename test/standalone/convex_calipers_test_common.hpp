@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/convex_calipers_detail.hpp"
+#include "../../src/algorithm/geometry/2d/detail/point_set_point/convex_calipers_detail.hpp"
 
 inline std::vector<Point> read_calipers_polygon(){
     std::size_t count;

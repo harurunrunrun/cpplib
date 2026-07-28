@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/polygon3_segment_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/result/polygon_segment/polygon3_segment_intersection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

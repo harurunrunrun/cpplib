@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/circle_line_intersection_count.hpp"
+#include "../../src/algorithm/geometry/2d/integer/circle_line/circle_line_intersection_count.hpp"
 
 #include <iostream>
 

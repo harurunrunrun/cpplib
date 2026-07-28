@@ -1,12 +1,12 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/line_line_distance.hpp"
-#include "../../src/algorithm/geometry/2d/line_point_distance.hpp"
-#include "../../src/algorithm/geometry/2d/line_segment_distance.hpp"
-#include "../../src/algorithm/geometry/2d/point_point_distance.hpp"
-#include "../../src/algorithm/geometry/2d/segment_point_distance.hpp"
-#include "../../src/algorithm/geometry/2d/segment_segment_distance.hpp"
-#include "../../src/algorithm/geometry/2d/distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/line_line/line_line_distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/line_point/line_point_distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/line_segment/line_segment_distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/point_point/point_point_distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/segment_point/segment_point_distance.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/segment_segment/segment_segment_distance.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/distance.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <stdexcept>

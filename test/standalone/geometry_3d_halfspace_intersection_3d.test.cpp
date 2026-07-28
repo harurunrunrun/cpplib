@@ -9,13 +9,13 @@
 #include <variant>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_volume.hpp"
-#include "../../src/algorithm/geometry/3d/halfspace_intersection_3d_default.hpp"
-#include "../../src/algorithm/geometry/3d/halfspace_intersection_3d_detail.hpp"
-#include "../../src/algorithm/geometry/3d/halfspace_intersection_3d_with_interior_point.hpp"
-#include "../../src/algorithm/geometry/3d/halfspace_intersection_3d.hpp"
-#include "../../src/algorithm/geometry/3d/three_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/polyhedron_point/convex_polyhedron_contains.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/polyhedron/convex_polyhedron_volume.hpp"
+#include "../../src/algorithm/geometry/3d/polyhedron/plane/halfspace_intersection_3d_default.hpp"
+#include "../../src/algorithm/geometry/3d/detail/plane_point/halfspace_intersection_3d_detail.hpp"
+#include "../../src/algorithm/geometry/3d/polyhedron/plane_point/halfspace_intersection_3d_with_interior_point.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/halfspace_intersection_3d.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/three_plane_intersection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 namespace{

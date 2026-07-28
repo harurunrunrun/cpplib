@@ -12,9 +12,9 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/delaunay_triangulation_result.hpp"
-#include "../../src/algorithm/geometry/2d/delaunay_triangulation_points.hpp"
-#include "../../src/algorithm/geometry/2d/delaunay_triangulation.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/delaunay_triangulation_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/delaunay_triangulation_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/delaunay_triangulation.hpp"
 
 namespace{
 

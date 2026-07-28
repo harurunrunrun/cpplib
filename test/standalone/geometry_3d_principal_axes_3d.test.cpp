@@ -7,9 +7,9 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/principal_axes3.hpp"
-#include "../../src/algorithm/geometry/3d/principal_axes_3d.hpp"
-#include "../../src/algorithm/geometry/3d/dot.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/principal_axes3.hpp"
+#include "../../src/algorithm/geometry/3d/result/point_set/principal_axes_3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point/dot.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

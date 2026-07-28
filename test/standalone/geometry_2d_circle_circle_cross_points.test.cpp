@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/2d/circle_circle_cross_points.hpp"
+#include "../../src/algorithm/geometry/2d/point_set/circle_circle/circle_circle_cross_points.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

@@ -4,22 +4,22 @@
 #include <cmath>
 #include <iostream>
 
-#include "../../src/algorithm/geometry/3d/barycentric_coordinates_detail.hpp"
-#include "../../src/algorithm/geometry/3d/circle3.hpp"
-#include "../../src/algorithm/geometry/3d/constants.hpp"
-#include "../../src/algorithm/geometry/3d/line3.hpp"
-#include "../../src/algorithm/geometry/3d/plane3.hpp"
-#include "../../src/algorithm/geometry/3d/point3.hpp"
-#include "../../src/algorithm/geometry/3d/ray3.hpp"
-#include "../../src/algorithm/geometry/3d/segment3.hpp"
-#include "../../src/algorithm/geometry/3d/sphere_contains_point.hpp"
-#include "../../src/algorithm/geometry/3d/sphere3.hpp"
-#include "../../src/algorithm/geometry/3d/tetrahedron_contains_point.hpp"
-#include "../../src/algorithm/geometry/3d/tetrahedron_point_barycentric_coordinates.hpp"
-#include "../../src/algorithm/geometry/3d/tetrahedron3.hpp"
-#include "../../src/algorithm/geometry/3d/triangle_contains_point.hpp"
-#include "../../src/algorithm/geometry/3d/triangle_point_barycentric_coordinates.hpp"
-#include "../../src/algorithm/geometry/3d/triangle3.hpp"
+#include "../../src/algorithm/geometry/3d/detail/point_point_point/barycentric_coordinates_detail.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/circle3.hpp"
+#include "../../src/algorithm/geometry/3d/constant/definition/constants.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/line3.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/plane3.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/point3.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/ray3.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/segment3.hpp"
+#include "../../src/algorithm/geometry/3d/integer/sphere_point/sphere_contains_point.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/sphere3.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/tetrahedron_point/tetrahedron_contains_point.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/tetrahedron_point/tetrahedron_point_barycentric_coordinates.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/tetrahedron3.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/triangle_point/triangle_contains_point.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/triangle_point/triangle_point_barycentric_coordinates.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/triangle3.hpp"
 
 namespace{
 

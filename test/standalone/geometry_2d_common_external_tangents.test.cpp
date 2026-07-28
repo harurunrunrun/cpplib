@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/common_external_tangents.hpp"
+#include "../../src/algorithm/geometry/2d/line_set/circle_circle/common_external_tangents.hpp"
 
 #include <iostream>
 

@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/ear_clipping_triangle.hpp"
-#include "../../src/algorithm/geometry/2d/ear_clipping_triangulation_detail.hpp"
-#include "../../src/algorithm/geometry/2d/ear_clipping_triangulation_points.hpp"
-#include "../../src/algorithm/geometry/2d/ear_clipping_triangulation.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/ear_clipping_triangle.hpp"
+#include "../../src/algorithm/geometry/2d/detail/numeric/ear_clipping_triangulation_detail.hpp"
+#include "../../src/algorithm/geometry/2d/triangle/point_set/ear_clipping_triangulation_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/ear_clipping_triangulation.hpp"
 #include "geometry_2d_triangulation_test_utils.hpp"
 
 #include <algorithm>

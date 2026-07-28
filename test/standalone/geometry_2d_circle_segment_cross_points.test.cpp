@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circle_segment_cross_points.hpp"
+#include "../../src/algorithm/geometry/2d/point_set/circle_segment/circle_segment_cross_points.hpp"
 #include "geometry_2d_test_util.hpp"
 
 int main(){

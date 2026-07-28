@@ -4,9 +4,9 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/2d/line_direction_relation_result.hpp"
-#include "../../src/algorithm/geometry/2d/line_direction_relation_lines.hpp"
-#include "../../src/algorithm/geometry/2d/line_direction_relation.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/line_direction_relation_result.hpp"
+#include "../../src/algorithm/geometry/2d/enumeration/line_line/line_direction_relation_lines.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/line_direction_relation.hpp"
 
 int main(){
     static_assert(static_cast<int>(LineDirectionRelation::NEITHER) == 0);

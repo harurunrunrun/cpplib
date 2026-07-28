@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_segment_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/result/polyhedron_segment/convex_polyhedron_segment_intersection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_convex_polyhedron_test_common.hpp"
 

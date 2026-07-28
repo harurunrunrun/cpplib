@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/convex_hull_with_collinear.hpp"
+#include "../../src/algorithm/geometry/2d/point_set/point_set/convex_hull_with_collinear.hpp"
 
 int main(){
     int count;

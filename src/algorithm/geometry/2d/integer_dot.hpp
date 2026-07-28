@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_HPP_INCLUDED
-
-#include "geometry_integer_wide.hpp"
-#include "integer_dot_integer_points.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTEGER_DOT_HPP_INCLUDED

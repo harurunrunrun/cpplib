@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/axis_aligned_segment_intersections.hpp"
+#include "../../src/algorithm/geometry/2d/result/segment_set/axis_aligned_segment_intersections.hpp"
 
 int main(){
     int count;

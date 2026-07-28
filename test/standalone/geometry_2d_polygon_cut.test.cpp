@@ -8,10 +8,10 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/contains.hpp"
-#include "../../src/algorithm/geometry/2d/polygon_area.hpp"
-#include "../../src/algorithm/geometry/2d/polygon_line_cut_result.hpp"
-#include "../../src/algorithm/geometry/2d/polygon_cut.hpp"
+#include "../../src/algorithm/geometry/2d/integer/point_set_point/contains.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/point_set/polygon_area.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/polygon_line_cut_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set_line/polygon_cut.hpp"
 #include "geometry_2d_test_common.hpp"
 
 namespace{

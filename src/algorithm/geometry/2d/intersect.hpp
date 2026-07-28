@@ -1,7 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_HPP_INCLUDED
-
-#include "intersect_line_point.hpp"
-#include "intersect_segment_segment.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_INTERSECT_HPP_INCLUDED

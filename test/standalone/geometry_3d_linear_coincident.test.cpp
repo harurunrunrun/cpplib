@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_line_coincident.hpp"
-#include "../../src/algorithm/geometry/3d/linear_coincident.hpp"
-#include "../../src/algorithm/geometry/3d/ray_ray_coincident.hpp"
-#include "../../src/algorithm/geometry/3d/segment_segment_coincident.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/line_line/line_line_coincident.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/linear_coincident.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/ray_ray/ray_ray_coincident.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/segment_segment/segment_segment_coincident.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

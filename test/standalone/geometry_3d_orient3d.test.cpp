@@ -3,7 +3,7 @@
 #include <limits>
 #include <stdexcept>
 
-#include "../../src/algorithm/geometry/3d/orient3d.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point_point_point/orient3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

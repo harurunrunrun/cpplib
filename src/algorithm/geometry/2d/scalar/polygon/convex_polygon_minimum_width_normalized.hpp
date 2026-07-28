@@ -1,0 +1,46 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SCALAR_POLYGON_CONVEX_POLYGON_MINIMUM_WIDTH_NORMALIZED_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SCALAR_POLYGON_CONVEX_POLYGON_MINIMUM_WIDTH_NORMALIZED_HPP_INCLUDED
+
+#include <algorithm>
+#include <cstddef>
+#include <limits>
+#include <vector>
+
+#include "../point/abs.hpp"
+#include "../../detail/segment_point_set/advanced_convex_geometry_detail.hpp"
+#include "../../detail/point_set_point/convex_calipers_detail.hpp"
+
+inline long double convex_polygon_minimum_width(
+    const NormalizedConvexPolygon& polygon
+){
+    const std::vector<Point>& vertices = polygon.vertices();
+    const std::size_t count = vertices.size();
+    if(count < 3) return 0.0L;
+
+    long double result = std::numeric_limits<long double>::infinity();
+    std::size_t opposite = 1;
+    for(std::size_t index = 0; index < count; ++index){
+        const std::size_t next = (index + 1) % count;
+        const Point edge = vertices[next] - vertices[index];
+        while(true){
+            const std::size_t candidate = (opposite + 1) % count;
+            const long double current_area = std::abs(cross(
+                edge, vertices[opposite] - vertices[index]
+            ));
+            const long double next_area = std::abs(cross(
+                edge, vertices[candidate] - vertices[index]
+            ));
+            if(advanced_geometry_detail::scaled_sign(
+                next_area - current_area,
+                std::max(current_area, next_area)
+            ) <= 0) break;
+            opposite = candidate;
+        }
+        result = std::min(result, std::abs(cross(
+            edge, vertices[opposite] - vertices[index]
+        )) / abs(edge));
+    }
+    return result;
+}
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_SCALAR_POLYGON_CONVEX_POLYGON_MINIMUM_WIDTH_NORMALIZED_HPP_INCLUDED

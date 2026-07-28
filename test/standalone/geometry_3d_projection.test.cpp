@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_point_projection.hpp"
-#include "../../src/algorithm/geometry/3d/linear_closest_detail.hpp"
-#include "../../src/algorithm/geometry/3d/plane_point_projection.hpp"
-#include "../../src/algorithm/geometry/3d/projection.hpp"
+#include "../../src/algorithm/geometry/3d/point/line_point/line_point_projection.hpp"
+#include "../../src/algorithm/geometry/3d/detail/scalar/linear_closest_detail.hpp"
+#include "../../src/algorithm/geometry/3d/point/plane_point/plane_point_projection.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/projection.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_test_common.hpp"
 

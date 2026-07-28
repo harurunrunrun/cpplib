@@ -11,8 +11,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/closest_pair_3d_result.hpp"
-#include "../../src/algorithm/geometry/3d/closest_pair_3d.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/closest_pair_3d_result.hpp"
+#include "../../src/algorithm/geometry/3d/result/point_set/closest_pair_3d.hpp"
 
 namespace{
 

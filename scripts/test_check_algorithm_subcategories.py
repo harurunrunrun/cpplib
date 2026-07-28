@@ -231,6 +231,50 @@ def main() -> None:
         )
         assert any("dimension directory" in error for error in errors)
 
+        geometry_root = Path("src/algorithm/geometric/2d")
+        geometry_doc_root = Path("docs/algorithm/geometric/2d")
+        geometry_header = (
+            root / geometry_root / "scalar/point_point/distance.hpp"
+        )
+        geometry_doc = (
+            root / geometry_doc_root / "scalar/point_point/distance.md"
+        )
+        for file in (geometry_header, geometry_doc):
+            file.parent.mkdir(parents=True, exist_ok=True)
+            file.write_text("valid\n", encoding="utf-8")
+
+        def geometry_errors() -> list[str]:
+            return check_algorithm_subcategories.layout_violations(
+                root,
+                {},
+                frozenset(),
+                frozenset(),
+                nested_layouts={},
+                expected_nested_stems={},
+                check_nested_docs=False,
+                geometry_layouts=(geometry_root,),
+            )
+
+        assert geometry_errors() == []
+        geometry_flat = root / geometry_root / "flat.hpp"
+        geometry_flat.write_text("invalid\n", encoding="utf-8")
+        assert any(
+            "<return-type>/<argument-types>" in error
+            for error in geometry_errors()
+        )
+        geometry_flat.unlink()
+        geometry_unknown = (
+            root / geometry_root / "mystery/point/value.hpp"
+        )
+        geometry_unknown.parent.mkdir(parents=True)
+        geometry_unknown.write_text("invalid\n", encoding="utf-8")
+        assert any(
+            "unknown geometry return category" in error
+            for error in geometry_errors()
+        )
+        geometry_unknown.unlink()
+        geometry_unknown.parent.rmdir()
+
         missing_layout = {
             Path("src/algorithm/missing"): frozenset({"category"}),
         }

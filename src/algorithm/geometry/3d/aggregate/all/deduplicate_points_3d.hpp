@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_DEDUPLICATE_POINTS_3D_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_DEDUPLICATE_POINTS_3D_HPP_INCLUDED
+
+#include "../../point_set/point_set/deduplicate_points_3d_default.hpp"
+#include "../../point_set/point_set/deduplicate_points_3d_relative_range_tree.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_AGGREGATE_ALL_DEDUPLICATE_POINTS_3D_HPP_INCLUDED

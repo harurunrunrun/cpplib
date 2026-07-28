@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/ray_plane_closest_points_ray_plane.hpp"
-#include "../../src/algorithm/geometry/3d/ray_plane_closest_points_plane_ray.hpp"
-#include "../../src/algorithm/geometry/3d/ray_plane_closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/ray_plane/ray_plane_closest_points_ray_plane.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/plane_ray/ray_plane_closest_points_plane_ray.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/ray_plane_closest_points.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

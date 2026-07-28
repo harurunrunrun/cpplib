@@ -2,15 +2,15 @@
 
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/distance.hpp"
-#include "../../src/algorithm/geometry/3d/line_line_distance.hpp"
-#include "../../src/algorithm/geometry/3d/line_point_distance.hpp"
-#include "../../src/algorithm/geometry/3d/plane_point_distance.hpp"
-#include "../../src/algorithm/geometry/3d/point_point_distance.hpp"
-#include "../../src/algorithm/geometry/3d/ray_point_distance.hpp"
-#include "../../src/algorithm/geometry/3d/segment_point_distance.hpp"
-#include "../../src/algorithm/geometry/3d/segment_segment_distance.hpp"
-#include "../../src/algorithm/geometry/3d/triangle_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/line_line/line_line_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/line_point/line_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/plane_point/plane_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point/point_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/ray_point/ray_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/segment_point/segment_point_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/segment_segment/segment_segment_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/triangle_point/triangle_point_distance.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_test_common.hpp"
 

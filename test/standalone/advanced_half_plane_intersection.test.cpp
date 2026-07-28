@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/half_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/2d/result/half_plane/half_plane_intersection.hpp"
 #include "advanced_geometry_test_common.hpp"
 
 #include <stdexcept>

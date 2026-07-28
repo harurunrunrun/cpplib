@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-#include "../../src/algorithm/geometry/2d/circle_relation_result.hpp"
-#include "../../src/algorithm/geometry/2d/circle_relation_circles.hpp"
-#include "../../src/algorithm/geometry/2d/circle_relation.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/circle_relation_result.hpp"
+#include "../../src/algorithm/geometry/2d/integer/circle_circle/circle_relation_circles.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/circle_relation.hpp"
 
 int main(){
     static_assert(CIRCLE_INSIDE == 0);

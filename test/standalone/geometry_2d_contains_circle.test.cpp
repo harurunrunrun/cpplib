@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/contains_circle.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/circle_point/contains_circle.hpp"
 
 #include <iostream>
 

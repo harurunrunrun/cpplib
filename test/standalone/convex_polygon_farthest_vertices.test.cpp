@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices_normalized.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices_points.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_farthest_vertices.hpp"
+#include "../../src/algorithm/geometry/2d/index_set/polygon/convex_polygon_farthest_vertices_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/index_set/point_set/convex_polygon_farthest_vertices_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/convex_polygon_farthest_vertices.hpp"
 #include "convex_calipers_test_common.hpp"
 
 int main(){

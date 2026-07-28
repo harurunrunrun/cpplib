@@ -7,9 +7,9 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/furthest_pair_result.hpp"
-#include "../../src/algorithm/geometry/2d/furthest_pair_points.hpp"
-#include "../../src/algorithm/geometry/2d/furthest_pair.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/furthest_pair_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/furthest_pair_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/furthest_pair.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);

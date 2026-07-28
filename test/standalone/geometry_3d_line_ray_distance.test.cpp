@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_ray_distance_line_ray.hpp"
-#include "../../src/algorithm/geometry/3d/line_ray_distance_ray_line.hpp"
-#include "../../src/algorithm/geometry/3d/line_ray_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/line_ray/line_ray_distance_line_ray.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/ray_line/line_ray_distance_ray_line.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/line_ray_distance.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

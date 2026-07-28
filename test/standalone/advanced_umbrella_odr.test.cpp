@@ -1,14 +1,14 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/advanced_convex_geometry.hpp"
-#include "../../src/algorithm/geometry/2d/advanced_convex_geometry.hpp"
-#include "../../src/algorithm/geometry/2d/half_plane_intersection_result.hpp"
-#include "../../src/algorithm/geometry/2d/advanced_convex_geometry_detail.hpp"
-#include "../../src/algorithm/geometry/2d/half_plane_contains.hpp"
-#include "../../src/algorithm/geometry/2d/normalize_convex_polygon.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_minkowski_sum.hpp"
-#include "../../src/algorithm/geometry/2d/half_plane_intersection.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_intersection.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/advanced_convex_geometry.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/advanced_convex_geometry.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/half_plane_intersection_result.hpp"
+#include "../../src/algorithm/geometry/2d/detail/segment_point_set/advanced_convex_geometry_detail.hpp"
+#include "../../src/algorithm/geometry/2d/predicate/half_plane_point/half_plane_contains.hpp"
+#include "../../src/algorithm/geometry/2d/point_set/point_set/normalize_convex_polygon.hpp"
+#include "../../src/algorithm/geometry/2d/point_set/point_set_point_set/convex_polygon_minkowski_sum.hpp"
+#include "../../src/algorithm/geometry/2d/result/half_plane/half_plane_intersection.hpp"
+#include "../../src/algorithm/geometry/2d/point_set/point_set_point_set/convex_polygon_intersection.hpp"
 
 #include <cstddef>
 #include <iostream>

@@ -1,8 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_RECTANGLE_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_RECTANGLE_HPP_INCLUDED
-
-#include "minimum_enclosing_rectangle_result.hpp"
-#include "minimum_enclosing_rectangle_normalized.hpp"
-#include "minimum_enclosing_rectangle_points.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_MINIMUM_ENCLOSING_RECTANGLE_HPP_INCLUDED

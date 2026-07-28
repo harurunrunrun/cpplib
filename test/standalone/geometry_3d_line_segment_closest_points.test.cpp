@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_segment_closest_points_line_segment.hpp"
-#include "../../src/algorithm/geometry/3d/line_segment_closest_points_segment_line.hpp"
-#include "../../src/algorithm/geometry/3d/line_segment_closest_points.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/line_segment/line_segment_closest_points_line_segment.hpp"
+#include "../../src/algorithm/geometry/3d/point_set/segment_line/line_segment_closest_points_segment_line.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/line_segment_closest_points.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

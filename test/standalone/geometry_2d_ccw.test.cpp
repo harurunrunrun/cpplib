@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/ccw_result.hpp"
-#include "../../src/algorithm/geometry/2d/ccw_points.hpp"
-#include "../../src/algorithm/geometry/2d/ccw.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/ccw_result.hpp"
+#include "../../src/algorithm/geometry/2d/integer/point_point_point/ccw_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/ccw.hpp"
 #include "geometry_2d_test_common.hpp"
 
 int main(){

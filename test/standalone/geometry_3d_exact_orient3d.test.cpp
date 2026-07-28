@@ -3,9 +3,9 @@
 #include <cstdint>
 #include <limits>
 
-#include "../../src/algorithm/geometry/3d/integer_point3.hpp"
-#include "../../src/algorithm/geometry/3d/exact_orient3d_integer_points.hpp"
-#include "../../src/algorithm/geometry/3d/exact_orient3d.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/integer_point3.hpp"
+#include "../../src/algorithm/geometry/3d/integer/scalar/exact_orient3d_integer_points.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/exact_orient3d.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

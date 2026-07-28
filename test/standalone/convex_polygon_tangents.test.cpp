@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_tangents_result.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_tangents_normalized.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_tangents_points.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_tangents.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/convex_polygon_tangents_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/point/convex_polygon_tangents_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set_point/convex_polygon_tangents_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/convex_polygon_tangents.hpp"
 #include "convex_calipers_test_common.hpp"
 
 namespace{

@@ -1,0 +1,7 @@
+#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_INTERSECT_LINE_CONVEX_POLYGON_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_INTERSECT_LINE_CONVEX_POLYGON_HPP_INCLUDED
+
+#include "../../predicate/line/intersect_line_convex_polygon_normalized.hpp"
+#include "../../predicate/line_point_set/intersect_line_convex_polygon_points.hpp"
+
+#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_AGGREGATE_ALL_INTERSECT_LINE_CONVEX_POLYGON_HPP_INCLUDED

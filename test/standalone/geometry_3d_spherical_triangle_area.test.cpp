@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/spherical_triangle_area.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point_point/spherical_triangle_area.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

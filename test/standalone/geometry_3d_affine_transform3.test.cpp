@@ -8,7 +8,7 @@
 #include <optional>
 #include <random>
 
-#include "../../src/algorithm/geometry/3d/affine_transform3.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/affine_transform3.hpp"
 
 namespace{
 

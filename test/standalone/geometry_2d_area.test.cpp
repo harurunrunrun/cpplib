@@ -1,6 +1,6 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/area.hpp"
+#include "../../src/algorithm/geometry/2d/scalar/point_set/area.hpp"
 #include "geometry_2d_test_common.hpp"
 
 #include <vector>

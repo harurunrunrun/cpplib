@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/segment_intersection_record.hpp"
-#include "../../src/algorithm/geometry/2d/bentley_ottmann_intersections_segments.hpp"
-#include "../../src/algorithm/geometry/2d/bentley_ottmann_intersections.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/segment_intersection_record.hpp"
+#include "../../src/algorithm/geometry/2d/result/segment_set/bentley_ottmann_intersections_segments.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/bentley_ottmann_intersections.hpp"
 
 #include <iostream>
 #include <vector>

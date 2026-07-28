@@ -1,7 +1,7 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/sphere_relation_result.hpp"
-#include "../../src/algorithm/geometry/3d/sphere_relation.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/sphere_relation_result.hpp"
+#include "../../src/algorithm/geometry/3d/enumeration/sphere_sphere/sphere_relation.hpp"
 #include "geometry_3d_api_test_common.hpp"
 #include "geometry_3d_circle_sphere_validation_test_common.hpp"
 

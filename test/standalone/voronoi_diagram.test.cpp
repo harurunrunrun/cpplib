@@ -12,11 +12,11 @@
 #include <utility>
 #include <vector>
 
-#include "../../src/algorithm/geometry/2d/voronoi_edge_kind.hpp"
-#include "../../src/algorithm/geometry/2d/voronoi_edge.hpp"
-#include "../../src/algorithm/geometry/2d/voronoi_diagram_result.hpp"
-#include "../../src/algorithm/geometry/2d/voronoi_diagram_points.hpp"
-#include "../../src/algorithm/geometry/2d/voronoi_diagram.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/voronoi_edge_kind.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/voronoi_edge.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/voronoi_diagram_result.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/voronoi_diagram_points.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/voronoi_diagram.hpp"
 
 namespace{
 

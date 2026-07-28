@@ -5,15 +5,15 @@
 #include <limits>
 #include <utility>
 
-#include "../../src/algorithm/geometry/3d/expansion_arithmetic.hpp"
-#include "../../src/algorithm/geometry/3d/expansion_arithmetic_detail.hpp"
-#include "../../src/algorithm/geometry/3d/geometry3d_expansion.hpp"
-#include "../../src/algorithm/geometry/3d/geometry3d_expansion_binary.hpp"
-#include "../../src/algorithm/geometry/3d/geometry3d_expansion_estimate.hpp"
-#include "../../src/algorithm/geometry/3d/geometry3d_expansion_from_two_scalars.hpp"
-#include "../../src/algorithm/geometry/3d/geometry3d_expansion_scale.hpp"
-#include "../../src/algorithm/geometry/3d/geometry3d_expansion_sign.hpp"
-#include "../../src/algorithm/geometry/3d/geometry3d_expansion_unary.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/expansion_arithmetic.hpp"
+#include "../../src/algorithm/geometry/3d/detail/numeric/expansion_arithmetic_detail.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/geometry3d_expansion.hpp"
+#include "../../src/algorithm/geometry/3d/result/mixed/geometry3d_expansion_binary.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/numeric/geometry3d_expansion_estimate.hpp"
+#include "../../src/algorithm/geometry/3d/result/scalar/geometry3d_expansion_from_two_scalars.hpp"
+#include "../../src/algorithm/geometry/3d/result/scalar/geometry3d_expansion_scale.hpp"
+#include "../../src/algorithm/geometry/3d/integer/mixed/geometry3d_expansion_sign.hpp"
+#include "../../src/algorithm/geometry/3d/result/mixed/geometry3d_expansion_unary.hpp"
 #include "../../src/algorithm/math/integer/exact_integer.hpp"
 #include "geometry_3d_api_test_common.hpp"
 

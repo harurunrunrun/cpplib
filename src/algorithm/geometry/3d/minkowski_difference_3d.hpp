@@ -1,8 +1,0 @@
-#ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINKOWSKI_DIFFERENCE_3D_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINKOWSKI_DIFFERENCE_3D_HPP_INCLUDED
-
-#include "minkowski_difference_3d_default.hpp"
-#include "minkowski_difference_3d_direct.hpp"
-#include "minkowski_difference_3d_with_seed.hpp"
-
-#endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_MINKOWSKI_DIFFERENCE_3D_HPP_INCLUDED

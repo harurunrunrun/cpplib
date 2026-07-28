@@ -10,17 +10,17 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../src/algorithm/geometry/3d/convex_hull_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_closest_point.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_contains.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d_build_membership_hierarchy.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d_build_support_hierarchy.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d_centered_direction.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d_detail.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d_logarithmic_support_index.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_query_hierarchy_3d.hpp"
-#include "../../src/algorithm/geometry/3d/convex_polyhedron_support_point.hpp"
-#include "../../src/algorithm/geometry/3d/distance.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/convex_hull_3d.hpp"
+#include "../../src/algorithm/geometry/3d/point/polyhedron_point/convex_polyhedron_closest_point.hpp"
+#include "../../src/algorithm/geometry/3d/predicate/polyhedron_point/convex_polyhedron_contains.hpp"
+#include "../../src/algorithm/geometry/3d/result/polyhedron/convex_polyhedron_query_hierarchy_3d_build_membership_hierarchy.hpp"
+#include "../../src/algorithm/geometry/3d/index_set/polyhedron/convex_polyhedron_query_hierarchy_3d_build_support_hierarchy.hpp"
+#include "../../src/algorithm/geometry/3d/result/polyhedron/convex_polyhedron_query_hierarchy_3d_centered_direction.hpp"
+#include "../../src/algorithm/geometry/3d/detail/polyhedron/convex_polyhedron_query_hierarchy_3d_detail.hpp"
+#include "../../src/algorithm/geometry/3d/result/polyhedron/convex_polyhedron_query_hierarchy_3d_logarithmic_support_index.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/convex_polyhedron_query_hierarchy_3d.hpp"
+#include "../../src/algorithm/geometry/3d/point/polyhedron_point/convex_polyhedron_support_point.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/distance.hpp"
 
 namespace{
 

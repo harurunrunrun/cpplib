@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle_normalized.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle_points.hpp"
-#include "../../src/algorithm/geometry/2d/convex_polygon_maximum_area_triangle_result.hpp"
+#include "../../src/algorithm/geometry/2d/aggregate/all/convex_polygon_maximum_area_triangle.hpp"
+#include "../../src/algorithm/geometry/2d/result/mixed/convex_polygon_maximum_area_triangle_normalized.hpp"
+#include "../../src/algorithm/geometry/2d/result/point_set/convex_polygon_maximum_area_triangle_points.hpp"
+#include "../../src/algorithm/geometry/2d/type/definition/convex_polygon_maximum_area_triangle_result.hpp"
 #include "convex_calipers_test_common.hpp"
 
 namespace{

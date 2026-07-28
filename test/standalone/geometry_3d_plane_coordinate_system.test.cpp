@@ -1,10 +1,10 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/plane_coordinate_system.hpp"
-#include "../../src/algorithm/geometry/3d/plane_coordinate_system3.hpp"
-#include "../../src/algorithm/geometry/3d/plane_coordinate_system_from_plane.hpp"
-#include "../../src/algorithm/geometry/3d/cross.hpp"
-#include "../../src/algorithm/geometry/3d/dot.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/plane_coordinate_system.hpp"
+#include "../../src/algorithm/geometry/3d/type/definition/plane_coordinate_system3.hpp"
+#include "../../src/algorithm/geometry/3d/result/plane/plane_coordinate_system_from_plane.hpp"
+#include "../../src/algorithm/geometry/3d/point/point_point/cross.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/point_point/dot.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

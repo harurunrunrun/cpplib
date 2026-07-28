@@ -8,7 +8,7 @@
 #include <iostream>
 #include <random>
 
-#include "../../src/algorithm/geometry/3d/geometry_primitives.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/geometry_primitives.hpp"
 
 inline bool geometry3d_api_close(
     long double left,

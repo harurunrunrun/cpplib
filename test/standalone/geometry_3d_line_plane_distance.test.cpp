@@ -1,8 +1,8 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/line_plane_distance_line_plane.hpp"
-#include "../../src/algorithm/geometry/3d/line_plane_distance_plane_line.hpp"
-#include "../../src/algorithm/geometry/3d/line_plane_distance.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/line_plane/line_plane_distance_line_plane.hpp"
+#include "../../src/algorithm/geometry/3d/scalar/plane_line/line_plane_distance_plane_line.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/line_plane_distance.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

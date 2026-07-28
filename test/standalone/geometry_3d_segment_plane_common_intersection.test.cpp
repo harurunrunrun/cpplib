@@ -2,7 +2,7 @@
 
 #include <variant>
 
-#include "../../src/algorithm/geometry/3d/segment_plane_common_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/result/segment_plane/segment_plane_common_intersection.hpp"
 #include "geometry_3d_api_test_common.hpp"
 
 int main(){

@@ -1,9 +1,9 @@
 // competitive-verifier: STANDALONE
 
-#include "../../src/algorithm/geometry/3d/closest_point.hpp"
-#include "../../src/algorithm/geometry/3d/ray_point_closest_point.hpp"
-#include "../../src/algorithm/geometry/3d/segment_point_closest_point.hpp"
-#include "../../src/algorithm/geometry/3d/triangle_point_closest_point.hpp"
+#include "../../src/algorithm/geometry/3d/aggregate/all/closest_point.hpp"
+#include "../../src/algorithm/geometry/3d/point/ray_point/ray_point_closest_point.hpp"
+#include "../../src/algorithm/geometry/3d/point/segment_point/segment_point_closest_point.hpp"
+#include "../../src/algorithm/geometry/3d/point/triangle_point/triangle_point_closest_point.hpp"
 #include "geometry_3d_linear_closest_extreme_test_common.hpp"
 #include "geometry_3d_test_common.hpp"
 
