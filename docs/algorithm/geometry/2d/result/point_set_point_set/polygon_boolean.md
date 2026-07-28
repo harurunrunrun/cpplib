@@ -13,9 +13,11 @@ even-odd 規則で表した2つの多角形集合について、和・積・差�
 
 ## 時間計算量
 
-入力総辺数を $N$、分割後の境界片数を $K=O(N^2)$ とする。全辺対の交点生成と各辺上の event sort は
-$O(N^2\log N)$、endpoint clustering・重複除去・角度順 stitch は $O(K\log K)$。
-全体は $O(N^2\log N+K\log K)$ 時間、$O(N^2+K)$ 空間。
+入力総辺数を $N$、分割後の境界片数を $K=O(N^2)$ とする。全辺対の交点生成と
+各辺上のevent sortは $O(N^2\log N)$。各境界片の左右sampleを入力全ringへ照合する
+分類が $O(NK)$、endpoint clustering・重複除去・角度順stitchが $O(K\log K)$。
+全体は $O(N^2\log N+NK+K\log K)$ 時間、最悪 $O(N^3)$、
+$O(N^2+K)$ 空間。
 
 ## 注意点
 

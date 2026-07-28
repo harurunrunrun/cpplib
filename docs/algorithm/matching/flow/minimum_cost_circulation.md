@@ -40,7 +40,7 @@ optional<MinimumCostCirculationResult> minimum_cost_circulation(
 - 下限制約を除去する処理: $O(V+E)$
 - Dinic 法による実行可能流構築: $O(V^2E)$
 - 整数 cost-scaling による費用最適化:
-  $O(VE\log(VC))$ 回の基本操作
+  $O(VE\log((V+1)C+1))$ 回の基本操作
 - 追加空間: $O(V+E)$
 
 ## 注意点
