@@ -12,8 +12,8 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/point_set/point_
 
 ## API別の時間計算量・空間計算量
 
-- `minkowski_sum_convex(first, second)`: 時間 O(n + m)、追加領域 O(1)。
-- `minkowski_sum(first, second)`: 時間 O(n log n + m log m)、追加領域 O(1)。
+- `minkowski_sum_convex(first, second)`: 時間 O(n + m)、戻り値を含む追加領域 O(n + m)。
+- `minkowski_sum(first, second)`: 時間 O(n log n + m log m)、戻り値を含む追加領域 O(n + m)。
 
 ## 注意点
 

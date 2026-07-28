@@ -13,9 +13,9 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/result/point_set
 
 ## API別の時間計算量・空間計算量
 
-- `closest_pair_squared(points)`: 時間 O(n log n)、追加領域 O(1)。
+- `closest_pair_squared(points)`: 時間 O(n log n)、追加領域 O(n)。
 - `convex_diameter_squared(polygon)`: 時間 O(n)、追加領域 O(1)。
-- `point_set_diameter_squared(points)`: 時間 O(n log n)、追加領域 O(1)。
+- `point_set_diameter_squared(points)`: 時間 O(n log n)、戻り値を除く追加領域 O(n)。
 
 ## 注意点
 

@@ -11,7 +11,7 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/point_set/point_
 
 ## API別の時間計算量・空間計算量
 
-- `convex_hull(points)`: 時間 O(n log n)、追加領域 O(1)。
+- `convex_hull(points)`: 時間 O(n log n)、戻り値を含む追加領域 O(n)。
 
 ## 注意点
 
