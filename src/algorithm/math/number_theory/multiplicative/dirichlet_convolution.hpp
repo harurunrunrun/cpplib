@@ -41,21 +41,19 @@ std::vector<Value> dirichlet_inverse(
     }
     const std::size_t maximum = values.size() - 1;
     std::vector<Value> result(maximum + 1);
+    std::vector<Value> contribution(maximum + 1);
     result[1] = Value{1} / values[1];
-    for(std::size_t value = 2; value <= maximum; ++value){
-        Value sum{};
-        for(std::size_t divisor = 2;
-            divisor <= value / divisor;
-            ++divisor){
-            if(value % divisor != 0) continue;
-            const std::size_t quotient = value / divisor;
-            sum += values[divisor] * result[quotient];
-            if(divisor != quotient){
-                sum += values[quotient] * result[divisor];
-            }
+    for(std::size_t quotient = 1; quotient <= maximum; ++quotient){
+        if(quotient != 1){
+            result[quotient] =
+                -contribution[quotient] / values[1];
         }
-        sum += values[value] * result[1];
-        result[value] = -sum / values[1];
+        for(std::size_t divisor = 2;
+            divisor <= maximum / quotient;
+            ++divisor){
+            contribution[divisor * quotient] +=
+                values[divisor] * result[quotient];
+        }
     }
     return result;
 }
