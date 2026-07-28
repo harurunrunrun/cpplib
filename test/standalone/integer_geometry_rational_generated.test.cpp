@@ -5,7 +5,9 @@
 #include <stdexcept>
 #include <string>
 
-#include "../../src/integer_geometry/2d/intersection.hpp"
+#include "../../src/algorithm/integer_geometry/integer/point_point_point/orientation.hpp"
+#include "../../src/algorithm/integer_geometry/result/line_line/line_intersection.hpp"
+#include "../../src/algorithm/integer_geometry/type/definition/rational.hpp"
 
 namespace{
 

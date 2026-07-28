@@ -98,6 +98,19 @@ class CheckStructureLayoutTest(unittest.TestCase):
             for item in self.messages()
         ))
 
+    def test_segtree_header_must_be_in_a_subcategory(self) -> None:
+        self.write("src/structure/segtree/lazysegtree.hpp")
+        self.assertTrue(any(
+            "segtree subcategory" in item for item in self.messages()
+        ))
+
+    def test_wavelet_matrix_unknown_subcategory_is_rejected(self) -> None:
+        self.write("src/structure/wavelet_matrix/sqrt/dynamic.hpp")
+        self.assertTrue(any(
+            "unknown wavelet_matrix subcategory" in item
+            for item in self.messages()
+        ))
+
     def test_range_query_subcategory_cannot_be_split_further(self) -> None:
         self.write("src/structure/range_query/aggregation/detail/example.hpp")
         self.assertTrue(any(

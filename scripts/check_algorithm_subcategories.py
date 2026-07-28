@@ -12,6 +12,7 @@ FLAT_LAYOUTS: frozenset[Path] = frozenset()
 GEOMETRY_LAYOUTS: tuple[Path, ...] = (
     Path("src/algorithm/geometry/2d"),
     Path("src/algorithm/geometry/3d"),
+    Path("src/algorithm/integer_geometry"),
 )
 
 GEOMETRY_RETURN_CATEGORIES: frozenset[str] = frozenset({
@@ -20,13 +21,14 @@ GEOMETRY_RETURN_CATEGORIES: frozenset[str] = frozenset({
     "line", "line_set", "matrix", "plane", "point", "point_set",
     "polygon", "polyhedron", "predicate", "quaternion", "result",
     "scalar", "segment", "sphere", "transform", "triangle", "type",
-    "void",
+    "vector", "void",
 })
 GEOMETRY_ARGUMENT_RE = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 
 
 FORBIDDEN_ALGORITHM_ROOTS: frozenset[Path] = frozenset({
     Path("src/algorithm/sequence"),
+    Path("src/integer_geometry"),
 })
 
 

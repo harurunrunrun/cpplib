@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../../src/integer_geometry/2d/distance.hpp"
+#include "../../src/algorithm/integer_geometry/result/point_set/point_set_squared_metrics.hpp"
 
 namespace{
 
