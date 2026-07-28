@@ -22,8 +22,10 @@ math::u64 math::generalized_lucas_binomial_mod_prime_power(
 
 $P=p^q$、$K=\min(k,n-k)$ とする。
 
-- $K<P$: $O(K\log_p n)$ 時間、$O(1)$ 追加空間
-- $K\ge P$: $O(P+\log_p n)$ 時間、$O(P)$ 空間
+- $K<P$: $O(K\log_p n+\log P+\log p+q)$ 時間、$O(1)$ 追加空間。
+  分母を全て掛けてから1回だけ拡張Euclidで逆元を求める。
+- $K\ge P$: $O(P+\log_p n\log n+\log P+\log p+q)$ 時間、
+  $O(P)$ 空間。
 
 ## 注意点
 

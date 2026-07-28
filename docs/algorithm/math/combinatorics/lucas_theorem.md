@@ -17,8 +17,16 @@ math::u64 math::lucas_binomial_mod_prime(
 
 ## 時間計算量
 
-$K=\min(k,n-k)$ とする。$K<p$ なら $O(K\log p)$ 時間・$O(1)$ 追加空間、それ以外は $O(p+\log_p n)$ 時間・$O(p)$ 空間。
+$n,k$ の $p$ 進表記の桁数を $L$、各桁を $n_i,k_i$、
+$S=\sum_i\min(k_i,n_i-k_i)$ とする。
+
+- 各桁の二項係数: $O(\min(k_i,n_i-k_i)+\log p)$
+- `lucas_binomial_mod_prime` 全体: $O(S+L\log p)$
+- 追加空間: $O(1)$
 
 ## 注意点
 
-`prime` は素数でなければならず、違反時は `runtime_error` を送出する。演算は `unsigned long long` 全域で `__uint128_t` により乗算剰余を正確に計算する。
+`prime` は素数でなければならず、違反時は `runtime_error` を送出する。
+各桁で直接 $\binom{n_i}{k_i}$ を計算して Lucas の定理を適用するため、
+素数冪版の実装や前計算表には依存しない。演算は `unsigned long long`
+全域で `__uint128_t` により乗算剰余を正確に計算する。

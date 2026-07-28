@@ -74,7 +74,8 @@ inline u64 multiplicative(
     u64 modulus
 ){
     k = std::min(k, n - k);
-    u64 result = 1 % modulus;
+    u64 numerator_product = 1 % modulus;
+    u64 denominator_product = 1 % modulus;
     long long prime_exponent = 0;
     for(u64 index = 1; index <= k; ++index){
         u64 numerator = n - k + index;
@@ -87,14 +88,19 @@ inline u64 multiplicative(
             denominator /= prime;
             --prime_exponent;
         }
-        result = mul_mod_u64(result, numerator % modulus, modulus);
-        result = mul_mod_u64(
-            result,
-            inverse_coprime(denominator % modulus, modulus),
+        numerator_product = mul_mod_u64(
+            numerator_product, numerator % modulus, modulus
+        );
+        denominator_product = mul_mod_u64(
+            denominator_product, denominator % modulus,
             modulus
         );
         if(index == k) break;
     }
+    const u64 result = mul_mod_u64(
+        numerator_product, inverse_coprime(denominator_product, modulus),
+        modulus
+    );
     if(prime_exponent >= exponent) return 0;
     if(prime_exponent < 0)[[unlikely]]{
         throw std::logic_error(
