@@ -13,15 +13,20 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/polyhedron/polyhed
 
 ## API別の時間計算量・空間計算量
 
-$H=F_1+F_2$、出力sizeを $K$ とする。full-dimensionalな通常経路は
-期待 $O(V_1+V_2+H\log H+K)$ 時間、$O(V_1+V_2+H+K)$ 追加領域。
-空集合・低次元接触・双対の退化を処理する半空間経路は最悪
-$O(V_1+V_2+H^4+K)$ 時間、$O(V_1+V_2+H+K)$ 追加領域。
+$H=F_1+F_2$、出力sizeを $K$ とする。exact空判定は期待
+$O(V_1+V_2+H)$、最悪 $O(V_1+V_2+H^3)$ 時間。strict interiorがある
+full-dimensionalな通常経路は期待 $O(V_1+V_2+H\log H+K)$ 時間、
+$O(V_1+V_2+H+K)$ 追加領域。低次元接触または双対の退化では、三平面の
+全組合せを列挙せず、直ちに次の候補点fallbackへ移る。
 
-候補点fallbackでは候補点数を $C$ とする。列挙は
-$O(V_1F_2+V_2F_1+E_1F_2+E_2F_1)$ 時間。凸包構築は固定seedで最悪
-$O(C^2\log C+K)$ 時間・$O(C^2+K)$ 追加領域、非敵対的入力では
-期待 $O(C\log C+K)$ 時間・$O(C+K)$ 追加領域。
+候補点fallbackでは候補点数を $C$、全辺queryが訪問するface-AABB node数の
+合計を $K_S$ とする。両入力が3次元ならquery階層を構築し、列挙は
+$O(N_1\log N_1+N_2\log N_2+V_1\log V_2+V_2\log V_1+K_S)$ 時間。
+$K_S$ は通常、交差候補面だけに近いが、AABBが重なる最悪配置では
+$O(E_1F_2+E_2F_1)$ である。低次元clipperは従来どおり
+$O(V_1F_2+V_2F_1+E_1F_2+E_2F_1)$ 時間となる。
+候補点の凸包構築は決定的に最悪 $O(C\log C+K)$ 時間、$O(C+K)$ 領域。
+query階層を含むfallback全体の追加領域は $O(N_1+N_2+C+K)$。
 
 ## 注意点
 

@@ -3,7 +3,7 @@ title: Convex Polyhedron Query Hierarchy 3D (三次元凸多面体クエリ階�
 documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/convex_polyhedron_query_hierarchy_3d.hpp
 ---
 
-このheaderは4つのmember実装leafをまとめる後方互換aggregatorである。
+このheaderは5つのmember実装leafをまとめる後方互換aggregatorである。
 利用側には従来どおり `ConvexPolyhedronQueryHierarchy3D` の完全な定義を提供する。
 
 同じ閉凸多面体に対する支持点、包含、最近点の多数queryを処理する。
@@ -37,6 +37,8 @@ fine側child数は最大11、最上位は頂点数24以下に固定され、`lea
 - `contains(point)`: 閉凸多面体に `point` が含まれるかを返す。境界は内部とする。
 - `closest_point(point)`: `point` が内部ならその点自身、それ以外なら閉凸多面体上の
   最近点を返す。最近点が複数ある場合の選択は規定しない。
+- `segment_intersection(segment)`: 線分との共通部分を返す。接点は退化線分、
+  空集合は `std::nullopt` で表す。face-AABB木のslab判定にはexact dyadic比較を使う。
 
 ## API別の時間計算量・空間計算量
 
@@ -60,6 +62,9 @@ fine側child数は最大11、最上位は頂点数24以下に固定され、`lea
   最近点についてDobkin--Kirkpatrick型階層の最悪対数時間は主張しない。
 - 2次元の `closest_point`: 包含fallbackを含め最悪 $O(F)$ 時間。
   0・1次元では $O(1)$ 時間。
+- 3次元の `segment_intersection`: 訪問face-AABB node数を $K_S$ として
+  $O(\log V+K_S)$、最悪 $O(F)$ 時間。探索stackは $O(\log F)$。
+  2次元は $O(K_S)$、0・1次元は $O(1)$ 時間。
 
 次数12以上の頂点は球面三角形分割の平均次数から全体の半分未満である。
 次数11以下の候補上のgreedy極大独立集合は候補数の少なくとも $1/12$ なので、

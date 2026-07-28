@@ -8,6 +8,7 @@
 #include <limits>
 #include <map>
 #include <numeric>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -1417,6 +1418,10 @@ public:
         );
         return answer;
     }
+
+    std::optional<Segment3> segment_intersection(
+        const Segment3& segment
+    ) const;
 };
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_DETAIL_POLYHEDRON_CONVEX_POLYHEDRON_QUERY_HIERARCHY_3D_DETAIL_HPP_INCLUDED

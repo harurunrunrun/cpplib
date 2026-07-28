@@ -19,6 +19,8 @@
 #include "../../src/algorithm/geometry/3d/detail/polyhedron/convex_polyhedron_query_hierarchy_3d_detail.hpp"
 #include "../../src/algorithm/geometry/3d/result/polyhedron/convex_polyhedron_query_hierarchy_3d_logarithmic_support_index.hpp"
 #include "../../src/algorithm/geometry/3d/aggregate/all/convex_polyhedron_query_hierarchy_3d.hpp"
+#include "../../src/algorithm/geometry/3d/result/polyhedron_segment/convex_polyhedron_query_hierarchy_3d_segment_intersection.hpp"
+#include "../../src/algorithm/geometry/3d/result/polyhedron_segment/convex_polyhedron_segment_intersection.hpp"
 #include "../../src/algorithm/geometry/3d/point/polyhedron_point/convex_polyhedron_support_point.hpp"
 #include "../../src/algorithm/geometry/3d/aggregate/all/distance.hpp"
 
@@ -125,6 +127,23 @@ bool compare_queries(
         );
         if(!close(distance(fast_closest, point), distance(slow_closest, point))){
             return false;
+        }
+
+        const Segment3 segment_query{
+            random_point(random, 4), random_point(random, 4)
+        };
+        const auto fast_segment = hierarchy.segment_intersection(
+            segment_query
+        );
+        if(polyhedron.affine_dimension == 3){
+            const auto slow_segment = convex_polyhedron_segment_intersection(
+                hierarchy.polyhedron(), segment_query
+            );
+            if(fast_segment.has_value() != slow_segment.has_value()) return false;
+            if(fast_segment && (
+                !close(distance(fast_segment->a, slow_segment->a), 0.0L)
+                || !close(distance(fast_segment->b, slow_segment->b), 0.0L)
+            )) return false;
         }
     }
     return true;
