@@ -7,6 +7,7 @@
 #include "../../src/algorithm/matching/flow/capacity_scaling_max_flow.hpp"
 #include "../../src/algorithm/matching/flow/circulation_with_lower_bounds.hpp"
 #include "../../src/algorithm/matching/flow/flow_decomposition.hpp"
+#include "../../src/algorithm/matching/flow/push_relabel_max_flow.hpp"
 
 int main(){
     std::ios::sync_with_stdio(false);
@@ -23,15 +24,18 @@ int main(){
             int sink;
             std::cin >> source >> sink;
             CapacityScalingMaxFlow<long long> flow(vertex_count);
+            PushRelabel<long long> push_relabel(vertex_count);
             for(int index = 0; index < edge_count; ++index){
                 int from;
                 int to;
                 long long capacity;
                 std::cin >> from >> to >> capacity;
                 flow.add_edge(from, to, capacity);
+                push_relabel.add_edge(from, to, capacity);
             }
             long long value = flow.max_flow(source, sink);
             auto side = flow.min_cut(source);
+            if(push_relabel.max_flow(source, sink) != value) return 7;
             long long cut = 0;
             for(std::size_t index = 0; index < flow.edges.size(); index += 2){
                 const auto& edge = flow.edges[index];
