@@ -2,6 +2,8 @@
 
 #include <cstddef>
 #include <iostream>
+#include <optional>
+#include <stdexcept>
 #include <vector>
 
 #include "../../src/algorithm/math/number_theory/arithmetic/continued_fraction.hpp"
@@ -12,9 +14,35 @@
 #include "../../src/algorithm/math/number_theory/modular/modular_kth_root.hpp"
 #include "../../src/algorithm/math/number_theory/modular/rational_reconstruction.hpp"
 
+namespace{
+
+std::optional<math::u64> brute_minimum_root(
+    math::u64 value,
+    math::u64 exponent,
+    math::u64 prime
+){
+    value %= prime;
+    for(math::u64 root = 0; root < prime; ++root){
+        if(math::pow_mod_u64(root, exponent, prime) == value) return root;
+    }
+    return std::nullopt;
+}
+
+} // namespace
+
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+    try{
+        (void)math::discrete_root_mod_prime(1, 0, 3);
+        return 7;
+    }catch(const std::runtime_error&){
+    }
+    try{
+        (void)math::discrete_root_mod_prime(1, 1, 9);
+        return 8;
+    }catch(const std::runtime_error&){
+    }
     int case_count;
     if(!(std::cin >> case_count)) return 1;
     while(case_count-- > 0){
@@ -29,7 +57,10 @@ int main(){
                 math::modular_kth_roots_prime(value, exponent, prime);
             auto one =
                 math::discrete_root_mod_prime(value, exponent, prime);
-            if(one.has_value() != !roots.empty()
+            const auto brute =
+                brute_minimum_root(value, exponent, prime);
+            if(one != brute
+                || one.has_value() != !roots.empty()
                 || (one && *one != roots.front())) return 2;
             std::cout << roots.size();
             for(auto root: roots) std::cout << ' ' << root;
