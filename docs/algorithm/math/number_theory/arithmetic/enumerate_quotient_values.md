@@ -1,5 +1,5 @@
 ---
-title: Enumerate Quotient Values (商の値列挙) [enumerate_quotients]
+title: Enumerate Quotient Values (商の値列挙) [dirichlet_convolution_and_prefix_sums] [dirichlet_inverse_and_prefix_sums] [enumerate_quotients]
 documentation_of: ../../../../../src/algorithm/math/number_theory/arithmetic/enumerate_quotient_values.hpp
 ---
 
