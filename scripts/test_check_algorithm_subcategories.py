@@ -9,7 +9,9 @@ import check_algorithm_subcategories
 def main() -> None:
     assert check_algorithm_subcategories.EXPECTED_LAYOUT[
         Path("src/algorithm/fft")
-    ] == frozenset({"formal_power_series", "min_plus", "transform"})
+    ] == frozenset({
+        "formal_power_series", "min_plus", "online", "transform",
+    })
     assert check_algorithm_subcategories.EXPECTED_LAYOUT[
         Path("src/algorithm/range")
     ] == frozenset({
@@ -59,7 +61,7 @@ def main() -> None:
     )
     assert len(
         check_algorithm_subcategories.CONNECTIVITY_SUBCATEGORY_BY_STEM
-    ) == 22
+    ) == 27
     assert (
         check_algorithm_subcategories.CONNECTIVITY_SUBCATEGORY_BY_STEM[
             "lowlink"
@@ -111,7 +113,7 @@ def main() -> None:
     })
     assert len(
         check_algorithm_subcategories.GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM
-    ) == 20
+    ) == 24
     assert (
         check_algorithm_subcategories.GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM[
             "treewidth_two_distance_oracle"
@@ -127,7 +129,7 @@ def main() -> None:
     })
     assert len(
         check_algorithm_subcategories.GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM
-    ) == 13
+    ) == 14
     assert (
         check_algorithm_subcategories.GRAPH_CONSTRAINTS_SUBCATEGORY_BY_STEM[
             "difference_constraints"
