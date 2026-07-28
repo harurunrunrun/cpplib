@@ -200,7 +200,10 @@ int main(){
                 convex_polyhedron_intersection_via_halfspaces_with_interior_point(
                     prism, prism, {0.0L, 0.0L, 0.0L}
                 );
-            if(!same_convex_set(prism, prism_intersection)){
+            const ConvexPolyhedron3 default_prism_intersection =
+                convex_polyhedron_intersection(prism, prism);
+            if(!same_convex_set(prism, prism_intersection)
+                || !same_convex_set(prism, default_prism_intersection)){
                 return false;
             }
         }

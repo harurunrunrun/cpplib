@@ -1,9 +1,11 @@
 #ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYHEDRON_POLYHEDRON_POLYHEDRON_CONVEX_POLYHEDRON_INTERSECTION_DEFAULT_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYHEDRON_POLYHEDRON_POLYHEDRON_CONVEX_POLYHEDRON_INTERSECTION_DEFAULT_HPP_INCLUDED
 
+#include <stdexcept>
 #include <utility>
 #include <vector>
 
+#include "convex_polyhedron_intersection_via_halfspaces.hpp"
 #include "../point_set/convex_hull_3d_default.hpp"
 #include "../../predicate/polyhedron_point/convex_polyhedron_contains.hpp"
 #include "../../index_set/polyhedron/convex_polyhedron_edges.hpp"
@@ -13,6 +15,15 @@ inline ConvexPolyhedron3 convex_polyhedron_intersection(
     const ConvexPolyhedron3& first,
     const ConvexPolyhedron3& second
 ){
+    if(first.affine_dimension == 3 && second.affine_dimension == 3){
+        try{
+            return convex_polyhedron_intersection_via_halfspaces(
+                first, second
+            );
+        }catch(const std::domain_error&){
+            // Degenerate dual configurations use the candidate-point fallback.
+        }
+    }
     std::vector<Point3> points;
     for(const Point3& point: first.vertices){
         if(convex_polyhedron_contains(second, point)) points.push_back(point);
