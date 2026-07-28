@@ -124,6 +124,100 @@ int main() {
             covered += group.size();
         }
         assert(covered == std::min<std::size_t>(n, 4));
+        assert(covered + union_result.uncovered.size() == n);
+
+        const auto zero_union =
+            combinatorial_optimization::matroid_union(n, 0, rank_two);
+        assert(zero_union.groups.empty());
+        assert(zero_union.uncovered.size() == n);
+
+        const std::size_t color_copy_count = 1 + random() % 3;
+        const auto color_union =
+            combinatorial_optimization::matroid_union(
+                edge_count, color_copy_count, partition
+            );
+        std::vector<unsigned char> color_seen(edge_count, 0);
+        std::size_t color_covered = 0;
+        for(const auto& group: color_union.groups){
+            assert(partition(group));
+            for(std::size_t element: group){
+                assert(color_seen[element] == 0);
+                color_seen[element] = 1;
+                ++color_covered;
+            }
+        }
+        for(std::size_t element: color_union.uncovered){
+            assert(color_seen[element] == 0);
+            color_seen[element] = 1;
+        }
+        assert(std::all_of(
+            color_seen.begin(), color_seen.end(),
+            [](unsigned char value){ return value != 0; }
+        ));
+        std::vector<std::size_t> color_frequency(4, 0);
+        for(int value: color){
+            ++color_frequency[static_cast<std::size_t>(value)];
+        }
+        std::size_t expected_color_covered = 0;
+        for(std::size_t count: color_frequency){
+            expected_color_covered += std::min(count, color_copy_count);
+        }
+        assert(color_covered == expected_color_covered);
+
+        if(edge_count <= 9){
+            std::size_t expected_graphic_covered = 0;
+            const std::size_t subset_count =
+                std::size_t{1} << edge_count;
+            for(std::size_t mask = 0; mask < subset_count; ++mask){
+                bool feasible = false;
+                std::size_t left_mask = mask;
+                while(true){
+                    std::vector<std::size_t> left;
+                    std::vector<std::size_t> right;
+                    for(std::size_t edge = 0; edge < edge_count; ++edge){
+                        if(((mask >> edge) & 1U) == 0U) continue;
+                        if(((left_mask >> edge) & 1U) != 0U){
+                            left.push_back(edge);
+                        }else{
+                            right.push_back(edge);
+                        }
+                    }
+                    if(graphic(left) && graphic(right)){
+                        feasible = true;
+                        break;
+                    }
+                    if(left_mask == 0) break;
+                    left_mask = (left_mask - 1) & mask;
+                }
+                if(feasible){
+                    expected_graphic_covered = std::max(
+                        expected_graphic_covered,
+                        static_cast<std::size_t>(
+                            __builtin_popcountll(mask)
+                        )
+                    );
+                }
+            }
+            const auto graphic_union =
+                combinatorial_optimization::matroid_union(
+                    edge_count, 2, graphic
+                );
+            std::vector<unsigned char> seen(edge_count, 0);
+            std::size_t graphic_covered = 0;
+            for(const auto& group: graphic_union.groups){
+                assert(graphic(group));
+                for(std::size_t element: group){
+                    assert(seen[element] == 0);
+                    seen[element] = 1;
+                    ++graphic_covered;
+                }
+            }
+            for(std::size_t element: graphic_union.uncovered){
+                assert(seen[element] == 0);
+                seen[element] = 1;
+            }
+            assert(graphic_covered == expected_graphic_covered);
+        }
 
         const std::size_t submodular_size = 4 + random() % 4;
         std::vector<long long> unary(submodular_size);
