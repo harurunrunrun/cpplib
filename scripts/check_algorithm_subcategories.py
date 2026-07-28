@@ -165,6 +165,8 @@ CONNECTIVITY_SUBCATEGORY_BY_STEM: dict[str, str] = {
     "three_edge_connected_components": "decomposition",
     "block_cut_tree": "decomposition",
     "st_numbering": "decomposition",
+    "core_decomposition": "decomposition",
+    "strong_orientation": "decomposition",
     "single_failure_connectivity": "resilience",
     "endpoint_failure_connectivity": "resilience",
     "dominator_tree": "resilience",
