@@ -35,6 +35,29 @@ def main() -> None:
             [(0, 1), (1, 2), (2, 3), (3, 0), (0, 2)],
             (-1, -1, -1, -1),
         ),
+        (
+            6,
+            [
+                (0, 1), (0, 2), (0, 4), (1, 3), (1, 4),
+                (2, 4), (2, 5), (3, 4), (3, 5),
+            ],
+            (-1, -1, -1, -1),
+        ),
+        (
+            8,
+            sorted({
+                edge
+                for vertices in (
+                    (0, 1, 2, 3),
+                    (2, 3, 4, 5),
+                    (4, 5, 6, 7),
+                )
+                for index, u in enumerate(vertices)
+                for v in vertices[index + 1:]
+                for edge in [(u, v)]
+            }),
+            (-1, -1, -1, -1),
+        ),
     ]
     for _ in range(240):
         n = rng.randint(3, 10)
@@ -54,6 +77,11 @@ def main() -> None:
             edges.append(rng.choice(edges))
         rng.shuffle(edges)
         cases.append((n, edges, (-1, -1, -1, -1)))
+
+    large_n = 100_000
+    large_cycle = [(vertex, (vertex + 1) % large_n)
+                   for vertex in range(large_n)]
+    cases.append((large_n, large_cycle, (1, 0, large_n, 0)))
 
     lines = [str(len(cases))]
     for n, edges, expected in cases:
