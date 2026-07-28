@@ -1,5 +1,5 @@
 ---
-title: Stirling Numbers (Stirling数) [stirling_number_of_the_first_kind] [stirling_number_of_the_second_kind]
+title: Stirling Numbers (Stirling数) [stirling_number_of_the_first_kind] [stirling_number_of_the_first_kind_fixed_k] [stirling_number_of_the_second_kind] [stirling_number_of_the_second_kind_fixed_k]
 documentation_of: ../../../../src/algorithm/math/combinatorics/stirling_numbers.hpp
 ---
 
@@ -55,3 +55,40 @@ $$
 
 両APIとも `order < MOD` が必要である。法は必要な階乗が可逆で、
 必要な2冪NTT長が `MOD - 1` を割り切る素数を想定する。
+
+## `math::signed_stirling_numbers_first_kind_fixed_k`
+
+```cpp
+template<int MOD>
+std::vector<Modint<MOD>>
+math::signed_stirling_numbers_first_kind_fixed_k(
+    std::size_t maximum_order,
+    std::size_t fixed_cycles
+)
+```
+
+`result[n] = s(n, fixed_cycles)` となる長さ `maximum_order + 1` の列を返す。
+指数型母関数 $(\log(1+x))^k/k!$ を形式的冪級数として計算する。
+
+- 時間計算量: $O(M(N)\log N)$。現在のFPS実装では $O(N\log^2 N)$
+- 空間計算量: $O(N)$
+
+## `math::stirling_numbers_second_kind_fixed_k`
+
+```cpp
+template<int MOD>
+std::vector<Modint<MOD>>
+math::stirling_numbers_second_kind_fixed_k(
+    std::size_t maximum_order,
+    std::size_t fixed_parts
+)
+```
+
+`result[n] = S(n, fixed_parts)` となる長さ `maximum_order + 1` の列を返す。
+指数型母関数 $(e^x-1)^k/k!$ を形式的冪級数として計算する。
+
+- 時間計算量: $O(M(N)\log N)$。現在のFPS実装では $O(N\log^2 N)$
+- 空間計算量: $O(N)$
+
+両固定K APIとも固定値が `maximum_order` 以下でなければ
+`invalid_argument`。`maximum_order < MOD` とNTT容量条件も必要である。
