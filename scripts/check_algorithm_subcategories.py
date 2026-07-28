@@ -252,6 +252,7 @@ GRAPH_SPECIALIZED_SUBCATEGORY_BY_STEM: dict[str, str] = {
     "ordered_quota_euclidean_activation_times": "metric_analysis",
     "radius_balls_form_vertex_partition": "metric_analysis",
     "chinese_postman": "route_optimization",
+    "directed_chinese_postman": "route_optimization",
     "maximum_distinct_vertex_weight_walk": "route_optimization",
     "minimum_steiner_tree": "route_optimization",
     "steiner_tree": "route_optimization",
