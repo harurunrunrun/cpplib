@@ -34,7 +34,7 @@ FORBIDDEN_ALGORITHM_ROOTS: frozenset[Path] = frozenset({
 
 EXPECTED_LAYOUT: dict[Path, frozenset[str]] = {
     Path("src/algorithm/fft"): frozenset({
-        "formal_power_series", "min_plus", "transform",
+        "formal_power_series", "min_plus", "online", "transform",
     }),
     Path("src/algorithm/range"): frozenset({
         "interval", "offline_query", "sliding_window", "static_query",
