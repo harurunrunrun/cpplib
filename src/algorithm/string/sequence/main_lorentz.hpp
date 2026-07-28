@@ -3,6 +3,8 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <limits>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -179,6 +181,12 @@ inline void enumerate(
 inline std::vector<TandemRepeat> main_lorentz_tandem_repeats(
     const std::string& text
 ){
+    if(text.size()
+        > static_cast<std::size_t>(std::numeric_limits<int>::max())){
+        throw std::length_error(
+            "main_lorentz_tandem_repeats: text is too long"
+        );
+    }
     std::vector<TandemRepeat> result;
     main_lorentz_internal::enumerate(
         text, 0, static_cast<int>(text.size()), result
