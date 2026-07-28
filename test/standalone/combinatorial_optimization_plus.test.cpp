@@ -179,6 +179,11 @@ int main() {
                 submodular_size, oracle, 2000, 1e-13L
             );
         assert(minimized.value == brute);
+        const auto one_iteration =
+            combinatorial_optimization::submodular_function_minimization(
+                submodular_size, oracle, 1, 1e-30L
+            );
+        assert(one_iteration.value == brute);
     }
     std::cout << "OK\n";
 }

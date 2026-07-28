@@ -21,6 +21,7 @@ struct SubmodularMinimizationResult {
     std::vector<long double> minimum_norm_point;
     std::size_t iterations = 0;
     long double dual_gap = 0.0L;
+    bool minimum_norm_converged = false;
 };
 
 namespace submodular_minimization_internal {
@@ -193,6 +194,7 @@ auto submodular_function_minimization(
         result.dual_gap = norm - support;
         if(result.dual_gap
            <= tolerance * std::max(1.0L, std::fabs(norm))){
+            result.minimum_norm_converged = true;
             break;
         }
         bool duplicate = false;
@@ -296,6 +298,27 @@ auto submodular_function_minimization(
                 if(candidate[index]) result.elements.push_back(index);
             }
         }
+    }
+
+    std::vector<unsigned char> exact_set(ground_set_size, 0);
+    while(true){
+        const Value exact_value = std::invoke(oracle, exact_set);
+        if(exact_value < result.value){
+            result.value = exact_value;
+            result.elements.clear();
+            for(std::size_t index = 0;
+                index < ground_set_size;
+                ++index){
+                if(exact_set[index]) result.elements.push_back(index);
+            }
+        }
+        std::size_t changed = 0;
+        while(changed < ground_set_size && exact_set[changed]){
+            exact_set[changed] = 0;
+            ++changed;
+        }
+        if(changed == ground_set_size) break;
+        exact_set[changed] = 1;
     }
     return result;
 }
