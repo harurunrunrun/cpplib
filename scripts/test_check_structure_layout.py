@@ -75,6 +75,36 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write(
             "docs/algorithm/graph/shortest_path/specialized/coordinate_product_knight_distances.md"
         )
+        self.write("src/structure/compressed/elias_fano.hpp")
+        self.write("docs/structure/compressed/elias_fano.md")
+        self.write("src/structure/bbst/multiway/b_tree.hpp")
+        self.write("docs/structure/bbst/multiway/b_tree.md")
+        self.write(
+            "src/structure/bbst/multiway/detail/standard_b_plus_tree.hpp"
+        )
+        self.write(
+            "docs/structure/bbst/multiway/detail/standard_b_plus_tree.md"
+        )
+        self.write("src/structure/bbst/probabilistic/skip_list.hpp")
+        self.write("docs/structure/bbst/probabilistic/skip_list.md")
+        self.write("src/structure/bbst/set/avl_tree.hpp")
+        self.write("docs/structure/bbst/set/avl_tree.md")
+        self.write(
+            "src/structure/bbst/sequence/detail/standard_finger_tree.hpp"
+        )
+        self.write(
+            "docs/structure/bbst/sequence/detail/standard_finger_tree.md"
+        )
+        self.write("src/structure/ordered_set/integer/x_fast_trie.hpp")
+        self.write("docs/structure/ordered_set/integer/x_fast_trie.md")
+        self.write(
+            "src/structure/ordered_set/integer/detail/"
+            "y_fast_trie_implementation.hpp"
+        )
+        self.write(
+            "docs/structure/ordered_set/integer/detail/"
+            "y_fast_trie_implementation.md"
+        )
         self.assertEqual(self.messages(), [])
 
     def test_legacy_other_header_and_document_are_rejected(self) -> None:
@@ -118,7 +148,7 @@ class CheckStructureLayoutTest(unittest.TestCase):
         ))
 
     def test_range_query_subcategory_cannot_be_split_further(self) -> None:
-        self.write("src/structure/range_query/aggregation/detail/example.hpp")
+        self.write("src/structure/range_query/aggregation/internal/example.hpp")
         self.assertTrue(any(
             "must not have nested subcategories" in item
             for item in self.messages()
@@ -224,7 +254,7 @@ class CheckStructureLayoutTest(unittest.TestCase):
 
     def test_graph_subcategory_cannot_be_split_further(self) -> None:
         self.write(
-            "src/structure/graph/dynamic_connectivity/detail/example.hpp"
+            "src/structure/graph/dynamic_connectivity/internal/example.hpp"
         )
         self.assertTrue(any(
             "must not have nested subcategories" in item

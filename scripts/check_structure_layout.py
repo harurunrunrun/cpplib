@@ -11,6 +11,7 @@ ALLOWED_STRUCTURE_CATEGORIES = frozenset({
     "bbst",
     "bit",
     "convex_hull_trick",
+    "compressed",
     "dsu",
     "fenwick_tree",
     "graph",
@@ -33,14 +34,18 @@ ALLOWED_STRUCTURE_CATEGORIES = frozenset({
 })
 
 NESTED_STRUCTURE_CATEGORIES = {
-    "bbst": frozenset({"map", "sequence"}),
+    "bbst": frozenset({
+        "map", "multiway", "probabilistic", "sequence", "set",
+    }),
     "convex_hull_trick": frozenset({
         "li_chao", "line_container", "slope_trick",
     }),
     "dsu": frozenset({"basic", "persistent", "range", "rollback", "specialized"}),
     "graph": frozenset({"dynamic_connectivity", "spanning_forest"}),
     "heap": frozenset({"meldable", "priority_queue"}),
-    "ordered_set": frozenset({"aggregate_multiset", "set", "transform_multiset"}),
+    "ordered_set": frozenset({
+        "aggregate_multiset", "integer", "set", "transform_multiset",
+    }),
     "range_query": frozenset({"aggregation", "extrema", "value_query"}),
     "segtree": frozenset({
         "basic", "detail", "dynamic", "partially_persistent", "persistent",
@@ -56,6 +61,7 @@ NESTED_STRUCTURE_CATEGORIES = {
 
 FLAT_STRUCTURE_CATEGORIES = frozenset({
     "bit",
+    "compressed",
     "fenwick_tree",
     "interval",
     "io",
@@ -170,12 +176,18 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "aa_tree_map": "bbst/map",
     "aa_tree_monoid_map": "bbst/map",
     "lazy_red_black_tree": "bbst/map",
+    "avl_tree": "bbst/set",
+    "b_plus_tree": "bbst/multiway",
+    "b_tree": "bbst/multiway",
+    "finger_tree": "bbst/sequence",
     "persistent_lazy_red_black_tree": "bbst/map",
     "persistent_red_black_tree": "bbst/map",
     "persistent_splay_tree": "bbst/map",
     "red_black_tree": "bbst/map",
     "splay_tree": "bbst/map",
     "dynamic_maximum_subarray_sum_sequence": "bbst/sequence",
+    "scapegoat_tree": "bbst/set",
+    "skip_list": "bbst/probabilistic",
     "dynamic_power_moment_sequence": "bbst/sequence",
     "lazy_reversible_splay_tree": "bbst/sequence",
     "lazy_weighted_balanced_tree": "bbst/sequence",
@@ -188,6 +200,10 @@ EXPECTED_STRUCTURE_CATEGORY = {
     "persistent_binary_trie": "trie/binary",
     "persistent_trie": "trie/string",
     "trie": "trie/string",
+    "elias_fano": "compressed",
+    "van_emde_boas_tree": "ordered_set/integer",
+    "x_fast_trie": "ordered_set/integer",
+    "y_fast_trie": "ordered_set/integer",
 }
 
 RECLASSIFIED_DSU_STEMS = frozenset({
@@ -330,7 +346,10 @@ def check_layout(root: Path) -> list[str]:
                     )
                     continue
                 for path in files:
-                    if path.parent != subcategory:
+                    if path.parent not in (
+                        subcategory,
+                        subcategory / "detail",
+                    ):
                         violations.append(
                             f"{relative(path, root)}: {family}/{subcategory.name} must not have nested subcategories"
                         )
