@@ -14,6 +14,9 @@ DOCS_RESULT := $(VERIFIER_CACHE)/docs-result.json
 DOCS_SOURCE := $(VERIFIER_ROOT)/_jekyll
 DOCS_OUTPUT := $(VERIFIER_ROOT)/site
 BUNDLE_PATH := $(VERIFIER_ROOT)/vendor/bundle
+DOCS_RESOLVE_INPUTS := $(shell find src test/onlinejudge test/standalone \
+	-type f ! -path '*/__pycache__/*')
+DOCS_RESOLVE_DIRS := $(shell find src test/onlinejudge test/standalone -type d)
 STANDALONE_ASSET_CACHE := $(VERIFIER_CACHE)/standalone-assets
 STANDALONE_RESULT_DIR := $(VERIFIER_CACHE)/standalone-results
 GXX13 ?= g++-13
@@ -116,7 +119,9 @@ verifier-resolve: gcc13-check verifier-setup verifier-wrapper-test no-boost-depe
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
-docs-verifier-resolve: verifier-setup no-boost-dependency-check test-verifier-markers
+docs-verifier-resolve: verifier-setup no-boost-dependency-check test-verifier-markers $(DOCS_VERIFY_FILES)
+
+$(DOCS_VERIFY_FILES): config.toml $(DOCS_RESOLVE_INPUTS) $(DOCS_RESOLVE_DIRS) | $(VERIFIER)
 	@mkdir -p $(VERIFIER_CACHE)
 	$(VERIFIER) oj-resolve --include src test/onlinejudge test/standalone --config config.toml > $(DOCS_VERIFY_FILES).tmp
 	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py

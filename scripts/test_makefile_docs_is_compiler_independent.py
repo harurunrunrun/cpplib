@@ -37,15 +37,20 @@ def main() -> None:
             + ", ".join(sorted(forbidden))
         )
 
-    if "verifier-setup" not in docs_dependencies:
-        raise AssertionError("docs-only resolve still requires verifier-setup")
+    required_for_docs = {"verifier-setup", "$(DOCS_VERIFY_FILES)"}
+    missing_docs = required_for_docs - docs_dependencies
+    if missing_docs:
+        raise AssertionError(
+            "docs-only resolve dependency is missing: "
+            + ", ".join(sorted(missing_docs))
+        )
 
     docs_recipe = re.search(
-        r"(?ms)^docs-verifier-resolve:[^\n]*\n((?:\t[^\n]*\n)+)",
+        r"(?ms)^\$\(DOCS_VERIFY_FILES\):[^\n]*\n((?:\t[^\n]*\n)+)",
         makefile,
     )
     if docs_recipe is None:
-        raise AssertionError("missing docs-verifier-resolve recipe")
+        raise AssertionError("missing cached docs resolve recipe")
     if "$(VERIFIER_COMMAND_ENV)" in docs_recipe.group(1):
         raise AssertionError(
             "docs-only resolve must use the local default compiler"
