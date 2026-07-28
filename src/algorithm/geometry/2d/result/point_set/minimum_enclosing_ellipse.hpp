@@ -83,6 +83,11 @@ inline MinimumEnclosingEllipseResult minimum_enclosing_ellipse(
             "ellipse approximation tolerance must be positive and finite"
         );
     }
+    if(maximum_iterations == 0){
+        throw std::invalid_argument(
+            "ellipse maximum_iterations must be positive"
+        );
+    }
     for(const Point& point: points){
         plus_geometry_detail::validate_finite(point);
     }

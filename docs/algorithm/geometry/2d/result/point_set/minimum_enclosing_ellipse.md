@@ -18,4 +18,5 @@ Khachiyan反復で最小体積包含楕円を指定許容誤差まで近似す�
 ## 注意点
 
 返却前に全点の二次形式最大値でformを縮小するため、有限丸めの範囲で全入力点を必ず包含する。
-反復上限では `runtime_error`、2次元で退化した点集合では `domain_error`。
+`maximum_iterations == 0` は `invalid_argument`、正の反復上限に到達した場合は
+`runtime_error`、2次元で退化した点集合では `domain_error`。
