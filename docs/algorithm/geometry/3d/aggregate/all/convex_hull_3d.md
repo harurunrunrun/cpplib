@@ -25,9 +25,10 @@ ConvexPolyhedron3 convex_hull_3d_with_seed(
 `convex_hull_3d_with_seed` は、三次元入力を処理する増分順序のseedを指定する。
 SplitMix64とrejection sampling付きFisher-Yates shuffleを使うため、同じ点集合と
 同じseedからは常に同じ頂点列・面列が得られる。`convex_hull_3d` は
-`0x6a09e667f3bcc909` を既定seedとして呼び出す再現可能な簡略APIである。
+乱択を使わないkinetic divide-and-conquer法を呼ぶ決定的な既定APIである。
 
-三次元の場合、各三角形面と未処理点の可視関係を双方向のconflict graphに保持する。
+`convex_hull_3d_with_seed` は、各三角形面と未処理点の可視関係を
+双方向のconflict graphに保持する。
 点を追加するときは、その点と衝突する面だけを除き、horizon上の各新面について、
 隣接していた可視面・不可視面のconflict listの和だけを再判定する。したがって、
 各追加点から全生存面を走査しない。
@@ -42,11 +43,9 @@ SplitMix64とrejection sampling付きFisher-Yates shuffleを使うため、同�
 入力点数を $N$ とする。
 
 - `convex_hull_3d(points)`
-  - アフィン次元が $2$ 以下: 時間 $O(N\log N)$、追加領域 $O(N)$。
-    重複除去、射影後の二次元凸包、元の点への対応付けを含む。
-  - アフィン次元が $3$: 固定seedを用いるため決定的であり、保証される最悪時間は
-    $O(N^2\log N)$、最悪追加領域は $O(N^2)$。入力が既定seedに合わせて
-    敵対的に構成されていない場合は、下記の期待計算量と同じ挙動になる。
+  - 全アフィン次元: 最悪時間 $O(N\log N)$、追加領域 $O(N)$。
+  - 三次元では左右lower hullのevent列を線形mergeし、二つの向きから
+    facetを復元する決定的分割統治法を使う。
 - `convex_hull_3d_with_seed(points, random_seed)`
   - アフィン次元が $2$ 以下: seedによらず時間 $O(N\log N)$、追加領域 $O(N)$。
   - アフィン次元が $3$: seedを入力と独立に一様ランダムに選ぶと期待時間
@@ -67,6 +66,6 @@ SplitMix64とrejection sampling付きFisher-Yates shuffleを使うため、同�
 使って判定する。共面凸包の射影前には局所差分を正規化する。三次元の面は外向きであり、
 同じ支持平面上の多角形面は複数の三角形として格納される。
 
-期待計算量を敵対的入力に対して利用したい場合は、入力から独立に生成したseedを
-`convex_hull_3d_with_seed` へ渡す。既定APIは実行間の完全な再現性を優先して
-固定seedを使う。
+定数倍を優先して乱択増分法を使う場合だけ、入力から独立に生成したseedを
+`convex_hull_3d_with_seed` へ渡す。既定APIは敵対的入力に対する
+最悪 $O(N\log N)$ 保証と再現性を優先する。

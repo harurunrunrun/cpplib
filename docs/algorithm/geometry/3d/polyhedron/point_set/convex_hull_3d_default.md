@@ -1,9 +1,9 @@
 ---
-title: 3D Convex Hull with Default Seed (固定seedによる三次元凸包)
+title: Deterministic 3D Convex Hull (決定的三次元凸包)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/polyhedron/point_set/convex_hull_3d_default.hpp
 ---
 
-固定seedの増分順序を使い、点集合の三次元凸包を再現可能に構築する。
+決定的なkinetic divide-and-conquer法により、点集合の三次元凸包を構築する。
 
 ## API
 
@@ -13,9 +13,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/polyhedron/point_s
 
 入力点数を $N$ とする。
 
-- アフィン次元2以下: 時間 $O(N\log N)$、追加領域 $O(N)$。
-- アフィン次元3: 固定seedに対する最悪時間 $O(N^2\log N)$、最悪追加領域 $O(N^2)$。既定seedに対して敵対的でない入力では期待的に $O(N\log N)$ 時間、$O(N)$ 領域となる。
+- 全アフィン次元: 最悪時間 $O(N\log N)$、追加領域 $O(N)$。
+- 三次元では二つのlower hullを線形mergeする分割統治と、facetの正規化を行う。
 
 ## 注意点
 
-座標は有限でなければならず、違反時は `std::invalid_argument` を送出する。面の向きとアフィン次元はexact dyadic predicateで判定する。同じ入力からは同じ頂点列・面列を返す。
+座標は有限でなければならず、違反時は `std::invalid_argument` を送出する。
+面の向きとアフィン次元はexact dyadic predicateで判定する。同じ点集合からは
+入力順によらず同じ頂点列・面列を返す。exact整数演算のビット計算量は上記の
+RAM計算量に含めない。
