@@ -4,7 +4,10 @@
 #include <cassert>
 #include <cstdint>
 #include <functional>
+#include <iostream>
 #include <numeric>
+#include <random>
+#include <stdexcept>
 #include <utility>
 #include <vector>
 
@@ -53,6 +56,40 @@ int main(){
     assert(persistent.sum(v1, 0, 4) == 5);
     assert(persistent.sum(v2, 0, 4) == 12);
 
+    PersistentFenwickTree<long long> branching(17);
+    std::vector<std::vector<long long>> versions(
+        1, std::vector<long long>(17)
+    );
+    std::mt19937 random(917'431U);
+    for(int operation = 0; operation < 300; ++operation){
+        const int base = static_cast<int>(
+            random() % static_cast<unsigned int>(versions.size())
+        );
+        const int position = static_cast<int>(random() % 17U);
+        const long long delta =
+            static_cast<long long>(random() % 101U) - 50;
+        std::vector<long long> next =
+            versions[static_cast<std::size_t>(base)];
+        next[static_cast<std::size_t>(position)] += delta;
+        const int version = branching.add(base, position, delta);
+        versions.push_back(std::move(next));
+        assert(version == static_cast<int>(versions.size()) - 1);
+        for(int query = 0; query < 20; ++query){
+            const int checked = static_cast<int>(
+                random() % static_cast<unsigned int>(versions.size())
+            );
+            int left = static_cast<int>(random() % 18U);
+            int right = static_cast<int>(random() % 18U);
+            if(right < left) std::swap(left, right);
+            const long long expected = std::accumulate(
+                versions[static_cast<std::size_t>(checked)].begin() + left,
+                versions[static_cast<std::size_t>(checked)].begin() + right,
+                0LL
+            );
+            assert(branching.sum(checked, left, right) == expected);
+        }
+    }
+
     FenwickOrderedSets<int> ordered(3, {{0, 4}, {1, 2}, {2, 7}});
     ordered.add(0, 4); ordered.add(1, 2); ordered.add(2, 7);
     assert(ordered.count_less(0, 3, 5) == 2);
@@ -75,8 +112,20 @@ int main(){
     auto reported = range_tree.report(0, 3, 1, 3);
     std::sort(reported.begin(), reported.end());
     assert((reported == std::vector<int>{0, 1}));
-    OrthogonalRangeReporting<int> orthogonal({{0, 2}, {1, 1}, {2, 3}});
-    assert(orthogonal.report(0, 2, 0, 3).size() == 2);
+    OrthogonalRangeReporting<int> orthogonal(
+        {{0, 2}, {1, 1}, {2, 3}, {1, 1}}
+    );
+    auto orthogonal_answer = orthogonal.report(0, 2, 0, 3);
+    std::sort(orthogonal_answer.begin(), orthogonal_answer.end());
+    assert((orthogonal_answer == std::vector<int>{0, 1, 3}));
+    assert(orthogonal.report(1, 1, -10, 10).empty());
+    bool invalid_rectangle = false;
+    try{
+        (void)orthogonal.report(2, 1, 0, 1);
+    }catch(const std::invalid_argument&){
+        invalid_rectangle = true;
+    }
+    assert(invalid_rectangle);
     PrioritySearchTree<int, int> priority({{0, 2, 0}, {1, 1, 1}, {2, 3, 2}, {3, 0, 3}});
     assert(priority.report(0, 3, 3).size() == 2);
     FractionalCascading<int> cascading({{1, 4, 9}, {2, 6}, {0, 7, 8}});
@@ -86,4 +135,35 @@ int main(){
     assert((dominance == std::vector<long long>{0, 1, 1}));
     const auto duplicate_dominance = offline_3d_dominance({{1, 1, 1}, {1, 1, 1}, {2, 2, 2}});
     assert((duplicate_dominance == std::vector<long long>{1, 1, 2}));
+
+    int point_count;
+    int query_count;
+    assert(std::cin >> point_count >> query_count);
+    std::vector<std::pair<int, int>> random_points(
+        static_cast<std::size_t>(point_count)
+    );
+    for(auto& [x, y]: random_points) std::cin >> x >> y;
+    OrthogonalRangeReporting<int> random_index(random_points);
+    assert(random_index.size() == point_count);
+    while(query_count-- > 0){
+        int lower_x;
+        int upper_x;
+        int lower_y;
+        int upper_y;
+        std::cin >> lower_x >> upper_x >> lower_y >> upper_y;
+        std::vector<int> expected;
+        for(int index = 0; index < point_count; ++index){
+            const auto [x, y] =
+                random_points[static_cast<std::size_t>(index)];
+            if(lower_x <= x && x < upper_x
+                && lower_y <= y && y < upper_y){
+                expected.push_back(index);
+            }
+        }
+        auto actual = random_index.report(
+            lower_x, upper_x, lower_y, upper_y
+        );
+        std::sort(actual.begin(), actual.end());
+        assert(actual == expected);
+    }
 }
