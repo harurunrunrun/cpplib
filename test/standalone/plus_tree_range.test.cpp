@@ -45,6 +45,209 @@ int main(){
     TreePathXorBasis basis(tree, {1, 2, 4, 8, 16});
     assert(basis.maximum_xor(3, 2) == 15);
 
+    std::mt19937 tree_random(83'711U);
+    for(int tree_size = 1; tree_size <= 8; ++tree_size){
+        for(int sample = 0; sample < 24; ++sample){
+            std::vector<std::vector<int>> random_tree(
+                static_cast<std::size_t>(tree_size)
+            );
+            std::vector<int> expected_parent(
+                static_cast<std::size_t>(tree_size), 0
+            );
+            std::vector<int> expected_depth(
+                static_cast<std::size_t>(tree_size)
+            );
+            for(int vertex = 1; vertex < tree_size; ++vertex){
+                const int parent = static_cast<int>(
+                    tree_random() % static_cast<unsigned int>(vertex)
+                );
+                expected_parent[static_cast<std::size_t>(vertex)] = parent;
+                expected_depth[static_cast<std::size_t>(vertex)] =
+                    expected_depth[static_cast<std::size_t>(parent)] + 1;
+                random_tree[static_cast<std::size_t>(vertex)]
+                    .push_back(parent);
+                random_tree[static_cast<std::size_t>(parent)]
+                    .push_back(vertex);
+            }
+
+            const LadderDecomposition decomposition(random_tree);
+            for(int vertex = 0; vertex < tree_size; ++vertex){
+                assert(decomposition.parent(vertex)
+                    == expected_parent[static_cast<std::size_t>(vertex)]);
+                assert(decomposition.depth(vertex)
+                    == expected_depth[static_cast<std::size_t>(vertex)]);
+                std::vector<int> actual_path;
+                for(const auto [ladder, count]:
+                    decomposition.path_to_root(vertex)){
+                    const auto& chain =
+                        decomposition.ladder_vertices(ladder);
+                    assert(0 < count
+                        && count <= static_cast<int>(chain.size()));
+                    for(int index = count; index-- > 0;){
+                        actual_path.push_back(
+                            chain[static_cast<std::size_t>(index)]
+                        );
+                    }
+                }
+                std::vector<int> expected_path;
+                for(int current = vertex;;
+                    current = expected_parent[
+                        static_cast<std::size_t>(current)
+                    ]){
+                    expected_path.push_back(current);
+                    if(current == 0) break;
+                }
+                assert(actual_path == expected_path);
+            }
+
+            const auto contraction =
+                rake_compress_tree_contraction(random_tree);
+            std::vector<unsigned char> contracted(
+                static_cast<std::size_t>(tree_size), 0
+            );
+            int contraction_count = 0;
+            for(const auto& round: contraction){
+                assert(!round.empty());
+                for(const TreeContractionStep& step: round){
+                    assert(0 <= step.vertex && step.vertex < tree_size);
+                    assert(!contracted[
+                        static_cast<std::size_t>(step.vertex)
+                    ]);
+                    contracted[static_cast<std::size_t>(step.vertex)] = 1;
+                    ++contraction_count;
+                    if(step.kind == TreeContractionStep::Kind::compress){
+                        assert(0 <= step.left && step.left < tree_size);
+                        assert(0 <= step.right && step.right < tree_size);
+                        assert(step.left != step.right);
+                    }
+                }
+            }
+            assert(contraction_count == tree_size - 1);
+
+            if(sample < 4 && tree_size <= 7){
+                std::vector<int> permutation(
+                    static_cast<std::size_t>(tree_size)
+                );
+                std::iota(permutation.begin(), permutation.end(), 0);
+                long long unrooted_count = 0;
+                long long rooted_count = 0;
+                do{
+                    bool valid = true;
+                    for(int first = 0; first < tree_size && valid; ++first){
+                        for(int second = first + 1;
+                            second < tree_size;
+                            ++second){
+                            const bool original = std::find(
+                                random_tree[
+                                    static_cast<std::size_t>(first)
+                                ].begin(),
+                                random_tree[
+                                    static_cast<std::size_t>(first)
+                                ].end(), second
+                            ) != random_tree[
+                                static_cast<std::size_t>(first)
+                            ].end();
+                            const int mapped_first = permutation[
+                                static_cast<std::size_t>(first)
+                            ];
+                            const int mapped_second = permutation[
+                                static_cast<std::size_t>(second)
+                            ];
+                            const bool mapped = std::find(
+                                random_tree[
+                                    static_cast<std::size_t>(mapped_first)
+                                ].begin(),
+                                random_tree[
+                                    static_cast<std::size_t>(mapped_first)
+                                ].end(), mapped_second
+                            ) != random_tree[
+                                static_cast<std::size_t>(mapped_first)
+                            ].end();
+                            if(original != mapped) valid = false;
+                        }
+                    }
+                    if(valid){
+                        ++unrooted_count;
+                        if(permutation[0] == 0) ++rooted_count;
+                    }
+                }while(std::next_permutation(
+                    permutation.begin(), permutation.end()
+                ));
+                assert(tree_automorphism_count<long long>(random_tree)
+                    == unrooted_count);
+                assert(rooted_tree_automorphism_count<long long>(
+                    random_tree, 0
+                ) == rooted_count);
+            }
+
+            std::vector<std::uint64_t> path_values(
+                static_cast<std::size_t>(tree_size)
+            );
+            for(auto& value: path_values) value = tree_random() & 255U;
+            const TreePathXorBasis<8> random_basis(
+                random_tree, path_values
+            );
+            for(int first = 0; first < tree_size; ++first){
+                for(int second = 0; second < tree_size; ++second){
+                    std::vector<int> first_path;
+                    for(int vertex = first;;
+                        vertex = expected_parent[
+                            static_cast<std::size_t>(vertex)
+                        ]){
+                        first_path.push_back(vertex);
+                        if(vertex == 0) break;
+                    }
+                    std::vector<int> second_path;
+                    for(int vertex = second;;
+                        vertex = expected_parent[
+                            static_cast<std::size_t>(vertex)
+                        ]){
+                        second_path.push_back(vertex);
+                        if(vertex == 0) break;
+                    }
+                    int left = static_cast<int>(first_path.size()) - 1;
+                    int right = static_cast<int>(second_path.size()) - 1;
+                    while(0 < left && 0 < right
+                        && first_path[static_cast<std::size_t>(left - 1)]
+                            == second_path[
+                                static_cast<std::size_t>(right - 1)
+                            ]){
+                        --left;
+                        --right;
+                    }
+                    std::vector<std::uint64_t> values;
+                    for(int index = 0; index <= left; ++index){
+                        values.push_back(path_values[static_cast<std::size_t>(
+                            first_path[static_cast<std::size_t>(index)]
+                        )]);
+                    }
+                    for(int index = right; index-- > 0;){
+                        values.push_back(path_values[static_cast<std::size_t>(
+                            second_path[static_cast<std::size_t>(index)]
+                        )]);
+                    }
+                    const std::uint64_t seed = tree_random() & 255U;
+                    std::uint64_t expected = seed;
+                    for(std::size_t mask = 0;
+                        mask < (std::size_t{1} << values.size());
+                        ++mask){
+                        std::uint64_t candidate = seed;
+                        for(std::size_t index = 0;
+                            index < values.size();
+                            ++index){
+                            if((mask >> index) & 1U){
+                                candidate ^= values[index];
+                            }
+                        }
+                        expected = std::max(expected, candidate);
+                    }
+                    assert(random_basis.maximum_xor(first, second, seed)
+                        == expected);
+                }
+            }
+        }
+    }
+
     int merges = 0;
     cdq_divide_and_conquer(0, 8, [&](int, int, int){ ++merges; });
     assert(merges == 7);
