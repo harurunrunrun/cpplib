@@ -133,6 +133,15 @@ void self_test(){
         }
     }
     assert(is_planar_graph(rows * columns, grid));
+    std::vector<std::pair<int,int>> duplicated_grid;
+    duplicated_grid.reserve(grid.size() * 3);
+    for(const auto [first, second]: grid){
+        duplicated_grid.emplace_back(first, second);
+        duplicated_grid.emplace_back(second, first);
+        duplicated_grid.emplace_back(first, second);
+    }
+    assert(is_planar_graph(rows * columns, duplicated_grid));
+
     std::mt19937_64 random(2026071620);
     for(int iteration = 0; iteration < 500; ++iteration){
         constexpr int n = 6;

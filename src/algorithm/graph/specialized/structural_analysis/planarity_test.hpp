@@ -2,13 +2,40 @@
 #define CPPLIB_SRC_ALGORITHM_GRAPH_SPECIALIZED_STRUCTURAL_ANALYSIS_PLANARITY_TEST_HPP_INCLUDED
 
 #include <algorithm>
+#include <array>
 #include <cstddef>
-#include <set>
+#include <cstdint>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
 namespace planarity_test_internal{
+
+template<class Entry, class Key>
+void radix_sort_unsigned_64(std::vector<Entry>& entries, Key key){
+    if(entries.size() < 2) return;
+    std::vector<Entry> buffer(entries.size());
+    std::array<std::size_t, 256> count{};
+    for(unsigned shift = 0; shift < 64; shift += 8){
+        count.fill(0);
+        for(const Entry& entry: entries){
+            ++count[static_cast<unsigned char>(key(entry) >> shift)];
+        }
+        std::size_t offset = 0;
+        for(std::size_t& size: count){
+            const std::size_t current = size;
+            size = offset;
+            offset += current;
+        }
+        for(Entry& entry: entries){
+            buffer[count[
+                static_cast<unsigned char>(key(entry) >> shift)
+            ]++] = std::move(entry);
+        }
+        entries.swap(buffer);
+    }
+}
 
 struct Interval{
     int low = -1;
@@ -52,7 +79,7 @@ class LeftRightPlanarity{
     std::vector<int> parent_edge;
     std::vector<int> lowpoint;
     std::vector<int> second_lowpoint;
-    std::vector<int> nesting_depth;
+    std::vector<std::uint32_t> nesting_depth;
     std::vector<int> reference;
     std::vector<int> lowpoint_edge;
     std::vector<std::size_t> stack_bottom;
@@ -60,8 +87,9 @@ class LeftRightPlanarity{
 
     void finish_orientation_edge(int edge, int from){
         nesting_depth[static_cast<std::size_t>(edge)] =
-            2 * lowpoint[static_cast<std::size_t>(edge)] +
-            static_cast<int>(
+            2U * static_cast<std::uint32_t>(
+                lowpoint[static_cast<std::size_t>(edge)]
+            ) + static_cast<std::uint32_t>(
                 second_lowpoint[static_cast<std::size_t>(edge)] <
                 height[static_cast<std::size_t>(from)]
             );
@@ -317,20 +345,41 @@ public:
         outgoing(static_cast<std::size_t>(vertex_count)),
         height(static_cast<std::size_t>(vertex_count), -1),
         parent_edge(static_cast<std::size_t>(vertex_count), -1){
-        std::set<std::pair<int, int>> unique_edges;
+        std::vector<std::uint64_t> unique_edges;
+        unique_edges.reserve(input_edges.size());
         for(const auto [first, second]: input_edges){
             if(first < 0 || vertex_count <= first ||
                second < 0 || vertex_count <= second)[[unlikely]]{
                 throw std::invalid_argument("planarity test: invalid edge endpoint");
             }
             if(first == second) continue;
-            unique_edges.emplace(
-                std::min(first, second), std::max(first, second)
+            const std::uint32_t low = static_cast<std::uint32_t>(
+                std::min(first, second)
             );
+            const std::uint32_t high = static_cast<std::uint32_t>(
+                std::max(first, second)
+            );
+            unique_edges.push_back(
+                (static_cast<std::uint64_t>(low) << 32) | high
+            );
+        }
+        radix_sort_unsigned_64(
+            unique_edges,
+            [](std::uint64_t edge){ return edge; }
+        );
+        unique_edges.erase(
+            std::unique(unique_edges.begin(), unique_edges.end()),
+            unique_edges.end()
+        );
+        if(unique_edges.size() >
+           static_cast<std::size_t>(std::numeric_limits<int>::max())){
+            throw std::length_error("planarity test: too many edges");
         }
         edges.resize(unique_edges.size());
         std::size_t edge_index = 0;
-        for(const auto [first, second]: unique_edges){
+        for(const std::uint64_t encoded: unique_edges){
+            const int first = static_cast<int>(encoded >> 32);
+            const int second = static_cast<int>(encoded & 0xffffffffULL);
             edges[edge_index] = {first, second};
             adjacency[static_cast<std::size_t>(first)].emplace_back(
                 second, static_cast<int>(edge_index)
@@ -351,9 +400,10 @@ public:
     }
 
     bool run(){
-        if(vertex_count > 2 &&
-           edges.size() > static_cast<std::size_t>(3 * vertex_count - 6)){
-            return false;
+        if(vertex_count > 2){
+            const std::uint64_t planar_edge_limit =
+                3ULL * static_cast<std::uint64_t>(vertex_count) - 6ULL;
+            if(edges.size() > planar_edge_limit) return false;
         }
         std::vector<int> roots;
         for(int vertex = 0; vertex < vertex_count; ++vertex){
@@ -362,14 +412,29 @@ public:
                 orient_component(vertex);
             }
         }
-        for(auto& edge_list: outgoing){
-            std::stable_sort(
-                edge_list.begin(), edge_list.end(),
-                [&](int first, int second){
-                    return nesting_depth[static_cast<std::size_t>(first)] <
-                        nesting_depth[static_cast<std::size_t>(second)];
-                }
-            );
+        struct OrderedEdge{
+            std::uint64_t key;
+            int edge;
+        };
+        std::vector<OrderedEdge> ordered;
+        ordered.reserve(edges.size());
+        for(std::size_t edge = 0; edge < edges.size(); ++edge){
+            ordered.push_back({
+                (static_cast<std::uint64_t>(
+                    static_cast<std::uint32_t>(edges[edge].first)
+                ) << 32) | nesting_depth[edge],
+                static_cast<int>(edge),
+            });
+        }
+        radix_sort_unsigned_64(
+            ordered,
+            [](const OrderedEdge& edge){ return edge.key; }
+        );
+        for(auto& edge_list: outgoing) edge_list.clear();
+        for(const OrderedEdge& entry: ordered){
+            outgoing[static_cast<std::size_t>(
+                edges[static_cast<std::size_t>(entry.edge)].first
+            )].push_back(entry.edge);
         }
         for(const int root: roots){
             if(!test_component(root)) return false;

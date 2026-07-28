@@ -19,11 +19,11 @@ bool is_planar_graph(
 頂点集合を `[0, vertex_count)` とする無向グラフが平面的なら `true` を返す。
 self-loopは平面性を変えないため無視し、平行辺は一つの辺へまとめる。
 
-- 時間計算量: $O((N+M)\log M)$
+- 時間計算量: $O(N+M)$
 - 空間計算量: $O(N+M)$
 
-DFSと制約処理自体は線形である。上記の対数因子は重複辺の正規化とnesting depth順の
-比較sortによる。
+重複辺の正規化とnesting depth順の並べ替えには、8 bitを一桁とする
+64 bit整数radix sortを使う。各辺を定数回走査する。
 
 ## 注意点
 
