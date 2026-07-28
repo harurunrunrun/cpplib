@@ -1,5 +1,5 @@
-#ifndef CP_RATIONAL_HPP
-#define CP_RATIONAL_HPP
+#ifndef CPPLIB_SRC_STRUCTURE_TYPES_RATIONAL_RATIONAL_HPP_INCLUDED
+#define CPPLIB_SRC_STRUCTURE_TYPES_RATIONAL_RATIONAL_HPP_INCLUDED
 
 #include <algorithm>
 #include <cctype>
@@ -1931,4 +1931,4 @@ struct hash<cp::Rational> {
 };
 } // namespace std
 
-#endif // CP_RATIONAL_HPP
+#endif  // CPPLIB_SRC_STRUCTURE_TYPES_RATIONAL_RATIONAL_HPP_INCLUDED

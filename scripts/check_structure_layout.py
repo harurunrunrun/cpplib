@@ -42,7 +42,7 @@ NESTED_STRUCTURE_CATEGORIES = {
     "heap": frozenset({"meldable", "priority_queue"}),
     "ordered_set": frozenset({"aggregate_multiset", "set", "transform_multiset"}),
     "range_query": frozenset({"aggregation", "extrema", "value_query"}),
-    "types": frozenset({"monoid", "simulation"}),
+    "types": frozenset({"monoid", "rational", "simulation"}),
     "trie": frozenset({"binary", "string"}),
     "tree": frozenset({"centroid", "dynamic_forest", "query", "treap"}),
 }

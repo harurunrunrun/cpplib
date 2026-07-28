@@ -106,10 +106,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reject broken includes and forbidden Boost dependencies
+      - name: Reject broken includes
         run: |
           python3 scripts/test_check_relative_includes.py
           python3 scripts/check_relative_includes.py src test
+
+      - name: Reject forbidden Boost dependencies
+        run: |
           python3 scripts/test_check_no_boost_dependency.py
           python3 scripts/check_no_boost_dependency.py src test docs
 

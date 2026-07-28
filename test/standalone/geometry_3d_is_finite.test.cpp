@@ -12,6 +12,8 @@
 #include "../../src/algorithm/geometry/3d/nonnegative_scaled_comparison.hpp"
 #include "../../src/algorithm/geometry/3d/plane3_is_finite.hpp"
 #include "../../src/algorithm/geometry/3d/point3_is_finite.hpp"
+#include "../../src/algorithm/geometry/3d/point3_normalized_difference_points.hpp"
+#include "../../src/algorithm/geometry/3d/point3_normalized_difference_result.hpp"
 #include "../../src/algorithm/geometry/3d/point3_normalized_difference.hpp"
 #include "../../src/algorithm/geometry/3d/point3_safe_normalized_difference.hpp"
 #include "../../src/algorithm/geometry/3d/ray3_is_finite.hpp"

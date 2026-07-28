@@ -45,6 +45,8 @@ class CheckStructureLayoutTest(unittest.TestCase):
         self.write("docs/structure/types/monoid/monoid.md")
         self.write("src/structure/types/simulation/dice.hpp")
         self.write("docs/structure/types/simulation/dice.md")
+        self.write("src/structure/types/rational/rational.hpp")
+        self.write("docs/structure/types/rational/rational.md")
         self.write(
             "src/structure/convex_hull_trick/li_chao/dynamic_li_chao_tree.hpp"
         )
