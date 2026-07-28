@@ -296,7 +296,7 @@ class StandaloneResultsWorkflowTest(unittest.TestCase):
         self.assertIn("gcc13-check:", makefile)
         self.assertIn("-dumpfullversion -dumpversion", makefile)
         self.assertIn("verifier-resolve: gcc13-check", makefile)
-        self.assertIn("docs-verifier-resolve: gcc13-check", makefile)
+        self.assertNotIn("docs-verifier-resolve: gcc13-check", makefile)
         self.assertIn("standalone-assets: gcc13-check", makefile)
 
         for workflow_name in ("verify.yaml", "docs.yaml"):
