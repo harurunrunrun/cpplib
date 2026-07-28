@@ -116,6 +116,161 @@ int main(){
     }
 
     {
+        for(int repetition = 0; repetition < 140; ++repetition){
+            const int vertex_count =
+                1 + static_cast<int>(random() % 180);
+            std::vector<std::vector<int>> graph(
+                static_cast<std::size_t>(vertex_count)
+            );
+            for(int vertex = 1; vertex < vertex_count; ++vertex){
+                const int parent =
+                    static_cast<int>(random()
+                        % static_cast<unsigned int>(vertex));
+                graph[static_cast<std::size_t>(vertex)]
+                    .push_back(parent);
+                graph[static_cast<std::size_t>(parent)]
+                    .push_back(vertex);
+            }
+            for(auto& adjacent: graph){
+                std::shuffle(adjacent.begin(), adjacent.end(), random);
+            }
+            const int root =
+                static_cast<int>(random()
+                    % static_cast<unsigned int>(vertex_count));
+            std::vector<int> brute_parent(
+                static_cast<std::size_t>(vertex_count), -1
+            );
+            std::vector<int> brute_depth(
+                static_cast<std::size_t>(vertex_count), 0
+            );
+            std::vector<int> order{root};
+            brute_parent[static_cast<std::size_t>(root)] = root;
+            for(std::size_t index = 0; index < order.size(); ++index){
+                const int vertex = order[index];
+                for(const int to:
+                    graph[static_cast<std::size_t>(vertex)]){
+                    if(brute_parent[static_cast<std::size_t>(to)]
+                        != -1) continue;
+                    brute_parent[static_cast<std::size_t>(to)] =
+                        vertex;
+                    brute_depth[static_cast<std::size_t>(to)] =
+                        brute_depth[static_cast<std::size_t>(vertex)]
+                        + 1;
+                    order.push_back(to);
+                }
+            }
+
+            const LevelAncestor ancestor(graph, root);
+            assert(ancestor.size() == vertex_count);
+            for(int vertex = 0; vertex < vertex_count; ++vertex){
+                assert(ancestor.depth(vertex)
+                    == brute_depth[static_cast<std::size_t>(vertex)]);
+                int current = vertex;
+                for(int distance = 0;
+                    distance
+                        <= brute_depth[
+                            static_cast<std::size_t>(vertex)
+                        ];
+                    ++distance){
+                    assert(ancestor.kth_ancestor(vertex, distance)
+                        == current);
+                    assert(ancestor.ancestor_at_depth(
+                        vertex,
+                        brute_depth[
+                            static_cast<std::size_t>(vertex)
+                        ] - distance
+                    ) == current);
+                    current =
+                        brute_parent[static_cast<std::size_t>(current)];
+                }
+                assert(ancestor.kth_ancestor(vertex, -1) == -1);
+                assert(ancestor.kth_ancestor(
+                    vertex,
+                    brute_depth[static_cast<std::size_t>(vertex)] + 1
+                ) == -1);
+                assert(ancestor.ancestor_at_depth(vertex, -1) == -1);
+                assert(ancestor.ancestor_at_depth(
+                    vertex,
+                    brute_depth[static_cast<std::size_t>(vertex)] + 1
+                ) == -1);
+            }
+        }
+
+        constexpr int path_size = 20'000;
+        std::vector<std::vector<int>> path(
+            static_cast<std::size_t>(path_size)
+        );
+        for(int vertex = 1; vertex < path_size; ++vertex){
+            path[static_cast<std::size_t>(vertex - 1)]
+                .push_back(vertex);
+            path[static_cast<std::size_t>(vertex)]
+                .push_back(vertex - 1);
+        }
+        const LevelAncestor from_left(path, 0);
+        const LevelAncestor from_right(path, path_size - 1);
+        for(int distance = 0; distance < path_size; ++distance){
+            assert(from_left.kth_ancestor(path_size - 1, distance)
+                == path_size - 1 - distance);
+            assert(from_right.kth_ancestor(0, distance) == distance);
+        }
+
+        const auto rejects_invalid_tree =
+            [](const std::vector<std::vector<int>>& invalid_graph){
+                try{
+                    const LevelAncestor structure(invalid_graph);
+                    (void)structure;
+                }catch(const std::invalid_argument&){
+                    return true;
+                }
+                return false;
+            };
+        assert(rejects_invalid_tree({{0}}));
+        assert(rejects_invalid_tree(
+            {{1, 1}, {0}, {0}}
+        ));
+        assert(rejects_invalid_tree(
+            {{1, 2}, {2}, {3}, {0, 1}}
+        ));
+        assert(rejects_invalid_tree(
+            {{1}, {0}, {3, 4}, {2, 4}, {2, 3}}
+        ));
+
+        bool range_error = false;
+        try{
+            const LevelAncestor invalid_edge({{1}, {0, 2}});
+            (void)invalid_edge;
+        }catch(const std::out_of_range&){
+            range_error = true;
+        }
+        assert(range_error);
+        range_error = false;
+        try{
+            const LevelAncestor invalid_root({{}}, 1);
+            (void)invalid_root;
+        }catch(const std::out_of_range&){
+            range_error = true;
+        }
+        assert(range_error);
+        range_error = false;
+        try{
+            const LevelAncestor empty({}, 1);
+            (void)empty;
+        }catch(const std::out_of_range&){
+            range_error = true;
+        }
+        assert(range_error);
+
+        const LevelAncestor singleton({{}});
+        range_error = false;
+        try{
+            (void)singleton.depth(1);
+        }catch(const std::out_of_range&){
+            range_error = true;
+        }
+        assert(range_error);
+    }
+
+    {
         using Priority = PrioritySearchTree<int, int>;
         const Priority empty;
         assert(empty.size() == 0);
