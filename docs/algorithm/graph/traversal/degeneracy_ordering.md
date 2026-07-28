@@ -4,6 +4,7 @@ documentation_of: ../../../../src/algorithm/graph/traversal/degeneracy_ordering.
 ---
 
 無向グラフの頂点を、残ったグラフでの次数が常に退化数以下になる順序へ並べる。
+次数バケットを直接更新する独立実装である。
 
 ## API
 
@@ -30,7 +31,8 @@ struct DegeneracyOrderingResult {
 
 頂点数を $N$、自己ループを除く辺数を $M$ とする。
 
-- `order` と `degeneracy` の計算: $O(N+M)$
+- 隣接リストと次数バケットの構築: $O(N+M)$
+- 各辺に対する次数更新: $O(N+M)$
 - 戻り値の構築: $O(N)$
 - `degeneracy_ordering` 全体: $O(N+M)$
 
@@ -40,4 +42,5 @@ $O(N+M)$。
 
 ## 注意点
 
-頂点番号は $[0,N)$ でなければならない。範囲外の頂点または負の頂点数を受け取ると `runtime_error` を送出する。同じグラフに複数の正しい退化順序が存在し得る。
+頂点番号は $[0,N)$ でなければならない。範囲外の頂点または負の頂点数を受け取ると
+`runtime_error` を送出する。同じグラフに複数の正しい退化順序が存在し得る。

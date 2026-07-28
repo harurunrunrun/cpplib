@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <functional>
 #include <iostream>
 #include <queue>
 #include <set>
@@ -77,6 +78,48 @@ std::vector<std::vector<unsigned char>> reachability(
     return result;
 }
 
+int heap_degeneracy(
+    int vertex_count,
+    const std::vector<std::pair<int, int>>& edges
+){
+    std::vector<std::vector<int>> graph(
+        static_cast<std::size_t>(vertex_count)
+    );
+    for(auto [from, to]: edges){
+        if(from == to) continue;
+        graph[static_cast<std::size_t>(from)].push_back(to);
+        graph[static_cast<std::size_t>(to)].push_back(from);
+    }
+    std::vector<int> degree(static_cast<std::size_t>(vertex_count));
+    using Entry = std::pair<int, int>;
+    std::priority_queue<Entry, std::vector<Entry>, std::greater<Entry>> heap;
+    for(int vertex = 0; vertex < vertex_count; ++vertex){
+        degree[static_cast<std::size_t>(vertex)] = static_cast<int>(
+            graph[static_cast<std::size_t>(vertex)].size()
+        );
+        heap.emplace(degree[static_cast<std::size_t>(vertex)], vertex);
+    }
+    std::vector<unsigned char> removed(
+        static_cast<std::size_t>(vertex_count), 0
+    );
+    int answer = 0;
+    while(!heap.empty()){
+        const auto [candidate_degree, vertex] = heap.top();
+        heap.pop();
+        if(removed[static_cast<std::size_t>(vertex)] != 0
+            || candidate_degree
+                != degree[static_cast<std::size_t>(vertex)]) continue;
+        removed[static_cast<std::size_t>(vertex)] = 1;
+        answer = std::max(answer, candidate_degree);
+        for(int to: graph[static_cast<std::size_t>(vertex)]){
+            if(removed[static_cast<std::size_t>(to)] != 0) continue;
+            --degree[static_cast<std::size_t>(to)];
+            heap.emplace(degree[static_cast<std::size_t>(to)], to);
+        }
+    }
+    return answer;
+}
+
 } // namespace
 
 int main(){
@@ -100,14 +143,20 @@ int main(){
             DegeneracyOrderingResult ordering =
                 degeneracy_ordering(vertex_count, edges);
             if(core.degeneracy != ordering.degeneracy
-                || core.degeneracy_order != ordering.order){
+                || ordering.degeneracy
+                    != heap_degeneracy(vertex_count, edges)
+                || static_cast<int>(ordering.order.size()) != vertex_count){
                 return 2;
             }
-            std::vector<int> rank(static_cast<std::size_t>(vertex_count));
+            std::vector<int> rank(
+                static_cast<std::size_t>(vertex_count), -1
+            );
             for(int index = 0; index < vertex_count; ++index){
-                rank[static_cast<std::size_t>(
-                    ordering.order[static_cast<std::size_t>(index)]
-                )] = index;
+                const int vertex =
+                    ordering.order[static_cast<std::size_t>(index)];
+                if(vertex < 0 || vertex >= vertex_count) return 15;
+                if(rank[static_cast<std::size_t>(vertex)] != -1) return 16;
+                rank[static_cast<std::size_t>(vertex)] = index;
             }
             for(int vertex = 0; vertex < vertex_count; ++vertex){
                 int later = 0;
