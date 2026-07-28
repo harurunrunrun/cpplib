@@ -24,12 +24,17 @@ uint64_t universe() const
 ## 時間計算量
 
 - 構築: $O(N)$
-- `select`: $O(1)$ (`256` 個ごとのselect sample)
-- `lower_bound`, `rank`: $O(\log(N+1))$
+- `select`: worst-case $O(1)$
+- `lower_bound`, `rank`: worst-case $O(\log(N+1))$
 - `empty`, `size`, `universe`: $O(1)$
 
-bitvector本体は $O(N\log(U/N+1))$ bit、select sampleは $O(N/256)$ machine
-word。
+The low bits and high bitvector use $O(N\log(U/N+1)+N)$ bits. The select
+directory samples every 256th one. A block spanning at most 65536 bits is
+scanned for a fixed number of machine words; a longer sparse block stores all
+of its one positions directly. Consequently a locally huge zero run cannot
+increase the select time. Because disjoint long blocks consume more than
+$256^2$ high-bit positions each, all select directories together use
+$O(N/256)$ machine words.
 
 ## 注意点
 

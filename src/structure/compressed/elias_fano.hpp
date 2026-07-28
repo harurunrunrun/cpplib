@@ -1,9 +1,11 @@
 #ifndef CPPLIB_SRC_STRUCTURE_COMPRESSED_ELIAS_FANO_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_COMPRESSED_ELIAS_FANO_HPP_INCLUDED
 
+#include <algorithm>
 #include <bit>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -14,7 +16,12 @@ class EliasFano {
     std::vector<std::uint64_t> lows_;
     std::vector<std::uint64_t> high_bits_;
     std::vector<std::size_t> select_samples_;
+    std::vector<std::size_t> select_long_offsets_;
+    std::vector<std::size_t> select_long_positions_;
     static constexpr std::size_t SAMPLE = 256;
+    static constexpr std::size_t MAX_SHORT_SPAN_BITS = SAMPLE * SAMPLE;
+    static constexpr std::size_t NO_LONG_BLOCK =
+        std::numeric_limits<std::size_t>::max();
 
     [[nodiscard]] std::uint64_t low_at(std::size_t index) const {
         if (low_bits_ == 0) return 0;
@@ -29,6 +36,11 @@ class EliasFano {
     }
     [[nodiscard]] std::size_t select_high(std::size_t index) const {
         const std::size_t block = index / SAMPLE;
+        if (select_long_offsets_[block] != NO_LONG_BLOCK) {
+            return select_long_positions_[
+                select_long_offsets_[block] + index % SAMPLE
+            ];
+        }
         std::size_t position = select_samples_[block];
         std::size_t rank = block * SAMPLE;
         if (rank == index) return position;
@@ -94,12 +106,32 @@ public:
             : static_cast<std::size_t>(universe_ >> low_bits_) + size_ + 1;
         high_bits_.assign((high_length + 63) / 64, 0);
         select_samples_.clear();
+        select_long_offsets_.clear();
+        select_long_positions_.clear();
         for (std::size_t i = 0; i < size_; ++i) {
             const std::size_t position =
                 static_cast<std::size_t>(values[i] >> low_bits_) + i;
             high_bits_[position / 64] |=
                 std::uint64_t{1} << (position % 64);
             if (i % SAMPLE == 0) select_samples_.push_back(position);
+        }
+        select_long_offsets_.assign(select_samples_.size(), NO_LONG_BLOCK);
+        for (std::size_t block = 0; block < select_samples_.size(); ++block) {
+            const std::size_t first = block * SAMPLE;
+            const std::size_t last =
+                std::min(size_, first + SAMPLE) - 1;
+            const std::size_t last_position =
+                static_cast<std::size_t>(values[last] >> low_bits_) + last;
+            if (last_position - select_samples_[block]
+                <= MAX_SHORT_SPAN_BITS) {
+                continue;
+            }
+            select_long_offsets_[block] = select_long_positions_.size();
+            for (std::size_t i = first; i <= last; ++i) {
+                select_long_positions_.push_back(
+                    static_cast<std::size_t>(values[i] >> low_bits_) + i
+                );
+            }
         }
     }
     [[nodiscard]] bool empty() const noexcept { return size_ == 0; }
