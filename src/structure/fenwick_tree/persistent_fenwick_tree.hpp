@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_FENWICK_TREE_PERSISTENT_FENWICK_TREE_HPP_INCLUDED
 
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -22,6 +23,11 @@ public:
         if(n < 0){
             throw std::invalid_argument(
                 "PersistentFenwickTree: negative size"
+            );
+        }
+        if(n == std::numeric_limits<int>::max()){
+            throw std::length_error(
+                "PersistentFenwickTree: size is too large"
             );
         }
     }

@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <functional>
 #include <iostream>
+#include <limits>
 #include <numeric>
 #include <random>
 #include <stdexcept>
@@ -258,6 +259,15 @@ int main(){
     const int v2 = persistent.add(2, 7);
     assert(persistent.sum(v1, 0, 4) == 5);
     assert(persistent.sum(v2, 0, 4) == 12);
+    bool fenwick_size_limit = false;
+    try{
+        PersistentFenwickTree<int> too_large(
+            std::numeric_limits<int>::max()
+        );
+    }catch(const std::length_error&){
+        fenwick_size_limit = true;
+    }
+    assert(fenwick_size_limit);
 
     PersistentFenwickTree<long long> branching(17);
     std::vector<std::vector<long long>> versions(

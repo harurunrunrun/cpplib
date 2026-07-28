@@ -24,5 +24,6 @@ documentation_of: ../../../src/structure/fenwick_tree/persistent_fenwick_tree.hp
 
 - 更新後も基にした版を含む既存の全版は不変である。
 - `T{}`、加算、減算が利用できる型を `T` に用いる。
-- 負の長さは `std::invalid_argument`、不正な版・位置・区間は
-  `std::out_of_range` を送出する。
+- 負の長さは `std::invalid_argument`、`INT_MAX` は内部の1-based境界を
+  表現できないため `std::length_error` を送出する。
+- 不正な版・位置・区間は `std::out_of_range` を送出する。
