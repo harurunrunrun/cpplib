@@ -116,9 +116,9 @@ verifier-resolve: gcc13-check verifier-setup verifier-wrapper-test no-boost-depe
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(VERIFY_FILES).tmp
 	mv $(VERIFY_FILES).tmp $(VERIFY_FILES)
 
-docs-verifier-resolve: gcc13-check verifier-setup verifier-wrapper-test no-boost-dependency-check test-verifier-markers
+docs-verifier-resolve: verifier-setup no-boost-dependency-check test-verifier-markers
 	@mkdir -p $(VERIFIER_CACHE)
-	$(VERIFIER_COMMAND_ENV) $(VERIFIER) oj-resolve --include src test/onlinejudge test/standalone --config config.toml > $(DOCS_VERIFY_FILES).tmp
+	$(VERIFIER) oj-resolve --include src test/onlinejudge test/standalone --config config.toml > $(DOCS_VERIFY_FILES).tmp
 	$(PYTHON) scripts/test_normalize_competitive_verifier_plan.py
 	$(PYTHON) scripts/normalize_competitive_verifier_plan.py $(DOCS_VERIFY_FILES).tmp
 	mv $(DOCS_VERIFY_FILES).tmp $(DOCS_VERIFY_FILES)
@@ -230,6 +230,7 @@ docs-coverage-check:
 	$(PYTHON) scripts/test_check_docs_coverage.py
 	$(PYTHON) scripts/test_check_docs_markdown.py
 	$(PYTHON) scripts/check_docs_markdown.py docs
+	$(PYTHON) scripts/test_makefile_docs_is_compiler_independent.py
 	$(PYTHON) scripts/check_docs_coverage.py src docs
 
 docs-source: docs-title-check docs-coverage-check docs-verifier-resolve
