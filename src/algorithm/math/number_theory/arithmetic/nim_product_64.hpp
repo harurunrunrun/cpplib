@@ -30,7 +30,7 @@ constexpr std::uint64_t recursive_product(
         left_low ^ left_high, right_low ^ right_high, half
     );
     const std::uint64_t twist = recursive_product(
-        high_product, std::uint64_t{1} << (half / 2), half
+        high_product, std::uint64_t{1} << (half - 1), half
     );
     return ((mixed_product ^ low_product) << half)
         ^ twist ^ low_product;

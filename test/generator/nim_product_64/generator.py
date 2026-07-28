@@ -24,7 +24,7 @@ def nim_product(left: int, right: int, bits: int = 64) -> int:
     mixed = nim_product(
         left_low ^ left_high, right_low ^ right_high, half
     )
-    twist = nim_product(high, 1 << (half // 2), half)
+    twist = nim_product(high, 1 << (half - 1), half)
     return (((mixed ^ low) << half) ^ twist ^ low) & MASK64
 
 
@@ -33,9 +33,20 @@ def main() -> None:
     parser.add_argument("--out-dir", required=True, type=Path)
     args = parser.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
+    trusted_basis_products = {
+        (2, 2): 3,
+        (4, 4): 6,
+        (8, 8): 13,
+        (16, 16): 24,
+        (256, 256): 384,
+        (65536, 65536): 98304,
+    }
+    for operands, expected in trusted_basis_products.items():
+        assert nim_product(*operands) == expected
     rng = random.Random(0x641A)
     cases = [
         (0, 0), (0, MASK64), (1, MASK64), (2, 2), (2, 3),
+        (16, 16), (256, 256), (65536, 65536),
         (1 << 63, 1 << 63), (MASK64, MASK64),
     ]
     cases.extend((rng.getrandbits(64), rng.getrandbits(64))
