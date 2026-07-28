@@ -64,6 +64,12 @@ class CheckStructureLayoutTest(unittest.TestCase):
             "docs/structure/graph/dynamic_connectivity/online_dynamic_connectivity.md"
         )
         self.write(
+            "src/structure/graph/spanning_forest/incremental_minimum_spanning_forest.hpp"
+        )
+        self.write(
+            "docs/structure/graph/spanning_forest/incremental_minimum_spanning_forest.md"
+        )
+        self.write(
             "src/algorithm/graph/shortest_path/specialized/coordinate_product_knight_distances.hpp"
         )
         self.write(
