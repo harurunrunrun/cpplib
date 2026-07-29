@@ -5,6 +5,7 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <optional>
 #include <stdexcept>
 #include <unordered_map>
 #include <unordered_set>
@@ -12,6 +13,7 @@
 #include <vector>
 
 #include "../../integer/point_point_point_point/adaptive_orient3d.hpp"
+#include "../../polyhedron/point_set/quickhull_3d.hpp"
 #include "../../type/definition/convex_polyhedron3.hpp"
 #include "../../result/polyhedron/convex_polyhedron_facets.hpp"
 #include "../../point/point_point/cross.hpp"
@@ -41,7 +43,53 @@ inline std::vector<Point3> candidate_points(
             points.push_back(left + right);
         }
     }
+    const auto less = [](const Point3& left, const Point3& right){
+        if(left.x != right.x) return left.x < right.x;
+        if(left.y != right.y) return left.y < right.y;
+        return left.z < right.z;
+    };
+    const auto same = [](const Point3& left, const Point3& right){
+        return left.x == right.x && left.y == right.y && left.z == right.z;
+    };
+    std::sort(points.begin(), points.end(), less);
+    points.erase(std::unique(points.begin(), points.end(), same), points.end());
     return points;
+}
+
+inline std::optional<ConvexPolyhedron3> certified_small_candidate_hull(
+    const std::vector<Point3>& points
+){
+    constexpr std::size_t maximum_quickhull_points = 256;
+    if(points.size() < 4 || points.size() > maximum_quickhull_points){
+        return std::nullopt;
+    }
+    ConvexPolyhedron3 proposal;
+    try{
+        proposal = quickhull_3d(points);
+    }catch(const std::logic_error&){
+        return std::nullopt;
+    }
+    if(proposal.affine_dimension != 3 || proposal.faces.empty()){
+        return std::nullopt;
+    }
+    for(const auto& face: proposal.faces){
+        if(face[0] >= proposal.vertices.size()
+            || face[1] >= proposal.vertices.size()
+            || face[2] >= proposal.vertices.size()
+            || face[0] == face[1] || face[1] == face[2]
+            || face[2] == face[0]){
+            return std::nullopt;
+        }
+        const Point3& first = proposal.vertices[face[0]];
+        const Point3& second = proposal.vertices[face[1]];
+        const Point3& third = proposal.vertices[face[2]];
+        for(const Point3& point: points){
+            if(adaptive_orient3d(first, second, third, point) > 0){
+                return std::nullopt;
+            }
+        }
+    }
+    return proposal;
 }
 
 struct DirectEdgeKey{

@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 
 #include "../point_set/convex_hull_3d_default.hpp"
 #include "../../detail/polyhedron_polyhedron/minkowski_difference_3d_detail.hpp"
@@ -26,9 +27,16 @@ inline ConvexPolyhedron3 minkowski_difference_3d(
             // Degenerate normal fans are handled by the general fallback.
         }
     }
-    return convex_hull_3d(
-        minkowski_difference_3d_detail::candidate_points(first, second)
+    auto candidates = minkowski_difference_3d_detail::candidate_points(
+        first, second
     );
+    if(auto quick =
+        minkowski_sum_3d_detail::certified_small_candidate_hull(
+            candidates
+        )){
+        return *quick;
+    }
+    return convex_hull_3d(std::move(candidates));
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYHEDRON_POLYHEDRON_POLYHEDRON_MINKOWSKI_DIFFERENCE_3D_DEFAULT_HPP_INCLUDED
