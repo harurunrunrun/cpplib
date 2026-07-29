@@ -12,7 +12,7 @@ AABB分枝限定法で調べる。返す直径は厳密であり、近似は行�
 
 ## API
 
-- `point_set_diameter_3d_via_convex_hull(points)`: 再現可能な固定seedで凸包を構築し、
+- `point_set_diameter_3d_via_convex_hull(points)`: 決定的な分割統治法で凸包を構築し、
   直径の `PointSetDiameter3DResult{first, second, distance}` を返す。
 - `point_set_diameter_3d_via_convex_hull_with_seed(points, random_seed)`:
   凸包の増分順序を決めるseedを指定して同じ結果を返す。期待計算量を使う場合は、
@@ -28,7 +28,7 @@ AABB分枝限定法で調べる。返す直径は厳密であり、近似は行�
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `point_set_diameter_3d_via_convex_hull(points)` | 固定seedの最悪 $O(N^2\log N+H^2)$。返却距離が有限で、増分順序が非敵対的なら平均 $O(N\log N+H\log H+R+C)$ | 最悪 $O(N^2+H)$、通常 $O(N+H)$ |
+| `point_set_diameter_3d_via_convex_hull(points)` | 最悪 $O(N\log N+H\log H+R+C)$ | $O(N+H)$ |
 | `point_set_diameter_3d_via_convex_hull_with_seed(points, random_seed)` | 返却距離が有限かつseedが入力と独立なら期待 $O(N\log N+H\log H+R+C)$、最悪 $O(N^2\log N+H^2)$ | 期待 $O(N+H)$、最悪 $O(N^2+H)$ |
 
 アフィン次元が2以下なら凸包構築はseedによらず $O(N\log N)$ であり、全体は平均

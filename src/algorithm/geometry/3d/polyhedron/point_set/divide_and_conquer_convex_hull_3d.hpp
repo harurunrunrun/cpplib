@@ -1131,6 +1131,105 @@ inline ConvexPolyhedron3 spatial_hull(
     return {3, std::move(vertices), std::move(result_faces)};
 }
 
+inline ConvexPolyhedron3 sorted_unique_hull(
+    const std::vector<Point3>& points
+){
+    if(points.size() <= 1){
+        return {points.empty() ? -1 : 0, points, {}};
+    }
+    std::size_t third = points.size();
+    for(std::size_t index = 2; index < points.size(); ++index){
+        if(non_collinear(points[0], points[1], points[index])){
+            third = index;
+            break;
+        }
+    }
+    if(third == points.size()) return lower_dimensional_hull(points);
+    std::size_t fourth = points.size();
+    for(std::size_t index = 0; index < points.size(); ++index){
+        if(adaptive_orient3d(
+            points[0], points[1], points[third], points[index]
+        ) != 0){
+            fourth = index;
+            break;
+        }
+    }
+    if(fourth == points.size()) return lower_dimensional_hull(points);
+    return spatial_hull(points, {0, 1, third, fourth});
+}
+
+inline std::vector<Point3> discard_certified_interior_points(
+    const std::vector<Point3>& points
+){
+    // The inner hull has constant size.  Removing only points certified
+    // strictly inside this subset hull preserves every full-hull boundary
+    // point and the deterministic O(N log N) worst-case bound.
+    constexpr std::size_t minimum_filter_size = 256;
+    if(points.size() < minimum_filter_size) return points;
+    long double scale = 0.0L;
+    for(const Point3& point: points){
+        scale = std::max({
+            scale, std::abs(point.x), std::abs(point.y), std::abs(point.z)
+        });
+    }
+    if(scale == 0.0L) return points;
+    std::vector<std::size_t> support_indices;
+    support_indices.reserve(124);
+    for(int x = -2; x <= 2; ++x){
+        for(int y = -2; y <= 2; ++y){
+            for(int z = -2; z <= 2; ++z){
+                if(x == 0 && y == 0 && z == 0) continue;
+                std::size_t support = 0;
+                long double best =
+                    x * (points[0].x / scale)
+                    + y * (points[0].y / scale)
+                    + z * (points[0].z / scale);
+                for(std::size_t index = 1; index < points.size(); ++index){
+                    const long double score =
+                        x * (points[index].x / scale)
+                        + y * (points[index].y / scale)
+                        + z * (points[index].z / scale);
+                    if(score > best){
+                        best = score;
+                        support = index;
+                    }
+                }
+                support_indices.push_back(support);
+            }
+        }
+    }
+    std::sort(support_indices.begin(), support_indices.end());
+    support_indices.erase(std::unique(
+        support_indices.begin(), support_indices.end()
+    ), support_indices.end());
+    if(support_indices.size() < 4) return points;
+    std::vector<Point3> support_points;
+    support_points.reserve(support_indices.size());
+    for(std::size_t index: support_indices){
+        support_points.push_back(points[index]);
+    }
+    const ConvexPolyhedron3 inner_hull = sorted_unique_hull(support_points);
+    if(inner_hull.affine_dimension != 3) return points;
+    std::vector<Point3> remaining;
+    remaining.reserve(points.size());
+    for(const Point3& point: points){
+        bool strictly_inside = true;
+        for(const auto& face: inner_hull.faces){
+            if(adaptive_orient3d(
+                inner_hull.vertices[face[0]],
+                inner_hull.vertices[face[1]],
+                inner_hull.vertices[face[2]],
+                point
+            ) >= 0){
+                strictly_inside = false;
+                break;
+            }
+        }
+        if(!strictly_inside) remaining.push_back(point);
+    }
+    return remaining;
+}
+
 }  // namespace divide_and_conquer_convex_hull_3d_detail
 
 inline ConvexPolyhedron3 divide_and_conquer_convex_hull_3d(
@@ -1156,28 +1255,10 @@ inline ConvexPolyhedron3 divide_and_conquer_convex_hull_3d(
             "divide_and_conquer_convex_hull_3d has too many points"
         );
     }
-
-    std::size_t third = points.size();
-    for(std::size_t index = 2; index < points.size(); ++index){
-        if(non_collinear(points[0], points[1], points[index])){
-            third = index;
-            break;
-        }
+    if(points.size() >= 256){
+        points = discard_certified_interior_points(points);
     }
-    if(third == points.size()) return lower_dimensional_hull(points);
-
-    std::size_t fourth = points.size();
-    for(std::size_t index = 0; index < points.size(); ++index){
-        if(adaptive_orient3d(
-            points[0], points[1], points[third], points[index]
-        ) != 0){
-            fourth = index;
-            break;
-        }
-    }
-    if(fourth == points.size()) return lower_dimensional_hull(points);
-
-    return spatial_hull(points, {0, 1, third, fourth});
+    return sorted_unique_hull(points);
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_POLYHEDRON_POINT_SET_DIVIDE_AND_CONQUER_CONVEX_HULL_3D_HPP_INCLUDED
