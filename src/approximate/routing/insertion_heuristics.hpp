@@ -242,6 +242,59 @@ std::vector<int> farthest_insertion_tour(
 }
 
 template<class DistanceMatrix>
+std::vector<int> arbitrary_insertion_tour(
+    const DistanceMatrix& distance,
+    const std::vector<int>& insertion_order
+){
+    const std::size_t n = internal::validate_distance_matrix(distance);
+    if(insertion_order.size() != n){
+        throw std::invalid_argument(
+            "insertion_order must contain every vertex exactly once"
+        );
+    }
+    internal::validate_tour_vertices(insertion_order, n);
+    std::vector<unsigned char> used(n, 0);
+    for(const int vertex : insertion_order){
+        const std::size_t index = static_cast<std::size_t>(vertex);
+        if(used[index] != 0){
+            throw std::invalid_argument(
+                "insertion_order must contain every vertex exactly once"
+            );
+        }
+        used[index] = 1;
+    }
+    if(n == 0) return {};
+
+    std::vector<int> tour{insertion_order.front()};
+    tour.reserve(n);
+    for(std::size_t index = 1; index < n; ++index){
+        const int vertex = insertion_order[index];
+        const auto [position, ignored_delta] = internal::cheapest_position(
+            distance,
+            tour,
+            vertex
+        );
+        static_cast<void>(ignored_delta);
+        using Difference = std::vector<int>::difference_type;
+        tour.insert(
+            tour.begin() + static_cast<Difference>(position),
+            vertex
+        );
+    }
+    return tour;
+}
+
+template<class DistanceMatrix>
+std::vector<int> arbitrary_insertion_tour(const DistanceMatrix& distance){
+    const std::size_t n = internal::validate_distance_matrix(distance);
+    std::vector<int> insertion_order(n);
+    for(std::size_t vertex = 0; vertex < n; ++vertex){
+        insertion_order[vertex] = static_cast<int>(vertex);
+    }
+    return arbitrary_insertion_tour(distance, insertion_order);
+}
+
+template<class DistanceMatrix>
 std::vector<int> regret_insertion_tour(
     const DistanceMatrix& distance,
     std::size_t start = 0,

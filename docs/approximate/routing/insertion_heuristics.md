@@ -61,6 +61,24 @@ nearest/farthestの頂点選択には `distance[tour_vertex][candidate]` を使�
 - `nearest_insertion_tour`, `farthest_insertion_tour`: 時間計算量は $O(N^2)$、追加空間 $O(N)$
 - `cheapest_insertion_tour`: 時間計算量は $O(N^3)$、追加空間 $O(N)$
 
+## arbitrary insertion
+
+~~~cpp
+template<class DistanceMatrix>
+vector<int> arbitrary_insertion_tour(
+    const DistanceMatrix& distance,
+    const vector<int>& insertion_order
+)
+
+template<class DistanceMatrix>
+vector<int> arbitrary_insertion_tour(const DistanceMatrix& distance)
+~~~
+
+`insertion_order` の先頭頂点から巡回路を開始し、以降の頂点を指定順にコスト増分最小の位置へ挿入する任意挿入法。同値な挿入位置では添字が小さい位置を選ぶ。引数を省略したoverloadは頂点を `0,1,...,N-1` の順に挿入する。
+
+- 時間計算量: $O(N^2)$
+- 追加空間計算量: $O(N)$
+
 ## regret insertion
 
 ~~~cpp
@@ -80,4 +98,5 @@ vector<int> regret_insertion_tour(
 ## 注意点
 
 `distance` は正方行列でなければならず、違反時は `std::invalid_argument`。非空行列で `start >= N` の場合は `std::out_of_range`。`regret_k=0` は `std::invalid_argument`。
+任意挿入法の `insertion_order` は `[0,N)` の全頂点をちょうど1回ずつ含む必要がある。長さの不一致または重複は `std::invalid_argument`、範囲外の頂点は `std::out_of_range`。
 距離の和・差は行列要素型に収まらなければならない。近似保証には対称性・三角不等式など別の仮定が必要であり、これらのheuristic自体は保証を持たない。
