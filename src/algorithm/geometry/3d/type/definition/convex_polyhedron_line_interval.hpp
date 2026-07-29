@@ -60,19 +60,39 @@ inline std::optional<std::pair<long double, long double>> clip(
         const Point3 second = polyhedron.vertices[face[1]] / scale;
         const Point3 third = polyhedron.vertices[face[2]] / scale;
         const Point3 normal = cross(second - first, third - first);
-        const long double offset = dot(normal, scaled_origin - first);
+        const Point3 origin_difference = scaled_origin - first;
+        const long double offset = dot(normal, origin_difference);
         const long double slope = dot(normal, scaled_direction);
-        const long double tolerance = 64.0L
+        const long double slope_error = 64.0L
             * std::numeric_limits<long double>::epsilon()
-            * std::max(1.0L, std::hypot(normal.x, normal.y, normal.z));
-        if(std::abs(slope) <= tolerance){
-            if(offset > tolerance) return std::nullopt;
+            * (
+                std::abs(normal.x * scaled_direction.x)
+                + std::abs(normal.y * scaled_direction.y)
+                + std::abs(normal.z * scaled_direction.z)
+            );
+        const long double offset_error = 64.0L
+            * std::numeric_limits<long double>::epsilon()
+            * (
+                std::abs(normal.x * origin_difference.x)
+                + std::abs(normal.y * origin_difference.y)
+                + std::abs(normal.z * origin_difference.z)
+            );
+        if(std::abs(slope) <= slope_error){
+            if(offset > offset_error) return std::nullopt;
             continue;
         }
         const long double bound = -offset / slope;
         if(slope > 0.0L) upper = std::min(upper, bound);
         else lower = std::max(lower, bound);
-        if(lower > upper + tolerance) return std::nullopt;
+        const long double parameter_error = 64.0L
+            * std::numeric_limits<long double>::epsilon()
+            * std::max({
+                1.0L,
+                std::isfinite(lower) ? std::abs(lower) : 0.0L,
+                std::isfinite(upper) ? std::abs(upper) : 0.0L,
+                std::abs(bound),
+            });
+        if(lower > upper + parameter_error) return std::nullopt;
     }
     return std::pair{lower, upper};
 }
