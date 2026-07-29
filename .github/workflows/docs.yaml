@@ -263,7 +263,13 @@ jobs:
           python3 scripts/test_docs_standalone_index.py
           python3 scripts/test_check_generated_docs_index.py
           python3 scripts/test_reorder_competitive_verifier_index.py
-          python3 scripts/reorder_competitive_verifier_index.py _jekyll/index.md
+          python3 scripts/reorder_competitive_verifier_index.py \
+            _jekyll/index.md \
+            --template _jekyll/_includes/toppage_body.html
+          python3 scripts/reorder_competitive_verifier_index.py \
+            _jekyll/index.md \
+            --template _jekyll/_includes/toppage_body.html \
+            --check
           python3 scripts/check_generated_docs_index.py _jekyll/index.md verify-files.json
 
       - name: Setup Pages

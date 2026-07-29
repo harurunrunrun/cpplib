@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import html
+import re
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +15,13 @@ import yaml
 SECTION_ORDER = ("algorithm", "structure", "integer_geometry", "approximate")
 VERIFICATION_PATH_PREFIXES = ("test/onlinejudge/", "test/standalone/")
 VERIFICATION_CATEGORY_ORDER = VERIFICATION_PATH_PREFIXES
+CONTENTS_START = "<!-- competitive-verifier-folder-contents:start -->"
+CONTENTS_END = "<!-- competitive-verifier-folder-contents:end -->"
+ORIGINAL_CATEGORY_HEADING = "<h3>{{ category.name }}</h3>"
+ANCHORED_CATEGORY_HEADING = (
+    '<h3{% if category.anchor %} id="{{ category.anchor | xml_escape }}"'
+    "{% endif %}>{{ category.name }}</h3>"
+)
 
 
 def split_front_matter(text: str) -> tuple[dict[str, Any], str]:
@@ -59,6 +69,118 @@ def category_pages(category: dict[str, Any]) -> list[Any]:
     if not isinstance(pages, list):
         raise ValueError("index category does not contain pages")
     return pages
+
+
+def category_anchor(name: str) -> str:
+    slug = re.sub(r"[^0-9A-Za-z]+", "-", name.strip("/")).strip("-").lower()
+    digest = hashlib.sha1(name.encode("utf-8")).hexdigest()[:8]
+    return f"library-directory-{slug}-{digest}"
+
+
+def add_library_category_anchors(library_entry: dict[str, Any]) -> bool:
+    changed = False
+    used: set[str] = set()
+    for category in entry_categories(library_entry):
+        if not isinstance(category, dict):
+            continue
+        name = category.get("name")
+        if not isinstance(name, str):
+            continue
+        anchor = category_anchor(name)
+        if anchor in used:
+            raise ValueError(f"duplicate library category anchor: {anchor}")
+        used.add(anchor)
+        if category.get("anchor") != anchor:
+            category["anchor"] = anchor
+            changed = True
+    return changed
+
+
+def library_folder_tree(library_entry: dict[str, Any]) -> dict[str, Any]:
+    tree: dict[str, Any] = {}
+    for category in entry_categories(library_entry):
+        if not isinstance(category, dict):
+            continue
+        name = category.get("name")
+        anchor = category.get("anchor")
+        if not isinstance(name, str) or not isinstance(anchor, str):
+            continue
+        components = [component for component in name.strip("/").split("/") if component]
+        if not components:
+            continue
+        nodes = tree
+        ancestry: list[dict[str, Any]] = []
+        for component in components:
+            node = nodes.setdefault(
+                component,
+                {"children": {}, "anchor": None, "first_anchor": None},
+            )
+            ancestry.append(node)
+            nodes = node["children"]
+        node["anchor"] = anchor
+        for ancestor in ancestry:
+            if ancestor["first_anchor"] is None:
+                ancestor["first_anchor"] = anchor
+    return tree
+
+
+def render_folder_tree(nodes: dict[str, Any], indent: str = "") -> list[str]:
+    lines = [f'{indent}<ul class="library-folder-tree">']
+    for name, node in nodes.items():
+        anchor = node["first_anchor"]
+        if not isinstance(anchor, str):
+            continue
+        lines.append(
+            f'{indent}  <li><a href="#{html.escape(anchor, quote=True)}">'
+            f"{html.escape(name)}/</a>"
+        )
+        if node["children"]:
+            lines.extend(render_folder_tree(node["children"], indent + "    "))
+        lines.append(f"{indent}  </li>")
+    lines.append(f"{indent}</ul>")
+    return lines
+
+
+def contents_block(front_matter: dict[str, Any]) -> str:
+    data = front_matter.get("data")
+    top = data.get("top") if isinstance(data, dict) else None
+    if not isinstance(top, list):
+        raise ValueError("front matter data does not contain top")
+    tree = library_folder_tree(find_entry(top, "Library Files"))
+    lines = [
+        CONTENTS_START,
+        '<h2 id="contents">Contents</h2>',
+        '<nav aria-labelledby="contents">',
+        *render_folder_tree(tree),
+        "</nav>",
+        CONTENTS_END,
+    ]
+    return "\n".join(lines)
+
+
+def normalize_content(front_matter: dict[str, Any], content: str) -> str:
+    marker_pattern = re.compile(
+        rf"\n*{re.escape(CONTENTS_START)}.*?{re.escape(CONTENTS_END)}\n*",
+        re.DOTALL,
+    )
+    base = marker_pattern.sub("\n", content).rstrip()
+    block = contents_block(front_matter)
+    spacer = base.rfind("<br>")
+    if spacer == -1:
+        return f"{base}\n\n{block}\n"
+    return f"{base[:spacer].rstrip()}\n\n{block}\n\n{base[spacer:]}\n"
+
+
+def normalize_template(template: str) -> tuple[str, bool]:
+    if ANCHORED_CATEGORY_HEADING in template:
+        return template, False
+    if ORIGINAL_CATEGORY_HEADING not in template:
+        raise ValueError("competitive-verifier category heading template is unsupported")
+    return template.replace(
+        ORIGINAL_CATEGORY_HEADING,
+        ANCHORED_CATEGORY_HEADING,
+        1,
+    ), True
 
 
 def find_entry(top: list[Any], entry_type: str) -> dict[str, Any]:
@@ -187,6 +309,8 @@ def normalize_index(front_matter: dict[str, Any]) -> bool:
     if reordered != categories:
         library_entry["categories"] = reordered
         changed = True
+    if add_library_category_anchors(library_entry):
+        changed = True
 
     library_position = top.index(library_entry)
     verification_position = top.index(verification_entry)
@@ -211,11 +335,21 @@ def validate_index(front_matter: dict[str, Any]) -> None:
 
     rank = {name: index for index, name in enumerate(SECTION_ORDER)}
     previous_rank = -1
+    anchors: set[str] = set()
     for category in entry_categories(library_entry):
         current_rank = rank.get(section_name(category), len(rank))
         if current_rank < previous_rank:
             raise ValueError("Library Files categories are out of order")
         previous_rank = current_rank
+        if not isinstance(category, dict):
+            continue
+        name = category.get("name")
+        anchor = category.get("anchor")
+        if not isinstance(name, str) or anchor != category_anchor(name):
+            raise ValueError("Library Files category anchor is missing or invalid")
+        if anchor in anchors:
+            raise ValueError("Library Files category anchors are duplicated")
+        anchors.add(anchor)
 
     for entry in top:
         if entry is verification_entry or not isinstance(entry, dict):
@@ -266,6 +400,12 @@ def main() -> None:
     )
     parser.add_argument("index", type=Path)
     parser.add_argument(
+        "--template",
+        type=Path,
+        required=True,
+        help="competitive-verifier toppage_body.html to add category anchors to",
+    )
+    parser.add_argument(
         "--check",
         action="store_true",
         help="fail instead of rewriting when the index is not normalized",
@@ -276,16 +416,23 @@ def main() -> None:
     front_matter, content = split_front_matter(text)
     changed = normalize_index(front_matter)
     validate_index(front_matter)
+    normalized_content = normalize_content(front_matter, content)
+    content_changed = normalized_content != content
+    template = args.template.read_text(encoding="utf-8")
+    normalized_template, template_changed = normalize_template(template)
     if args.check:
-        if changed:
+        if changed or content_changed or template_changed:
             parser.error("competitive-verifier index is not normalized")
         return
 
-    if changed:
+    if changed or content_changed:
         args.index.write_text(
-            dump_front_matter(front_matter, content),
+            dump_front_matter(front_matter, normalized_content),
             encoding="utf-8",
         )
+
+    if template_changed:
+        args.template.write_text(normalized_template, encoding="utf-8")
 
 
 if __name__ == "__main__":

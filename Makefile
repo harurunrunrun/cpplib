@@ -251,7 +251,12 @@ docs-source: docs-title-check docs-coverage-check docs-verifier-resolve
 	$(PYTHON) scripts/test_check_generated_docs_index.py
 	$(PYTHON) scripts/test_reorder_competitive_verifier_index.py
 	$(VERIFIER_VENV)/bin/python scripts/reorder_competitive_verifier_index.py \
-		$(DOCS_SOURCE)/index.md
+		$(DOCS_SOURCE)/index.md \
+		--template $(DOCS_SOURCE)/_includes/toppage_body.html
+	$(VERIFIER_VENV)/bin/python scripts/reorder_competitive_verifier_index.py \
+		$(DOCS_SOURCE)/index.md \
+		--template $(DOCS_SOURCE)/_includes/toppage_body.html \
+		--check
 	$(VERIFIER_VENV)/bin/python scripts/check_generated_docs_index.py \
 		$(DOCS_SOURCE)/index.md $(DOCS_VERIFY_FILES)
 

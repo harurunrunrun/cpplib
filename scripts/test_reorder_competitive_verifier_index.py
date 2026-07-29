@@ -145,6 +145,70 @@ class NormalizeIndexTest(unittest.TestCase):
             ],
         )
 
+    def test_builds_linked_folder_hierarchy_before_library_files(self) -> None:
+        front_matter = {
+            "data": {
+                "top": [
+                    {
+                        "type": "Library Files",
+                        "categories": [
+                            {
+                                "name": "src/algorithm/graph/connectivity/",
+                                "pages": [],
+                            },
+                            {
+                                "name": "src/algorithm/graph/shortest_path/",
+                                "pages": [],
+                            },
+                            {
+                                "name": "src/structure/segtree/",
+                                "pages": [],
+                            },
+                        ],
+                    },
+                    {"type": "Verification Files", "categories": []},
+                ]
+            }
+        }
+
+        self.assertTrue(index_order.normalize_index(front_matter))
+        index_order.validate_index(front_matter)
+        library = front_matter["data"]["top"][0]
+        categories = library["categories"]
+        anchors = {
+            category["name"]: category["anchor"] for category in categories
+        }
+        content = "# Library\n\nIntroduction.\n\n<br>\n"
+        normalized = index_order.normalize_content(front_matter, content)
+
+        self.assertLess(normalized.index("<h2 id=\"contents\">Contents</h2>"),
+                        normalized.index("<br>"))
+        self.assertIn('<nav aria-labelledby="contents">', normalized)
+        self.assertIn(">src/</a>", normalized)
+        self.assertIn(">algorithm/</a>", normalized)
+        self.assertIn(">graph/</a>", normalized)
+        self.assertIn(">connectivity/</a>", normalized)
+        self.assertIn(">shortest_path/</a>", normalized)
+        self.assertIn(">structure/</a>", normalized)
+        for anchor in anchors.values():
+            self.assertIn(f'href="#{anchor}"', normalized)
+        self.assertEqual(
+            index_order.normalize_content(front_matter, normalized),
+            normalized,
+        )
+
+        template = "before\n<h3>{{ category.name }}</h3>\nafter\n"
+        normalized_template, changed = index_order.normalize_template(template)
+        self.assertTrue(changed)
+        self.assertIn(index_order.ANCHORED_CATEGORY_HEADING, normalized_template)
+        second_template, changed = index_order.normalize_template(normalized_template)
+        self.assertFalse(changed)
+        self.assertEqual(second_template, normalized_template)
+
+    def test_rejects_unsupported_category_heading_template(self) -> None:
+        with self.assertRaisesRegex(ValueError, "unsupported"):
+            index_order.normalize_template("<h3>different template</h3>")
+
     def test_validation_handles_unrelated_top_entries(self) -> None:
         valid_front_matter = {
             "data": {
