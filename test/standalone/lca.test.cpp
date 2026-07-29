@@ -57,6 +57,13 @@ void test_lca_and_jump(){
             assert(lca.dist(u, v) == depth[u] + depth[v] - 2 * depth[expected]);
             assert(lca.path_vertex_count(u, v) ==
                    depth[u] + depth[v] - 2 * depth[expected] + 1);
+            for(int p = 0; p < n; p++){
+                const bool expected_on_path =
+                    depth[u] + depth[p] - 2 * depth[naive_lca(u, p, parent, depth)]
+                    + depth[p] + depth[v] - 2 * depth[naive_lca(p, v, parent, depth)]
+                    == depth[u] + depth[v] - 2 * depth[expected];
+                assert(lca.is_on_path(u, v, p) == expected_on_path);
+            }
             queries.push_back({u, v});
         }
     }
@@ -91,6 +98,9 @@ void test_root_change(){
     assert(lca.lca(4, 6) == 3);
     assert(lca.dist(2, 6) == 4);
     assert(lca.path_vertex_count(2, 6) == 5);
+    assert(lca.is_on_path(2, 6, 3));
+    assert(lca.is_on_path(2, 6, 1));
+    assert(!lca.is_on_path(2, 6, 4));
 
     std::vector<std::pair<int, int>> queries = {{0, 2}, {0, 6}, {4, 6}, {3, 3}};
     auto answers = offline_lca(graph, queries, 3);
@@ -112,6 +122,7 @@ void test_degenerate_trees(){
     assert(singleton.lca(0, 0) == 0);
     assert(singleton.dist(0, 0) == 0);
     assert(singleton.path_vertex_count(0, 0) == 1);
+    assert(singleton.is_on_path(0, 0, 0));
 }
 
 void test_rebuild(){

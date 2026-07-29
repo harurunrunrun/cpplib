@@ -247,6 +247,10 @@ public:
     int path_vertex_count(int u, int v) const{
         return dist(u, v) + 1;
     }
+
+    bool is_on_path(int u, int v, int p) const{
+        return dist(u, p) + dist(p, v) == dist(u, v);
+    }
 };
 
 #endif  // CPPLIB_SRC_ALGORITHM_TREE_QUERY_LCA_HPP_INCLUDED

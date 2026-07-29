@@ -52,6 +52,11 @@ Euler tour RMQ、binary lifting table を構築する。同じ木を別の根で
 
 `u` と `v` を結ぶ単純パス上の頂点数を、両端を含めて返す。
 
+### `is_on_path(u, v, p)`
+
+頂点 `p` が `u` と `v` を結ぶ単純パス上にあるとき、かつそのときに限り
+`true` を返す。端点を含む。
+
 ## 時間計算量
 
 - `LowestCommonAncestor(n)`: $O(N\log(N+1))$
@@ -60,7 +65,8 @@ Euler tour RMQ、binary lifting table を構築する。同じ木を別の根で
 - `build`: $O(N\log(N+1))$
 - `parent(v)`, `depth(v)`: $O(1)$
 - `jump(v, k)`: $O(\log(N+1))$
-- `lca(u, v)`, `dist(u, v)`, `path_vertex_count(u, v)`: $O(1)$
+- `lca(u, v)`, `dist(u, v)`, `path_vertex_count(u, v)`,
+  `is_on_path(u, v, p)`: $O(1)$
 
 ## 空間計算量
 
@@ -70,7 +76,7 @@ $O(N\log(N+1))$。
 ## 注意点
 
 `parent`、`depth`、`jump`、`lca`、`dist`、
-`path_vertex_count` の前に、最後の辺追加より後で `build` を完了させる。
+`path_vertex_count`、`is_on_path` の前に、最後の辺追加より後で `build` を完了させる。
 頂点と根は範囲内でなければならず、空でない入力は自己ループや多重辺を含まない
 無向連結木でなければならない。
 
