@@ -41,7 +41,7 @@ Polynomial<MOD> polynomial_compose(
     const std::size_t size
 ){
     if(size == 0) return {};
-    const std::size_t coefficient_count = std::min(outer.size(), size);
+    const std::size_t coefficient_count = outer.size();
     if(coefficient_count == 0) return Polynomial<MOD>(size);
 
     const std::size_t block_size =

@@ -13,7 +13,7 @@ MOD = 998244353
 def compose(outer: list[int], inner: list[int], size: int) -> list[int]:
     result = [0] * size
     power = [1] + [0] * (size - 1)
-    for coefficient in outer[:size]:
+    for coefficient in outer:
         for degree in range(size):
             result[degree] = (result[degree] + coefficient * power[degree]) % MOD
         next_power = [0] * size
@@ -70,6 +70,7 @@ def main() -> None:
     rng = random.Random(args.seed)
     cases: list[tuple[int, list[int], int, list[int]]] = [
         (0, [1, 2, 3], 6, [4, 5]),
+        (0, [1, 2, 4, 8, 16], 2, [3]),
         (0, [], 4, [1, 1]),
         (1, [0, 1], 8, []),
         (1, [0, 2, 3, 4], 12, []),
