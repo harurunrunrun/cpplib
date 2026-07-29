@@ -48,16 +48,45 @@ inline int exact_turn(
     ));
 }
 
+inline int adaptive_turn(
+    long double origin_x,
+    long double origin_y,
+    long double first_x,
+    long double first_y,
+    long double second_x,
+    long double second_y
+){
+    const long double first_dx = first_x - origin_x;
+    const long double first_dy = first_y - origin_y;
+    const long double second_dx = second_x - origin_x;
+    const long double second_dy = second_y - origin_y;
+    const long double first_product = first_dx * second_dy;
+    const long double second_product = first_dy * second_dx;
+    const long double determinant = std::fma(
+        first_dx, second_dy, -second_product
+    );
+    const long double error =
+        32.0L * std::numeric_limits<long double>::epsilon()
+        * (std::abs(first_product) + std::abs(second_product));
+    if(std::isfinite(determinant) && std::isfinite(error)
+        && std::abs(determinant) > error){
+        return determinant > 0.0L ? 1 : -1;
+    }
+    return exact_turn(
+        origin_x, origin_y, first_x, first_y, second_x, second_y
+    );
+}
+
 inline bool non_collinear(
     const Point3& first,
     const Point3& second,
     const Point3& third
 ){
-    return exact_turn(
+    return adaptive_turn(
         first.x, first.y, second.x, second.y, third.x, third.y
-    ) != 0 || exact_turn(
+    ) != 0 || adaptive_turn(
         first.x, first.z, second.x, second.z, third.x, third.z
-    ) != 0 || exact_turn(
+    ) != 0 || adaptive_turn(
         first.y, first.z, second.y, second.z, third.y, third.z
     ) != 0;
 }
@@ -73,7 +102,7 @@ inline int projected_turn(
     const ProjectedPoint& first,
     const ProjectedPoint& second
 ){
-    return exact_turn(
+    return adaptive_turn(
         origin.first, origin.second, first.first, first.second,
         second.first, second.second
     );
@@ -464,7 +493,7 @@ inline ApproximateDeterminant approximate_projected_determinant(
         -second_product
     );
     const long double magnitude =
-        std::abs(first_product) + std::abs(second_product) + 1.0L;
+        std::abs(first_product) + std::abs(second_product);
     return {
         value,
         128.0L * std::numeric_limits<long double>::epsilon() * magnitude,
@@ -602,7 +631,7 @@ inline int compare_event_times(
             + right.numerator.error * left.denominator.error;
         const long double rounding_error =
             16.0L * std::numeric_limits<long double>::epsilon()
-            * (std::abs(first_product) + std::abs(second_product) + 1.0L);
+            * (std::abs(first_product) + std::abs(second_product));
         if(std::abs(difference) > propagated_error + rounding_error){
             difference_sign = difference > 0.0L ? 1 : -1;
         }
