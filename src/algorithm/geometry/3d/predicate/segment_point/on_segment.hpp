@@ -16,8 +16,9 @@
 #include "../point_point/parallel.hpp"
 
 inline bool on_segment(const Segment3& segment, const Point3& point){
+    if(point == segment.a || point == segment.b) return true;
     const Point3 direction = segment.b - segment.a;
-    if(geometry3d_sign(abs(direction)) == 0) return point == segment.a;
+    if(geometry3d_sign(abs(direction)) == 0) return false;
     return parallel(direction, point - segment.a) &&
         geometry3d_sign(dot(point - segment.a, point - segment.b)) <= 0;
 }

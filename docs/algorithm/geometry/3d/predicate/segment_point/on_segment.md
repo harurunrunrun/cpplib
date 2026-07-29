@@ -13,4 +13,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/segment_
 
 ## 注意点
 
-退化線分は1点として扱う。
+退化線分は1点として扱う。端点との比較には `Point3` の絶対許容誤差を用いるため、
+計算で端点へ丸め戻した点も線分上と判定する。
