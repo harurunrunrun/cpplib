@@ -171,7 +171,7 @@ RULES = (
         "problem-code",
         re.compile(
             r"(?<![A-Za-z0-9])(?:FISHER)"
-            r"(?!(?:[-_ –—]?Yates))"
+            r"(?!(?:[-_ –—]?(?:Yates|Jaikumar)))"
             r"(?![A-Za-z0-9])",
             re.IGNORECASE,
         ),
@@ -189,7 +189,7 @@ RULES = (
     Rule(
         "problem-story",
         re.compile(
-            r"(?<![A-Za-z])(?:Batman|Bottom Vertices|Commando|Critical Edges|Fisher(?!(?:[-_ –—]?Yates))|Fishmonger|Pilot|Taxi|Penguins?|Herding|"
+            r"(?<![A-Za-z])(?:Batman|Bottom Vertices|Commando|Critical Edges|Fisher(?!(?:[-_ –—]?(?:Yates|Jaikumar)))|Fishmonger|Pilot(?!(?:[-_ –—]?Method)(?![A-Za-z0-9_]))|Taxi|Penguins?|Herding|"
             r"Coconuts?|Temple Queues?|Bug Interactions?|Cows?|"
             r"Feed (?:All )?Cats|Employee Salary|Enterprise Network|"
             r"Gondor Sparks?|Grass Planting|Lucifer Numbers?|"

@@ -154,6 +154,71 @@ class CheckProblemIndependentLibraryNamesTest(unittest.TestCase):
         )
         self.assertEqual(self.terms(document), [])
 
+    def test_fisher_jaikumar_standard_algorithm_is_allowed(self) -> None:
+        header = self.write(
+            "src/approximate/routing/fisher_jaikumar_routes.hpp",
+            "// Fisher-Jaikumar and Fisher–Jaikumar construction.\n"
+            "void fisher_jaikumar_routes();\n",
+        )
+        self.assertEqual(self.terms(header, doc=False), [])
+        document = self.write(
+            "docs/fisher_jaikumar_routes.md",
+            self.valid_doc(
+                "Fisher-Jaikumar Construction (Fisher–Jaikumar構築法)"
+            ).replace("無向グラフ", "Fisher–Jaikumar construction"),
+        )
+        self.assertEqual(self.terms(document), [])
+
+    def test_pilot_method_standard_algorithm_is_allowed(self) -> None:
+        header = self.write(
+            "src/approximate/metaheuristic/pilot_method.hpp",
+            "// Pilot Method for constructive search.\n"
+            "void pilot_method();\n",
+        )
+        self.assertEqual(self.terms(header, doc=False), [])
+        document = self.write(
+            "docs/pilot_method.md",
+            self.valid_doc("Pilot Method (Pilot Method)").replace(
+                "無向グラフ", "Pilot Method"
+            ),
+        )
+        self.assertEqual(self.terms(document), [])
+
+    def test_problem_specific_pilot_and_fisher_remain_rejected(self) -> None:
+        pilot = self.write(
+            "docs/pilot_story.md",
+            self.valid_doc().replace(
+                "無向グラフが二部グラフかを判定する。",
+                "A pilot is assigned to each flight.",
+            ),
+        )
+        self.assertIn("pilot", [term.lower() for term in self.terms(pilot)])
+
+        fisher = self.write(
+            "docs/fisher_story.md",
+            self.valid_doc().replace(
+                "無向グラフが二部グラフかを判定する。",
+                "Solve the FISHER instance.",
+            ),
+        )
+        violations = check_file(fisher)
+        self.assertTrue(
+            any(
+                item.rule == "problem-code"
+                and item.context == "documentation"
+                and item.term == "FISHER"
+                for item in violations
+            )
+        )
+        self.assertTrue(
+            any(
+                item.rule == "problem-story"
+                and item.context == "documentation"
+                and item.term == "FISHER"
+                for item in violations
+            )
+        )
+
     def test_generated_include_guard_is_not_public_vocabulary(self) -> None:
         header = self.write(
             "src/approximate/packing/bottom_left_packing.hpp",
