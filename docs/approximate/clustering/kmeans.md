@@ -1,5 +1,5 @@
 ---
-title: k-Means / k-Means++ / Mini-Batch k-Means (k平均法)
+title: k-Means / k-Means++ / Hartigan-Wong / Mini-Batch k-Means (k平均法)
 documentation_of: ../../../src/approximate/clustering/kmeans.hpp
 ---
 
@@ -44,6 +44,19 @@ auto result = k_means(points, k, rng, maximum_iterations, tolerance);
 ```
 
 k-means++で初期化してLloyd法を行う。時間計算量は $O(nkd+(I+1)nd)$、追加空間計算量は $O(nd+kd)$。
+
+## `hartigan_wong_k_means`
+
+```cpp
+auto result = hartigan_wong_k_means(
+    points, initial_centers, maximum_passes);
+```
+
+初期割当の空クラスタを決定的に修復した後、各点を別クラスタへ移したときの
+SSE差をHartiganの更新式で評価し、SSEを厳密に減らす最良の移動を反映する。
+1 pass中は更新後の中心と要素数を直ちに後続の点へ反映する。実行pass数を
+$I$ とすると、時間計算量は $O((I+1)nkd)$、追加空間計算量は
+$O(n+kd)$。
 
 ## `mini_batch_k_means`
 

@@ -205,6 +205,137 @@ template<class Real, class URBG>
     );
 }
 
+template<class Real>
+[[nodiscard]] KMeansResult hartigan_wong_k_means(
+    const DensePoints<Real>& points,
+    DensePoints<long double> initial_centers,
+    std::size_t maximum_passes = 100
+){
+    detail::validate_dense_points(points);
+    detail::validate_kmeans_parameters(points.size(), initial_centers, 0.0L);
+    if(points.front().size() != initial_centers.front().size()){
+        throw std::invalid_argument("points and centers must have the same dimension");
+    }
+
+    const std::size_t point_count = points.size();
+    const std::size_t cluster_count = initial_centers.size();
+    const std::size_t dimension = points.front().size();
+    auto [labels, ignored_error] =
+        detail::assign_to_centers(points, initial_centers);
+    (void)ignored_error;
+    std::vector<std::size_t> counts(cluster_count, 0);
+    for(const std::size_t label : labels) ++counts[label];
+
+    for(std::size_t empty = 0; empty < cluster_count; ++empty){
+        if(counts[empty] != 0) continue;
+        std::size_t selected = point_count;
+        long double farthest = -1.0L;
+        for(std::size_t point = 0; point < point_count; ++point){
+            const std::size_t source = labels[point];
+            if(counts[source] <= 1) continue;
+            const long double distance = squared_euclidean_distance(
+                points[point], initial_centers[source]
+            );
+            if(farthest < distance){
+                farthest = distance;
+                selected = point;
+            }
+        }
+        if(selected == point_count){
+            throw std::logic_error("failed to repair an empty k-means cluster");
+        }
+        --counts[labels[selected]];
+        labels[selected] = empty;
+        ++counts[empty];
+    }
+
+    DensePoints<long double> centers(
+        cluster_count, DensePoint<long double>(dimension, 0.0L)
+    );
+    std::fill(counts.begin(), counts.end(), 0);
+    for(std::size_t point = 0; point < point_count; ++point){
+        const std::size_t cluster = labels[point];
+        ++counts[cluster];
+        const long double rate =
+            1.0L / static_cast<long double>(counts[cluster]);
+        for(std::size_t coordinate = 0; coordinate < dimension; ++coordinate){
+            centers[cluster][coordinate] = std::lerp(
+                centers[cluster][coordinate],
+                static_cast<long double>(points[point][coordinate]),
+                rate
+            );
+        }
+    }
+
+    KMeansResult result;
+    for(std::size_t pass = 0; pass < maximum_passes; ++pass){
+        bool moved = false;
+        for(std::size_t point = 0; point < point_count; ++point){
+            const std::size_t source = labels[point];
+            if(counts[source] <= 1) continue;
+            const long double source_count =
+                static_cast<long double>(counts[source]);
+            const long double removal_gain =
+                source_count / (source_count - 1.0L)
+                * squared_euclidean_distance(points[point], centers[source]);
+            std::size_t best = source;
+            long double best_change = 0.0L;
+            for(std::size_t target = 0; target < cluster_count; ++target){
+                if(target == source) continue;
+                const long double target_count =
+                    static_cast<long double>(counts[target]);
+                const long double insertion_cost =
+                    target_count / (target_count + 1.0L)
+                    * squared_euclidean_distance(points[point], centers[target]);
+                const long double change = insertion_cost - removal_gain;
+                if(change < best_change){
+                    best = target;
+                    best_change = change;
+                }
+            }
+            if(best == source) continue;
+
+            const long double target_count =
+                static_cast<long double>(counts[best]);
+            for(std::size_t coordinate = 0; coordinate < dimension; ++coordinate){
+                const long double value =
+                    static_cast<long double>(points[point][coordinate]);
+                centers[source][coordinate] =
+                    (source_count * centers[source][coordinate] - value)
+                    / (source_count - 1.0L);
+                centers[best][coordinate] =
+                    (target_count * centers[best][coordinate] + value)
+                    / (target_count + 1.0L);
+                if(!std::isfinite(centers[source][coordinate])
+                   || !std::isfinite(centers[best][coordinate])){
+                    throw std::overflow_error(
+                        "Hartigan-Wong center update overflowed"
+                    );
+                }
+            }
+            --counts[source];
+            ++counts[best];
+            labels[point] = best;
+            moved = true;
+        }
+        result.iterations = pass + 1;
+        if(!moved) break;
+    }
+
+    result.centers = std::move(centers);
+    result.labels = std::move(labels);
+    for(std::size_t point = 0; point < point_count; ++point){
+        result.squared_error = detail::checked_cost_sum(
+            result.squared_error,
+            squared_euclidean_distance(
+                points[point], result.centers[result.labels[point]]
+            ),
+            "Hartigan-Wong objective overflowed"
+        );
+    }
+    return result;
+}
+
 template<class Real, class URBG>
 [[nodiscard]] KMeansResult mini_batch_k_means(
     const DensePoints<Real>& points,

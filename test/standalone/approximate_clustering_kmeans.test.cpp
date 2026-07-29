@@ -18,6 +18,26 @@ bool self_test(){
     const auto first = approximate::clustering::k_means(points, 2, first_random, 30);
     const auto second = approximate::clustering::k_means(points, 2, second_random, 30);
     if(first.centers != second.centers || first.labels != second.labels) return false;
+    const auto hartigan = approximate::clustering::hartigan_wong_k_means(
+        points,
+        approximate::clustering::DensePoints<long double>{{0.0L, 0.0L},
+                                                          {10.0L, 9.0L}},
+        30
+    );
+    if(hartigan.labels.size() != points.size()
+       || hartigan.centers.size() != 2
+       || hartigan.squared_error > 2.0L
+       || hartigan.iterations == 0){
+        return false;
+    }
+    const auto repaired = approximate::clustering::hartigan_wong_k_means(
+        approximate::clustering::DensePoints<int>{{0}, {10}, {20}},
+        approximate::clustering::DensePoints<long double>{{0.0L}, {0.0L}},
+        10
+    );
+    if(repaired.centers.size() != 2 || repaired.labels.size() != 3){
+        return false;
+    }
     std::mt19937 mini_random(7U);
     const auto mini = approximate::clustering::mini_batch_k_means(
         points, 2, 3, 20, mini_random
