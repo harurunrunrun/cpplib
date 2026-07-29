@@ -173,7 +173,8 @@ inline FarthestDiagram farthest_voronoi(
     triangles.push_back({polygon[0], polygon[1], polygon[2]});
     std::vector<std::size_t> triangle_vertex;
     for(const auto& triangle: triangles){
-        const Point center = circumcenter(
+        const Point center =
+            smallest_enclosing_annulus_detail::circumcenter(
             points[triangle[0]],
             points[triangle[1]],
             points[triangle[2]]
