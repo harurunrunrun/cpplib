@@ -58,8 +58,8 @@ class NormalizeIndexTest(unittest.TestCase):
             [category["name"] for category in top[0]["categories"]],
             [
                 "src/algorithm/",
-                "src/structure/",
                 "src/integer_geometry/",
+                "src/structure/",
                 "src/approximate/",
             ],
         )
@@ -204,6 +204,64 @@ class NormalizeIndexTest(unittest.TestCase):
         second_template, changed = index_order.normalize_template(normalized_template)
         self.assertFalse(changed)
         self.assertEqual(second_template, normalized_template)
+
+    def test_splits_library_files_into_three_linked_pages(self) -> None:
+        front_matter = {
+            "layout": "toppage",
+            "data": {
+                "top": [
+                    {
+                        "type": "Library Files",
+                        "categories": [
+                            {"name": "src/structure/segtree/", "pages": []},
+                            {"name": "src/approximate/search/", "pages": []},
+                            {"name": "src/integer_geometry/point/", "pages": []},
+                            {"name": "src/algorithm/graph/", "pages": []},
+                        ],
+                    },
+                    {"type": "Verification Files", "categories": []},
+                ]
+            },
+        }
+        index_order.normalize_index(front_matter)
+        index_order.validate_index(front_matter)
+        documents = index_order.split_index_documents(
+            front_matter,
+            "# Library\n\nIntroduction.\n\n<br>\n",
+        )
+
+        root_front_matter, root_content = index_order.split_front_matter(
+            documents["index"]
+        )
+        self.assertEqual(
+            [entry["type"] for entry in root_front_matter["data"]["top"]],
+            ["Verification Files"],
+        )
+        for section in index_order.PAGE_SECTIONS:
+            self.assertIn(f"'/{section}.html' | relative_url", root_content)
+
+        section_front_matters = {}
+        expected_categories = {
+            "algorithm": ["src/algorithm/graph/", "src/integer_geometry/point/"],
+            "structure": ["src/structure/segtree/"],
+            "approximate": ["src/approximate/search/"],
+        }
+        for section in index_order.PAGE_SECTIONS:
+            section_front_matter, section_body = index_order.split_front_matter(
+                documents[section]
+            )
+            section_front_matters[section] = section_front_matter
+            library = section_front_matter["data"]["top"][0]
+            self.assertEqual(
+                [category["name"] for category in library["categories"]],
+                expected_categories[section],
+            )
+            self.assertIn('<h2 id="contents">Contents</h2>', section_body)
+            self.assertIn("{{ '/' | relative_url }}", section_body)
+        index_order.validate_split_documents(
+            root_front_matter,
+            section_front_matters,
+        )
 
     def test_rejects_unsupported_category_heading_template(self) -> None:
         with self.assertRaisesRegex(ValueError, "unsupported"):

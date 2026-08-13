@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import html
 import re
@@ -12,7 +13,19 @@ from typing import Any
 import yaml
 
 
-SECTION_ORDER = ("algorithm", "structure", "integer_geometry", "approximate")
+SECTION_ORDER = ("algorithm", "integer_geometry", "structure", "approximate")
+PAGE_SECTIONS = ("algorithm", "structure", "approximate")
+PAGE_SECTION_TITLES = {
+    "algorithm": "Algorithm",
+    "structure": "Structure",
+    "approximate": "Approximate",
+}
+SOURCE_PAGE_SECTIONS = {
+    "algorithm": "algorithm",
+    "integer_geometry": "algorithm",
+    "structure": "structure",
+    "approximate": "approximate",
+}
 VERIFICATION_PATH_PREFIXES = ("test/onlinejudge/", "test/standalone/")
 VERIFICATION_CATEGORY_ORDER = VERIFICATION_PATH_PREFIXES
 CONTENTS_START = "<!-- competitive-verifier-folder-contents:start -->"
@@ -158,17 +171,52 @@ def contents_block(front_matter: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def normalize_content(front_matter: dict[str, Any], content: str) -> str:
+def page_contents_block() -> str:
+    lines = [
+        CONTENTS_START,
+        '<h2 id="contents">Contents</h2>',
+        '<nav aria-labelledby="contents">',
+        '<ul class="library-folder-tree">',
+    ]
+    for section in PAGE_SECTIONS:
+        title = PAGE_SECTION_TITLES[section]
+        lines.append(
+            "  <li>"
+            f'<a href="{{{{ \'/{section}.html\' | relative_url }}}}">'
+            f"{html.escape(title)}</a>"
+            "</li>"
+        )
+    lines.extend(["</ul>", "</nav>", CONTENTS_END])
+    return "\n".join(lines)
+
+
+def replace_contents_block(content: str, block: str) -> str:
     marker_pattern = re.compile(
         rf"\n*{re.escape(CONTENTS_START)}.*?{re.escape(CONTENTS_END)}\n*",
         re.DOTALL,
     )
     base = marker_pattern.sub("\n", content).rstrip()
-    block = contents_block(front_matter)
     spacer = base.rfind("<br>")
     if spacer == -1:
         return f"{base}\n\n{block}\n"
     return f"{base[:spacer].rstrip()}\n\n{block}\n\n{base[spacer:]}\n"
+
+
+def normalize_content(front_matter: dict[str, Any], content: str) -> str:
+    return replace_contents_block(content, contents_block(front_matter))
+
+
+def normalize_root_content(content: str) -> str:
+    return replace_contents_block(content, page_contents_block())
+
+
+def section_content(section: str, front_matter: dict[str, Any]) -> str:
+    title = PAGE_SECTION_TITLES[section]
+    content = (
+        f'<p><a href="{{{{ \'/\' | relative_url }}}}">Contents</a></p>\n\n'
+        f"# {title}\n\n<br>\n"
+    )
+    return normalize_content(front_matter, content)
 
 
 def normalize_template(template: str) -> tuple[str, bool]:
@@ -381,6 +429,106 @@ def validate_index(front_matter: dict[str, Any]) -> None:
         previous_verification_rank = current_rank
 
 
+def split_index_documents(
+    front_matter: dict[str, Any], content: str
+) -> dict[str, str]:
+    root_front_matter = copy.deepcopy(front_matter)
+    root_data = root_front_matter.get("data")
+    root_top = root_data.get("top") if isinstance(root_data, dict) else None
+    if not isinstance(root_top, list):
+        raise ValueError("front matter data does not contain top")
+    root_library = find_entry(root_top, "Library Files")
+
+    categories_by_section: dict[str, list[Any]] = {
+        section: [] for section in PAGE_SECTIONS
+    }
+    for category in entry_categories(root_library):
+        source_section = section_name(category)
+        page_section = SOURCE_PAGE_SECTIONS.get(source_section or "")
+        if page_section is None:
+            name = category.get("name") if isinstance(category, dict) else category
+            raise ValueError(f"unsupported Library Files category: {name}")
+        categories_by_section[page_section].append(copy.deepcopy(category))
+
+    root_top.remove(root_library)
+    documents = {
+        "index": dump_front_matter(
+            root_front_matter,
+            normalize_root_content(content),
+        )
+    }
+    for section in PAGE_SECTIONS:
+        section_front_matter = copy.deepcopy(front_matter)
+        section_front_matter["title"] = PAGE_SECTION_TITLES[section]
+        section_data = section_front_matter.get("data")
+        if not isinstance(section_data, dict):
+            raise ValueError("front matter does not contain data")
+        section_data["top"] = [
+            {
+                "categories": categories_by_section[section],
+                "type": "Library Files",
+            }
+        ]
+        documents[section] = dump_front_matter(
+            section_front_matter,
+            section_content(section, section_front_matter),
+        )
+    return documents
+
+
+def validate_split_documents(
+    root_front_matter: dict[str, Any],
+    section_front_matters: dict[str, dict[str, Any]],
+) -> None:
+    root_data = root_front_matter.get("data")
+    root_top = root_data.get("top") if isinstance(root_data, dict) else None
+    if not isinstance(root_top, list):
+        raise ValueError("front matter data does not contain top")
+    if any(
+        isinstance(entry, dict) and entry.get("type") == "Library Files"
+        for entry in root_top
+    ):
+        raise ValueError("split root index must not contain Library Files")
+    verification_entry = find_entry(root_top, "Verification Files")
+
+    combined_categories: list[Any] = []
+    for section in PAGE_SECTIONS:
+        section_front_matter = section_front_matters.get(section)
+        if section_front_matter is None:
+            raise ValueError(f"{section}.md is missing")
+        if section_front_matter.get("title") != PAGE_SECTION_TITLES[section]:
+            raise ValueError(f"{section}.md title is invalid")
+        section_data = section_front_matter.get("data")
+        section_top = (
+            section_data.get("top") if isinstance(section_data, dict) else None
+        )
+        if not isinstance(section_top, list):
+            raise ValueError(f"{section}.md data does not contain top")
+        library_entry = find_entry(section_top, "Library Files")
+        if len(section_top) != 1:
+            raise ValueError(f"{section}.md must contain only Library Files")
+        for category in entry_categories(library_entry):
+            source_section = section_name(category)
+            if SOURCE_PAGE_SECTIONS.get(source_section or "") != section:
+                name = category.get("name") if isinstance(category, dict) else category
+                raise ValueError(f"category is on the wrong page: {name}")
+            combined_categories.append(copy.deepcopy(category))
+
+    combined_front_matter = copy.deepcopy(root_front_matter)
+    combined_data = combined_front_matter.get("data")
+    if not isinstance(combined_data, dict):
+        raise ValueError("front matter does not contain data")
+    combined_data["top"] = [
+        {"categories": combined_categories, "type": "Library Files"},
+        copy.deepcopy(verification_entry),
+    ]
+    validate_index(combined_front_matter)
+
+
+def section_path(index_path: Path, section: str) -> Path:
+    return index_path.with_name(f"{section}.md")
+
+
 def dump_front_matter(front_matter: dict[str, Any], content: str) -> str:
     body = yaml.safe_dump(
         front_matter,
@@ -414,22 +562,63 @@ def main() -> None:
 
     text = args.index.read_text(encoding="utf-8")
     front_matter, content = split_front_matter(text)
-    changed = normalize_index(front_matter)
-    validate_index(front_matter)
-    normalized_content = normalize_content(front_matter, content)
-    content_changed = normalized_content != content
     template = args.template.read_text(encoding="utf-8")
     normalized_template, template_changed = normalize_template(template)
+
+    data = front_matter.get("data")
+    top = data.get("top") if isinstance(data, dict) else None
+    if not isinstance(top, list):
+        raise ValueError("front matter data does not contain top")
+    library_entries = [
+        entry
+        for entry in top
+        if isinstance(entry, dict) and entry.get("type") == "Library Files"
+    ]
+    actual_documents = {"index": text}
+    if len(library_entries) == 1:
+        normalize_index(front_matter)
+        validate_index(front_matter)
+        expected_documents = split_index_documents(front_matter, content)
+        for section in PAGE_SECTIONS:
+            path = section_path(args.index, section)
+            if path.is_file():
+                actual_documents[section] = path.read_text(encoding="utf-8")
+    elif not library_entries:
+        section_front_matters: dict[str, dict[str, Any]] = {}
+        expected_documents = {
+            "index": dump_front_matter(
+                front_matter,
+                normalize_root_content(content),
+            )
+        }
+        for section in PAGE_SECTIONS:
+            path = section_path(args.index, section)
+            section_text = path.read_text(encoding="utf-8")
+            actual_documents[section] = section_text
+            section_front_matter, _ = split_front_matter(section_text)
+            section_front_matters[section] = section_front_matter
+            expected_documents[section] = dump_front_matter(
+                section_front_matter,
+                section_content(section, section_front_matter),
+            )
+        validate_split_documents(front_matter, section_front_matters)
+    else:
+        raise ValueError("Library Files entry is duplicated")
+
+    documents_changed = any(
+        actual_documents.get(name) != expected
+        for name, expected in expected_documents.items()
+    )
     if args.check:
-        if changed or content_changed or template_changed:
-            parser.error("competitive-verifier index is not normalized")
+        if documents_changed or template_changed:
+            parser.error("competitive-verifier index pages are not normalized")
         return
 
-    if changed or content_changed:
-        args.index.write_text(
-            dump_front_matter(front_matter, normalized_content),
-            encoding="utf-8",
-        )
+    if documents_changed:
+        for name, expected in expected_documents.items():
+            path = args.index if name == "index" else section_path(args.index, name)
+            if actual_documents.get(name) != expected:
+                path.write_text(expected, encoding="utf-8")
 
     if template_changed:
         args.template.write_text(normalized_template, encoding="utf-8")
