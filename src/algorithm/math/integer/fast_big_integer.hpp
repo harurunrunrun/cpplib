@@ -1,5 +1,5 @@
-#ifndef CPPLIB_SRC_ALGORITHM_MATH_INTEGER_BIG_INTEGER_HPP_INCLUDED
-#define CPPLIB_SRC_ALGORITHM_MATH_INTEGER_BIG_INTEGER_HPP_INCLUDED
+#ifndef CPPLIB_SRC_ALGORITHM_MATH_INTEGER_FAST_BIG_INTEGER_HPP_INCLUDED
+#define CPPLIB_SRC_ALGORITHM_MATH_INTEGER_FAST_BIG_INTEGER_HPP_INCLUDED
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -279,4 +279,4 @@ template<big_integer_detail::Expression Expression>inline BigInteger operator>>(
 template<big_integer_detail::Expression Expression>inline bool operator==(const Expression&left,const BigInteger&right){return BigInteger(left)==right;}
 template<big_integer_detail::Expression Expression>inline bool operator==(const BigInteger&left,const Expression&right){return left==BigInteger(right);}
 template<big_integer_detail::Expression Expression>inline std::ostream&operator<<(std::ostream&stream,const Expression&value){return stream<<BigInteger(value);}
-#endif
+#endif  // CPPLIB_SRC_ALGORITHM_MATH_INTEGER_FAST_BIG_INTEGER_HPP_INCLUDED
