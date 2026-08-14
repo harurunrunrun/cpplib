@@ -97,11 +97,11 @@ inline int build(
         segments.begin() + static_cast<std::ptrdiff_t>(end),
         [split_x](const BoxedSegment& left, const BoxedSegment& right){
             const long double left_center = split_x
-                ? left.minimum_x + left.maximum_x
-                : left.minimum_y + left.maximum_y;
+                ? left.minimum_x / 2.0L + left.maximum_x / 2.0L
+                : left.minimum_y / 2.0L + left.maximum_y / 2.0L;
             const long double right_center = split_x
-                ? right.minimum_x + right.maximum_x
-                : right.minimum_y + right.maximum_y;
+                ? right.minimum_x / 2.0L + right.maximum_x / 2.0L
+                : right.minimum_y / 2.0L + right.maximum_y / 2.0L;
             return left_center < right_center;
         }
     );
@@ -112,7 +112,7 @@ inline int build(
     return result;
 }
 
-inline long double box_distance_squared(const Node& first, const Node& second){
+inline long double box_distance(const Node& first, const Node& second){
     const long double dx = first.maximum_x < second.minimum_x
         ? second.minimum_x - first.maximum_x
         : second.maximum_x < first.minimum_x
@@ -123,7 +123,7 @@ inline long double box_distance_squared(const Node& first, const Node& second){
         : second.maximum_y < first.minimum_y
             ? first.minimum_y - second.maximum_y
             : 0.0L;
-    return dx * dx + dy * dy;
+    return std::hypot(dx, dy);
 }
 
 struct NodePair{
@@ -151,13 +151,13 @@ inline long double boundary_distance(
         second_segments, second_nodes, 0, second_segments.size()
     );
 
-    long double best_squared = std::numeric_limits<long double>::infinity();
+    long double best = std::numeric_limits<long double>::infinity();
     std::priority_queue<
         NodePair,
         std::vector<NodePair>,
         std::greater<NodePair>
     > queue;
-    queue.push({box_distance_squared(
+    queue.push({box_distance(
         first_nodes[static_cast<std::size_t>(first_root)],
         second_nodes[static_cast<std::size_t>(second_root)]
     ), first_root, second_root});
@@ -165,7 +165,7 @@ inline long double boundary_distance(
     while(!queue.empty()){
         const NodePair current = queue.top();
         queue.pop();
-        if(current.lower_bound >= best_squared) break;
+        if(current.lower_bound >= best) break;
         const Node& first = first_nodes[static_cast<std::size_t>(current.first)];
         const Node& second = second_nodes[static_cast<std::size_t>(current.second)];
         if(first.leaf() && second.leaf()){
@@ -175,10 +175,8 @@ inline long double boundary_distance(
                         first_segments[left].segment,
                         second_segments[right].segment
                     );
-                    best_squared = std::min(
-                        best_squared, candidate * candidate
-                    );
-                    if(best_squared == 0.0L) return 0.0L;
+                    best = std::min(best, candidate);
+                    if(best == 0.0L) return 0.0L;
                 }
             }
             continue;
@@ -189,25 +187,25 @@ inline long double boundary_distance(
         );
         if(split_first){
             for(const int child: {first.left, first.right}){
-                const long double lower = box_distance_squared(
+                const long double lower = box_distance(
                     first_nodes[static_cast<std::size_t>(child)], second
                 );
-                if(lower < best_squared){
+                if(lower < best){
                     queue.push({lower, child, current.second});
                 }
             }
         }else{
             for(const int child: {second.left, second.right}){
-                const long double lower = box_distance_squared(
+                const long double lower = box_distance(
                     first, second_nodes[static_cast<std::size_t>(child)]
                 );
-                if(lower < best_squared){
+                if(lower < best){
                     queue.push({lower, current.first, child});
                 }
             }
         }
     }
-    return std::sqrt(best_squared);
+    return best;
 }
 
 }  // namespace polygon_minimum_distance_detail
