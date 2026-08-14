@@ -13,9 +13,13 @@ _FACES = (
 )
 
 
+def polyhedron3_mesh_text() -> str:
+    return "12 20\n" + _VERTICES + _FACES
+
+
 def write_polyhedron3_case(out_dir: str, expected: str, query: str = "") -> None:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    data = "12 20\n" + _VERTICES + _FACES + query
+    data = polyhedron3_mesh_text() + query
     (out / "case_00.in").write_text(data, encoding="utf-8")
     (out / "case_00.out").write_text(expected, encoding="utf-8")
