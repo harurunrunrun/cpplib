@@ -29,19 +29,19 @@ inline std::vector<std::size_t> offline_range_mex(
     const std::size_t universe = values.size() + 1;
     std::size_t leaf_count = 1;
     while(leaf_count < universe) leaf_count <<= 1;
-    std::vector<int> minimum_last(leaf_count << 1, -1);
-    const auto set_last = [&](std::size_t position, int last){
+    std::vector<std::size_t> minimum_last_plus_one(leaf_count << 1, 0);
+    const auto set_last = [&](std::size_t position, std::size_t last_plus_one){
         std::size_t node = leaf_count + position;
-        minimum_last[node] = last;
+        minimum_last_plus_one[node] = last_plus_one;
         while(node > 1){
             node >>= 1;
-            minimum_last[node] = std::min(minimum_last[node << 1], minimum_last[node << 1 | 1]);
+            minimum_last_plus_one[node] = std::min(minimum_last_plus_one[node << 1], minimum_last_plus_one[node << 1 | 1]);
         }
     };
-    const auto first_before = [&](int boundary){
+    const auto first_before = [&](std::size_t boundary_plus_one){
         std::size_t node = 1;
         while(node < leaf_count){
-            if(minimum_last[node << 1] < boundary) node <<= 1;
+            if(minimum_last_plus_one[node << 1] < boundary_plus_one) node <<= 1;
             else node = node << 1 | 1;
         }
         return node - leaf_count;
@@ -53,11 +53,11 @@ inline std::vector<std::size_t> offline_range_mex(
         while(processed < query.right){
             const std::int64_t value = values[processed];
             if(value >= 0 && static_cast<std::uint64_t>(value) < universe){
-                set_last(static_cast<std::size_t>(value), static_cast<int>(processed));
+                set_last(static_cast<std::size_t>(value), processed + 1);
             }
             ++processed;
         }
-        answer[query.index] = first_before(static_cast<int>(query.left));
+        answer[query.index] = first_before(query.left + 1);
     }
     return answer;
 }

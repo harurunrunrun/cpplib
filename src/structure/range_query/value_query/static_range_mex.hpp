@@ -11,7 +11,7 @@ class StaticRangeMex{
     struct Node{
         int left = -1;
         int right = -1;
-        int minimum_last = -1;
+        std::size_t minimum_last_plus_one = 0;
     };
 
     std::size_t size_ = 0;
@@ -37,12 +37,12 @@ class StaticRangeMex{
         std::size_t left,
         std::size_t right,
         std::size_t position,
-        int last
+        std::size_t last_plus_one
     ){
         const int node = static_cast<int>(nodes_.size());
         nodes_.push_back(nodes_[static_cast<std::size_t>(source)]);
         if(right - left == 1){
-            nodes_[static_cast<std::size_t>(node)].minimum_last = last;
+            nodes_[static_cast<std::size_t>(node)].minimum_last_plus_one = last_plus_one;
             return node;
         }
         const std::size_t middle = left + (right - left) / 2;
@@ -52,7 +52,7 @@ class StaticRangeMex{
                 left,
                 middle,
                 position,
-                last
+                last_plus_one
             );
         }else{
             nodes_[static_cast<std::size_t>(node)].right = set_last(
@@ -60,12 +60,12 @@ class StaticRangeMex{
                 middle,
                 right,
                 position,
-                last
+                last_plus_one
             );
         }
-        nodes_[static_cast<std::size_t>(node)].minimum_last = std::min(
-            nodes_[static_cast<std::size_t>(nodes_[static_cast<std::size_t>(node)].left)].minimum_last,
-            nodes_[static_cast<std::size_t>(nodes_[static_cast<std::size_t>(node)].right)].minimum_last
+        nodes_[static_cast<std::size_t>(node)].minimum_last_plus_one = std::min(
+            nodes_[static_cast<std::size_t>(nodes_[static_cast<std::size_t>(node)].left)].minimum_last_plus_one,
+            nodes_[static_cast<std::size_t>(nodes_[static_cast<std::size_t>(node)].right)].minimum_last_plus_one
         );
         return node;
     }
@@ -74,15 +74,15 @@ class StaticRangeMex{
         int node,
         std::size_t left,
         std::size_t right,
-        int boundary
+        std::size_t boundary_plus_one
     ) const{
         if(right - left == 1) return left;
         const Node& current = nodes_[static_cast<std::size_t>(node)];
         const std::size_t middle = left + (right - left) / 2;
-        if(nodes_[static_cast<std::size_t>(current.left)].minimum_last < boundary){
-            return first_last_before(current.left, left, middle, boundary);
+        if(nodes_[static_cast<std::size_t>(current.left)].minimum_last_plus_one < boundary_plus_one){
+            return first_last_before(current.left, left, middle, boundary_plus_one);
         }
-        return first_last_before(current.right, middle, right, boundary);
+        return first_last_before(current.right, middle, right, boundary_plus_one);
     }
 
 public:
@@ -100,7 +100,7 @@ public:
                     0,
                     universe_,
                     static_cast<std::size_t>(value),
-                    static_cast<int>(index)
+                    index + 1
                 );
             }
             roots_.push_back(root);
@@ -114,7 +114,7 @@ public:
         if(left > right || right > size_){
             throw std::out_of_range("StaticRangeMex::range_mex: invalid half-open range");
         }
-        return first_last_before(roots_[right], 0, universe_, static_cast<int>(left));
+        return first_last_before(roots_[right], 0, universe_, left + 1);
     }
 };
 

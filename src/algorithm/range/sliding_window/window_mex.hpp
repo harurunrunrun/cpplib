@@ -44,19 +44,19 @@ inline std::size_t minimum_fixed_window_mex(
         throw std::out_of_range("minimum_fixed_window_mex: invalid window length");
     }
     const std::size_t universe = values.size() + 1;
-    std::vector<std::int64_t> last(universe, -1);
+    std::vector<std::size_t> last_plus_one(universe, 0);
     std::vector<bool> absent_from_a_window(universe, false);
     for(std::size_t index = 0; index < values.size(); index++){
         const std::int64_t value = values[index];
         if(value < 0 || static_cast<std::uint64_t>(value) >= universe) continue;
         const std::size_t converted = static_cast<std::size_t>(value);
-        if(static_cast<std::int64_t>(index) - last[converted] > static_cast<std::int64_t>(window)){
+        if(index + 1 - last_plus_one[converted] > window){
             absent_from_a_window[converted] = true;
         }
-        last[converted] = static_cast<std::int64_t>(index);
+        last_plus_one[converted] = index + 1;
     }
     for(std::size_t value = 0; value < universe; value++){
-        if(static_cast<std::int64_t>(values.size()) - last[value] > static_cast<std::int64_t>(window)){
+        if(values.size() + 1 - last_plus_one[value] > window){
             absent_from_a_window[value] = true;
         }
         if(absent_from_a_window[value]) return value;
