@@ -52,7 +52,7 @@ $N=graph.size()$、$M$ を格納した有向辺数とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `maximum_probability_path(graph, source)` | $O((N+M)\log(N+1))$ | $O(N+M)$ |
+| `maximum_probability_path(graph, source)` | $O((N+M)\log(M+N+1))$ | $O(N+M)$ |
 
 ## 注意点
 

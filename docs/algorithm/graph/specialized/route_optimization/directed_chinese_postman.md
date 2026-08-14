@@ -52,7 +52,7 @@ struct DirectedChinesePostmanResult {
 頂点数を $N$、辺数を $M$、出次数が入次数より小さい頂点数を $S$、異なる次数不均衡頂点数を $B$ とする。
 
 - 強連結性判定: $O(N+M)$
-- $S$ 回のDijkstra法: $O(S(M+N)\log N)$
+- $S$ 回のDijkstra法: $O(S(M+N)\log(M+N+1))$
 - 不均衡補正の最小費用流: 一般の逐次最短路法の上界で $O(B^2E_f+FM_f\log B)$。$F$ は補正流量、$E_f,M_f=O(B^2)$
 - 全体: 上記の和
 

@@ -27,7 +27,7 @@ vector<char> reachable;
 
 ## 時間計算量
 
-- `dijkstra`: $O((N+M)\log(N+1))$
+- `dijkstra`: $O((N+M)\log(M+N+1))$
 
 全辺の検査、priority queueによる探索、長さ $N$ の結果列構築を含む。
 

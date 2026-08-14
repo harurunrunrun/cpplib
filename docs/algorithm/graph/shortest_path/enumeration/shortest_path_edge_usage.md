@@ -34,7 +34,7 @@ vector<char> unused;
 
 $N$ を頂点数、$M$ を辺数とする。
 
-- `shortest_path_edge_usage`: $O((N+M)\log(N+1))$
+- `shortest_path_edge_usage`: $O((N+M)\log(M+N+1))$
 
 正方向・逆方向のDijkstraを1回ずつ行い、最後に $M$ 辺分の `used` / `unused` を構築する。
 

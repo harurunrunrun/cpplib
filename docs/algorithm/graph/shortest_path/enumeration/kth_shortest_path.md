@@ -35,10 +35,10 @@ Yen法。受理済みpathは頂点列のprefix trieで管理し、各spurで全�
 
 受理したpath長の総和を $P$、生成した候補path数を $Q$ とする。$P,Q\leq KN$。
 
-- `kth_shortest_paths` 内のshortest path探索: $O(P(M+N)\log(N+1))$
+- `kth_shortest_paths` 内のshortest path探索: $O(P(M+N)\log(M+N+1))$
 - prefix trieの構築・走査と禁止辺判定: $O((P+KM)\log(P+1))$
 - 候補heapと重複除外集合: $O(QN\log(Q+1))$
-- 全体: $O(P(M+N)\log(N+1)+(P+KM)\log(P+1)+QN\log(Q+1))$
+- 全体: $O(P(M+N)\log(M+N+1)+(P+KM)\log(P+1)+QN\log(Q+1))$
 
 禁止nextのtrie探索はspur頂点から出る辺だけで行う。pathは単純なので、全受理path・全spurにわたる対象辺数は $O(KM)$。戻り値の出力要素数は $P$。
 

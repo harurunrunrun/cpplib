@@ -32,7 +32,7 @@ vector<char> reachable;
 
 $S$ を入力した始点数とする。
 
-- `multi_source_shortest_path`: $O(S+(N+M)\log(N+1))$
+- `multi_source_shortest_path`: $O(S+(N+M)\log(M+N+1))$
 
 始点検査、全辺検査、Dijkstra、長さ $N$ の結果列構築を含む。
 

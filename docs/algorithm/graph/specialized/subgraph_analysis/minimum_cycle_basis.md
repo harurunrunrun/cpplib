@@ -40,7 +40,7 @@ struct MinimumCycleBasisResult {
 
 頂点数を $N$、辺数を $M$、$W=64$、Horton候補数を $H\le NM$ とする。
 
-- 全始点のDijkstra法: $O(N(M+N)\log N)$
+- 全始点のDijkstra法: $O(N(M+N)\log(M+N+1))$
 - 最短路の辺ビット集合とHorton候補の構築: $O(N^2\lceil M/W\rceil+HM)$
 - 候補の整列: $O(H\log(H+1)\lceil M/W\rceil)$
 - GF(2)基底への挿入: $O(HM\lceil M/W\rceil)$

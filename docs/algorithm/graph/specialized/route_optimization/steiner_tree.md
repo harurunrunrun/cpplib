@@ -27,7 +27,7 @@ steiner_tree<T>(graph, terminals, inf)
 
 端点数を $K$ とする。
 
-- `steiner_tree`: $O(3^K N+2^K M\log(N+1))$
+- `steiner_tree`: $O(3^K N+2^K(N+M)\log(M+N+1))$
 
 subset併合が第1項、各subsetに対するDijkstraが第2項。戻り値の構築は $O(1)$。
 

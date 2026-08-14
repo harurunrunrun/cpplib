@@ -35,7 +35,7 @@ MinimumSteinerTreeResult<T> minimum_steiner_tree(
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| `minimum_steiner_tree` | $O(3^K N+2^K M\log(N+1))$ | $O(2^K N+M)$ |
+| `minimum_steiner_tree` | $O(3^K N+2^K(N+M)\log(M+N+1))$ | $O(2^K N+M)$ |
 
 ## 注意点
 

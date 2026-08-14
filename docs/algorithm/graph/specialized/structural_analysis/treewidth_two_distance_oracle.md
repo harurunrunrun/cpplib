@@ -39,7 +39,7 @@ explicit TreewidthTwoDistanceOracle(
 頂点集合を `[0, vertex_count)` として距離オラクルを構築する。`infinity` は到達不能と、
 距離加算の飽和値を表す。正しい有限距離は `infinity` 未満でなければならない。
 
-- 時間計算量: $O((N+M)\log^2 N)$
+- 時間計算量: $O((N+M)\log(N+1)\log(M+N+1))$
 - 空間計算量: $O(M+N\log N)$
 
 $N$ は頂点数、$M$ は向きを区別した入力辺数。基礎単純無向グラフの辺数は木幅2以下なら
