@@ -8,7 +8,7 @@
 #include <vector>
 #include "../../src/algorithm/graph/shortest_path/enumeration/shortest_path_edge_usage.hpp"
 
-std::vector<char> brute_used(
+std::vector<char> brute_used_positive_cost(
     int n,
     const std::vector<ShortestPathEdgeUsageEdge<long long>>& edges,
     int s,
@@ -70,6 +70,18 @@ void self_test(){
         assert((res.used == std::vector<char>{1, 1, 0}));
     }
     {
+        std::vector<ShortestPathEdgeUsageEdge<long long>> edges = {
+            {0, 1, 0},
+            {1, 0, 0},
+            {0, 2, 1},
+        };
+        auto res = shortest_path_edge_usage<long long>(3, edges, 0, 2);
+        assert(res.reachable);
+        assert(res.shortest == 1);
+        assert((res.used == std::vector<char>{1, 1, 1}));
+        assert((res.unused == std::vector<char>{0, 0, 0}));
+    }
+    {
         constexpr long long INF = 1LL << 60;
         auto res = shortest_path_edge_usage<long long>(2, {}, 0, 1, INF);
         assert(!res.reachable);
@@ -100,7 +112,7 @@ void self_test(){
             int s = static_cast<int>(rng() % n);
             int t = static_cast<int>(rng() % n);
             auto res = shortest_path_edge_usage<long long>(n, edges, s, t, 1LL << 60);
-            assert(res.used == brute_used(n, edges, s, t));
+            assert(res.used == brute_used_positive_cost(n, edges, s, t));
         }
     }
 }
