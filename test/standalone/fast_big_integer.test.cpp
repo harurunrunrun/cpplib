@@ -37,10 +37,49 @@ static void run_local_contract_tests(){
         }
     }
 
+    const BigInteger large(
+        "987654321012345678909876543210123456789098765432101234567890"
+    );
+    for(const long long divisor_value : {
+        1LL, 2LL, 3LL, 97LL, 299LL, 999999937LL, 999999999LL
+    }){
+        for(const int left_sign : {-1, 1}){
+            for(const int right_sign : {-1, 1}){
+                const BigInteger x = large * left_sign;
+                const BigInteger y = BigInteger(divisor_value) * right_sign;
+                const auto [q, r] = BigInteger::divmod(x, y);
+                BigInteger q_only = x, r_only = x;
+                q_only /= y;
+                r_only %= y;
+                assert(q_only == q);
+                assert(r_only == r);
+                assert(x == q * y + r);
+                assert(abs(r) < abs(y));
+                assert(r.is_zero() || r.is_negative() == x.is_negative());
+            }
+        }
+    }
+    for(const std::string divisor_text : {
+        "1000000001", "999999999999999937",
+        "123456789012345678901234567890123456789"
+    }){
+        const BigInteger y(divisor_text);
+        const auto [q, r] = BigInteger::divmod(large, y);
+        BigInteger q_only = large, r_only = large;
+        q_only /= y;
+        r_only %= y;
+        assert(q_only == q);
+        assert(r_only == r);
+        assert(large == q * y + r);
+    }
+
     BigInteger alias("999999999999999999999999999999999999");
     const BigInteger alias_copy = alias;
     alias += alias;
     assert(alias == alias_copy * 2);
+    alias = alias_copy;
+    alias -= alias;
+    assert(alias == 0);
     alias = alias_copy;
     alias *= alias;
     assert(alias == alias_copy * alias_copy);

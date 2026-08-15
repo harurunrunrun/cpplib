@@ -8,6 +8,10 @@ documentation_of: ../../../../src/algorithm/math/integer/fast_big_integer.hpp
 4 limbまではオブジェクト内に保持する。外部多倍長整数ライブラリには依存せず、GCC 13、
 C++20、`__uint128_t`を前提とする。
 
+inline配列とheap用vectorはunionで共有されるため、GCC 13の64 bit環境では
+`sizeof(BigInteger) == 32` である。多数の値をpriority queueや配列へ保持する
+用途でも、未使用のheap管理領域を各オブジェクトへ重複して持たない。
+
 ## 構築・代入
 
 ```cpp
@@ -58,8 +62,12 @@ BigInteger operator%(const BigInteger&, const BigInteger&)
 ```
 
 加減算はlimb数に対して線形である。乗算は短い側が128 limb以下なら
-schoolbook法、それより長ければ次の3素数上のMontgomery radix-4 NTTとCRTを
-使用する。
+schoolbook法、それより長ければMontgomery radix-4 NTTとCRTを使用する。
+複合加減算と1-limb複合乗除算は既存の格納領域を再利用する。
+1-limb除算と剰余は除数ごとに逆数を一度求め、各limbをmul-highで処理するため、
+各limbでハードウェア除算を繰り返さない。
+
+長い乗算では次の3素数を使用する。
 
 - `167772161`
 - `469762049`
@@ -81,6 +89,10 @@ static std::pair<BigInteger, BigInteger> divmod(
 1-limb除算、除数64 limb以下の正規化long division、それより大きい場合の
 Newton逆数法を切り替える。`divmod` は商と余りを同時に求めるので、両方が
 必要な場合に `/` と `%` を個別に呼ぶより効率がよい。
+
+`/` と `%` を単独で使う場合も、long divisionでは不要側の結果vectorを
+確保しない。特に `value % small_integer` は左辺のコピーや商の構築をせず、
+剰余だけを計算する。
 
 除数0では `std::domain_error` を送出する。商は0方向へ丸め、余りは被除数と
 同符号である。返される商 `q` と余り `r` は常に次を満たす。
