@@ -1,5 +1,6 @@
 #ifndef CPPLIB_SRC_ALGORITHM_MATH_INTEGER_FAST_BIG_INTEGER_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_MATH_INTEGER_FAST_BIG_INTEGER_HPP_INCLUDED
+
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -10,7 +11,6 @@
 #include <cstdint>
 #include <istream>
 #include <limits>
-#include <memory>
 #include <ostream>
 #include <span>
 #include <stdexcept>
@@ -19,264 +19,1164 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-#if defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__))
-#include <x86intrin.h>
-#endif
+
 #if !defined(__SIZEOF_INT128__)
-#error "This optimized ExactInteger requires unsigned __int128."
+#error "BigInteger requires unsigned __int128."
 #endif
-namespace exact_integer_detail{template<class Integer>inline constexpr bool native_integer=std::is_integral_v<std::remove_cv_t<Integer>>||std::same_as<std::remove_cv_t<Integer>,__int128_t>||std::same_as<std::remove_cv_t<Integer>,__uint128_t>;template<class Integer>concept NativeInteger=native_integer<Integer>;
-template<class Integer>struct MakeUnsigned{using type=std::make_unsigned_t<Integer>;};
-template<>struct MakeUnsigned<__int128_t>{using type=__uint128_t;};
-template<>struct MakeUnsigned<__uint128_t>{using type=__uint128_t;};template<class Integer>using MakeUnsignedT=typename MakeUnsigned<std::remove_cv_t<Integer>>::type;}
-class BigInteger;namespace big_integer_detail{
-struct AddExpression{const BigInteger&left;const BigInteger&right;};
-struct SubtractExpression{const BigInteger&left;const BigInteger&right;};
-struct MultiplyExpression{const BigInteger&left;const BigInteger&right;};
-struct DivideExpression{const BigInteger&left;const BigInteger&right;};
-struct ModuloExpression{const BigInteger&left;const BigInteger&right;};template<class Type>inline constexpr bool is_expression=std::same_as<std::remove_cvref_t<Type>,AddExpression>||std::same_as<std::remove_cvref_t<Type>,SubtractExpression>||std::same_as<std::remove_cvref_t<Type>,MultiplyExpression>||std::same_as<std::remove_cvref_t<Type>,DivideExpression>||std::same_as<std::remove_cvref_t<Type>,ModuloExpression>;template<class Type>concept Expression=is_expression<Type>;}
-class ExactInteger{
-using Limb=std::uint64_t;
-using Wide=__uint128_t;
-static constexpr std::size_t inline_limb_capacity=4;
-static constexpr Limb decimal_base=10'000'000'000'000'000'000ULL;
-template<std::size_t Size>[[gnu::always_inline]]static inline Limb add_equal_fixed(Limb*b,const Limb*c,const Limb*e)noexcept{Wide f=0;for(std::size_t g=0;g<Size;++g){const Wide k=static_cast<Wide>(c[g])+e[g]+f;b[g]=static_cast<Limb>(k);f=k>>64;}return static_cast<Limb>(f);}
-template<std::size_t Size>[[gnu::always_inline]]static inline Limb subtract_equal_fixed(Limb*l,const Limb*o,const Limb*p)noexcept{Wide q=0;for(std::size_t s=0;s<Size;++s){const Wide w=static_cast<Wide>(p[s])+q;const Wide x=o[s];l[s]=static_cast<Limb>(x-w);q=x<w;}return static_cast<Limb>(q);}
-[[gnu::always_inline]]static inline Limb add_equal_length(Limb*y,const Limb*z,const Limb*A,std::size_t B)noexcept{switch(B){case 2:return add_equal_fixed<2>(y,z,A);case 4:return add_equal_fixed<4>(y,z,A);case 8:return add_equal_fixed<8>(y,z,A);default:break;}
-#if defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__))
-unsigned char D;Limb*E=y;const Limb*F=z;const Limb*G=A;std::size_t H=B;__asm__ volatile("clc\n\t""1:\n\t""movq (%[left]), %%rax\n\t""adcq (%[right]), %%rax\n\t""movq %%rax, (%[output])\n\t""leaq 8(%[left]), %[left]\n\t""leaq 8(%[right]), %[right]\n\t""leaq 8(%[output]), %[output]\n\t""decq %[remaining]\n\t""jnz 1b\n\t""setc %[carry]":[output]"+r"(E),[left]"+r"(F),[right]"+r"(G),[remaining]"+r"(H),[carry]"=qm"(D): :"rax","cc","memory");return D;
-#else
-Wide I=0;for(std::size_t J=0;J<B;++J){const Wide K=static_cast<Wide>(z[J])+A[J]+I;y[J]=static_cast<Limb>(K);I=K>>64;}return static_cast<Limb>(I);
-#endif
+
+namespace fast_big_integer_detail{
+
+template<class Integer>
+inline constexpr bool native_integer =
+    std::is_integral_v<std::remove_cv_t<Integer>>
+    || std::same_as<std::remove_cv_t<Integer>, __int128_t>
+    || std::same_as<std::remove_cv_t<Integer>, __uint128_t>;
+
+template<class Integer>
+concept NativeInteger = native_integer<Integer>;
+
+template<class Integer>
+struct MakeUnsigned{
+    using type = std::make_unsigned_t<Integer>;
+};
+template<>
+struct MakeUnsigned<__int128_t>{using type = __uint128_t;};
+template<>
+struct MakeUnsigned<__uint128_t>{using type = __uint128_t;};
+template<class Integer>
+using MakeUnsignedT = typename MakeUnsigned<std::remove_cv_t<Integer>>::type;
+
+constexpr std::uint64_t power_mod(
+    std::uint64_t value,
+    std::uint64_t exponent,
+    std::uint64_t modulus
+){
+    std::uint64_t result = 1;
+    while(exponent != 0){
+        if((exponent & 1U) != 0) result = result * value % modulus;
+        value = value * value % modulus;
+        exponent >>= 1;
+    }
+    return result;
 }
-[[gnu::always_inline]]static inline Limb subtract_equal_length(Limb*L,const Limb*M,const Limb*N,std::size_t O)noexcept{switch(O){case 2:return subtract_equal_fixed<2>(L,M,N);case 4:return subtract_equal_fixed<4>(L,M,N);case 8:return subtract_equal_fixed<8>(L,M,N);default:break;}
-#if defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__))
-unsigned char P;Limb*Q=L;const Limb*R=M;const Limb*S=N;std::size_t T=O;__asm__ volatile("clc\n\t""1:\n\t""movq (%[left]), %%rax\n\t""sbbq (%[right]), %%rax\n\t""movq %%rax, (%[output])\n\t""leaq 8(%[left]), %[left]\n\t""leaq 8(%[right]), %[right]\n\t""leaq 8(%[output]), %[output]\n\t""decq %[remaining]\n\t""jnz 1b\n\t""setc %[borrow]":[output]"+r"(Q),[left]"+r"(R),[right]"+r"(S),[remaining]"+r"(T),[borrow]"=qm"(P): :"rax","cc","memory");return P;
-#else
-Wide U=0;for(std::size_t V=0;V<O;++V){const Wide W=static_cast<Wide>(N[V])+U;const Wide X=M[V];L[V]=static_cast<Limb>(X-W);U=X<W;}return static_cast<Limb>(U);
-#endif
-}
-[[gnu::always_inline]]static inline Limb divide_two_by_one(Limb Y,Limb Z,Limb aa,Limb&ab)noexcept{
-#if defined(__x86_64__) && (defined(__GNUC__) || defined(__clang__))
-Limb ac;Limb ad;__asm__("divq %[divisor]":"=a"(ac),"=d"(ad):"a"(Z),"d"(Y),[divisor]"r"(aa):"cc");ab=ad;return ac;
-#else
-const Wide ae=(static_cast<Wide>(Y)<<64)|Z;const Limb af=static_cast<Limb>(ae/aa);ab=static_cast<Limb>(ae%aa);return af;
-#endif
-}
-class LimbStorage{
-std::array<Limb,inline_limb_capacity>ag{};
-std::unique_ptr<Limb[]>ah;
-std::size_t ai=0;
-std::size_t aj=inline_limb_capacity;
-Limb*pointer()noexcept{return ah?ah.get():ag.data();}
-const Limb*pointer()const noexcept{return ah?ah.get():ag.data();}
+
+template<std::uint32_t Modulus>
+class MontgomeryModInt{
+    static_assert((Modulus & 1U) != 0);
+    static_assert(Modulus < (std::uint32_t{1} << 30));
+
+    static consteval std::uint32_t montgomery_inverse(){
+        std::uint32_t inverse = Modulus;
+        for(int iteration = 0; iteration < 5; ++iteration){
+            inverse *= 2U - Modulus * inverse;
+        }
+        return 0U - inverse;
+    }
+
+    static constexpr std::uint32_t negative_inverse = montgomery_inverse();
+    static constexpr std::uint32_t r_squared = static_cast<std::uint32_t>(
+        (std::uint64_t{0} - Modulus) % Modulus
+    );
+    static constexpr std::uint32_t twice_modulus = Modulus * 2U;
+    std::uint32_t value_ = 0;
+
+    static constexpr std::uint32_t reduce(std::uint64_t value) noexcept{
+        return static_cast<std::uint32_t>(
+            (value
+                + static_cast<std::uint64_t>(
+                    static_cast<std::uint32_t>(value) * negative_inverse
+                ) * Modulus) >> 32
+        );
+    }
+
 public:
-LimbStorage()=default;
-LimbStorage(const LimbStorage&ak){resize(ak.ai);std::copy_n(ak.data(),ai,data());}
-LimbStorage(LimbStorage&&al)noexcept{if(al.ah){ah=std::move(al.ah);ai=al.ai;aj=al.aj;al.ai=0;al.aj=inline_limb_capacity;}else{ai=al.ai;std::copy_n(al.ag.data(),ai,ag.data());al.ai=0;}}
-LimbStorage&operator=(const LimbStorage&am){if(this==&am)return*this;resize(am.ai);std::copy_n(am.data(),ai,data());return*this;}
-LimbStorage&operator=(LimbStorage&&an)noexcept{if(this==&an)return*this;clear();ah.reset();aj=inline_limb_capacity;if(an.ah){ah=std::move(an.ah);ai=an.ai;aj=an.aj;an.ai=0;an.aj=inline_limb_capacity;}else{ai=an.ai;std::copy_n(an.ag.data(),ai,ag.data());an.ai=0;}return*this;}
-Limb*data()noexcept{return pointer();}
-const Limb*data()const noexcept{return pointer();}
-std::size_t size()const noexcept{return ai;}
-std::size_t capacity()const noexcept{return aj;}
-bool empty()const noexcept{return ai==0;}
-Limb&operator[](std::size_t ao)noexcept{return pointer()[ao];}
-const Limb&operator[](std::size_t ap)const noexcept{return pointer()[ap];}
-Limb&back()noexcept{return pointer()[ai-1];}
-const Limb&back()const noexcept{return pointer()[ai-1];}
-Limb*begin()noexcept{return data();}
-Limb*end()noexcept{return data()+ai;}
-const Limb*begin()const noexcept{return data();}
-const Limb*end()const noexcept{return data()+ai;}
-void reserve(std::size_t aq){if(aq<=aj)return;std::size_t ar=aj;while(ar<aq){if(ar>(std::numeric_limits<std::size_t>::max)()/2){ar=aq;break;}ar*=2;}auto as=std::make_unique_for_overwrite<Limb[]>(ar);std::copy_n(data(),ai,as.get());ah=std::move(as);aj=ar;}
-void resize(std::size_t at,Limb au=0){reserve(at);if(at>ai){std::fill(data()+ai,data()+at,au);}ai=at;}
-void assign(std::size_t av,Limb aw){resize(av);std::fill(data(),data()+ai,aw);}
-void clear()noexcept{ai=0;}
-void push_back(Limb ax){reserve(ai+1);data()[ai++]=ax;}
-void pop_back()noexcept{--ai;}};
-LimbStorage ay;
-bool az=false;
-static std::span<const Limb>trim_span(std::span<const Limb>aA){while(!aA.empty()&&aA.back()==0){aA=aA.first(aA.size()-1);}return aA;}
-void normalize()noexcept{while(!ay.empty()&&ay.back()==0)ay.pop_back();if(ay.empty())az=false;}
-template<exact_integer_detail::NativeInteger Integer>void assign_integral(Integer aB){ay.clear();az=false;using Value=std::remove_cv_t<Integer>;if constexpr(std::same_as<Value,bool>){if(aB)ay.push_back(1);return;}using Unsigned=exact_integer_detail::MakeUnsignedT<Value>;Unsigned aC=static_cast<Unsigned>(aB);if constexpr(std::numeric_limits<Value>::is_signed){if(aB<0){az=true;aC=Unsigned{0}-aC;}}if constexpr(std::numeric_limits<Unsigned>::digits<=64){if(aC!=0)ay.push_back(static_cast<Limb>(aC));}else{while(aC!=0){ay.push_back(static_cast<Limb>(aC));aC>>=64;}}}
-static int compare_magnitude(const ExactInteger&aD,const ExactInteger&aE){if(aD.ay.size()!=aE.ay.size()){return aD.ay.size()<aE.ay.size()?-1:1;}for(std::size_t aF=aD.ay.size();aF-->0;){if(aD.ay[aF]!=aE.ay[aF]){return aD.ay[aF]<aE.ay[aF]?-1:1;}}return 0;}
-void add_magnitude(const ExactInteger&aG){const std::size_t aH=ay.size();const std::size_t aI=std::max(aH,aG.ay.size());ay.resize(aI,0);Wide aJ=0;std::size_t aK=0;for(;aK<aG.ay.size();++aK){const Wide aL=static_cast<Wide>(ay[aK])+aG.ay[aK]+aJ;ay[aK]=static_cast<Limb>(aL);aJ=aL>>64;}while(aJ!=0&&aK<aI){const Wide aM=static_cast<Wide>(ay[aK])+aJ;ay[aK]=static_cast<Limb>(aM);aJ=aM>>64;++aK;}if(aJ!=0)ay.push_back(static_cast<Limb>(aJ));}
-void subtract_magnitude(const ExactInteger&aN){Wide aO=0;for(std::size_t aP=0;aP<ay.size();++aP){const Wide aQ=(aP<aN.ay.size()?static_cast<Wide>(aN.ay[aP]):0)+aO;const Wide aR=ay[aP];ay[aP]=static_cast<Limb>(aR-aQ);aO=aR<aQ;}normalize();}
-void add_magnitude_limb(Limb aS){if(aS==0)return;if(ay.empty()){ay.push_back(aS);return;}Wide aT=aS;for(std::size_t aU=0;aU<ay.size()&&aT!=0;++aU){const Wide aV=static_cast<Wide>(ay[aU])+aT;ay[aU]=static_cast<Limb>(aV);aT=aV>>64;}if(aT!=0)ay.push_back(static_cast<Limb>(aT));}
-void multiply_magnitude_limb(Limb aW){if(aW==0||ay.empty()){ay.clear();az=false;return;}if(aW==1)return;Wide aX=0;for(Limb&aY:ay){const Wide aZ=static_cast<Wide>(aY)*aW+aX;aY=static_cast<Limb>(aZ);aX=aZ>>64;}if(aX!=0)ay.push_back(static_cast<Limb>(aX));}
-Limb divide_magnitude_limb_inplace(Limb ba){Limb bb=0;for(std::size_t bc=ay.size();bc-->0;){ay[bc]=divide_two_by_one(bb,ay[bc],ba,bb);}normalize();return bb;}
-static std::vector<Limb>add_vectors(std::span<const Limb>bd,std::span<const Limb>be){const std::size_t bf=std::max(bd.size(),be.size());std::vector<Limb>bg(bf+1,0);Wide bh=0;for(std::size_t bi=0;bi<bf;++bi){const Wide bj=bh+(bi<bd.size()?bd[bi]:0)+(bi<be.size()?be[bi]:0);bg[bi]=static_cast<Limb>(bj);bh=bj>>64;}bg[bf]=static_cast<Limb>(bh);while(!bg.empty()&&bg.back()==0)bg.pop_back();return bg;}
-static void subtract_vector_inplace(std::vector<Limb>&bk,std::span<const Limb>bl){Wide bm=0;for(std::size_t bn=0;bn<bk.size();++bn){const Wide bo=(bn<bl.size()?static_cast<Wide>(bl[bn]):0)+bm;const Wide bp=bk[bn];bk[bn]=static_cast<Limb>(bp-bo);bm=bp<bo;}while(!bk.empty()&&bk.back()==0)bk.pop_back();}
-template<std::size_t LeftSize,std::size_t RightSize>[[gnu::always_inline]]static inline void schoolbook_multiply_fixed(const Limb*bq,const Limb*br,Limb*bs)noexcept{std::fill_n(bs,LeftSize+RightSize,Limb{0});for(std::size_t bt=0;bt<RightSize;++bt){Wide bu=0;const Limb bv=br[bt];for(std::size_t bw=0;bw<LeftSize;++bw){const std::size_t bx=bw+bt;const Wide bz=static_cast<Wide>(bq[bw])*bv+bs[bx]+bu;bs[bx]=static_cast<Limb>(bz);bu=bz>>64;}bs[bt+LeftSize]=static_cast<Limb>(bu);}}
-static void schoolbook_multiply_raw_bmi2(const Limb*bA,std::size_t bB,const Limb*bC,std::size_t bD,Limb*bE){if(bB==bD){switch(bB){case 2:schoolbook_multiply_fixed<2,2>(bA,bC,bE);return;case 3:schoolbook_multiply_fixed<3,3>(bA,bC,bE);return;case 4:schoolbook_multiply_fixed<4,4>(bA,bC,bE);return;default:break;}}std::fill(bE,bE+bB+bD,0);if(bB<bD){std::swap(bA,bC);std::swap(bB,bD);}for(std::size_t bF=0;bF<bD;++bF){const Limb bG=bC[bF];
-#if defined(__x86_64__) && defined(__BMI2__) && (defined(__GNUC__) || defined(__clang__))
-Limb bH=0;for(std::size_t bI=0;bI<bB;++bI){const std::size_t bJ=bI+bF;unsigned long long bK;const unsigned long long bL=_mulx_u64(static_cast<unsigned long long>(bA[bI]),static_cast<unsigned long long>(bG),&bK);unsigned long long bM;unsigned char bN=_addcarry_u64(0,bL,static_cast<unsigned long long>(bE[bJ]),&bM);bK+=bN;unsigned long long bO;bN=_addcarry_u64(0,bM,static_cast<unsigned long long>(bH),&bO);bK+=bN;bE[bJ]=static_cast<Limb>(bO);bH=static_cast<Limb>(bK);}bE[bF+bB]=bH;
-#else
-Wide bP=0;for(std::size_t bQ=0;bQ<bB;++bQ){const std::size_t bR=bQ+bF;const Wide bS=static_cast<Wide>(bA[bQ])*bG+bE[bR]+bP;bE[bR]=static_cast<Limb>(bS);bP=bS>>64;}bE[bF+bB]=static_cast<Limb>(bP);
-#endif
-}}
-static void schoolbook_multiply_raw(const Limb*bT,std::size_t bU,const Limb*bV,std::size_t bW,Limb*bX){if(bU==bW){switch(bU){case 2:schoolbook_multiply_fixed<2,2>(bT,bV,bX);return;case 3:schoolbook_multiply_fixed<3,3>(bT,bV,bX);return;case 4:schoolbook_multiply_fixed<4,4>(bT,bV,bX);return;default:break;}}std::fill(bX,bX+bU+bW,0);if(bU<bW){std::swap(bT,bV);std::swap(bU,bW);}for(std::size_t bY=0;bY<bW;++bY){Wide bZ=0;const Limb ca=bV[bY];for(std::size_t cb=0;cb<bU;++cb){const std::size_t cd=cb+bY;const Wide ce=static_cast<Wide>(bT[cb])*ca+bX[cd]+bZ;bX[cd]=static_cast<Limb>(ce);bZ=ce>>64;}bX[bY+bU]=static_cast<Limb>(bZ);}}
-static int compare_equal_arrays(const Limb*cf,const Limb*cg,std::size_t ch)noexcept{for(std::size_t ci=ch;ci-->0;){if(cf[ci]!=cg[ci]){return cf[ci]<cg[ci]?-1:1;}}return 0;}
-static void subtract_equal_arrays(Limb*cj,const Limb*ck,const Limb*cl,std::size_t cm)noexcept{if(cm==0)return;(void)subtract_equal_length(cj,ck,cl,cm);}
-static void add_array_at(Limb*cn,std::size_t co,const Limb*cp,std::size_t cq,std::size_t cr)noexcept{Wide cs=0;std::size_t ct=0;for(;ct<cq;++ct){const std::size_t cu=cr+ct;const Wide cv=static_cast<Wide>(cn[cu])+cp[ct]+cs;cn[cu]=static_cast<Limb>(cv);cs=cv>>64;}std::size_t cw=cr+ct;while(cs!=0&&cw<co){const Wide cx=static_cast<Wide>(cn[cw])+cs;cn[cw]=static_cast<Limb>(cx);cs=cx>>64;++cw;}}
-static void subtract_array_at(Limb*cy,std::size_t cz,const Limb*cA,std::size_t cB,std::size_t cC)noexcept{Wide cD=0;std::size_t cE=0;for(;cE<cB;++cE){const std::size_t cF=cC+cE;const Wide cG=static_cast<Wide>(cA[cE])+cD;const Wide cH=cy[cF];cy[cF]=static_cast<Limb>(cH-cG);cD=cH<cG;}std::size_t cI=cC+cE;while(cD!=0&&cI<cz){const Limb cJ=cy[cI];cy[cI]=cJ-1;cD=cJ==0;++cI;}}
-static std::size_t karatsuba_scratch_size(std::size_t cK)noexcept{return cK*8+64;}
-static void karatsuba_equal_raw(const Limb*cL,const Limb*cM,std::size_t cN,Limb*cO,Limb*cP){constexpr std::size_t cQ=16;if(cN<=cQ){schoolbook_multiply_raw_bmi2(cL,cN,cM,cN,cO);return;}const std::size_t cR=cN/2;Limb*cS=cP;Limb*cT=cS+cN;Limb*cU=cT+cN;Limb*cV=cU+cR;Limb*cW=cV+cR;Limb*cX=cW+cN;karatsuba_equal_raw(cL,cM,cR,cS,cX);karatsuba_equal_raw(cL+cR,cM+cR,cR,cT,cX);const int cY=compare_equal_arrays(cL+cR,cL,cR);if(cY>=0){subtract_equal_arrays(cU,cL+cR,cL,cR);}else{subtract_equal_arrays(cU,cL,cL+cR,cR);}const int cZ=compare_equal_arrays(cM,cM+cR,cR);if(cZ>=0){subtract_equal_arrays(cV,cM,cM+cR,cR);}else{subtract_equal_arrays(cV,cM+cR,cM,cR);}karatsuba_equal_raw(cU,cV,cR,cW,cX);std::fill(cO,cO+cN*2,0);std::copy_n(cS,cN,cO);std::copy_n(cT,cN,cO+cN);add_array_at(cO,cN*2,cS,cN,cR);add_array_at(cO,cN*2,cT,cN,cR);if((cY<0)!=(cZ<0)){subtract_array_at(cO,cN*2,cW,cN,cR);}else{add_array_at(cO,cN*2,cW,cN,cR);}}
-static bool can_use_power_two_karatsuba(std::size_t da,std::size_t db)noexcept{const std::size_t dc=std::min(da,db);const std::size_t dd=std::max(da,db);if(dc<64||dd>dc*2)return false;const std::size_t de=std::bit_ceil(dd);return dc*4>=de*3;}
-static void power_two_karatsuba_into(std::span<const Limb>df,std::span<const Limb>dg,Limb*dh,std::size_t di){
-struct KaratsubaScratch{std::vector<Limb>dj;std::vector<Limb>dk;std::vector<Limb>dl;};static thread_local KaratsubaScratch scratch;scratch.dj.resize(karatsuba_scratch_size(di));const Limb*dm=df.data();const Limb*dn=dg.data();if(df.size()!=di){scratch.dk.assign(di,0);std::copy(df.begin(),df.end(),scratch.dk.begin());dm=scratch.dk.data();}if(dg.size()!=di){scratch.dl.assign(di,0);std::copy(dg.begin(),dg.end(),scratch.dl.begin());dn=scratch.dl.data();}karatsuba_equal_raw(dm,dn,di,dh,scratch.dj.data());}
-static std::vector<Limb>schoolbook_multiply(std::span<const Limb>dp,std::span<const Limb>dq){dp=trim_span(dp);dq=trim_span(dq);if(dp.empty()||dq.empty())return{};std::vector<Limb>dr(dp.size()+dq.size(),0);schoolbook_multiply_raw(dp.data(),dp.size(),dq.data(),dq.size(),dr.data());while(!dr.empty()&&dr.back()==0)dr.pop_back();return dr;}
-static void add_shifted(std::vector<Limb>&ds,std::span<const Limb>dt,std::size_t du){if(dt.empty())return;const std::size_t dv=du+dt.size();if(ds.size()<dv+1)ds.resize(dv+1,0);Wide dw=0;std::size_t dx=0;for(;dx<dt.size();++dx){const std::size_t dy=du+dx;const Wide dz=static_cast<Wide>(ds[dy])+dt[dx]+dw;ds[dy]=static_cast<Limb>(dz);dw=dz>>64;}std::size_t dA=du+dx;while(dw!=0){const Wide dB=static_cast<Wide>(ds[dA])+dw;ds[dA]=static_cast<Limb>(dB);dw=dB>>64;++dA;if(dA==ds.size()&&dw!=0){ds.push_back(0);}}}
-static std::vector<Limb>multiply_recursive(std::span<const Limb>dC,std::span<const Limb>dD){dC=trim_span(dC);dD=trim_span(dD);if(dC.empty()||dD.empty())return{};if(dC.size()<dD.size())std::swap(dC,dD);constexpr std::size_t dE=36;if(dD.size()<=dE)return schoolbook_multiply(dC,dD);if(dC.size()>dD.size()*2){std::vector<Limb>dF(dC.size()+dD.size()+1,0);for(std::size_t dG=0;dG<dC.size();dG+=dD.size()){auto dH=multiply_recursive(dC.subspan(dG,std::min(dD.size(),dC.size()-dG)),dD);add_shifted(dF,dH,dG);}while(!dF.empty()&&dF.back()==0)dF.pop_back();return dF;}const std::size_t dF=dC.size()/2;const auto dG=dC.first(dF);const auto dH=dC.subspan(dF);const auto dI=dD.first(std::min(dF,dD.size()));const auto dJ=dD.subspan(std::min(dF,dD.size()));auto dK=multiply_recursive(dG,dI);auto dL=multiply_recursive(dH,dJ);auto dM=add_vectors(dG,dH);auto dN=add_vectors(dI,dJ);auto dO=multiply_recursive(dM,dN);subtract_vector_inplace(dO,dK);subtract_vector_inplace(dO,dL);std::vector<Limb>dP(dC.size()+dD.size()+1,0);add_shifted(dP,dK,0);add_shifted(dP,dO,dF);add_shifted(dP,dL,dF*2);while(!dP.empty()&&dP.back()==0)dP.pop_back();return dP;}
-static ExactInteger add_values(const ExactInteger&dQ,const ExactInteger&dR){if(dQ.is_zero())return dR;if(dR.is_zero())return dQ;ExactInteger dS;if(dQ.az==dR.az){const std::size_t dT=std::max(dQ.ay.size(),dR.ay.size());dS.ay.resize(dT+1,0);Wide dU=0;std::size_t dV=0;const std::size_t dW=std::min(dQ.ay.size(),dR.ay.size());for(;dV<dW;++dV){const Wide dX=static_cast<Wide>(dQ.ay[dV])+dR.ay[dV]+dU;dS.ay[dV]=static_cast<Limb>(dX);dU=dX>>64;}const ExactInteger&dY=dQ.ay.size()>=dR.ay.size()?dQ:dR;for(;dV<dT;++dV){const Wide dZ=static_cast<Wide>(dY.ay[dV])+dU;dS.ay[dV]=static_cast<Limb>(dZ);dU=dZ>>64;}dS.ay[dT]=static_cast<Limb>(dU);dS.az=dQ.az;dS.normalize();return dS;}const int ea=compare_magnitude(dQ,dR);if(ea==0)return dS;const ExactInteger&eb=ea>0?dQ:dR;const ExactInteger&ec=ea>0?dR:dQ;dS.ay.resize(eb.ay.size(),0);Wide ed=0;std::size_t ee=0;for(;ee<ec.ay.size();++ee){const Wide ef=static_cast<Wide>(ec.ay[ee])+ed;const Wide eg=eb.ay[ee];dS.ay[ee]=static_cast<Limb>(eg-ef);ed=eg<ef;}for(;ee<eb.ay.size();++ee){const Wide eh=eb.ay[ee];dS.ay[ee]=static_cast<Limb>(eh-ed);ed=eh<ed;}dS.az=eb.az;dS.normalize();return dS;}
-static ExactInteger subtract_values(const ExactInteger&ei,const ExactInteger&ej){if(ej.is_zero())return ei;if(ei.is_zero()){ExactInteger ek=ej;ek.az=!ek.az;return ek;}ExactInteger el;if(ei.az!=ej.az){const std::size_t em=std::max(ei.ay.size(),ej.ay.size());el.ay.resize(em+1,0);Wide en=0;std::size_t eo=0;const std::size_t ep=std::min(ei.ay.size(),ej.ay.size());for(;eo<ep;++eo){const Wide eq=static_cast<Wide>(ei.ay[eo])+ej.ay[eo]+en;el.ay[eo]=static_cast<Limb>(eq);en=eq>>64;}const ExactInteger&er=ei.ay.size()>=ej.ay.size()?ei:ej;for(;eo<em;++eo){const Wide es=static_cast<Wide>(er.ay[eo])+en;el.ay[eo]=static_cast<Limb>(es);en=es>>64;}el.ay[em]=static_cast<Limb>(en);el.az=ei.az;el.normalize();return el;}const int et=compare_magnitude(ei,ej);if(et==0)return el;const ExactInteger&eu=et>0?ei:ej;const ExactInteger&ev=et>0?ej:ei;el.ay.resize(eu.ay.size(),0);Wide ew=0;std::size_t ex=0;for(;ex<ev.ay.size();++ex){const Wide ey=static_cast<Wide>(ev.ay[ex])+ew;const Wide ez=eu.ay[ex];el.ay[ex]=static_cast<Limb>(ez-ey);ew=ez<ey;}for(;ex<eu.ay.size();++ex){const Wide eA=eu.ay[ex];el.ay[ex]=static_cast<Limb>(eA-ew);ew=eA<ew;}el.az=et>0?ei.az:!ei.az;el.normalize();return el;}
-static ExactInteger schoolbook_multiply_value(std::span<const Limb>eB,std::span<const Limb>eC,bool eD){eB=trim_span(eB);eC=trim_span(eC);ExactInteger eE;if(eB.empty()||eC.empty())return eE;eE.ay.assign(eB.size()+eC.size(),0);schoolbook_multiply_raw(eB.data(),eB.size(),eC.data(),eC.size(),eE.ay.data());eE.az=eD;eE.normalize();return eE;}
-static ExactInteger multiply_values(const ExactInteger&eF,const ExactInteger&eG){if(eF.is_zero()||eG.is_zero())return ExactInteger{};const bool eH=eF.az!=eG.az;if(eG.ay.size()==1){ExactInteger eI=eF;eI.multiply_magnitude_limb(eG.ay[0]);eI.az=eH;return eI;}if(eF.ay.size()==1){ExactInteger eJ=eG;eJ.multiply_magnitude_limb(eF.ay[0]);eJ.az=eH;return eJ;}constexpr std::size_t eK=36;const std::size_t eL=std::min(eF.ay.size(),eG.ay.size());const std::size_t eM=std::max(eF.ay.size(),eG.ay.size());if(can_use_power_two_karatsuba(eF.ay.size(),eG.ay.size())){const std::size_t eN=std::bit_ceil(eM);ExactInteger eO;eO.ay.assign(eN*2,0);power_two_karatsuba_into(std::span<const Limb>(eF.ay.data(),eF.ay.size()),std::span<const Limb>(eG.ay.data(),eG.ay.size()),eO.ay.data(),eN);eO.az=eH;eO.normalize();return eO;}if(eL<=eK){return schoolbook_multiply_value(std::span<const Limb>(eF.ay.data(),eF.ay.size()),std::span<const Limb>(eG.ay.data(),eG.ay.size()),eH);}auto eP=multiply_recursive(std::span<const Limb>(eF.ay.data(),eF.ay.size()),std::span<const Limb>(eG.ay.data(),eG.ay.size()));return from_vector(std::move(eP),eH);}
-static ExactInteger from_vector(std::vector<Limb>&&eQ,bool eR=false){ExactInteger eS;eS.ay.resize(eQ.size());std::copy(eQ.begin(),eQ.end(),eS.ay.begin());eS.az=eR&&!eQ.empty();eS.normalize();return eS;}
-static std::vector<Limb>normalized_left_shift(std::span<const Limb>eT,unsigned eU,bool eV){std::vector<Limb>eW(eT.size()+static_cast<std::size_t>(eV),0);if(eU==0){std::copy(eT.begin(),eT.end(),eW.begin());return eW;}Limb eX=0;for(std::size_t eY=0;eY<eT.size();++eY){const Limb eZ=eT[eY];eW[eY]=(eZ<<eU)|eX;eX=eZ>>(64-eU);}if(eV)eW[eT.size()]=eX;return eW;}
-static std::vector<Limb>normalized_right_shift(std::span<const Limb>fa,unsigned fb){std::vector<Limb>fc(fa.size(),0);if(fb==0){std::copy(fa.begin(),fa.end(),fc.begin());}else{Limb fd=0;for(std::size_t fe=fa.size();fe-->0;){const Limb ff=fa[fe];fc[fe]=(ff>>fb)|fd;fd=ff<<(64-fb);}}while(!fc.empty()&&fc.back()==0)fc.pop_back();return fc;}
-static void divide_magnitudes_into(const ExactInteger&fg,const ExactInteger&fh,ExactInteger*fi,ExactInteger*fj){const int fk=compare_magnitude(fg,fh);if(fk<0){if(fi){fi->ay.clear();fi->az=false;}if(fj){*fj=fg;fj->az=false;}return;}if(fk==0){if(fi)*fi=1;if(fj){fj->ay.clear();fj->az=false;}return;}if(fh.ay.size()==1){Limb fl=0;if(fi){fi->ay.resize(fg.ay.size());std::copy(fg.ay.begin(),fg.ay.end(),fi->ay.begin());fi->az=false;fl=fi->divide_magnitude_limb_inplace(fh.ay[0]);}else{for(std::size_t fm=fg.ay.size();fm-->0;){(void)divide_two_by_one(fl,fg.ay[fm],fh.ay[0],fl);}}if(fj)*fj=fl;return;}const std::size_t fn=fh.ay.size();const std::size_t fo=fg.ay.size();const std::size_t fp=fo-fn;if(fn>8192||(fo>fn*2&&fn>=4096)||(fo>fn*4&&fn>=2048)||(fo>fn*8&&fn>=1024)){ExactInteger f0=fh;f0.az=false;const std::size_t f1=f0.bit_length(),f2=fo>fn*2?fn*64+80:fg.bit_length()-f1+16;const Limb f3=(f0>>(f1-64)).checked_to<Limb>();ExactInteger f4((~Wide{0})/f3);std::size_t f5=64;const std::size_t f6=std::max<std::size_t>(64,f2);while(f5<f6){const std::size_t f7=std::min(f5*2,f6),f8=f1+f7;ExactInteger f9=f4<<(f7-f5);f4=(f9*((ExactInteger(1)<<(f8+1))-f0*f9))>>f8;f5=f7;}const std::size_t f7=f1+f5;if(fo>fn*2){ExactInteger f8,f9,ga;if(fi){fi->ay.assign(fp+1,0);fi->az=false;}for(std::size_t gb=fo;gb!=0;){const std::size_t gc=gb>fn?gb-fn:0,gd=gb-gc;f8.ay.assign(ga.ay.size()+gd,0);std::copy_n(fg.ay.data()+gc,gd,f8.ay.data());std::copy(ga.ay.begin(),ga.ay.end(),f8.ay.begin()+static_cast<std::ptrdiff_t>(gd));f8.az=false;f8.normalize();f9=(f8*f4)>>f7;ga=f8-f9*f0;while(ga.is_negative()){f9-=1;ga+=f0;}while(compare_magnitude(ga,f0)>=0){f9+=1;ga-=f0;}if(fi)std::copy(f9.ay.begin(),f9.ay.end(),fi->ay.begin()+static_cast<std::ptrdiff_t>(gc));gb=gc;}if(fi)fi->normalize();if(fj){*fj=std::move(ga);fj->az=false;}return;}ExactInteger f8=fg;f8.az=false;ExactInteger f9=(f8*f4)>>f7,ga=f8-f9*f0;while(ga.is_negative()){f9-=1;ga+=f0;}while(compare_magnitude(ga,f0)>=0){f9+=1;ga-=f0;}if(fi)*fi=std::move(f9);if(fj)*fj=std::move(ga);return;}const unsigned fq=std::countl_zero(fh.ay.back());
-struct DivisionScratch{std::vector<Limb>fr;std::vector<Limb>fs;};static thread_local DivisionScratch scratch;auto&ft=scratch.fr;auto&fu=scratch.fs;ft.resize(fn);fu.resize(fo+1);if(fq==0){std::copy_n(fh.ay.data(),fn,ft.data());std::copy_n(fg.ay.data(),fo,fu.data());fu[fo]=0;}else{Limb fv=0;for(std::size_t fw=0;fw<fn;++fw){const Limb fx=fh.ay[fw];ft[fw]=(fx<<fq)|fv;fv=fx>>(64-fq);}fv=0;for(std::size_t fy=0;fy<fo;++fy){const Limb fz=fg.ay[fy];fu[fy]=(fz<<fq)|fv;fv=fz>>(64-fq);}fu[fo]=fv;}if(fi){fi->ay.resize(fp+1,0);fi->az=false;}constexpr Wide fA=Wide{1}<<64;const Limb fB=ft[fn-1];const Limb fC=ft[fn-2];for(std::size_t fD=fp+1;fD-->0;){const std::size_t fE=fD;Limb fF;Wide fG;if(fu[fE+fn]==fB){fF=(std::numeric_limits<Limb>::max)();fG=static_cast<Wide>(fu[fE+fn-1])+fB;}else{Limb fH=0;fF=divide_two_by_one(fu[fE+fn],fu[fE+fn-1],fB,fH);fG=fH;}while(fG<fA&&static_cast<Wide>(fF)*fC>(fG<<64)+fu[fE+fn-2]){--fF;fG+=fB;}
-#if defined(__x86_64__) && defined(__BMI2__) && (defined(__GNUC__) || defined(__clang__))
-Limb fI=0;unsigned char fJ=0;for(std::size_t fK=0;fK<fn;++fK){unsigned long long fL;const unsigned long long fM=_mulx_u64(static_cast<unsigned long long>(fF),static_cast<unsigned long long>(ft[fK]),&fL);unsigned long long fN;const unsigned char fO=_addcarry_u64(0,fM,static_cast<unsigned long long>(fI),&fN);fL+=fO;unsigned long long fP;fJ=_subborrow_u64(fJ,static_cast<unsigned long long>(fu[fE+fK]),fN,&fP);fu[fE+fK]=static_cast<Limb>(fP);fI=static_cast<Limb>(fL);}unsigned long long fQ;unsigned char fR=_subborrow_u64(0,static_cast<unsigned long long>(fu[fE+fn]),static_cast<unsigned long long>(fI),&fQ);unsigned long long fS;fR=_subborrow_u64(fR,fQ,static_cast<unsigned long long>(fJ),&fS);const bool fT=fR!=0;fu[fE+fn]=static_cast<Limb>(fS);if(fT){--fF;unsigned char fU=0;for(std::size_t fV=0;fV<fn;++fV){unsigned long long fW;fU=_addcarry_u64(fU,static_cast<unsigned long long>(fu[fE+fV]),static_cast<unsigned long long>(ft[fV]),&fW);fu[fE+fV]=static_cast<Limb>(fW);}fu[fE+fn]+=static_cast<Limb>(fU);}
-#else
-Wide fX=0;Wide fY=0;for(std::size_t fZ=0;fZ<fn;++fZ){const Wide ga=static_cast<Wide>(fF)*ft[fZ]+fX;fX=ga>>64;const Wide gb=static_cast<Limb>(ga)+fY;const Wide gc=fu[fE+fZ];fu[fE+fZ]=static_cast<Limb>(gc-gb);fY=gc<gb;}const Wide gd=fX+fY;const bool ge=static_cast<Wide>(fu[fE+fn])<gd;fu[fE+fn]=static_cast<Limb>(static_cast<Wide>(fu[fE+fn])-gd);if(ge){--fF;Wide gf=0;for(std::size_t gg=0;gg<fn;++gg){const Wide gh=static_cast<Wide>(fu[fE+gg])+ft[gg]+gf;fu[fE+gg]=static_cast<Limb>(gh);gf=gh>>64;}fu[fE+fn]+=static_cast<Limb>(gf);}
-#endif
-if(fi)fi->ay[fE]=fF;}if(fi)fi->normalize();if(fj){fj->ay.resize(fn,0);fj->az=false;if(fq==0){std::copy_n(fu.data(),fn,fj->ay.data());}else{Limb gi=0;for(std::size_t gj=fn;gj-->0;){const Limb gk=fu[gj];fj->ay[gj]=(gk>>fq)|gi;gi=gk<<(64-fq);}}fj->normalize();}}
-void add_magnitude_one(){add_magnitude_limb(1);}
-template<class Unsigned>Unsigned magnitude_to_unsigned()const{static_assert(!std::numeric_limits<Unsigned>::is_signed);Unsigned gl=0;if constexpr(std::numeric_limits<Unsigned>::digits<=64){if(!ay.empty())gl=static_cast<Unsigned>(ay[0]);}else{for(std::size_t gm=ay.size();gm-->0;){gl=static_cast<Unsigned>(gl<<64);gl=static_cast<Unsigned>(gl|ay[gm]);}}return gl;}
-public:
-ExactInteger()=default;
-template<exact_integer_detail::NativeInteger Integer>ExactInteger(Integer gn){assign_integral(gn);}
-template<exact_integer_detail::NativeInteger Integer>ExactInteger&operator=(Integer go){assign_integral(go);return*this;}
-bool is_zero()const noexcept{return ay.empty();}
-bool is_negative()const noexcept{return az;}
-std::size_t bit_length()const noexcept{if(ay.empty())return 0;return(ay.size()-1)*64+static_cast<std::size_t>(64-std::countl_zero(ay.back()));}
-ExactInteger absolute()const{ExactInteger gp=*this;gp.az=false;return gp;}
-template<exact_integer_detail::NativeInteger Integer>Integer checked_to()const{using Value=std::remove_cv_t<Integer>;if constexpr(std::same_as<Value,bool>){if(*this==0)return false;if(*this==1)return true;throw std::overflow_error("ExactInteger does not fit target integer type");}else{const ExactInteger gq=std::numeric_limits<Value>::is_signed?ExactInteger((std::numeric_limits<Value>::min)()):ExactInteger(0);const ExactInteger gr((std::numeric_limits<Value>::max)());if(*this<gq||*this>gr){throw std::overflow_error("ExactInteger does not fit target integer type");}using Unsigned=exact_integer_detail::MakeUnsignedT<Value>;const Unsigned gs=magnitude_to_unsigned<Unsigned>();if constexpr(!std::numeric_limits<Value>::is_signed){return static_cast<Value>(gs);}else{if(!az)return static_cast<Value>(gs);const Unsigned gt=static_cast<Unsigned>((std::numeric_limits<Value>::max)())+Unsigned{1};if(gs==gt){return(std::numeric_limits<Value>::min)();}return static_cast<Value>(-static_cast<Value>(gs));}}}
-std::pair<ExactInteger,Limb>divmod(Limb gu)const{if(gu==0){throw std::domain_error("ExactInteger division by zero");}ExactInteger gv=absolute();const Limb gw=gv.divide_magnitude_limb_inplace(gu);gv.az=az&&!gv.is_zero();return{std::move(gv),gw};}
-static std::pair<ExactInteger,ExactInteger>divmod(const ExactInteger&gx,const ExactInteger&gy){if(gy.is_zero()){throw std::domain_error("ExactInteger division by zero");}std::pair<ExactInteger,ExactInteger>gz;divide_magnitudes_into(gx,gy,&gz.first,&gz.second);gz.first.az=!gz.first.is_zero()&&gx.az!=gy.az;gz.second.az=!gz.second.is_zero()&&gx.az;return gz;}
-void assign_quotient(const ExactInteger&gA,const ExactInteger&gB){if(gB.is_zero()){throw std::domain_error("ExactInteger division by zero");}if(this==&gA||this==&gB){ExactInteger gC;divide_magnitudes_into(gA,gB,&gC,nullptr);gC.az=!gC.is_zero()&&gA.az!=gB.az;*this=std::move(gC);return;}divide_magnitudes_into(gA,gB,this,nullptr);az=!is_zero()&&gA.az!=gB.az;}
-void assign_remainder(const ExactInteger&gD,const ExactInteger&gE){if(gE.is_zero()){throw std::domain_error("ExactInteger division by zero");}if(this==&gD||this==&gE){ExactInteger gF;divide_magnitudes_into(gD,gE,nullptr,&gF);gF.az=!gF.is_zero()&&gD.az;*this=std::move(gF);return;}divide_magnitudes_into(gD,gE,nullptr,this);az=!is_zero()&&gD.az;}
-[[gnu::always_inline]]inline void assign_sum(const ExactInteger&gG,const ExactInteger&gH){if(this==&gG){*this+=gH;return;}if(this==&gH){*this+=gG;return;}if(gG.is_zero()){*this=gH;return;}if(gH.is_zero()){*this=gG;return;}if(gG.az!=gH.az){const int gI=compare_magnitude(gG,gH);if(gI==0){ay.clear();az=false;return;}const ExactInteger&gJ=gI>0?gG:gH;const ExactInteger&gK=gI>0?gH:gG;ay.resize(gJ.ay.size(),0);if(gJ.ay.size()==gK.ay.size()){(void)subtract_equal_length(ay.data(),gJ.ay.data(),gK.ay.data(),gJ.ay.size());az=gJ.az;normalize();return;}Wide gL=0;std::size_t gM=0;for(;gM<gK.ay.size();++gM){const Wide gN=static_cast<Wide>(gK.ay[gM])+gL;const Wide gO=gJ.ay[gM];ay[gM]=static_cast<Limb>(gO-gN);gL=gO<gN;}for(;gM<gJ.ay.size();++gM){const Wide gP=gJ.ay[gM];ay[gM]=static_cast<Limb>(gP-gL);gL=gP<gL;}az=gJ.az;normalize();return;}const std::size_t gQ=std::max(gG.ay.size(),gH.ay.size());ay.resize(gQ+1,0);if(gG.ay.size()==gH.ay.size()){ay[gQ]=add_equal_length(ay.data(),gG.ay.data(),gH.ay.data(),gQ);az=gG.az;normalize();return;}Wide gR=0;std::size_t gS=0;const std::size_t gT=std::min(gG.ay.size(),gH.ay.size());for(;gS<gT;++gS){const Wide gU=static_cast<Wide>(gG.ay[gS])+gH.ay[gS]+gR;ay[gS]=static_cast<Limb>(gU);gR=gU>>64;}const ExactInteger&gV=gG.ay.size()>=gH.ay.size()?gG:gH;for(;gS<gQ;++gS){const Wide gW=static_cast<Wide>(gV.ay[gS])+gR;ay[gS]=static_cast<Limb>(gW);gR=gW>>64;}ay[gQ]=static_cast<Limb>(gR);az=gG.az;normalize();}
-[[gnu::always_inline]]inline void assign_difference(const ExactInteger&gX,const ExactInteger&gY){if(this==&gX){*this-=gY;return;}if(this==&gY){ExactInteger gZ=subtract_values(gX,gY);*this=std::move(gZ);return;}if(gY.is_zero()){*this=gX;return;}if(gX.is_zero()){*this=gY;if(!is_zero())az=!az;return;}if(gX.az!=gY.az){const std::size_t ha=std::max(gX.ay.size(),gY.ay.size());ay.resize(ha+1,0);if(gX.ay.size()==gY.ay.size()){ay[ha]=add_equal_length(ay.data(),gX.ay.data(),gY.ay.data(),ha);az=gX.az;normalize();return;}Wide hb=0;std::size_t hc=0;const std::size_t hd=std::min(gX.ay.size(),gY.ay.size());for(;hc<hd;++hc){const Wide he=static_cast<Wide>(gX.ay[hc])+gY.ay[hc]+hb;ay[hc]=static_cast<Limb>(he);hb=he>>64;}const ExactInteger&hf=gX.ay.size()>=gY.ay.size()?gX:gY;for(;hc<ha;++hc){const Wide hg=static_cast<Wide>(hf.ay[hc])+hb;ay[hc]=static_cast<Limb>(hg);hb=hg>>64;}ay[ha]=static_cast<Limb>(hb);az=gX.az;normalize();return;}const int hh=compare_magnitude(gX,gY);if(hh==0){ay.clear();az=false;return;}const ExactInteger&hi=hh>0?gX:gY;const ExactInteger&hj=hh>0?gY:gX;ay.resize(hi.ay.size(),0);if(hi.ay.size()==hj.ay.size()){(void)subtract_equal_length(ay.data(),hi.ay.data(),hj.ay.data(),hi.ay.size());az=hh>0?gX.az:!gX.az;normalize();return;}Wide hk=0;std::size_t hl=0;for(;hl<hj.ay.size();++hl){const Wide hm=static_cast<Wide>(hj.ay[hl])+hk;const Wide hn=hi.ay[hl];ay[hl]=static_cast<Limb>(hn-hm);hk=hn<hm;}for(;hl<hi.ay.size();++hl){const Wide ho=hi.ay[hl];ay[hl]=static_cast<Limb>(ho-hk);hk=ho<hk;}az=hh>0?gX.az:!gX.az;normalize();}
-void assign_product(const ExactInteger&hp,const ExactInteger&hq){if(this==&hp||this==&hq){ExactInteger hr=multiply_values(hp,hq);*this=std::move(hr);return;}if(hp.is_zero()||hq.is_zero()){ay.clear();az=false;return;}const bool hs=hp.az!=hq.az;if(hq.ay.size()==1){*this=hp;multiply_magnitude_limb(hq.ay[0]);az=hs;return;}if(hp.ay.size()==1){*this=hq;multiply_magnitude_limb(hp.ay[0]);az=hs;return;}constexpr std::size_t ht=36;const std::size_t hu=std::min(hp.ay.size(),hq.ay.size());const std::size_t hv=std::max(hp.ay.size(),hq.ay.size());if(can_use_power_two_karatsuba(hp.ay.size(),hq.ay.size())){const std::size_t hw=std::bit_ceil(hv);ay.assign(hw*2,0);power_two_karatsuba_into(std::span<const Limb>(hp.ay.data(),hp.ay.size()),std::span<const Limb>(hq.ay.data(),hq.ay.size()),ay.data(),hw);az=hs;normalize();return;}if(hu<=ht){const ExactInteger*hx=&hp;const ExactInteger*hy=&hq;if(hp.ay.size()<hq.ay.size()){std::swap(hx,hy);}ay.assign(hx->ay.size()+hy->ay.size(),0);schoolbook_multiply_raw(hx->ay.data(),hx->ay.size(),hy->ay.data(),hy->ay.size(),ay.data());az=hs;normalize();return;}auto hz=multiply_recursive(std::span<const Limb>(hp.ay.data(),hp.ay.size()),std::span<const Limb>(hq.ay.data(),hq.ay.size()));ay.resize(hz.size());std::copy(hz.begin(),hz.end(),ay.begin());az=hs;normalize();}
-void multiply_add(Limb hA,Limb hB){if(is_zero()){if(hB!=0)ay.push_back(hB);return;}if(az){throw std::logic_error("multiply_add requires a nonnegative ExactInteger");}Wide hC=hB;for(Limb&hD:ay){const Wide hE=static_cast<Wide>(hD)*hA+hC;hD=static_cast<Limb>(hE);hC=hE>>64;}if(hC!=0)ay.push_back(static_cast<Limb>(hC));}
-ExactInteger operator-()const{ExactInteger hF=*this;if(!hF.is_zero())hF.az=!hF.az;return hF;}
-ExactInteger&operator+=(const ExactInteger&hG){if(hG.is_zero())return*this;if(is_zero()){*this=hG;return*this;}if(az==hG.az){add_magnitude(hG);return*this;}const int hH=compare_magnitude(*this,hG);if(hH==0){ay.clear();az=false;}else if(hH>0){subtract_magnitude(hG);}else{ExactInteger hI=hG;hI.subtract_magnitude(*this);*this=std::move(hI);}return*this;}
-template<exact_integer_detail::NativeInteger Integer>ExactInteger&operator+=(Integer hJ){return*this+=ExactInteger(hJ);}
-ExactInteger&operator-=(const ExactInteger&hK){if(hK.is_zero())return*this;if(this==&hK){ay.clear();az=false;return*this;}ExactInteger hL=hK;hL.az=!hL.az;return*this+=hL;}
-template<exact_integer_detail::NativeInteger Integer>ExactInteger&operator-=(Integer hM){return*this-=ExactInteger(hM);}
-ExactInteger&operator*=(const ExactInteger&hN){*this=multiply_values(*this,hN);return*this;}
-template<exact_integer_detail::NativeInteger Integer>ExactInteger&operator*=(Integer hO){using Value=std::remove_cv_t<Integer>;if constexpr(std::numeric_limits<Value>::digits<=64){if constexpr(std::numeric_limits<Value>::is_signed){if(hO<0){const auto hP=static_cast<Limb>(exact_integer_detail::MakeUnsignedT<Value>{0}-static_cast<exact_integer_detail::MakeUnsignedT<Value>>(hO));const bool hQ=!az;multiply_magnitude_limb(hP);az=hQ&&!is_zero();return*this;}}multiply_magnitude_limb(static_cast<Limb>(hO));return*this;}else{return*this*=ExactInteger(hO);}}
-ExactInteger&operator<<=(std::size_t hR){if(is_zero()||hR==0)return*this;const std::size_t hS=hR/64;const unsigned hT=static_cast<unsigned>(hR%64);const std::size_t hU=ay.size();ay.resize(hU+hS+1,0);if(hS!=0){for(std::size_t hV=hU;hV-->0;){ay[hV+hS]=ay[hV];}std::fill(ay.begin(),ay.begin()+static_cast<std::ptrdiff_t>(hS),0);}if(hT!=0){Limb hW=0;for(std::size_t hX=hS;hX<hS+hU;++hX){const Limb hY=ay[hX];ay[hX]=(hY<<hT)|hW;hW=hY>>(64-hT);}ay[hS+hU]=hW;}else{ay[hS+hU]=0;}normalize();return*this;}
-ExactInteger&operator>>=(std::size_t hZ){if(is_zero()||hZ==0)return*this;const bool ia=az;const std::size_t ib=hZ/64;const unsigned ic=static_cast<unsigned>(hZ%64);bool id=false;const std::size_t ie=std::min(ib,ay.size());for(std::size_t ig=0;ig<ie;++ig){id=id||ay[ig]!=0;}if(ib<ay.size()&&ic!=0){const Limb ih=(Limb{1}<<ic)-1;id=id||(ay[ib]&ih)!=0;}if(ib>=ay.size()){ay.clear();}else{const std::size_t ii=ay.size()-ib;if(ib!=0){for(std::size_t ij=0;ij<ii;++ij){ay[ij]=ay[ij+ib];}}ay.resize(ii);if(ic!=0){Limb ik=0;for(std::size_t il=ii;il-->0;){const Limb im=ay[il];ay[il]=(im>>ic)|ik;ik=im<<(64-ic);}}}normalize();if(ia&&id){add_magnitude_one();az=true;}else if(!is_zero()){az=ia;}return*this;}
-std::string to_string()const{if(is_zero())return"0";ExactInteger in=absolute();std::vector<ExactInteger>io{ExactInteger(decimal_base)};while(in>=io.back())io.push_back(io.back()*io.back());std::vector<std::pair<ExactInteger,std::size_t>>ip(io.size());for(std::size_t iq=4;iq+1<io.size()&&io.size()>12;++iq){const std::size_t ir=io[iq].bit_length(),is=ir*2;const Limb it=(io[iq]>>(ir-64)).checked_to<Limb>();ExactInteger iu((~Wide{0})/it);for(std::size_t iv=64;iv<ir;){const std::size_t iw=std::min(iv*2,ir);iu<<=iw-iv;const ExactInteger ix=io[iq]>>(ir-iw),iy=ExactInteger(1)<<(iw*2);iu=(iu*((iy<<1)-ix*iu))>>(iw*2);iv=iw;}ExactInteger iv=ExactInteger(1)<<is,iw=io[iq]*iu;while(iw>iv){iu-=1;iw-=io[iq];}ExactInteger ix=iv-iw;while(ix>=io[iq]){iu+=1;ix-=io[iq];}ip[iq]={std::move(iu),is};}std::string iz;if(az)iz.push_back('-');struct iA{ExactInteger iB;std::size_t iC;bool iD;};std::vector<iA>iE;iE.push_back({std::move(in),io.size()-1,false});while(!iE.empty()){iA iF=std::move(iE.back());iE.pop_back();if(iF.iC==0){const Limb iG=iF.iB.checked_to<Limb>();char iH[32];auto[iI,iJ]=std::to_chars(iH,iH+sizeof(iH),iG);if(iJ!=std::errc{})throw std::runtime_error("ExactInteger decimal conversion failed");if(iF.iD)iz.append(19-static_cast<std::size_t>(iI-iH),'0');iz.append(iH,iI);continue;}const ExactInteger&iK=io[iF.iC-1];if(!iF.iD&&iF.iB<iK){--iF.iC;iE.push_back(std::move(iF));continue;}ExactInteger iL,iM;if(iF.iC<=4||io.size()<=12){auto iN=ExactInteger::divmod(iF.iB,iK);iL=std::move(iN.first);iM=std::move(iN.second);}else{iL=(iF.iB*ip[iF.iC-1].first)>>ip[iF.iC-1].second;iM=iF.iB-iL*iK;if(iM>=iK){iM-=iK;iL+=1;}}iE.push_back({std::move(iM),iF.iC-1,true});iE.push_back({std::move(iL),iF.iC-1,iF.iD});}return iz;}
-friend ExactInteger abs(const ExactInteger&ix){return ix.absolute();}
-friend bool operator==(const ExactInteger&iy,const ExactInteger&iz){if(iy.az!=iz.az||iy.ay.size()!=iz.ay.size()){return false;}return std::equal(iy.ay.begin(),iy.ay.end(),iz.ay.begin());}
-friend std::strong_ordering operator<=>(const ExactInteger&iA,const ExactInteger&iB){if(iA.az!=iB.az){return iA.az?std::strong_ordering::less:std::strong_ordering::greater;}const int iC=compare_magnitude(iA,iB);if(iC==0)return std::strong_ordering::equal;const bool iD=iA.az?iC>0:iC<0;return iD?std::strong_ordering::less:std::strong_ordering::greater;}
-friend ExactInteger operator+(const ExactInteger&iE,const ExactInteger&iF){return add_values(iE,iF);}
-friend ExactInteger operator-(const ExactInteger&iG,const ExactInteger&iH){return subtract_values(iG,iH);}
-friend ExactInteger operator*(const ExactInteger&iI,const ExactInteger&iJ){return multiply_values(iI,iJ);}
-friend ExactInteger operator<<(ExactInteger iK,std::size_t iL){iK<<=iL;return iK;}
-friend ExactInteger operator>>(ExactInteger iM,std::size_t iN){iM>>=iN;return iM;}
-friend std::ostream&operator<<(std::ostream&iO,const ExactInteger&iP){return iO<<iP.to_string();}};
+    constexpr MontgomeryModInt() = default;
+    constexpr MontgomeryModInt(std::uint64_t value) noexcept:
+        value_(reduce(value % Modulus * r_squared)){}
+
+    constexpr MontgomeryModInt& operator+=(const MontgomeryModInt& other) noexcept{
+        value_ += other.value_;
+        if(value_ >= twice_modulus) value_ -= twice_modulus;
+        return *this;
+    }
+    constexpr MontgomeryModInt& operator-=(const MontgomeryModInt& other) noexcept{
+        if(value_ < other.value_) value_ += twice_modulus;
+        value_ -= other.value_;
+        return *this;
+    }
+    constexpr MontgomeryModInt& operator*=(const MontgomeryModInt& other) noexcept{
+        value_ = reduce(static_cast<std::uint64_t>(value_) * other.value_);
+        return *this;
+    }
+    friend constexpr MontgomeryModInt operator+(
+        MontgomeryModInt left,
+        const MontgomeryModInt& right
+    ) noexcept{return left += right;}
+    friend constexpr MontgomeryModInt operator-(
+        MontgomeryModInt left,
+        const MontgomeryModInt& right
+    ) noexcept{return left -= right;}
+    friend constexpr MontgomeryModInt operator*(
+        MontgomeryModInt left,
+        const MontgomeryModInt& right
+    ) noexcept{return left *= right;}
+
+    constexpr MontgomeryModInt pow(std::uint64_t exponent) const noexcept{
+        MontgomeryModInt result(1), factor = *this;
+        while(exponent != 0){
+            if((exponent & 1U) != 0) result *= factor;
+            factor *= factor;
+            exponent >>= 1;
+        }
+        return result;
+    }
+    constexpr std::uint32_t value() const noexcept{
+        std::uint32_t result = reduce(value_);
+        if(result >= Modulus) result -= Modulus;
+        return result;
+    }
+};
+
+template<std::uint32_t Modulus, std::uint32_t PrimitiveRoot>
+void radix_four_ntt(
+    std::vector<MontgomeryModInt<Modulus>>& values,
+    bool inverse
+){
+    using Mint = MontgomeryModInt<Modulus>;
+    const std::size_t size = values.size();
+    if(size <= 1) return;
+
+    for(std::size_t index = 1, reversed = 0; index < size; ++index){
+        std::size_t bit = size >> 1;
+        while((reversed & bit) != 0){
+            reversed ^= bit;
+            bit >>= 1;
+        }
+        reversed ^= bit;
+        if(index < reversed) std::swap(values[index], values[reversed]);
+    }
+
+    const unsigned levels = std::countr_zero(size);
+    std::size_t first_size = 2;
+    if((levels & 1U) != 0){
+        for(std::size_t block = 0; block < size; block += 2){
+            const Mint second = values[block + 1];
+            values[block + 1] = values[block] - second;
+            values[block] += second;
+        }
+        first_size = 4;
+    }
+
+    for(; first_size < size; first_size <<= 2){
+        const std::size_t block_size = first_size << 1;
+        const std::size_t quarter = first_size >> 1;
+        Mint root = Mint(PrimitiveRoot).pow(
+            (Modulus - 1) / static_cast<std::uint64_t>(block_size)
+        );
+        if(inverse) root = root.pow(Modulus - 2);
+        const Mint imaginary = root.pow(quarter);
+
+        for(std::size_t block = 0; block < size; block += block_size){
+            Mint factor(1);
+            for(std::size_t offset = 0; offset < quarter; ++offset){
+                const Mint squared_factor = factor * factor;
+                const Mint first = values[block + offset];
+                const Mint second =
+                    values[block + quarter + offset] * squared_factor;
+                const Mint third = values[block + first_size + offset];
+                const Mint fourth =
+                    values[block + first_size + quarter + offset]
+                    * squared_factor;
+                const Mint low_sum = first + second;
+                const Mint low_difference = first - second;
+                const Mint high_sum = (third + fourth) * factor;
+                const Mint high_difference =
+                    (third - fourth) * imaginary * factor;
+                values[block + offset] = low_sum + high_sum;
+                values[block + first_size + offset] = low_sum - high_sum;
+                values[block + quarter + offset] =
+                    low_difference + high_difference;
+                values[block + first_size + quarter + offset] =
+                    low_difference - high_difference;
+                factor *= root;
+            }
+        }
+    }
+
+    if(inverse){
+        const Mint inverse_size = Mint(size).pow(Modulus - 2);
+        for(Mint& value: values) value *= inverse_size;
+    }
+}
+
+template<std::uint32_t Modulus, std::uint32_t PrimitiveRoot>
+std::vector<std::uint32_t> convolution_mod(
+    std::span<const std::uint32_t> left,
+    std::span<const std::uint32_t> right,
+    std::size_t transform_size,
+    bool square
+){
+    using Mint = MontgomeryModInt<Modulus>;
+    const std::size_t result_size = left.size() + right.size() - 1;
+    std::vector<Mint> left_values(transform_size);
+    for(std::size_t index = 0; index < left.size(); ++index){
+        left_values[index] = Mint(left[index]);
+    }
+    radix_four_ntt<Modulus, PrimitiveRoot>(left_values, false);
+    if(square){
+        for(Mint& value: left_values) value *= value;
+    }else{
+        std::vector<Mint> right_values(transform_size);
+        for(std::size_t index = 0; index < right.size(); ++index){
+            right_values[index] = Mint(right[index]);
+        }
+        radix_four_ntt<Modulus, PrimitiveRoot>(right_values, false);
+        for(std::size_t index = 0; index < transform_size; ++index){
+            left_values[index] *= right_values[index];
+        }
+    }
+    radix_four_ntt<Modulus, PrimitiveRoot>(left_values, true);
+    std::vector<std::uint32_t> result(result_size);
+    for(std::size_t index = 0; index < result_size; ++index){
+        result[index] = left_values[index].value();
+    }
+    return result;
+}
+
+}  // namespace fast_big_integer_detail
+
 class BigInteger{
-private:
-ExactInteger iQ;
-static ExactInteger parse_decimal(std::string_view iR){if(iR.empty())throw std::invalid_argument("empty BigInteger literal");bool iS=false;std::size_t iT=0;if(iR.front()=='+'||iR.front()=='-'){iS=iR.front()=='-';iT=1;}if(iT==iR.size())throw std::invalid_argument("BigInteger literal has no digits");for(std::size_t iU=iT;iU<iR.size();++iU)if(iR[iU]<'0'||iR[iU]>'9')throw std::invalid_argument("invalid BigInteger decimal digit");while(iT<iR.size()&&iR[iT]=='0')++iT;if(iT==iR.size())return ExactInteger(0);constexpr std::uint64_t iV=10'000'000'000'000'000'000ULL;std::vector<std::uint64_t>iW;const std::size_t iX=iR.size()-iT;for(std::size_t iY=iT,iZ=iX%19?iX%19:19;iY<iR.size();iY+=iZ,iZ=19){std::uint64_t ja;const char*jb=iR.data()+static_cast<std::ptrdiff_t>(iY),*jc=jb+static_cast<std::ptrdiff_t>(iZ);const auto[jd,je]=std::from_chars(jb,jc,ja);if(je!=std::errc{}||jd!=jc)throw std::invalid_argument("invalid BigInteger decimal digit");iW.push_back(ja);}if(iW.size()<=4096){ExactInteger jf=0;for(const auto jg:iW)jf.multiply_add(iV,jg);return iS?-jf:jf;}struct jh{ExactInteger ji,jj;};std::vector<jh>jk;jk.reserve((iW.size()+31)/32);for(std::size_t jl=0;jl<iW.size();){const std::size_t jm=std::min(jl+32,iW.size());ExactInteger jn=0,jo=1;for(;jl<jm;++jl){jn.multiply_add(iV,iW[jl]);jo*=iV;}jk.push_back({std::move(jn),std::move(jo)});}while(jk.size()>1){std::vector<jh>jp;jp.reserve((jk.size()+1)/2);std::size_t jq=0;for(;jq+1<jk.size();jq+=2)jp.push_back({jk[jq].ji*jk[jq+1].jj+jk[jq+1].ji,jk[jq].jj*jk[jq+1].jj});if(jq<jk.size())jp.push_back(std::move(jk[jq]));jk=std::move(jp);}ExactInteger jr=std::move(jk[0].ji);return iS?-jr:jr;}
+    using Limb = std::uint32_t;
+    using Wide = __uint128_t;
+    static constexpr Limb limb_base = 1'000'000'000U;
+    static constexpr std::size_t decimal_digits_per_limb = 9;
+    static constexpr std::size_t inline_limb_capacity = 4;
+    static constexpr std::size_t schoolbook_threshold = 128;
+    static constexpr std::size_t division_basecase_threshold = 64;
+    static constexpr std::size_t maximum_ntt_size = std::size_t{1} << 24;
+
+    class LimbStorage{
+        std::array<Limb, inline_limb_capacity> inline_values_{};
+        std::vector<Limb> heap_values_;
+        std::size_t inline_size_ = 0;
+        bool heap_mode_ = false;
+    public:
+        LimbStorage() = default;
+        LimbStorage(const LimbStorage&) = default;
+        LimbStorage& operator=(const LimbStorage&) = default;
+        LimbStorage(LimbStorage&& other) noexcept:
+            inline_values_(other.inline_values_),
+            heap_values_(std::move(other.heap_values_)),
+            inline_size_(other.inline_size_),
+            heap_mode_(other.heap_mode_){
+            other.inline_size_ = 0;
+            other.heap_mode_ = false;
+            other.heap_values_.clear();
+        }
+        LimbStorage& operator=(LimbStorage&& other) noexcept{
+            if(this == &other) return *this;
+            inline_values_ = other.inline_values_;
+            heap_values_ = std::move(other.heap_values_);
+            inline_size_ = other.inline_size_;
+            heap_mode_ = other.heap_mode_;
+            other.inline_size_ = 0;
+            other.heap_mode_ = false;
+            other.heap_values_.clear();
+            return *this;
+        }
+        std::size_t size() const noexcept{
+            return heap_mode_ ? heap_values_.size() : inline_size_;
+        }
+        bool empty() const noexcept{return size() == 0;}
+        Limb* data() noexcept{
+            return heap_mode_ ? heap_values_.data() : inline_values_.data();
+        }
+        const Limb* data() const noexcept{
+            return heap_mode_ ? heap_values_.data() : inline_values_.data();
+        }
+        Limb& operator[](std::size_t index) noexcept{return data()[index];}
+        const Limb& operator[](std::size_t index) const noexcept{return data()[index];}
+        Limb& back() noexcept{return data()[size() - 1];}
+        const Limb& back() const noexcept{return data()[size() - 1];}
+        Limb* begin() noexcept{return data();}
+        Limb* end() noexcept{return data() + size();}
+        const Limb* begin() const noexcept{return data();}
+        const Limb* end() const noexcept{return data() + size();}
+        void clear() noexcept{
+            if(heap_mode_) heap_values_.clear();
+            else inline_size_ = 0;
+        }
+        void resize(std::size_t size, Limb value = 0){
+            if(heap_mode_){
+                heap_values_.resize(size, value);
+                return;
+            }
+            if(size <= inline_limb_capacity){
+                if(size > inline_size_){
+                    std::fill(
+                        inline_values_.begin()
+                            + static_cast<std::ptrdiff_t>(inline_size_),
+                        inline_values_.begin()
+                            + static_cast<std::ptrdiff_t>(size),
+                        value
+                    );
+                }
+                inline_size_ = size;
+                return;
+            }
+            heap_values_.assign(size, value);
+            std::copy_n(inline_values_.begin(), inline_size_, heap_values_.begin());
+            heap_mode_ = true;
+            inline_size_ = 0;
+        }
+        void push_back(Limb value){
+            const std::size_t old_size = size();
+            resize(old_size + 1);
+            (*this)[old_size] = value;
+        }
+        void pop_back() noexcept{
+            if(heap_mode_) heap_values_.pop_back();
+            else --inline_size_;
+        }
+        void assign(std::vector<Limb>&& values){
+            if(values.size() <= inline_limb_capacity){
+                heap_values_.clear();
+                heap_mode_ = false;
+                inline_size_ = values.size();
+                std::copy(values.begin(), values.end(), inline_values_.begin());
+            }else{
+                heap_values_ = std::move(values);
+                heap_mode_ = true;
+                inline_size_ = 0;
+            }
+        }
+        std::span<const Limb> span() const noexcept{return {data(), size()};}
+    };
+
+    LimbStorage limbs_;
+    bool negative_ = false;
+
+    static void trim(std::vector<Limb>& value) noexcept{
+        while(!value.empty() && value.back() == 0) value.pop_back();
+    }
+    void normalize() noexcept{
+        while(!limbs_.empty() && limbs_.back() == 0) limbs_.pop_back();
+        if(limbs_.empty()) negative_ = false;
+    }
+    static int compare_magnitudes(
+        std::span<const Limb> left,
+        std::span<const Limb> right
+    ) noexcept{
+        while(!left.empty() && left.back() == 0){
+            left = left.first(left.size() - 1);
+        }
+        while(!right.empty() && right.back() == 0){
+            right = right.first(right.size() - 1);
+        }
+        if(left.size() != right.size()) return left.size() < right.size() ? -1 : 1;
+        for(std::size_t index = left.size(); index-- > 0;){
+            if(left[index] != right[index]) return left[index] < right[index] ? -1 : 1;
+        }
+        return 0;
+    }
+    static std::vector<Limb> add_magnitudes(
+        std::span<const Limb> left,
+        std::span<const Limb> right
+    ){
+        const std::size_t size = std::max(left.size(), right.size());
+        std::vector<Limb> result(size + 1, 0);
+        std::uint64_t carry = 0;
+        for(std::size_t index = 0; index < size; ++index){
+            const std::uint64_t sum = carry
+                + (index < left.size() ? left[index] : 0)
+                + (index < right.size() ? right[index] : 0);
+            if(sum >= limb_base){
+                result[index] = static_cast<Limb>(sum - limb_base);
+                carry = 1;
+            }else{
+                result[index] = static_cast<Limb>(sum);
+                carry = 0;
+            }
+        }
+        result[size] = static_cast<Limb>(carry);
+        trim(result);
+        return result;
+    }
+    static std::vector<Limb> subtract_magnitudes(
+        std::span<const Limb> larger,
+        std::span<const Limb> smaller
+    ){
+        std::vector<Limb> result(larger.size(), 0);
+        std::uint64_t borrow = 0;
+        for(std::size_t index = 0; index < larger.size(); ++index){
+            const std::uint64_t subtrahend =
+                (index < smaller.size() ? smaller[index] : 0) + borrow;
+            if(larger[index] < subtrahend){
+                result[index] = static_cast<Limb>(
+                    static_cast<std::uint64_t>(larger[index])
+                    + limb_base - subtrahend
+                );
+                borrow = 1;
+            }else{
+                result[index] = static_cast<Limb>(larger[index] - subtrahend);
+                borrow = 0;
+            }
+        }
+        trim(result);
+        return result;
+    }
+    static std::vector<Limb> multiply_limb(
+        std::span<const Limb> value,
+        Limb multiplier
+    ){
+        if(value.empty() || multiplier == 0) return {};
+        if(multiplier == 1) return {value.begin(), value.end()};
+        std::vector<Limb> result(value.size() + 1, 0);
+        std::uint64_t carry = 0;
+        for(std::size_t index = 0; index < value.size(); ++index){
+            const std::uint64_t product =
+                static_cast<std::uint64_t>(value[index]) * multiplier + carry;
+            result[index] = static_cast<Limb>(product % limb_base);
+            carry = product / limb_base;
+        }
+        result[value.size()] = static_cast<Limb>(carry);
+        trim(result);
+        return result;
+    }
+    static std::pair<std::vector<Limb>, Limb> divide_limb(
+        std::span<const Limb> value,
+        Limb divisor
+    ){
+        std::vector<Limb> quotient(value.size(), 0);
+        std::uint64_t remainder = 0;
+        for(std::size_t index = value.size(); index-- > 0;){
+            const std::uint64_t current = remainder * limb_base + value[index];
+            quotient[index] = static_cast<Limb>(current / divisor);
+            remainder = current % divisor;
+        }
+        trim(quotient);
+        return {std::move(quotient), static_cast<Limb>(remainder)};
+    }
+    static std::vector<Limb> schoolbook_multiply(
+        std::span<const Limb> left,
+        std::span<const Limb> right
+    ){
+        if(left.size() < right.size()) std::swap(left, right);
+        std::vector<Limb> result(left.size() + right.size(), 0);
+        for(std::size_t right_index = 0; right_index < right.size(); ++right_index){
+            std::uint64_t carry = 0;
+            for(std::size_t left_index = 0; left_index < left.size(); ++left_index){
+                const std::size_t result_index = left_index + right_index;
+                const std::uint64_t current =
+                    static_cast<std::uint64_t>(left[left_index]) * right[right_index]
+                    + result[result_index] + carry;
+                result[result_index] = static_cast<Limb>(current % limb_base);
+                carry = current / limb_base;
+            }
+            result[right_index + left.size()] = static_cast<Limb>(carry);
+        }
+        trim(result);
+        return result;
+    }
+    static std::vector<Limb> ntt_multiply(
+        std::span<const Limb> left,
+        std::span<const Limb> right,
+        bool square
+    ){
+        constexpr std::uint32_t modulus0 = 167'772'161U;
+        constexpr std::uint32_t modulus1 = 469'762'049U;
+        constexpr std::uint32_t modulus2 = 754'974'721U;
+        if(left.size() > (std::numeric_limits<std::size_t>::max)()
+                - right.size() + 1){
+            throw std::length_error("BigInteger multiplication is too large");
+        }
+        const std::size_t result_size = left.size() + right.size() - 1;
+        if(result_size > maximum_ntt_size){
+            throw std::length_error(std::string{});
+        }
+        const std::size_t transform_size = std::bit_ceil(result_size);
+        auto residue0 = fast_big_integer_detail::convolution_mod<
+            modulus0, 3U
+        >(left, right, transform_size, square);
+        auto residue1 = fast_big_integer_detail::convolution_mod<
+            modulus1, 3U
+        >(left, right, transform_size, square);
+        auto residue2 = fast_big_integer_detail::convolution_mod<
+            modulus2, 11U
+        >(left, right, transform_size, square);
+        constexpr std::uint64_t modulus01 =
+            static_cast<std::uint64_t>(modulus0) * modulus1;
+        constexpr std::uint64_t inverse0_mod1 =
+            fast_big_integer_detail::power_mod(modulus0, modulus1 - 2, modulus1);
+        constexpr std::uint64_t inverse01_mod2 =
+            fast_big_integer_detail::power_mod(
+                modulus01 % modulus2, modulus2 - 2, modulus2
+            );
+        std::vector<Limb> result;
+        result.reserve(result_size + 3);
+        Wide carry = 0;
+        for(std::size_t index = 0; index < result_size; ++index){
+            const std::uint64_t first = residue0[index];
+            const std::uint64_t second_delta =
+                (residue1[index] + modulus1 - first % modulus1) % modulus1;
+            const std::uint64_t second =
+                second_delta * inverse0_mod1 % modulus1;
+            const std::uint64_t first_two = first + modulus0 * second;
+            const std::uint64_t third_delta =
+                (residue2[index] + modulus2 - first_two % modulus2) % modulus2;
+            const std::uint64_t third =
+                third_delta * inverse01_mod2 % modulus2;
+            const Wide coefficient =
+                static_cast<Wide>(first_two)
+                + static_cast<Wide>(modulus01) * third;
+            const Wide current = coefficient + carry;
+            result.push_back(static_cast<Limb>(current % limb_base));
+            carry = current / limb_base;
+        }
+        while(carry != 0){
+            result.push_back(static_cast<Limb>(carry % limb_base));
+            carry /= limb_base;
+        }
+        trim(result);
+        return result;
+    }
+    static std::vector<Limb> multiply_magnitudes(
+        std::span<const Limb> left,
+        std::span<const Limb> right,
+        bool square = false
+    ){
+        if(left.empty() || right.empty()) return {};
+        if(left.size() == 1) return multiply_limb(right, left.front());
+        if(right.size() == 1) return multiply_limb(left, right.front());
+        if(std::min(left.size(), right.size()) <= schoolbook_threshold){
+            return schoolbook_multiply(left, right);
+        }
+        return ntt_multiply(left, right, square);
+    }
+    static void decrement_magnitude(std::vector<Limb>& value){
+        std::size_t index = 0;
+        while(value[index] == 0){
+            value[index] = limb_base - 1;
+            ++index;
+        }
+        --value[index];
+        trim(value);
+    }
+    static void increment_magnitude(std::vector<Limb>& value){
+        std::size_t index = 0;
+        while(index < value.size() && value[index] == limb_base - 1){
+            value[index] = 0;
+            ++index;
+        }
+        if(index == value.size()) value.push_back(1);
+        else ++value[index];
+    }
+    static std::pair<std::vector<Limb>, std::vector<Limb>> long_division(
+        std::span<const Limb> dividend,
+        std::span<const Limb> divisor
+    ){
+        const int order = compare_magnitudes(dividend, divisor);
+        if(order < 0) return {{}, {dividend.begin(), dividend.end()}};
+        if(order == 0) return {{1}, {}};
+        if(divisor.size() == 1){
+            auto [quotient, remainder] = divide_limb(dividend, divisor[0]);
+            return {
+                std::move(quotient),
+                remainder == 0 ? std::vector<Limb>{}
+                               : std::vector<Limb>{remainder}
+            };
+        }
+        const Limb normalization = static_cast<Limb>(
+            limb_base / (static_cast<std::uint64_t>(divisor.back()) + 1)
+        );
+        std::vector<Limb> normalized_dividend =
+            multiply_limb(dividend, normalization);
+        std::vector<Limb> normalized_divisor =
+            multiply_limb(divisor, normalization);
+        normalized_dividend.resize(dividend.size() + 1, 0);
+        const std::size_t divisor_size = normalized_divisor.size();
+        const std::size_t quotient_size =
+            dividend.size() - divisor.size() + 1;
+        std::vector<Limb> quotient(quotient_size, 0);
+        const std::uint64_t high_divisor = normalized_divisor.back();
+        const std::uint64_t next_divisor =
+            normalized_divisor[divisor_size - 2];
+
+        for(std::size_t position = quotient_size; position-- > 0;){
+            const std::uint64_t numerator =
+                static_cast<std::uint64_t>(
+                    normalized_dividend[position + divisor_size]
+                ) * limb_base
+                + normalized_dividend[position + divisor_size - 1];
+            std::uint64_t estimate = numerator / high_divisor;
+            std::uint64_t remainder = numerator % high_divisor;
+            if(estimate >= limb_base){
+                estimate = limb_base - 1;
+                remainder = numerator - estimate * high_divisor;
+            }
+            while(remainder < limb_base
+                && estimate * next_divisor
+                    > remainder * limb_base
+                        + normalized_dividend[position + divisor_size - 2]){
+                --estimate;
+                remainder += high_divisor;
+            }
+
+            std::uint64_t carry = 0;
+            std::uint64_t borrow = 0;
+            for(std::size_t index = 0; index < divisor_size; ++index){
+                const std::uint64_t product =
+                    estimate * normalized_divisor[index] + carry;
+                carry = product / limb_base;
+                const std::uint64_t subtrahend =
+                    product % limb_base + borrow;
+                Limb& current = normalized_dividend[position + index];
+                if(current < subtrahend){
+                    current = static_cast<Limb>(
+                        static_cast<std::uint64_t>(current)
+                        + limb_base - subtrahend
+                    );
+                    borrow = 1;
+                }else{
+                    current = static_cast<Limb>(current - subtrahend);
+                    borrow = 0;
+                }
+            }
+            Limb& high = normalized_dividend[position + divisor_size];
+            const std::uint64_t high_subtrahend = carry + borrow;
+            const bool overestimated = high < high_subtrahend;
+            if(overestimated){
+                high = static_cast<Limb>(
+                    static_cast<std::uint64_t>(high)
+                    + limb_base - high_subtrahend
+                );
+                --estimate;
+                std::uint64_t addition_carry = 0;
+                for(std::size_t index = 0; index < divisor_size; ++index){
+                    const std::uint64_t sum =
+                        static_cast<std::uint64_t>(
+                            normalized_dividend[position + index]
+                        ) + normalized_divisor[index] + addition_carry;
+                    if(sum >= limb_base){
+                        normalized_dividend[position + index] =
+                            static_cast<Limb>(sum - limb_base);
+                        addition_carry = 1;
+                    }else{
+                        normalized_dividend[position + index] =
+                            static_cast<Limb>(sum);
+                        addition_carry = 0;
+                    }
+                }
+                const std::uint64_t corrected_high = high + addition_carry;
+                high = static_cast<Limb>(
+                    corrected_high >= limb_base
+                        ? corrected_high - limb_base
+                        : corrected_high
+                );
+            }else{
+                high = static_cast<Limb>(high - high_subtrahend);
+            }
+            quotient[position] = static_cast<Limb>(estimate);
+        }
+
+        trim(quotient);
+        std::vector<Limb> remainder(
+            normalized_dividend.begin(),
+            normalized_dividend.begin()
+                + static_cast<std::ptrdiff_t>(divisor_size)
+        );
+        trim(remainder);
+        if(normalization != 1){
+            auto division = divide_limb(remainder, normalization);
+            remainder = std::move(division.first);
+        }
+        return {std::move(quotient), std::move(remainder)};
+    }
+    static std::vector<Limb> reciprocal_approximation(
+        const std::vector<Limb>& value,
+        std::size_t precision
+    ){
+        std::size_t current_precision = precision;
+        while(current_precision > division_basecase_threshold){
+            current_precision = (current_precision + 1) / 2;
+        }
+        std::vector<Limb> numerator(
+            value.size() + current_precision + 1, 0
+        );
+        numerator.back() = 1;
+        std::vector<Limb> approximation =
+            long_division(numerator, value).first;
+
+        while(current_precision < precision){
+            std::vector<Limb> square = multiply_magnitudes(
+                approximation, approximation, true
+            );
+            square.insert(square.begin(), 0);
+            const std::size_t window_size = current_precision * 2 + 1;
+            std::vector<Limb> high_value(window_size, 0);
+            const std::size_t copied = std::min(value.size(), window_size);
+            std::copy(
+                value.end() - static_cast<std::ptrdiff_t>(copied),
+                value.end(),
+                high_value.end() - static_cast<std::ptrdiff_t>(copied)
+            );
+            std::vector<Limb> correction = multiply_magnitudes(
+                square, high_value
+            );
+            if(correction.size() <= window_size){
+                correction.clear();
+            }else{
+                correction.erase(
+                    correction.begin(),
+                    correction.begin()
+                        + static_cast<std::ptrdiff_t>(window_size)
+                );
+            }
+            std::vector<Limb> doubled = add_magnitudes(
+                approximation, approximation
+            );
+            std::vector<Limb> scaled(current_precision + 1, 0);
+            scaled.insert(scaled.end(), doubled.begin(), doubled.end());
+            approximation = subtract_magnitudes(scaled, correction);
+            if(!approximation.empty()) approximation.erase(approximation.begin());
+            trim(approximation);
+            current_precision *= 2;
+        }
+        if(current_precision > precision){
+            const std::size_t excess = current_precision - precision;
+            approximation.erase(
+                approximation.begin(),
+                approximation.begin() + static_cast<std::ptrdiff_t>(excess)
+            );
+        }
+        trim(approximation);
+        return approximation;
+    }
+    static std::pair<std::vector<Limb>, std::vector<Limb>> newton_division(
+        std::span<const Limb> dividend,
+        std::span<const Limb> divisor
+    ){
+        const Limb normalization = static_cast<Limb>(
+            limb_base / (static_cast<std::uint64_t>(divisor.back()) + 1)
+        );
+        std::vector<Limb> normalized_dividend =
+            multiply_limb(dividend, normalization);
+        std::vector<Limb> normalized_divisor =
+            multiply_limb(divisor, normalization);
+        const std::size_t precision =
+            normalized_dividend.size() - normalized_divisor.size() + 2;
+        std::vector<Limb> reciprocal = reciprocal_approximation(
+            normalized_divisor, precision
+        );
+        std::vector<Limb> quotient = multiply_magnitudes(
+            normalized_dividend, reciprocal
+        );
+        const std::size_t discarded = normalized_divisor.size() + precision;
+        if(quotient.size() <= discarded){
+            quotient.clear();
+        }else{
+            quotient.erase(
+                quotient.begin(),
+                quotient.begin() + static_cast<std::ptrdiff_t>(discarded)
+            );
+        }
+        trim(quotient);
+        std::vector<Limb> product = multiply_magnitudes(
+            normalized_divisor, quotient
+        );
+        while(compare_magnitudes(normalized_dividend, product) < 0){
+            decrement_magnitude(quotient);
+            product = subtract_magnitudes(product, normalized_divisor);
+        }
+        std::vector<Limb> remainder = subtract_magnitudes(
+            normalized_dividend, product
+        );
+        while(compare_magnitudes(remainder, normalized_divisor) >= 0){
+            increment_magnitude(quotient);
+            remainder = subtract_magnitudes(remainder, normalized_divisor);
+        }
+        if(normalization != 1){
+            auto division = divide_limb(remainder, normalization);
+            remainder = std::move(division.first);
+        }
+        trim(quotient);
+        trim(remainder);
+        return {std::move(quotient), std::move(remainder)};
+    }
+    static std::pair<std::vector<Limb>, std::vector<Limb>> divide_magnitudes(
+        std::span<const Limb> dividend,
+        std::span<const Limb> divisor
+    ){
+        const int order = compare_magnitudes(dividend, divisor);
+        if(order < 0) return {{}, {dividend.begin(), dividend.end()}};
+        if(order == 0) return {{1}, {}};
+        if(divisor.size() == 1
+            || divisor.size() <= division_basecase_threshold
+            || dividend.size() - divisor.size()
+                <= division_basecase_threshold){
+            return long_division(dividend, divisor);
+        }
+        return newton_division(dividend, divisor);
+    }
+    template<fast_big_integer_detail::NativeInteger Integer>
+    void assign_integral(Integer value){
+        using Value = std::remove_cv_t<Integer>;
+        limbs_.clear();
+        negative_ = false;
+        if constexpr(std::same_as<Value, bool>){
+            if(value) limbs_.push_back(1);
+        }else{
+            using Unsigned = fast_big_integer_detail::MakeUnsignedT<Value>;
+            Unsigned magnitude = static_cast<Unsigned>(value);
+            if constexpr(std::numeric_limits<Value>::is_signed){
+                if(value < 0){
+                    negative_ = true;
+                    magnitude = Unsigned{0} - magnitude;
+                }
+            }
+            std::vector<Limb> limbs;
+            while(magnitude != 0){
+                limbs.push_back(static_cast<Limb>(magnitude % limb_base));
+                magnitude /= limb_base;
+            }
+            limbs_.assign(std::move(limbs));
+        }
+    }
+    static BigInteger from_magnitude(
+        std::vector<Limb>&& magnitude,
+        bool negative = false
+    ){
+        trim(magnitude);
+        BigInteger result;
+        result.negative_ = negative && !magnitude.empty();
+        result.limbs_.assign(std::move(magnitude));
+        return result;
+    }
+
 public:
-BigInteger()=default;
-template<exact_integer_detail::NativeInteger Integer>BigInteger(Integer jh):iQ(jh){}
-explicit BigInteger(std::string_view ji):iQ(parse_decimal(ji)){}
-explicit BigInteger(const ExactInteger&jk):iQ(jk){}
-explicit BigInteger(ExactInteger&&jl):iQ(std::move(jl)){}
-BigInteger(const big_integer_detail::AddExpression&jm);
-BigInteger(const big_integer_detail::SubtractExpression&jn);
-BigInteger(const big_integer_detail::MultiplyExpression&jo);
-BigInteger(const big_integer_detail::DivideExpression&jp);
-BigInteger(const big_integer_detail::ModuloExpression&jq);
-BigInteger&operator=(const big_integer_detail::AddExpression&jr);
-BigInteger&operator=(const big_integer_detail::SubtractExpression&js);
-BigInteger&operator=(const big_integer_detail::MultiplyExpression&jt);
-BigInteger&operator=(const big_integer_detail::DivideExpression&ju);
-BigInteger&operator=(const big_integer_detail::ModuloExpression&jv);
-template<exact_integer_detail::NativeInteger Integer>BigInteger&operator=(Integer jw){iQ=jw;return*this;}
-BigInteger&assign(std::string_view jx){iQ=parse_decimal(jx);return*this;}
-bool is_zero()const noexcept{return iQ.is_zero();}
-bool is_negative()const noexcept{return iQ.is_negative();}
-std::size_t bit_length()const noexcept{return iQ.bit_length();}
-BigInteger absolute()const{return BigInteger(iQ.absolute());}
-std::string to_string()const{return iQ.to_string();}
-template<exact_integer_detail::NativeInteger Integer>Integer checked_to()const{return iQ.template checked_to<Integer>();}
-const ExactInteger&exact_integer()const noexcept{return iQ;}
-static std::pair<BigInteger,BigInteger>divmod(const BigInteger&jy,const BigInteger&jz){auto jA=ExactInteger::divmod(jy.iQ,jz.iQ);return{BigInteger(std::move(jA.first)),BigInteger(std::move(jA.second))};}
-BigInteger operator-()const{return BigInteger(-iQ);}
-BigInteger&operator+=(const BigInteger&jB){iQ+=jB.iQ;return*this;}
-BigInteger&operator-=(const BigInteger&jC){iQ-=jC.iQ;return*this;}
-BigInteger&operator*=(const BigInteger&jD){iQ*=jD.iQ;return*this;}
-BigInteger&operator/=(const BigInteger&jE){iQ.assign_quotient(iQ,jE.iQ);return*this;}
-BigInteger&operator%=(const BigInteger&jF){iQ.assign_remainder(iQ,jF.iQ);return*this;}
-BigInteger&operator<<=(std::size_t jG){iQ<<=jG;return*this;}
-BigInteger&operator>>=(std::size_t jH){iQ>>=jH;return*this;}
-BigInteger&operator++(){iQ+=1;return*this;}
-BigInteger operator++(int){BigInteger jI=*this;++*this;return jI;}
-BigInteger&operator--(){iQ-=1;return*this;}
-BigInteger operator--(int){BigInteger jJ=*this;--*this;return jJ;}
-friend BigInteger abs(const BigInteger&jK){return jK.absolute();}
-friend bool operator==(const BigInteger&,const BigInteger&)=default;
-friend std::strong_ordering operator<=>(const BigInteger&jL,const BigInteger&jM){return jL.iQ<=>jM.iQ;}
-friend big_integer_detail::AddExpression operator+(const BigInteger&jN,const BigInteger&jO)noexcept{return{jN,jO};}
-friend big_integer_detail::SubtractExpression operator-(const BigInteger&jP,const BigInteger&jQ)noexcept{return{jP,jQ};}
-friend big_integer_detail::MultiplyExpression operator*(const BigInteger&jR,const BigInteger&jS)noexcept{return{jR,jS};}
-friend big_integer_detail::DivideExpression operator/(const BigInteger&jT,const BigInteger&jU)noexcept{return{jT,jU};}
-friend big_integer_detail::ModuloExpression operator%(const BigInteger&jV,const BigInteger&jW)noexcept{return{jV,jW};}
-friend BigInteger operator<<(BigInteger jX,std::size_t jY){jX<<=jY;return jX;}
-friend BigInteger operator>>(BigInteger jZ,std::size_t ka){jZ>>=ka;return jZ;}
-friend std::ostream&operator<<(std::ostream&kb,const BigInteger&kc){return kb<<kc.to_string();}
-friend std::istream&operator>>(std::istream&kd,BigInteger&ke){std::string kf;if(!(kd>>kf))return kd;try{ke.assign(kf);}catch(const std::invalid_argument&){kd.setstate(std::ios::failbit);}return kd;}};
-inline BigInteger::BigInteger(const big_integer_detail::AddExpression&kg){iQ.assign_sum(kg.left.iQ,kg.right.iQ);}
-inline BigInteger::BigInteger(const big_integer_detail::SubtractExpression&kh){iQ.assign_difference(kh.left.iQ,kh.right.iQ);}
-inline BigInteger::BigInteger(const big_integer_detail::MultiplyExpression&ki){iQ.assign_product(ki.left.iQ,ki.right.iQ);}
-inline BigInteger::BigInteger(const big_integer_detail::DivideExpression&kj){iQ.assign_quotient(kj.left.iQ,kj.right.iQ);}
-inline BigInteger::BigInteger(const big_integer_detail::ModuloExpression&kk){iQ.assign_remainder(kk.left.iQ,kk.right.iQ);}
-inline BigInteger&BigInteger::operator=(const big_integer_detail::AddExpression&kl){iQ.assign_sum(kl.left.iQ,kl.right.iQ);return*this;}
-inline BigInteger&BigInteger::operator=(const big_integer_detail::SubtractExpression&km){iQ.assign_difference(km.left.iQ,km.right.iQ);return*this;}
-inline BigInteger&BigInteger::operator=(const big_integer_detail::MultiplyExpression&kn){iQ.assign_product(kn.left.iQ,kn.right.iQ);return*this;}
-inline BigInteger&BigInteger::operator=(const big_integer_detail::DivideExpression&ko){iQ.assign_quotient(ko.left.iQ,ko.right.iQ);return*this;}
-inline BigInteger&BigInteger::operator=(const big_integer_detail::ModuloExpression&kp){iQ.assign_remainder(kp.left.iQ,kp.right.iQ);return*this;}
-inline BigInteger operator+(BigInteger&&left,const BigInteger&right){left+=right;return std::move(left);}
-inline BigInteger operator+(const BigInteger&left,BigInteger&&right){right+=left;return std::move(right);}
-inline BigInteger operator+(BigInteger&&left,BigInteger&&right){left+=right;return std::move(left);}
-inline BigInteger operator-(BigInteger&&left,const BigInteger&right){left-=right;return std::move(left);}
-inline BigInteger operator-(const BigInteger&left,BigInteger&&right){BigInteger result(left);result-=right;return result;}
-inline BigInteger operator-(BigInteger&&left,BigInteger&&right){left-=right;return std::move(left);}
-inline BigInteger operator*(BigInteger&&left,const BigInteger&right){left*=right;return std::move(left);}
-inline BigInteger operator*(const BigInteger&left,BigInteger&&right){right*=left;return std::move(right);}
-inline BigInteger operator*(BigInteger&&left,BigInteger&&right){left*=right;return std::move(left);}
-inline BigInteger operator/(BigInteger&&left,const BigInteger&right){left/=right;return std::move(left);}
-inline BigInteger operator/(BigInteger&&left,BigInteger&&right){left/=right;return std::move(left);}
-inline BigInteger operator%(BigInteger&&left,const BigInteger&right){left%=right;return std::move(left);}
-inline BigInteger operator%(BigInteger&&left,BigInteger&&right){left%=right;return std::move(left);}
-template<big_integer_detail::Expression Expression>inline BigInteger operator+(const Expression&left,const BigInteger&right){BigInteger result(left);result+=right;return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator+(const BigInteger&left,const Expression&right){BigInteger result(right);result+=left;return result;}
-template<big_integer_detail::Expression LeftExpression,big_integer_detail::Expression RightExpression>inline BigInteger operator+(const LeftExpression&left,const RightExpression&right){BigInteger result(left);result+=BigInteger(right);return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator-(const Expression&left,const BigInteger&right){BigInteger result(left);result-=right;return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator-(const BigInteger&left,const Expression&right){BigInteger result(left);result-=BigInteger(right);return result;}
-template<big_integer_detail::Expression LeftExpression,big_integer_detail::Expression RightExpression>inline BigInteger operator-(const LeftExpression&left,const RightExpression&right){BigInteger result(left);result-=BigInteger(right);return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator*(const Expression&left,const BigInteger&right){BigInteger result(left);result*=right;return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator*(const BigInteger&left,const Expression&right){BigInteger result(right);result*=left;return result;}
-template<big_integer_detail::Expression LeftExpression,big_integer_detail::Expression RightExpression>inline BigInteger operator*(const LeftExpression&left,const RightExpression&right){BigInteger result(left);result*=BigInteger(right);return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator/(const Expression&left,const BigInteger&right){BigInteger result(left);result/=right;return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator/(const BigInteger&left,const Expression&right){BigInteger result(left);result/=BigInteger(right);return result;}
-template<big_integer_detail::Expression LeftExpression,big_integer_detail::Expression RightExpression>inline BigInteger operator/(const LeftExpression&left,const RightExpression&right){BigInteger result(left);result/=BigInteger(right);return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator%(const Expression&left,const BigInteger&right){BigInteger result(left);result%=right;return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator%(const BigInteger&left,const Expression&right){BigInteger result(left);result%=BigInteger(right);return result;}
-template<big_integer_detail::Expression LeftExpression,big_integer_detail::Expression RightExpression>inline BigInteger operator%(const LeftExpression&left,const RightExpression&right){BigInteger result(left);result%=BigInteger(right);return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator<<(const Expression&value,std::size_t shift){BigInteger result(value);result<<=shift;return result;}
-template<big_integer_detail::Expression Expression>inline BigInteger operator>>(const Expression&value,std::size_t shift){BigInteger result(value);result>>=shift;return result;}
-template<big_integer_detail::Expression Expression>inline bool operator==(const Expression&left,const BigInteger&right){return BigInteger(left)==right;}
-template<big_integer_detail::Expression Expression>inline bool operator==(const BigInteger&left,const Expression&right){return left==BigInteger(right);}
-template<big_integer_detail::Expression Expression>inline std::ostream&operator<<(std::ostream&stream,const Expression&value){return stream<<BigInteger(value);}
+    BigInteger() = default;
+    template<fast_big_integer_detail::NativeInteger Integer>
+    BigInteger(Integer value){assign_integral(value);}
+    explicit BigInteger(std::string_view decimal){assign(decimal);}
+    template<fast_big_integer_detail::NativeInteger Integer>
+    BigInteger& operator=(Integer value){
+        assign_integral(value);
+        return *this;
+    }
+    BigInteger& assign(std::string_view decimal){
+        if(decimal.empty()){
+            throw std::invalid_argument("empty BigInteger literal");
+        }
+        bool negative = false;
+        std::size_t begin = 0;
+        if(decimal.front() == '+' || decimal.front() == '-'){
+            negative = decimal.front() == '-';
+            begin = 1;
+        }
+        if(begin == decimal.size()){
+            throw std::invalid_argument("BigInteger literal has no digits");
+        }
+        for(std::size_t index = begin; index < decimal.size(); ++index){
+            if(decimal[index] < '0' || decimal[index] > '9'){
+                throw std::invalid_argument("invalid BigInteger decimal digit");
+            }
+        }
+        while(begin < decimal.size() && decimal[begin] == '0') ++begin;
+        if(begin == decimal.size()){
+            limbs_.clear();
+            negative_ = false;
+            return *this;
+        }
+        std::vector<Limb> magnitude;
+        magnitude.reserve(
+            (decimal.size() - begin + decimal_digits_per_limb - 1)
+            / decimal_digits_per_limb
+        );
+        std::size_t end = decimal.size();
+        while(end > begin){
+            const std::size_t block_begin =
+                end - begin > decimal_digits_per_limb
+                    ? end - decimal_digits_per_limb
+                    : begin;
+            Limb block = 0;
+            for(std::size_t index = block_begin; index < end; ++index){
+                block = static_cast<Limb>(
+                    block * 10U + static_cast<unsigned>(decimal[index] - '0')
+                );
+            }
+            magnitude.push_back(block);
+            end = block_begin;
+        }
+        limbs_.assign(std::move(magnitude));
+        negative_ = negative;
+        return *this;
+    }
+    bool is_zero() const noexcept{return limbs_.empty();}
+    bool is_negative() const noexcept{return negative_;}
+    BigInteger absolute() const{
+        BigInteger result = *this;
+        result.negative_ = false;
+        return result;
+    }
+    std::string to_string() const{
+        if(is_zero()) return "0";
+        char highest_buffer[16];
+        const auto [highest_end, error] = std::to_chars(
+            highest_buffer,
+            highest_buffer + sizeof(highest_buffer),
+            limbs_.back()
+        );
+        if(error != std::errc{}){
+            throw std::runtime_error("BigInteger decimal conversion failed");
+        }
+        const std::size_t highest_size = static_cast<std::size_t>(
+            highest_end - highest_buffer
+        );
+        std::string result;
+        result.reserve(
+            static_cast<std::size_t>(negative_)
+            + highest_size
+            + (limbs_.size() - 1) * decimal_digits_per_limb
+        );
+        if(negative_) result.push_back('-');
+        result.append(highest_buffer, highest_end);
+        for(std::size_t index = limbs_.size() - 1; index-- > 0;){
+            char block[decimal_digits_per_limb];
+            Limb value = limbs_[index];
+            for(std::size_t position = decimal_digits_per_limb; position-- > 0;){
+                block[position] = static_cast<char>('0' + value % 10U);
+                value /= 10U;
+            }
+            result.append(block, block + decimal_digits_per_limb);
+        }
+        return result;
+    }
+    template<fast_big_integer_detail::NativeInteger Integer>
+    Integer checked_to() const{
+        using Value = std::remove_cv_t<Integer>;
+        if constexpr(std::same_as<Value, bool>){
+            if(*this == 0) return false;
+            if(*this == 1) return true;
+            throw std::overflow_error(
+                "BigInteger does not fit target integer type"
+            );
+        }else{
+            using Unsigned = fast_big_integer_detail::MakeUnsignedT<Value>;
+            Unsigned limit;
+            if constexpr(std::numeric_limits<Value>::is_signed){
+                const Unsigned positive_limit = static_cast<Unsigned>(
+                    (std::numeric_limits<Value>::max)()
+                );
+                limit = negative_ ? positive_limit + Unsigned{1}
+                                  : positive_limit;
+            }else{
+                if(negative_){
+                    throw std::overflow_error(
+                        "BigInteger does not fit target integer type"
+                    );
+                }
+                limit = (std::numeric_limits<Value>::max)();
+            }
+            Unsigned magnitude = 0;
+            for(std::size_t index = limbs_.size(); index-- > 0;){
+                const Unsigned digit = static_cast<Unsigned>(limbs_[index]);
+                if(digit > limit
+                    || magnitude > (limit - digit) / limb_base){
+                    throw std::overflow_error(
+                        "BigInteger does not fit target integer type"
+                    );
+                }
+                magnitude = magnitude * limb_base + digit;
+            }
+            if constexpr(!std::numeric_limits<Value>::is_signed){
+                return static_cast<Value>(magnitude);
+            }else{
+                if(!negative_) return static_cast<Value>(magnitude);
+                const Unsigned minimum_magnitude =
+                    static_cast<Unsigned>((std::numeric_limits<Value>::max)())
+                    + Unsigned{1};
+                if(magnitude == minimum_magnitude){
+                    return (std::numeric_limits<Value>::min)();
+                }
+                return static_cast<Value>(-static_cast<Value>(magnitude));
+            }
+        }
+    }
+    static std::pair<BigInteger, BigInteger> divmod(
+        const BigInteger& dividend,
+        const BigInteger& divisor
+    ){
+        if(divisor.is_zero()){
+            throw std::domain_error("BigInteger division by zero");
+        }
+        auto [quotient, remainder] = divide_magnitudes(
+            dividend.limbs_.span(), divisor.limbs_.span()
+        );
+        return {
+            from_magnitude(
+                std::move(quotient),
+                dividend.negative_ != divisor.negative_
+            ),
+            from_magnitude(std::move(remainder), dividend.negative_)
+        };
+    }
+    BigInteger operator-() const{
+        BigInteger result = *this;
+        if(!result.is_zero()) result.negative_ = !result.negative_;
+        return result;
+    }
+    BigInteger& operator+=(const BigInteger& other){
+        if(other.is_zero()) return *this;
+        if(is_zero()){
+            *this = other;
+            return *this;
+        }
+        if(negative_ == other.negative_){
+            limbs_.assign(add_magnitudes(limbs_.span(), other.limbs_.span()));
+            return *this;
+        }
+        const int order = compare_magnitudes(
+            limbs_.span(), other.limbs_.span()
+        );
+        if(order == 0){
+            limbs_.clear();
+            negative_ = false;
+        }else if(order > 0){
+            limbs_.assign(subtract_magnitudes(
+                limbs_.span(), other.limbs_.span()
+            ));
+        }else{
+            limbs_.assign(subtract_magnitudes(
+                other.limbs_.span(), limbs_.span()
+            ));
+            negative_ = other.negative_;
+        }
+        normalize();
+        return *this;
+    }
+    BigInteger& operator-=(const BigInteger& other){
+        if(this == &other){
+            limbs_.clear();
+            negative_ = false;
+            return *this;
+        }
+        BigInteger negated = -other;
+        return *this += negated;
+    }
+    BigInteger& operator*=(const BigInteger& other){
+        const bool result_negative = negative_ != other.negative_;
+        const bool square = this == &other;
+        std::vector<Limb> product = multiply_magnitudes(
+            limbs_.span(), other.limbs_.span(), square
+        );
+        limbs_.assign(std::move(product));
+        negative_ = result_negative && !limbs_.empty();
+        return *this;
+    }
+    BigInteger& operator/=(const BigInteger& other){
+        *this = divmod(*this, other).first;
+        return *this;
+    }
+    BigInteger& operator%=(const BigInteger& other){
+        *this = divmod(*this, other).second;
+        return *this;
+    }
+    BigInteger& operator++(){
+        *this += 1;
+        return *this;
+    }
+    BigInteger operator++(int){
+        BigInteger result = *this;
+        ++*this;
+        return result;
+    }
+    BigInteger& operator--(){
+        *this -= 1;
+        return *this;
+    }
+    BigInteger operator--(int){
+        BigInteger result = *this;
+        --*this;
+        return result;
+    }
+    friend BigInteger abs(const BigInteger& value){return value.absolute();}
+    friend bool operator==(
+        const BigInteger& left,
+        const BigInteger& right
+    ){
+        if(left.negative_ != right.negative_
+            || left.limbs_.size() != right.limbs_.size()){
+            return false;
+        }
+        return std::equal(
+            left.limbs_.begin(),
+            left.limbs_.end(),
+            right.limbs_.begin()
+        );
+    }
+    friend std::strong_ordering operator<=> (
+        const BigInteger& left,
+        const BigInteger& right
+    ){
+        if(left.negative_ != right.negative_){
+            return left.negative_ ? std::strong_ordering::less
+                                  : std::strong_ordering::greater;
+        }
+        const int order = compare_magnitudes(
+            left.limbs_.span(), right.limbs_.span()
+        );
+        if(order == 0) return std::strong_ordering::equal;
+        const bool less = left.negative_ ? order > 0 : order < 0;
+        return less ? std::strong_ordering::less
+                    : std::strong_ordering::greater;
+    }
+    friend BigInteger operator+(
+        BigInteger left,
+        const BigInteger& right
+    ){return left += right;}
+    friend BigInteger operator-(
+        BigInteger left,
+        const BigInteger& right
+    ){return left -= right;}
+    friend BigInteger operator*(
+        const BigInteger& left,
+        const BigInteger& right
+    ){
+        return from_magnitude(
+            multiply_magnitudes(
+                left.limbs_.span(),
+                right.limbs_.span(),
+                &left == &right
+            ),
+            left.negative_ != right.negative_
+        );
+    }
+    friend BigInteger operator/(
+        BigInteger left,
+        const BigInteger& right
+    ){return left /= right;}
+    friend BigInteger operator%(
+        BigInteger left,
+        const BigInteger& right
+    ){return left %= right;}
+    friend std::ostream& operator<<(
+        std::ostream& stream,
+        const BigInteger& value
+    ){return stream << value.to_string();}
+    friend std::istream& operator>>(
+        std::istream& stream,
+        BigInteger& value
+    ){
+        std::string text;
+        if(!(stream >> text)) return stream;
+        try{
+            BigInteger parsed(text);
+            value = std::move(parsed);
+        }catch(const std::invalid_argument&){
+            stream.setstate(std::ios::failbit);
+        }
+        return stream;
+    }
+};
+
 #endif  // CPPLIB_SRC_ALGORITHM_MATH_INTEGER_FAST_BIG_INTEGER_HPP_INCLUDED
