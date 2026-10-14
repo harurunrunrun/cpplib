@@ -1,5 +1,5 @@
 ---
-title: Run Enumeration (Run列挙)
+title: Run Enumeration (Run列挙) [runenumerate]
 documentation_of: ../../../../src/algorithm/string/sequence/run_enumeration.hpp
 ---
 

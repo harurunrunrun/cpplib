@@ -66,6 +66,9 @@ static void test_errors_and_rebuild(){
 }
 
 int main(){
+    CoordinateCompression<bool> dynamic_boolean(std::vector<bool>{true, false, true});
+    assert(dynamic_boolean.size() == 2 && !dynamic_boolean.value(0) && dynamic_boolean.value(1));
+    assert((dynamic_boolean.values() == std::vector<bool>{false, true}));
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

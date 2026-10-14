@@ -25,3 +25,17 @@ documentation_of: ../../../src/approximate/streaming/kll_sketch.hpp
 独立な compaction parity の下で rank 誤差は典型的に $O(N/\sqrt K)$、失敗確率は
 $e^{-\Theta(K\varepsilon^2)}$。最上位からさらに昇格が必要なら
 `std::overflow_error`。保存に必要な空間計算量は $O(K\,MaxLevels)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+KLLSketch<int> sketch(128, 24, 123); // level ごとの容量、level 上限、seed
+sketch.add(42);
+auto median = sketch.quantile(0.5L);
+~~~
+
+偶数の容量 $K\ge2$ と level 上限 $L\in[1,63]$ を実行時に指定し、`vector` に保存する。
+構築は $O(KL)$ 時間・$O(KL)$ 保存領域。追加は償却 $O(\log K)$ 時間、
+1 回の cascade は最悪 $O(KL\log K)$ 時間・$O(KL)$ 一時領域。
+保持数 $R\le KL$ に対する分位点 query は $O(R\log R)$ 時間・$O(R)$ 一時領域。
+容量を明示した固定配列版も同じ header で利用できる。

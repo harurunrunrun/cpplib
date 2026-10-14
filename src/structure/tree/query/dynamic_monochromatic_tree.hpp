@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -10,13 +11,13 @@
 #include <type_traits>
 #include <vector>
 
-template<auto Monoid, int MAX_SIZE>
+template<auto Monoid, int MAX_SIZE = -1>
 struct DynamicMonochromaticTree{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
 
 private:
-    static constexpr int SEGMENT_CAPACITY = 4 * MAX_SIZE;
+    static constexpr int SEGMENT_CAPACITY = MAX_SIZE < 0 ? 0 : 4 * MAX_SIZE;
     static constexpr int SEGMENT_TOTAL_CAPACITY = 2 * SEGMENT_CAPACITY;
     static constexpr int UNVISITED = -2;
     static constexpr int INFINITY_COUNT = std::numeric_limits<int>::max() / 4;
@@ -27,38 +28,59 @@ private:
     };
 
     struct State{
-        std::array<int, MAX_SIZE> graph_head{};
-        std::array<int, 2 * MAX_SIZE> graph_to{};
-        std::array<int, 2 * MAX_SIZE> graph_next{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> graph_head{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> graph_to{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> graph_next{};
         int edge_count = 0;
 
-        std::array<int, MAX_SIZE> parent{};
-        std::array<int, MAX_SIZE> depth{};
-        std::array<int, MAX_SIZE> subtree_size{};
-        std::array<int, MAX_SIZE> heavy_child{};
-        std::array<int, MAX_SIZE> chain_head{};
-        std::array<int, MAX_SIZE> position{};
-        std::array<int, MAX_SIZE> inverse_position{};
-        std::array<int, MAX_SIZE> order{};
-        std::array<int, MAX_SIZE> stack{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> parent{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> depth{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> subtree_size{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> heavy_child{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> chain_head{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> position{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> inverse_position{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> order{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack{};
 
-        std::array<unsigned char, MAX_SIZE> color{};
-        std::array<S, MAX_SIZE> value;
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> color{};
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> value;
 
-        std::array<int, SEGMENT_TOTAL_CAPACITY> minimum{};
-        std::array<int, SEGMENT_TOTAL_CAPACITY> lazy{};
-        std::array<S, SEGMENT_TOTAL_CAPACITY> minimum_product;
-        std::array<int, SEGMENT_TOTAL_CAPACITY> color_max_position{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : SEGMENT_TOTAL_CAPACITY)> minimum{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : SEGMENT_TOTAL_CAPACITY)> lazy{};
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : SEGMENT_TOTAL_CAPACITY)> minimum_product;
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : SEGMENT_TOTAL_CAPACITY)> color_max_position{};
 
         int root = -1;
         bool built = false;
+        explicit State(int n){
+            if(n < 0 || (MAX_SIZE < 0 && n > std::numeric_limits<int>::max() / 8)) throw std::length_error("tree index capacity exceeded");
+            graph_head.resize(static_cast<std::size_t>(n));
+            graph_to.resize(static_cast<std::size_t>(2 * n));
+            graph_next.resize(static_cast<std::size_t>(2 * n));
+            parent.resize(static_cast<std::size_t>(n));
+            depth.resize(static_cast<std::size_t>(n));
+            subtree_size.resize(static_cast<std::size_t>(n));
+            heavy_child.resize(static_cast<std::size_t>(n));
+            chain_head.resize(static_cast<std::size_t>(n));
+            position.resize(static_cast<std::size_t>(n));
+            inverse_position.resize(static_cast<std::size_t>(n));
+            order.resize(static_cast<std::size_t>(n));
+            stack.resize(static_cast<std::size_t>(n));
+            color.resize(static_cast<std::size_t>(n));
+            value.resize(static_cast<std::size_t>(n));
+            minimum.resize(static_cast<std::size_t>(8 * n));
+            lazy.resize(static_cast<std::size_t>(8 * n));
+            minimum_product.resize(static_cast<std::size_t>(8 * n));
+            color_max_position.resize(static_cast<std::size_t>(8 * n));
+        }
     };
 
     int _n;
     std::unique_ptr<State> state;
 
-    static int segment_index(int color, int node){
-        return color * SEGMENT_CAPACITY + node;
+    int segment_index(int color, int node) const{
+        return color * (MAX_SIZE < 0 ? 4 * _n : SEGMENT_CAPACITY) + node;
     }
 
     void check_vertex(int vertex, const char* message) const{
@@ -297,13 +319,13 @@ private:
     }
 
 public:
-    explicit DynamicMonochromaticTree(int n = MAX_SIZE): _n(n), state(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit DynamicMonochromaticTree(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), state(nullptr){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
-        state = std::make_unique<State>();
+        state = std::make_unique<State>(_n);
         state->graph_head.fill(-1);
         for(int vertex = 0; vertex < _n; ++vertex){
             state->value[vertex] = Monoid.e();
@@ -313,7 +335,7 @@ public:
     explicit DynamicMonochromaticTree(
         const std::vector<S>& values,
         const std::vector<bool>& colors = {}
-    ): DynamicMonochromaticTree(static_cast<int>(values.size())){
+    ): DynamicMonochromaticTree(cpplib_detail::checked_int_size(values.size())){
         if(values.size() > static_cast<std::size_t>(MAX_SIZE)
             || (!colors.empty() && colors.size() != values.size()))[[unlikely]]{
             throw std::runtime_error(

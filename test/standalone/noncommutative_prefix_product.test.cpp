@@ -1,9 +1,12 @@
 // competitive-verifier: STANDALONE
 
 #include <array>
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 #include <cassert>
 #include <cstddef>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <stdexcept>
 #include <vector>
@@ -106,6 +109,20 @@ void print_matrix(const Matrix2& matrix){
 }
 
 int main(){
+    {
+        constexpr MinMonoid<bool> monoid{};
+        NoncommutativePrefixProduct<monoid> tree(std::vector<bool>{true, true, false});
+        assert(tree.get(0) && tree.range_product(0, 2) && !tree.range_product(0, 3));
+        tree.set(2, true); assert(tree.get(2) && tree.range_product(0, 3));
+    }
+
+    // Dynamic storage: verify growth and retained values.
+    {
+        std::vector<Matrix2> values(129, Matrix2{1, 1, 0, 1});
+        NoncommutativePrefixProduct<matrix_monoid> products(values);
+        products.set(63, Matrix2{0, 1, 1, 0}); values[63] = Matrix2{0, 1, 1, 0};
+        for(int left = 0; left < 129; ++left) assert(products.range_product(left, 129) == naive_product(values, left, 129));
+    }
     int size;
     int query_count;
     if(!(std::cin >> size >> query_count)){

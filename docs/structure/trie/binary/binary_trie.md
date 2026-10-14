@@ -1,5 +1,5 @@
 ---
-title: Binary Trie (二進トライ)
+title: Binary Trie (二進トライ) [set_xor_min]
 documentation_of: ../../../../src/structure/trie/binary/binary_trie.hpp
 ---
 
@@ -64,3 +64,17 @@ $B=\mathrm{BIT}$ とする。
 - `kth`は`0 <= k < size()`なら値、それ以外は`nullopt`。
 - `min_element`, `max_element`は空なら`nullopt`。
 - 順序queryは保存値そのものではなく`value xor xor_value`を比較するが、戻り値は保存値。
+
+## 容量を省略した可変長版
+
+容量テンプレートを省略すると既定値 `-1` でvectorを使い、必要な保存領域を明示的に伸長する。
+固定容量を指定する既存版も同じヘッダに残る。
+
+```cpp
+using Variable = BinaryTrie<T>;
+using Fixed = BinaryTrie<T, Bits, Nodes>;
+```
+
+伸長の費用は追加操作全体で償却され、上記の各操作の計算量を維持する。
+領域は確保済みノード・履歴・heap要素などの個数に比例する。
+整数添字の表現上限を超える要素数は例外。構造上の文字種類・bit幅・座標域は、件数容量とは別に指定できる。

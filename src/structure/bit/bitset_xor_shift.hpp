@@ -2,19 +2,21 @@
 #define CPPLIB_SRC_STRUCTURE_BIT_BITSET_XOR_SHIFT_HPP_INCLUDED
 
 #include <array>
+#include <limits>
+#include "../array/static_or_vector.hpp"
 #include <bit>
 #include <cstddef>
 #include <cstdint>
 #include <stdexcept>
 
-template<std::size_t MAX_BITS>
+template<std::size_t MAX_BITS = std::numeric_limits<std::size_t>::max()>
 class BitsetXorShift{
     static constexpr std::size_t WORD_BITS = 64;
     static constexpr std::size_t MAX_WORDS =
         MAX_BITS / WORD_BITS + static_cast<std::size_t>(MAX_BITS % WORD_BITS != 0);
 
     std::size_t bit_size = 0;
-    std::array<std::uint64_t, MAX_WORDS> words{};
+    cpplib_detail::StaticOrVector<std::uint64_t, (MAX_BITS == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(MAX_WORDS))> words{};
 
     std::size_t word_count() const noexcept{
         return bit_size / WORD_BITS +
@@ -35,15 +37,17 @@ class BitsetXorShift{
     }
 
 public:
-    explicit BitsetXorShift(std::size_t size = MAX_BITS): bit_size(size){
+    explicit BitsetXorShift(std::size_t size = (MAX_BITS == std::numeric_limits<std::size_t>::max() ? 0 : MAX_BITS)): bit_size(size){
         if(size > MAX_BITS)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity violation (BitsetXorShift constructor)."
             );
         }
+        words.resize(word_count());
     }
 
-    static constexpr std::size_t capacity() noexcept{ return MAX_BITS; }
+    static constexpr std::size_t capacity() noexcept requires(MAX_BITS != std::numeric_limits<std::size_t>::max()){ return MAX_BITS; }
+    std::size_t capacity() const noexcept requires(MAX_BITS == std::numeric_limits<std::size_t>::max()){ return bit_size; }
     std::size_t size() const noexcept{ return bit_size; }
     bool empty() const noexcept{ return bit_size == 0; }
 

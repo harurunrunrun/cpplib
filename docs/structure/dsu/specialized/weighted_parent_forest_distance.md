@@ -75,3 +75,13 @@ void link_root(
 - `T` はデフォルト構築と加算ができ、全距離和を表現できる必要があります。
 - 頂点・サイズ違反には `out_of_range`、根でない頂点や閉路を作る接続には
   `invalid_argument` を送出します。
+
+## 可変長版
+
+```cpp
+using Dynamic = WeightedParentForestDistance<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。保存領域 O(n)。根取得・距離取得は従来どおり経路圧縮を使う。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

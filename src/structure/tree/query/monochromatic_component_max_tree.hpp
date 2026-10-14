@@ -4,7 +4,7 @@
 #include "dynamic_monochromatic_tree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class Value, int MAX_SIZE>
+template<class Value, int MAX_SIZE = -1>
 struct MonochromaticComponentMaxTree{
 private:
     DynamicMonochromaticTree<MaxMonoid<Value>{}, MAX_SIZE> tree;

@@ -21,7 +21,7 @@ long long composition_add(long long f, long long g){ return f + g; }
 long long id_add(){ return 0; }
 constexpr Monoid_Act_Len<op_sum, e_sum, mapping_add, composition_add, id_add> range_add_sum;
 
-using Tree = PersistentLazyRedBlackTree<int, range_add_sum, 300000, 3000>;
+using Tree = PersistentLazyRedBlackTree<int, range_add_sum>;
 
 long long naive_prod(const std::map<int, long long>& mp, int l, int r){
     long long result = 0;
@@ -178,7 +178,7 @@ constexpr Monoid_Act_Len<
     affine_id
 > affine_range_sum;
 
-using AffineTree = PersistentLazyRedBlackTree<int, affine_range_sum, 400000, 2000>;
+using AffineTree = PersistentLazyRedBlackTree<int, affine_range_sum>;
 
 long long affine_naive_prod(const std::map<int, long long>& values, int l, int r){
     long long result = 0;

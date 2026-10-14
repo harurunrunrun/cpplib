@@ -13,7 +13,7 @@
 #include <vector>
 #include "../../src/structure/bbst/map/persistent_splay_tree.hpp"
 
-using Tree = PersistentSplaySet<int, 200000, 5000>;
+using Tree = PersistentSplaySet<int>;
 
 template<class Set>
 std::optional<int> kth_naive(const Set& set, int k){
@@ -77,7 +77,7 @@ void check_version(const TreeType& tree, int version, const Set& set){
 }
 
 void branching_test(){
-    using BranchTree = PersistentSplaySet<int, 5000, 64>;
+    using BranchTree = PersistentSplaySet<int>;
     auto tree = std::make_unique<BranchTree>();
     std::vector<std::set<int>> expected(1);
 
@@ -118,7 +118,7 @@ void branching_test(){
 
 template<class Compare>
 void randomized_test(unsigned seed){
-    using RandomTree = PersistentSplaySet<int, 120000, 1200, Compare>;
+    using RandomTree = PersistentSplaySet<int, -1, -1, Compare>;
     auto tree = std::make_unique<RandomTree>(Compare{});
     std::vector<std::set<int, Compare>> expected(1);
     std::mt19937 rng(seed);

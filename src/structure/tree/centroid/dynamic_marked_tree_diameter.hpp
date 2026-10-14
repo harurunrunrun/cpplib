@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <memory>
 #include <optional>
@@ -13,17 +14,20 @@
 
 #include "centroid_distance_index.hpp"
 
-template<class Distance, int MAX_SIZE>
+template<class Distance, int MAX_SIZE = -1>
 struct DynamicMarkedTreeDiameter{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     using Index = CentroidDistanceIndex<Distance, MAX_SIZE>;
 
 private:
     struct State{
-        std::array<unsigned char, MAX_SIZE> marked{};
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> marked{};
         std::vector<std::multiset<std::pair<Distance, int>>> branch_values;
         std::vector<std::set<std::pair<Distance, int>>> centroid_maxima;
         std::set<std::pair<Distance, int>> centroid_candidates;
+        explicit State(int n){
+            marked.resize(static_cast<std::size_t>(n));
+        }
     };
 
     Index distance_index;
@@ -103,8 +107,8 @@ private:
     }
 
 public:
-    explicit DynamicMarkedTreeDiameter(int n = MAX_SIZE):
-        distance_index(n), state(std::make_unique<State>()){}
+    explicit DynamicMarkedTreeDiameter(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
+        distance_index(n), state(std::make_unique<State>(n)){}
 
     DynamicMarkedTreeDiameter(const DynamicMarkedTreeDiameter&) = delete;
     DynamicMarkedTreeDiameter& operator=(const DynamicMarkedTreeDiameter&) = delete;

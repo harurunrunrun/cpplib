@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_UTILITY_PLANE_COORDINATE_COMPRESSION_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_UTILITY_PLANE_COORDINATE_COMPRESSION_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <cstddef>
@@ -15,15 +17,15 @@ struct CoordinateNeighborPolicy{
     bool successor = false;
 };
 
-template<class X, class Y, int MAX_X_SIZE, int MAX_Y_SIZE>
+template<class X, class Y, int MAX_X_SIZE = -1, int MAX_Y_SIZE = -1>
 class PlaneCoordinateCompression{
     static_assert(std::is_integral_v<X> && !std::is_same_v<std::remove_cv_t<X>, bool>);
     static_assert(std::is_integral_v<Y> && !std::is_same_v<std::remove_cv_t<Y>, bool>);
-    static_assert(MAX_X_SIZE >= 0);
-    static_assert(MAX_Y_SIZE >= 0);
+    static_assert(MAX_X_SIZE >= -1);
+    static_assert(MAX_Y_SIZE >= -1);
 
-    std::array<X, static_cast<std::size_t>(MAX_X_SIZE)> compressed_x{};
-    std::array<Y, static_cast<std::size_t>(MAX_Y_SIZE)> compressed_y{};
+    cpplib_detail::StaticOrVector<X, ((MAX_X_SIZE < 0 || MAX_Y_SIZE < 0) ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_X_SIZE)))> compressed_x{};
+    cpplib_detail::StaticOrVector<Y, ((MAX_X_SIZE < 0 || MAX_Y_SIZE < 0) ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_Y_SIZE)))> compressed_y{};
     std::size_t x_count = 0;
     std::size_t y_count = 0;
 
@@ -61,9 +63,9 @@ class PlaneCoordinateCompression{
         return candidates;
     }
 
-    template<class T, std::size_t MAX_SIZE>
+    template<class Container, class T>
     static std::size_t index_of(
-        const std::array<T, MAX_SIZE>& values,
+        const Container& values,
         std::size_t count,
         T value,
         const char* message
@@ -111,10 +113,12 @@ public:
             "library assertion fault: capacity violation (PlaneCoordinateCompression y-axis)."
         );
 
-        if constexpr(MAX_X_SIZE > 0){
+        compressed_x.resize(next_x.size());
+        compressed_y.resize(next_y.size());
+        if constexpr(MAX_X_SIZE != 0){
             std::copy(next_x.begin(), next_x.end(), compressed_x.begin());
         }
-        if constexpr(MAX_Y_SIZE > 0){
+        if constexpr(MAX_Y_SIZE != 0){
             std::copy(next_y.begin(), next_y.end(), compressed_y.begin());
         }
         x_count = next_x.size();

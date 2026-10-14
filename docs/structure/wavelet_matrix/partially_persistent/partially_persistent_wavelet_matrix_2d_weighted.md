@@ -41,3 +41,17 @@ $D=\mathtt{Y\_BIT\_WIDTH}$、$H=O(\log(N+1))$。
 更新元は最新版だけ。同じxの点も入力idで区別する。copyは禁止、moveは可能。
 不正なversion・点・矩形、入力長不一致、yのbit幅、容量では `runtime_error`。
 失敗した更新はversion数と全bit段のnode使用量を戻す。
+
+## 容量を省略した可変長版
+
+容量のテンプレート引数 `MAX_SIZE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
+容量を指定した既存の固定配列版も同じヘッダで利用できる。
+
+```cpp
+using Variable = PartiallyPersistentWaveletMatrix2DWeighted<X, Y, W>;
+using Fixed = PartiallyPersistentWaveletMatrix2DWeighted<X, Y, W, N, Versions>;
+```
+
+可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
+再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
+整数添字の表現上限は残り、不正な添字や上限超過は検証する。

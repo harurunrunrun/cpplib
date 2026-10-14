@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include <array>
+#include <span>
+#include <vector>
 #include <cstdint>
 #include <iostream>
 #include <stdexcept>
@@ -86,6 +88,12 @@ int run_known_engine(){
        || parameters->increment != Engine::increment){
         return 1;
     }
+
+    const std::vector<result_type> dynamic_outputs(observations.begin(), observations.end());
+    const auto dynamic_parameters = recover_linear_congruential_parameters<result_type, Engine::modulus>(
+        std::span<const result_type>(dynamic_outputs));
+    if(!dynamic_parameters || dynamic_parameters->multiplier != parameters->multiplier
+       || dynamic_parameters->increment != parameters->increment) return 1;
 
     std::cout << *recovered << ' ' << parameters->multiplier << ' '
               << parameters->increment << '\n';

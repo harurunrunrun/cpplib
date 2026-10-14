@@ -75,3 +75,13 @@ long long y = tree.fold_less_equal(left, right, upper);
 - 空の対象集合は `Monoid.e()` を返す。
 - `Monoid.op` は結合的かつ可換で、`Monoid.e()` は単位元である必要がある。node 内では key 順に重みを保持するため、非可換 Monoid では元の index 順を保存できない。
 - `Compare` は狭義弱順序である必要がある。constructor に渡した比較 object が各 query でも使われる。
+
+## 可変長版
+
+```cpp
+using Dynamic = MonoidMergeSortTree<int, Monoid>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n log(n + 1))、保存領域 O(n log(n + 1))、値の上限付き区間集約は O(log²(n + 1))。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

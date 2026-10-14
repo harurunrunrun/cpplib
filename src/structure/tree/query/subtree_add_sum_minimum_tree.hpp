@@ -59,9 +59,9 @@ constexpr auto action = Monoid_Act<
 
 } // namespace subtree_add_sum_minimum_tree_internal
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class SubtreeAddSumMinimumTree{
-    static_assert(0 < MAX_SIZE);
+    static_assert(MAX_SIZE == -1 || 0 < MAX_SIZE);
 
     int vertex_count_;
     bool built_ = false;
@@ -73,7 +73,7 @@ class SubtreeAddSumMinimumTree{
     >> segment_tree_;
 
     static int checked_size(int vertex_count){
-        if(vertex_count < 0 || MAX_SIZE < vertex_count)[[unlikely]]{
+        if(vertex_count < 0 || (MAX_SIZE >= 0 && MAX_SIZE < vertex_count))[[unlikely]]{
             throw std::out_of_range(
                 "SubtreeAddSumMinimumTree size is out of range"
             );

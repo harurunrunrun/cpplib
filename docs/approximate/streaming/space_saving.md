@@ -24,3 +24,16 @@ documentation_of: ../../../src/approximate/streaming/space_saving.hpp
 候補について `estimate - error <= true_frequency <= estimate`。単位更新では
 最小 counter は高々 $N/Capacity$ なので、頻度が $N/Capacity$ を超える要素は
 必ず候補となる。保存に必要な空間計算量は $O(Capacity)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+SpaceSaving<int> sketch(16); // 保持する候補数
+sketch.add(42, 3);
+auto estimate = sketch.estimate(42);
+~~~
+
+容量 $C$ を実行時に指定し、候補を `vector` に保存する。
+構築・追加・推定・`clear` は $O(C)$ 時間、候補列挙は $O(C\log C)$ 時間。
+保存領域は $O(C)$、候補列挙は返り値に $O(C)$ 空間を使い、その他の一時領域は $O(1)$。
+容量指定の固定配列版も同じ header にある。

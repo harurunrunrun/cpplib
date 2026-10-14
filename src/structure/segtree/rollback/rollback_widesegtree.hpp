@@ -4,11 +4,14 @@
 #include "rollback_dynamic_segtree.hpp"
 #include "../detail/wide_segtree_persistence_common.hpp"
 
-template<long long MAX_SIZE, int MAX_NODES, int MAX_CHANGES>
+template<long long MAX_SIZE = -1, int MAX_NODES = -1, int MAX_CHANGES = -1>
 struct RollbackWideSegtree{
 private:
     RollbackDynamicSegtree<wide_segtree_persistence_internal::sum_monoid, MAX_SIZE, MAX_NODES, MAX_CHANGES> tree;
 public:
+    RollbackWideSegtree() = default;
+    explicit RollbackWideSegtree(long long n): tree(n){}
+
     using Snapshot = typename decltype(tree)::Snapshot;
     int history_size() const{ return tree.history_size(); }
     int nodes_used() const{ return tree.nodes_used(); }
@@ -24,7 +27,7 @@ public:
     void rollback(Snapshot snapshot){ tree.rollback(snapshot); }
 };
 
-template<long long MAX_SIZE, int MAX_NODES, int MAX_CHANGES>
+template<long long MAX_SIZE = -1, int MAX_NODES = -1, int MAX_CHANGES = -1>
 using RollbackWide_Segtree = RollbackWideSegtree<MAX_SIZE, MAX_NODES, MAX_CHANGES>;
 
 #endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_ROLLBACK_ROLLBACK_WIDESEGTREE_HPP_INCLUDED

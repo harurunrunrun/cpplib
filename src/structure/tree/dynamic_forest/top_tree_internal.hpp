@@ -3,16 +3,18 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <utility>
 
 namespace top_tree_internal{
 
-template<class Traits, int MAX_SIZE>
+template<class Traits, int MAX_SIZE = -1>
 struct SelfAdjustingTopTree{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     using S = typename Traits::S;
     using T = typename Traits::T;
 
@@ -69,14 +71,23 @@ struct SelfAdjustingTopTree{
 
 private:
     struct State{
-        std::array<Vertex, 2 * MAX_SIZE> vertices;
-        std::array<Node, 4 * MAX_SIZE> nodes;
-        std::array<Node*, 4 * MAX_SIZE> stack_node{};
-        std::array<int, 4 * MAX_SIZE> stack_depth{};
-        std::array<bool, 4 * MAX_SIZE> seen{};
+        cpplib_detail::StaticOrVector<Vertex, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> vertices;
+        cpplib_detail::StaticOrVector<Node, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(4 * MAX_SIZE))> nodes;
+        cpplib_detail::StaticOrVector<Node*, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(4 * MAX_SIZE))> stack_node{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(4 * MAX_SIZE))> stack_depth{};
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(4 * MAX_SIZE))> seen{};
+        explicit State(int n){
+            if(n < 0 || (MAX_SIZE < 0 && n > std::numeric_limits<int>::max() / 4)) throw std::length_error("tree index capacity exceeded");
+            vertices.resize(static_cast<std::size_t>(2 * n));
+            nodes.resize(static_cast<std::size_t>(4 * n));
+            stack_node.resize(static_cast<std::size_t>(4 * n));
+            stack_depth.resize(static_cast<std::size_t>(4 * n));
+            seen.resize(static_cast<std::size_t>(4 * n));
+        }
     };
 
     std::unique_ptr<State> state;
+    int capacity_n = MAX_SIZE;
     int vertex_used = 0;
     int node_used = 0;
     Node* recycled = nullptr;
@@ -222,7 +233,7 @@ private:
     void push_to(Node* node){
         int count = 0;
         for(Node* current = node; current != nullptr; current = current->parent){
-            if(count >= 4 * MAX_SIZE)[[unlikely]]{
+            if(count >= 4 * capacity_n)[[unlikely]]{
                 throw std::runtime_error("library assertion fault: invalid top tree parent chain.");
             }
             state->stack_node[count++] = current;
@@ -364,7 +375,7 @@ private:
             result = recycled;
             recycled = recycled->parent;
         }else{
-            if(node_used >= 4 * MAX_SIZE)[[unlikely]]{
+            if(node_used >= 4 * capacity_n)[[unlikely]]{
                 throw std::runtime_error("library assertion fault: top tree node capacity exceeded.");
             }
             result = &state->nodes[node_used++];
@@ -437,7 +448,8 @@ private:
     }
 
 public:
-    SelfAdjustingTopTree(): state(std::make_unique<State>()){}
+    explicit SelfAdjustingTopTree(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
+        state(std::make_unique<State>(n)), capacity_n(MAX_SIZE < 0 ? n : MAX_SIZE){}
 
     SelfAdjustingTopTree(const SelfAdjustingTopTree&) = delete;
     SelfAdjustingTopTree& operator=(const SelfAdjustingTopTree&) = delete;
@@ -445,7 +457,7 @@ public:
     SelfAdjustingTopTree& operator=(SelfAdjustingTopTree&&) = default;
 
     Vertex* create_vertex(const S& value, int index){
-        if(vertex_used + 2 > 2 * MAX_SIZE)[[unlikely]]{
+        if(vertex_used + 2 > 2 * capacity_n)[[unlikely]]{
             throw std::runtime_error("library assertion fault: top tree vertex capacity exceeded.");
         }
         Vertex* vertex = &state->vertices[vertex_used++];

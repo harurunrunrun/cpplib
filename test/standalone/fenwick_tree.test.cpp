@@ -1,7 +1,10 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/structure/fenwick_tree/fenwick_tree_2d.hpp"
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include "../../src/structure/fenwick_tree/range_add_point_get.hpp"
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -93,6 +96,20 @@ void test_exceptions(){
 }
 
 int main(){
+    {
+        FenwickTree<bool> tree(std::vector<bool>{false, true, false});
+        assert(tree.prefix_sum(3)); tree.add(0, true); assert(tree.prefix_sum(1));
+        FenwickTree2D<bool> grid(std::vector<std::vector<bool>>{{false, true}, {false, false}});
+        assert(grid.prefix_sum(2, 2)); grid.add(1, 0, true); assert(grid.prefix_sum(2, 1));
+    }
+
+    // Dynamic wrappers: runtime capacities.
+    {
+        RangeAddPointGet<long long> values(129); values.add(1, 129, 7); values.add(64, 129, -3);
+        assert(values.get(0) == 0 && values.get(63) == 7 && values.get(128) == 4);
+    }
+    {FenwickTree<long long> f(1001); f.add(1000,7); f.add(0,-2); assert(f.sum(0,1001)==5); assert(f.get(1000)==7); FenwickTree<long long> z(0); assert(z.prefix_sum(0)==0);}
+
     int n, q;
     if(std::cin >> n >> q){
         std::vector<long long> a(static_cast<std::size_t>(n));

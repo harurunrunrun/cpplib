@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <functional>
 #include <stdexcept>
@@ -13,11 +14,11 @@
 template<
     class Key,
     auto Monoid,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     class Compare = std::less<Key>
 >
 struct MonoidMergeSortTree{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
 
@@ -37,8 +38,8 @@ private:
     int height = 0;
     std::size_t capacity = 1;
     Compare compare;
-    std::array<std::vector<Key>, LEVEL_COUNT> sorted_keys;
-    std::array<std::vector<S>, LEVEL_COUNT> prefix;
+    cpplib_detail::StaticOrVector<std::vector<Key>, (MAX_SIZE < 0 ? -1 : LEVEL_COUNT)> sorted_keys;
+    cpplib_detail::StaticOrVector<std::vector<S>, (MAX_SIZE < 0 ? -1 : LEVEL_COUNT)> prefix;
 
     void check_range(int left, int right, const char* message) const{
         if(left < 0 || right < left || _n < right)[[unlikely]]{
@@ -52,17 +53,19 @@ private:
                 "library assertion fault: range violation (constructor)."
             );
         }
-        if(keys.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+        if(MAX_SIZE >= 0 && keys.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
 
-        _n = static_cast<int>(keys.size());
+        _n = cpplib_detail::checked_int_size(keys.size());
         while(capacity < keys.size()){
             capacity <<= 1U;
             height++;
         }
+        sorted_keys.resize(static_cast<std::size_t>(MAX_SIZE < 0 ? height + 1 : LEVEL_COUNT));
+        prefix.resize(static_cast<std::size_t>(MAX_SIZE < 0 ? height + 1 : LEVEL_COUNT));
         if(keys.empty()) return;
 
         sorted_keys[0] = keys;
@@ -221,7 +224,7 @@ public:
         std::vector<S>(weights.begin(), weights.end()),
         std::move(compare_)
     ){
-        static_assert(N <= static_cast<std::size_t>(MAX_SIZE));
+        static_assert(MAX_SIZE < 0 || N <= static_cast<std::size_t>(MAX_SIZE));
     }
 
     int size() const{ return _n; }
@@ -236,7 +239,7 @@ public:
         return sorted_keys[0][static_cast<std::size_t>(index)];
     }
 
-    const S& weight(int index) const{
+    typename std::vector<S>::const_reference weight(int index) const{
         if(index < 0 || _n <= index)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (weight)."

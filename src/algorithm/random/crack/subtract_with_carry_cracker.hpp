@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_SUBTRACT_WITH_CARRY_CRACKER_HPP_INCLUDED
 
 #include <array>
+#include <span>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
@@ -83,7 +84,53 @@ private:
     }
 
 public:
-    template<std::size_t Count>
+    inline constexpr explicit SubtractWithCarryCracker(
+        std::span<const result_type> consecutive_outputs
+    ){
+    const std::size_t observation_count = consecutive_outputs.size();
+        if(!(LongLag + 1 <= observation_count)) throw std::invalid_argument("insufficient observations for state recovery");
+        for(result_type value: consecutive_outputs){
+            if(!valid_word(value)){
+                throw std::invalid_argument(
+                    "subtract-with-carry output exceeds word size"
+                );
+            }
+        }
+
+        const result_type short_value =
+            consecutive_outputs[LongLag - ShortLag];
+        const result_type long_value = consecutive_outputs[0];
+        const result_type observed = consecutive_outputs[LongLag];
+        const result_type without_carry =
+            subtract(short_value, long_value, false);
+        const result_type with_carry =
+            subtract(short_value, long_value, true);
+
+        bool previous_carry;
+        if(observed == without_carry){
+            previous_carry = false;
+        }else if(observed == with_carry){
+            previous_carry = true;
+        }else{
+            throw std::invalid_argument(
+                "outputs do not belong to one subtract-with-carry stream"
+            );
+        }
+
+        carry_ = next_carry(short_value, long_value, previous_carry);
+        for(std::size_t index = 0; index < LongLag; ++index){
+            state_[index] = consecutive_outputs[index + 1];
+        }
+        for(std::size_t index = LongLag + 1; index < observation_count; ++index){
+            if(next() != consecutive_outputs[index]){
+                throw std::invalid_argument(
+                    "outputs do not belong to one subtract-with-carry stream"
+                );
+            }
+        }
+    }
+
+template<std::size_t Count>
     constexpr explicit SubtractWithCarryCracker(
         const std::array<result_type, Count>& consecutive_outputs
     ){
@@ -307,6 +354,37 @@ struct InitialStateSet{
     std::size_t count = 0;
 };
 
+template<std::size_t WordSize,
+    std::size_t ShortLag,
+    std::size_t LongLag,
+    class Result>
+constexpr bool state_matches(
+    std::array<Result, LongLag> state,
+    std::span<const Result> outputs
+) noexcept{
+    const std::size_t observation_count = outputs.size();
+    bool carry = state[LongLag - 1] == 0;
+    std::size_t head = 0;
+    for(Result observed: outputs){
+        std::size_t short_index =
+            head + (LongLag - ShortLag);
+        if(short_index >= LongLag) short_index -= LongLag;
+        const Result short_value = state[short_index];
+        const Result long_value = state[head];
+        const Result generated = subtract_word<WordSize>(
+            short_value,
+            long_value,
+            carry
+        );
+        if(generated != observed) return false;
+        carry = next_carry(short_value, long_value, carry);
+        state[head] = generated;
+        ++head;
+        if(head == LongLag) head = 0;
+    }
+    return true;
+}
+
 template<
     std::size_t WordSize,
     std::size_t ShortLag,
@@ -338,6 +416,85 @@ constexpr bool state_matches(
         if(head == LongLag) head = 0;
     }
     return true;
+}
+
+template<std::size_t WordSize,
+    std::size_t ShortLag,
+    std::size_t LongLag,
+    class Result>
+constexpr InitialStateSet<Result, LongLag> recover_initial_states(
+    std::span<const Result> outputs
+){
+    const std::size_t observation_count = outputs.size();
+    if(!(LongLag <= observation_count)) throw std::invalid_argument("insufficient observations for state recovery");
+    static_assert(
+        2 * ShortLag <= LongLag,
+        "direct standard-seed recovery requires 2 * ShortLag <= LongLag"
+    );
+
+    InitialStateSet<Result, LongLag> result;
+    for(unsigned carry_at_short_lag = 0;
+        carry_at_short_lag < 2;
+        ++carry_at_short_lag){
+        std::array<Result, LongLag> high_state{};
+        bool carry = carry_at_short_lag != 0;
+        for(std::size_t index = ShortLag;
+            index < LongLag;
+            ++index){
+            const Result short_value = outputs[index - ShortLag];
+            const Result long_value = subtract_word<WordSize>(
+                short_value,
+                outputs[index],
+                carry
+            );
+            high_state[index] = long_value;
+            carry = next_carry(short_value, long_value, carry);
+        }
+
+        for(unsigned initial_carry = 0;
+            initial_carry < 2;
+            ++initial_carry){
+            auto state = high_state;
+            carry = initial_carry != 0;
+            for(std::size_t index = 0;
+                index < ShortLag;
+                ++index){
+                const Result short_value =
+                    state[LongLag - ShortLag + index];
+                const Result long_value = subtract_word<WordSize>(
+                    short_value,
+                    outputs[index],
+                    carry
+                );
+                state[index] = long_value;
+                carry = next_carry(short_value, long_value, carry);
+            }
+            if(carry != (carry_at_short_lag != 0)) continue;
+            if((state[LongLag - 1] == 0)
+               != (initial_carry != 0)){
+                continue;
+            }
+            if(!state_matches<
+                WordSize,
+                ShortLag,
+                LongLag
+            >(state, outputs)){
+                continue;
+            }
+
+            bool duplicate = false;
+            for(std::size_t index = 0; index < result.count; ++index){
+                if(result.values[index] == state){
+                    duplicate = true;
+                    break;
+                }
+            }
+            if(!duplicate){
+                result.values[result.count++] = state;
+            }
+        }
+    }
+    return result;
 }
 
 template<
@@ -494,6 +651,37 @@ constexpr void append_seed_classes(
     }
 }
 
+template<class Engine,
+    class Cracker,
+    std::size_t WordSize,
+    std::size_t ShortLag,
+    std::size_t LongLag>
+auto recover_standard_seed(
+    std::span<const typename Engine::result_type> outputs
+){
+    const std::size_t observation_count = outputs.size();
+    if(!(LongLag + 1 <= observation_count)) throw std::invalid_argument("insufficient observations for state recovery");
+    using recovery_type = StandardSubtractWithCarrySeedRecovery<
+        Cracker,
+        typename Engine::result_type
+    >;
+
+    recovery_type recovery;
+    recovery.predictor.emplace(outputs);
+    const auto states = recover_initial_states<
+        WordSize,
+        ShortLag,
+        LongLag
+    >(outputs);
+    for(std::size_t index = 0; index < states.count; ++index){
+        append_seed_classes<WordSize, LongLag>(
+            states.values[index],
+            recovery
+        );
+    }
+    return recovery;
+}
+
 template<
     class Engine,
     class Cracker,
@@ -541,6 +729,20 @@ using Ranlux48BaseStandardSeedRecovery =
         std::ranlux48_base::result_type
     >;
 
+inline Ranlux24BaseStandardSeedRecovery
+recover_ranlux24_base_standard_seed(
+    std::span<const std::ranlux24_base::result_type> outputs
+){
+    const std::size_t observation_count = outputs.size();
+    return subtract_with_carry_cracker_detail::recover_standard_seed<
+        std::ranlux24_base,
+        Ranlux24BaseCracker,
+        24,
+        10,
+        24
+    >(outputs);
+}
+
 template<std::size_t Count>
 Ranlux24BaseStandardSeedRecovery
 recover_ranlux24_base_standard_seed(
@@ -552,6 +754,20 @@ recover_ranlux24_base_standard_seed(
         24,
         10,
         24
+    >(outputs);
+}
+
+inline Ranlux48BaseStandardSeedRecovery
+recover_ranlux48_base_standard_seed(
+    std::span<const std::ranlux48_base::result_type> outputs
+){
+    const std::size_t observation_count = outputs.size();
+    return subtract_with_carry_cracker_detail::recover_standard_seed<
+        std::ranlux48_base,
+        Ranlux48BaseCracker,
+        48,
+        5,
+        12
     >(outputs);
 }
 
@@ -602,6 +818,62 @@ struct SubtractWithCarrySeedRecovery{
         return predictor();
     }
 };
+
+template<class Engine>
+SubtractWithCarrySeedRecovery<Engine>
+recover_subtract_with_carry_seed_candidates(
+    std::span<const typename Engine::result_type> consecutive_outputs,
+    unsigned long long discard_count,
+    typename Engine::result_type seed_first,
+    unsigned long long candidate_count
+){
+    const std::size_t observation_count = consecutive_outputs.size();
+    if(!(0 < observation_count)) throw std::invalid_argument("insufficient observations for state recovery");
+    using result_type = typename Engine::result_type;
+    static_assert(std::is_unsigned_v<result_type>);
+    static_assert(
+        std::numeric_limits<result_type>::digits
+            <= std::numeric_limits<unsigned long long>::digits
+    );
+    if(
+        candidate_count != 0
+        && candidate_count - 1 > static_cast<unsigned long long>(
+            std::numeric_limits<result_type>::max() - seed_first
+        )
+    ){
+        throw std::invalid_argument("seed candidate range overflows");
+    }
+    SubtractWithCarrySeedRecovery<Engine> recovery;
+    result_type seed = seed_first;
+    for(
+        unsigned long long offset = 0;
+        offset < candidate_count;
+        ++offset
+    ){
+        Engine engine(seed);
+        engine.discard(discard_count);
+        bool matches = true;
+        for(result_type observed: consecutive_outputs){
+            if(engine() != observed){
+                matches = false;
+                break;
+            }
+        }
+        if(matches){
+            if(recovery.status == SubtractWithCarrySeedRecoveryStatus::none){
+                recovery.status = SubtractWithCarrySeedRecoveryStatus::unique;
+                recovery.seed = seed;
+                recovery.predictor = std::move(engine);
+            }else{
+                recovery.status =
+                    SubtractWithCarrySeedRecoveryStatus::ambiguous;
+                return recovery;
+            }
+        }
+        if(offset + 1 != candidate_count) ++seed;
+    }
+    return recovery;
+}
 
 template<class Engine, std::size_t Count>
 SubtractWithCarrySeedRecovery<Engine>
@@ -656,6 +928,33 @@ recover_subtract_with_carry_seed_candidates(
         if(offset + 1 != candidate_count) ++seed;
     }
     return recovery;
+}
+
+template<class Engine>
+SubtractWithCarrySeedRecovery<Engine>
+recover_subtract_with_carry_seed_in_range(
+    std::span<const typename Engine::result_type> consecutive_outputs,
+    unsigned long long discard_count,
+    typename Engine::result_type seed_first,
+    typename Engine::result_type seed_last
+){
+    const std::size_t observation_count = consecutive_outputs.size();
+    if(!(0 < observation_count)) throw std::invalid_argument("insufficient observations for state recovery");
+    using result_type = typename Engine::result_type;
+    static_assert(std::is_unsigned_v<result_type>);
+    static_assert(
+        std::numeric_limits<result_type>::digits
+            <= std::numeric_limits<unsigned long long>::digits
+    );
+    if(seed_last < seed_first){
+        throw std::invalid_argument("invalid seed range");
+    }
+    return recover_subtract_with_carry_seed_candidates<Engine>(
+        consecutive_outputs,
+        discard_count,
+        seed_first,
+        static_cast<unsigned long long>(seed_last - seed_first)
+    );
 }
 
 template<class Engine, std::size_t Count>

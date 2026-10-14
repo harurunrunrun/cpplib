@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -67,6 +69,23 @@ void self_test(){
 }
 
 int main(){
+    {
+        PersistentArray<bool> values(std::vector<bool>{true, false});
+        int version = 0;
+        for(int i = 0; i < 100; ++i) version = values.set(version, 1, values.get(version, 0));
+        const bool& bit = values.get(version, 1); assert(bit);
+        assert(!values.get(0, 1));
+    }
+
+    // Dynamic storage: verify growth and retained values.
+    {
+        PersistentArray<std::string> values(17, "original");
+        int version = 0;
+        for(int i = 0; i < 300; ++i) version = values.set(version, i % 17, values.get(version, (i + 1) % 17));
+        assert(values.get(0, 0) == "original");
+        const int branch = values.set(0, 0, "branch");
+        assert(values.get(branch, 0) == "branch"); assert(values.get(version, 0) == "original");
+    }
     int n, q;
     if(!(std::cin >> n >> q)){
         self_test();

@@ -1,20 +1,23 @@
 #ifndef CPPLIB_SRC_STRUCTURE_GRAPH_DYNAMIC_CONNECTIVITY_OFFLINE_DYNAMIC_CONNECTIVITY_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_GRAPH_DYNAMIC_CONNECTIVITY_OFFLINE_DYNAMIC_CONNECTIVITY_HPP_INCLUDED
 
+#include "../../array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <map>
 #include <memory>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 #include "../../dsu/rollback/rollback_dsu.hpp"
 
-template<int MAX_SIZE, int MAX_TIME, int MAX_HISTORY>
+template<int MAX_SIZE = -1, int MAX_TIME = -1, int MAX_HISTORY = -1>
 struct OfflineDynamicConnectivity{
-    static_assert(MAX_SIZE > 0);
-    static_assert(MAX_TIME > 0);
-    static_assert(MAX_HISTORY >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
+    static_assert(MAX_TIME == -1 || MAX_TIME > 0);
+    static_assert(MAX_HISTORY >= -1);
 
     struct Edge{
         int u;
@@ -25,7 +28,7 @@ private:
     static constexpr int SEG_SIZE = MAX_TIME * 4 + 5;
 
     struct State{
-        std::array<std::vector<Edge>, SEG_SIZE> segment;
+        cpplib_detail::StaticOrVector<std::vector<Edge>, (MAX_TIME < 0 ? -1 : static_cast<std::ptrdiff_t>(SEG_SIZE))> segment;
         std::map<std::pair<int, int>, std::vector<int>> active;
     };
 
@@ -92,15 +95,18 @@ private:
     }
 
 public:
-    explicit OfflineDynamicConnectivity(int n = MAX_SIZE, int time_size = MAX_TIME):
+    explicit OfflineDynamicConnectivity(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE), int time_size = (MAX_TIME < 0 ? 0 : MAX_TIME)):
         _n(n), _time_size(time_size), state(nullptr), dsu(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
-        if(time_size < 0 || MAX_TIME < time_size)[[unlikely]]{
+        if(time_size < 0 || (MAX_TIME >= 0 && MAX_TIME < time_size))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
+        if(time_size > (std::numeric_limits<int>::max() - 5) / 4)
+            throw std::length_error("offline connectivity time index overflow");
         state = std::make_unique<State>();
+        state->segment.resize(static_cast<std::size_t>(time_size) * 4 + 5);
     }
 
     OfflineDynamicConnectivity(const OfflineDynamicConnectivity&) = delete;

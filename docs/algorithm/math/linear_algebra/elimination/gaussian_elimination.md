@@ -148,3 +148,16 @@ $W=\lceil (MAX\_COL+1) / w\rceil$、nullspace dimension を $D$ とする。
 ## 注意点
 
 法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+Matrix<Mint> dynamic(rows, columns);
+auto rank = gaussian_rank(dynamic);
+std::vector<std::vector<Mint>> values(rows, std::vector<Mint>(columns));
+auto vector_rank = gaussian_rank(values);
+```
+
+行数 $R$、列数 $C$ の rank は $O(RC\min(R,C))$ 時間・$O(RC)$ 空間。正方行列の行列式・逆行列は $O(N^3)$ 時間・$O(N^2)$ 空間。`Matrix<T>` と二次元 `vector` の両方を受け付ける。

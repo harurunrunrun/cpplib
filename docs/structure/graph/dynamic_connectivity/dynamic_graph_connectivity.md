@@ -39,3 +39,14 @@ $O(\log \mathtt{MAX\_SIZE})$。
 - 頂点数は `MAX_SIZE` 以下でなければならない。
 - 自己ループは記録するが連結性には影響しない。
 - 多重辺は個数を管理し、削除は1本ずつ行う。
+
+## 容量を省略した可変長版
+
+```cpp
+DynamicGraphConnectivity<> graph(n);
+DynamicGraphConnectivity<N> fixed(n);
+```
+
+容量省略時の `MAX_SIZE=-1` はvectorを使い、固定容量版と同じAPIを提供する。
+内部のオンライン連結性へ実行時頂点数を渡す。償却操作時間と $O(N\log(N+1)+M)$ の保存領域は内部構造と同じ。
+整数添字の表現上限を超えるノード数と無効な頂点は検証する。

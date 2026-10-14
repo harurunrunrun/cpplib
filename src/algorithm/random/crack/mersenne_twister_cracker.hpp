@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_MERSENNE_TWISTER_CRACKER_HPP_INCLUDED
 
 #include <array>
+#include <span>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
@@ -137,7 +138,31 @@ private:
     }
 
 public:
-    template<std::size_t Count>
+    inline constexpr explicit MersenneTwisterCracker(
+        std::span<const result_type> consecutive_outputs
+    ){
+    const std::size_t observation_count = consecutive_outputs.size();
+        if(!(observation_count >= StateSize)) throw std::invalid_argument("insufficient observations for state recovery");
+        for(result_type value: consecutive_outputs){
+            if(!valid_word(value)){
+                throw std::invalid_argument(
+                    "Mersenne Twister output exceeds word size"
+                );
+            }
+        }
+        for(std::size_t index = 0; index < StateSize; ++index){
+            state_[index] = untemper(consecutive_outputs[index]);
+        }
+        for(std::size_t index = StateSize; index < observation_count; ++index){
+            if(next() != consecutive_outputs[index]){
+                throw std::invalid_argument(
+                    "outputs do not belong to one Mersenne Twister stream"
+                );
+            }
+        }
+    }
+
+template<std::size_t Count>
     constexpr explicit MersenneTwisterCracker(
         const std::array<result_type, Count>& consecutive_outputs
     ){

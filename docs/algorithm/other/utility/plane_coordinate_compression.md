@@ -118,3 +118,14 @@ neighbor追加時も候補数は入力列長の高々3倍なので、漸近計�
 - 圧縮後の要素数がtemplate容量を超えると `runtime_error` を送出する。
 - neighbor追加は整数の1だけ離れた値を加える。座標差そのものを保存する圧縮ではない。
 - `x_values()` と `y_values()` が返したspanは、同じobjectへの次の `build` で無効になる。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+PlaneCoordinateCompression<int, long long> dynamic(xs, ys);
+PlaneCoordinateCompression<int, long long, 100000, 100000> fixed(xs, ys);
+```
+
+入力軸の要素数を $X,Y$ とすると構築は $O(X\log X+Y\log Y)$ 時間・$O(X+Y)$ 空間、軸ごとの検索は対数時間。

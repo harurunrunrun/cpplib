@@ -6,7 +6,7 @@
 #include "../dynamic/dynamic_lazysegtree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class RangeAddRangeSum{
     static constexpr AddSumMonoidAct<T> action_{};
     std::unique_ptr<DynamicLazySegtree<action_, MAX_SIZE>> tree_;

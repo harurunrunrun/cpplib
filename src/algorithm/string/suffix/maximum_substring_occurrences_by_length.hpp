@@ -9,13 +9,14 @@
 
 #include "suffix_automaton.hpp"
 
-template<int MAX_LENGTH, int ALPHABET = 26, char OFFSET = 'a'>
+template<int MAX_LENGTH = -1, int ALPHABET = 26, char OFFSET = 'a'>
 std::vector<long long> maximum_substring_occurrences_by_length(
     std::string_view text
 ){
-    static_assert(MAX_LENGTH >= 0);
-    static_assert(MAX_LENGTH <= (std::numeric_limits<int>::max() - 1) / 2);
-    if(text.size() > static_cast<std::size_t>(MAX_LENGTH))[[unlikely]]{
+    static_assert(MAX_LENGTH >= -1);
+    static_assert(MAX_LENGTH == -1 || MAX_LENGTH <= (std::numeric_limits<int>::max() - 1) / 2);
+    if(text.size() > static_cast<std::size_t>(MAX_LENGTH)
+       || text.size() > static_cast<std::size_t>((std::numeric_limits<int>::max() - 1) / 2))[[unlikely]]{
         throw std::runtime_error(
             "library assertion fault: capacity exceeded "
             "(maximum_substring_occurrences_by_length)."
@@ -23,7 +24,7 @@ std::vector<long long> maximum_substring_occurrences_by_length(
     }
 
     auto automaton = std::make_unique<
-        SuffixAutomaton<ALPHABET, MAX_LENGTH * 2 + 1, OFFSET>
+        SuffixAutomaton<ALPHABET, (MAX_LENGTH < 0 ? -1 : MAX_LENGTH * 2 + 1), OFFSET>
     >();
     for(char character: text) automaton->extend(character);
     return automaton->maximum_occurrences_by_length();

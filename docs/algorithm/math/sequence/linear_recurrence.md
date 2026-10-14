@@ -1,5 +1,5 @@
 ---
-title: Linear Recurrence (線形漸化式) [kth_term_of_linearly_recurrent_sequence]
+title: Linear Recurrence (線形漸化式) [find_linear_recurrence] [kth_term_of_linearly_recurrent_sequence]
 documentation_of: ../../../../src/algorithm/math/sequence/linear_recurrence.hpp
 ---
 
@@ -69,3 +69,15 @@ $M(d)$ を次数 $d$ の多項式乗算時間とする。
   容量超過を検査する。Berlekamp--Masseyだけは除算を使うため値型が体である必要がある。
 - 高速 `bostan_mori(initial,coefficient,k)` は2vectorの長さが異なると例外。
   次数0では0を返す。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+LinearRecurrence<Mint> dynamic(initial, coefficients);
+LinearRecurrence<Mint, 1000> fixed(initial, coefficients);
+auto inferred = berlekamp_massey(sequence);
+```
+
+次数 $d$ の保存領域と `kth_term` の作業領域は $O(d)$、計算は $O(d^2\log(k+1))$ 時間。Berlekamp–Massey は長さ $N$ に対して $O(Nd)$ 時間、作業領域 $O(N)$。高速 Modint 版 Bostan–Mori の計算量は変わらない。

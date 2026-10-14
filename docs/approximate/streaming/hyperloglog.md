@@ -23,3 +23,16 @@ stream の distinct key 数を $2^{Precision}$ 個の register で推定する�
 異なる seed の merge は `std::invalid_argument`。一様な 64-bit hash を仮定する。
 十分大きい cardinality で相対標準誤差は約 $1.04/\sqrt{2^{Precision}}$。
 保存に必要な空間計算量は $O(2^{Precision})$ byte。
+
+## 容量を省略する可変長版
+
+~~~cpp
+HyperLogLog<> sketch(12, 123); // precision、seed
+sketch.add(42);
+auto cardinality = sketch.estimate();
+~~~
+
+precision $P\in[4,18]$ を実行時に指定し、$M=2^P$ 個の register を `vector` に保存する。
+構築・推定・merge・`clear` は $O(M)$ 時間、追加は $O(1)$ 時間。
+保存領域は $O(M)$ byte、各操作の一時領域は $O(1)$。
+`HyperLogLog<P>` は同じ header の固定配列版を選ぶ。

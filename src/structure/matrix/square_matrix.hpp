@@ -3,23 +3,37 @@
 
 #include <array>
 #include <cstddef>
+#include <limits>
+#include <type_traits>
 #include <stdexcept>
 #include <vector>
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 struct SquareMatrix{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
 private:
     int _n = 0;
-    std::array<T, static_cast<std::size_t>(MAX_SIZE) * MAX_SIZE> data{};
+    using DynamicValue = std::conditional_t<std::is_same_v<T, bool>, std::array<T, 1>, T>;
+    std::conditional_t<MAX_SIZE < 0, std::vector<DynamicValue>,
+        std::array<T, static_cast<std::size_t>(MAX_SIZE < 0 ? 0 : MAX_SIZE) * (MAX_SIZE < 0 ? 0 : MAX_SIZE)>> data{};
 
-    static constexpr std::size_t index(int i, int j){
-        return static_cast<std::size_t>(i) * MAX_SIZE + j;
+    constexpr int stride() const{return MAX_SIZE < 0 ? _n : MAX_SIZE;}
+
+    constexpr std::size_t index(int i, int j) const{
+        return static_cast<std::size_t>(i) * stride() + j;
+    }
+
+    void allocate(){
+        if constexpr(MAX_SIZE < 0){
+            if(_n && static_cast<std::size_t>(_n) > data.max_size() / static_cast<std::size_t>(_n))
+                throw std::length_error("matrix storage is too large");
+            data.resize(static_cast<std::size_t>(_n) * _n);
+        }
     }
 
     void check_size(int n, const char* message) const{
-        if(n < 0 || MAX_SIZE < n)[[unlikely]] throw std::runtime_error(message);
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]] throw std::runtime_error(message);
     }
 
     void check_index(int i, int j, const char* message) const{
@@ -37,14 +51,17 @@ public:
 
     explicit SquareMatrix(int n): _n(n){
         check_size(n, "library assertion fault: range violation (constructor).");
+        allocate();
     }
 
     explicit SquareMatrix(const std::vector<std::vector<T>>& values){
+        if(values.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))
+            throw std::length_error("too many matrix rows");
         int n = static_cast<int>(values.size());
         check_size(n, "library assertion fault: range violation (constructor).");
 
         for(int i = 0; i < n; i++){
-            if(static_cast<int>(values[static_cast<std::size_t>(i)].size()) != n){
+            if(values[static_cast<std::size_t>(i)].size() != static_cast<std::size_t>(n)){
                 throw std::runtime_error(
                     "library assertion fault: square violation (constructor)."
                 );
@@ -52,6 +69,7 @@ public:
         }
 
         _n = n;
+        allocate();
         for(int i = 0; i < _n; i++){
             for(int j = 0; j < _n; j++){
                 (*this)(i, j) = values[static_cast<std::size_t>(i)][
@@ -66,12 +84,14 @@ public:
 
     T& operator()(int i, int j){
         check_index(i, j, "library assertion fault: range violation (operator()).");
-        return data[index(i, j)];
+        if constexpr((MAX_SIZE < 0) && std::is_same_v<T, bool>) return data[index(i, j)][0];
+        else return data[index(i, j)];
     }
 
     const T& operator()(int i, int j) const{
         check_index(i, j, "library assertion fault: range violation (operator()).");
-        return data[index(i, j)];
+        if constexpr((MAX_SIZE < 0) && std::is_same_v<T, bool>) return data[index(i, j)][0];
+        else return data[index(i, j)];
     }
 
     static SquareMatrix zero(int n){
@@ -181,15 +201,21 @@ public:
 
         SquareMatrix res(lhs._n);
         const int n = lhs._n;
-        for(int i = 0; i < n; i++){
+        if constexpr(std::is_same_v<T, bool>){
+            for(int i = 0; i < n; i++){
+                for(int k = 0; k < n; k++){
+                    for(int j = 0; j < n; j++) res(i, j) += lhs(i, k) * rhs(k, j);
+                }
+            }
+        }else for(int i = 0; i < n; i++){
             T* result_row = res.data.data() +
-                static_cast<std::size_t>(i) * MAX_SIZE;
+                static_cast<std::size_t>(i) * res.stride();
             const T* left_row = lhs.data.data() +
-                static_cast<std::size_t>(i) * MAX_SIZE;
+                static_cast<std::size_t>(i) * lhs.stride();
             for(int k = 0; k < n; k++){
                 const T& left_value = left_row[k];
                 const T* right_row = rhs.data.data() +
-                    static_cast<std::size_t>(k) * MAX_SIZE;
+                    static_cast<std::size_t>(k) * rhs.stride();
                 for(int j = 0; j < n; j++){
                     result_row[j] += left_value * right_row[j];
                 }

@@ -30,3 +30,14 @@ $O(N)$。
 - 各軸の順位は相異なることを呼び出し側が保証する。
 - $N$ は `MAX_SIZE` 以下でなければならない。
 - 前提違反時は `runtime_error` を送出する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = count_undominated_rank_triples(ranks);
+auto fixed = count_undominated_rank_triples<100000>(ranks);
+```
+
+$N$ 要素に対して $O(N\log N)$ 時間・$O(N)$ 空間。

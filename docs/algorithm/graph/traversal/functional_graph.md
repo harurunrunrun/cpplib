@@ -98,3 +98,14 @@ default constructorは空graphを作り、`build` は以前の状態を置換す
 | 頂点ごとの分解結果query | $O(1)$ | $O(1)$ |
 | `component_size`, `cycle_size`, `cycle` | $O(1)$ | $O(1)$（`cycle` はview） |
 | `jump`, `steps_to` | $O(64)$ | $O(1)$ |
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+FunctionalGraph<> dynamic(successors);
+FunctionalGraph<100000> fixed(successors);
+```
+
+構築・保存領域は $O(64N)$、`jump` は $O(64)$ 時間。64 は扱う移動回数 `uint64_t` の bit 幅であり、頂点容量とは独立している。

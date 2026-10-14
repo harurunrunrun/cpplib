@@ -10,7 +10,7 @@
 
 #include "single_failure_connectivity.hpp"
 
-template<int MAX_VERTICES, int MAX_EDGES>
+template<int MAX_VERTICES = -1, int MAX_EDGES = -1>
 struct EndpointFailureConnectivity{
 private:
     static std::uint64_t edge_key(int first, int second){

@@ -1,10 +1,13 @@
 #ifndef CPPLIB_SRC_ALGORITHM_MATH_LINEAR_ALGEBRA_ELIMINATION_GAUSSIAN_ELIMINATION_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_MATH_LINEAR_ALGEBRA_ELIMINATION_GAUSSIAN_ELIMINATION_HPP_INCLUDED
 
+#include "../../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <bitset>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <stdexcept>
@@ -39,20 +42,6 @@ struct Workspace{
     }
 };
 
-template<class T, int MAX_ROW, int MAX_COL, int WORK_COL>
-std::unique_ptr<Workspace<T, MAX_ROW, WORK_COL>> copy_matrix(
-    const Matrix<T, MAX_ROW, MAX_COL>& matrix,
-    int stride
-){
-    auto workspace = std::make_unique<Workspace<T, MAX_ROW, WORK_COL>>();
-    workspace->stride = stride;
-    for(int i = 0; i < matrix.rows(); ++i){
-        T* destination = workspace->row(i);
-        for(int j = 0; j < matrix.cols(); ++j) destination[j] = matrix(i, j);
-    }
-    return workspace;
-}
-
 template<class T>
 void swap_row(T* lhs, T* rhs, int first, int last){
     for(int j = first; j < last; ++j) std::swap(lhs[j], rhs[j]);
@@ -76,12 +65,27 @@ struct DynamicWorkspace{
     }
 };
 
+template<class T, int MAX_ROW, int MAX_COL, int WORK_COL>
+auto copy_matrix(const Matrix<T, MAX_ROW, MAX_COL>& matrix, int stride){
+    auto workspace = [&](){
+        if constexpr(MAX_ROW < 0 || MAX_COL < 0)
+            return std::make_unique<DynamicWorkspace<T>>(matrix.rows(), stride);
+        else return std::make_unique<Workspace<T, MAX_ROW, WORK_COL>>();
+    }();
+    workspace->stride = stride;
+    for(int i = 0; i < matrix.rows(); ++i){
+        T* destination = workspace->row(i);
+        for(int j = 0; j < matrix.cols(); ++j) destination[j] = matrix(i, j);
+    }
+    return workspace;
+}
+
 template<class T>
 std::pair<int, int> check_rectangular(const std::vector<std::vector<T>>& matrix){
-    const int rows = static_cast<int>(matrix.size());
-    const int cols = rows == 0 ? 0 : static_cast<int>(matrix[0].size());
+    const int rows = cpplib_detail::checked_int_size(matrix.size());
+    const int cols = rows == 0 ? 0 : cpplib_detail::checked_int_size(matrix[0].size());
     for(const auto& row: matrix){
-        if(static_cast<int>(row.size()) != cols)[[unlikely]]{
+        if(cpplib_detail::checked_int_size(row.size()) != cols)[[unlikely]]{
             throw std::runtime_error("library assertion fault: rectangular violation (gaussian elimination).");
         }
     }
@@ -94,6 +98,8 @@ DynamicWorkspace<T> copy_dynamic(
     int extra_columns
 ){
     const auto [rows, cols] = check_rectangular(matrix);
+    if(extra_columns > std::numeric_limits<int>::max() - cols)
+        throw std::length_error("augmented matrix width exceeds int range");
     DynamicWorkspace<T> workspace(rows, cols + extra_columns);
     for(int i = 0; i < rows; ++i){
         std::copy(matrix[static_cast<std::size_t>(i)].begin(),
@@ -311,6 +317,7 @@ GaussianLinearSystemSolution<T> solve_linear_system(
     if(static_cast<int>(rhs.size()) != rows)[[unlikely]]{
         throw std::runtime_error("library assertion fault: shape violation (solve_linear_system).");
     }
+    if(cols == std::numeric_limits<int>::max()) throw std::length_error("augmented matrix width exceeds int range");
     auto workspace = gaussian_elimination_internal::copy_matrix<
         T, MAX_ROW, MAX_COL, MAX_COL + 1
     >(matrix, cols + 1);
@@ -380,6 +387,7 @@ std::optional<Matrix<T, MAX_ROW, MAX_COL>> gaussian_inverse(
         throw std::runtime_error("library assertion fault: square violation (gaussian_inverse).");
     }
     const int n = matrix.rows();
+    if(n > std::numeric_limits<int>::max() / 2) throw std::length_error("augmented matrix width exceeds int range");
     auto workspace = gaussian_elimination_internal::copy_matrix<
         T, MAX_ROW, MAX_COL, 2 * MAX_COL
     >(matrix, 2 * n);
@@ -471,7 +479,7 @@ std::optional<std::vector<std::vector<T>>> gaussian_inverse(
     return result;
 }
 
-template<std::size_t MAX_COL>
+template<std::size_t MAX_COL = static_cast<std::size_t>(-1)>
 struct GF2LinearSystemSolution{
     bool consistent = false;
     std::bitset<MAX_COL> particular;
@@ -488,7 +496,7 @@ int gf2_rank(
         throw std::runtime_error("library assertion fault: range violation (gf2_rank).");
     }
     std::vector<std::bitset<MAX_COL>> matrix = input;
-    const int rows = static_cast<int>(matrix.size());
+    const int rows = cpplib_detail::checked_int_size(matrix.size());
     int rank = 0;
     for(int column = 0; column < columns && rank < rows; ++column){
         int pivot = rank;
@@ -569,6 +577,96 @@ GF2LinearSystemSolution<MAX_COL> gf2_solve_linear_system(
         result.nullspace_basis.push_back(basis);
     }
     return result;
+}
+
+template<>
+struct GF2LinearSystemSolution<static_cast<std::size_t>(-1)>{
+    bool consistent = false;
+    std::vector<bool> particular;
+    std::vector<std::vector<bool>> nullspace_basis;
+    std::vector<int> pivot_columns;
+};
+
+namespace gf2_dynamic_internal{
+using PackedMatrix = std::vector<std::vector<std::uint64_t>>;
+inline PackedMatrix pack(const std::vector<std::vector<bool>>& input, std::size_t columns){
+    PackedMatrix result(input.size(), std::vector<std::uint64_t>((columns + 63) / 64));
+    for(std::size_t i = 0; i < input.size(); ++i){
+        if(input[i].size() < columns) throw std::invalid_argument("GF(2) matrix shape");
+        for(std::size_t j = 0; j < columns; ++j)
+            if(input[i][j]) result[i][j / 64] |= std::uint64_t(1) << (j % 64);
+    }
+    return result;
+}
+inline bool bit(const std::vector<std::uint64_t>& row, std::size_t column){
+    return (row[column / 64] >> (column % 64)) & 1U;
+}
+inline std::vector<int> eliminate(PackedMatrix& matrix, std::size_t columns, bool full){
+    std::vector<int> pivots;
+    for(std::size_t column = 0; column < columns && pivots.size() < matrix.size(); ++column){
+        const auto rank = pivots.size();
+        auto pivot = rank;
+        while(pivot < matrix.size() && !bit(matrix[pivot], column)) ++pivot;
+        if(pivot == matrix.size()) continue;
+        std::swap(matrix[pivot], matrix[rank]);
+        for(std::size_t row = full ? 0 : rank + 1; row < matrix.size(); ++row){
+            if(row == rank || !bit(matrix[row], column)) continue;
+            for(std::size_t word = column / 64; word < matrix[row].size(); ++word)
+                matrix[row][word] ^= matrix[rank][word];
+        }
+        pivots.push_back(static_cast<int>(column));
+    }
+    return pivots;
+}
+} // namespace gf2_dynamic_internal
+
+inline int gf2_rank(const std::vector<std::vector<bool>>& input, int columns){
+    if(columns < 0) throw std::invalid_argument("negative GF(2) column count");
+    auto matrix = gf2_dynamic_internal::pack(input, static_cast<std::size_t>(columns));
+    return static_cast<int>(gf2_dynamic_internal::eliminate(matrix, static_cast<std::size_t>(columns), false).size());
+}
+inline int gf2_rank(const std::vector<std::vector<bool>>& input){
+    return gf2_rank(input, input.empty() ? 0 : static_cast<int>(input.front().size()));
+}
+
+template<class RHS>
+GF2LinearSystemSolution<> gf2_solve_linear_system(
+    const std::vector<std::vector<bool>>& input, const std::vector<RHS>& rhs, int columns
+){
+    if(columns < 0 || input.size() != rhs.size()) throw std::invalid_argument("GF(2) system shape");
+    const auto width = static_cast<std::size_t>(columns);
+    auto matrix = gf2_dynamic_internal::pack(input, width);
+    for(std::size_t row = 0; row < matrix.size(); ++row){
+        matrix[row].resize((width + 1 + 63) / 64);
+        if(static_cast<bool>(rhs[row])) matrix[row][width / 64] |= std::uint64_t(1) << (width % 64);
+    }
+    auto pivots = gf2_dynamic_internal::eliminate(matrix, width, true);
+    GF2LinearSystemSolution<> result;
+    for(std::size_t row = pivots.size(); row < matrix.size(); ++row)
+        if(gf2_dynamic_internal::bit(matrix[row], width)) return result;
+    result.consistent = true;
+    result.pivot_columns = pivots;
+    result.particular.resize(width);
+    std::vector<bool> is_pivot(width);
+    for(std::size_t row = 0; row < pivots.size(); ++row){
+        const auto column = static_cast<std::size_t>(pivots[row]);
+        is_pivot[column] = true;
+        result.particular[column] = gf2_dynamic_internal::bit(matrix[row], width);
+    }
+    for(std::size_t column = 0; column < width; ++column) if(!is_pivot[column]){
+        std::vector<bool> basis(width);
+        basis[column] = true;
+        for(std::size_t row = 0; row < pivots.size(); ++row)
+            basis[static_cast<std::size_t>(pivots[row])] = gf2_dynamic_internal::bit(matrix[row], column);
+        result.nullspace_basis.push_back(std::move(basis));
+    }
+    return result;
+}
+template<class RHS>
+GF2LinearSystemSolution<> gf2_solve_linear_system(
+    const std::vector<std::vector<bool>>& input, const std::vector<RHS>& rhs
+){
+    return gf2_solve_linear_system(input, rhs, input.empty() ? 0 : static_cast<int>(input.front().size()));
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_MATH_LINEAR_ALGEBRA_ELIMINATION_GAUSSIAN_ELIMINATION_HPP_INCLUDED

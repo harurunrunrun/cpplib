@@ -126,7 +126,7 @@ void test_random(){
     std::mt19937 generator(20260714U);
     for(int repetition = 0; repetition < 35; ++repetition){
         const int size = 1 + static_cast<int>(generator() % 35U);
-        DynamicMarkedTreeDiameter<Distance, 64> tree(size);
+        DynamicMarkedTreeDiameter<Distance> tree(size);
         std::vector<std::vector<std::pair<int, Distance>>> graph(
             static_cast<std::size_t>(size)
         );
@@ -246,7 +246,7 @@ int main(){
         while(test_count-- != 0){
             int size, initially_marked, operation_count;
             std::cin >> size >> initially_marked >> operation_count;
-            DynamicMarkedTreeDiameter<Distance, 256> tree(size);
+            DynamicMarkedTreeDiameter<Distance> tree(size);
             for(int edge = 1; edge < size; ++edge){
                 int left, right;
                 Distance weight;

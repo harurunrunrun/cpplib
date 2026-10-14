@@ -2,14 +2,15 @@
 #define CPPLIB_SRC_STRUCTURE_TRIE_STRING_PERSISTENT_TRIE_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <string_view>
 
-template<int ALPHABET, int MAX_NODES, int MAX_VERSIONS, char OFFSET = 'a'>
+template<int ALPHABET = 26, int MAX_NODES = -1, int MAX_VERSIONS = -1, char OFFSET = 'a'>
 struct PersistentTrie{
     static_assert(ALPHABET > 0);
-    static_assert(MAX_NODES > 0);
-    static_assert(MAX_VERSIONS > 0);
+    static_assert(MAX_NODES == -1 || MAX_NODES > 0);
+    static_assert(MAX_VERSIONS == -1 || MAX_VERSIONS > 0);
 
 private:
     struct Node{
@@ -20,8 +21,8 @@ private:
 
     int used = 1;
     int version_count = 1;
-    std::array<Node, MAX_NODES> nodes{};
-    std::array<int, MAX_VERSIONS> roots{};
+    cpplib_detail::StaticOrVector<Node, MAX_NODES> nodes{};
+    cpplib_detail::StaticOrVector<int, MAX_VERSIONS> roots{};
 
     int char_id(char c) const{
         int id = static_cast<int>(c - OFFSET);
@@ -36,6 +37,7 @@ private:
         }
     }
     int new_node(){
+        if constexpr(MAX_NODES < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(used == MAX_NODES)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (node).");
         }
@@ -49,6 +51,7 @@ private:
         return u;
     }
     int new_version(int root){
+        if constexpr(MAX_VERSIONS < 0) roots.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(version_count) + 1));
         if(version_count == MAX_VERSIONS)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (version).");
         }
@@ -63,6 +66,7 @@ private:
 
 public:
     PersistentTrie(){
+        nodes.ensure(1); roots.ensure(1);
         roots[0] = new_node();
     }
 

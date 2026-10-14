@@ -30,7 +30,7 @@ int count_naive(const std::vector<int>& values, int x){
 int main(){
     int input_q;
     if(std::cin >> input_q){
-        PersistentBinaryTrie<int, 20, 50000, 2048> trie;
+        PersistentBinaryTrie<int, 20> trie;
         auto print_optional = [](const std::optional<int>& value){
             if(value) std::cout << *value << '\n';
             else std::cout << "NONE\n";
@@ -83,7 +83,7 @@ int main(){
         return 0;
     }
 
-    PersistentBinaryTrie<int, 10, 30000, 1024> trie;
+    PersistentBinaryTrie<int, 10> trie;
     std::vector<std::vector<int>> versions(1);
     std::mt19937 rng(20260718);
     assert(trie.versions() == 1);

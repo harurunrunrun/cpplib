@@ -3,6 +3,8 @@
 #include <array>
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -52,6 +54,13 @@ void compare_all(const PartiallyPersistentDSU<30, 300>& dsu, int version, const 
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        PartiallyPersistentDSU<> dsu(129);
+        for(int i = 1; i < 129; ++i) dsu.merge(i - 1, i);
+        for(int i = 0; i < 300; ++i) dsu.merge(0, 128);
+        assert(!dsu.same(0, 0, 128)); assert(dsu.same(dsu.latest_version(), 0, 128));
+    }
     int input_n, input_q;
     if(std::cin >> input_n >> input_q){
         PartiallyPersistentDSU<128, 2048> dsu(input_n);

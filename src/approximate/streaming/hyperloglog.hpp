@@ -2,6 +2,8 @@
 #define CPPLIB_SRC_APPROXIMATE_STREAMING_HYPERLOGLOG_HPP_INCLUDED
 
 #include <array>
+#include <vector>
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -10,7 +12,7 @@
 
 #include "hash.hpp"
 
-template<unsigned Precision = 12, class Key = std::uint64_t>
+template<unsigned Precision = static_cast<unsigned>(-1), class Key = std::uint64_t>
 class HyperLogLog {
     static_assert(4U <= Precision && Precision <= 18U,
                   "Precision must be in [4, 18]");
@@ -82,4 +84,81 @@ public:
     }
 };
 
+
+template<class Key>
+class HyperLogLog<static_cast<unsigned>(-1), Key> {
+    unsigned precision_;
+
+
+    std::size_t register_count_ = 0;
+
+    std::vector<std::uint8_t> registers_{};
+    std::uint64_t seed_;
+
+    [[nodiscard]] long double alpha() const noexcept {
+        if(register_count_ == 16U) return 0.673L;
+        if(register_count_ == 32U) return 0.697L;
+        if(register_count_ == 64U) return 0.709L;
+        return 0.7213L / (1.0L + 1.079L / static_cast<long double>(register_count_));
+    }
+
+public:
+    explicit HyperLogLog(unsigned precision = 12, std::uint64_t seed = 0): precision_(precision), seed_(seed){
+        if(precision < 4 || precision > 18) throw std::invalid_argument("precision must be 4..18");
+        register_count_ = std::size_t(1) << precision;
+        registers_.resize(register_count_);
+    }
+
+    void clear() noexcept { std::fill(registers_.begin(), registers_.end(), 0); }
+
+    void add(const Key& key) {
+        const std::uint64_t hashed = approximate_streaming_detail::key_hash(key, seed_);
+        const std::size_t index = static_cast<std::size_t>(
+            hashed & (static_cast<std::uint64_t>(register_count_) - 1ULL));
+        const std::uint64_t remaining = hashed >> precision_;
+        unsigned rank;
+        if(remaining == 0ULL){
+            rank = 65U - precision_;
+        }else{
+            rank = static_cast<unsigned>(__builtin_clzll(remaining)) - precision_ + 1U;
+        }
+        if(registers_[index] < rank) registers_[index] = static_cast<std::uint8_t>(rank);
+    }
+
+    [[nodiscard]] long double estimate() const noexcept {
+        long double inverse_sum = 0.0L;
+        std::size_t zero_count = 0;
+        for(const std::uint8_t value: registers_){
+            inverse_sum += std::ldexp(1.0L, -static_cast<int>(value));
+            if(value == 0U) ++zero_count;
+        }
+        const long double m = static_cast<long double>(register_count_);
+        long double result = alpha() * m * m / inverse_sum;
+        if(result <= 2.5L * m && zero_count != 0U){
+            result = m * std::log(m / static_cast<long double>(zero_count));
+        }
+        const long double hash_space = std::ldexp(1.0L, 64);
+        if(result > hash_space / 30.0L){
+            result = result < hash_space
+                ? -hash_space * std::log1p(-result / hash_space)
+                : std::numeric_limits<long double>::infinity();
+        }
+        return result;
+    }
+
+    void merge(const HyperLogLog& other) {
+        if(precision_ != other.precision_ || seed_ != other.seed_) throw std::invalid_argument("cannot merge different seeds");
+        for(std::size_t i = 0; i < register_count_; ++i){
+            if(registers_[i] < other.registers_[i]) registers_[i] = other.registers_[i];
+        }
+    }
+
+    [[nodiscard]] std::uint64_t seed() const noexcept { return seed_; }
+    [[nodiscard]] std::size_t register_count() const noexcept {
+        return register_count_;
+    }
+    [[nodiscard]] long double relative_standard_error() const noexcept {
+        return 1.04L / std::sqrt(static_cast<long double>(register_count_));
+    }
+};
 #endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_HYPERLOGLOG_HPP_INCLUDED

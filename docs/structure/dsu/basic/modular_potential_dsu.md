@@ -52,3 +52,13 @@ int groups() const
 - `0 < MOD <= INT_MAX`、`0 <= n <= MAX_SIZE`、頂点は `[0,n)`。
 - 剰余加減算は `long long` の中間値を使うため、`MOD` が32-bit signed整数の上限付近でもoverflowしない。
 - 範囲違反は `runtime_error`。`difference` は非連結を例外ではなく `nullopt` で表す。
+
+## 可変長版
+
+```cpp
+using Dynamic = ModularPotentialDSU<3>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n)、併合・差取得は償却 O(alpha(n))。法は演算の定義なので template 引数に残る。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

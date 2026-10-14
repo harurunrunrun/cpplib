@@ -87,3 +87,13 @@ int latest_version()
 - version 0が初期状態。`merge`は同一成分の場合も最新状態からversionを1個追加する。
 - 更新は高々`MAX_UPDATE`回。超過した`merge`は例外で既存versionを変えない。
 - `leader`は代表、`component_size`は成分頂点数、`groups`は成分数を返す。
+
+## 可変長版
+
+```cpp
+using Dynamic = PartiallyPersistentDSU<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n + u + v)、代表取得 O(log(n + 1))、併合は償却計算で同じ上限。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

@@ -129,3 +129,14 @@ static constexpr std::size_t reference_capacity()
 - 空でない区間を `MAX_EVENTS` 個より多く追加すると例外。
 - 各イベントは 1 個だけ保持し、segment tree node には参照を固定長 `std::array` へ保存する。
 - callback から例外を送出した場合、処理中の snapshot まで rollback することは保証しない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+TimeSegmentTree<int> dynamic(time_count);
+TimeSegmentTree<int, 100000, 100000> fixed(time_count);
+```
+
+時刻数 $T$、登録区間数 $E$ に対し構築は $O(T)$、各登録は $O(\log T)$ 償却時間、保存領域は $O(T+E\log T)$。走査は各保存イベントと各時刻の callback にかかる時間の合計。

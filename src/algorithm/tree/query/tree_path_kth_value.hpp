@@ -5,7 +5,7 @@
 
 #include "tree_path_order_statistics.hpp"
 
-template<class Value, int MAX_SIZE>
+template<class Value, int MAX_SIZE = -1>
 struct TreePathKthValue{
 private:
     TreePathOrderStatistics<Value, MAX_SIZE> statistics;

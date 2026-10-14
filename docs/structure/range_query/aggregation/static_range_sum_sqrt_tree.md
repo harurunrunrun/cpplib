@@ -80,3 +80,13 @@ $O(\mathrm{MAX\_SIZE}\log\log(\mathrm{MAX\_SIZE}+2))$。
 
 - `values.size() <= MAX_SIZE` が必要。
 - `get` の添字と `sum` の区間は列の範囲内でなければならず、違反時は `runtime_error`。
+
+## 可変長版
+
+```cpp
+using Dynamic = StaticRangeSumSqrtTree<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log log(n + 2))、区間和 O(1)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

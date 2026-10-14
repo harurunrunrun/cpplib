@@ -4,7 +4,7 @@
 #include "link_cut_tree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct DynamicForestConnectivity{
 private:
     LinkCutTree<AddMonoid<int>{}, MAX_SIZE> forest;

@@ -32,3 +32,15 @@ A は非孤立頂点数。次数階乗の構築を含めて O(M)、固定容量�
 ## 注意点
 
 `vertex_count`または辺端点が範囲外、あるいは非孤立頂点数が `MAX_VERTEX` を超える場合は `runtime_error` を送出する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto value = count_eulerian_circuits<Mint>(vertex_count, edges);
+auto fixed_value = count_eulerian_circuits<Mint, 1000>(vertex_count, edges);
+```
+
+孤立頂点を含む頂点数 $V$、非孤立頂点数 $A$、辺数 $E$ に対して、
+$O(V+A^3+E)$ 時間・$O(V+A^2+E)$ 空間。

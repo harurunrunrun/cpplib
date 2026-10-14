@@ -8,7 +8,7 @@
 
 template<
     class T,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     int ID_BIT_WIDTH = std::numeric_limits<unsigned>::digits
 >
 class StaticRangeGreaterCount{

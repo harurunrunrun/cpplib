@@ -30,3 +30,14 @@ $O(N)$。
 - タスク数は `MAX_TASKS` 以下でなければならない。
 - 前提違反時は `runtime_error` を送出する。
 - 完了時刻は `long long` で表現できる必要がある。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = round_robin_completion_times(processing_times);
+auto fixed = round_robin_completion_times<100000>(processing_times);
+```
+
+$N$ 件の処理は $O(N\log N)$ 時間・$O(N)$ 空間。

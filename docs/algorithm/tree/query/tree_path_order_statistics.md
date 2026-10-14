@@ -129,3 +129,14 @@ copy構築とcopy代入は使用できない。move構築とmove代入は、構�
 `range_freq` の `upper < lower`、`values.size() != n`、入力が木でない、
 `build` 前に索引APIを呼んだ場合は `runtime_error` を送出する。
 `build` 後に辺は追加できない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+TreePathOrderStatistics<int> dynamic(vertex_count);
+TreePathOrderStatistics<int, 100000> fixed(vertex_count);
+```
+
+構築・前処理・保存領域は $O(N\log N)$、パスの順位・頻度クエリは $O(\log N)$ 時間。

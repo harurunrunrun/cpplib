@@ -3,6 +3,8 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -74,6 +76,21 @@ void self_test(){
 }
 
 int main(){
+    {
+        DoubleEndedPriorityQueue<bool> values;
+        for(int i = 0; i < 300; ++i) values.push(i % 2 != 0);
+        assert(!values.min() && values.max());
+        for(int i = 0; i < 150; ++i) assert(!values.pop_min());
+        for(int i = 0; i < 150; ++i) assert(values.pop_max());
+        assert(values.empty());
+    }
+    // Dynamic storage: verify growth and retained values.
+    {
+        DoubleEndedPriorityQueue<int> queue;
+        for(int i = 0; i < 300; ++i) queue.push(i);
+        queue.push(queue.min()); assert(queue.pop_min() == 0); assert(queue.pop_min() == 0);
+        for(int i = 299; i >= 1; --i) assert(queue.pop_max() == i); assert(queue.empty());
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

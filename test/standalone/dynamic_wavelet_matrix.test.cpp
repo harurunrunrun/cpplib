@@ -20,8 +20,8 @@
 
 namespace{
 
-using Matrix = DynamicWaveletMatrix<int, 4096, 32, long long, 2>;
-using BitMatrix = DynamicWaveletMatrix<unsigned, 4096, 6, long long, 2>;
+using Matrix = DynamicWaveletMatrix<int, -1, 32, long long, 2>;
+using BitMatrix = DynamicWaveletMatrix<unsigned, -1, 6, long long, 2>;
 
 template<class Function>
 bool throws_runtime_error(Function&& function){
@@ -644,7 +644,7 @@ void run_performance_test(){
             & ((1ULL << 20) - 1ULL)
         );
     }
-    DynamicWaveletMatrix<unsigned, 90000, 20, long long, 2> matrix(values);
+    DynamicWaveletMatrix<unsigned, -1, 20, long long, 2> matrix(values);
     std::uint64_t checksum = 0;
     for(int step = 0; step < 5000; step++){
         const int position = static_cast<int>(

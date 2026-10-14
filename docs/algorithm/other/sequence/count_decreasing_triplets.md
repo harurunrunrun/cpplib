@@ -26,3 +26,14 @@ $O(N)$。
 - 同値な要素は厳密な大小関係に含めない。
 - 異なる値の個数は `MAX_SIZE` 以下でなければならない。
 - 結果は `long long` で表現できる必要がある。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = count_decreasing_triplets(values);
+auto fixed = count_decreasing_triplets<Value, 100000>(values);
+```
+
+$N$ 要素に対して $O(N\log N)$ 時間・$O(N)$ 空間。

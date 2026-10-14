@@ -11,9 +11,9 @@
 #include "../array/persistent_array.hpp"
 #include "../segtree/persistent/persistent_segtree.hpp"
 
-template<class PersistentStorage, int MAX_VERSION>
+template<class PersistentStorage, int MAX_VERSION = -1>
 struct PersistentQueue{
-    static_assert(MAX_VERSION >= 0);
+    static_assert(MAX_VERSION >= -1);
     static_assert(MAX_VERSION < std::numeric_limits<int>::max());
 
     using value_type = std::remove_cvref_t<decltype(
@@ -28,7 +28,7 @@ private:
     };
 
     PersistentStorage storage_;
-    std::array<VersionState, static_cast<std::size_t>(MAX_VERSION) + 1>
+    cpplib_detail::StaticOrVector<VersionState, (MAX_VERSION < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSION) + 1)>
         state_{};
     int version_count_ = 1;
 
@@ -39,14 +39,16 @@ private:
     }
 
     void check_new_version(const char* message) const{
-        if(version_count_ > MAX_VERSION)[[unlikely]]{
+        if(version_count_ == std::numeric_limits<int>::max() || (MAX_VERSION >= 0 && version_count_ > MAX_VERSION))[[unlikely]]{
             throw std::runtime_error(message);
         }
     }
 
     int append_version(const VersionState& next){
+        const VersionState copied(next);
+        state_.ensure(static_cast<std::size_t>(version_count_) + 1);
         const int result = version_count_++;
-        state_[static_cast<std::size_t>(result)] = next;
+        state_[static_cast<std::size_t>(result)] = copied;
         return result;
     }
 
@@ -56,7 +58,7 @@ public:
     PersistentQueue(PersistentQueue&&) = delete;
     PersistentQueue& operator=(PersistentQueue&&) = delete;
 
-    explicit PersistentQueue(int capacity) : storage_(capacity) {}
+    explicit PersistentQueue(int capacity) : storage_(capacity) {state_.ensure(1);}
 
     int capacity() const{
         return storage_.size();
@@ -153,13 +155,13 @@ public:
     }
 };
 
-template<class T, int MAX_SIZE, int MAX_VERSION>
+template<class T, int MAX_SIZE = -1, int MAX_VERSION = -1>
 using PersistentArrayQueue = PersistentQueue<
     PersistentArray<T, MAX_SIZE, MAX_VERSION>,
     MAX_VERSION
 >;
 
-template<auto Monoid, int MAX_SIZE, int MAX_VERSION>
+template<auto Monoid, int MAX_SIZE = -1, int MAX_VERSION = -1>
 using PersistentSegtreeQueue = PersistentQueue<
     PersistentSegtree<Monoid, MAX_SIZE, MAX_VERSION>,
     MAX_VERSION

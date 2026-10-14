@@ -84,3 +84,17 @@ callback自身が使う領域は含めない。
 - 存在しない辺の`erase_edge`、および初回`run`後のevent追加・削除は例外。
 - 未削除の辺は`time_size`まで有効として初回`run`で確定する。`run`自体は再実行できる。
 - DFS中の同時merge履歴数が`MAX_HISTORY`を超えるとrollback DSU由来の例外。
+
+## 容量を省略する可変長版
+
+```cpp
+OfflineDynamicConnectivity<> dynamic(vertex_count, time_count);
+OfflineDynamicConnectivity<100000, 200000, 200000> fixed(vertex_count, time_count);
+```
+
+容量省略時は時刻 segment tree と rollback DSU の配列・履歴に `std::vector` を使う。
+頂点数を $N$、時刻数を $Q$ とすると構築は $O(N+Q)$ 時間・空間。
+辺の有効区間数を $M$ とすると、実行は
+$O((Q+M\log Q)\log N+\sum C_t)$ 時間、保持・作業領域は $O(N+Q+M\log Q)$。
+$C_t$ は時刻ごとの callback の時間である。`run` を繰り返しても入力の追加・削除は禁止される。
+容量を明示する固定長版も同じヘッダにある。

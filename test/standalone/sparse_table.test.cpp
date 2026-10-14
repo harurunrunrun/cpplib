@@ -1,7 +1,10 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include "../../src/structure/range_query/extrema/static_range_minimum.hpp"
 #include <numeric>
 #include <stdexcept>
 #include <string>
@@ -87,6 +90,21 @@ void test_against_naive(){
 }
 
 int main(){
+    {
+        constexpr MinMonoid<bool> monoid{};
+        const std::vector<bool> bits{true, true, false, true, false, true, true};
+        SparseTable<monoid> table(bits);
+        assert(table.get(0) && table.prod(0, 2) && !table.prod(0, 7));
+    }
+
+    // Dynamic wrappers: runtime capacities.
+    {
+        std::vector<int> values(129); for(int i = 0; i < 129; ++i) values[i] = i;
+        SparseTable<min_monoid> table(values); StaticRangeMinimum<int> wrapper(values);
+        for(int left = 0; left < 129; ++left) for(int right = left + 1; right <= 129; ++right){
+            assert(table.prod(left, right) == left); assert(wrapper.minimum(left, right) == left);
+        }
+    }
     int n, q;
     if(std::cin >> n >> q){
         std::vector<int> a(static_cast<std::size_t>(n));

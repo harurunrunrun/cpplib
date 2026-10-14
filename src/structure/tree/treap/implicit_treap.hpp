@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_TREE_TREAP_IMPLICIT_TREAP_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -10,22 +11,44 @@
 #include <utility>
 #include <vector>
 
-template<auto Monoid, int MAX_SIZE>
+template<auto Monoid, int MAX_SIZE = -1>
 struct ImplicitTreap{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
 
 private:
     struct State{
-        std::array<int, MAX_SIZE> left{};
-        std::array<int, MAX_SIZE> right{};
-        std::array<int, MAX_SIZE> size{};
-        std::array<int, MAX_SIZE> free_stack{};
-        std::array<std::uint64_t, MAX_SIZE> priority{};
-        std::array<bool, MAX_SIZE> reversed{};
-        std::array<S, MAX_SIZE> value;
-        std::array<S, MAX_SIZE> aggregate;
-        std::array<S, MAX_SIZE> rev_aggregate;
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> left{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> right{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> size{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> free_stack{};
+        cpplib_detail::StaticOrVector<std::uint64_t, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> priority{};
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> reversed{};
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> value;
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> aggregate;
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> rev_aggregate;
+        void ensure(std::size_t n){
+            left.ensure(n);
+            right.ensure(n);
+            size.ensure(n);
+            free_stack.ensure(n);
+            priority.ensure(n);
+            reversed.ensure(n);
+            value.ensure(n);
+            aggregate.ensure(n);
+            rev_aggregate.ensure(n);
+        }
+        explicit State(int n){
+            left.resize(static_cast<std::size_t>(n));
+            right.resize(static_cast<std::size_t>(n));
+            size.resize(static_cast<std::size_t>(n));
+            free_stack.resize(static_cast<std::size_t>(n));
+            priority.resize(static_cast<std::size_t>(n));
+            reversed.resize(static_cast<std::size_t>(n));
+            value.resize(static_cast<std::size_t>(n));
+            aggregate.resize(static_cast<std::size_t>(n));
+            rev_aggregate.resize(static_cast<std::size_t>(n));
+        }
     };
 
     int root_node = -1;
@@ -60,6 +83,7 @@ private:
         return z ^ (z >> 31);
     }
     int new_node(const S& x){
+        if constexpr(MAX_SIZE < 0) state->ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         int v;
         if(free_count > 0){
             v = state->free_stack[--free_count];
@@ -93,7 +117,8 @@ private:
     void toggle(int v){
         if(v == -1) return;
         std::swap(state->left[v], state->right[v]);
-        std::swap(state->aggregate[v], state->rev_aggregate[v]);
+        using std::swap;
+        swap(state->aggregate[v], state->rev_aggregate[v]);
         state->reversed[v] = !state->reversed[v];
     }
     void push(int v){
@@ -145,12 +170,12 @@ private:
             if(state->left[v] != -1) stack.push_back(state->left[v]);
             if(state->right[v] != -1) stack.push_back(state->right[v]);
         }
-        for(int i = static_cast<int>(order.size()) - 1; i >= 0; i--) pull(order[static_cast<std::size_t>(i)]);
+        for(int i = cpplib_detail::checked_int_size(order.size()) - 1; i >= 0; i--) pull(order[static_cast<std::size_t>(i)]);
     }
 
 public:
     explicit ImplicitTreap(std::uint64_t seed = 0x123456789abcdef0ULL):
-        rng_state(seed), state(std::make_unique<State>()){}
+        rng_state(seed), state(std::make_unique<State>(0)){}
     explicit ImplicitTreap(const std::vector<S>& values, std::uint64_t seed = 0x123456789abcdef0ULL):
         ImplicitTreap(seed){
         if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{

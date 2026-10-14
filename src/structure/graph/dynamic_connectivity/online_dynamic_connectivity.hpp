@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_GRAPH_DYNAMIC_CONNECTIVITY_ONLINE_DYNAMIC_CONNECTIVITY_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <limits>
 #include <map>
@@ -10,24 +11,25 @@
 #include <utility>
 #include "online_dynamic_connectivity_internal.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct OnlineDynamicConnectivity{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     using Forest = online_dynamic_connectivity_internal::EulerTourForest<MAX_SIZE>;
 
-    static constexpr int level_count(){
+    static constexpr int level_count(int n){
         int result = 1;
         std::size_t bound = 1;
-        while(bound < static_cast<std::size_t>(MAX_SIZE)){
+        while(bound < static_cast<std::size_t>(n)){
             bound *= 2;
             ++result;
         }
         return result;
     }
 
-    static constexpr int LEVEL_COUNT = level_count();
+    static constexpr int FIXED_LEVEL_COUNT = MAX_SIZE < 0 ? 0 : level_count(MAX_SIZE);
+    int LEVEL_COUNT = FIXED_LEVEL_COUNT;
 
     struct EdgeInfo{
         int multiplicity = 0;
@@ -36,7 +38,8 @@ private:
     };
 
     struct State{
-        std::array<std::unique_ptr<Forest>, LEVEL_COUNT> forest;
+        cpplib_detail::StaticOrVector<std::unique_ptr<Forest>, (MAX_SIZE < 0 ? -1 : FIXED_LEVEL_COUNT)> forest;
+        explicit State(int levels){forest.resize(static_cast<std::size_t>(levels));}
         std::map<std::pair<int, int>, EdgeInfo> edge;
         int group_count = 0;
     };
@@ -120,11 +123,12 @@ private:
     }
 
 public:
-    explicit OnlineDynamicConnectivity(int n = MAX_SIZE): _n(n), state(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit OnlineDynamicConnectivity(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
+        LEVEL_COUNT(MAX_SIZE < 0 ? level_count(n < 0 ? 0 : n) : FIXED_LEVEL_COUNT), _n(n), state(nullptr){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
-        state = std::make_unique<State>();
+        state = std::make_unique<State>(LEVEL_COUNT);
         state->group_count = _n;
         state->forest[0] = std::make_unique<Forest>(_n);
     }

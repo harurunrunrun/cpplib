@@ -112,3 +112,14 @@ std::vector<std::size_t> compress(const std::vector<T>& source) const
 $0\le K\le MAX\_SIZE$。object の保存領域は $O(MAX\_SIZE)$。`build` は入力の
 要素数に対して容量を検査するため、重複除去後に収まる場合でも
 `values.size() > MAX_SIZE` は許可しない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+CoordinateCompression<int> dynamic(values);
+CoordinateCompression<int, 100000> fixed(values);
+```
+
+要素数 $N$ の構築は $O(N\log N)$ 時間・$O(N)$ 空間、検索は $O(\log N)$ 時間。`T=bool` の可変長版では `value` は値、`values` は `vector<bool>` のコピーを返す（最大2要素）。

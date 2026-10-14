@@ -32,3 +32,14 @@ $L=N$なら時間計算量は$O(N^3/w)$、追加領域は$O(N^2/w)$である。
 ## 注意点
 
 法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+std::vector<std::vector<bool>> values{ {true, true}, {true, false}};
+auto inverse = inverse_matrix_mod_2(values);
+```
+
+内部を64 bit 単位に詰め、$N$ 次逆行列は $O(N^2\lceil N/64\rceil)$ 時間、$O(N\lceil N/64\rceil+N^2)$ 空間。入出力は二次元 `vector<bool>`。固定長 `bitset` の overload も利用できる。

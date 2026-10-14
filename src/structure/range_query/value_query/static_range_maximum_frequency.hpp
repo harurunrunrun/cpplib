@@ -9,7 +9,7 @@
 #include "../aggregation/sparse_table.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class StaticRangeMaximumFrequency{
     static constexpr MaxMonoid<int> maximum_{};
     std::vector<int> group_;
@@ -25,11 +25,12 @@ public:
                 "(StaticRangeMaximumFrequency)."
             );
         }
+        const int count = cpplib_detail::checked_int_size(values.size());
         group_.resize(values.size());
         std::vector<int> frequencies;
-        for(int left = 0; left < static_cast<int>(values.size());){
+        for(int left = 0; left < count;){
             int right = left + 1;
-            while(right < static_cast<int>(values.size())
+            while(right < count
                 && values[static_cast<std::size_t>(right)]
                     == values[static_cast<std::size_t>(left)]) ++right;
             const int group = static_cast<int>(frequencies.size());

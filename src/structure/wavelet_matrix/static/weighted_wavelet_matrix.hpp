@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_STATIC_WEIGHTED_WAVELET_MATRIX_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -14,12 +15,12 @@
 template<
     class T,
     class W,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 struct WeightedWaveletMatrix{
     static_assert(std::is_integral_v<T>);
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
     using U = std::make_unsigned_t<T>;
     static constexpr int digits = std::numeric_limits<U>::digits;
     static_assert(0 < BIT_WIDTH && BIT_WIDTH <= digits);
@@ -29,13 +30,19 @@ private:
     struct State{
         std::array<FullyIndexableDictionary<MAX_SIZE>, BIT_WIDTH> matrix;
         std::array<int, BIT_WIDTH> middle{};
-        std::array<std::array<W, MAX_SIZE + 1>, BIT_WIDTH + 1> prefix;
-        std::array<U, MAX_SIZE> current{};
-        std::array<U, MAX_SIZE> next{};
-        std::array<W, MAX_SIZE> current_weight{};
-        std::array<W, MAX_SIZE> next_weight{};
+        std::array<cpplib_detail::StaticOrVector<W, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE + 1))>, BIT_WIDTH + 1> prefix;
+        cpplib_detail::StaticOrVector<U, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> current{};
+        cpplib_detail::StaticOrVector<U, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> next{};
+        cpplib_detail::StaticOrVector<W, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> current_weight{};
+        cpplib_detail::StaticOrVector<W, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> next_weight{};
 
         explicit State(int n){
+            current.resize(static_cast<std::size_t>(n));
+            next.resize(static_cast<std::size_t>(n));
+            current_weight.resize(static_cast<std::size_t>(n));
+            next_weight.resize(static_cast<std::size_t>(n));
+            for(auto& row: prefix) row.resize(static_cast<std::size_t>(n) + 1);
+
             for(auto& dictionary: matrix){
                 dictionary = FullyIndexableDictionary<MAX_SIZE>(n);
             }
@@ -95,7 +102,7 @@ private:
 
 public:
     WeightedWaveletMatrix(const std::vector<T>& values, const std::vector<W>& weights):
-        _n(static_cast<int>(values.size())), state(nullptr){
+        _n(cpplib_detail::checked_int_size(values.size())), state(nullptr){
         if(values.size() != weights.size())[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }

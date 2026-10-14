@@ -59,3 +59,13 @@ bool contains(const Value& value)
 - `contains`、個数query、前者・後者queryの境界値は未登録でもよい。
 - 異なる値がちょうど `MAX_UNIQUE` 個の場合も利用でき、添字範囲は `[0, MAX_UNIQUE)`。
 - `MAX_UNIQUE > 0`。通常操作の追加領域は木の高さに比例する。
+
+## 可変長版
+
+```cpp
+using Dynamic = CompressedOrderedSet<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。座標圧縮 O(n log n)、登録座標は vector、集合は疎な動的ノードで保存する。操作は O(log n + log U)、U は int の座標範囲。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

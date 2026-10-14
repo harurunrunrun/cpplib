@@ -2,6 +2,8 @@
 #define CPPLIB_SRC_ALGORITHM_RANGE_INTERVAL_COUNT_VISIBLE_OVERLAID_INTERVALS_HPP_INCLUDED
 
 #include <algorithm>
+#include <limits>
+#include <stdexcept>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -9,10 +11,12 @@
 #include "../../../structure/segtree/basic/dualsegtree.hpp"
 #include "../../../structure/types/monoid/common_monoids.hpp"
 
-template<class Coordinate, int MAX_ATOMS>
+template<class Coordinate, int MAX_ATOMS = -1>
 int count_visible_overlaid_intervals(
     const std::vector<std::pair<Coordinate, Coordinate>>& closed_intervals
 ){
+    if(closed_intervals.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()) / 4)
+        throw std::length_error("interval atoms exceed int index range");
     constexpr AssignMaxMonoidAct<int> assignment{};
     std::vector<std::pair<Coordinate, Coordinate>> intervals = closed_intervals;
     std::vector<Coordinate> boundaries;

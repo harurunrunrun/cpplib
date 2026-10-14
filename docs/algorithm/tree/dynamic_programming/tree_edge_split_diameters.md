@@ -43,3 +43,14 @@ CSR隣接列の構築、木の検査、下向きDP、上向きDP、
 - 自己辺、多重辺、閉路、非連結、辺数不一致、範囲外頂点、容量超過では
   `runtime_error` を送出する。
 - `vertex_count == 1` では空のvectorを返す。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = tree_edge_split_diameters(vertex_count, edges);
+auto fixed = tree_edge_split_diameters<100000>(vertex_count, edges);
+```
+
+$N$ 頂点に対して $O(N)$ 時間・空間。隣接辺・再帰を使わない作業配列も実寸で確保する。

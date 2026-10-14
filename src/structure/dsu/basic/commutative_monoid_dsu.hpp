@@ -2,22 +2,23 @@
 #define CPPLIB_SRC_STRUCTURE_DSU_BASIC_COMMUTATIVE_MONOID_DSU_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-template<auto Monoid, int MAX_SIZE>
+template<auto Monoid, int MAX_SIZE = -1>
 struct CommutativeMonoidDSU{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
 
 private:
     int _n = 0;
     int group_count = 0;
-    std::array<int, MAX_SIZE> parent_or_size{};
-    std::array<S, MAX_SIZE> product{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> parent_or_size{};
+    cpplib_detail::StaticOrVector<S, MAX_SIZE> product{};
 
     void check_vertex(int vertex, const char* message) const{
         if(vertex < 0 || _n <= vertex)[[unlikely]]{
@@ -26,11 +27,13 @@ private:
     }
 
     void initialize(int n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        parent_or_size.resize(static_cast<std::size_t>(n));
+        product.resize(static_cast<std::size_t>(n));
         _n = n;
         group_count = n;
         for(int vertex = 0; vertex < _n; ++vertex){
@@ -40,17 +43,17 @@ private:
     }
 
 public:
-    explicit CommutativeMonoidDSU(int n = MAX_SIZE){
+    explicit CommutativeMonoidDSU(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)){
         initialize(n);
     }
 
     explicit CommutativeMonoidDSU(const std::vector<S>& values){
-        if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+        if(MAX_SIZE >= 0 && values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
-        initialize(static_cast<int>(values.size()));
+        initialize(cpplib_detail::checked_int_size(values.size()));
         for(int vertex = 0; vertex < _n; ++vertex){
             product[vertex] = values[vertex];
         }

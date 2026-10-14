@@ -5,7 +5,9 @@
 #include <cstddef>
 #include <stdexcept>
 #include <utility>
+#include <type_traits>
 #include <vector>
+#include "../../math/linear_algebra/elimination/gaussian_elimination.hpp"
 
 template<class T>
 struct MatrixTreeEdge{
@@ -33,7 +35,7 @@ void validate_edges(
     }
 }
 
-template<std::size_t MAX_VERTEX>
+template<std::size_t MAX_VERTEX = static_cast<std::size_t>(-1)>
 void validate_vertex_count(int n, const char* message){
     if(n < 0 || static_cast<std::size_t>(n) > MAX_VERTEX)[[unlikely]]{
         throw std::runtime_error(message);
@@ -98,7 +100,14 @@ T matrix_tree_determinant(
     return determinant;
 }
 
-template<class T, std::size_t MAX_VERTEX>
+template<class T, std::size_t MAX_SIZE = static_cast<std::size_t>(-1)>
+T matrix_tree_determinant(std::vector<std::vector<T>> matrix, int n){
+    if(n < 0 || static_cast<std::size_t>(n) > MAX_SIZE || matrix.size() != static_cast<std::size_t>(n))
+        throw std::invalid_argument("matrix tree determinant shape");
+    return gaussian_determinant(matrix);
+}
+
+template<class T, std::size_t MAX_VERTEX = static_cast<std::size_t>(-1)>
 T count_weighted_undirected_spanning_trees(
     int n,
     const std::vector<MatrixTreeEdge<T>>& edges
@@ -111,7 +120,12 @@ T count_weighted_undirected_spanning_trees(
     if(n == 0) return T(1);
 
     constexpr int removed = 0;
-    MatrixTreeFixedMatrix<T, MAX_VERTEX> minor{};
+    using Minor = std::conditional_t<MAX_VERTEX == static_cast<std::size_t>(-1),
+        std::vector<std::vector<T>>, MatrixTreeFixedMatrix<T, MAX_VERTEX == static_cast<std::size_t>(-1) ? 0 : MAX_VERTEX>>;
+    Minor minor{};
+    if constexpr(MAX_VERTEX == static_cast<std::size_t>(-1)){
+        minor.assign(static_cast<std::size_t>(n - 1), std::vector<T>(static_cast<std::size_t>(n - 1)));
+    }
     for(const auto& edge: edges){
         if(edge.from == edge.to) continue;
         const int from = matrix_tree_theorem_internal::minor_index(
@@ -135,10 +149,14 @@ T count_weighted_undirected_spanning_trees(
                 -= edge.weight;
         }
     }
-    return matrix_tree_determinant<T, MAX_VERTEX>(std::move(minor), n - 1);
+    if constexpr(MAX_VERTEX == static_cast<std::size_t>(-1)){
+        return matrix_tree_determinant<T>(std::move(minor), n - 1);
+    }else{
+        return matrix_tree_determinant<T, MAX_VERTEX>(std::move(minor), n - 1);
+    }
 }
 
-template<class T, std::size_t MAX_VERTEX>
+template<class T, std::size_t MAX_VERTEX = static_cast<std::size_t>(-1)>
 T count_weighted_directed_out_arborescences(
     int n,
     int root,
@@ -151,7 +169,12 @@ T count_weighted_directed_out_arborescences(
     if(root < 0 || n <= root)[[unlikely]] throw std::runtime_error(message);
     matrix_tree_theorem_internal::validate_edges(n, edges, message);
 
-    MatrixTreeFixedMatrix<T, MAX_VERTEX> minor{};
+    using Minor = std::conditional_t<MAX_VERTEX == static_cast<std::size_t>(-1),
+        std::vector<std::vector<T>>, MatrixTreeFixedMatrix<T, MAX_VERTEX == static_cast<std::size_t>(-1) ? 0 : MAX_VERTEX>>;
+    Minor minor{};
+    if constexpr(MAX_VERTEX == static_cast<std::size_t>(-1)){
+        minor.assign(static_cast<std::size_t>(n - 1), std::vector<T>(static_cast<std::size_t>(n - 1)));
+    }
     for(const auto& edge: edges){
         if(edge.from == edge.to || edge.to == root) continue;
         const int to = matrix_tree_theorem_internal::minor_index(edge.to, root);
@@ -165,10 +188,14 @@ T count_weighted_directed_out_arborescences(
                 -= edge.weight;
         }
     }
-    return matrix_tree_determinant<T, MAX_VERTEX>(std::move(minor), n - 1);
+    if constexpr(MAX_VERTEX == static_cast<std::size_t>(-1)){
+        return matrix_tree_determinant<T>(std::move(minor), n - 1);
+    }else{
+        return matrix_tree_determinant<T, MAX_VERTEX>(std::move(minor), n - 1);
+    }
 }
 
-template<class T, std::size_t MAX_VERTEX>
+template<class T, std::size_t MAX_VERTEX = static_cast<std::size_t>(-1)>
 T count_weighted_directed_in_arborescences(
     int n,
     int root,
@@ -181,7 +208,12 @@ T count_weighted_directed_in_arborescences(
     if(root < 0 || n <= root)[[unlikely]] throw std::runtime_error(message);
     matrix_tree_theorem_internal::validate_edges(n, edges, message);
 
-    MatrixTreeFixedMatrix<T, MAX_VERTEX> minor{};
+    using Minor = std::conditional_t<MAX_VERTEX == static_cast<std::size_t>(-1),
+        std::vector<std::vector<T>>, MatrixTreeFixedMatrix<T, MAX_VERTEX == static_cast<std::size_t>(-1) ? 0 : MAX_VERTEX>>;
+    Minor minor{};
+    if constexpr(MAX_VERTEX == static_cast<std::size_t>(-1)){
+        minor.assign(static_cast<std::size_t>(n - 1), std::vector<T>(static_cast<std::size_t>(n - 1)));
+    }
     for(const auto& edge: edges){
         if(edge.from == edge.to || edge.from == root) continue;
         const int from = matrix_tree_theorem_internal::minor_index(
@@ -197,7 +229,11 @@ T count_weighted_directed_in_arborescences(
                 -= edge.weight;
         }
     }
-    return matrix_tree_determinant<T, MAX_VERTEX>(std::move(minor), n - 1);
+    if constexpr(MAX_VERTEX == static_cast<std::size_t>(-1)){
+        return matrix_tree_determinant<T>(std::move(minor), n - 1);
+    }else{
+        return matrix_tree_determinant<T, MAX_VERTEX>(std::move(minor), n - 1);
+    }
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_GRAPH_SPANNING_TREE_MATRIX_TREE_THEOREM_HPP_INCLUDED

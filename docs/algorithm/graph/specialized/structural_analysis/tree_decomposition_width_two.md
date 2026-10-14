@@ -1,5 +1,5 @@
 ---
-title: Tree Decomposition of Width Two (木幅2以下の木分解)
+title: Tree Decomposition of Width Two (木幅2以下の木分解) [tree_decomposition_width_2]
 documentation_of: ../../../../../src/algorithm/graph/specialized/structural_analysis/tree_decomposition_width_two.hpp
 ---
 

@@ -23,8 +23,8 @@ int main(){
                 >> input_y[static_cast<std::size_t>(k)]
                 >> input_weight[static_cast<std::size_t>(k)];
         }
-        WaveletMatrix2D<int, int, 512> plain(input_x, input_y);
-        WaveletMatrix2DWeighted<int, int, long long, 512> weighted(
+        WaveletMatrix2D<int, int> plain(input_x, input_y);
+        WaveletMatrix2DWeighted<int, int, long long> weighted(
             input_x, input_y, input_weight
         );
         auto print_optional = [](const std::optional<int>& value){
@@ -74,10 +74,10 @@ int main(){
         weighted_points.emplace_back(xs[k], ys[k], weights[k]);
     }
 
-    WaveletMatrix2D<int, int, 200> plain(xs, ys);
-    WaveletMatrix2D<int, int, 200> plain_pairs(points);
-    WaveletMatrix2DWeighted<int, int, long long, 200> weighted(xs, ys, weights);
-    RectangleSum<int, int, long long, 200> rectangle_sum(weighted_points);
+    WaveletMatrix2D<int, int> plain(xs, ys);
+    WaveletMatrix2D<int, int> plain_pairs(points);
+    WaveletMatrix2DWeighted<int, int, long long> weighted(xs, ys, weights);
+    RectangleSum<int, int, long long> rectangle_sum(weighted_points);
 
     for(int step = 0; step < 3000; step++){
         int xl = static_cast<int>(rng() % 301) - 150;

@@ -129,3 +129,21 @@ T fast_gaussian_determinant(
 - 一次元配列の要素数不一致、二次元配列の非矩形、右辺の長さ不一致、逆行列・行列式に対する非正方形入力では `invalid_argument`。
 - 要素数の積または解の列添字が表現範囲を超える場合は `length_error`。
 - 計算中に選ばれたpivotが0になるなど、`T` が体の契約を破った場合は `logic_error`。
+
+## 容量を省略する可変長版
+
+~~~cpp
+using Mint = Modint998244353;
+std::vector<std::vector<Mint>> values{ {1, 2}, {3, 4} };
+Matrix<Mint> matrix(values);
+auto rank = fast_gaussian_rank(matrix);
+auto inverse = fast_gaussian_inverse(matrix);
+auto solution = fast_solve_linear_system(matrix, std::vector<Mint>{5, 11});
+~~~
+
+`Matrix<Mint>` は実寸に応じた `vector` を使う。
+`vector<vector<Mint>>` と row-major `vector<Mint>` にも容量引数なしの overload があり、
+固定容量 `Matrix<Mint, R, C>` も同じ header で利用できる。
+実寸を $R\times C$、$S=\max(R,C)$、$\omega=\log_2 7$、自由変数数を $F$ とすると、
+rank・逆行列・行列式は $O(S^\omega)$ 時間・$O(S^2)$ 追加空間。
+連立一次方程式は $O(S^\omega+CF)$ 時間・$O(S^2+CF)$ 追加空間で、$CF$ は解空間の出力量。

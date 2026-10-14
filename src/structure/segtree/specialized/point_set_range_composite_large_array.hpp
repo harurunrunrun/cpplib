@@ -6,7 +6,7 @@
 #include "../../types/monoid/common_monoids.hpp"
 #include "../dynamic/dynamic_segtree.hpp"
 
-template<class T, long long MAX_SIZE>
+template<class T, long long MAX_SIZE = -1>
 class PointSetRangeCompositeLargeArray{
 public:
     using affine_type = MonoidAffine<T>;
@@ -33,7 +33,8 @@ private:
 
 public:
     explicit PointSetRangeCompositeLargeArray(long long size): size_(size){
-        if(size < 0 || MAX_SIZE < size){
+        if constexpr(MAX_SIZE < 0) tree_.reset_size(size);
+        if(size < 0 || (MAX_SIZE >= 0 && MAX_SIZE < size)){
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );

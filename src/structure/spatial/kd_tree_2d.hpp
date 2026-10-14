@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../array/static_or_vector.hpp"
 #include <cmath>
 #include <limits>
 #include <memory>
@@ -26,9 +27,9 @@ struct KdTreeNearestResult2D{
     bool exists() const{ return found; }
 };
 
-template<class T, int MAX_POINTS>
+template<class T, int MAX_POINTS = -1>
 struct KdTree2D{
-    static_assert(MAX_POINTS > 0);
+    static_assert(MAX_POINTS == -1 || MAX_POINTS > 0);
     using Point = KdTreePoint2D<T>;
 
 private:
@@ -43,8 +44,8 @@ private:
     };
 
     struct State{
-        std::array<Point, MAX_POINTS> work;
-        std::array<Node, MAX_POINTS> nodes;
+        cpplib_detail::StaticOrVector<Point, MAX_POINTS> work;
+        cpplib_detail::StaticOrVector<Node, MAX_POINTS> nodes;
     };
 
     int point_count = 0;
@@ -262,12 +263,14 @@ public:
     }
 
     void build(const std::vector<Point>& points){
-        if(points.size() > static_cast<std::size_t>(MAX_POINTS))[[unlikely]]{
+        if(MAX_POINTS >= 0 && points.size() > static_cast<std::size_t>(MAX_POINTS))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity exceeded (KdTree2D::build)."
             );
         }
-        point_count = static_cast<int>(points.size());
+        point_count = cpplib_detail::checked_int_size(points.size());
+        state->work.resize(points.size());
+        state->nodes.resize(points.size());
         node_count = 0;
         root_node = -1;
         for(int i = 0; i < point_count; i++){

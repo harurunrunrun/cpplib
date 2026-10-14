@@ -27,7 +27,7 @@
 #define INT_SET_TARGET_AVX2
 #endif
 
-template<class L, L MAX_SIZE>
+template<class L, L MAX_SIZE = static_cast<L>(std::numeric_limits<int>::max())>
 struct Int_Set{
     static_assert(std::is_same_v<L, unsigned int> || std::is_same_v<L, unsigned long long>);
     static_assert(0< MAX_SIZE && MAX_SIZE <= (L)std::numeric_limits<int>::max());

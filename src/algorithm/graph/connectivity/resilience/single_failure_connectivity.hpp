@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_GRAPH_CONNECTIVITY_RESILIENCE_SINGLE_FAILURE_CONNECTIVITY_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_GRAPH_CONNECTIVITY_RESILIENCE_SINGLE_FAILURE_CONNECTIVITY_HPP_INCLUDED
 
+#include "../../../../structure/array/static_or_vector.hpp"
+
 #include <array>
 #include <cstddef>
 #include <limits>
@@ -9,37 +11,37 @@
 #include <utility>
 #include <vector>
 
-template<std::size_t MAX_VERTEX_COUNT, std::size_t MAX_EDGE_COUNT>
+template<std::size_t MAX_VERTEX_COUNT = static_cast<std::size_t>(-1), std::size_t MAX_EDGE_COUNT = static_cast<std::size_t>(-1)>
 class SingleFailureConnectivity{
     static_assert(
-        MAX_VERTEX_COUNT <= static_cast<std::size_t>(std::numeric_limits<int>::max())
+        MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_VERTEX_COUNT <= static_cast<std::size_t>(std::numeric_limits<int>::max())
     );
     static_assert(
-        MAX_EDGE_COUNT <=
+        MAX_EDGE_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT <=
         static_cast<std::size_t>(std::numeric_limits<int>::max() / 2)
     );
 
     struct State{
         State() noexcept{}
 
-        std::array<int, MAX_VERTEX_COUNT> head;
-        std::array<int, MAX_VERTEX_COUNT> order;
-        std::array<int, MAX_VERTEX_COUNT> low;
-        std::array<int, MAX_VERTEX_COUNT> subtree_end;
-        std::array<int, MAX_VERTEX_COUNT> parent;
-        std::array<int, MAX_VERTEX_COUNT> parent_edge;
-        std::array<int, MAX_VERTEX_COUNT> vertex_by_order;
-        std::array<int, MAX_VERTEX_COUNT> iterator;
-        std::array<int, MAX_VERTEX_COUNT> stack;
-        std::array<int, MAX_VERTEX_COUNT> child_count;
-        std::array<int, MAX_VERTEX_COUNT> child_write;
-        std::array<int, MAX_VERTEX_COUNT + 1> child_offset;
-        std::array<int, MAX_VERTEX_COUNT> children;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> head;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> order;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> low;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> subtree_end;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> parent;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> parent_edge;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> vertex_by_order;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> iterator;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> stack;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> child_count;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> child_write;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT + 1))> child_offset;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERTEX_COUNT))> children;
 
-        std::array<int, MAX_EDGE_COUNT> bridge_child;
-        std::array<int, MAX_EDGE_COUNT * 2> arc_to;
-        std::array<int, MAX_EDGE_COUNT * 2> arc_edge;
-        std::array<int, MAX_EDGE_COUNT * 2> arc_next;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_EDGE_COUNT))> bridge_child;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_EDGE_COUNT * 2))> arc_to;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_EDGE_COUNT * 2))> arc_edge;
+        cpplib_detail::StaticOrVector<int, ((MAX_VERTEX_COUNT == static_cast<std::size_t>(-1) || MAX_EDGE_COUNT == static_cast<std::size_t>(-1)) ? -1 : static_cast<std::ptrdiff_t>(MAX_EDGE_COUNT * 2))> arc_next;
     };
 
 public:
@@ -74,7 +76,26 @@ public:
             }
         }
 
+        if(edges.size() > static_cast<std::size_t>(std::numeric_limits<int>::max() / 2)) throw std::length_error("graph edge index overflow");
         State& state = *state_;
+        state.head.resize(static_cast<std::size_t>(vertex_count));
+        state.order.resize(static_cast<std::size_t>(vertex_count));
+        state.low.resize(static_cast<std::size_t>(vertex_count));
+        state.subtree_end.resize(static_cast<std::size_t>(vertex_count));
+        state.parent.resize(static_cast<std::size_t>(vertex_count));
+        state.parent_edge.resize(static_cast<std::size_t>(vertex_count));
+        state.vertex_by_order.resize(static_cast<std::size_t>(vertex_count));
+        state.iterator.resize(static_cast<std::size_t>(vertex_count));
+        state.stack.resize(static_cast<std::size_t>(vertex_count));
+        state.child_count.resize(static_cast<std::size_t>(vertex_count));
+        state.child_write.resize(static_cast<std::size_t>(vertex_count));
+        state.child_offset.resize(static_cast<std::size_t>(vertex_count + 1));
+        state.children.resize(static_cast<std::size_t>(vertex_count));
+        state.bridge_child.resize(static_cast<std::size_t>(edges.size()));
+        state.arc_to.resize(static_cast<std::size_t>(edges.size() * 2));
+        state.arc_edge.resize(static_cast<std::size_t>(edges.size() * 2));
+        state.arc_next.resize(static_cast<std::size_t>(edges.size() * 2));
+
         vertex_count_ = vertex_count;
         edge_count_ = static_cast<int>(edges.size());
         arc_count_ = 0;

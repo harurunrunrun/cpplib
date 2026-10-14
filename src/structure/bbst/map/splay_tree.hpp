@@ -3,24 +3,33 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <functional>
 #include <memory>
 #include <optional>
 #include <stdexcept>
 #include <utility>
 
-template<class Key, int MAX_SIZE, class Compare = std::less<Key>>
+template<class Key, int MAX_SIZE = -1, class Compare = std::less<Key>>
 struct SplaySet{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     struct State{
-        std::array<int, MAX_SIZE> left{};
-        std::array<int, MAX_SIZE> right{};
-        std::array<int, MAX_SIZE> parent{};
-        std::array<int, MAX_SIZE> size{};
-        std::array<int, MAX_SIZE> free_stack{};
-        std::array<Key, MAX_SIZE> key;
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> left{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> right{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> parent{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> size{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> free_stack{};
+        cpplib_detail::StaticOrVector<Key, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> key;
+        void ensure(std::size_t n){
+            left.ensure(n);
+            right.ensure(n);
+            parent.ensure(n);
+            size.ensure(n);
+            free_stack.ensure(n);
+            key.ensure(n);
+        }
     };
 
     int root_node = -1;
@@ -39,6 +48,7 @@ private:
         state->size[v] = 1 + size_or_zero(state->left[v]) + size_or_zero(state->right[v]);
     }
     int new_node(const Key& x){
+        if constexpr(MAX_SIZE < 0) state->ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         int v;
         if(free_count > 0){
             v = state->free_stack[--free_count];

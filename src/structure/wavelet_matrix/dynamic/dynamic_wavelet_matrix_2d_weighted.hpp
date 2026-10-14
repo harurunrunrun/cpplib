@@ -1,5 +1,6 @@
 #ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_DYNAMIC_WAVELET_MATRIX_2D_WEIGHTED_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_DYNAMIC_WAVELET_MATRIX_2D_WEIGHTED_HPP_INCLUDED
+#include "../../array/static_or_vector.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -16,11 +17,11 @@
 #include "../../tree/treap/treap.hpp"
 #include "dynamic_weighted_wavelet_matrix.hpp"
 
-template<class X, class Y, class W, int MAX_SIZE,
+template<class X, class Y, class W, int MAX_SIZE = -1,
          int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits>
 struct DynamicWaveletMatrix2DWeighted{
     static_assert(std::is_integral_v<X> && std::is_integral_v<Y>);
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
 
 private:
     static constexpr int STORAGE_SIZE = MAX_SIZE == 0 ? 1 : MAX_SIZE;
@@ -83,14 +84,14 @@ private:
         std::vector<W> sorted_weights;
         sorted_y.reserve(xs.size());
         sorted_weights.reserve(xs.size());
-        for(int index = 0; index < static_cast<int>(xs.size()); ++index){
+        for(int index = 0; index < cpplib_detail::checked_int_size(xs.size()); ++index){
             const auto key = x_order_.kth(index);
             Point* point = point_of(key->second);
             sorted_y.push_back(point->y);
             sorted_weights.push_back(point->weight);
         }
         matrix_ = std::make_unique<Matrix>(sorted_y, sorted_weights);
-        _n = static_cast<int>(xs.size());
+        _n = cpplib_detail::checked_int_size(xs.size());
     }
 
 public:

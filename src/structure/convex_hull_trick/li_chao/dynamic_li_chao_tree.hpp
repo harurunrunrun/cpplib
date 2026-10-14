@@ -3,14 +3,15 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <limits>
 #include <numeric>
 #include <stdexcept>
 
-template<long long X_MIN, long long X_MAX, int MAX_NODE>
+template<long long X_MIN, long long X_MAX, int MAX_NODE = -1>
 struct DynamicLiChaoTree{
     static_assert(X_MIN <= X_MAX);
-    static_assert(MAX_NODE >= 0);
+    static_assert(MAX_NODE == -1 || MAX_NODE >= 0);
 
     static constexpr long long INF =
         std::numeric_limits<long long>::max() / 4;
@@ -44,7 +45,7 @@ private:
 
     int root = -1;
     int node_count = 0;
-    std::array<Node, MAX_NODE> nodes;
+    cpplib_detail::StaticOrVector<Node, MAX_NODE> nodes;
 
     static long long midpoint(long long l, long long r){
         return std::midpoint(l, r);
@@ -76,7 +77,8 @@ private:
     }
 
     int new_node(Line line){
-        if(node_count >= MAX_NODE)[[unlikely]]{
+        if constexpr(MAX_NODE < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(node_count) + 1));
+        if((MAX_NODE >= 0 && node_count >= MAX_NODE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: node capacity exceeded (add_line)."
             );
@@ -87,10 +89,9 @@ private:
         return res;
     }
 
-    void add_line_impl(int& current, long long l, long long r, Line line){
+    int add_line_impl(int current, long long l, long long r, Line line){
         if(current == -1){
-            current = new_node(line);
-            return;
+            return new_node(line);
         }
 
         long long m = midpoint(l, r);
@@ -99,13 +100,14 @@ private:
         bool mid_better = less_at(line, nodes[current].line, m);
 
         if(mid_better) std::swap(line, nodes[current].line);
-        if(l == r) return;
+        if(l == r) return current;
 
         if(left_better != mid_better){
-            add_line_impl(nodes[current].left, l, m, line);
+            nodes[current].left = add_line_impl(nodes[current].left, l, m, line);
         }else{
-            add_line_impl(nodes[current].right, m + 1, r, line);
+            nodes[current].right = add_line_impl(nodes[current].right, m + 1, r, line);
         }
+        return current;
     }
 
 public:
@@ -122,7 +124,7 @@ public:
                 "library assertion fault: node capacity exceeded (add_line)."
             );
         }
-        add_line_impl(root, X_MIN, X_MAX, line);
+        root = add_line_impl(root, X_MIN, X_MAX, line);
     }
 
     long long query(long long x) const{

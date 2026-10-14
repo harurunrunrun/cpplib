@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_STRUCTURE_GRAPH_SPANNING_FOREST_INCREMENTAL_MINIMUM_SPANNING_FOREST_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_GRAPH_SPANNING_FOREST_INCREMENTAL_MINIMUM_SPANNING_FOREST_HPP_INCLUDED
 
+#include "../../array/static_or_vector.hpp"
+
 #include <array>
 #include <cstddef>
 #include <limits>
@@ -30,33 +32,38 @@ struct IncrementalMinimumSpanningForestMaximumMonoid{
     }
 };
 
-template<class Weight, int MAX_VERTICES, int MAX_EDGES>
+template<class Weight, int MAX_VERTICES = -1, int MAX_EDGES = -1>
 class IncrementalMinimumSpanningForest{
-    static_assert(MAX_VERTICES > 0);
-    static_assert(MAX_EDGES > 0);
-    static_assert(MAX_VERTICES <= std::numeric_limits<int>::max() - MAX_EDGES);
+    static_assert(MAX_VERTICES == -1 || MAX_VERTICES > 0);
+    static_assert(MAX_EDGES == -1 || MAX_EDGES > 0);
+    static_assert(MAX_VERTICES < 0 || MAX_EDGES < 0 || MAX_VERTICES <= std::numeric_limits<int>::max() - MAX_EDGES);
     static_assert(std::numeric_limits<Weight>::is_specialized);
 
     using Entry = IncrementalMinimumSpanningForestPathEntry<Weight>;
     static constexpr auto maximum_monoid =
         IncrementalMinimumSpanningForestMaximumMonoid<Weight>{};
-    using Forest = LinkCutTree<maximum_monoid, MAX_VERTICES + MAX_EDGES>;
+    using Forest = LinkCutTree<maximum_monoid, (MAX_VERTICES < 0 || MAX_EDGES < 0 ? -1 : MAX_VERTICES + MAX_EDGES)>;
 
     int vertex_count_ = 0;
     int edge_count_ = 0;
     int component_count_ = 0;
     Forest forest_;
-    std::array<int, MAX_EDGES> first_endpoint_{};
-    std::array<int, MAX_EDGES> second_endpoint_{};
-    std::array<bool, MAX_EDGES> in_forest_{};
+    cpplib_detail::StaticOrVector<int, (MAX_EDGES < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_EDGES))> first_endpoint_{};
+    cpplib_detail::StaticOrVector<int, (MAX_EDGES < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_EDGES))> second_endpoint_{};
+    cpplib_detail::StaticOrVector<bool, (MAX_EDGES < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_EDGES))> in_forest_{};
 
     static int storage_size(int vertex_count){
-        if(vertex_count < 0 || MAX_VERTICES < vertex_count)[[unlikely]]{
+        if(vertex_count < 0 || (MAX_VERTICES >= 0 && MAX_VERTICES < vertex_count))[[unlikely]]{
             throw std::invalid_argument(
                 "incremental minimum spanning forest size is out of range"
             );
         }
-        return vertex_count + MAX_EDGES;
+        if constexpr(MAX_EDGES < 0) return vertex_count;
+        else{
+            if(vertex_count > std::numeric_limits<int>::max() - MAX_EDGES)
+                throw std::length_error("spanning forest node index overflow");
+            return vertex_count + MAX_EDGES;
+        }
     }
 
     void check_vertex(int vertex) const{
@@ -131,7 +138,13 @@ public:
                 "incremental minimum spanning forest edge capacity exceeded"
             );
         }
+        if(edge_count_ >= std::numeric_limits<int>::max() - vertex_count_)
+            throw std::length_error("spanning forest node index overflow");
+        first_endpoint_.ensure(static_cast<std::size_t>(edge_count_) + 1);
+        second_endpoint_.ensure(static_cast<std::size_t>(edge_count_) + 1);
+        in_forest_.ensure(static_cast<std::size_t>(edge_count_) + 1);
         const int edge = edge_count_++;
+        if constexpr(MAX_EDGES < 0) forest_.add_vertex(maximum_monoid.e());
         if(first == second) return edge;
 
         if(!forest_.connected(first, second)){

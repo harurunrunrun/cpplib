@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_TREE_QUERY_TREE_PATH_ORDER_STATISTICS_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_TREE_QUERY_TREE_PATH_ORDER_STATISTICS_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -10,9 +12,9 @@
 #include <stdexcept>
 #include <vector>
 
-template<class Value, int MAX_SIZE>
+template<class Value, int MAX_SIZE = -1>
 struct TreePathOrderStatistics{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     static constexpr int MAX_LOG = static_cast<int>(
@@ -24,7 +26,7 @@ private:
         static_cast<std::size_t>(1)
         + static_cast<std::size_t>(MAX_SIZE)
             * static_cast<std::size_t>(MAX_LOG + 1);
-    static_assert(NODE_CAPACITY <= static_cast<std::size_t>(
+    static_assert(MAX_SIZE == -1 || NODE_CAPACITY <= static_cast<std::size_t>(
         std::numeric_limits<int>::max()
     ));
 
@@ -35,15 +37,15 @@ private:
     };
 
     struct State{
-        std::array<int, MAX_SIZE> head{};
-        std::array<int, EDGE_CAPACITY> to{};
-        std::array<int, EDGE_CAPACITY> next{};
-        std::array<int, MAX_SIZE> parent{};
-        std::array<int, MAX_SIZE> depth{};
-        std::array<std::array<int, MAX_SIZE>, MAX_LOG> up{};
-        std::array<int, MAX_SIZE> rank{};
-        std::array<int, MAX_SIZE> version_root{};
-        std::array<Node, NODE_CAPACITY> nodes{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> head{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> to{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> next{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> parent{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> depth{};
+        cpplib_detail::StaticOrVector<cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))>, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_LOG))> up{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> rank{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> version_root{};
+        cpplib_detail::StaticOrVector<Node, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(NODE_CAPACITY))> nodes{};
     };
 
     struct Versions{
@@ -54,6 +56,7 @@ private:
     };
 
     int _n;
+    int log_ = 1;
     int edge_count = 0;
     int node_count = 1;
     int root_vertex = -1;
@@ -74,7 +77,7 @@ private:
     }
 
     int clone_node(int source){
-        if(static_cast<std::size_t>(node_count) == NODE_CAPACITY)[[unlikely]]{
+        if(static_cast<std::size_t>(node_count) == state->nodes.size())[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: node capacity exceeded (build)."
             );
@@ -134,7 +137,7 @@ private:
         if(left == right){
             return left;
         }
-        for(int level = MAX_LOG - 1; level >= 0; --level){
+        for(int level = log_ - 1; level >= 0; --level){
             const int left_ancestor = state->up[static_cast<std::size_t>(level)]
                 [static_cast<std::size_t>(left)];
             const int right_ancestor = state->up[static_cast<std::size_t>(level)]
@@ -231,13 +234,26 @@ private:
     }
 
 public:
-    explicit TreePathOrderStatistics(int n = MAX_SIZE): _n(n), state(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit TreePathOrderStatistics(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), state(nullptr){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
         state = std::make_unique<State>();
+        log_ = static_cast<int>(std::bit_width(static_cast<unsigned>(std::max(1, _n))));
+        if(static_cast<std::size_t>(_n) > (static_cast<std::size_t>(std::numeric_limits<int>::max()) - 2) / static_cast<std::size_t>(log_ + 1)) throw std::length_error("tree path node index overflow");
+        state->head.resize(static_cast<std::size_t>(_n));
+        state->to.resize(static_cast<std::size_t>(2 * std::max(0, _n - 1)));
+        state->next.resize(static_cast<std::size_t>(2 * std::max(0, _n - 1)));
+        state->parent.resize(static_cast<std::size_t>(_n));
+        state->depth.resize(static_cast<std::size_t>(_n));
+        state->up.resize(static_cast<std::size_t>(log_));
+        for(auto& row: state->up) row.resize(static_cast<std::size_t>(_n));
+        state->rank.resize(static_cast<std::size_t>(_n));
+        state->version_root.resize(static_cast<std::size_t>(_n));
+        state->nodes.resize(static_cast<std::size_t>(static_cast<std::size_t>(1) + static_cast<std::size_t>(_n) * static_cast<std::size_t>(log_ + 1)));
+
         state->head.fill(-1);
         state->parent.fill(-1);
     }
@@ -259,7 +275,7 @@ public:
         }
         check_vertex(left, "library assertion fault: range violation (add_edge).");
         check_vertex(right, "library assertion fault: range violation (add_edge).");
-        if(static_cast<std::size_t>(edge_count + 2) > EDGE_CAPACITY)[[unlikely]]{
+        if(static_cast<std::size_t>(edge_count + 2) > (MAX_SIZE < 0 ? static_cast<std::size_t>(2) * static_cast<std::size_t>(std::max(0, _n - 1)) : EDGE_CAPACITY))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: edge capacity exceeded (add_edge)."
             );
@@ -342,7 +358,7 @@ public:
             state->up[0][static_cast<std::size_t>(vertex)] =
                 parent == -1 ? vertex : parent;
         }
-        for(int level = 1; level < MAX_LOG; ++level){
+        for(int level = 1; level < log_; ++level){
             for(int vertex = 0; vertex < _n; ++vertex){
                 const int middle = state->up[static_cast<std::size_t>(level - 1)]
                     [static_cast<std::size_t>(vertex)];

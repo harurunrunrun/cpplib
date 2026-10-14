@@ -36,3 +36,14 @@ $Z$を`lhs`の有効範囲にある1の個数、$w$を機械語長、$L=\texttt{
 ## 注意点
 
 法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+std::vector<std::vector<bool>> a{ {true, false}, {true, true}};
+auto product = matrix_product_mod_2(a, a);
+```
+
+$R\times K$ と $K\times C$ の積は $O(RK\lceil C/64\rceil+RC+KC)$ 時間、$O((R+K)\lceil C/64\rceil+RC)$ 空間。入出力は二次元 `vector<bool>`。固定長 `bitset` の overload も利用できる。

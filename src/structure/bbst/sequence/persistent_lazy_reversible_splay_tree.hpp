@@ -3,15 +3,16 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-template<auto MonoidActLen, int MAX_NODE, int MAX_VERSION>
+template<auto MonoidActLen, int MAX_NODE = -1, int MAX_VERSION = -1>
 struct PersistentLazyReversibleSplayTree{
-    static_assert(MAX_NODE > 0);
-    static_assert(MAX_VERSION > 0);
+    static_assert(MAX_NODE == -1 || MAX_NODE > 0);
+    static_assert(MAX_VERSION == -1 || MAX_VERSION > 0);
     using S = typename std::remove_cvref_t<decltype(MonoidActLen)>::S;
     using T = typename std::remove_cvref_t<decltype(MonoidActLen)>::T;
 
@@ -33,8 +34,8 @@ private:
         int length;
     };
 
-    std::array<Node, MAX_NODE> nodes{};
-    std::array<int, MAX_VERSION> roots{};
+    cpplib_detail::StaticOrVector<Node, (MAX_NODE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_NODE))> nodes{};
+    cpplib_detail::StaticOrVector<int, (MAX_VERSION < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSION))> roots{};
     int used = 0;
     int version_count = 1;
 
@@ -51,17 +52,18 @@ private:
     }
 
     void pull(int node){
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        int left_size = size_or_zero(current.left);
-        int right_size = size_or_zero(current.right);
-        current.size = left_size + 1 + right_size;
-        S prefix = MonoidActLen.op(aggregate_or_e(current.left), left_size, current.value, 1);
-        current.aggregate = MonoidActLen.op(prefix, left_size + 1, aggregate_or_e(current.right), right_size);
-        S rev_prefix = MonoidActLen.op(rev_aggregate_or_e(current.right), right_size, current.value, 1);
-        current.rev_aggregate = MonoidActLen.op(rev_prefix, right_size + 1, rev_aggregate_or_e(current.left), left_size);
+        const auto current_node_index_1 = static_cast<std::size_t>(node);
+        int left_size = size_or_zero(nodes[current_node_index_1].left);
+        int right_size = size_or_zero(nodes[current_node_index_1].right);
+        nodes[current_node_index_1].size = left_size + 1 + right_size;
+        S prefix = MonoidActLen.op(aggregate_or_e(nodes[current_node_index_1].left), left_size, nodes[current_node_index_1].value, 1);
+        nodes[current_node_index_1].aggregate = MonoidActLen.op(prefix, left_size + 1, aggregate_or_e(nodes[current_node_index_1].right), right_size);
+        S rev_prefix = MonoidActLen.op(rev_aggregate_or_e(nodes[current_node_index_1].right), right_size, nodes[current_node_index_1].value, 1);
+        nodes[current_node_index_1].rev_aggregate = MonoidActLen.op(rev_prefix, right_size + 1, rev_aggregate_or_e(nodes[current_node_index_1].left), left_size);
     }
 
     int copy_node(int node){
+        if constexpr(MAX_NODE < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(node == -1) return -1;
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentLazyReversibleSplayTree).");
@@ -71,6 +73,7 @@ private:
     }
 
     int new_node(const S& value){
+        if constexpr(MAX_NODE < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentLazyReversibleSplayTree).");
         }
@@ -83,44 +86,44 @@ private:
 
     void all_apply(int node, const T& f){
         if(node == -1) return;
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        current.value = MonoidActLen.mapping(f, current.value, 1);
-        current.aggregate = MonoidActLen.mapping(f, current.aggregate, current.size);
-        current.rev_aggregate = MonoidActLen.mapping(f, current.rev_aggregate, current.size);
-        if(current.has_lazy){
-            current.lazy = MonoidActLen.composition(f, current.lazy);
+        const auto current_node_index_2 = static_cast<std::size_t>(node);
+        nodes[current_node_index_2].value = MonoidActLen.mapping(f, nodes[current_node_index_2].value, 1);
+        nodes[current_node_index_2].aggregate = MonoidActLen.mapping(f, nodes[current_node_index_2].aggregate, nodes[current_node_index_2].size);
+        nodes[current_node_index_2].rev_aggregate = MonoidActLen.mapping(f, nodes[current_node_index_2].rev_aggregate, nodes[current_node_index_2].size);
+        if(nodes[current_node_index_2].has_lazy){
+            nodes[current_node_index_2].lazy = MonoidActLen.composition(f, nodes[current_node_index_2].lazy);
         }else{
-            current.lazy = f;
-            current.has_lazy = true;
+            nodes[current_node_index_2].lazy = f;
+            nodes[current_node_index_2].has_lazy = true;
         }
     }
 
     void toggle(int node){
         if(node == -1) return;
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        std::swap(current.left, current.right);
-        std::swap(current.aggregate, current.rev_aggregate);
-        current.reversed = !current.reversed;
+        const auto current_node_index_3 = static_cast<std::size_t>(node);
+        std::swap(nodes[current_node_index_3].left, nodes[current_node_index_3].right);
+        std::swap(nodes[current_node_index_3].aggregate, nodes[current_node_index_3].rev_aggregate);
+        nodes[current_node_index_3].reversed = !nodes[current_node_index_3].reversed;
     }
 
     // Returns a writable copy whose reversal and action have been propagated.
     int expose(int root){
         int node = copy_node(root);
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        if(!current.reversed && !current.has_lazy) return node;
-        if(current.left != -1){
-            current.left = copy_node(current.left);
-            if(current.reversed) toggle(current.left);
-            if(current.has_lazy) all_apply(current.left, current.lazy);
+        const auto current_node_index_4 = static_cast<std::size_t>(node);
+        if(!nodes[current_node_index_4].reversed && !nodes[current_node_index_4].has_lazy) return node;
+        if(nodes[current_node_index_4].left != -1){
+            nodes[current_node_index_4].left = copy_node(nodes[current_node_index_4].left);
+            if(nodes[current_node_index_4].reversed) toggle(nodes[current_node_index_4].left);
+            if(nodes[current_node_index_4].has_lazy) all_apply(nodes[current_node_index_4].left, nodes[current_node_index_4].lazy);
         }
-        if(current.right != -1){
-            current.right = copy_node(current.right);
-            if(current.reversed) toggle(current.right);
-            if(current.has_lazy) all_apply(current.right, current.lazy);
+        if(nodes[current_node_index_4].right != -1){
+            nodes[current_node_index_4].right = copy_node(nodes[current_node_index_4].right);
+            if(nodes[current_node_index_4].reversed) toggle(nodes[current_node_index_4].right);
+            if(nodes[current_node_index_4].has_lazy) all_apply(nodes[current_node_index_4].right, nodes[current_node_index_4].lazy);
         }
-        current.reversed = false;
-        current.has_lazy = false;
-        current.lazy = MonoidActLen.id();
+        nodes[current_node_index_4].reversed = false;
+        nodes[current_node_index_4].has_lazy = false;
+        nodes[current_node_index_4].lazy = MonoidActLen.id();
         return node;
     }
 
@@ -245,6 +248,7 @@ private:
         int checkpoint = used;
         try{
             int root = operation();
+            if constexpr(MAX_VERSION < 0) roots.ensure(static_cast<std::size_t>(version_count) + 1);
             roots[static_cast<std::size_t>(version_count)] = root;
             return version_count++;
         }catch(...){
@@ -267,14 +271,14 @@ private:
     }
 
     S get_rec(int node, int k, bool flip, const T& action) const{
-        const auto& current = nodes[static_cast<std::size_t>(node)];
-        int left = flip ? current.right : current.left;
-        int right = flip ? current.left : current.right;
-        bool child_flip = flip ^ current.reversed;
-        T next_action = child_action(action, current);
+        const auto current_node_index_5 = static_cast<std::size_t>(node);
+        int left = flip ? nodes[current_node_index_5].right : nodes[current_node_index_5].left;
+        int right = flip ? nodes[current_node_index_5].left : nodes[current_node_index_5].right;
+        bool child_flip = flip ^ nodes[current_node_index_5].reversed;
+        T next_action = child_action(action, nodes[current_node_index_5]);
         int left_size = size_or_zero(left);
         if(k < left_size) return get_rec(left, k, child_flip, next_action);
-        if(k == left_size) return MonoidActLen.mapping(action, current.value, 1);
+        if(k == left_size) return MonoidActLen.mapping(action, nodes[current_node_index_5].value, 1);
         return get_rec(right, k - left_size - 1, child_flip, next_action);
     }
 
@@ -285,18 +289,18 @@ private:
             S value = flip ? rev_aggregate_or_e(node) : aggregate_or_e(node);
             return {MonoidActLen.mapping(action, value, node_size), node_size};
         }
-        const auto& current = nodes[static_cast<std::size_t>(node)];
-        int left = flip ? current.right : current.left;
-        int right = flip ? current.left : current.right;
-        bool child_flip = flip ^ current.reversed;
-        T next_action = child_action(action, current);
+        const auto current_node_index_6 = static_cast<std::size_t>(node);
+        int left = flip ? nodes[current_node_index_6].right : nodes[current_node_index_6].left;
+        int right = flip ? nodes[current_node_index_6].left : nodes[current_node_index_6].right;
+        bool child_flip = flip ^ nodes[current_node_index_6].reversed;
+        T next_action = child_action(action, nodes[current_node_index_6]);
         int left_size = size_or_zero(left);
         QueryResult result{MonoidActLen.e(), 0};
         if(l < left_size){
             result = prod_rec(left, l, std::min(r, left_size), child_flip, next_action);
         }
         if(l <= left_size && left_size < r){
-            result = combine(result, {MonoidActLen.mapping(action, current.value, 1), 1});
+            result = combine(result, {MonoidActLen.mapping(action, nodes[current_node_index_6].value, 1), 1});
         }
         if(left_size + 1 < r){
             result = combine(
@@ -315,26 +319,26 @@ private:
 
     void collect(int node, bool flip, const T& action, std::vector<S>& result) const{
         if(node == -1) return;
-        const auto& current = nodes[static_cast<std::size_t>(node)];
-        int left = flip ? current.right : current.left;
-        int right = flip ? current.left : current.right;
-        bool child_flip = flip ^ current.reversed;
-        T next_action = child_action(action, current);
+        const auto current_node_index_7 = static_cast<std::size_t>(node);
+        int left = flip ? nodes[current_node_index_7].right : nodes[current_node_index_7].left;
+        int right = flip ? nodes[current_node_index_7].left : nodes[current_node_index_7].right;
+        bool child_flip = flip ^ nodes[current_node_index_7].reversed;
+        T next_action = child_action(action, nodes[current_node_index_7]);
         collect(left, child_flip, next_action, result);
-        result.push_back(MonoidActLen.mapping(action, current.value, 1));
+        result.push_back(MonoidActLen.mapping(action, nodes[current_node_index_7].value, 1));
         collect(right, child_flip, next_action, result);
     }
 
 public:
     PersistentLazyReversibleSplayTree(){
-        roots.fill(-1);
+        roots.ensure(1); roots.fill(-1);
     }
 
     explicit PersistentLazyReversibleSplayTree(const std::vector<S>& values) : PersistentLazyReversibleSplayTree(){
         if(values.size() > static_cast<std::size_t>(MAX_NODE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentLazyReversibleSplayTree).");
         }
-        roots[0] = build(values, 0, static_cast<int>(values.size()));
+        roots[0] = build(values, 0, cpplib_detail::checked_int_size(values.size()));
     }
 
     int versions() const{
@@ -375,13 +379,13 @@ public:
             auto [left, right] = split(roots[static_cast<std::size_t>(version)], p);
             auto [middle, tail] = split(right, 1);
             middle = copy_node(middle);
-            auto& current = nodes[static_cast<std::size_t>(middle)];
-            current.value = value;
-            current.aggregate = value;
-            current.rev_aggregate = value;
-            current.reversed = false;
-            current.has_lazy = false;
-            current.lazy = MonoidActLen.id();
+            const auto current_node_index_8 = static_cast<std::size_t>(middle);
+            nodes[current_node_index_8].value = value;
+            nodes[current_node_index_8].aggregate = value;
+            nodes[current_node_index_8].rev_aggregate = value;
+            nodes[current_node_index_8].reversed = false;
+            nodes[current_node_index_8].has_lazy = false;
+            nodes[current_node_index_8].lazy = MonoidActLen.id();
             return merge(merge(left, middle), tail);
         });
     }

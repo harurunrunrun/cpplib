@@ -21,7 +21,7 @@ constexpr std::pair<Weight, Weight> tree_path_minmax_identity(){
     return {std::numeric_limits<Weight>::max(), std::numeric_limits<Weight>::lowest()};
 }
 
-template<class Weight, int MAX_SIZE>
+template<class Weight, int MAX_SIZE = -1>
 struct TreePathMinmax{
 private:
     static constexpr auto monoid = Monoid<

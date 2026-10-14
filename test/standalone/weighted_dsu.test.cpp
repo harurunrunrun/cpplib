@@ -112,6 +112,8 @@ void self_test(){
 }
 
 int main(){
+    {WeightedDSU<long long> d(1001); d.merge(0,1000,9); assert(d.diff(0,1000)==9); assert(d.component_size(0)==2);}
+
     int n, q;
     if(!(std::cin >> n >> q)){
         self_test();

@@ -2,6 +2,8 @@
 #define CPPLIB_SRC_STRUCTURE_DSU_SPECIALIZED_INCREMENTAL_COMPONENT_AFFINE_HPP_INCLUDED
 
 #include <array>
+#include <limits>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <stdexcept>
 #include <type_traits>
@@ -27,9 +29,9 @@ struct ActionPathMonoid{
 
 } // namespace incremental_component_affine_internal
 
-template<auto MonoidActLen, int MAX_SIZE>
+template<auto MonoidActLen, int MAX_SIZE = -1>
 struct IncrementalComponentAffine{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     static_assert(MAX_SIZE <= 1'000'000'000);
 
     using act_type = std::remove_cvref_t<decltype(MonoidActLen)>;
@@ -40,24 +42,30 @@ private:
     static constexpr auto action_path_monoid =
         incremental_component_affine_internal::
             ActionPathMonoid<MonoidActLen>{};
-    using HistoryTree = LinkCutTree<action_path_monoid, 2 * MAX_SIZE>;
+    using HistoryTree = LinkCutTree<action_path_monoid, (MAX_SIZE < 0 ? -1 : 2 * MAX_SIZE)>;
 
     int _n = 0;
     int group_count = 0;
     int next_history_node = 0;
-    std::array<int, MAX_SIZE> parent_or_size{};
-    std::array<int, MAX_SIZE> history_root{};
-    std::array<S, MAX_SIZE> initial_value{};
-    std::array<S, MAX_SIZE> aggregate{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> parent_or_size{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> history_root{};
+    cpplib_detail::StaticOrVector<S, MAX_SIZE> initial_value{};
+    cpplib_detail::StaticOrVector<S, MAX_SIZE> aggregate{};
     HistoryTree history;
 
+    static int checked_runtime_size(int n){
+        if(n < 0 || n > std::numeric_limits<int>::max() / 2 || (MAX_SIZE >= 0 && n > MAX_SIZE))
+            throw std::length_error("IncrementalComponentAffine size is out of range");
+        return n;
+    }
+
     static int checked_size(const std::vector<S>& values){
-        if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+        if(values.size() > static_cast<std::size_t>(std::numeric_limits<int>::max() / 2) || (MAX_SIZE >= 0 && values.size() > static_cast<std::size_t>(MAX_SIZE)))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
-        return static_cast<int>(values.size());
+        return cpplib_detail::checked_int_size(values.size());
     }
 
     void check_vertex(int vertex, const char* message) const{
@@ -67,6 +75,10 @@ private:
     }
 
     void initialize_empty_values(){
+        parent_or_size.resize(_n);
+        history_root.resize(_n);
+        initial_value.resize(_n);
+        aggregate.resize(_n);
         for(int vertex = 0; vertex < _n; ++vertex){
             parent_or_size[vertex] = -1;
             history_root[vertex] = vertex;
@@ -76,12 +88,12 @@ private:
     }
 
 public:
-    explicit IncrementalComponentAffine(int n = MAX_SIZE):
-        _n(n),
+    explicit IncrementalComponentAffine(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
+        _n(checked_runtime_size(n)),
         group_count(n),
         next_history_node(n),
-        history(2 * MAX_SIZE){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        history(2 * (MAX_SIZE < 0 ? _n : MAX_SIZE)){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
@@ -93,7 +105,7 @@ public:
         _n(checked_size(values)),
         group_count(_n),
         next_history_node(_n),
-        history(2 * MAX_SIZE){
+        history(2 * (MAX_SIZE < 0 ? _n : MAX_SIZE)){
         initialize_empty_values();
         for(int vertex = 0; vertex < _n; ++vertex){
             initial_value[vertex] = values[vertex];

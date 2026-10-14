@@ -4,7 +4,7 @@
 #include "../../types/monoid/common_monoids.hpp"
 #include "../dynamic/dynamic_lazysegtree.hpp"
 
-template<class T, long long MAX_SIZE>
+template<class T, long long MAX_SIZE = -1>
 class RangeAffineRangeSumLargeArray{
 public:
     using affine_type = MonoidAffine<T>;

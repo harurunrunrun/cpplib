@@ -82,3 +82,19 @@ rank profile、逆行列、必要な1個の minor determinant は Strassen 行�
 - 浮動小数点数では厳密な0判定を契約できないため使用しない。
 - 一次元配列の要素数不一致、二次元配列または `Matrix` の非正方形入力では `std::invalid_argument` を送出する。
 - `size * size` が `size_t` に収まらない場合は `std::length_error` を送出する。
+
+## 容量を省略する可変長版
+
+~~~cpp
+using Mint = Modint998244353;
+std::vector<std::vector<Mint>> values{ {1, 2}, {3, 4} };
+auto from_vector = fast_adjugate_matrix(values);
+Matrix<Mint> matrix(values);
+auto from_matrix = fast_adjugate_matrix(matrix);
+~~~
+
+`vector` overload では容量のテンプレート引数を使わない。
+`Matrix<Mint>` も実寸だけの `vector` 保存領域を使い、同じ関数へ渡せる。
+実行時の次数を $N$、高速行列積の指数を $\omega=\log_2 7$ とすると、
+時間計算量は $O(N^\omega)$、追加空間計算量は $O(N^2)$。
+固定容量を明示する `Matrix<Mint, R, C>` も同じ header の overload で利用できる。

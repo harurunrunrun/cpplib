@@ -1,5 +1,6 @@
 #ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_BASIC_SEGTREE_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_SEGTREE_BASIC_SEGTREE_HPP_INCLUDED
+#include "../../array/static_or_vector.hpp"
 #include <array>
 #include <vector>
 #include <stdexcept>
@@ -7,8 +8,7 @@
 #include <functional>
 #include "../../types/monoid/monoid.hpp"
 
-
-template<auto Monoid, int MAX_SIZE>
+template<auto Monoid, int MAX_SIZE = -1>
 struct Segtree{
     static_assert(MAX_SIZE > 0);
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
@@ -21,9 +21,9 @@ struct Segtree{
     }();
 
     int _n;
-    
+
     std::array<S, 2 * sz> data;
-    
+
     explicit constexpr Segtree(int n = MAX_SIZE):_n(n){
         if(_n < 0 ||  _n > MAX_SIZE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
@@ -33,6 +33,149 @@ struct Segtree{
 
     explicit constexpr Segtree(const std::vector<S>& v):_n((int)v.size()){
         if(v.size() > MAX_SIZE)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (constructor).");
+        }
+        data.fill(Monoid.e());
+        for(int k = 0; k < _n; k++){
+            data[k + sz] = v[k];
+        }
+        for(int k = sz - 1; k > 0; k--){
+            data[k] = Monoid.op(data[2 * k], data[2 * k + 1]);
+        }
+    }
+
+    void set(int k, const S& x){
+        if(k < 0 || _n <= k)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (set).");
+        }
+        k += sz;
+        data[k] = x;
+        while(k >>= 1){
+            data[k] = Monoid.op(data[2 * k], data[2 * k + 1]);
+        }
+    }
+
+    S get(int k)const{
+        if(k < 0 || _n <= k)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (get).");
+        }
+        return data[k + sz];
+    }
+
+    S prod(int l, int r)const{
+        if(l < 0 || l > r || _n < r)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (prod).");
+        }
+        S sml = Monoid.e();
+        S smr = Monoid.e();
+        l += sz;
+        r += sz;
+        while(l < r){
+            if(l & 1){
+                sml = Monoid.op(sml, data[l++]);
+            }
+            if(r & 1){
+                smr = Monoid.op(data[--r], smr);
+            }
+            l >>= 1;
+            r >>= 1;
+        }
+        return Monoid.op(sml, smr);
+    }
+
+    S all_prod()const{
+        return data[1];
+    }
+
+    int max_right(int l, auto f, auto&&... args)const{
+        if(l < 0 || _n < l)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (max_right).");
+        }
+        if(!std::invoke(f, Monoid.e(), args...))[[unlikely]]{
+            throw std::runtime_error("library assertion fault: f(e) must be true (max_right).");
+        }
+        if(l == _n) return _n;
+        S sm = Monoid.e();
+        l += sz;
+        do {
+            while((l & 1) == 0) {
+                l >>= 1;
+            }
+            if(!std::invoke(f, Monoid.op(sm, data[l]), args...)) {
+                while(l < sz) {
+                    l <<= 1;
+                    if(std::invoke(f, Monoid.op(sm, data[l]), args...)) {
+                        sm = Monoid.op(sm, data[l]);
+                        l++;
+                    }
+                }
+                return l - sz;
+            }
+            sm = Monoid.op(sm, data[l]);
+            l++;
+        } while((l & -l) != l);
+        return _n;
+    }
+
+    int min_left(int r, auto f, auto&&... args) const {
+        if(r < 0 || _n < r) [[unlikely]] {
+            throw std::runtime_error("library assertion fault: range violation (min_left).");
+        }
+        if(!std::invoke(f, Monoid.e(), args...)) [[unlikely]] {
+            throw std::runtime_error("library assertion fault: f(e) must be true (min_left).");
+        }
+        if(r == 0) return 0;
+        S sm = Monoid.e();
+        r += sz;
+        do {
+            r--;
+            while(r > 1 && (r & 1)) {
+                r >>= 1;
+            }
+            if(!std::invoke(f,Monoid.op(data[r], sm), args...)) {
+                while(r < sz) {
+                    r = 2 * r + 1;
+                    if(std::invoke(f,Monoid.op(data[r], sm), args...)) {
+                        sm = Monoid.op(data[r], sm);
+                        r--;
+                    }
+                }
+                return r + 1 - sz;
+            }
+            sm = Monoid.op(data[r], sm);
+        } while((r & -r) != r);
+        return 0;
+    }
+};
+
+// Capacity omitted: storage follows the runtime shape and actual updates.
+template<auto Monoid>
+struct Segtree<Monoid, -1>{
+    void initialize_storage(int n){
+        if(n < 0 || n > (1 << 29)) throw std::length_error("segment tree size");
+        sz = 1;
+        while(sz < n){ sz <<= 1; }
+        data.resize(2 * sz);
+    }
+
+    using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
+    int sz = 1;
+
+    int _n;
+
+    cpplib_detail::StaticOrVector<S, -1> data;
+
+    explicit Segtree(int n = 0):_n(n){
+        initialize_storage(_n);
+        if(_n < 0 )[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (constructor).");
+        }
+        data.fill(Monoid.e());
+    }
+
+    explicit Segtree(const std::vector<S>& v):_n(cpplib_detail::checked_int_size(v.size())){
+        initialize_storage(_n);
+        if(false)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
         data.fill(Monoid.e());

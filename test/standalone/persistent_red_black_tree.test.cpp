@@ -15,7 +15,7 @@ std::optional<int> kth_naive(const std::set<int>& s, int k){
     return *it;
 }
 
-void check_version(const PersistentRedBlackSet<int, 20000, 2000>& tree, int version, const std::set<int>& s){
+void check_version(const PersistentRedBlackSet<int>& tree, int version, const std::set<int>& s){
     assert(tree.size(version) == static_cast<int>(s.size()));
     assert(tree.empty(version) == s.empty());
     for(int x = -20; x <= 120; x++){
@@ -31,7 +31,7 @@ void check_version(const PersistentRedBlackSet<int, 20000, 2000>& tree, int vers
 }
 
 void self_test(){
-    PersistentRedBlackSet<int, 20000, 2000> tree;
+    PersistentRedBlackSet<int> tree;
     std::vector<std::set<int>> naive(1);
     std::mt19937 rng(20260916);
     for(int step = 0; step < 500; step++){
@@ -92,7 +92,7 @@ int main(){
         capacity_self_test();
         return 0;
     }
-    PersistentRedBlackSet<int, 20000, 2000> tree;
+    PersistentRedBlackSet<int> tree;
     while(q--){
         std::string type;
         int v, x;

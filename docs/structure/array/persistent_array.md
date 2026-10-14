@@ -122,3 +122,15 @@ constructor、fork、size、versions、latest_versionの一時領域は O(1)。g
 - `set`と`fork`はversionを1個追加し、追加version数が`MAX_VERSION`を超えると例外。
 - `set`はpath-copy nodeを$O(\log MAX\_SIZE)$個生成し、`fork`はnodeを生成しない。
 - node/version容量超過または値のcopy例外時は、version数とnode数を操作前へ戻す。
+
+## 可変長版
+
+```cpp
+using Dynamic = PersistentArray<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、更新 O(log(n + 1))、保存領域 O(n + u log(n + 1) + v)（u は更新数、v は版数）。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+
+可変長ストレージから返された値への参照は、後続の更新に伴う再確保で無効になることがある。必要な値は更新前にコピーする。

@@ -32,3 +32,13 @@ documentation_of: ../../../../src/structure/range_query/value_query/static_range
 - 初期列は非減少でなければならず、違反時は `runtime_error` を送出します。
 - 非空区間だけを受け付けます。
 - 値の連長数が `MAX_SIZE` 以下でなければなりません。
+
+## 可変長版
+
+```cpp
+using Dynamic = StaticRangeMaximumFrequency<int>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log(n + 1))、整列済み列の区間最大頻度は O(1)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

@@ -1,10 +1,14 @@
 ---
-title: Fast Big Integer (高速多倍長整数) [addition_of_big_integers] [division_of_big_integers] [multiplication_of_big_integers]
+title: Fast Big Integer (高速多倍長整数) [addition_of_big_integers] [addition_of_hex_big_integers] [division_of_big_integers] [division_of_hex_big_integers] [multiplication_of_big_integers] [multiplication_of_hex_big_integers]
 documentation_of: ../../../../src/algorithm/math/integer/fast_big_integer.hpp
 ---
 
-10進入出力と符号付き四則演算に特化した `BigInteger` を提供する。
+`BasicBigInteger<RADIX>` は10進・16進入出力と符号付き四則演算を提供する。
+`BigInteger = BasicBigInteger<10>`、`HexBigInteger = BasicBigInteger<16>` が使える。
 内部表現は符号と little-endian の base 10^9 uint32_t limb であり、
+16進版は base $2^{28}$ の limb を使い、7桁を1 limbとして直接入出力する。
+16進入力は大文字・小文字とも許し、出力は大文字に統一する。基数変換を行わないため、
+16進文字列の入出力も桁数に対して線形時間である。
 4 limbまではオブジェクト内に保持する。外部多倍長整数ライブラリには依存せず、GCC 13、
 C++20、`__uint128_t`を前提とする。
 
@@ -130,3 +134,8 @@ NTT乗算は O(n log n)、Newton除算は O(M(n) log n) 時間で動作する。
 この高速版は10進Big Integer問題向けのAPIである。旧版に存在した
 `ExactInteger`、`exact_integer()`、`bit_length()`、bit shift、
 式テンプレート型は提供しない。16進入出力が必要な用途では別実装を使用する。
+
+## 類題
+
+符号付き16進整数の積を、別の16進整数で割った商と剰余を求める。
+`HexBigInteger::divmod(a*b,c)` で処理できる。丸めは0方向、剰余の符号は被除数に従う。

@@ -27,3 +27,17 @@ documentation_of: ../../../src/approximate/streaming/cuckoo_filter.hpp
 $2\,SlotsPerBucket/2^{FingerprintBits}$。偽陽性 key の `erase` は別 key の fingerprint を
 削除して偽陰性を生むため、削除は実際に追加した key に限る。
 保存に必要な空間計算量は $O(BucketCount\,SlotsPerBucket)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+CuckooFilter<> filter(1024, 4, 500, 123); // bucket 数、slot 数、kick 上限、seed
+bool inserted = filter.add(42);
+bool present = filter.contains(42);
+~~~
+
+bucket 数 $B$、各 bucket の slot 数 $S$、kick 上限 $K$ を実行時に指定する。
+$B$ は 2 以上の 2 の冪で、$S,K$ は正とする。保存は `vector` を用い、
+構築・`clear` は $O(BS)$ 時間・保存領域 $O(BS)$。
+所属判定・削除は $O(S)$ 時間、追加は最悪 $O(KS)$ 時間・$O(K)$ 一時領域。
+固定容量を指定する版も同じ header にある。

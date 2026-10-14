@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_STRING_SUFFIX_SUFFIX_AUTOMATON_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_STRING_SUFFIX_SUFFIX_AUTOMATON_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <cstddef>
@@ -12,10 +14,10 @@
 #include <utility>
 #include <vector>
 
-template<int ALPHABET, int MAX_STATES, char OFFSET = 'a'>
+template<int ALPHABET, int MAX_STATES = -1, char OFFSET = 'a'>
 struct SuffixAutomaton{
     static_assert(ALPHABET > 0);
-    static_assert(MAX_STATES > 0);
+    static_assert(MAX_STATES == -1 || MAX_STATES > 0);
 
     struct State{
         std::array<int, ALPHABET> next;
@@ -37,8 +39,8 @@ private:
     int used = 1;
     int last_state = 0;
     bool occurrence_built = false;
-    std::array<State, MAX_STATES> states{};
-    std::array<bool, MAX_STATES> terminal_contribution{};
+    cpplib_detail::StaticOrVector<State, (MAX_STATES < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_STATES))> states{};
+    cpplib_detail::StaticOrVector<bool, (MAX_STATES < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_STATES))> terminal_contribution{};
 
     int char_id(char c) const{
         int id = static_cast<int>(c - OFFSET);
@@ -48,18 +50,20 @@ private:
         return id;
     }
     int new_state(){
-        if(used == MAX_STATES)[[unlikely]]{
+        if(used == MAX_STATES || used == std::numeric_limits<int>::max())[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (extend).");
         }
+        states.ensure(static_cast<std::size_t>(used) + 1);
+        terminal_contribution.ensure(static_cast<std::size_t>(used) + 1);
         states[used] = State();
         terminal_contribution[used] = false;
         return used++;
     }
 
 public:
-    SuffixAutomaton() = default;
+    SuffixAutomaton(){ states.resize(1); terminal_contribution.resize(1); }
 
-    explicit SuffixAutomaton(std::string_view s){
+    explicit SuffixAutomaton(std::string_view s): SuffixAutomaton(){
         for(char c: s) extend(c);
     }
 

@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_STATIC_WAVELET_MATRIX_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -13,12 +14,12 @@
 
 template<
     class T,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 struct WaveletMatrix{
     static_assert(std::is_integral_v<T>);
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
     using U = std::make_unsigned_t<T>;
     static constexpr int digits = std::numeric_limits<U>::digits;
     static_assert(0 < BIT_WIDTH && BIT_WIDTH <= digits);
@@ -28,10 +29,13 @@ private:
     struct State{
         std::array<FullyIndexableDictionary<MAX_SIZE>, BIT_WIDTH> matrix;
         std::array<int, BIT_WIDTH> middle{};
-        std::array<U, MAX_SIZE> current{};
-        std::array<U, MAX_SIZE> next{};
+        cpplib_detail::StaticOrVector<U, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> current{};
+        cpplib_detail::StaticOrVector<U, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> next{};
 
         explicit State(int n){
+            current.resize(static_cast<std::size_t>(n));
+            next.resize(static_cast<std::size_t>(n));
+
             for(auto& dictionary: matrix){
                 dictionary = FullyIndexableDictionary<MAX_SIZE>(n);
             }
@@ -71,7 +75,7 @@ private:
 
 public:
     explicit WaveletMatrix(const std::vector<T>& values):
-        _n(static_cast<int>(values.size())), state(nullptr){
+        _n(cpplib_detail::checked_int_size(values.size())), state(nullptr){
         if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }

@@ -77,3 +77,14 @@ $N=vertex\_count$ とします。
 - `add_edge` は `build` 後に呼べません。更新と取得は `build` 後に呼びます。
 - `edge_get` の2頂点は同じ木辺の両端でなければなりません。
 - `T` は加減算とデフォルト構築ができ、全中間値を表現できる必要があります。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+PathAddEdgeGetTree<long long> dynamic(vertex_count);
+PathAddEdgeGetTree<long long, 100000> fixed(vertex_count);
+```
+
+構築・前処理は $O(N)$ 時間・空間、パス加算・辺の取得は $O(\log N)$ 時間。

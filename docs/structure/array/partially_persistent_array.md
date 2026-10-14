@@ -92,3 +92,15 @@ int latest_version() const
 - `set`は最新versionだけを更新して新しいversion番号を返す。更新数が`MAX_UPDATE`に達すると例外。
 - 容量超過や値のcopyで失敗した更新はversionを追加せず、既存状態を変えない。
 - `MAX_SIZE`個の初期値と`MAX_UPDATE`個の変更値を固定確保する。
+
+## 可変長版
+
+```cpp
+using Dynamic = PartiallyPersistentArray<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、set は償却 O(1)、過去版取得は O(log(u + 1))、保存領域は O(n + u)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+
+可変長ストレージから返された値への参照は、後続の更新に伴う再確保で無効になることがある。必要な値は更新前にコピーする。

@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <numeric>
 #include <random>
 #include <string>
@@ -46,6 +48,25 @@ struct NaiveDSU{
 };
 
 int main(){
+    {
+        const int bound = std::numeric_limits<int>::max();
+        PersistentDSU<> dsu(bound);
+        const int joined = dsu.merge(0, 0, bound - 1);
+        assert(dsu.same(joined, 0, bound - 1));
+        assert(!dsu.same(0, 0, bound - 1));
+        assert(dsu.component_size(joined, bound - 1) == 2);
+        assert(dsu.groups(joined) == bound - 1);
+        assert(dsu.nodes_used() < 100);
+    }
+
+    // Dynamic storage: verify growth and retained values.
+    {
+        PersistentDSU<> dsu(129);
+        int version = 0;
+        for(int i = 1; i < 129; ++i) version = dsu.merge(version, i - 1, i);
+        for(int i = 0; i < 300; ++i) version = dsu.fork(version);
+        assert(!dsu.same(0, 0, 128)); assert(dsu.same(version, 0, 128));
+    }
     int input_n, input_q;
     if(std::cin >> input_n >> input_q){
         PersistentDSU<128, 2048> dsu(input_n);

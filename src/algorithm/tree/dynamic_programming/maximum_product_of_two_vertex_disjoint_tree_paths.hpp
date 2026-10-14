@@ -21,7 +21,7 @@ struct TreeTwoDisjointPathsResult{
     ) = default;
 };
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 TreeTwoDisjointPathsResult maximum_product_of_two_vertex_disjoint_tree_paths(
     int vertex_count,
     const std::vector<std::pair<int, int>>& edges

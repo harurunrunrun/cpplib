@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/yosupo06/library-checker-problems",
+  "revision": "1814c4e5205517e368bb57a8d1127eb961cfeaae",
+  "problems": [
+    {
+      "id": "all_furthest_neighbors",
+      "directory": "geo/all_furthest_neighbors",
+      "title": "All Furthest Neighbors of a Convex Polygon",
+      "timelimit": 5.0,
+      "tests": [
+        {
+          "name": "example.in",
+          "number": 1
+        },
+        {
+          "name": "small_random.cpp",
+          "number": 1
+        },
+        {
+          "name": "random.cpp",
+          "number": 5
+        },
+        {
+          "name": "many_small.cpp",
+          "number": 2
+        },
+        {
+          "name": "symmetric.cpp",
+          "number": 2
+        },
+        {
+          "name": "non_unimodal.cpp",
+          "number": 1
+        },
+        {
+          "name": "overflow.cpp",
+          "number": 1
+        },
+        {
+          "name": "max_convex.cpp",
+          "number": 2
+        }
+      ],
+      "checker": "checker.cpp",
+      "suite_revision": "1814c4e5205517e368bb57a8d1127eb961cfeaae",
+      "support_files": {
+        "common/testlib.h": "8d6d68c9708ff3f8d094488506a8171802496bd1ae04942b31f2a47057564497"
+      },
+      "pinned_files": {
+        "geo/all_furthest_neighbors/info.toml": "cc396c90b627d4038d1d514357ff1efee4b50f47100d530c561d82cc81a28ab9",
+        "geo/all_furthest_neighbors/hash.json": "5e6a85c5949a9e2309fd50c2043c9580da22515cd2ae8e4928db6ac1de8771f3",
+        "geo/all_furthest_neighbors/checker.cpp": "79fc14e1049999d818b43e1eda96429aec75084dc4ac5e00047cc598503a1943"
+      }
+    },
+    {
+      "id": "prefix_sum_of_polynomial",
+      "directory": "polynomial/prefix_sum_of_polynomial",
+      "title": "Prefix Sum of Polynomial",
+      "timelimit": 5.0,
+      "tests": [
+        {
+          "name": "example.in",
+          "number": 2
+        },
+        {
+          "name": "small.cpp",
+          "number": 16
+        },
+        {
+          "name": "medium.cpp",
+          "number": 3
+        },
+        {
+          "name": "random.cpp",
+          "number": 3
+        },
+        {
+          "name": "max_random.cpp",
+          "number": 2
+        }
+      ],
+      "checker": "checker.cpp",
+      "suite_revision": "1814c4e5205517e368bb57a8d1127eb961cfeaae",
+      "support_files": {
+        "common/testlib.h": "8d6d68c9708ff3f8d094488506a8171802496bd1ae04942b31f2a47057564497"
+      },
+      "pinned_files": {
+        "polynomial/prefix_sum_of_polynomial/info.toml": "75ef48c16246c2d7a68bca6732858bec13d2477d9f74bc58cabf0b3a2a3246f6",
+        "polynomial/prefix_sum_of_polynomial/hash.json": "92c25a21e73cb3056b045bf7c63a38b45e1843644e6226d5ee74d37c26019dcb",
+        "polynomial/prefix_sum_of_polynomial/checker.cpp": "6e9b1ffacf111a87c040efbccb5de2862f897c97d0618ba2dc106cc996c584ba"
+      }
+    },
+    {
+      "id": "primality_test",
+      "directory": "number_theory/primality_test",
+      "title": "Primality Test",
+      "timelimit": 5.0,
+      "tests": [
+        {
+          "name": "example.in",
+          "number": 1
+        },
+        {
+          "name": "small.cpp",
+          "number": 1
+        },
+        {
+          "name": "less_1000000000.cpp",
+          "number": 1
+        },
+        {
+          "name": "carmichael.in",
+          "number": 1
+        },
+        {
+          "name": "all_prime.cpp",
+          "number": 1
+        },
+        {
+          "name": "prod_two_prime.cpp",
+          "number": 1
+        },
+        {
+          "name": "random.cpp",
+          "number": 3
+        },
+        {
+          "name": "hack_issue996.cpp",
+          "number": 1
+        },
+        {
+          "name": "hack_issue1325.in",
+          "number": 1
+        },
+        {
+          "name": "pseudoprimes.in",
+          "number": 1
+        },
+        {
+          "name": "many_liars.cpp",
+          "number": 1
+        }
+      ],
+      "checker": "checker.cpp",
+      "suite_revision": "1814c4e5205517e368bb57a8d1127eb961cfeaae",
+      "support_files": {
+        "common/testlib.h": "8d6d68c9708ff3f8d094488506a8171802496bd1ae04942b31f2a47057564497"
+      },
+      "pinned_files": {
+        "number_theory/primality_test/info.toml": "16e765394c1a6f5e9d5a1719bed206be16ff98ef656a598761600faae97330a4",
+        "number_theory/primality_test/hash.json": "2ab8372c583ae8a830dd5dd6116b2d5c958494cd19574dc0e90f360c443f17d2",
+        "number_theory/primality_test/checker.cpp": "6e9b1ffacf111a87c040efbccb5de2862f897c97d0618ba2dc106cc996c584ba"
+      },
+      "replaces_base_revision": "04c8de378bab67be926325de2871f0babb8e6451"
+    }
+  ],
+  "replaces_support_revision": "04c8de378bab67be926325de2871f0babb8e6451",
+  "support_overrides": {
+    "common/fastio.h": "ca7cdae509fe377f823e9b224dfd77a5324ee201d31e9e81c728e229a68ebcc2"
+  }
+}

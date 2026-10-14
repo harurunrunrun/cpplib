@@ -15,7 +15,7 @@
 #include "../../src/structure/types/monoid/monoid.hpp"
 
 constexpr AddMonoid<long long> add_monoid{};
-using Tree = PersistentReversibleSplayTree<add_monoid, 350000, 2000>;
+using Tree = PersistentReversibleSplayTree<add_monoid>;
 
 struct Hash{
     std::uint64_t value = 0;
@@ -40,7 +40,7 @@ Hash hash_e(){
 }
 
 constexpr Monoid<hash_op, hash_e> hash_monoid{};
-using HashTree = PersistentReversibleSplayTree<hash_monoid, 220000, 800>;
+using HashTree = PersistentReversibleSplayTree<hash_monoid>;
 
 long long sum_naive(const std::vector<long long>& a, int l, int r){
     return std::accumulate(a.begin() + l, a.begin() + r, 0LL);

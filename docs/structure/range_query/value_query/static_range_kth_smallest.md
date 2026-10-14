@@ -63,3 +63,13 @@ $O(MAX\_SIZE\log(MAX\_SIZE+1))$。
 `values.size() > MAX_SIZE` では `length_error` を送出する。query区間は空でない
 有効な半開区間で、`order` は $[0,right-left)$ に含まれなければならず、違反時は
 `out_of_range` を送出する。
+
+## 可変長版
+
+```cpp
+using Dynamic = StaticRangeKthSmallest<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n log(n + 1))、保存領域 O(n log(n + 1)) bit と座標列、取得 O(log(n + 1))。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

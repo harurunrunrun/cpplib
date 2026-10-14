@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -17,8 +18,8 @@
 template<
     class X,
     class Y,
-    int MAX_SIZE,
-    int MAX_VERSION,
+    int MAX_SIZE = -1,
+    int MAX_VERSION = -1,
     int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits
 >
 struct PartiallyPersistentWaveletMatrix2D{
@@ -26,17 +27,22 @@ struct PartiallyPersistentWaveletMatrix2D{
     static_assert(std::is_integral_v<Y>);
     static_assert(!std::is_same_v<std::remove_cv_t<X>, bool>);
     static_assert(!std::is_same_v<std::remove_cv_t<Y>, bool>);
-    static_assert(MAX_SIZE >= 0);
-    static_assert(MAX_VERSION >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
+    static_assert(MAX_VERSION == -1 || MAX_VERSION >= 0);
 
 private:
     using Matrix = PartiallyPersistentWaveletMatrix<Y, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH>;
 
     struct State{
-        std::array<X, MAX_SIZE> x{};
-        std::array<X, MAX_SIZE> original_x{};
-        std::array<int, MAX_SIZE> original_to_sorted{};
+        cpplib_detail::StaticOrVector<X, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> x{};
+        cpplib_detail::StaticOrVector<X, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> original_x{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> original_to_sorted{};
         std::unique_ptr<Matrix> matrix;
+        explicit State(int n){
+            x.resize(static_cast<std::size_t>(n));
+            original_x.resize(static_cast<std::size_t>(n));
+            original_to_sorted.resize(static_cast<std::size_t>(n));
+        }
     };
 
     int _n = 0;
@@ -55,10 +61,10 @@ private:
         return {l, r};
     }
     void build(const std::vector<X>& xs, const std::vector<Y>& ys){
-        _n = static_cast<int>(xs.size());
+        _n = cpplib_detail::checked_int_size(xs.size());
         if(xs.size() != ys.size())[[unlikely]] throw std::runtime_error("library assertion fault: range violation (constructor).");
         if(xs.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]] throw std::runtime_error("library assertion fault: range violation (constructor).");
-        state = std::make_unique<State>();
+        state = std::make_unique<State>(_n);
         std::vector<int> order(static_cast<std::size_t>(_n));
         std::iota(order.begin(), order.end(), 0);
         std::sort(order.begin(), order.end(), [&](int lhs, int rhs){

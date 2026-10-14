@@ -10,9 +10,15 @@
 
 #include "polynomial_division.hpp"
 
-template<class T, std::size_t CAPACITY>
+template<class T, std::size_t CAPACITY = static_cast<std::size_t>(-1)>
 struct PolynomialRemainderResult{
     std::array<T, CAPACITY> coefficients{};
+    std::size_t coefficient_count = 0;
+};
+
+template<class T>
+struct PolynomialRemainderResult<T, static_cast<std::size_t>(-1)>{
+    std::vector<T> coefficients;
     std::size_t coefficient_count = 0;
 };
 
@@ -323,21 +329,8 @@ FastResultantReduction<MOD> fast_half_resultant_reduction(
 }
 
 
-template<int MOD, std::size_t CAPACITY>
-Modint<MOD> fast_resultant(
-    const std::array<Modint<MOD>, CAPACITY>& left,
-    const std::size_t left_count,
-    const std::array<Modint<MOD>, CAPACITY>& right,
-    const std::size_t right_count
-){
-    math::Polynomial<MOD> first(
-        left.begin(),
-        left.begin() + static_cast<std::ptrdiff_t>(left_count)
-    );
-    math::Polynomial<MOD> second(
-        right.begin(),
-        right.begin() + static_cast<std::ptrdiff_t>(right_count)
-    );
+template<int MOD>
+Modint<MOD> fast_resultant(math::Polynomial<MOD> first, math::Polynomial<MOD> second){
     if(first.empty() || second.empty()) return Modint<MOD>(0);
 
     Modint<MOD> result = Modint<MOD>(1);
@@ -378,6 +371,24 @@ Modint<MOD> fast_resultant(
     }
 
     return result * power(second.front(), first.size() - 1);
+}
+
+template<int MOD, std::size_t CAPACITY>
+Modint<MOD> fast_resultant(
+    const std::array<Modint<MOD>, CAPACITY>& left,
+    const std::size_t left_count,
+    const std::array<Modint<MOD>, CAPACITY>& right,
+    const std::size_t right_count
+){
+    math::Polynomial<MOD> first(
+        left.begin(),
+        left.begin() + static_cast<std::ptrdiff_t>(left_count)
+    );
+    math::Polynomial<MOD> second(
+        right.begin(),
+        right.begin() + static_cast<std::ptrdiff_t>(right_count)
+    );
+    return fast_resultant<MOD>(std::move(first), std::move(second));
 }
 
 
@@ -538,6 +549,69 @@ T polynomial_discriminant(
         coefficients, coefficient_count, derivative, degree
     ) / coefficients[degree];
     if(((degree * (degree - 1) / 2) & 1U) != 0) result = -result;
+    return result;
+}
+
+template<class T>
+PolynomialRemainderResult<T> polynomial_remainder(
+    std::vector<T> dividend, std::vector<T> divisor
+){
+    while(!dividend.empty() && dividend.back() == T{}) dividend.pop_back();
+    while(!divisor.empty() && divisor.back() == T{}) divisor.pop_back();
+    if(divisor.empty()) throw std::invalid_argument("polynomial division by zero");
+    if(dividend.size() >= divisor.size()){
+        const T inverse = T(1) / divisor.back();
+        for(std::size_t i = dividend.size(); i-- >= divisor.size();){
+            const T scale = dividend[i] * inverse;
+            for(std::size_t j = 0; j < divisor.size(); ++j)
+                dividend[i + 1 - divisor.size() + j] -= scale * divisor[j];
+        }
+        dividend.resize(divisor.size() - 1);
+        while(!dividend.empty() && dividend.back() == T{}) dividend.pop_back();
+    }
+    const auto size = dividend.size();
+    return {std::move(dividend), size};
+}
+
+template<class T>
+T polynomial_resultant(std::vector<T> left, std::vector<T> right){
+    while(!left.empty() && left.back() == T{}) left.pop_back();
+    while(!right.empty() && right.back() == T{}) right.pop_back();
+    if(left.empty() || right.empty()) return T{};
+    if constexpr(polynomial_resultant_internal::static_modint_traits<T>::value){
+        constexpr int mod = polynomial_resultant_internal::static_modint_traits<T>::modulus;
+        if(polynomial_resultant_internal::fast_transform_is_available<mod>(std::max(left.size(), right.size())))
+            return polynomial_resultant_internal::fast_resultant<mod>(std::move(left), std::move(right));
+    }
+    T result(1);
+    while(right.size() > 1){
+        if(left.size() < right.size()){
+            if(((left.size() - 1) & 1U) && ((right.size() - 1) & 1U)) result = -result;
+            left.swap(right);
+        }
+        if(right.size() == 1) break;
+        const auto left_degree = left.size() - 1, right_degree = right.size() - 1;
+        auto remainder = polynomial_remainder(left, right).coefficients;
+        if(remainder.empty()) return T{};
+        if((left_degree & 1U) && (right_degree & 1U)) result = -result;
+        result *= polynomial_resultant_internal::power(right.back(), left_degree - (remainder.size() - 1));
+        left.swap(right);
+        right = std::move(remainder);
+    }
+    return result * polynomial_resultant_internal::power(right[0], left.size() - 1);
+}
+
+template<class T>
+T polynomial_discriminant(const std::vector<T>& coefficients){
+    std::size_t count = coefficients.size();
+    while(count && coefficients[count - 1] == T{}) --count;
+    if(!count) throw std::invalid_argument("zero polynomial has no discriminant");
+    const auto degree = count - 1;
+    if(!degree) return T(1);
+    std::vector<T> derivative(degree);
+    for(std::size_t i = 1; i < count; ++i) derivative[i - 1] = coefficients[i] * T(static_cast<long long>(i));
+    T result = polynomial_resultant(coefficients, derivative) / coefficients[degree];
+    if(((degree * (degree - 1) / 2) & 1U)) result = -result;
     return result;
 }
 

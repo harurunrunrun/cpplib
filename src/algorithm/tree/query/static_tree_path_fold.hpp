@@ -12,9 +12,9 @@
 // Static weighted-tree path products by binary lifting.
 // Both directions of every lifted segment are stored, so Monoid may be
 // non-commutative.
-template<auto Monoid, int MAX_SIZE>
+template<auto Monoid, int MAX_SIZE = -1>
 struct StaticTreePathFold{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
 
 private:
@@ -44,7 +44,7 @@ private:
     }
 
     static std::size_t checked_size(int n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
         return static_cast<std::size_t>(n);
@@ -95,7 +95,7 @@ private:
     }
 
 public:
-    explicit StaticTreePathFold(int n = MAX_SIZE):
+    explicit StaticTreePathFold(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
         _n(n),
         _log(logarithm(n)),
         graph(checked_size(n)),

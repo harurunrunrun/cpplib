@@ -3,6 +3,8 @@
 #include <cassert>
 #include <climits>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -58,6 +60,11 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        StaticRangeKthSmallest<int> tree(std::vector<int>{4, -1, 7, 7, 3});
+        assert(tree.kth_smallest(0, 5, 1) == 3); assert(tree.kth_smallest(1, 4, 2) == 7);
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

@@ -5,6 +5,8 @@
 #include <cstddef>
 #include <functional>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <set>
 #include <stdexcept>
@@ -171,6 +173,16 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        PersistentLeftistHeap<int> heap; std::size_t version = 0;
+        for(int i = 299; i >= 0; --i) version = heap.push(version, i);
+        const auto saved = version;
+        version = heap.push(version, heap.top(version));
+        assert(heap.top(version) == 0); version = heap.pop(version);
+        for(int i = 0; i < 300; ++i){assert(heap.top(version) == i); version = heap.pop(version);}
+        assert(heap.empty(version)); assert(heap.top(saved) == 0); assert(heap.size(saved) == 300);
+    }
     int query_count;
     if(!(std::cin >> query_count)){
         self_test();

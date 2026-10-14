@@ -95,3 +95,14 @@ constructorはbinary-lifting表と永続set領域も初期化する。`append` �
   最初の出現位置・文字列を返す。長さ-1のrootでは例外。
 - `palindrome_nodes/palindromes(version)` は指定versionに存在する全非空回文、
   `suffix_palindrome_nodes/lengths(version)` は回文suffixを長い順に返す。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+FullyPersistentPalindromicTree<26> dynamic;
+FullyPersistentPalindromicTree<26, 100002, 100001> fixed;
+```
+
+追加版数 $V$、ノード数 $S$、alphabet サイズ $A$ に対し二分累積と集合木を合わせて $O(AS+V\log(V+S))$ 保存領域。文字追加は既存の探索コストに加え $O(\log(V+S))$ の集合木・祖先更新を行う。

@@ -3,14 +3,15 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <limits>
 #include <numeric>
 #include <stdexcept>
 
-template<long long X_MIN, long long X_MAX, int MAX_VERSION>
+template<long long X_MIN, long long X_MAX, int MAX_VERSION = -1>
 struct PersistentDynamicLiChaoTree{
     static_assert(X_MIN <= X_MAX);
-    static_assert(MAX_VERSION >= 0);
+    static_assert(MAX_VERSION == -1 || MAX_VERSION >= 0);
 
     static constexpr long long INF =
         std::numeric_limits<long long>::max() / 4;
@@ -49,7 +50,7 @@ private:
     }();
 
     static constexpr int nodes_per_update = height + 1;
-    static constexpr int node_capacity = MAX_VERSION * nodes_per_update;
+    static constexpr int node_capacity = MAX_VERSION < 0 ? 0 : MAX_VERSION * nodes_per_update;
 
     struct Node{
         Line line;
@@ -60,8 +61,8 @@ private:
     int version_count = 1;
     int node_count = 0;
 
-    std::array<int, static_cast<std::size_t>(MAX_VERSION) + 1> root;
-    std::array<Node, static_cast<std::size_t>(node_capacity)> nodes;
+    cpplib_detail::StaticOrVector<int, (MAX_VERSION < 0 ? -1 : MAX_VERSION + 1)> root;
+    cpplib_detail::StaticOrVector<Node, (MAX_VERSION < 0 ? -1 : node_capacity)> nodes;
 
     static long long midpoint(long long l, long long r){
         return std::midpoint(l, r);
@@ -78,7 +79,8 @@ private:
     }
 
     int new_node(Line line){
-        if(node_count >= node_capacity)[[unlikely]]{
+        if constexpr(MAX_VERSION < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(node_count) + 1));
+        if(MAX_VERSION >= 0 && node_count >= node_capacity)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: node capacity exceeded (add_line)."
             );
@@ -90,7 +92,8 @@ private:
     }
 
     int clone_node(int source){
-        if(node_count >= node_capacity)[[unlikely]]{
+        if constexpr(MAX_VERSION < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(node_count) + 1));
+        if(MAX_VERSION >= 0 && node_count >= node_capacity)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: node capacity exceeded (add_line)."
             );
@@ -124,10 +127,11 @@ private:
     }
 
     int append_version(int new_root, const char* message){
-        if(version_count > MAX_VERSION)[[unlikely]]{
+        if((MAX_VERSION >= 0 && version_count > MAX_VERSION))[[unlikely]]{
             throw std::runtime_error(message);
         }
 
+        if constexpr(MAX_VERSION < 0) root.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(version_count) + 1));
         int res = version_count++;
         root[res] = new_root;
         return res;
@@ -135,7 +139,7 @@ private:
 
 public:
     PersistentDynamicLiChaoTree(){
-        root.fill(-1);
+        root.ensure(1); root.fill(-1);
     }
 
     int versions() const{ return version_count; }
@@ -164,7 +168,7 @@ public:
             version,
             "library assertion fault: range violation (add_line)."
         );
-        if(version_count > MAX_VERSION)[[unlikely]]{
+        if((MAX_VERSION >= 0 && version_count > MAX_VERSION))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: version capacity exceeded (add_line)."
             );

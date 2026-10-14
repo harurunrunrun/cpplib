@@ -112,3 +112,15 @@ simplex法のpivot回数には一般の多項式上界がなく、最悪時間�
 内部判定幅は `LinearProgramming::EPS = 1e-12L`。係数のscale差が大きい問題、退化が強い問題、厳密解が必要な問題では誤判定や誤差が起こり得る。行・変数のscaleを揃え、必要なら有理数またはexact LPを使う。
 
 object構築時は固定配列を0初期化するため `O(MAX_CONSTRAINT * MAX_VARIABLE)` 時間・空間。入力とtableauの全中間値が有限な `long double` に収まる必要がある。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+LinearProgramming<> dynamic(variable_count);
+LinearProgramming<100, 1000> fixed(variable_count);
+dynamic.set_objective(std::vector<long double>(variable_count, 1));
+```
+
+変数数 $N$、制約数 $M$ に対し保存領域は $O(MN)$。制約追加は $O(N)$ 時間、解法は pivot 回数 $P$ に対し $O(MN+PMN)$ 時間・$O(MN)$ 作業領域。単体法の最悪時間は多項式には制限されない。

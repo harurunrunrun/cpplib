@@ -12,12 +12,12 @@
 
 #include "suffix_automaton.hpp"
 
-template<int MAX_LENGTH, int ALPHABET = 26, char OFFSET = 'a'>
+template<int MAX_LENGTH = -1, int ALPHABET = 26, char OFFSET = 'a'>
 int longest_common_substring_multiple_length(
     std::span<const std::string> texts
 ){
-    static_assert(MAX_LENGTH >= 0);
-    static_assert(MAX_LENGTH <= (std::numeric_limits<int>::max() - 1) / 2);
+    static_assert(MAX_LENGTH >= -1);
+    static_assert(MAX_LENGTH == -1 || MAX_LENGTH <= (std::numeric_limits<int>::max() - 1) / 2);
     if(texts.empty()) return 0;
 
     const auto shortest = std::min_element(
@@ -27,7 +27,8 @@ int longest_common_substring_multiple_length(
             return left.size() < right.size();
         }
     );
-    if(shortest->size() > static_cast<std::size_t>(MAX_LENGTH))[[unlikely]]{
+    if(shortest->size() > static_cast<std::size_t>(MAX_LENGTH)
+       || shortest->size() > static_cast<std::size_t>((std::numeric_limits<int>::max() - 1) / 2))[[unlikely]]{
         throw std::runtime_error(
             "library assertion fault: capacity exceeded "
             "(longest_common_substring_multiple_length)."
@@ -35,7 +36,7 @@ int longest_common_substring_multiple_length(
     }
 
     auto automaton = std::make_unique<
-        SuffixAutomaton<ALPHABET, MAX_LENGTH * 2 + 1, OFFSET>
+        SuffixAutomaton<ALPHABET, (MAX_LENGTH < 0 ? -1 : MAX_LENGTH * 2 + 1), OFFSET>
     >();
     for(char character: *shortest) automaton->extend(character);
 

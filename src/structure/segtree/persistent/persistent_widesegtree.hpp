@@ -4,11 +4,14 @@
 #include "persistent_dynamic_segtree.hpp"
 #include "../detail/wide_segtree_persistence_common.hpp"
 
-template<long long MAX_SIZE, int MAX_NODES, int MAX_VERSIONS>
+template<long long MAX_SIZE = -1, int MAX_NODES = -1, int MAX_VERSIONS = -1>
 struct PersistentWideSegtree{
 private:
     PersistentDynamicSegtree<wide_segtree_persistence_internal::sum_monoid, MAX_SIZE, MAX_NODES, MAX_VERSIONS> tree;
 public:
+    PersistentWideSegtree() = default;
+    explicit PersistentWideSegtree(long long n): tree(n){}
+
     int versions() const{ return tree.versions(); }
     int latest_version() const{ return tree.latest_version(); }
     int nodes_used() const{ return tree.nodes_used(); }
@@ -25,7 +28,7 @@ public:
     long long all_prod() const{ return tree.all_prod(); }
 };
 
-template<long long MAX_SIZE, int MAX_NODES, int MAX_VERSIONS>
+template<long long MAX_SIZE = -1, int MAX_NODES = -1, int MAX_VERSIONS = -1>
 using PersistentWide_Segtree = PersistentWideSegtree<MAX_SIZE, MAX_NODES, MAX_VERSIONS>;
 
 #endif  // CPPLIB_SRC_STRUCTURE_SEGTREE_PERSISTENT_PERSISTENT_WIDESEGTREE_HPP_INCLUDED

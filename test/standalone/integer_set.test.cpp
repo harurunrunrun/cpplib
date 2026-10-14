@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <iterator>
 #include <optional>
 #include <random>
@@ -249,6 +251,12 @@ void self_test(unsigned long long seed){
     assert(values.list() == as_vector());
 }
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        Int_Set<unsigned int> values;
+        values.insert(1); values.insert(1000000000u);
+        assert(values.contain(1000000000u)); assert(values.range_sum(0u, 1000000001u) == 2);
+    }
     int type, q;
     if(!(std::cin >> type >> q)){
         self_test<unsigned int, 257u>(20260713);

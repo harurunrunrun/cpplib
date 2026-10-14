@@ -20,7 +20,7 @@ MersenneTwisterCracker<
 <code>StateSize</code> 以下、各テンパリングのシフト量は1以上
 <code>WordSize</code> 以下。
 
-<code>outputs</code> は <code>std::array</code> で、要素数は
+<code>outputs</code> は <code>std::array</code> または <code>std::span</code> で、要素数は
 <code>StateSize</code> 以上。先頭 <code>StateSize</code> 語から状態を作り、
 余分な語は再生して整合性を検査する。<code>WordSize</code> を超える上位bitが
 立っている場合、または整合性検査に失敗した場合は <code>std::invalid_argument</code>。
@@ -54,3 +54,21 @@ MersenneTwisterCracker<
 観測開始位置は624語blockの境界でなくてもよい。分布変換後、一部bitだけ、
 呼出し欠落を含む列には適用できない。復元するのは内部状態であり、最初に渡された
 整数seedや <code>seed_seq</code> ではない。暗号用途の乱数には使用しない。
+
+## 観測数を実行時に決める
+
+観測列には `std::span<const result_type>` も渡せる。
+生成器の状態語数は生成器の仕様として固定され、観測列の長さは実行時に決める。
+
+~~~cpp
+std::mt19937 generator(123);
+std::vector<std::uint32_t> outputs(700);
+for(auto& value: outputs) value = generator();
+Mt19937Cracker cracker{std::span<const std::uint32_t>(outputs)};
+auto next_value = cracker.next();
+~~~
+
+状態語数を $N$、観測数を $K\ge N$ とすると構築は $O(K)$ 時間・
+$O(N)$ 保存領域で、観測列のコピーは行わない。`next()` は $O(1)$ 時間・
+$O(1)$ 追加空間。観測 `vector` の保存には $O(K)$ 空間を使う。
+固定長 `array` のコンストラクタも同じ header で利用できる。

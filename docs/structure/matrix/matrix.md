@@ -170,3 +170,13 @@ $C=\mathtt{MAX\_ROW}\cdot\mathtt{MAX\_COL}$ とする。
 | 値を返す加減算・scalar演算・単項演算・`zero`・`transposed` | 戻り値に $O(C)$ |
 | 行列積 | 戻り値に $O(\mathtt{MAX\_ROW}\cdot RHS\_MAX\_COL)$ |
 | `pow_entry_bmbm` | $O(n+d)$。$d$ は漸化式次数 |
+
+## 可変長版
+
+```cpp
+Matrix<long long> matrix(rows, cols);
+```
+
+容量の template 引数を省略すると、実行時の要素数に合わせて `std::vector` を確保する。構築・保存領域は実際の行列の大きさに対して O(rows * cols)。固定版との積も利用できる。
+
+容量を明示した固定長版も同じヘッダに含まれる。既存の固定上限に関する説明は容量を明示した場合に適用される。

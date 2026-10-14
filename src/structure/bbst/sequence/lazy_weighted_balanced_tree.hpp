@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_BBST_SEQUENCE_LAZY_WEIGHTED_BALANCED_TREE_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
@@ -9,23 +10,34 @@
 #include <utility>
 #include <vector>
 
-template<auto MonoidActLen, int MAX_SIZE>
+template<auto MonoidActLen, int MAX_SIZE = -1>
 struct LazyWeightedBalancedTree{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     using S = typename std::remove_cvref_t<decltype(MonoidActLen)>::S;
     using T = typename std::remove_cvref_t<decltype(MonoidActLen)>::T;
 
 private:
     struct State{
-        std::array<int, MAX_SIZE> left{};
-        std::array<int, MAX_SIZE> right{};
-        std::array<int, MAX_SIZE> size{};
-        std::array<int, MAX_SIZE> free_stack{};
-        std::array<bool, MAX_SIZE> reversed{};
-        std::array<S, MAX_SIZE> value;
-        std::array<S, MAX_SIZE> aggregate;
-        std::array<S, MAX_SIZE> rev_aggregate;
-        std::array<T, MAX_SIZE> lazy;
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> left{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> right{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> size{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> free_stack{};
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> reversed{};
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> value;
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> aggregate;
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> rev_aggregate;
+        cpplib_detail::StaticOrVector<T, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> lazy;
+        void ensure(std::size_t n){
+            left.ensure(n);
+            right.ensure(n);
+            size.ensure(n);
+            free_stack.ensure(n);
+            reversed.ensure(n);
+            value.ensure(n);
+            aggregate.ensure(n);
+            rev_aggregate.ensure(n);
+            lazy.ensure(n);
+        }
     };
 
     int root_node = -1;
@@ -52,6 +64,7 @@ private:
         if(l < 0 || r < l || size() < r)[[unlikely]] throw std::runtime_error(message);
     }
     int new_node(const S& x){
+        if constexpr(MAX_SIZE < 0) state->ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         int v;
         if(free_count > 0){
             v = state->free_stack[--free_count];
@@ -91,7 +104,8 @@ private:
     void toggle(int v){
         if(v == -1) return;
         std::swap(state->left[v], state->right[v]);
-        std::swap(state->aggregate[v], state->rev_aggregate[v]);
+        using std::swap;
+        swap(state->aggregate[v], state->rev_aggregate[v]);
         state->reversed[v] = !state->reversed[v];
     }
     void push(int v){
@@ -212,7 +226,7 @@ public:
         if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (constructor).");
         }
-        root_node = build(values, 0, static_cast<int>(values.size()));
+        root_node = build(values, 0, cpplib_detail::checked_int_size(values.size()));
     }
 
     LazyWeightedBalancedTree(const LazyWeightedBalancedTree&) = delete;

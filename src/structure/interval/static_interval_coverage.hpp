@@ -1,11 +1,12 @@
 #ifndef CPPLIB_SRC_STRUCTURE_INTERVAL_STATIC_INTERVAL_COVERAGE_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_INTERVAL_STATIC_INTERVAL_COVERAGE_HPP_INCLUDED
 
+#include "../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-template<int MAX_COORDINATE = 1000000>
+template<int MAX_COORDINATE = -1>
 class StaticIntervalCoverage{
     std::vector<int> coverage_;
 
@@ -14,12 +15,13 @@ public:
         int coordinate_count,
         const std::vector<std::pair<int, int>>& closed_intervals
     ){
-        if(coordinate_count < 0 || MAX_COORDINATE < coordinate_count)[[unlikely]]{
+        if(coordinate_count < 0 || (MAX_COORDINATE >= 0 && MAX_COORDINATE < coordinate_count))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: size out of range "
                 "(StaticIntervalCoverage)."
             );
         }
+        (void)cpplib_detail::checked_int_size(closed_intervals.size());
         std::vector<int> difference(
             static_cast<std::size_t>(coordinate_count) + 1,
             0

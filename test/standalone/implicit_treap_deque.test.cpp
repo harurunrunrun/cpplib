@@ -42,7 +42,7 @@ int main(){
         self_test();
         return 0;
     }
-    ImplicitTreapDeque<AddMonoid<long long>{}, 4096> deque;
+    ImplicitTreapDeque<AddMonoid<long long>{}> deque;
     while(query_count--){
         std::string type;
         std::cin >> type;

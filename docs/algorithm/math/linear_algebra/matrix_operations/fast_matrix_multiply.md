@@ -34,7 +34,7 @@ vector<T> fast_matrix_multiply(
 fast_matrix_multiply(left, right)
 ```
 
-既存の固定容量 `Matrix` を受け取り、
+`Matrix` を受け取り、
 `Matrix<T, LEFT_MAX_ROW, RIGHT_MAX_COL>` を返す overload。
 実行時の列数と行数が一致していれば、左右の compile-time 最大サイズは異なっていてもよい。
 
@@ -83,3 +83,18 @@ $O(S^\omega)$ の上界に含まれる。`Matrix` API の追加項は、固定�
 - `Matrix` API は `left.cols() == right.rows()` を要求する。
 - shape 違反では `invalid_argument`、サイズ計算または padding の overflow では
   `length_error` を送出する。
+
+## 容量を省略する可変長版
+
+~~~cpp
+using Mint = Modint998244353;
+std::vector<std::vector<Mint>> values{ {1, 2}, {3, 4} };
+Matrix<Mint> left(values), right(values);
+auto product = fast_matrix_multiply(left, right);
+~~~
+
+`Matrix<Mint>` は実寸に応じた `vector` を使い、返り値も可変長版になる。
+row-major `vector<Mint>` overload も容量引数なしで使える。
+実寸を $R\times K$ と $K\times C$、$S=\max(R,K,C)$、$\omega=\log_2 7$ とすると、
+時間計算量は $O(S^\omega)$、返り値を含む追加空間計算量は $O(S^2)$。
+固定容量の `Matrix<Mint, R, K>` なども同じ header で利用できる。

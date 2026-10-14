@@ -67,3 +67,14 @@ $N=values.size()$、$W$ を `int` のbit数とする。
 - `Hash` と `KeyEqual` は互いに整合し、同値な要素へ同じhash値を返す必要がある。
 - `Hash` と `KeyEqual` はデフォルト構築可能でなければならない。
 - 構築後の列は変更できない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+StaticRangeCountDistinct<int> dynamic(values);
+StaticRangeCountDistinct<int, 100000> fixed(values);
+```
+
+$N$ 要素の構築は $O(N\log N)$ 時間・空間、区間内種類数は $O(\log N)$ 時間。

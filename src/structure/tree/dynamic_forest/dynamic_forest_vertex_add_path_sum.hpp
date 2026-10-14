@@ -19,7 +19,7 @@ inline constexpr AddMonoid<T> add_monoid{};
 template<class T>
 inline constexpr AddSumMonoidAct<T> add_sum_monoid_act{};
 
-template<class Backend, class T, int MAX_SIZE>
+template<class Backend, class T, int MAX_SIZE = -1>
 class Structure{
     Backend tree;
 
@@ -30,7 +30,7 @@ class Structure{
     }
 
 public:
-    explicit Structure(int n = MAX_SIZE): tree(n){}
+    explicit Structure(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): tree(n){}
 
     explicit Structure(const std::vector<T>& values): tree(values){}
 
@@ -87,21 +87,21 @@ public:
     }
 };
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using LinkCutBackend = LinkCutTree<add_monoid<T>, MAX_SIZE>;
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using LazyLinkCutBackend = LazyLinkCutTree<add_sum_monoid_act<T>, MAX_SIZE>;
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using TopTreeBackend = TopTree<add_monoid<T>, MAX_SIZE>;
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using LazyTopTreeBackend = LazyTopTree<add_sum_monoid_act<T>, MAX_SIZE>;
 
 } // namespace dynamic_forest_vertex_add_path_sum_internal
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using DynamicForestVertexAddPathSumLinkCutTree =
     dynamic_forest_vertex_add_path_sum_internal::Structure<
         dynamic_forest_vertex_add_path_sum_internal::LinkCutBackend<T, MAX_SIZE>,
@@ -109,7 +109,7 @@ using DynamicForestVertexAddPathSumLinkCutTree =
         MAX_SIZE
     >;
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using DynamicForestVertexAddPathSumLazyLinkCutTree =
     dynamic_forest_vertex_add_path_sum_internal::Structure<
         dynamic_forest_vertex_add_path_sum_internal::LazyLinkCutBackend<T, MAX_SIZE>,
@@ -117,7 +117,7 @@ using DynamicForestVertexAddPathSumLazyLinkCutTree =
         MAX_SIZE
     >;
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using DynamicForestVertexAddPathSumTopTree =
     dynamic_forest_vertex_add_path_sum_internal::Structure<
         dynamic_forest_vertex_add_path_sum_internal::TopTreeBackend<T, MAX_SIZE>,
@@ -125,7 +125,7 @@ using DynamicForestVertexAddPathSumTopTree =
         MAX_SIZE
     >;
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using DynamicForestVertexAddPathSumLazyTopTree =
     dynamic_forest_vertex_add_path_sum_internal::Structure<
         dynamic_forest_vertex_add_path_sum_internal::LazyTopTreeBackend<T, MAX_SIZE>,

@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <limits>
 #include <stdexcept>
 #include <string>
@@ -58,6 +60,14 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        std::vector<int> universe(129); for(int i = 0; i < 129; ++i) universe[i] = i * 10;
+        CompressedOrderedSet<int> values(universe);
+        for(int i = 0; i < 129; ++i) values.insert(universe[i]);
+        assert(values.size() == 129); assert(values.kth_smallest(128) == 1280);
+        values.erase(640); assert(values.order_of_key(650) == 64);
+    }
     int universe_size, initial_size, query_count;
     if(!(std::cin >> universe_size >> initial_size >> query_count)){
         self_test();

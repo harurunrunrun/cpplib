@@ -40,3 +40,18 @@ documentation_of: ../../../src/approximate/streaming/bloom_filter.hpp
 削除は実際に追加した回数以下に限る。偽陽性となった未追加 key の削除は、保存中 key
 と counter を共有して偽陰性を発生させ得る。counter 飽和後の削除も偽陰性を避けられない。
 保存に必要な空間計算量は $O(CounterCount)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+BloomFilter<> filter(4096, 5, 123); // bit 数、hash 数、seed
+CountingBloomFilter<> counting(1024, 5, 123); // counter 数、hash 数、seed
+filter.add(42);
+counting.add(42);
+~~~
+
+bit 数 $B$、counter 数 $C$、hash 数 $H$ を実行時に指定し、`vector` に保存する。
+通常版は構築・`clear` が $O(\lceil B/64\rceil)$ 時間、保存領域も同じ語数。
+counting 版は構築・`clear` が $O(C)$ 時間・保存領域 $O(C)$。
+いずれも追加・所属判定は $O(H)$ 時間・$O(1)$ 追加空間で、counting 版の削除も同様。
+容量を明示した固定配列版も同じ header で利用できる。

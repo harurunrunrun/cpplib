@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+
 #include <limits>
 #include <stdexcept>
 
@@ -61,6 +63,15 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic wrappers: runtime capacities.
+    {
+        PersistentQueueQueries<PersistentArrayQueue<int>> queue(129);
+        queue.push(-1, 7);
+        for(int i = 0; i < 300; ++i){
+            const int base = queue.processed_queries() - 1;
+            assert(queue.pop(base) == 7); queue.push(queue.processed_queries() - 1, 7);
+        }
+    }
     self_test();
 
     int query_count;

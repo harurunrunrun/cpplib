@@ -4,6 +4,8 @@
 #include <cassert>
 #include <cstddef>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <limits>
 #include <optional>
 #include <random>
@@ -134,6 +136,16 @@ static void test_large(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        KineticTournament<long long> tree(129);
+        for(int i = 0; i < 129; ++i) tree.set(i, -i, i * i);
+        for(int time = 0; time < 260; ++time){
+            tree.advance_time(time); long long expected = 0;
+            for(int i = 0; i < 129; ++i) expected = std::min(expected, -1LL * i * time + 1LL * i * i);
+            assert(tree.best()->value == expected);
+        }
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

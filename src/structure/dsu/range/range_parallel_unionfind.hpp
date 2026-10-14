@@ -2,18 +2,21 @@
 #define CPPLIB_SRC_STRUCTURE_DSU_RANGE_RANGE_PARALLEL_UNIONFIND_HPP_INCLUDED
 
 #include <array>
+#include <bit>
+#include <type_traits>
+#include <vector>
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
 #include <utility>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class RangeParallelUnionFind{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
     static constexpr int level_count(){
         int levels = 1;
-        while((std::size_t(1) << levels) <= static_cast<std::size_t>(MAX_SIZE)){
+        while((std::size_t(1) << levels) <= static_cast<std::size_t>(MAX_SIZE < 0 ? 0 : MAX_SIZE)){
             ++levels;
         }
         return levels;
@@ -22,7 +25,8 @@ class RangeParallelUnionFind{
     static constexpr int LEVEL_COUNT = level_count();
 
     struct State{
-        std::array<std::array<int, MAX_SIZE>, LEVEL_COUNT> parent_or_size{};
+        std::conditional_t<MAX_SIZE < 0, std::vector<std::vector<int>>,
+            std::array<std::array<int, (MAX_SIZE < 0 ? 0 : MAX_SIZE)>, LEVEL_COUNT>> parent_or_size{};
     };
 
     int n_ = 0;
@@ -83,18 +87,21 @@ class RangeParallelUnionFind{
     }
 
 public:
-    explicit RangeParallelUnionFind(int n = MAX_SIZE):
+    explicit RangeParallelUnionFind(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
         n_(n), group_count_(n), state_(std::make_unique<State>()){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (RangeParallelUnionFind constructor)."
             );
         }
-        for(int level = 0; level < LEVEL_COUNT; ++level){
+        const int active_levels = MAX_SIZE < 0 ? std::max(1, static_cast<int>(std::bit_width(static_cast<unsigned>(n)))) : LEVEL_COUNT;
+        if constexpr(MAX_SIZE < 0) state_->parent_or_size.resize(active_levels);
+        for(int level = 0; level < active_levels; ++level){
             const int length = 1 << level;
             const int count = n_ - length + 1;
             if(count <= 0) break;
             auto& parent = state_->parent_or_size[static_cast<std::size_t>(level)];
+            if constexpr(MAX_SIZE < 0) parent.resize(static_cast<std::size_t>(count));
             for(int index = 0; index < count; ++index){
                 parent[static_cast<std::size_t>(index)] = -1;
             }
@@ -169,7 +176,7 @@ public:
             return merge_level(0, first_left, second_left, callback_reference);
         }
         int level = 0;
-        while((1 << (level + 1)) < length) ++level;
+        while((std::size_t(1) << (level + 1)) < static_cast<std::size_t>(length)) ++level;
         const int block_length = 1 << level;
         int result = merge_level(level, first_left, second_left, callback_reference);
         result += merge_level(

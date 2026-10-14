@@ -28,7 +28,7 @@ int prefix_count_naive(const std::map<std::string, int>& mp, const std::string& 
 int main(){
     int input_q;
     if(std::cin >> input_q){
-        PersistentTrie<4, 30000, 1024> input_trie;
+        PersistentTrie<4> input_trie;
         while(input_q--){
             std::string type;
             std::cin >> type;
@@ -65,7 +65,7 @@ int main(){
         }
         return 0;
     }
-    PersistentTrie<4, 30000, 1024> trie;
+    PersistentTrie<4> trie;
     std::vector<std::map<std::string, int>> versions(1);
     std::mt19937 rng(20260717);
     assert(trie.versions() == 1);

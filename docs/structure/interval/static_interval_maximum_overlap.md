@@ -47,3 +47,13 @@ public:
 - `Coordinate` は全順序を持たなければならない。
 - 空の区間集合に対する問い合わせは0を返す。
 - 容量違反時は下位APIから `runtime_error` が送出される。
+
+## 可変長版
+
+```cpp
+using Dynamic = StaticIntervalMaximumOverlap<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。前処理・保存領域は O(m log m)、区間内の最大重複数取得は O(log m)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

@@ -94,3 +94,14 @@ $V$ を使用中state数、$L$ を現在の文字列長、$Q$ をquery文字列�
 保持する。入力長 `N` は `(numeric_limits<int>::max() / 2) + 1` 以下でなければ
 ならず、超える入力はreserveや入力文字に対応するstate追加より前に `std::length_error` で拒否する。
 状態数の上限は `N == 1` で2、それ以外の非空入力で `2 * N - 1` である。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+SuffixAutomaton<26> dynamic(text);
+SuffixAutomaton<26, 200001> fixed(text);
+```
+
+長さ $N$、alphabet サイズ $A$ に対し構築は $O(AN)$ 時間・空間。状態生成に伴う vector 再配置を含めて償却する。alphabet は定数として残る。

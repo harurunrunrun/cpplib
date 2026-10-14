@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -92,6 +94,15 @@ void run_direct_tests(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        IncrementalComponentAffine<sum_affine_action> components(std::vector<long long>(129, 1));
+        components.apply_component(0, AffineAction{2, 3});
+        for(int i = 1; i < 129; ++i) components.add_edge(i - 1, i);
+        components.apply_component(128, AffineAction{3, 2});
+        assert(components.vertex_value(0) == 17); assert(components.vertex_value(128) == 5);
+        assert(components.component_sum(0) == 657);
+    }
     int vertex_count, query_count;
     if(!(std::cin >> vertex_count >> query_count)){
         run_direct_tests();

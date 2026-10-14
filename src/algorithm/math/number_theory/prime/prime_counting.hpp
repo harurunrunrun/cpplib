@@ -54,7 +54,7 @@ inline long long count_primes(long long n){
     return prime_count(n);
 }
 
-template<int MAX_N>
+template<int MAX_N = -1>
 struct PrimeCounting{
     static_assert(MAX_N >= 0);
 
@@ -74,6 +74,65 @@ public:
         }
         _n = n;
         is_prime_data.fill(true);
+        if(_n >= 0) is_prime_data[0] = false;
+        if(_n >= 1) is_prime_data[1] = false;
+        for(int p = 2; (long long)p * p <= _n; p++){
+            if(!is_prime_data[p]) continue;
+            for(long long q = (long long)p * p; q <= _n; q += p){
+                is_prime_data[static_cast<int>(q)] = false;
+            }
+        }
+        prefix_count[0] = 0;
+        for(int i = 1; i <= _n; i++){
+            prefix_count[i] = prefix_count[i - 1] + (is_prime_data[i] ? 1 : 0);
+        }
+    }
+
+    int size() const{ return _n; }
+
+    bool is_prime(int n) const{
+        if(n < 0 || _n < n)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (is_prime).");
+        }
+        return is_prime_data[n];
+    }
+
+    int count_primes(int n) const{
+        if(n < 0 || _n < n)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (count_primes).");
+        }
+        return prefix_count[n];
+    }
+
+    int count_primes_less(int n) const{
+        if(n <= 0) return 0;
+        if(_n < n - 1)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (count_primes_less).");
+        }
+        return prefix_count[n - 1];
+    }
+};
+
+template<>
+struct PrimeCounting<-1>{
+
+private:
+    int _n = 0;
+    std::vector<unsigned char> is_prime_data{};
+    std::vector<int> prefix_count{};
+
+public:
+    explicit PrimeCounting(int n = 0){
+        build(n);
+    }
+
+    void build(int n){
+        if(n < 0)[[unlikely]]{
+            throw std::runtime_error("library assertion fault: range violation (build).");
+        }
+        _n = n;
+        is_prime_data.assign(static_cast<std::size_t>(n) + 1, true);
+        prefix_count.assign(static_cast<std::size_t>(n) + 1, 0);
         if(_n >= 0) is_prime_data[0] = false;
         if(_n >= 1) is_prime_data[1] = false;
         for(int p = 2; (long long)p * p <= _n; p++){

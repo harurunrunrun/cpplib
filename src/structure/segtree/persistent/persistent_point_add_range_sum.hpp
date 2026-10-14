@@ -15,7 +15,7 @@ inline constexpr AddMonoid<T> monoid{};
 
 } // namespace persistent_point_add_range_sum_internal
 
-template<class T, int MAX_SIZE, int MAX_VERSION>
+template<class T, int MAX_SIZE = -1, int MAX_VERSION = -1>
 class PersistentPointAddRangeSum{
     PersistentSegtree<
         persistent_point_add_range_sum_internal::monoid<T>,
@@ -24,7 +24,7 @@ class PersistentPointAddRangeSum{
     > tree_;
 
 public:
-    explicit PersistentPointAddRangeSum(int size = MAX_SIZE): tree_(size){}
+    explicit PersistentPointAddRangeSum(int size = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): tree_(size){}
 
     explicit PersistentPointAddRangeSum(const std::vector<T>& values):
         tree_(values){}

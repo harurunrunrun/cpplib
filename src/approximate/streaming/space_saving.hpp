@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <vector>
 
-template<class Key, std::size_t Capacity, class Count = std::uint64_t>
+template<class Key, std::size_t Capacity = static_cast<std::size_t>(-1), class Count = std::uint64_t>
 class SpaceSaving {
     static_assert(Capacity > 0, "Capacity must be positive");
     static_assert(std::numeric_limits<Count>::is_integer
@@ -84,4 +84,85 @@ public:
     [[nodiscard]] static constexpr std::size_t capacity() noexcept { return Capacity; }
 };
 
+
+template<class Key, class Count>
+class SpaceSaving<Key, static_cast<std::size_t>(-1), Count> {
+    std::size_t capacity_;
+
+
+    static_assert(std::numeric_limits<Count>::is_integer
+                  && !std::numeric_limits<Count>::is_signed
+                  && !std::is_same<Count, bool>::value,
+                  "Count must be an unsigned integer other than bool");
+
+
+public:
+    struct Candidate {
+        Key key{};
+        Count estimate{};
+        Count error{};
+    };
+
+private:
+    std::vector<Candidate> slots_{};
+    std::size_t size_ = 0;
+    Count total_{};
+
+public:
+    explicit SpaceSaving(std::size_t capacity): capacity_(capacity){
+        if(capacity_ == 0) throw std::invalid_argument("dimension must be positive");
+        slots_.resize(capacity_);
+    }
+
+    void clear() noexcept {
+        std::fill(slots_.begin(), slots_.end(), Candidate{});
+        size_ = 0;
+        total_ = Count{};
+    }
+
+    void add(const Key& key, Count delta = Count{1}) {
+        if(delta == Count{}) return;
+        if(delta > static_cast<Count>(std::numeric_limits<Count>::max() - total_)){
+            throw std::overflow_error("stream weight overflow");
+        }
+        total_ = static_cast<Count>(total_ + delta);
+        for(std::size_t i = 0; i < size_; ++i){
+            if(slots_[i].key == key){
+                slots_[i].estimate = static_cast<Count>(slots_[i].estimate + delta);
+                return;
+            }
+        }
+        if(size_ < capacity_){
+            slots_[size_++] = Candidate{key, delta, Count{}};
+            return;
+        }
+        std::size_t minimum = 0;
+        for(std::size_t i = 1; i < capacity_; ++i){
+            if(slots_[i].estimate < slots_[minimum].estimate) minimum = i;
+        }
+        const Count old_estimate = slots_[minimum].estimate;
+        slots_[minimum] = Candidate{
+            key, static_cast<Count>(old_estimate + delta), old_estimate};
+    }
+
+    [[nodiscard]] Candidate estimate(const Key& key) const {
+        for(std::size_t i = 0; i < size_; ++i){
+            if(slots_[i].key == key) return slots_[i];
+        }
+        return Candidate{key, Count{}, Count{}};
+    }
+
+    [[nodiscard]] std::vector<Candidate> candidates() const {
+        std::vector<Candidate> result(slots_.begin(),
+                                      slots_.begin() + static_cast<std::ptrdiff_t>(size_));
+        std::sort(result.begin(), result.end(), [](const Candidate& first, const Candidate& second) {
+            return first.estimate > second.estimate;
+        });
+        return result;
+    }
+
+    [[nodiscard]] Count total() const noexcept { return total_; }
+    [[nodiscard]] std::size_t size() const noexcept { return size_; }
+    [[nodiscard]] std::size_t capacity() const noexcept { return capacity_; }
+};
 #endif  // CPPLIB_SRC_APPROXIMATE_STREAMING_SPACE_SAVING_HPP_INCLUDED

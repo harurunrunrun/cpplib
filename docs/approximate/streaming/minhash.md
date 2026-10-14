@@ -25,3 +25,18 @@ documentation_of: ../../../src/approximate/streaming/minhash.hpp
 標準偏差は $\sqrt{J(1-J)/SignatureSize}$ で、Hoeffding bound は
 $\Pr[|\hat J-J|\ge\varepsilon]\le2e^{-2 SignatureSize\varepsilon^2}$。
 保存に必要な空間計算量は $O(SignatureSize)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+MinHash<> first(128, 123), second(128, 123); // signature 長、seed
+first.add(42);
+second.add(42);
+auto similarity = first.similarity(second);
+~~~
+
+signature 長 $S$ を実行時に指定し、`vector` に保存する。
+構築・追加・比較・merge・`clear` は $O(S)$ 時間、保存領域は $O(S)$。
+`signature()` はコピーせず参照を返すため $O(1)$ 時間・追加空間。
+比較・merge では signature 長と seed を一致させる。
+容量指定の固定配列版も同じ header にある。

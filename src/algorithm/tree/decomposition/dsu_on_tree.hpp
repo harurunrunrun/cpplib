@@ -1,15 +1,18 @@
 #ifndef CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_DSU_ON_TREE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_DSU_ON_TREE_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <functional>
 #include <stdexcept>
 #include <utility>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class DsuOnTree{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
     static constexpr int EDGE_CAPACITY =
         MAX_SIZE == 0 ? 0 : MAX_SIZE - 1;
@@ -19,24 +22,24 @@ class DsuOnTree{
     int _root = -1;
     bool built = false;
 
-    std::array<int, EDGE_CAPACITY> edge_u;
-    std::array<int, EDGE_CAPACITY> edge_v;
-    std::array<int, MAX_SIZE + 1> offset;
-    std::array<int, 2 * EDGE_CAPACITY> adjacency;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> edge_u;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> edge_v;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE + 1))> offset;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * EDGE_CAPACITY))> adjacency;
 
-    std::array<int, MAX_SIZE> parent_vertex;
-    std::array<int, MAX_SIZE> subtree_size_vertex;
-    std::array<int, MAX_SIZE> heavy_child_vertex;
-    std::array<int, MAX_SIZE> tin_vertex;
-    std::array<int, MAX_SIZE> tout_vertex;
-    std::array<int, MAX_SIZE> preorder_vertices;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> parent_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> subtree_size_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> heavy_child_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tin_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tout_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> preorder_vertices;
 
     // build and callback traversal workspaces. Keeping these in the object avoids
     // using the process call stack even for a path-shaped tree.
-    std::array<int, MAX_SIZE> stack_vertex;
-    std::array<int, MAX_SIZE> stack_next;
-    std::array<unsigned char, MAX_SIZE> stack_phase;
-    std::array<unsigned char, MAX_SIZE> stack_keep;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack_next;
+    cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack_phase;
+    cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack_keep;
 
     void check_vertex(int vertex, const char* message) const{
         if(vertex < 0 || _n <= vertex)[[unlikely]]{
@@ -61,12 +64,28 @@ class DsuOnTree{
     }
 
 public:
-    explicit DsuOnTree(int n = MAX_SIZE) : _n(n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit DsuOnTree(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)) : _n(n){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        if(_n > std::numeric_limits<int>::max() / 2)
+            throw std::length_error("tree tables exceed int index range");
+        edge_u.resize(static_cast<std::size_t>(std::max(0, _n - 1)));
+        edge_v.resize(static_cast<std::size_t>(std::max(0, _n - 1)));
+        offset.resize(static_cast<std::size_t>(_n + 1));
+        adjacency.resize(static_cast<std::size_t>(2 * std::max(0, _n - 1)));
+        parent_vertex.resize(static_cast<std::size_t>(_n));
+        subtree_size_vertex.resize(static_cast<std::size_t>(_n));
+        heavy_child_vertex.resize(static_cast<std::size_t>(_n));
+        tin_vertex.resize(static_cast<std::size_t>(_n));
+        tout_vertex.resize(static_cast<std::size_t>(_n));
+        preorder_vertices.resize(static_cast<std::size_t>(_n));
+        stack_vertex.resize(static_cast<std::size_t>(_n));
+        stack_next.resize(static_cast<std::size_t>(_n));
+        stack_phase.resize(static_cast<std::size_t>(_n));
+        stack_keep.resize(static_cast<std::size_t>(_n));
     }
 
     int size() const{
@@ -86,7 +105,7 @@ public:
             v,
             "library assertion fault: range violation (add_edge)."
         );
-        if(_edge_count == EDGE_CAPACITY)[[unlikely]]{
+        if(_edge_count == (MAX_SIZE < 0 ? std::max(0, _n - 1) : EDGE_CAPACITY))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity exceeded (add_edge)."
             );

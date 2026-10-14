@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_TREE_CENTROID_INCREMENTAL_TREE_CENTROID_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <limits>
@@ -9,15 +10,15 @@
 #include <stdexcept>
 #include <utility>
 
-template<std::size_t MAX_SIZE>
+template<int MAX_SIZE = -1>
 class IncrementalTreeCentroid{
-    static_assert(MAX_SIZE <= static_cast<std::size_t>(
+    static_assert(MAX_SIZE == -1 || MAX_SIZE <= static_cast<int>(
         std::numeric_limits<int>::max() / 2
     ), "IncrementalTreeCentroid capacity is too large");
 
     static constexpr std::size_t LOG = []{
         std::size_t result = 1;
-        std::size_t value = MAX_SIZE;
+        std::size_t value = MAX_SIZE < 0 ? static_cast<std::size_t>(std::numeric_limits<int>::max() / 2) : static_cast<std::size_t>(MAX_SIZE);
         while(value > 1){
             value >>= 1;
             ++result;
@@ -34,12 +35,24 @@ class IncrementalTreeCentroid{
     };
 
     struct State{
-        std::array<Marker, 2 * MAX_SIZE> markers{};
-        std::array<int, MAX_SIZE> enter{};
-        std::array<int, MAX_SIZE> leave{};
-        std::array<int, MAX_SIZE> tree_parent{};
-        std::array<int, MAX_SIZE> depth{};
-        std::array<std::array<int, LOG>, MAX_SIZE> ancestor{};
+        cpplib_detail::StaticOrVector<Marker, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> markers{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> enter{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> leave{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tree_parent{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> depth{};
+        cpplib_detail::StaticOrVector<std::array<int, LOG>, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> ancestor{};
+        void ensure(std::size_t n){
+            const auto old_size = ancestor.size();
+            markers.ensure(2 * n);
+            enter.ensure(n);
+            leave.ensure(n);
+            tree_parent.ensure(n);
+            depth.ensure(n);
+            ancestor.ensure(n);
+            for(std::size_t i = old_size; i < n; ++i){
+                ancestor[i].fill(-1); enter[i] = leave[i] = tree_parent[i] = -1;
+            }
+        }
     };
 
     std::unique_ptr<State> state_ = std::make_unique<State>();
@@ -181,7 +194,7 @@ public:
     }
 
     [[nodiscard]] static constexpr std::size_t capacity() noexcept{
-        return MAX_SIZE;
+        return MAX_SIZE < 0 ? static_cast<std::size_t>(std::numeric_limits<int>::max() / 2) : static_cast<std::size_t>(MAX_SIZE);
     }
 
     int add_root(){
@@ -191,6 +204,7 @@ public:
         if constexpr(MAX_SIZE == 0){
             throw std::length_error("incremental tree capacity");
         }else{
+            if constexpr(MAX_SIZE < 0) state_->ensure(vertex_count_ + 1);
             const int enter = make_marker();
             const int leave = make_marker();
             sequence_root_ = merge(enter, leave);
@@ -205,9 +219,10 @@ public:
 
     int add_leaf(std::size_t parent){
         check_vertex(parent);
-        if(vertex_count_ >= MAX_SIZE){
+        if(vertex_count_ >= capacity()){
             throw std::length_error("incremental tree capacity");
         }
+        if constexpr(MAX_SIZE < 0) state_->ensure(vertex_count_ + 1);
         const int vertex = static_cast<int>(vertex_count_);
         const int parent_vertex = static_cast<int>(parent);
         state_->tree_parent[static_cast<std::size_t>(vertex)] = parent_vertex;

@@ -23,3 +23,16 @@ distinct key を bit map に写し、空 bit 数から cardinality を推定す�
 異なる seed の merge は `std::invalid_argument`。一様 hash の下で maximum likelihood estimator
 となる。負荷 $n/m$ が小さい範囲では誤差は $O(1/\sqrt m)$、bit map が飽和すると
 分散が急増する。保存に必要な空間計算量は $O(BitCount)$ bit。
+
+## 容量を省略する可変長版
+
+~~~cpp
+LinearCounting<> sketch(4096, 123); // bit 数、seed
+sketch.add(42);
+auto cardinality = sketch.estimate();
+~~~
+
+bit 数 $B$ を実行時に指定し、`vector` に $\lceil B/64\rceil$ 語を保存する。
+構築・merge・`clear` は $O(\lceil B/64\rceil)$ 時間、追加・推定は $O(1)$ 時間。
+保存領域は $O(\lceil B/64\rceil)$ 語、各操作の一時領域は $O(1)$。
+容量指定の固定配列版も同じ header にある。

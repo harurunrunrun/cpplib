@@ -25,13 +25,14 @@ struct PalindromicTreeRepresentation{
     std::vector<int> longest_suffix;
 };
 
-template<int MAX_LENGTH, int ALPHABET = 26, char OFFSET = 'a'>
+template<int MAX_LENGTH = -1, int ALPHABET = 26, char OFFSET = 'a'>
 PalindromicTreeRepresentation palindromic_tree_representation(
     std::string_view text
 ){
-    static_assert(MAX_LENGTH >= 0);
-    static_assert(MAX_LENGTH <= std::numeric_limits<int>::max() - 2);
-    if(text.size() > static_cast<std::size_t>(MAX_LENGTH))[[unlikely]]{
+    static_assert(MAX_LENGTH >= -1);
+    static_assert(MAX_LENGTH == -1 || MAX_LENGTH <= std::numeric_limits<int>::max() - 2);
+    if(text.size() > static_cast<std::size_t>(MAX_LENGTH)
+       || text.size() > static_cast<std::size_t>(std::numeric_limits<int>::max() - 2))[[unlikely]]{
         throw std::runtime_error(
             "library assertion fault: capacity exceeded "
             "(palindromic_tree_representation)."
@@ -39,7 +40,7 @@ PalindromicTreeRepresentation palindromic_tree_representation(
     }
 
     auto tree = std::make_unique<
-        PalindromicTree<ALPHABET, MAX_LENGTH + 2, OFFSET>
+        PalindromicTree<ALPHABET, (MAX_LENGTH < 0 ? -1 : MAX_LENGTH + 2), OFFSET>
     >();
     PalindromicTreeRepresentation result;
     result.longest_suffix.reserve(text.size());

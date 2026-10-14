@@ -1,5 +1,6 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 #include <cassert>
 #include <iostream>
 #include <utility>
@@ -46,6 +47,13 @@ void self_test(){
 }
 
 int main(){
+    {
+        constexpr MinMonoid<bool> monoid{};
+        const std::vector<bool> bits{true, true, false, true, false, true, true};
+        SqrtTree<monoid> table(bits);
+        assert(table.get(0) && table.prod(0, 2) && !table.prod(0, 7));
+    }
+
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

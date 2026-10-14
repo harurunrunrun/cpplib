@@ -10,7 +10,7 @@
 
 namespace{
 
-using Nearest = DynamicNearestMarkedVertex<long long, 256>;
+using Nearest = DynamicNearestMarkedVertex<long long>;
 
 void test_contract(){
     Nearest empty(0);

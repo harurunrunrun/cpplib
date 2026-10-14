@@ -8,9 +8,9 @@
 
 #include "../basic/dsu.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct OfflineTreeEdgeDeletionDisconnectedPairs{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     enum class OperationType{
@@ -35,7 +35,7 @@ public:
     explicit OfflineTreeEdgeDeletionDisconnectedPairs(int n):
         vertex_count(n),
         deleted(static_cast<std::size_t>(n <= 1 ? 0 : n - 1), false){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );

@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -88,6 +90,16 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        OfflinePersistentUnionFindQueries<> queries(129);
+        for(int i = 0; i < 128; ++i) queries.merge(i - 1, i, i + 1);
+        for(int i = 0; i < 300; ++i) queries.same(127, 0, 128);
+        queries.same(-1, 0, 128);
+        auto answers = queries.solve(); assert(answers.size() == 301);
+        for(int i = 0; i < 300; ++i) assert(answers[i] == 1);
+        assert(answers.back() == 0);
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

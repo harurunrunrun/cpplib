@@ -74,3 +74,14 @@ long long count_primes(long long n)
 ## 注意点
 
 法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+math::PrimeCounting<> dynamic(n);
+math::PrimeCounting<100000> fixed(n);
+```
+
+構築・`build(n)` は $O(n\log\log n)$ 時間、保存領域は $O(n)$、前処理範囲内のクエリは $O(1)$ 時間。

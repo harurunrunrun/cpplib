@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -30,6 +32,13 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        StaticRangeSumSqrtTree<long long> tree(std::vector<long long>(129, 2));
+        for(int left = 0; left < 129; ++left) for(int right = left; right <= 129; ++right)
+            assert(tree.sum(left, right) == 2 * (right - left));
+        tree.build({7}); assert(tree.all_sum() == 7);
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

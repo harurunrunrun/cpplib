@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+
 #include <string>
 
 #include "../../src/structure/dsu/basic/modular_potential_dsu.hpp"
@@ -38,6 +40,11 @@ void run_queries(int n, int query_count){
 }
 
 int main(){
+    // Dynamic wrappers: runtime capacities.
+    {
+        ModularPotentialDSU<7> dsu(129); for(int i = 1; i < 129; ++i) dsu.merge(i - 1, i, 2);
+        assert(dsu.difference(0, 128) == 4);
+    }
     int mode, n, query_count;
     if(!(std::cin >> mode >> n >> query_count)){
         self_test();

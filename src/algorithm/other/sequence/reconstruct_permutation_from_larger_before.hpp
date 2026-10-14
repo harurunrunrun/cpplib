@@ -1,24 +1,29 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_SEQUENCE_RECONSTRUCT_PERMUTATION_FROM_LARGER_BEFORE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_SEQUENCE_RECONSTRUCT_PERMUTATION_FROM_LARGER_BEFORE_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <memory>
+#include <type_traits>
 #include <stdexcept>
 #include <vector>
 
 #include "../../../structure/ordered_set/set/integer_set.hpp"
 
-template<int MAX_SIZE = 200000>
+template<int MAX_SIZE = -1>
 std::vector<int> reconstruct_permutation_from_larger_before(
     const std::vector<unsigned int>& larger_before
 ){
-    const int size = static_cast<int>(larger_before.size());
-    if(size > MAX_SIZE)[[unlikely]]{
+    const int size = cpplib_detail::checked_int_size(larger_before.size());
+    if(MAX_SIZE >= 0 && size > MAX_SIZE)[[unlikely]]{
         throw std::runtime_error(
             "library assertion fault: size exceeds MAX_SIZE "
             "(reconstruct_permutation_from_larger_before)."
         );
     }
-    auto available = std::make_unique<Int_Set<unsigned int, static_cast<unsigned int>(MAX_SIZE + 1)>>();
+    using Available = std::conditional_t<MAX_SIZE < 0, Int_Set<unsigned int>,
+        Int_Set<unsigned int, static_cast<unsigned int>(MAX_SIZE < 0 ? 1 : MAX_SIZE + 1)>>;
+    auto available = std::make_unique<Available>();
     for(int value = 1; value <= size; ++value){
         available->insert(static_cast<unsigned int>(value));
     }

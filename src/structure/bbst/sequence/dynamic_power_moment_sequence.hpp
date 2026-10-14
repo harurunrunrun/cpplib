@@ -9,7 +9,7 @@
 #include "reversible_splay_tree.hpp"
 #include "../../types/monoid/power_moment_monoid.hpp"
 
-template<class T, std::size_t MAX_POWER, int MAX_SIZE>
+template<class T, std::size_t MAX_POWER, int MAX_SIZE = -1>
 class DynamicPowerMomentSequence{
     static constexpr PowerMomentMonoid<T, MAX_POWER> monoid_{};
     using Aggregate = PowerMomentAggregate<T, MAX_POWER>;

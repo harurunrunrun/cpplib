@@ -45,7 +45,7 @@ int main(){
         }
         std::vector<int> input(static_cast<std::size_t>(input_n));
         for(int& value: input) std::cin >> value;
-        CompressedWaveletMatrix<int, 256> matrix(input);
+        CompressedWaveletMatrix<int> matrix(input);
         auto print_optional = [](const std::optional<int>& value){
             if(value) std::cout << *value << '\n';
             else std::cout << "NONE\n";
@@ -105,7 +105,7 @@ int main(){
     for(int& value: values){
         value = (static_cast<int>(rng() % 401) - 200) * (static_cast<int>(rng() % 5) + 1);
     }
-    CompressedWaveletMatrix<int, 200> matrix(values);
+    CompressedWaveletMatrix<int> matrix(values);
 
     for(int k = 0; k < n; k++) assert(matrix[k] == values[k]);
     for(int step = 0; step < 3000; step++){

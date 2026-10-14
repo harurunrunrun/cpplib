@@ -13,7 +13,32 @@
 #include "../../src/approximate/streaming/count_sketch.hpp"
 #include "../../src/approximate/streaming/hash.hpp"
 
+void dynamic_capacity_test(){
+    BloomFilter<> dynamic_bloom(1024, 5, 17); BloomFilter<1024, 5> fixed_bloom(17);
+    CountingBloomFilter<> dynamic_counting(1024, 5, 18); CountingBloomFilter<1024, 5> fixed_counting(18);
+    CountMinSketch<> dynamic_min(128, 5, 19); CountMinSketch<128, 5> fixed_min(19);
+    CountSketch<> dynamic_sketch(128, 5, 20); CountSketch<128, 5> fixed_sketch(20);
+    CuckooFilter<> dynamic_cuckoo(128, 4, 500, 21); CuckooFilter<128, 4, 12, 500> fixed_cuckoo(21);
+    for(int i = 0; i < 300; ++i){
+        const int key = i % 43;
+        dynamic_bloom.add(key); fixed_bloom.add(key);
+        dynamic_counting.add(key); fixed_counting.add(key);
+        dynamic_min.add(key); fixed_min.add(key);
+        dynamic_sketch.add(key); fixed_sketch.add(key);
+        assert(dynamic_cuckoo.add(key) == fixed_cuckoo.add(key));
+    }
+    for(int i = 0; i < 100; ++i){
+        assert(dynamic_bloom.contains(i) == fixed_bloom.contains(i));
+        assert(dynamic_counting.estimate_multiplicity(i) == fixed_counting.estimate_multiplicity(i));
+        assert(dynamic_min.estimate(i) == fixed_min.estimate(i));
+        assert(dynamic_sketch.estimate(i) == fixed_sketch.estimate(i));
+        assert(dynamic_cuckoo.contains(i) == fixed_cuckoo.contains(i));
+    }
+    dynamic_min.clear(); assert(dynamic_min.total() == 0);
+}
+
 int main(){
+    dynamic_capacity_test();
     int count;
     if(!(std::cin >> count)) return 0;
     using approximate_streaming_detail::key_hash;

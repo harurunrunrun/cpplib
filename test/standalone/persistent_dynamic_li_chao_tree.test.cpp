@@ -15,7 +15,7 @@
 int main(){
     int input_q;
     if(std::cin >> input_q){
-        PersistentDynamicLiChaoTree<-1000, 1000, 2048> cht;
+        PersistentDynamicLiChaoTree<-1000, 1000> cht;
         while(input_q--){
             std::string type;
             std::cin >> type;
@@ -43,7 +43,7 @@ int main(){
         return 0;
     }
 
-    PersistentDynamicLiChaoTree<-30, 30, 180> cht;
+    PersistentDynamicLiChaoTree<-30, 30> cht;
     std::vector<std::vector<std::pair<long long, long long>>> naive(1);
 
     assert(cht.versions() == 1);

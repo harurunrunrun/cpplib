@@ -50,3 +50,14 @@ documentation_of: ../../../../src/algorithm/tree/construction/binary_tree_traver
 3列のキーはそれぞれ重複せず、要素集合が一致しなければならない。長さ・重複・要素集合・巡回順の不整合は `valid == false` で返す。空の3列は空木として整合する。
 
 いずれかの列の長さが `MAX_SIZE` を超える場合は `runtime_error` を送出する。`Hash` と `KeyEqual` は `unordered_map` の要件を満たし、互いに整合していなければならない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = reconstruct_binary_tree_traversals(preorder, inorder, postorder);
+auto fixed = reconstruct_binary_tree_traversals<100000>(preorder, inorder, postorder);
+```
+
+$N$ 頂点に対して 期待 $O(N)$ 時間・$O(N)$ 空間（ハッシュ衝突時は最悪 $O(N^2)$ 時間）。返り値の左右の子配列も実寸の `vector` になる。

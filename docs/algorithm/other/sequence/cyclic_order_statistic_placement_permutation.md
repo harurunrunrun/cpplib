@@ -30,3 +30,14 @@ vector<int> cyclic_order_statistic_placement_permutation(int size);
 - `MAX_SIZE` は正でなければなりません。
 - `size` が範囲外なら `out_of_range`、内部の順序統計取得に失敗した場合は
   `runtime_error` を送出します。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = cyclic_order_statistic_placement_permutation(n);
+auto fixed = cyclic_order_statistic_placement_permutation<100000>(n);
+```
+
+$N$ 要素に対して座標 bit 幅を $W$ として $O(NW)$ 時間・$O(NW)$ 空間（分岐数16の trie）。

@@ -1,16 +1,18 @@
 #ifndef CPPLIB_SRC_STRUCTURE_ARRAY_ROLLBACK_ARRAY_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_ARRAY_ROLLBACK_ARRAY_HPP_INCLUDED
 
+#include <limits>
 #include <array>
+#include "static_or_vector.hpp"
 #include <cstddef>
 #include <optional>
 #include <stdexcept>
 #include <vector>
 
-template<class T, int MAX_SIZE, int MAX_UPDATE>
+template<class T, int MAX_SIZE = -1, int MAX_UPDATE = -1>
 struct RollbackArray{
-    static_assert(MAX_SIZE > 0);
-    static_assert(MAX_UPDATE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
+    static_assert(MAX_UPDATE >= -1);
 
     using Snapshot = int;
 
@@ -23,10 +25,10 @@ private:
     int _n;
     int _history_size = 0;
 
-    std::array<std::optional<T>, MAX_SIZE> initial;
-    std::array<std::optional<T>, MAX_UPDATE> updated_values;
-    std::array<int, MAX_SIZE> current_value_ref;
-    std::array<History, MAX_UPDATE> history;
+    cpplib_detail::StaticOrVector<std::optional<T>, MAX_SIZE> initial;
+    cpplib_detail::StaticOrVector<std::optional<T>, MAX_UPDATE> updated_values;
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> current_value_ref;
+    cpplib_detail::StaticOrVector<History, MAX_UPDATE> history;
 
     static int initial_value_ref(int k){
         return -k - 1;
@@ -49,12 +51,14 @@ public:
     RollbackArray(RollbackArray&&) = delete;
     RollbackArray& operator=(RollbackArray&&) = delete;
 
-    explicit RollbackArray(int n = MAX_SIZE): _n(n){
-        if(_n < 0 || MAX_SIZE < _n)[[unlikely]]{
+    explicit RollbackArray(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n){
+        if(_n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < _n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        initial.resize(static_cast<std::size_t>(_n));
+        current_value_ref.resize(static_cast<std::size_t>(_n));
         for(int k = 0; k < _n; k++){
             initial[k].emplace();
             initialize_ref(k);
@@ -62,23 +66,27 @@ public:
     }
 
     RollbackArray(int n, const T& value): _n(n){
-        if(_n < 0 || MAX_SIZE < _n)[[unlikely]]{
+        if(_n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < _n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        initial.resize(static_cast<std::size_t>(_n));
+        current_value_ref.resize(static_cast<std::size_t>(_n));
         for(int k = 0; k < _n; k++){
             initial[k].emplace(value);
             initialize_ref(k);
         }
     }
 
-    explicit RollbackArray(const std::vector<T>& v): _n((int)v.size()){
-        if(v.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+    explicit RollbackArray(const std::vector<T>& v): _n(cpplib_detail::checked_int_size(v.size())){
+        if(MAX_SIZE >= 0 && v.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        initial.resize(static_cast<std::size_t>(_n));
+        current_value_ref.resize(static_cast<std::size_t>(_n));
         for(int k = 0; k < _n; k++){
             initial[k].emplace(v[static_cast<std::size_t>(k)]);
             initialize_ref(k);
@@ -86,12 +94,14 @@ public:
     }
 
     template<std::size_t N>
-    explicit RollbackArray(const std::array<T, N>& v): _n((int)N){
-        if(N > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+    explicit RollbackArray(const std::array<T, N>& v): _n(cpplib_detail::checked_int_size(N)){
+        if(MAX_SIZE >= 0 && N > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        initial.resize(static_cast<std::size_t>(_n));
+        current_value_ref.resize(static_cast<std::size_t>(_n));
         for(int k = 0; k < _n; k++){
             initial[k].emplace(v[static_cast<std::size_t>(k)]);
             initialize_ref(k);
@@ -116,13 +126,17 @@ public:
                 "library assertion fault: range violation (set)."
             );
         }
-        if(_history_size == MAX_UPDATE)[[unlikely]]{
+        if(_history_size == std::numeric_limits<int>::max() || _history_size == MAX_UPDATE)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity violation (set)."
             );
         }
 
-        updated_values[_history_size].emplace(value);
+        std::optional<T> copied;
+        if constexpr(MAX_UPDATE < 0) copied.emplace(value);
+        updated_values.ensure(static_cast<std::size_t>(_history_size) + 1);
+        history.ensure(static_cast<std::size_t>(_history_size) + 1);
+        updated_values[_history_size].emplace(copied ? *copied : value);
         history[_history_size] = {k, current_value_ref[k]};
         current_value_ref[k] = _history_size;
         _history_size++;

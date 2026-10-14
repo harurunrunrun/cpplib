@@ -77,3 +77,13 @@ wrapper本体は $O(1)$。backendの固定長予約領域はheapに置かれ、�
 - 失敗した操作は操作数を増やさない。
 - 各成功操作はbackendにちょうど1つ新versionを作る `Queue` を要求する。
 - copyは禁止し、moveを許可する。
+
+## 可変長版
+
+```cpp
+using Dynamic = PersistentQueueQueries<PersistentArrayQueue<long long>>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。処理件数に合わせて版管理が伸びる。各操作は基礎キューの操作時間に従い、管理情報の保存領域は O(q)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

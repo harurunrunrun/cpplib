@@ -1,15 +1,18 @@
 #ifndef CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_EULER_TOUR_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_EULER_TOUR_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class TreeEulerTour{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
     static constexpr int EDGE_CAPACITY =
         MAX_SIZE == 0 ? 0 : MAX_SIZE - 1;
@@ -28,20 +31,20 @@ private:
     int _event_count = 0;
     bool built = false;
 
-    std::array<int, EDGE_CAPACITY> edge_u;
-    std::array<int, EDGE_CAPACITY> edge_v;
-    std::array<int, MAX_SIZE + 1> offset;
-    std::array<int, 2 * EDGE_CAPACITY> adjacency;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> edge_u;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> edge_v;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE + 1))> offset;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * EDGE_CAPACITY))> adjacency;
 
-    std::array<int, MAX_SIZE> parent_vertex;
-    std::array<int, MAX_SIZE> depth_vertex;
-    std::array<int, MAX_SIZE> tin_vertex;
-    std::array<int, MAX_SIZE> tout_vertex;
-    std::array<int, MAX_SIZE> preorder_vertices;
-    std::array<Event, 2 * MAX_SIZE> events;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> parent_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> depth_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tin_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tout_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> preorder_vertices;
+    cpplib_detail::StaticOrVector<Event, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> events;
 
-    std::array<int, MAX_SIZE> stack_vertex;
-    std::array<int, MAX_SIZE> stack_next;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack_next;
 
     void check_vertex(int vertex, const char* message) const{
         if(vertex < 0 || _n <= vertex)[[unlikely]]{
@@ -64,12 +67,26 @@ private:
     }
 
 public:
-    explicit TreeEulerTour(int n = MAX_SIZE) : _n(n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit TreeEulerTour(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)) : _n(n){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        if(_n > std::numeric_limits<int>::max() / 2)
+            throw std::length_error("tree tables exceed int index range");
+        edge_u.resize(static_cast<std::size_t>(std::max(0, _n - 1)));
+        edge_v.resize(static_cast<std::size_t>(std::max(0, _n - 1)));
+        offset.resize(static_cast<std::size_t>(_n + 1));
+        adjacency.resize(static_cast<std::size_t>(2 * std::max(0, _n - 1)));
+        parent_vertex.resize(static_cast<std::size_t>(_n));
+        depth_vertex.resize(static_cast<std::size_t>(_n));
+        tin_vertex.resize(static_cast<std::size_t>(_n));
+        tout_vertex.resize(static_cast<std::size_t>(_n));
+        preorder_vertices.resize(static_cast<std::size_t>(_n));
+        events.resize(static_cast<std::size_t>(2 * _n));
+        stack_vertex.resize(static_cast<std::size_t>(_n));
+        stack_next.resize(static_cast<std::size_t>(_n));
     }
 
     int size() const{
@@ -89,7 +106,7 @@ public:
             v,
             "library assertion fault: range violation (add_edge)."
         );
-        if(_edge_count == EDGE_CAPACITY)[[unlikely]]{
+        if(_edge_count == (MAX_SIZE < 0 ? std::max(0, _n - 1) : EDGE_CAPACITY))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity exceeded (add_edge)."
             );

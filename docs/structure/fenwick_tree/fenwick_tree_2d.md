@@ -56,3 +56,13 @@ long long s = fw.sum(1, 2, 5, 6);
 - 矩形は`0 <= y1 <= y2 <= h`, `0 <= x1 <= x2 <= w`。違反時は例外。
 - `T`はdefault構築、加算、減算を使える必要がある。
 - 保存領域は固定$O(MAX\_H MAX\_W)$、各操作の追加領域は$O(1)$。
+
+## 可変長版
+
+```cpp
+FenwickTree2D<long long> bit(height, width);
+```
+
+容量の template 引数を省略すると、実行時の要素数に合わせて `std::vector` を確保する。空の木の構築・保存領域は O(height * width)。更新・長方形和は O(log height * log width)。
+
+容量を明示した固定長版も同じヘッダに含まれる。既存の固定上限に関する説明は容量を明示した場合に適用される。

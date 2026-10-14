@@ -87,3 +87,13 @@ int groups()
 - `snapshot()`は履歴数。`rollback(s)`は`0 <= s <= snapshot()`を要求する。
 - 履歴が空の`undo()`と範囲外rollbackは例外。
 - 経路圧縮を行わずunion by sizeで木の高さを$O(\log N)$に保つ。
+
+## 可変長版
+
+```cpp
+using Dynamic = RollbackDSU<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、併合・代表取得 O(log(n + 1))、undo 償却 O(1)、保存領域 O(n + u)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

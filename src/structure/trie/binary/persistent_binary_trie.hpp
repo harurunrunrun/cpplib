@@ -2,18 +2,19 @@
 #define CPPLIB_SRC_STRUCTURE_TRIE_BINARY_PERSISTENT_BINARY_TRIE_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <limits>
 #include <optional>
 #include <stdexcept>
 #include <type_traits>
 
-template<class T, int BIT, int MAX_NODES, int MAX_VERSIONS>
+template<class T, int BIT = std::numeric_limits<std::make_unsigned_t<T>>::digits, int MAX_NODES = -1, int MAX_VERSIONS = -1>
 struct PersistentBinaryTrie{
     static_assert(std::is_integral_v<T>);
     static_assert(BIT > 0);
     static_assert(BIT <= std::numeric_limits<std::make_unsigned_t<T>>::digits);
-    static_assert(MAX_NODES > 0);
-    static_assert(MAX_VERSIONS > 0);
+    static_assert(MAX_NODES == -1 || MAX_NODES > 0);
+    static_assert(MAX_VERSIONS == -1 || MAX_VERSIONS > 0);
     using U = std::make_unsigned_t<T>;
 
 private:
@@ -24,8 +25,8 @@ private:
 
     int used = 1;
     int version_count = 1;
-    std::array<Node, MAX_NODES> nodes{};
-    std::array<int, MAX_VERSIONS> roots{};
+    cpplib_detail::StaticOrVector<Node, MAX_NODES> nodes{};
+    cpplib_detail::StaticOrVector<int, MAX_VERSIONS> roots{};
 
     void check_version(int version) const{
         if(version < 0 || version_count <= version)[[unlikely]]{
@@ -33,6 +34,7 @@ private:
         }
     }
     int new_node(){
+        if constexpr(MAX_NODES < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(used == MAX_NODES)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (node).");
         }
@@ -46,6 +48,7 @@ private:
         return u;
     }
     int new_version(int root){
+        if constexpr(MAX_VERSIONS < 0) roots.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(version_count) + 1));
         if(version_count == MAX_VERSIONS)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (version).");
         }
@@ -62,7 +65,7 @@ private:
     }
 
 public:
-    PersistentBinaryTrie() = default;
+    PersistentBinaryTrie(){nodes.ensure(1); roots.ensure(1);}
 
     int versions() const{ return version_count; }
     int node_count() const{ return used; }

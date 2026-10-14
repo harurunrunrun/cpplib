@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_RANDOM_CRACK_PHILOX_CRACKER_HPP_INCLUDED
 
 #include <array>
+#include <span>
 #include <cstddef>
 #include <limits>
 #include <optional>
@@ -382,6 +383,82 @@ struct PhiloxKnownKeyRecovery{
     }
 };
 
+template<class Engine>
+PhiloxKnownKeyRecovery<Engine> recover_philox_known_key_stream(
+    std::span<const typename Engine::result_type> outputs,
+    const typename Engine::key_type& key
+){
+    const std::size_t observation_count = outputs.size();
+    if(!(PhiloxKnownKeyRecovery<Engine>::minimum_observation_count
+            <= observation_count)) throw std::invalid_argument("insufficient observations for state recovery");
+    if(!philox_cracker_detail::valid_words<Engine>(outputs)
+       || !philox_cracker_detail::valid_words<Engine>(key)){
+        throw std::invalid_argument(
+            "Philox output or key exceeds word size"
+        );
+    }
+
+    PhiloxKnownKeyRecovery<Engine> recovery;
+    for(std::size_t first_index = 0;
+        first_index < Engine::word_count;
+        ++first_index){
+        const std::size_t first_full =
+            first_index == 0 ? 0 : Engine::word_count - first_index;
+        typename Engine::block_type first_block{};
+        typename Engine::block_type second_block{};
+        for(std::size_t index = 0;
+            index < Engine::word_count;
+            ++index){
+            first_block[index] = outputs[first_full + index];
+            second_block[index] =
+                outputs[first_full + Engine::word_count + index];
+        }
+
+        auto first_full_counter =
+            philox_cracker_detail::invert_block<Engine>(
+                first_block,
+                key
+            );
+        const auto second_full_counter =
+            philox_cracker_detail::invert_block<Engine>(
+                second_block,
+                key
+            );
+        auto expected_second = first_full_counter;
+        philox_cracker_detail::increment_counter<Engine>(
+            expected_second
+        );
+        if(expected_second != second_full_counter) continue;
+
+        auto first_counter = first_full_counter;
+        if(first_index != 0){
+            philox_cracker_detail::decrement_counter<Engine>(
+                first_counter
+            );
+        }
+        PhiloxKnownKeyCracker<Engine> predictor(
+            key,
+            first_counter,
+            first_index
+        );
+        bool matches = true;
+        for(const auto observed: outputs){
+            if(predictor.next() != observed){
+                matches = false;
+                break;
+            }
+        }
+        if(!matches) continue;
+
+        auto& candidate =
+            recovery.candidates[recovery.candidate_count++];
+        candidate.first_counter = first_counter;
+        candidate.first_index = first_index;
+        candidate.predictor = std::move(predictor);
+    }
+    return recovery;
+}
+
 template<class Engine, std::size_t Count>
 PhiloxKnownKeyRecovery<Engine> recover_philox_known_key_stream(
     const std::array<typename Engine::result_type, Count>& outputs,
@@ -537,6 +614,17 @@ recover_one_round_philox_integer_seed(
     return PhiloxIntegerSeedClass<Engine>{(*key)[0]};
 }
 
+template<class Engine>
+PhiloxKnownKeyRecovery<Engine> recover_philox_integer_seeded_stream(
+    std::span<const typename Engine::result_type> outputs,
+    typename Engine::result_type seed
+){
+    const std::size_t observation_count = outputs.size();
+    typename Engine::key_type key{};
+    key[0] = philox_cracker_detail::mask_word<Engine>(seed);
+    return recover_philox_known_key_stream<Engine>(outputs, key);
+}
+
 template<class Engine, std::size_t Count>
 PhiloxKnownKeyRecovery<Engine> recover_philox_integer_seeded_stream(
     const std::array<typename Engine::result_type, Count>& outputs,
@@ -579,6 +667,59 @@ struct PhiloxSeedRecovery{
         return predictor();
     }
 };
+
+template<class Engine>
+PhiloxSeedRecovery<Engine> recover_philox_seed_candidates(
+    std::span<const typename Engine::result_type> consecutive_outputs,
+    unsigned long long discard_count,
+    typename Engine::result_type seed_first,
+    unsigned long long candidate_count
+){
+    const std::size_t observation_count = consecutive_outputs.size();
+    if(!(0 < observation_count)) throw std::invalid_argument("insufficient observations for state recovery");
+    using result_type = typename Engine::result_type;
+    static_assert(std::is_unsigned_v<result_type>);
+    static_assert(
+        std::numeric_limits<result_type>::digits
+        <= std::numeric_limits<unsigned long long>::digits
+    );
+
+    const auto available_after_first = static_cast<unsigned long long>(
+        std::numeric_limits<result_type>::max() - seed_first
+    );
+    if(candidate_count != 0
+       && candidate_count - 1 > available_after_first){
+        throw std::invalid_argument("Philox seed candidate range wraps");
+    }
+
+    PhiloxSeedRecovery<Engine> recovery;
+    result_type seed = seed_first;
+    for(unsigned long long offset = 0;
+        offset < candidate_count;
+        ++offset){
+        Engine engine(seed);
+        engine.discard(discard_count);
+        bool matches = true;
+        for(result_type observed: consecutive_outputs){
+            if(engine() != observed){
+                matches = false;
+                break;
+            }
+        }
+        if(matches){
+            if(recovery.status == PhiloxSeedRecoveryStatus::none){
+                recovery.status = PhiloxSeedRecoveryStatus::unique;
+                recovery.seed = seed;
+                recovery.predictor = std::move(engine);
+            }else{
+                recovery.status = PhiloxSeedRecoveryStatus::ambiguous;
+                return recovery;
+            }
+        }
+        if(offset + 1 < candidate_count) ++seed;
+    }
+    return recovery;
+}
 
 template<class Engine, std::size_t Count>
 PhiloxSeedRecovery<Engine> recover_philox_seed_candidates(
@@ -630,6 +771,34 @@ PhiloxSeedRecovery<Engine> recover_philox_seed_candidates(
         if(offset + 1 < candidate_count) ++seed;
     }
     return recovery;
+}
+
+template<class Engine>
+PhiloxSeedRecovery<Engine> recover_philox_seed_in_range(
+    std::span<const typename Engine::result_type> consecutive_outputs,
+    unsigned long long discard_count,
+    typename Engine::result_type seed_first,
+    typename Engine::result_type seed_last
+){
+    const std::size_t observation_count = consecutive_outputs.size();
+    using result_type = typename Engine::result_type;
+    static_assert(std::is_unsigned_v<result_type>);
+    static_assert(
+        std::numeric_limits<result_type>::digits
+        <= std::numeric_limits<unsigned long long>::digits
+    );
+    if(seed_last < seed_first){
+        throw std::invalid_argument("invalid seed range");
+    }
+    const auto candidate_count = static_cast<unsigned long long>(
+        seed_last - seed_first
+    );
+    return recover_philox_seed_candidates<Engine>(
+        consecutive_outputs,
+        discard_count,
+        seed_first,
+        candidate_count
+    );
 }
 
 template<class Engine, std::size_t Count>

@@ -71,3 +71,13 @@ int size() const
 第1引数が新leader、第2引数が吸収されたleaderである。
 保存領域は $O(N\log N)$。通常のDSU queryの追加領域は $O(1)$、`merge_ranges` の
 再帰stackは $O(\log N)$。
+
+## 可変長版
+
+```cpp
+using Dynamic = RangeParallelUnionFind<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log(n + 1))、各層の併合は union-by-size を用い、全処理の償却計算量は従来どおり。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

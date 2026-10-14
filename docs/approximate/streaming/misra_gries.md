@@ -24,3 +24,16 @@ documentation_of: ../../../src/approximate/streaming/misra_gries.hpp
 真の頻度を $f_x$、返す下界を $\hat f_x$、stream 長を $N$ とすると、決定的に
 $0\le f_x-\hat f_x\le\lfloor N/(Capacity+1)\rfloor$。従って
 $f_x>N/(Capacity+1)$ の要素は必ず候補に残る。保存に必要な空間計算量は $O(Capacity)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+MisraGries<int> sketch(15); // 保持する counter 数
+sketch.add(42);
+auto candidates = sketch.candidates();
+~~~
+
+容量 $C$ を実行時に指定し、slot を `vector` に保存する。
+構築・追加・頻度下界の推定・候補列挙・`clear` は $O(C)$ 時間。
+保存領域は $O(C)$、候補列挙の返り値は $O(C)$ 空間で、それ以外の操作の一時領域は $O(1)$。
+容量を指定する固定配列版も同じ header で利用できる。

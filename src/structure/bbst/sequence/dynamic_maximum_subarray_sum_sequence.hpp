@@ -8,7 +8,7 @@
 #include "reversible_splay_tree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class DynamicMaximumSubarraySumSequence{
     static constexpr NonEmptyMaxSubarrayMonoid<T> monoid_{};
     using Aggregate = NonEmptyMaxSubarrayAggregate<T>;

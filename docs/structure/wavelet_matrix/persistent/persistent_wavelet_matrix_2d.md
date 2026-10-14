@@ -75,3 +75,17 @@ optional<Y> wm.next_y(version, xl, xr, lower) const
 不正な version・点・矩形・順序、vector 長不一致、点数・version 容量、y の bit 幅違反では
 `runtime_error`。失敗した更新は新 version を作らない。copy は禁止、move は可能。
 標準 C++20 で実装され、GCC 13 で利用できる。
+
+## 容量を省略した可変長版
+
+容量のテンプレート引数 `MAX_SIZE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
+容量を指定した既存の固定配列版も同じヘッダで利用できる。
+
+```cpp
+using Variable = PersistentWaveletMatrix2D<X, Y>;
+using Fixed = PersistentWaveletMatrix2D<X, Y, N, Versions>;
+```
+
+可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
+再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
+整数添字の表現上限は残り、不正な添字や上限超過は検証する。

@@ -4,7 +4,7 @@
 #include "static_tree_path_fold.hpp"
 #include "../../../structure/types/monoid/common_monoids.hpp"
 
-template<class Weight, int MAX_SIZE>
+template<class Weight, int MAX_SIZE = -1>
 struct WeightedTreeDistanceKthVertex{
 private:
     StaticTreePathFold<AddMonoid<Weight>{}, MAX_SIZE> tree;

@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cstddef>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -148,6 +150,13 @@ void print_state(const BitsetXorShift<MAX_BITS>& bits){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        BitsetXorShift<> bits(1031); bits.set(0).set(1024).xor_left_shift(3);
+        assert(bits.test(0) && bits.test(3) && bits.test(1024) && bits.test(1027));
+        bits.xor_right_shift(1024); assert(!bits.test(0) && !bits.test(3));
+        assert(bits.count() == 2 && bits.capacity() == 1031);
+    }
     std::size_t size;
     std::string initial;
     if(!(std::cin >> size >> initial)){

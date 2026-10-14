@@ -15,7 +15,7 @@
 int main(){
     int q;
     if(std::cin >> q){
-        DynamicLiChaoTree<-1000000, 1000000, 8192> tree;
+        DynamicLiChaoTree<-1000000, 1000000> tree;
         while(q--){
             std::string type;
             std::cin >> type;
@@ -32,7 +32,7 @@ int main(){
         return 0;
     }
 
-    DynamicLiChaoTree<-50, 50, 300> cht;
+    DynamicLiChaoTree<-50, 50> cht;
     assert(cht.empty());
     assert(cht.query(0) == decltype(cht)::INF);
 

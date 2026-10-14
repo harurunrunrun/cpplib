@@ -195,3 +195,23 @@ $K$ を観測語数、$D$ を従来APIのseed候補数とする。
   key未知を直接解ける1-round構成を別APIにする。
 - 既知key列の復元には加工前の連続出力を使う。
 - Philoxは統計的乱数生成器であり、暗号用途には使用しない。
+
+## 観測数を実行時に決める
+
+既知 key の復元、整数 seed 既知の復元、seed 候補探索には `span` overload がある。
+観測数のテンプレート引数は不要で、固定長 `array` 版も同じ header にある。
+
+~~~cpp
+Philox4x32 generator(7);
+std::vector<Philox4x32::result_type> outputs(16);
+for(auto& value: outputs) value = generator();
+Philox4x32::key_type key{};
+key[0] = 7;
+auto recovery = recover_philox_known_key_stream<Philox4x32>(
+    std::span<const Philox4x32::result_type>(outputs), key
+);
+~~~
+
+語数 $N$、round 数 $R$、観測数 $K$ に対し、既知 key 復元は
+$O(RN(N+K))$ 時間・$O(N^2)$ 追加空間。観測列はコピーせず、入力の保存領域は $O(K)$。
+seed 候補数 $D$ の探索は $O(D(N+R(N+K)))$ 時間で、候補ごとの領域を再利用する。

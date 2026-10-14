@@ -113,3 +113,15 @@ BivariateFormalPowerSeries square_root(
 各演算は $0\le i\le XDegree$, $0\le j\le YDegree$ の長方形で打ち切る。
 指数・対数の級数は、定数項0の級数の $k$ 乗がtotal degree $k$ 未満を持たない
 ことを使い、$k=XDegree+YDegree$ で停止する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+BivariateFormalPowerSeries<Mint> dynamic(x_degree, y_degree);
+BivariateFormalPowerSeries<Mint, 10, 20> fixed;
+auto one = BivariateFormalPowerSeries<Mint>::constant(1, x_degree, y_degree);
+```
+
+$X=x\_degree+1, Y=y\_degree+1$ として構築・保存は $O(XY)$、乗算・逆数は $O(X^2Y^2)$ 時間・$O(XY)$ 空間。ほかの演算も上記の次数を実行時次数とした計算量になる。二項演算では両辺の次数を一致させる。

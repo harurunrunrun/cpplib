@@ -18,7 +18,7 @@ struct ProductModMonoid{
     static constexpr int e(){ return 1 % MOD; }
 };
 
-template<int MOD, int MAX_SIZE>
+template<int MOD, int MAX_SIZE = -1>
 class StaticRangeProductLessEqualMod{
     static constexpr ProductModMonoid<MOD> monoid_{};
     std::unique_ptr<MonoidMergeSortTree<int, monoid_, MAX_SIZE>> tree_;

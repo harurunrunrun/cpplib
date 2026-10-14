@@ -75,3 +75,14 @@ $P=\pi(n)$、素因数の種類数を $K$ とする。
 - `factorize(x)` は $1\le x\le n$ を要求し、素因数と指数を昇順で返す。
 - `min_factor_data`, `prime_data`, `_n`, `_prime_count` は公開storage。
   通常は対応するaccessorを使用する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+math::PrimeSieve<> dynamic(n);
+math::PrimeSieve<100000> fixed(n);
+```
+
+構築・`build(n)` は $O(n)$ 時間・空間、素数判定は $O(1)$ 時間、素因数分解は $O(\log n)$ 時間。再構築すると現在の上限に合わせて配列を取り直す。

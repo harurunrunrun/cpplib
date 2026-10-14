@@ -119,3 +119,14 @@ constructorの容量違反、端点・root・query予約数の範囲違反、辺
 
 callbackが例外を送出した場合、その例外は呼出し元へ伝播する。
 この場合は途中まで更新されたcallback側状態のcleanupを保証しない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+TreeMo<> dynamic(vertex_count);
+TreeMo<100000> fixed(vertex_count);
+```
+
+前処理・保存領域は $O(N\log N)$。$Q$ クエリの走査回数はブロック幅 $B$ に対し $O(N^2/B+BQ)$、並べ替えは $O(Q\log Q)$、クエリ保存は $O(Q)$ 空間。

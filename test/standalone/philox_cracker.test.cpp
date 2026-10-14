@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include <array>
+#include <span>
+#include <vector>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -274,6 +276,15 @@ void check_known_key_stream(
         outputs,
         key
     );
+    const std::vector<typename Engine::result_type> dynamic_outputs(outputs.begin(), outputs.end());
+    auto dynamic_recovery = recover_philox_known_key_stream<Engine>(
+        std::span<const typename Engine::result_type>(dynamic_outputs), key
+    );
+    assert(dynamic_recovery.candidate_count == recovery.candidate_count);
+    auto dynamic_standard = recover_philox_integer_seeded_stream<Engine>(
+        std::span<const typename Engine::result_type>(dynamic_outputs), seed
+    );
+    assert(dynamic_standard.unique());
     assert(recovery.unique());
     assert(recovery.candidate_count == 1);
     assert(

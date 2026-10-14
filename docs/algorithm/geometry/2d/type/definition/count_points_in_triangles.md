@@ -17,6 +17,12 @@ CountPointsInTriangles counter(vertices, query_points);
 どちらも`std::vector<std::pair<Coordinate, Coordinate>>`で、`Coordinate`は整数型とする。
 外積は128-bit符号付き整数で計算し、中間値がその範囲に収まる必要がある。
 
+`CountPointsInTriangles<Coordinate, Weight>(vertices, query_points, weights)` と
+集計型と重み列を指定すると、同じ前処理・照会計算量で点数の代わりに内部の重み和を返す。
+`Weight` の既定値は `int`。空の重み列を省略すると各点の重みは1。
+非空の重み列は対象点と同じ長さとし、加減算の中間値を `Weight` に収める。
+符号付き64bitの点重みを安全に集計する場合は `WeightedPointsInTriangles` を利用できる。
+
 ## `count`
 
 ```cpp

@@ -91,8 +91,21 @@ versionは`[0,versions())`、`line_at`のindexは`[0,size(version))`。
 
 ## 注意点
 
-傾きは `add_line` の呼出し順に単調でなければならない。`MIN_QUERY=true` は最小値、
-falseは最大値を返す。空versionへのquery、無効version、version・node容量超過では
-`runtime_error`。演算中の `T` の加算・乗算が表現範囲を超えないことを呼出側が保証する。
-保存領域は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$。追加・分岐は固定arenaへ
-記録する以外の追加領域 $O(1)$、queryも $O(1)$。
+各版で追加する傾きは、その版の最後の傾き以下にする。
+空versionへのquery、無効なversionやindex、固定版の容量超過は例外。
+失敗した更新は既存versionと使用済みノード数を変えない。
+
+## 容量を省略した可変長版
+
+容量テンプレートを省略すると既定値 `-1` でvectorを使い、必要な保存領域を明示的に伸長する。
+固定容量を指定する既存版も同じヘッダに残る。
+
+```cpp
+using Variable = PersistentConvexHullTrick<>;
+using Fixed = PersistentConvexHullTrick<Lines, Versions, Nodes>;
+```
+
+各版の索引木は必要なときだけ範囲を倍増し、古い根を左部分木として新しい根を作る。過去版は変更しない。
+祖先版を含む最大hull長を $L$、今回除去する直線数を $K$ とすると、追加 $O((K+1)\log(L+1))$、照会 $O(\log(N+1)\log(L+1))$。
+領域は作成済みノード・版の数に比例する。分岐を通じて $K$ を一律償却することはできない。
+整数添字の表現上限を超える要素数は例外。構造上の文字種類・bit幅・座標域は、件数容量とは別に指定できる。

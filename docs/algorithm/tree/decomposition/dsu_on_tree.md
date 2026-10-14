@@ -100,3 +100,14 @@ object本体は $O(MAX_SIZE)$。各APIの追加領域はcallback側の状態を�
 constructorは `0 <= n <= MAX_SIZE`、辺容量は `MAX_SIZE-1`。metadataと実行APIは直近の `add_edge` 後に成功した `build` を必要とする。
 
 空木を除き、入力は頂点番号が $[0,n)$ の無向連結木とする。端点・root・indexの範囲違反、辺容量超過、辺数違反、自己loop・多重辺・cycle・非連結入力では `runtime_error` を送出する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+DsuOnTree<> dynamic(vertex_count);
+DsuOnTree<100000> fixed(vertex_count);
+```
+
+構築・前処理・保存領域は $O(N)$。走査の頂点追加・削除 callback は合計 $O(N\log N)$ 回、回答 callback は各頂点1回。

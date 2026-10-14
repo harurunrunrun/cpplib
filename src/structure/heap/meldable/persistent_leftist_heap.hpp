@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_HEAP_MELDABLE_PERSISTENT_LEFTIST_HEAP_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <functional>
 #include <limits>
@@ -10,8 +11,8 @@
 
 template<
     class T,
-    std::size_t MAX_VERSION,
-    std::size_t MAX_NODE,
+    std::size_t MAX_VERSION = std::numeric_limits<std::size_t>::max(),
+    std::size_t MAX_NODE = std::numeric_limits<std::size_t>::max(),
     class Compare = std::less<T>
 >
 struct PersistentLeftistHeap{
@@ -27,12 +28,12 @@ private:
     };
 
     static_assert(
-        MAX_NODE <= static_cast<std::size_t>(std::numeric_limits<int>::max())
+        MAX_NODE == std::numeric_limits<std::size_t>::max() || MAX_NODE <= static_cast<std::size_t>(std::numeric_limits<int>::max())
     );
 
-    std::array<Node, MAX_NODE> nodes{};
-    std::array<int, MAX_VERSION> roots{};
-    std::array<std::size_t, MAX_VERSION> sizes{};
+    cpplib_detail::StaticOrVector<Node, (MAX_NODE == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(MAX_NODE))> nodes{std::size_t(1)};
+    cpplib_detail::StaticOrVector<int, (MAX_VERSION == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSION))> roots{std::size_t(1)};
+    cpplib_detail::StaticOrVector<std::size_t, (MAX_VERSION == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSION))> sizes{std::size_t(1)};
     std::size_t node_count = 1;
     std::size_t version_count = 1;
     [[no_unique_address]] Compare compare{};
@@ -55,24 +56,28 @@ private:
     }
 
     int copy_node(int source){
-        if(node_count == MAX_NODE)[[unlikely]]{
+        if(node_count == MAX_NODE || node_count >= static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: node capacity exceeded "
                 "(persistent leftist heap)."
             );
         }
-        nodes[node_count] = nodes[static_cast<std::size_t>(source)];
+        const Node copy = nodes[static_cast<std::size_t>(source)];
+        nodes.ensure(node_count + 1);
+        nodes[node_count] = copy;
         return static_cast<int>(node_count++);
     }
 
     int make_node(const T& value){
-        if(node_count == MAX_NODE)[[unlikely]]{
+        if(node_count == MAX_NODE || node_count >= static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: node capacity exceeded "
                 "(persistent leftist heap)."
             );
         }
-        nodes[node_count] = Node{value, 0, 0, 1};
+        Node created{value, 0, 0, 1};
+        nodes.ensure(node_count + 1);
+        nodes[node_count] = std::move(created);
         return static_cast<int>(node_count++);
     }
 
@@ -87,8 +92,9 @@ private:
         }
 
         const int result = copy_node(left);
+        const int merged_right = meld_roots(nodes[static_cast<std::size_t>(result)].right, right);
         Node& node = nodes[static_cast<std::size_t>(result)];
-        node.right = meld_roots(node.right, right);
+        node.right = merged_right;
         if(
             nodes[static_cast<std::size_t>(node.left)].rank <
             nodes[static_cast<std::size_t>(node.right)].rank
@@ -100,6 +106,8 @@ private:
     }
 
     std::size_t add_version(int root, std::size_t size){
+        roots.ensure(version_count + 1);
+        sizes.ensure(version_count + 1);
         roots[version_count] = root;
         sizes[version_count] = size;
         return version_count++;

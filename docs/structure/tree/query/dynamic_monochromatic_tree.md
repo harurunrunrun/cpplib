@@ -129,3 +129,17 @@ objectの保存領域は $O(\mathtt{MAX\_SIZE})$。
 - 辺数が `N-1` でない、閉路がある、または非連結なら `build` は `runtime_error`。
 - `S` はdefault constructionとcopyが可能でなければならない。
 - `Monoid.op` の結果に対するoverflow検査は行わない。
+
+## 容量を省略した可変長版
+
+容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
+容量を指定した既存の固定配列版も同じヘッダで利用できる。
+
+```cpp
+using Variable = DynamicMonochromaticTree<Monoid>;
+using Fixed = DynamicMonochromaticTree<Monoid, N>;
+```
+
+可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
+領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
+整数添字の表現上限は残り、不正な添字や上限超過は検証する。

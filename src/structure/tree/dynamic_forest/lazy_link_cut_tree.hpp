@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_TREE_DYNAMIC_FOREST_LAZY_LINK_CUT_TREE_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
@@ -9,23 +10,34 @@
 #include <utility>
 #include <vector>
 
-template<auto MonoidActLen, int MAX_SIZE>
+template<auto MonoidActLen, int MAX_SIZE = -1>
 struct LazyLinkCutTree{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     using S = typename std::remove_cvref_t<decltype(MonoidActLen)>::S;
     using T = typename std::remove_cvref_t<decltype(MonoidActLen)>::T;
 
 private:
     struct State{
-        std::array<int, MAX_SIZE> left{};
-        std::array<int, MAX_SIZE> right{};
-        std::array<int, MAX_SIZE> parent{};
-        std::array<int, MAX_SIZE> size{};
-        std::array<bool, MAX_SIZE> reversed{};
-        std::array<S, MAX_SIZE> value;
-        std::array<S, MAX_SIZE> aggregate;
-        std::array<S, MAX_SIZE> rev_aggregate;
-        std::array<T, MAX_SIZE> lazy;
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> left{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> right{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> parent{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> size{};
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> reversed{};
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> value;
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> aggregate;
+        cpplib_detail::StaticOrVector<S, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> rev_aggregate;
+        cpplib_detail::StaticOrVector<T, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> lazy;
+        explicit State(int n){
+            left.resize(static_cast<std::size_t>(n));
+            right.resize(static_cast<std::size_t>(n));
+            parent.resize(static_cast<std::size_t>(n));
+            size.resize(static_cast<std::size_t>(n));
+            reversed.resize(static_cast<std::size_t>(n));
+            value.resize(static_cast<std::size_t>(n));
+            aggregate.resize(static_cast<std::size_t>(n));
+            rev_aggregate.resize(static_cast<std::size_t>(n));
+            lazy.resize(static_cast<std::size_t>(n));
+        }
     };
 
     int _n = 0;
@@ -68,7 +80,8 @@ private:
     void toggle(int v){
         if(v == -1) return;
         std::swap(state->left[v], state->right[v]);
-        std::swap(state->aggregate[v], state->rev_aggregate[v]);
+        using std::swap;
+        swap(state->aggregate[v], state->rev_aggregate[v]);
         state->reversed[v] = !state->reversed[v];
     }
     void push(int v){
@@ -104,7 +117,8 @@ private:
         pull(v);
     }
     void splay(int v){
-        static std::array<int, MAX_SIZE> stack;
+        static cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack;
+        if constexpr(MAX_SIZE < 0) stack.ensure(static_cast<std::size_t>(_n));
         int count = 0;
         int x = v;
         stack[count++] = x;
@@ -171,12 +185,12 @@ private:
     }
 
 public:
-    explicit LazyLinkCutTree(int n = MAX_SIZE): _n(n), state(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit LazyLinkCutTree(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), state(nullptr){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
-        state = std::make_unique<State>();
-        for(int k = 0; k < MAX_SIZE; k++){
+        state = std::make_unique<State>(_n);
+        for(int k = 0; k < (MAX_SIZE < 0 ? _n : MAX_SIZE); k++){
             state->left[k] = state->right[k] = state->parent[k] = -1;
             state->size[k] = 1;
             state->reversed[k] = false;
@@ -187,7 +201,7 @@ public:
         }
     }
     explicit LazyLinkCutTree(const std::vector<S>& values):
-        LazyLinkCutTree(static_cast<int>(values.size())){
+        LazyLinkCutTree(cpplib_detail::checked_int_size(values.size())){
         if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
@@ -202,6 +216,28 @@ public:
     LazyLinkCutTree& operator=(const LazyLinkCutTree&) = delete;
     LazyLinkCutTree(LazyLinkCutTree&&) = default;
     LazyLinkCutTree& operator=(LazyLinkCutTree&&) = default;
+
+    int add_vertex(const S& input = MonoidActLen.e()) requires(MAX_SIZE < 0){
+        const S initial = input;
+        const int next_size = cpplib_detail::checked_int_size(static_cast<std::size_t>(_n) + 1);
+        state->left.ensure(static_cast<std::size_t>(next_size));
+        state->right.ensure(static_cast<std::size_t>(next_size));
+        state->parent.ensure(static_cast<std::size_t>(next_size));
+        state->size.ensure(static_cast<std::size_t>(next_size));
+        state->reversed.ensure(static_cast<std::size_t>(next_size));
+        state->value.ensure(static_cast<std::size_t>(next_size));
+        state->aggregate.ensure(static_cast<std::size_t>(next_size));
+        state->rev_aggregate.ensure(static_cast<std::size_t>(next_size));
+        state->lazy.ensure(static_cast<std::size_t>(next_size));
+        const int vertex = _n;
+        state->left[vertex] = state->right[vertex] = state->parent[vertex] = -1;
+        state->size[vertex] = 1;
+        state->reversed[vertex] = false;
+        state->value[vertex] = state->aggregate[vertex] = state->rev_aggregate[vertex] = initial;
+        state->lazy[vertex] = MonoidActLen.id();
+        _n = next_size;
+        return vertex;
+    }
 
     int size() const{ return _n; }
 

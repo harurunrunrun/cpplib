@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_TREE_CONSTRUCTION_BINARY_TREE_TRAVERSAL_RECONSTRUCTION_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_TREE_CONSTRUCTION_BINARY_TREE_TRAVERSAL_RECONSTRUCTION_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <cstddef>
@@ -10,42 +12,46 @@
 #include <utility>
 #include <vector>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct BinaryTreeTraversalResult{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
     bool valid = false;
     int node_count = 0;
     int root = -1;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> left_child;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> right_child;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> left_child;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> right_child;
 
-    BinaryTreeTraversalResult() noexcept{}
+    BinaryTreeTraversalResult() noexcept(MAX_SIZE >= 0){}
 
-    BinaryTreeTraversalResult(const BinaryTreeTraversalResult& other) noexcept:
+    BinaryTreeTraversalResult(const BinaryTreeTraversalResult& other) noexcept(MAX_SIZE >= 0):
         valid(other.valid),
         node_count(other.node_count),
         root(other.root){
+        left_child.resize(static_cast<std::size_t>(node_count));
+        right_child.resize(static_cast<std::size_t>(node_count));
         std::copy_n(other.left_child.begin(), node_count, left_child.begin());
         std::copy_n(other.right_child.begin(), node_count, right_child.begin());
     }
 
-    BinaryTreeTraversalResult(BinaryTreeTraversalResult&& other) noexcept:
+    BinaryTreeTraversalResult(BinaryTreeTraversalResult&& other) noexcept(MAX_SIZE >= 0):
         BinaryTreeTraversalResult(
             static_cast<const BinaryTreeTraversalResult&>(other)
         ){}
 
-    BinaryTreeTraversalResult& operator=(const BinaryTreeTraversalResult& other) noexcept{
+    BinaryTreeTraversalResult& operator=(const BinaryTreeTraversalResult& other) noexcept(MAX_SIZE >= 0){
         if(this == &other) return *this;
         valid = other.valid;
         node_count = other.node_count;
         root = other.root;
+        left_child.resize(static_cast<std::size_t>(node_count));
+        right_child.resize(static_cast<std::size_t>(node_count));
         std::copy_n(other.left_child.begin(), node_count, left_child.begin());
         std::copy_n(other.right_child.begin(), node_count, right_child.begin());
         return *this;
     }
 
-    BinaryTreeTraversalResult& operator=(BinaryTreeTraversalResult&& other) noexcept{
+    BinaryTreeTraversalResult& operator=(BinaryTreeTraversalResult&& other) noexcept(MAX_SIZE >= 0){
         return *this = static_cast<const BinaryTreeTraversalResult&>(other);
     }
 
@@ -75,7 +81,7 @@ struct Segment{
 }
 
 template<
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     class Key,
     class Hash = std::hash<Key>,
     class KeyEqual = std::equal_to<Key>
@@ -103,8 +109,10 @@ BinaryTreeTraversalResult<MAX_SIZE> reconstruct_binary_tree_traversals(
         return result;
     }
 
-    const int n = static_cast<int>(preorder.size());
+    const int n = cpplib_detail::checked_int_size(preorder.size());
     result.node_count = n;
+    result.left_child.resize(preorder.size());
+    result.right_child.resize(preorder.size());
     std::fill_n(result.left_child.begin(), n, -1);
     std::fill_n(result.right_child.begin(), n, -1);
     if(n == 0){
@@ -230,7 +238,7 @@ BinaryTreeTraversalResult<MAX_SIZE> reconstruct_binary_tree_traversals(
 }
 
 template<
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     class Key,
     class Hash = std::hash<Key>,
     class KeyEqual = std::equal_to<Key>

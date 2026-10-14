@@ -8,6 +8,31 @@
 #include <vector>
 
 #include "../../src/algorithm/fft/min_plus/min_plus_convolution.hpp"
+#include "../../src/algorithm/fft/min_plus/max_plus_convolution.hpp"
+
+void test_max_plus(){
+    const auto naive = [](const std::vector<long long>& a,
+                          const std::vector<long long>& b){
+        std::vector<__int128_t> result(a.size() + b.size() - 1,
+                                     -(__int128_t(1) << 100));
+        for(std::size_t i = 0; i < a.size(); ++i)
+            for(std::size_t j = 0; j < b.size(); ++j)
+                result[i + j] = std::max(result[i + j], __int128_t(a[i]) + b[j]);
+        return result;
+    };
+    const std::vector<long long> concave{0, 4, 5, 5}, convex{-3, -2, 2, 10};
+    const std::vector<long long> arbitrary{3, -7, 9}, other_concave{1, 3, 3};
+    assert(max_plus_convolution_concave_arbitrary(concave, arbitrary) == naive(concave, arbitrary));
+    assert(max_plus_convolution_convex_arbitrary(convex, arbitrary) == naive(convex, arbitrary));
+    assert(max_plus_convolution_concave_concave(concave, other_concave) == naive(concave, other_concave));
+    const long long minimum = std::numeric_limits<long long>::min();
+    const long long maximum = std::numeric_limits<long long>::max();
+    assert(max_plus_convolution_concave_concave({minimum}, {minimum}) ==
+           std::vector<__int128_t>{__int128_t(minimum) * 2});
+    assert(max_plus_convolution_convex_arbitrary({maximum}, {maximum}) ==
+           std::vector<__int128_t>{__int128_t(maximum) * 2});
+    assert(max_plus_convolution_concave_arbitrary({}, arbitrary).empty());
+}
 
 std::vector<long long> naive_min_plus(const std::vector<long long>& left,
                                       const std::vector<long long>& right){
@@ -119,6 +144,7 @@ void test_large(){
 }
 
 int main(){
+    test_max_plus();
     char mode;
     int n, m;
     if(std::cin >> mode >> n >> m){

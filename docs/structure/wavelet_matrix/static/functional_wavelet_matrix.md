@@ -63,3 +63,17 @@ $D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$ とする。
 `range_sum/sum_k_smallest/sum_k_largest/range_min/range_max/median_floor/median_ceil/prev_value/next_value`
 を継承する。各signature、半開区間、戻り値、例外はCompressed Weighted Wavelet Matrixと同じ。
 constructorはvector/arrayを受け、列長またはID bit幅の容量違反では `runtime_error`。
+
+## 容量を省略した可変長版
+
+容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
+容量を指定した既存の固定配列版も同じヘッダで利用できる。
+
+```cpp
+using Variable = FunctionalWaveletMatrix<T>;
+using Fixed = FunctionalWaveletMatrix<T, N>;
+```
+
+可変長版は入力長 $n$ とビット幅 $B$ に応じた配列だけを確保し、構築・照会の計算量は上記と同じ。
+長さに依存する固定容量の領域は $O(n)$ に、ビット段ごとの領域は $O(Bn)$ になる。
+整数添字の表現上限は残り、不正な添字や上限超過は検証する。

@@ -9,7 +9,7 @@
 #include "lca.hpp"
 #include "../../range/static_query/static_range_count_distinct.hpp"
 
-template<class Color, int MAX_SIZE>
+template<class Color, int MAX_SIZE = -1>
 struct LcaSubtreeDistinctColors{
 private:
     int _n;
@@ -20,7 +20,7 @@ private:
 
 public:
     explicit LcaSubtreeDistinctColors(const std::vector<Color>& vertex_colors):
-        _n(static_cast<int>(vertex_colors.size())), colors(vertex_colors),
+        _n(cpplib_detail::checked_int_size(vertex_colors.size())), colors(vertex_colors),
         tour(std::make_unique<TreeEulerTour<MAX_SIZE>>(_n)), lca_index(_n){}
 
     void add_edge(int left, int right){

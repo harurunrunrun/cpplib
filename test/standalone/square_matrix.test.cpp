@@ -9,6 +9,19 @@
 #include "../../src/structure/modint/modint.hpp"
 
 int main(){
+    {
+        SquareMatrix<bool> matrix(std::vector<std::vector<bool>>{{true, false}, {false, true}});
+        static_assert(std::is_same_v<decltype(matrix(0, 0)), bool&>);
+        const auto& view = matrix;
+        static_assert(std::is_same_v<decltype(view(0, 0)), const bool&>);
+        matrix(0, 1) = true;
+        const auto square = matrix * matrix;
+        assert(square(0, 0) && square(0, 1) && !square(1, 0) && square(1, 1));
+        assert(matrix.transposed()(1, 0));
+    }
+
+    {SquareMatrix<long long> a(std::vector<std::vector<long long>>{{1,2},{3,4}}); assert((a*a)(1,1)==22); assert(a.transposed()(0,1)==3); assert((a*SquareMatrix<long long>::identity(2))==a);}
+
     int query_count;
     if(std::cin >> query_count){
         using external_mint = Modint<998244353>;

@@ -101,6 +101,8 @@ void test_exceptions(){
 }
 
 int main(){
+    {FenwickTree2D<long long> f(13,17); f.add(12,16,7); f.add(0,0,-2); assert(f.sum(0,0,13,17)==5); assert(f.get(12,16)==7);}
+
     int h, w, q;
     if(std::cin >> h >> w >> q){
         std::vector<std::vector<long long>> a(

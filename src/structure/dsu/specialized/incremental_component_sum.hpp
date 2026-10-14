@@ -2,19 +2,20 @@
 #define CPPLIB_SRC_STRUCTURE_DSU_SPECIALIZED_INCREMENTAL_COMPONENT_SUM_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 struct IncrementalComponentSum{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     int _n = 0;
     int group_count = 0;
-    std::array<int, MAX_SIZE> parent_or_size{};
-    std::array<T, MAX_SIZE> component_value{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> parent_or_size{};
+    cpplib_detail::StaticOrVector<T, MAX_SIZE> component_value{};
 
     void check_vertex(int vertex, const char* message) const{
         if(vertex < 0 || _n <= vertex)[[unlikely]]{
@@ -23,11 +24,13 @@ private:
     }
 
     void initialize(int n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        parent_or_size.resize(static_cast<std::size_t>(n));
+        component_value.resize(static_cast<std::size_t>(n));
         _n = n;
         group_count = n;
         for(int vertex = 0; vertex < _n; ++vertex){
@@ -37,17 +40,17 @@ private:
     }
 
 public:
-    explicit IncrementalComponentSum(int n = MAX_SIZE){
+    explicit IncrementalComponentSum(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)){
         initialize(n);
     }
 
     explicit IncrementalComponentSum(const std::vector<T>& values){
-        if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+        if(MAX_SIZE >= 0 && values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
-        initialize(static_cast<int>(values.size()));
+        initialize(cpplib_detail::checked_int_size(values.size()));
         for(int vertex = 0; vertex < _n; ++vertex){
             component_value[vertex] = values[vertex];
         }

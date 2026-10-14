@@ -30,3 +30,14 @@ $O(N\log N)$。
 - 全頂点番号は $[0,N)$ でなければならない。
 - $N$ は `MAX_SIZE` 以下でなければならない。
 - 前提違反時は `runtime_error` を送出する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto count = count_unblocked_height_queries(heights, queries);
+auto fixed = count_unblocked_height_queries<100000>(heights, queries);
+```
+
+$N$ 本の高さと $Q$ クエリに対して $O(N\log N+Q)$ 時間・$O(N\log N)$ 空間。

@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_TREE_DYNAMIC_PROGRAMMING_TREE_EDGE_SPLIT_DIAMETERS_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_TREE_DYNAMIC_PROGRAMMING_TREE_EDGE_SPLIT_DIAMETERS_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <cstddef>
@@ -81,7 +83,7 @@ inline ComponentState component_excluding(
     };
 }
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct Workspace{
     static_assert(MAX_SIZE <= std::numeric_limits<int>::max() / 2);
     static constexpr int EDGE_CAPACITY = MAX_SIZE - 1;
@@ -89,34 +91,46 @@ struct Workspace{
     static constexpr std::size_t ADJACENCY_CAPACITY =
         static_cast<std::size_t>(2) * static_cast<std::size_t>(EDGE_CAPACITY);
 
-    std::array<int, VERTEX_CAPACITY + 1> offset;
-    std::array<int, ADJACENCY_CAPACITY> adjacency_to;
-    std::array<int, ADJACENCY_CAPACITY> adjacency_edge;
-    std::array<int, VERTEX_CAPACITY> parent;
-    std::array<int, VERTEX_CAPACITY> parent_edge;
-    std::array<int, VERTEX_CAPACITY> order;
-    std::array<int, VERTEX_CAPACITY> stack;
-    std::array<ComponentState, VERTEX_CAPACITY> downward;
-    std::array<ComponentState, VERTEX_CAPACITY> outside;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(VERTEX_CAPACITY + 1))> offset;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(ADJACENCY_CAPACITY))> adjacency_to;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(ADJACENCY_CAPACITY))> adjacency_edge;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(VERTEX_CAPACITY))> parent;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(VERTEX_CAPACITY))> parent_edge;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(VERTEX_CAPACITY))> order;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(VERTEX_CAPACITY))> stack;
+    cpplib_detail::StaticOrVector<ComponentState, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(VERTEX_CAPACITY))> downward;
+    cpplib_detail::StaticOrVector<ComponentState, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(VERTEX_CAPACITY))> outside;
 };
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 std::vector<TreeEdgeSplitDiameter> compute(
     int vertex_count,
     const std::vector<std::pair<int, int>>& edges,
     const char* range_message,
     const char* tree_message
 ){
-    static_assert(MAX_SIZE > 0);
-    if(vertex_count <= 0 || MAX_SIZE < vertex_count)[[unlikely]]{
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
+    if(vertex_count <= 0 || (MAX_SIZE >= 0 && MAX_SIZE < vertex_count))[[unlikely]]{
         throw std::runtime_error(range_message);
     }
+    if(vertex_count > std::numeric_limits<int>::max() / 2)
+        throw std::length_error("tree adjacency exceeds int index range");
     const int edge_count = vertex_count - 1;
     if(edges.size() != static_cast<std::size_t>(edge_count))[[unlikely]]{
         throw std::runtime_error(tree_message);
     }
 
     auto workspace = std::make_unique_for_overwrite<Workspace<MAX_SIZE>>();
+        workspace->offset.resize(static_cast<std::size_t>(vertex_count + 1));
+        workspace->adjacency_to.resize(static_cast<std::size_t>(static_cast<std::size_t>(2) * static_cast<std::size_t>(vertex_count - 1)));
+        workspace->adjacency_edge.resize(static_cast<std::size_t>(static_cast<std::size_t>(2) * static_cast<std::size_t>(vertex_count - 1)));
+        workspace->parent.resize(static_cast<std::size_t>(vertex_count));
+        workspace->parent_edge.resize(static_cast<std::size_t>(vertex_count));
+        workspace->order.resize(static_cast<std::size_t>(vertex_count));
+        workspace->stack.resize(static_cast<std::size_t>(vertex_count));
+        workspace->downward.resize(static_cast<std::size_t>(vertex_count));
+        workspace->outside.resize(static_cast<std::size_t>(vertex_count));
+
     std::fill_n(workspace->offset.begin(), vertex_count + 1, 0);
     for(int edge = 0; edge < edge_count; ++edge){
         const auto [left, right] = edges[static_cast<std::size_t>(edge)];
@@ -244,7 +258,7 @@ std::vector<TreeEdgeSplitDiameter> compute(
 
 }
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 std::vector<TreeEdgeSplitDiameter> tree_edge_split_diameters(
     int vertex_count,
     const std::vector<std::pair<int, int>>& edges

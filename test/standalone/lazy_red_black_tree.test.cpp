@@ -34,7 +34,7 @@ std::optional<int> kth_key_naive(const std::map<int, long long>& mp, int k){
     return it->first;
 }
 
-void check_all(LazyRedBlackTree<int, range_add_sum, 512>& tree, const std::map<int, long long>& mp){
+void check_all(LazyRedBlackTree<int, range_add_sum>& tree, const std::map<int, long long>& mp){
     assert(tree.size() == static_cast<int>(mp.size()));
     assert(tree.empty() == mp.empty());
     assert(tree.all_prod() == naive_prod(mp, -1000, 1000));
@@ -59,7 +59,7 @@ void check_all(LazyRedBlackTree<int, range_add_sum, 512>& tree, const std::map<i
 int main(){
     int input_q;
     if(std::cin >> input_q){
-        LazyRedBlackTree<int, range_add_sum, 512> tree;
+        LazyRedBlackTree<int, range_add_sum> tree;
         auto print_optional = [](const std::optional<long long>& value){
             if(value) std::cout << *value << '\n';
             else std::cout << "NONE\n";
@@ -119,7 +119,7 @@ int main(){
         return 0;
     }
 
-    LazyRedBlackTree<int, range_add_sum, 512> tree;
+    LazyRedBlackTree<int, range_add_sum> tree;
     std::map<int, long long> naive;
     std::mt19937 rng(42424242);
 

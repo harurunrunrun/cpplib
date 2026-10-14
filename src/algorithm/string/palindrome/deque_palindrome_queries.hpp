@@ -3,7 +3,7 @@
 
 #include "deque_palindromic_tree.hpp"
 
-template<int ALPHABET, int MAX_NODES, int MAX_LENGTH, char OFFSET = 'a'>
+template<int ALPHABET, int MAX_NODES = -1, int MAX_LENGTH = -1, char OFFSET = 'a'>
 class DequePalindromeQueries{
     DequePalindromicTree<ALPHABET, MAX_NODES, MAX_LENGTH, OFFSET> tree_;
 

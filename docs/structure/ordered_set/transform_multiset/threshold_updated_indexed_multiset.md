@@ -63,3 +63,13 @@ public:
 - 識別番号は $[0,N)$ で指定する。
 - 添字違反時は `runtime_error`、容量超過時は `length_error` を送出する。
 - 加減算で `long long` の範囲を超える場合は `overflow_error` を送出する。
+
+## 可変長版
+
+```cpp
+using Dynamic = ThresholdUpdatedIndexedMultiset<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n log(n + 1))、保存領域 O(n)、閾値で分けた作用と一点取得は O(log(n + 1))。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

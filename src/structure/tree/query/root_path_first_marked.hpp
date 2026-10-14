@@ -6,7 +6,7 @@
 
 #include "../../../algorithm/tree/decomposition/heavy_light_decomposition.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct RootPathFirstMarked{
 private:
     int _n;
@@ -17,7 +17,7 @@ private:
 
 public:
     explicit RootPathFirstMarked(int n): _n(n), decomposition(n){
-        if(n < 0 || MAX_SIZE < n) throw std::runtime_error("library assertion fault: range violation (constructor).");
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n)) throw std::runtime_error("library assertion fault: range violation (constructor).");
     }
 
     void add_edge(int left, int right){ decomposition.add_edge(left, right); }

@@ -34,3 +34,14 @@ $O(MAX\_SIZE+N+Q)$ です。
 - `T` は加算、比較、ハッシュが可能でなければなりません。
 - 範囲違反では `runtime_error` を送出します。
 - 和が `T` で表現できる必要があります。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = maximum_distinct_subarray_sums(values, ranges);
+auto fixed = maximum_distinct_subarray_sums<Value, 100000>(values, ranges);
+```
+
+$N$ 要素と $Q$ クエリに対して $O((N+Q)\log N)$ 時間・$O(N+Q)$ 空間。

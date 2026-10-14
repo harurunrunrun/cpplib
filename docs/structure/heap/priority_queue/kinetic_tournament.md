@@ -41,3 +41,13 @@ struct Result { T value; Line line; size_t index; };
 - 範囲外の添字・区間は `out_of_range`。実行時要素数が容量を超えると `length_error`。
 - `slope * time + intercept` が `T` の範囲外になる結果取得は `overflow_error`。内部比較とcertificate計算には拡張整数を使う。
 - 浮動小数時刻や二次以上の軌跡は扱わない。
+
+## 可変長版
+
+```cpp
+using Dynamic = KineticTournament<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域は O(n)。直線変更と区間最適値取得は O(log(n + 1))、時刻更新は発生するイベント数に応じた従来の計算量。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

@@ -27,3 +27,14 @@ documentation_of: ../../../../src/algorithm/tree/query/tree_path_value_membershi
 
 - `values.size()==n<=MAX_SIZE` で、辺集合は連結な木でなければならない。
 - `build` 前や範囲外頂点では `runtime_error`。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+TreePathValueMembership<int> dynamic(vertex_count);
+TreePathValueMembership<int, 100000> fixed(vertex_count);
+```
+
+構築・前処理・保存領域は $O(N\log N)$、クエリは $O(\log N)$ 時間。

@@ -2,23 +2,24 @@
 #define CPPLIB_SRC_ALGORITHM_OTHER_SEQUENCE_CYCLIC_ORDER_STATISTIC_PLACEMENT_PERMUTATION_HPP_INCLUDED
 
 #include <memory>
+#include <type_traits>
 #include <stdexcept>
 #include <vector>
 
 #include "../../../structure/ordered_set/set/integer_set.hpp"
 
-template<int MAX_SIZE = 20000>
+template<int MAX_SIZE = -1>
 std::vector<int> cyclic_order_statistic_placement_permutation(int size){
-    static_assert(0 < MAX_SIZE);
-    if(size < 0 || MAX_SIZE < size)[[unlikely]]{
+    static_assert(MAX_SIZE == -1 || 0 < MAX_SIZE);
+    if(size < 0 || (MAX_SIZE >= 0 && MAX_SIZE < size))[[unlikely]]{
         throw std::out_of_range(
             "cyclic_order_statistic_placement_permutation size is out of range"
         );
     }
 
-    auto available_positions = std::make_unique<
-        Int_Set<unsigned int, static_cast<unsigned int>(MAX_SIZE)>
-    >();
+    using Available = std::conditional_t<MAX_SIZE < 0, Int_Set<unsigned int>,
+        Int_Set<unsigned int, static_cast<unsigned int>(MAX_SIZE < 0 ? 1 : MAX_SIZE)>>;
+    auto available_positions = std::make_unique<Available>();
     for(int position = 0; position < size; ++position){
         available_positions->insert(static_cast<unsigned int>(position));
     }

@@ -87,13 +87,13 @@ inline constexpr Monoid<T> monoid{};
 
 } // namespace two_maximum_segtree_internal
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class TwoMaximumSegtree{
     int size_;
     Segtree<two_maximum_segtree_internal::monoid<T>, MAX_SIZE> tree_;
 
     static std::vector<TwoMaximumAggregate<T>> default_initial(int size){
-        if(size < 0 || MAX_SIZE < size)[[unlikely]]{
+        if(size < 0 || (MAX_SIZE >= 0 && MAX_SIZE < size))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
@@ -118,7 +118,7 @@ class TwoMaximumSegtree{
     }
 
 public:
-    explicit TwoMaximumSegtree(int n = MAX_SIZE):
+    explicit TwoMaximumSegtree(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
         size_(n), tree_(default_initial(n)){}
 
     explicit TwoMaximumSegtree(const std::vector<T>& values):

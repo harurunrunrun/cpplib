@@ -52,3 +52,19 @@ $N$ を行列の次数、$\omega=\log_2 7$ を使用する Strassen 行列積の
 - 浮動小数点数は丸めにより rank 判定が変わるため対象外である。
 - Strassen 積の閾値より小さいblockでは定数倍を抑える通常積・通常消去を使うが、全体の漸近計算量は変わらない。
 - 除算不能な非零要素を持つ環では使用できない。
+
+## 容量を省略する可変長版
+
+~~~cpp
+using Mint = Modint998244353;
+std::vector<std::vector<Mint>> values{ {1, 2}, {3, 4} };
+auto from_vector = fast_characteristic_polynomial(values);
+Matrix<Mint> matrix(values);
+auto from_matrix = fast_characteristic_polynomial(matrix);
+~~~
+
+`vector` overload では容量のテンプレート引数を使わない。
+`Matrix<Mint>` も実寸だけの `vector` 保存領域を使い、同じ関数へ渡せる。
+実行時の次数を $N$、高速行列積の指数を $\omega=\log_2 7$ とすると、
+時間計算量は $O(N^\omega\log N)$、追加空間計算量は $O(N^2)$。
+固定容量を明示する `Matrix<Mint, R, C>` も同じ header の overload で利用できる。

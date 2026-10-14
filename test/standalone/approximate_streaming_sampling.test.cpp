@@ -12,7 +12,22 @@
 #include "../../src/approximate/streaming/morris_counter.hpp"
 #include "../../src/approximate/streaming/reservoir_sampling.hpp"
 
+void dynamic_capacity_test(){
+    ReservoirSampler<int> dynamic_sample(8, 17); ReservoirSampler<int, 8> fixed_sample(17);
+    WeightedReservoirSampler<int> dynamic_weighted(8, 18); WeightedReservoirSampler<int, 8> fixed_weighted(18);
+    for(int i = 0; i < 100; ++i){
+        dynamic_sample.add(i); fixed_sample.add(i);
+        dynamic_weighted.add(i, i + 1); fixed_weighted.add(i, i + 1);
+    }
+    assert(dynamic_sample.samples() == fixed_sample.samples());
+    assert(dynamic_weighted.samples() == fixed_weighted.samples());
+    bool invalid_capacity = false;
+    try{ ReservoirSampler<int> empty_sample(0); }catch(const std::invalid_argument&){ invalid_capacity = true; }
+    assert(invalid_capacity);
+}
+
 int main(){
+    dynamic_capacity_test();
     int count;
     if(!(std::cin >> count)) return 0;
     ReservoirSampler<int, 32> first(42), second(42);

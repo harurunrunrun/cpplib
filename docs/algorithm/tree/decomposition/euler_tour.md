@@ -106,3 +106,14 @@ object本体と構築用bufferは $O(MAX_SIZE)$。`build` 中も動的確保は�
 constructorは `0 <= n <= MAX_SIZE`、`add_edge` は固定の `MAX_SIZE-1` 辺容量を検査する。metadata・preorder・event queryは直近の辺追加後のbuild成功と有効indexを必要とし、違反時は `runtime_error`。
 
 頂点とrootは範囲内でなければならない。空木を明記した場合を除き、入力は無向の連結木とする。端点範囲、閉路、辺数、連結性の違反時は `runtime_error` を送出する。記載した計算量には木の検査とResultの構築を含む。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+TreeEulerTour<> dynamic(vertex_count);
+TreeEulerTour<100000> fixed(vertex_count);
+```
+
+構築・前処理と保存領域は $O(N)$、前処理後の区間・祖先判定は $O(1)$ 時間。

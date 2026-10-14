@@ -4,18 +4,19 @@
 #include <algorithm>
 #include <cstddef>
 #include <optional>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 #include <utility>
 
 #include "integer_set.hpp"
 
-template<class Value, int MAX_UNIQUE>
+template<class Value, int MAX_UNIQUE = -1>
 class CompressedOrderedSet{
-    static_assert(MAX_UNIQUE > 0);
+    static_assert(MAX_UNIQUE == -1 || MAX_UNIQUE > 0);
 
     std::vector<Value> coordinates_;
-    Int_Set<unsigned int, static_cast<unsigned int>(MAX_UNIQUE)> set_;
+    Int_Set<unsigned int, static_cast<unsigned int>(MAX_UNIQUE < 0 ? std::numeric_limits<int>::max() : MAX_UNIQUE)> set_;
 
     unsigned int registered_index(const Value& value) const{
         const auto iterator = std::lower_bound(
@@ -45,7 +46,7 @@ public:
             std::unique(coordinates_.begin(), coordinates_.end()),
             coordinates_.end()
         );
-        if(coordinates_.size() > static_cast<std::size_t>(MAX_UNIQUE))[[unlikely]]{
+        if(coordinates_.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()) || (MAX_UNIQUE >= 0 && coordinates_.size() > static_cast<std::size_t>(MAX_UNIQUE)))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity exceeded (CompressedOrderedSet)."
             );

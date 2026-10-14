@@ -45,3 +45,14 @@ bool empty() const
 - 空文字列に対する `pop_front` と `pop_back` は `runtime_error`。
 - alphabet外文字、`MAX_LENGTH` 超過、`MAX_NODES` 超過でも `runtime_error`。
 - pop後にも返り値は有効で、空文字列では3つの統計値がすべて0になる。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+DequePalindromeQueries<26> dynamic;
+DequePalindromeQueries<26, 100002, 100000> fixed;
+```
+
+内部の deque 回文木と同じ時間計算量で、到達したノード数 $S$、最大保持長 $L$、alphabet サイズ $A$ に対し $O(AS+L)$ 空間。

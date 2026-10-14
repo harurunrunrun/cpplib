@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <functional>
@@ -20,7 +21,7 @@ enum class RetroactivePriorityQueueOperationKind{
 template<
     class Time,
     class T,
-    std::size_t MAX_OPERATION,
+    std::size_t MAX_OPERATION = std::numeric_limits<std::size_t>::max(),
     class Compare = std::less<T>,
     class TimeCompare = std::less<Time>
 >
@@ -61,9 +62,9 @@ class PartiallyRetroactivePriorityQueue{
 
     [[no_unique_address]] Compare compare;
     [[no_unique_address]] TimeCompare time_compare;
-    std::array<std::optional<Node>, MAX_OPERATION> nodes{};
-    std::array<std::size_t, MAX_OPERATION> free_slots{};
-    std::size_t free_count = MAX_OPERATION;
+    cpplib_detail::StaticOrVector<std::optional<Node>, (MAX_OPERATION == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(MAX_OPERATION))> nodes{};
+    cpplib_detail::StaticOrVector<std::size_t, (MAX_OPERATION == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(MAX_OPERATION))> free_slots{};
+    std::size_t free_count = MAX_OPERATION == std::numeric_limits<std::size_t>::max() ? 0 : MAX_OPERATION;
     std::size_t root = NONE;
     std::uint64_t next_serial = 1;
 
@@ -505,11 +506,21 @@ class PartiallyRetroactivePriorityQueue{
         std::optional<T> value,
         bool active
     ){
+        Time copied_time = time;
+        if constexpr(MAX_OPERATION == std::numeric_limits<std::size_t>::max()){
+            if(free_count == 0){
+                const std::size_t slot = nodes.size();
+                if(slot >= static_cast<std::size_t>(std::numeric_limits<balance_type>::max())) throw std::length_error("retroactive queue size overflow");
+                free_slots.ensure(slot + 1);
+                nodes.ensure(slot + 1);
+                free_slots[free_count++] = slot;
+            }
+        }
         const std::size_t slot = free_slots[--free_count];
         const std::uint64_t serial = next_serial++;
         try{
             nodes[slot].emplace(
-                time, kind, std::move(value), active, serial, mix(serial)
+                copied_time, kind, std::move(value), active, serial, mix(serial)
             );
         }catch(...){
             ++free_count;
@@ -530,7 +541,7 @@ class PartiallyRetroactivePriorityQueue{
     }
 
     void check_insertable(const Time& time) const{
-        if(free_count == 0)[[unlikely]]{
+        if(MAX_OPERATION != std::numeric_limits<std::size_t>::max() && free_count == 0)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: operation capacity violation "
                 "(PartiallyRetroactivePriorityQueue)."
@@ -575,12 +586,14 @@ public:
         Compare compare_ = Compare{},
         TimeCompare time_compare_ = TimeCompare{}
     ) : compare(std::move(compare_)), time_compare(std::move(time_compare_)){
+        if constexpr(MAX_OPERATION != std::numeric_limits<std::size_t>::max())
         for(std::size_t index = 0; index < MAX_OPERATION; ++index){
             free_slots[MAX_OPERATION - index - 1] = index;
         }
     }
 
-    static constexpr std::size_t capacity() noexcept{ return MAX_OPERATION; }
+    static constexpr std::size_t capacity() noexcept requires(MAX_OPERATION != std::numeric_limits<std::size_t>::max()){ return MAX_OPERATION; }
+    std::size_t capacity() const noexcept requires(MAX_OPERATION == std::numeric_limits<std::size_t>::max()){ return nodes.size(); }
     std::size_t operation_count() const noexcept{ return subtree_size(root); }
     std::size_t size() const noexcept{
         return static_cast<std::size_t>(raw_sum(root));
@@ -626,7 +639,13 @@ public:
         return *node(found).value;
     }
 
-    void insert_push(const Time& time, const T& value){
+    void insert_push(const Time& input_time, const T& value){
+        std::optional<Time> copied_time;
+        if constexpr(MAX_OPERATION == std::numeric_limits<std::size_t>::max()){
+            copied_time.emplace(input_time);
+        }
+        const Time& time = MAX_OPERATION == std::numeric_limits<std::size_t>::max()
+            ? *copied_time : input_time;
         check_insertable(time);
         const balance_type before = bridge_prefix_before(root, time);
         const std::size_t bridge =

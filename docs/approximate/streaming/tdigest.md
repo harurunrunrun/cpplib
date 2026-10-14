@@ -28,3 +28,16 @@ documentation_of: ../../../src/approximate/streaming/tdigest.hpp
 t-digest には入力分布に依存しない厳密な最大 rank 誤差保証はない。
 centroid 数を増やすと通常は誤差が下がり、この実装は tail の結合を中央より抑える。
 保存に必要な空間計算量は $O(MaxCentroids)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+TDigest<> sketch(128); // centroid 数の上限
+sketch.add(42.0L);
+auto median = sketch.quantile(0.5L);
+~~~
+
+centroid 上限 $C\ge2$ を実行時に指定し、`vector` に保存する。
+構築・追加・分位点 query・CDF は $O(C)$ 時間、merge は $O(C^2)$ 時間。
+保存領域は $O(C)$、merge の一時領域は $O(C)$、その他の一時領域は $O(1)$。
+`clear` は $O(1)$ 時間。容量を明示した固定配列版も同じ header にある。

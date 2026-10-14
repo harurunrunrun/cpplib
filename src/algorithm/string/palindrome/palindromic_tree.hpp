@@ -1,17 +1,20 @@
 #ifndef CPPLIB_SRC_ALGORITHM_STRING_PALINDROME_PALINDROMIC_TREE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_STRING_PALINDROME_PALINDROMIC_TREE_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <array>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
 
-template<int ALPHABET, int MAX_NODES, char OFFSET = 'a'>
+template<int ALPHABET, int MAX_NODES = -1, char OFFSET = 'a'>
 struct PalindromicTree{
     static_assert(ALPHABET > 0);
-    static_assert(MAX_NODES >= 2);
+    static_assert(MAX_NODES == -1 || MAX_NODES >= 2);
 
     struct Node{
         std::array<int, ALPHABET> next;
@@ -34,7 +37,7 @@ private:
     int last_node = 1;
     bool occurrence_built = false;
     std::string text;
-    std::array<Node, MAX_NODES> nodes{};
+    cpplib_detail::StaticOrVector<Node, (MAX_NODES < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_NODES))> nodes{};
 
     int char_id(char c) const{
         int id = static_cast<int>(c - OFFSET);
@@ -44,9 +47,10 @@ private:
         return id;
     }
     int new_node(){
-        if(used == MAX_NODES)[[unlikely]]{
+        if(used == MAX_NODES || used == std::numeric_limits<int>::max())[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (add).");
         }
+        nodes.ensure(static_cast<std::size_t>(used) + 1);
         nodes[used] = Node();
         return used++;
     }
@@ -60,6 +64,7 @@ private:
 
 public:
     PalindromicTree(){
+        nodes.resize(2);
         nodes[0] = Node();
         nodes[1] = Node();
         nodes[0].length = -1;
@@ -92,6 +97,8 @@ public:
     const std::string& str() const{ return text; }
 
     int add(char c){
+        if(text.size() >= static_cast<std::size_t>(std::numeric_limits<int>::max() - 2))
+            throw std::length_error("palindrome text exceeds int index range");
         occurrence_built = false;
         int id = char_id(c);
         text.push_back(c);

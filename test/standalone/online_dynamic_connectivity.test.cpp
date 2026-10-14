@@ -1,6 +1,7 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include "../../src/structure/graph/dynamic_connectivity/dynamic_graph_connectivity.hpp"
 #include <iostream>
 #include <map>
 #include <queue>
@@ -75,9 +76,14 @@ int naive_groups(int n, const std::map<std::pair<int, int>, int>& edge_count){
 }
 
 int main(){
+    {
+        DynamicGraphConnectivity<> wrapper(3);
+        assert(wrapper.add_edge(0, 1)); assert(wrapper.connected(0, 1));
+        assert(wrapper.remove_edge(0, 1)); assert(!wrapper.connected(0, 1));
+    }
     int input_n, input_q;
     if(std::cin >> input_n >> input_q){
-        OnlineDynamicConnectivity<256> graph(input_n);
+        OnlineDynamicConnectivity<> graph(input_n);
         while(input_q--){
             std::string type;
             std::cin >> type;

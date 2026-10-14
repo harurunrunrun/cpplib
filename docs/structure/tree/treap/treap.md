@@ -1,5 +1,5 @@
 ---
-title: Treap (トレープ) [ordered_set]
+title: Treap (トレープ) [ordered_set] [point_set_range_frequency]
 documentation_of: ../../../../src/structure/tree/treap/treap.hpp
 ---
 
@@ -99,3 +99,17 @@ nodeは固定arena $O(\mathtt{MAX\_SIZE})$ に保存し、`insert`が消費す�
 - `erase`は不存在なら`false`。`kth`と各境界探索は該当なしなら`nullopt`。
 - seedはpriority生成だけに使い、同じseedと操作列なら同じ木を構築する。
 - `clear`は$O(1)$で固定node arenaを再利用する。
+
+## 容量を省略した可変長版
+
+容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
+容量を指定した既存の固定配列版も同じヘッダで利用できる。
+
+```cpp
+using Variable = TreapSet<Key>;
+using Fixed = TreapSet<Key, N>;
+```
+
+可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
+領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
+整数添字の表現上限は残り、不正な添字や上限超過は検証する。

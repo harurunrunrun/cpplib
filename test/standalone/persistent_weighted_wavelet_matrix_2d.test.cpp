@@ -65,7 +65,7 @@ void run_full(
     const std::vector<long long>& weights,
     int query_count
 ){
-    PersistentRectangleSum<int, int, long long, 128, 512, 32>
+    PersistentRectangleSum<int, int, long long, -1, -1, 32>
         matrix(xs, ys, weights);
     while(query_count--){
         std::string operation;
@@ -122,7 +122,7 @@ void run_partial(
     int query_count
 ){
     PartiallyPersistentRectangleSum<
-        int, int, long long, 128, 512, 32
+        int, int, long long, -1, -1, 32
     > matrix(xs, ys, weights);
     while(query_count--){
         std::string operation;

@@ -3,7 +3,7 @@
 
 #include "implicit_treap.hpp"
 
-template<auto Monoid, int MAX_SIZE>
+template<auto Monoid, int MAX_SIZE = -1>
 class ImplicitTreapDeque{
     ImplicitTreap<Monoid, MAX_SIZE> sequence_;
 

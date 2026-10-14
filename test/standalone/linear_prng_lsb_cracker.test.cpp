@@ -159,7 +159,19 @@ std::string solve_well(const std::vector<std::uint8_t>& observations){
 
 }
 
+void dynamic_state_dimension_test(){
+    Gf2LinearStateCracker<> dynamic(70, [](std::vector<std::uint64_t>& state, std::size_t index){
+        return ((state[index / 64] >> (index % 64)) & 1U) != 0;
+    });
+    std::vector<std::uint8_t> observations(70);
+    observations[0] = observations[63] = observations[69] = 1;
+    const auto state = dynamic.recover(observations);
+    assert(dynamic.uniquely_recoverable() && dynamic.rank() == 70);
+    assert(state.size() == 2 && state[0] == ((std::uint64_t{1} << 63) | 1) && state[1] == 32);
+}
+
 int main(){
+    dynamic_state_dimension_test();
     check_library_contracts();
 
     int test_count;

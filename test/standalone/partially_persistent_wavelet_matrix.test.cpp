@@ -48,6 +48,14 @@ void self_test(){
 } // namespace
 
 int main(){
+    {
+        PartiallyPersistentWaveletMatrix<int> growing(std::vector<int>{0, 1, 2});
+        for(int i = 1; i <= 1024; ++i){
+            assert(growing.set(0, i) == i);
+            assert(growing.access(i, 0) == i);
+            assert(growing.access(0, 0) == 0);
+        }
+    }
     int n, q;
     if(!(std::cin >> n >> q)){
         self_test();

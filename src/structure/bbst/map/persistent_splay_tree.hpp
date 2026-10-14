@@ -2,16 +2,17 @@
 #define CPPLIB_SRC_STRUCTURE_BBST_MAP_PERSISTENT_SPLAY_TREE_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <functional>
 #include <optional>
 #include <stdexcept>
 #include <vector>
 
-template<class Key, int MAX_NODE, int MAX_VERSION, class Compare = std::less<Key>>
+template<class Key, int MAX_NODE = -1, int MAX_VERSION = -1, class Compare = std::less<Key>>
 struct PersistentSplaySet{
-    static_assert(MAX_NODE > 0);
-    static_assert(MAX_VERSION > 0);
+    static_assert(MAX_NODE == -1 || MAX_NODE > 0);
+    static_assert(MAX_VERSION == -1 || MAX_VERSION > 0);
 
 private:
     struct Node{
@@ -21,8 +22,8 @@ private:
         Key key{};
     };
 
-    std::array<Node, MAX_NODE> nodes{};
-    std::array<int, MAX_VERSION> roots{};
+    cpplib_detail::StaticOrVector<Node, (MAX_NODE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_NODE))> nodes{};
+    cpplib_detail::StaticOrVector<int, (MAX_VERSION < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSION))> roots{};
     int used = 0;
     int version_count = 1;
     int mutation_begin = 0;
@@ -37,11 +38,12 @@ private:
     }
 
     void pull(int node){
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        current.size = 1 + size_or_zero(current.left) + size_or_zero(current.right);
+        const auto current_node_index_1 = static_cast<std::size_t>(node);
+        nodes[current_node_index_1].size = 1 + size_or_zero(nodes[current_node_index_1].left) + size_or_zero(nodes[current_node_index_1].right);
     }
 
     int copy_node(int node){
+        if constexpr(MAX_NODE < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentSplaySet).");
         }
@@ -55,6 +57,7 @@ private:
     }
 
     int new_node(const Key& key, int left = -1, int right = -1){
+        if constexpr(MAX_NODE < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentSplaySet).");
         }
@@ -152,6 +155,8 @@ private:
     }
 
     int register_root(int root){
+        if constexpr(MAX_VERSION < 0) roots.ensure(static_cast<std::size_t>(version_count) + 1);
+        if constexpr(MAX_VERSION < 0) roots.ensure(static_cast<std::size_t>(version_count) + 1);
         roots[static_cast<std::size_t>(version_count)] = root;
         return version_count++;
     }
@@ -164,7 +169,7 @@ private:
 
 public:
     explicit PersistentSplaySet(const Compare& compare = Compare()) : comp(compare){
-        roots.fill(-1);
+        roots.ensure(1); roots.fill(-1);
     }
 
     int versions() const{
@@ -184,9 +189,9 @@ public:
         check_version(version);
         int node = roots[static_cast<std::size_t>(version)];
         while(node != -1){
-            const auto& current = nodes[static_cast<std::size_t>(node)];
-            if(equal_key(current.key, key)) return true;
-            node = comp(key, current.key) ? current.left : current.right;
+            const auto current_node_index_2 = static_cast<std::size_t>(node);
+            if(equal_key(nodes[current_node_index_2].key, key)) return true;
+            node = comp(key, nodes[current_node_index_2].key) ? nodes[current_node_index_2].left : nodes[current_node_index_2].right;
         }
         return false;
     }
@@ -253,12 +258,12 @@ public:
         int node = roots[static_cast<std::size_t>(version)];
         int result = 0;
         while(node != -1){
-            const auto& current = nodes[static_cast<std::size_t>(node)];
-            if(comp(current.key, key)){
-                result += size_or_zero(current.left) + 1;
-                node = current.right;
+            const auto current_node_index_3 = static_cast<std::size_t>(node);
+            if(comp(nodes[current_node_index_3].key, key)){
+                result += size_or_zero(nodes[current_node_index_3].left) + 1;
+                node = nodes[current_node_index_3].right;
             }else{
-                node = current.left;
+                node = nodes[current_node_index_3].left;
             }
         }
         return result;
@@ -269,12 +274,12 @@ public:
         int node = roots[static_cast<std::size_t>(version)];
         int result = 0;
         while(node != -1){
-            const auto& current = nodes[static_cast<std::size_t>(node)];
-            if(!comp(key, current.key)){
-                result += size_or_zero(current.left) + 1;
-                node = current.right;
+            const auto current_node_index_4 = static_cast<std::size_t>(node);
+            if(!comp(key, nodes[current_node_index_4].key)){
+                result += size_or_zero(nodes[current_node_index_4].left) + 1;
+                node = nodes[current_node_index_4].right;
             }else{
-                node = current.left;
+                node = nodes[current_node_index_4].left;
             }
         }
         return result;
@@ -285,15 +290,15 @@ public:
         int node = roots[static_cast<std::size_t>(version)];
         if(k < 0 || size_or_zero(node) <= k) return std::nullopt;
         while(node != -1){
-            const auto& current = nodes[static_cast<std::size_t>(node)];
-            int left_size = size_or_zero(current.left);
+            const auto current_node_index_5 = static_cast<std::size_t>(node);
+            int left_size = size_or_zero(nodes[current_node_index_5].left);
             if(k < left_size){
-                node = current.left;
+                node = nodes[current_node_index_5].left;
             }else if(k == left_size){
-                return current.key;
+                return nodes[current_node_index_5].key;
             }else{
                 k -= left_size + 1;
-                node = current.right;
+                node = nodes[current_node_index_5].right;
             }
         }
         return std::nullopt;
@@ -304,12 +309,12 @@ public:
         int node = roots[static_cast<std::size_t>(version)];
         std::optional<Key> result;
         while(node != -1){
-            const auto& current = nodes[static_cast<std::size_t>(node)];
-            if(!comp(current.key, key)){
-                result = current.key;
-                node = current.left;
+            const auto current_node_index_6 = static_cast<std::size_t>(node);
+            if(!comp(nodes[current_node_index_6].key, key)){
+                result = nodes[current_node_index_6].key;
+                node = nodes[current_node_index_6].left;
             }else{
-                node = current.right;
+                node = nodes[current_node_index_6].right;
             }
         }
         return result;
@@ -320,12 +325,12 @@ public:
         int node = roots[static_cast<std::size_t>(version)];
         std::optional<Key> result;
         while(node != -1){
-            const auto& current = nodes[static_cast<std::size_t>(node)];
-            if(comp(key, current.key)){
-                result = current.key;
-                node = current.left;
+            const auto current_node_index_7 = static_cast<std::size_t>(node);
+            if(comp(key, nodes[current_node_index_7].key)){
+                result = nodes[current_node_index_7].key;
+                node = nodes[current_node_index_7].left;
             }else{
-                node = current.right;
+                node = nodes[current_node_index_7].right;
             }
         }
         return result;
@@ -336,12 +341,12 @@ public:
         int node = roots[static_cast<std::size_t>(version)];
         std::optional<Key> result;
         while(node != -1){
-            const auto& current = nodes[static_cast<std::size_t>(node)];
-            if(!comp(key, current.key)){
-                result = current.key;
-                node = current.right;
+            const auto current_node_index_8 = static_cast<std::size_t>(node);
+            if(!comp(key, nodes[current_node_index_8].key)){
+                result = nodes[current_node_index_8].key;
+                node = nodes[current_node_index_8].right;
             }else{
-                node = current.left;
+                node = nodes[current_node_index_8].left;
             }
         }
         return result;
@@ -352,12 +357,12 @@ public:
         int node = roots[static_cast<std::size_t>(version)];
         std::optional<Key> result;
         while(node != -1){
-            const auto& current = nodes[static_cast<std::size_t>(node)];
-            if(comp(current.key, key)){
-                result = current.key;
-                node = current.right;
+            const auto current_node_index_9 = static_cast<std::size_t>(node);
+            if(comp(nodes[current_node_index_9].key, key)){
+                result = nodes[current_node_index_9].key;
+                node = nodes[current_node_index_9].right;
             }else{
-                node = current.left;
+                node = nodes[current_node_index_9].left;
             }
         }
         return result;

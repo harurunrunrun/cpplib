@@ -2,15 +2,17 @@
 #define CPPLIB_SRC_STRUCTURE_TRIE_BINARY_BINARY_TRIE_HPP_INCLUDED
 
 #include <array>
+#include <limits>
+#include "../../array/static_or_vector.hpp"
 #include <optional>
 #include <stdexcept>
 #include <type_traits>
 
-template<class T, int BIT, int MAX_NODES>
+template<class T, int BIT = std::numeric_limits<std::make_unsigned_t<T>>::digits, int MAX_NODES = -1>
 struct BinaryTrie{
     static_assert(std::is_integral_v<T>);
     static_assert(BIT > 0);
-    static_assert(MAX_NODES > 0);
+    static_assert(MAX_NODES == -1 || MAX_NODES > 0);
     using U = std::make_unsigned_t<T>;
 
 private:
@@ -20,9 +22,10 @@ private:
     };
 
     int used = 1;
-    std::array<Node, MAX_NODES> nodes{};
+    cpplib_detail::StaticOrVector<Node, MAX_NODES> nodes{};
 
     int new_node(){
+        if constexpr(MAX_NODES < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(used == MAX_NODES)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (insert).");
         }
@@ -36,6 +39,7 @@ private:
 
 public:
     BinaryTrie(){
+        nodes.ensure(1);
         nodes[0] = Node();
     }
 

@@ -5,7 +5,7 @@
 
 #include "dynamic_marked_tree_diameter.hpp"
 
-template<class Weight, int MAX_SIZE>
+template<class Weight, int MAX_SIZE = -1>
 struct MarkedTreeDiameterQueries{
 private:
     DynamicMarkedTreeDiameter<Weight, MAX_SIZE> tree;

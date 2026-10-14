@@ -49,3 +49,14 @@ for(int i = 0; i < m; ++i){
 `VirtualTree<MAX_SIZE>` はalias。`compress` は圧縮後sizeを返す。`vertex`, `parent_index`, `edge_length`, `selected` は元頂点、圧縮上の親、元木上距離、指定頂点flagを返す。size・辺・圧縮容量を検査し、違反時は `runtime_error`。
 
 頂点とrootは範囲内でなければならない。空木を明記した場合を除き、入力は無向の連結木とする。端点範囲、閉路、辺数、連結性の違反時は `runtime_error` を送出する。記載した計算量には木の検査とResultの構築を含む。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+AuxiliaryTree<> dynamic(vertex_count);
+AuxiliaryTree<100000> fixed(vertex_count);
+```
+
+前処理・保存領域は $O(N\log N)$、選択頂点数 $K$ の圧縮木は $O(K\log K+K\log N)$ 時間・$O(K)$ 出力領域。二分累積の段数も実行時に算出する。

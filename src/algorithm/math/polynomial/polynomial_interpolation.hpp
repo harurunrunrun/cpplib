@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_MATH_POLYNOMIAL_POLYNOMIAL_INTERPOLATION_HPP_INCLUDED
 
 #include <array>
+#include <limits>
 #include <cstddef>
 #include <stdexcept>
 
@@ -27,9 +28,22 @@ T polynomial_evaluate(
     return result;
 }
 
+template<class T>
+T polynomial_evaluate(const std::vector<T>& coefficients, std::size_t count, T x){
+    if(count > coefficients.size()) throw std::out_of_range("polynomial coefficient count");
+    T result{};
+    for(std::size_t i = count; i > 0; --i) result = result * x + coefficients[i - 1];
+    return result;
+}
+
+template<class T>
+T polynomial_evaluate(const std::vector<T>& coefficients, T x){
+    return polynomial_evaluate(coefficients, coefficients.size(), x);
+}
+
 namespace polynomial_interpolation_detail{
 
-template<class Mint, std::size_t MAX_DEGREE>
+template<class Mint, std::size_t MAX_DEGREE = static_cast<std::size_t>(-1)>
 struct ConsecutiveLagrangeTable{
     std::array<Mint, MAX_DEGREE + 1> factorial{};
     std::array<Mint, MAX_DEGREE + 1> inverse_factorial{};
@@ -92,6 +106,72 @@ struct ConsecutiveLagrangeTable{
         return result;
     }
 };
+
+template<class Mint>
+struct ConsecutiveLagrangeTable<Mint, static_cast<std::size_t>(-1)>{
+    mutable std::vector<Mint> factorial{Mint(1)};
+    mutable std::vector<Mint> inverse_factorial{Mint(1)};
+
+    explicit ConsecutiveLagrangeTable(std::size_t maximum = 0){ prepare(maximum); }
+
+    void prepare(std::size_t maximum) const{
+        if(maximum == std::numeric_limits<std::size_t>::max())
+            throw std::length_error("interpolation degree is too large");
+        if(maximum < factorial.size()) return;
+        const std::size_t old_size = factorial.size();
+        factorial.resize(maximum + 1);
+        inverse_factorial.resize(maximum + 1);
+        for(std::size_t i = old_size; i <= maximum; ++i){
+            factorial[i] = factorial[i - 1] * Mint(static_cast<long long>(i));
+        }
+        inverse_factorial[maximum] = factorial[maximum].inv();
+        for(std::size_t i = maximum; i > 0; --i){
+            inverse_factorial[i - 1] = inverse_factorial[i] * Mint(static_cast<long long>(i));
+        }
+    }
+
+    Mint combination(std::size_t n, std::size_t k) const{
+        prepare(n);
+        if(k > n) return Mint(0);
+        return factorial[n] * inverse_factorial[k] * inverse_factorial[n - k];
+    }
+
+    Mint evaluate(
+        const std::vector<Mint>& values,
+        std::size_t sample_count,
+        Mint x
+    ) const{
+        if(sample_count == 0 || sample_count > values.size())[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (consecutive Lagrange evaluation)."
+            );
+        }
+
+        prepare(sample_count - 1);
+        std::vector<Mint> prefix(sample_count + 1);
+        std::vector<Mint> suffix(sample_count + 1);
+        prefix[0] = Mint(1);
+        for(std::size_t index = 0; index < sample_count; ++index){
+            prefix[index + 1] = prefix[index]
+                * (x - Mint(static_cast<long long>(index)));
+        }
+        suffix[sample_count] = Mint(1);
+        for(std::size_t index = sample_count; index > 0; --index){
+            suffix[index - 1] = suffix[index]
+                * (x - Mint(static_cast<long long>(index - 1)));
+        }
+
+        Mint result = Mint(0);
+        for(std::size_t index = 0; index < sample_count; ++index){
+            Mint term = values[index] * prefix[index] * suffix[index + 1]
+                * inverse_factorial[index]
+                * inverse_factorial[sample_count - 1 - index];
+            if(((sample_count - 1 - index) & 1U) != 0) term = -term;
+            result += term;
+        }
+        return result;
+    }
+};
 template<class Mint>
 struct StaticModintTraits{
     static constexpr bool supported = false;
@@ -106,7 +186,7 @@ struct StaticModintTraits<::Modint<MOD>>{
 
 }  // namespace polynomial_interpolation_detail
 
-template<class Mint, std::size_t MAX_DEGREE>
+template<class Mint, std::size_t MAX_DEGREE = static_cast<std::size_t>(-1)>
 struct PolynomialInterpolation{
     using ValueArray = std::array<Mint, MAX_DEGREE + 1>;
 
@@ -217,6 +297,143 @@ public:
         }
 
         ValueArray result{};
+        for(std::size_t index = 0; index < sample_count; ++index){
+            const Mint scale = ys[index] * denominators[index];
+            Mint quotient_coefficient = product[sample_count];
+            result[sample_count - 1] += scale * quotient_coefficient;
+            for(std::size_t degree = sample_count - 1; degree > 0; --degree){
+                quotient_coefficient = product[degree]
+                    + xs[index] * quotient_coefficient;
+                result[degree - 1] += scale * quotient_coefficient;
+            }
+        }
+        return result;
+    }
+
+    Mint evaluate(
+        const ValueArray& xs,
+        const ValueArray& ys,
+        std::size_t sample_count,
+        Mint x
+    ) const{
+        const ValueArray coefficients = interpolate_coefficients(xs, ys, sample_count);
+        return polynomial_evaluate(coefficients, sample_count, x);
+    }
+};
+
+template<class Mint>
+struct PolynomialInterpolation<Mint, static_cast<std::size_t>(-1)>{
+    using ValueArray = std::vector<Mint>;
+
+private:
+    polynomial_interpolation_detail::ConsecutiveLagrangeTable<
+        Mint, static_cast<std::size_t>(-1)
+    > consecutive;
+
+    static void check_sample_count(std::size_t sample_count){
+        if(sample_count == 0)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (PolynomialInterpolation)."
+            );
+        }
+    }
+
+public:
+    Mint evaluate_consecutive(
+        const ValueArray& values,
+        std::size_t sample_count,
+        Mint x
+    ) const{
+        check_sample_count(sample_count);
+        return consecutive.evaluate(values, sample_count, x);
+    }
+
+    Mint evaluate_equidistant(
+        const ValueArray& values,
+        std::size_t sample_count,
+        Mint first,
+        Mint step,
+        Mint x
+    ) const{
+        check_sample_count(sample_count);
+        if(step == Mint(0))[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: zero step (equidistant Lagrange evaluation)."
+            );
+        }
+        return consecutive.evaluate(values, sample_count, (x - first) / step);
+    }
+
+    ValueArray interpolate_coefficients(
+        const ValueArray& xs,
+        const ValueArray& ys,
+        std::size_t sample_count
+    ) const{
+        check_sample_count(sample_count);
+        if(xs.size() < sample_count || ys.size() < sample_count)
+            throw std::out_of_range("insufficient interpolation samples");
+        using traits =
+            polynomial_interpolation_detail::StaticModintTraits<Mint>;
+        if constexpr(traits::supported){
+            try{
+                const auto end = static_cast<std::ptrdiff_t>(sample_count);
+                const std::vector<Mint> points(xs.begin(), xs.begin() + end);
+                const std::vector<Mint> values(ys.begin(), ys.begin() + end);
+                const auto coefficients = polynomial_interpolation<
+                    traits::modulus
+                >(points, values);
+                ValueArray result(sample_count);
+                for(std::size_t index = 0;
+                    index < coefficients.size();
+                    ++index){
+                    result[index] = coefficients[index];
+                }
+                return result;
+            }catch(const std::invalid_argument& error){
+                throw std::runtime_error(error.what());
+            }
+        }
+
+        ValueArray denominators(sample_count);
+        for(std::size_t index = 0; index < sample_count; ++index){
+            denominators[index] = Mint(1);
+            for(std::size_t other = 0; other < sample_count; ++other){
+                if(index == other) continue;
+                const Mint difference = xs[index] - xs[other];
+                if(difference == Mint(0))[[unlikely]]{
+                    throw std::runtime_error(
+                        "library assertion fault: duplicate interpolation points."
+                    );
+                }
+                denominators[index] *= difference;
+            }
+        }
+
+        std::vector<Mint> prefix_products(sample_count + 1);
+        prefix_products[0] = Mint(1);
+        for(std::size_t index = 0; index < sample_count; ++index){
+            prefix_products[index + 1] = prefix_products[index] * denominators[index];
+        }
+        Mint inverse_product = prefix_products[sample_count].inv();
+        for(std::size_t index = sample_count; index > 0; --index){
+            const Mint denominator = denominators[index - 1];
+            denominators[index - 1] = inverse_product * prefix_products[index - 1];
+            inverse_product *= denominator;
+        }
+
+        std::vector<Mint> product(sample_count + 1);
+        product[0] = Mint(1);
+        std::size_t product_degree = 0;
+        for(std::size_t index = 0; index < sample_count; ++index){
+            product[product_degree + 1] = product[product_degree];
+            for(std::size_t degree = product_degree; degree > 0; --degree){
+                product[degree] = product[degree - 1] - xs[index] * product[degree];
+            }
+            product[0] = -xs[index] * product[0];
+            ++product_degree;
+        }
+
+        ValueArray result(sample_count);
         for(std::size_t index = 0; index < sample_count; ++index){
             const Mint scale = ys[index] * denominators[index];
             Mint quotient_coefficient = product[sample_count];

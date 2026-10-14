@@ -3,14 +3,14 @@
 
 #include "../detail/persistent_bit_range_tree.hpp"
 
-template<long long MAX_SIZE, int MAX_NODES, int MAX_VERSIONS>
+template<long long MAX_SIZE = -1, int MAX_NODES = -1, int MAX_VERSIONS = -1>
 struct PersistentBitAssignRangeSumRangeFlip:
     bit_range_tree_detail::PersistentBitRangeTree<MAX_SIZE, MAX_NODES, MAX_VERSIONS>{
     using Base = bit_range_tree_detail::PersistentBitRangeTree<MAX_SIZE, MAX_NODES, MAX_VERSIONS>;
     using Base::Base;
 };
 
-template<long long MAX_SIZE, int MAX_NODES, int MAX_VERSIONS>
+template<long long MAX_SIZE = -1, int MAX_NODES = -1, int MAX_VERSIONS = -1>
 using PersistentDynamicBitAssignRangeSumRangeFlip =
     PersistentBitAssignRangeSumRangeFlip<MAX_SIZE, MAX_NODES, MAX_VERSIONS>;
 

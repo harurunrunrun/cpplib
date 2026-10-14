@@ -3,7 +3,7 @@
 
 #include "online_dynamic_connectivity.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct DynamicGraphConnectivity{
 private:
     OnlineDynamicConnectivity<MAX_SIZE> graph;

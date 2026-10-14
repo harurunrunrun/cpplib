@@ -52,3 +52,17 @@ $H=\mathtt{Y\_BIT\_WIDTH}$ とする。
 `xs,ys,weights` または `(x,y,weight)` 列を受ける。`size`、`rectangle_count/range_freq`、
 `rectangle_sum/range_sum` を利用でき、矩形は `[xl,xr) x [yl,yr)`。
 vector長・点数容量・bit幅・矩形の違反では `runtime_error`。各APIの計算量は上記表の通り。
+
+## 容量を省略した可変長版
+
+容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
+容量を指定した既存の固定配列版も同じヘッダで利用できる。
+
+```cpp
+using Variable = RectangleSum<X, Y, W>;
+using Fixed = RectangleSum<X, Y, W, N>;
+```
+
+可変長版は入力長 $n$ とビット幅 $B$ に応じた配列だけを確保し、構築・照会の計算量は上記と同じ。
+長さに依存する固定容量の領域は $O(n)$ に、ビット段ごとの領域は $O(Bn)$ になる。
+整数添字の表現上限は残り、不正な添字や上限超過は検証する。

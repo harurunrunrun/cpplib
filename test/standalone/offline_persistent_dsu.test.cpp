@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -28,6 +30,16 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        OfflinePersistentDSU<> dsu(129);
+        int version = 0;
+        for(int i = 1; i < 129; ++i) version = dsu.merge(version, i - 1, i);
+        for(int i = 0; i < 300; ++i) version = dsu.fork(version);
+        dsu.query_same(0, 0, 128); dsu.query_same(version, 0, 128);
+        assert((dsu.solve() == std::vector<int>{0, 1}));
+        assert((dsu.solve() == std::vector<int>{0, 1}));
+    }
     self_test();
     int size, operation_count;
     if(!(std::cin >> size >> operation_count)) return 0;

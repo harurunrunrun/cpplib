@@ -87,3 +87,13 @@ int query_count() const
 
 頂点、version、各固定容量の範囲外では `out_of_range` または `length_error`。
 Union by sizeを使いpath compressionは行わない。
+
+## 可変長版
+
+```cpp
+using Dynamic = OfflinePersistentDSU<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。保存領域 O(n + v + q)、solve は O((v + q) log(n + 1))。頂点数・版数・質問数の template 上限は不要。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

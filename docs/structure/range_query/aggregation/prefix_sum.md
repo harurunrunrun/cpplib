@@ -64,3 +64,13 @@ $C=(MAX\_HEIGHT+1)(MAX\_WIDTH+1)$、入力の大きさを $H\times W$ とする�
   `0 <= col_begin <= col_end <= W`。点indexも実際のshape内でなければならない。
 - default constructorの実際の長さ・shapeは0。`build`で同じobjectを再構築できる。
 - 容量はtemplate引数で固定され、構築後の値更新APIはない。
+
+## 可変長版
+
+```cpp
+using Dynamic = PrefixSum<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。`PrefixSum2D<T>` も容量を省略できる。構築・保存領域は一次元 O(n)、二次元 O(h w)、区間和は O(1)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

@@ -10,7 +10,7 @@
 
 template<
     class T,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     class Sum = long long,
     int ID_BIT_WIDTH = std::numeric_limits<unsigned>::digits
 >

@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_GRAPH_DYNAMIC_CONNECTIVITY_ONLINE_DYNAMIC_CONNECTIVITY_INTERNAL_HPP_INCLUDED
 
 #include <algorithm>
+#include <limits>
 #include <map>
 #include <set>
 #include <stdexcept>
@@ -10,9 +11,9 @@
 
 namespace online_dynamic_connectivity_internal{
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct EulerTourForest{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     struct Node{
@@ -36,7 +37,7 @@ private:
     std::map<int, std::set<int>> non_tree_adjacent;
 
     static constexpr std::size_t NODE_CAPACITY =
-        static_cast<std::size_t>(MAX_SIZE) * 3;
+        MAX_SIZE < 0 ? 0 : static_cast<std::size_t>(MAX_SIZE) * 3;
 
     static std::pair<int, int> normalize(int left, int right){
         if(right < left) std::swap(left, right);
@@ -152,7 +153,8 @@ private:
             free_nodes.pop_back();
             return index;
         }
-        if(nodes.size() >= NODE_CAPACITY)[[unlikely]]{
+        if(nodes.size() >= (MAX_SIZE < 0 ? static_cast<std::size_t>(_n) * 3 : NODE_CAPACITY)
+            || nodes.size() >= static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: Euler Tour Tree node capacity exceeded."
             );
@@ -214,7 +216,7 @@ private:
 
 public:
     explicit EulerTourForest(int n): _n(n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (Euler Tour Tree).");
         }
     }

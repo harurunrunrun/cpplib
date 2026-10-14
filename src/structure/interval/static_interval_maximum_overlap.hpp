@@ -9,7 +9,7 @@
 #include "../range_query/aggregation/sparse_table.hpp"
 #include "../types/monoid/common_monoids.hpp"
 
-template<class Coordinate, int MAX_ENDPOINTS>
+template<class Coordinate, int MAX_ENDPOINTS = -1>
 class StaticIntervalMaximumOverlap{
     static constexpr MaxMonoid<int> maximum_{};
     std::vector<Coordinate> starts_;
@@ -21,6 +21,7 @@ public:
     explicit StaticIntervalMaximumOverlap(
         std::vector<std::pair<Coordinate, Coordinate>> closed_intervals
     ){
+        (void)cpplib_detail::checked_int_size(closed_intervals.size());
         starts_.reserve(closed_intervals.size());
         ends_.reserve(closed_intervals.size());
         coordinates_.reserve(closed_intervals.size() * 2);
@@ -38,6 +39,7 @@ public:
             std::unique(coordinates_.begin(), coordinates_.end()),
             coordinates_.end()
         );
+        (void)cpplib_detail::checked_int_size(coordinates_.size());
         std::vector<int> overlap;
         overlap.reserve(coordinates_.size());
         for(const Coordinate& coordinate: coordinates_){

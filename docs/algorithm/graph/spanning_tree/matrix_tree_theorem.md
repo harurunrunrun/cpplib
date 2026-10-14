@@ -99,3 +99,14 @@ L_{from,to} \mathrel{-}= w
 - 有向版は `0 <= root < n` を要求する。このため0頂点の有向グラフには有効なrootがなく、例外を送出する。
 - 容量、頂点、rootの違反時は `runtime_error`。
 - 1頂点の有向グラフでは有効なrootを0とし、自己loopの有無によらずout/inともに `T(1)`。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto value = count_weighted_undirected_spanning_trees(vertex_count, edges);
+auto fixed_value = count_weighted_undirected_spanning_trees<Mint, 1000>(vertex_count, edges);
+```
+
+構築する余因子行列は $O(N^2)$ 空間、行列式計算は $O(N^3)$ 時間。容量を省略すると実際の頂点数だけ二次元 `vector` を確保する。

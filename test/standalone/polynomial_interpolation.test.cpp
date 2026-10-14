@@ -26,6 +26,14 @@ math::PolynomialInterpolation<mint, SMALL_MAX_DEGREE>::ValueArray small_xs{};
 math::PolynomialInterpolation<mint, SMALL_MAX_DEGREE>::ValueArray small_ys{};
 
 void self_check(){
+    math::PolynomialInterpolation<FastModint998244353> dynamic_interpolation;
+    const auto dynamic_coefficients = dynamic_interpolation.interpolate_coefficients(
+        {0, 1, 2}, {2, 9, 24}, 3);
+    assert(dynamic_coefficients.size() == 3);
+    assert(dynamic_coefficients[0] == FastModint998244353(2));
+    assert(dynamic_coefficients[1] == FastModint998244353(3));
+    assert(dynamic_coefficients[2] == FastModint998244353(4));
+
     std::array<mint, 3> coefficients{mint(2), mint(3), mint(4)};
     assert(math::polynomial_evaluate(coefficients, 3, mint(5)) == mint(117));
     assert(math::polynomial_evaluate(coefficients, 0, mint(5)) == mint(0));

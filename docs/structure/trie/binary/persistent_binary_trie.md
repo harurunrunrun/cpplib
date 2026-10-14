@@ -79,3 +79,17 @@ $B=\mathrm{BIT}$ とする。
 - `kth`はkが範囲外なら`nullopt`、min/maxは空versionなら`nullopt`。
 - erase対象が存在しない場合はnodeを生成せず、同じ内容のversionを1個作る。
 - 順序queryは`value xor xor_value`で比較し、保存値を返す。
+
+## 容量を省略した可変長版
+
+容量テンプレートを省略すると既定値 `-1` でvectorを使い、必要な保存領域を明示的に伸長する。
+固定容量を指定する既存版も同じヘッダに残る。
+
+```cpp
+using Variable = PersistentBinaryTrie<T>;
+using Fixed = PersistentBinaryTrie<T, Bits, Nodes, Versions>;
+```
+
+伸長の費用は追加操作全体で償却され、上記の各操作の計算量を維持する。
+領域は確保済みノード・履歴・heap要素などの個数に比例する。
+整数添字の表現上限を超える要素数は例外。構造上の文字種類・bit幅・座標域は、件数容量とは別に指定できる。

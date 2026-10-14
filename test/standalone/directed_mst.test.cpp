@@ -9,6 +9,28 @@
 
 constexpr long long INF = (1LL << 60);
 
+void check_certificate(int n, int root, const std::vector<DirectedMstEdge<long long>>& edges,
+                       const DirectedMstResult<long long>& result){
+    assert(result.exists);
+    assert(result.parent[root] == root && result.parent_edge[root] == -1);
+    long long sum = 0;
+    for(int vertex = 0; vertex < n; ++vertex){
+        if(vertex == root) continue;
+        const int index = result.parent_edge[vertex];
+        assert(index >= 0 && index < static_cast<int>(edges.size()));
+        assert(edges[index].to == vertex && edges[index].from == result.parent[vertex]);
+        sum += edges[index].cost;
+        int current = vertex, steps = 0;
+        while(current != root && steps <= n){
+            current = result.parent[current];
+            assert(current >= 0 && current < n);
+            ++steps;
+        }
+        assert(current == root && steps <= n);
+    }
+    assert(sum == result.cost);
+}
+
 std::pair<long long, bool> brute(
     int n,
     int root,
@@ -115,7 +137,26 @@ void self_test(){
             auto expected = brute(n, root, edges);
             auto actual = directed_mst<long long>(n, root, edges, INF);
             assert(actual.exists == expected.second);
-            if(actual.exists) assert(actual.cost == expected.first);
+            if(actual.exists){
+                assert(actual.cost == expected.first);
+                check_certificate(n, root, edges, actual);
+            }
+            const std::vector<int> roots{0, n - 1};
+            const auto choice = directed_mst_with_root_choices(n, roots, edges);
+            bool found = false;
+            long long best = 0;
+            for(int candidate: roots){
+                const auto trial = brute(n, candidate, edges);
+                if(trial.second && (!found || trial.first < best)){
+                    found = true;
+                    best = trial.first;
+                }
+            }
+            assert(choice.tree.exists == found);
+            if(found){
+                assert(choice.tree.cost == best);
+                check_certificate(n, choice.root, edges, choice.tree);
+            }
         }
     }
 }

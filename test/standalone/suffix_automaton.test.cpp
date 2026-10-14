@@ -96,7 +96,41 @@ void self_test(){
     assert(thrown);
 }
 
+#include "../../src/algorithm/string/automata/aho_corasick.hpp"
+#include "../../src/algorithm/string/palindrome/palindromic_tree.hpp"
+#include "../../src/algorithm/string/palindrome/persistent_palindromic_tree.hpp"
+#include "../../src/algorithm/string/palindrome/fully_persistent_palindromic_tree.hpp"
+#include "../../src/algorithm/string/palindrome/deque_palindromic_tree.hpp"
+#include "../../src/algorithm/tree/decomposition/auxiliary_tree.hpp"
+#include "../../src/algorithm/tree/decomposition/tree_mo.hpp"
+#include "../../src/algorithm/tree/query/tree_path_order_statistics.hpp"
+
+#include "../../src/algorithm/string/automata/aho_corasick_representation.hpp"
+#include "../../src/algorithm/string/palindrome/palindromic_tree_representation.hpp"
+#include "../../src/algorithm/string/palindrome/deque_palindrome_queries.hpp"
+#include "../../src/algorithm/string/suffix/maximum_substring_occurrences_by_length.hpp"
+#include "../../src/algorithm/string/suffix/longest_common_substring_multiple_length.hpp"
+
+void dynamic_capacity_string_tree_test(){
+ assert(aho_corasick_representation<26>({"ab", "bc"}).terminal_state.size()==2);
+ assert(palindromic_tree_representation("ababa").nodes.size()==5);
+ DequePalindromeQueries<26> queries; queries.push_front('a'); queries.push_back('b'); assert(queries.size()==2); queries.pop_front(); assert(queries.size()==1);
+ assert((maximum_substring_occurrences_by_length("aaa")==std::vector<long long>{3,2,1}));
+ assert(longest_common_substring_multiple_length(std::vector<std::string>{"abcab","zzcab"})==3);
+
+AhoCorasick<26> ac;ac.add("aaa");ac.build();
+ PalindromicTree<26> p("ababa");assert(p.distinct_palindromes()==5);
+ PersistentPalindromicTree<26> pp("ababa");assert(pp.distinct_palindromes(5)==5);
+ FullyPersistentPalindromicTree<26> fp;int v=fp.append(0,'a');v=fp.append(v,'b');v=fp.append(v,'a');assert(fp.distinct_palindromes(v)==3);int u=fp.append(0,'b');u=fp.append(u,'b');assert(fp.distinct_palindromes(u)==2);assert(fp.str(v)=="aba");
+ DequePalindromicTree<26> dp;dp.push_back('a');dp.push_back('b');dp.push_front('b');dp.push_front('a');assert(dp.size()==4);dp.pop_back();assert(dp.size()==3);
+ SuffixAutomaton<26> sam("ababa");assert(sam.count_distinct_substrings()==9);
+ AuxiliaryTree<> aux(4);aux.add_edge(0,1);aux.add_edge(1,2);aux.add_edge(1,3);aux.build();
+ TreeMo<> mo(4);mo.add_edge(0,1);mo.add_edge(1,2);mo.add_edge(1,3);mo.build();
+ TreePathOrderStatistics<int> stats(4);stats.add_edge(0,1);stats.add_edge(1,2);stats.add_edge(1,3);stats.build({3,1,4,2});assert(stats.kth_smallest(2,3,1)==2);
+}
+
 int main(){
+    dynamic_capacity_string_tree_test();
     self_test();
     int case_count;
     if(!(std::cin >> case_count)) return 0;

@@ -1,18 +1,22 @@
 #ifndef CPPLIB_SRC_ALGORITHM_STRING_PALINDROME_FULLY_PERSISTENT_PALINDROMIC_TREE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_STRING_PALINDROME_FULLY_PERSISTENT_PALINDROMIC_TREE_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <array>
+#include <bit>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
 
-template<int ALPHABET, int MAX_NODES, int MAX_VERSIONS, char OFFSET = 'a'>
+template<int ALPHABET, int MAX_NODES = -1, int MAX_VERSIONS = -1, char OFFSET = 'a'>
 struct FullyPersistentPalindromicTree{
     static_assert(ALPHABET > 0);
-    static_assert(MAX_NODES >= 2);
-    static_assert(MAX_VERSIONS >= 0);
+    static_assert(MAX_NODES == -1 || MAX_NODES >= 2);
+    static_assert(MAX_VERSIONS >= -1);
 
     struct Node{
         std::array<int, ALPHABET> next{};
@@ -27,6 +31,18 @@ struct FullyPersistentPalindromicTree{
     };
 
 private:
+    static constexpr bool dynamic_storage = MAX_NODES < 0 || MAX_VERSIONS < 0;
+    std::vector<int> present_limit_;
+
+    int presence_limit(int version) const{
+        if constexpr(dynamic_storage) return present_limit_[static_cast<std::size_t>(version)];
+        else return MAX_NODES;
+    }
+    int ancestor_jump(int version, int bit) const{
+        const auto& row = ancestor[static_cast<std::size_t>(version)];
+        return static_cast<std::size_t>(bit) < row.size() ? row[static_cast<std::size_t>(bit)] : 0;
+    }
+
     static constexpr int VERSION_LOG = []{
         int result = 1;
         unsigned long long size = static_cast<unsigned long long>(MAX_VERSIONS) + 1;
@@ -54,17 +70,17 @@ private:
     int used = 2;
     int version_count = 1;
     int set_used = 0;
-    std::array<Node, MAX_NODES> nodes{};
-    std::array<SetNode, SET_CAPACITY> set_nodes{};
-    std::array<int, MAX_VERSIONS + 1> parent{};
-    std::array<int, MAX_VERSIONS + 1> depth{};
-    std::array<char, MAX_VERSIONS + 1> appended{};
-    std::array<std::array<int, VERSION_LOG>, MAX_VERSIONS + 1> ancestor{};
-    std::array<int, MAX_VERSIONS + 1> last_at{};
-    std::array<int, MAX_VERSIONS + 1> distinct_at{};
-    std::array<int, MAX_VERSIONS + 1> longest_at{};
-    std::array<long long, MAX_VERSIONS + 1> pal_substrings_at{};
-    std::array<int, MAX_VERSIONS + 1> present_root{};
+    cpplib_detail::StaticOrVector<Node, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_NODES))> nodes{};
+    cpplib_detail::StaticOrVector<SetNode, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(SET_CAPACITY))> set_nodes{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> parent{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> depth{};
+    cpplib_detail::StaticOrVector<char, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> appended{};
+    cpplib_detail::StaticOrVector<cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(VERSION_LOG))>, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> ancestor{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> last_at{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> distinct_at{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> longest_at{};
+    cpplib_detail::StaticOrVector<long long, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> pal_substrings_at{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_VERSIONS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSIONS + 1))> present_root{};
 
     int char_id(char c) const{
         const int id = static_cast<int>(c - OFFSET);
@@ -90,7 +106,7 @@ private:
     int ancestor_at_depth(int version, int target_depth) const{
         int distance = depth[static_cast<std::size_t>(version)] - target_depth;
         for(int bit = 0; distance > 0; ++bit){
-            if(distance & 1) version = ancestor[static_cast<std::size_t>(version)][static_cast<std::size_t>(bit)];
+            if(distance & 1) version = ancestor_jump(version, bit);
             distance >>= 1;
         }
         return version;
@@ -112,7 +128,7 @@ private:
     }
 
     bool set_contains(int root, int left, int right, int position) const{
-        if(root == -1) return false;
+        if(root == -1 || position < left || position >= right) return false;
         if(right - left == 1) return set_nodes[static_cast<std::size_t>(root)].value;
         const int middle = left + (right - left) / 2;
         if(position < middle){
@@ -122,6 +138,8 @@ private:
     }
 
     int clone_set_node(int source){
+        if(set_used == std::numeric_limits<int>::max()) throw std::length_error("palindromic set index overflow");
+        set_nodes.ensure(static_cast<std::size_t>(set_used) + 1);
         const int result = set_used++;
         set_nodes[static_cast<std::size_t>(result)] = source == -1 ? SetNode{} : set_nodes[static_cast<std::size_t>(source)];
         return result;
@@ -170,6 +188,18 @@ private:
 
 public:
     FullyPersistentPalindromicTree(){
+        nodes.resize(2);
+        parent.resize(1);
+        depth.resize(1);
+        appended.resize(1);
+        ancestor.resize(1);
+        last_at.resize(1);
+        distinct_at.resize(1);
+        longest_at.resize(1);
+        pal_substrings_at.resize(1);
+        present_root.resize(1);
+        for(auto& row: ancestor) row.resize(1);
+        if constexpr(dynamic_storage) present_limit_.push_back(2);
         nodes[0] = Node();
         nodes[1] = Node();
         nodes[0].length = -1;
@@ -204,9 +234,10 @@ public:
 
     int append(int version, char c){
         check_version(version);
-        if(version_count > MAX_VERSIONS)[[unlikely]]{
+        if(MAX_VERSIONS >= 0 && version_count > MAX_VERSIONS)[[unlikely]]{
             throw std::runtime_error("library assertion fault: version capacity exceeded (append).");
         }
+        if(version_count == std::numeric_limits<int>::max()) throw std::length_error("palindromic version index overflow");
         const int id = char_id(c);
         const int new_depth = depth[static_cast<std::size_t>(version)] + 1;
         const int candidate = suffix_candidate(last_at[static_cast<std::size_t>(version)], version, new_depth, c);
@@ -221,10 +252,10 @@ public:
         const bool already_present = set_contains(
             present_root[static_cast<std::size_t>(version)],
             0,
-            MAX_NODES,
+            presence_limit(version),
             next
         );
-        if(!already_present && static_cast<std::size_t>(set_used) + SET_HEIGHT + 1 > SET_CAPACITY)[[unlikely]]{
+        if(!dynamic_storage && !already_present && static_cast<std::size_t>(set_used) + SET_HEIGHT + 1 > SET_CAPACITY)[[unlikely]]{
             throw std::runtime_error("library assertion fault: set capacity exceeded (append).");
         }
 
@@ -254,21 +285,44 @@ public:
         }
 
         int new_root = present_root[static_cast<std::size_t>(version)];
-        if(!already_present) new_root = set_insert(new_root, 0, MAX_NODES, next);
+        int limit = presence_limit(version);
+        if constexpr(dynamic_storage){
+            while(next >= limit){
+                if(limit > std::numeric_limits<int>::max() / 2) throw std::length_error("palindromic node index overflow");
+                const int expanded = clone_set_node(-1);
+                set_nodes[static_cast<std::size_t>(expanded)].left = new_root;
+                new_root = expanded;
+                limit *= 2;
+            }
+        }
+        if(!already_present) new_root = set_insert(new_root, 0, limit, next);
         if(creates_node){
+            nodes.ensure(static_cast<std::size_t>(next) + 1);
             nodes[static_cast<std::size_t>(next)] = created;
             nodes[static_cast<std::size_t>(candidate)].next[static_cast<std::size_t>(id)] = next;
             ++used;
         }
 
         const int result = version_count++;
+        parent.ensure(static_cast<std::size_t>(result) + 1);
+        depth.ensure(static_cast<std::size_t>(result) + 1);
+        appended.ensure(static_cast<std::size_t>(result) + 1);
+        ancestor.ensure(static_cast<std::size_t>(result) + 1);
+        last_at.ensure(static_cast<std::size_t>(result) + 1);
+        distinct_at.ensure(static_cast<std::size_t>(result) + 1);
+        longest_at.ensure(static_cast<std::size_t>(result) + 1);
+        pal_substrings_at.ensure(static_cast<std::size_t>(result) + 1);
+        present_root.ensure(static_cast<std::size_t>(result) + 1);
+        if constexpr(dynamic_storage) present_limit_.push_back(limit);
+        const int version_log = dynamic_storage ? static_cast<int>(std::bit_width(static_cast<unsigned>(new_depth))) : VERSION_LOG;
+        ancestor[static_cast<std::size_t>(result)].resize(static_cast<std::size_t>(version_log));
         parent[static_cast<std::size_t>(result)] = version;
         depth[static_cast<std::size_t>(result)] = new_depth;
         appended[static_cast<std::size_t>(result)] = c;
         ancestor[static_cast<std::size_t>(result)][0] = version;
-        for(int bit = 1; bit < VERSION_LOG; ++bit){
+        for(int bit = 1; bit < version_log; ++bit){
             ancestor[static_cast<std::size_t>(result)][static_cast<std::size_t>(bit)] =
-                ancestor[static_cast<std::size_t>(ancestor[static_cast<std::size_t>(result)][static_cast<std::size_t>(bit - 1)])][static_cast<std::size_t>(bit - 1)];
+                ancestor_jump(ancestor_jump(result, bit - 1), bit - 1);
         }
         last_at[static_cast<std::size_t>(result)] = next;
         distinct_at[static_cast<std::size_t>(result)] =
@@ -325,7 +379,7 @@ public:
         check_version(version);
         checked_node(node);
         if(node < 2) return true;
-        return set_contains(present_root[static_cast<std::size_t>(version)], 0, MAX_NODES, node);
+        return set_contains(present_root[static_cast<std::size_t>(version)], 0, presence_limit(version), node);
     }
 
     int find_node(std::string_view value, int version) const{
@@ -369,7 +423,7 @@ public:
         check_version(version);
         std::vector<int> result;
         result.reserve(static_cast<std::size_t>(distinct_at[static_cast<std::size_t>(version)]));
-        collect_set_nodes(present_root[static_cast<std::size_t>(version)], 0, MAX_NODES, result);
+        collect_set_nodes(present_root[static_cast<std::size_t>(version)], 0, presence_limit(version), result);
         return result;
     }
     std::vector<std::string> palindromes(int version) const{

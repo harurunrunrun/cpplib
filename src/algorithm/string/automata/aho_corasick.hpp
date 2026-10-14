@@ -1,15 +1,18 @@
 #ifndef CPPLIB_SRC_ALGORITHM_STRING_AUTOMATA_AHO_CORASICK_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_STRING_AUTOMATA_AHO_CORASICK_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <array>
+#include <limits>
 #include <queue>
 #include <stdexcept>
 #include <string_view>
 
-template<int ALPHABET, int MAX_NODES, char OFFSET = 'a'>
+template<int ALPHABET, int MAX_NODES = -1, char OFFSET = 'a'>
 struct AhoCorasick{
     static_assert(ALPHABET > 0);
-    static_assert(MAX_NODES > 0);
+    static_assert(MAX_NODES == -1 || MAX_NODES > 0);
 
 private:
     struct Node{
@@ -23,7 +26,7 @@ private:
 
     int used = 1;
     bool built = false;
-    std::array<Node, MAX_NODES> nodes{};
+    cpplib_detail::StaticOrVector<Node, (MAX_NODES < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_NODES))> nodes{};
 
     int char_id(char c) const{
         int id = static_cast<int>(c - OFFSET);
@@ -33,9 +36,10 @@ private:
         return id;
     }
     int new_node(int parent){
-        if(used == MAX_NODES)[[unlikely]]{
+        if(used == MAX_NODES || used == std::numeric_limits<int>::max())[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (add).");
         }
+        nodes.ensure(static_cast<std::size_t>(used) + 1);
         int v = used++;
         nodes[v] = Node();
         nodes[v].parent = parent;
@@ -44,6 +48,7 @@ private:
 
 public:
     AhoCorasick(){
+        nodes.resize(1);
         nodes[0] = Node();
     }
 

@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <bit>
 #include <cstddef>
 #include <cstdint>
@@ -10,15 +11,16 @@
 #include <stdexcept>
 #include <vector>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct FullyIndexableDictionary{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
 
 private:
-    static constexpr int word_count = (MAX_SIZE + 63) / 64;
+    static constexpr int fixed_word_count = MAX_SIZE < 0 ? 0 : MAX_SIZE / 64 + (MAX_SIZE % 64 != 0);
+    int word_count = 0;
     int _n = 0;
-    std::array<std::uint64_t, word_count> bit{};
-    std::array<int, word_count + 1> prefix{};
+    cpplib_detail::StaticOrVector<std::uint64_t, (MAX_SIZE < 0 ? -1 : fixed_word_count)> bit{};
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : fixed_word_count + 1)> prefix{};
 
     void check_position(int k, const char* message) const{
         if(k < 0 || _n < k)[[unlikely]] throw std::runtime_error(message);
@@ -26,14 +28,17 @@ private:
 
 public:
     explicit FullyIndexableDictionary(int n = 0){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
         _n = n;
+        word_count = MAX_SIZE < 0 ? n / 64 + (n % 64 != 0) : fixed_word_count;
+        bit.resize(static_cast<std::size_t>(word_count));
+        prefix.resize(static_cast<std::size_t>(word_count) + 1);
     }
 
     explicit FullyIndexableDictionary(const std::vector<bool>& values):
-        FullyIndexableDictionary(static_cast<int>(values.size())){
+        FullyIndexableDictionary(cpplib_detail::checked_int_size(values.size())){
         for(int k = 0; k < _n; k++) if(values[static_cast<std::size_t>(k)]) set(k);
         build();
     }
@@ -87,7 +92,7 @@ public:
         int total = rank(value, _n);
         if(total <= k) return _n;
 
-        const int words = (_n + 63) >> 6;
+        const int words = _n / 64 + (_n % 64 != 0);
         auto count_before_word = [&](int word){
             const int ones = prefix[static_cast<std::size_t>(word)];
             return value ? ones : std::min(_n, word << 6) - ones;

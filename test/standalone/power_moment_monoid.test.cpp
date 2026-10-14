@@ -159,7 +159,7 @@ int main(){
         value = power_moment_singleton<std::uint32_t, max_power>(read_value());
     }
 
-    ReversibleSplayTree<power_moment_monoid, 200005> sequence(initial);
+    ReversibleSplayTree<power_moment_monoid> sequence(initial);
     while(query_count-- != 0){
         std::string operation;
         std::cin >> operation;

@@ -37,7 +37,7 @@ int main(){
     if(!(std::cin >> size)) return 0;
     std::vector<int> values(static_cast<std::size_t>(size));
     for(int& value: values) std::cin >> value;
-    StaticRangeGreaterCount<int, 30000, 15> range_count(values);
+    StaticRangeGreaterCount<int, -1, 15> range_count(values);
 
     int query_count;
     std::cin >> query_count;

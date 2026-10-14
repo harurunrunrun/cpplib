@@ -6,7 +6,7 @@
 
 #include "fenwick_tree.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class RangeAddPointGet{
     std::unique_ptr<FenwickTree<T, MAX_SIZE>> difference_;
 

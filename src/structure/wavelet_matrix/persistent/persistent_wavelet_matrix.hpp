@@ -1,5 +1,6 @@
 #ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_PERSISTENT_WAVELET_MATRIX_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_PERSISTENT_PERSISTENT_WAVELET_MATRIX_HPP_INCLUDED
+#include "../../array/static_or_vector.hpp"
 
 #include <array>
 #include <cstddef>
@@ -14,15 +15,15 @@
 
 template<
     class T,
-    int MAX_SIZE,
-    int MAX_VERSION,
+    int MAX_SIZE = -1,
+    int MAX_VERSION = -1,
     int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 struct PersistentWaveletMatrix{
     static_assert(std::is_integral_v<T>);
     static_assert(!std::is_same_v<std::remove_cv_t<T>, bool>);
-    static_assert(MAX_SIZE >= 0);
-    static_assert(MAX_VERSION >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
+    static_assert(MAX_VERSION == -1 || MAX_VERSION >= 0);
 
     using U = std::make_unsigned_t<T>;
     static constexpr int digits = std::numeric_limits<U>::digits;
@@ -70,7 +71,8 @@ private:
         if(l < 0 || r < l || _n < r)[[unlikely]] throw std::runtime_error(message);
     }
     void check_version_capacity() const{
-        if(_versions > MAX_VERSION)[[unlikely]]{
+        if constexpr(MAX_VERSION < 0) cpplib_detail::checked_int_size(static_cast<std::size_t>(_versions) + 1);
+        if((MAX_VERSION >= 0 && _versions > MAX_VERSION))[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity violation (version).");
         }
     }
@@ -112,7 +114,7 @@ private:
     }
 
     void build(const std::vector<T>& sequence){
-        _n = static_cast<int>(sequence.size());
+        _n = cpplib_detail::checked_int_size(sequence.size());
         if(sequence.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }

@@ -57,3 +57,14 @@ documentation_of: ../../../../src/algorithm/tree/query/weighted_tree_distance_kt
 - `order` は `[0, パスの辺数]` でなければならない。
 - 頂点・`order` の範囲違反、木でない入力、構築前のクエリ、
   構築後の辺追加では `runtime_error` を送出する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+WeightedTreeDistanceKthVertex<long long> dynamic(vertex_count);
+WeightedTreeDistanceKthVertex<long long, 100000> fixed(vertex_count);
+```
+
+構築・前処理・保存領域は $O(N\log N)$、クエリは $O(\log N)$ 時間。

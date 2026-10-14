@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "../../src/structure/bbst/sequence/lazy_reversible_splay_tree.hpp"
+#include "../../src/structure/types/monoid/affine_assignment_action.hpp"
 #include "../../src/structure/types/monoid/monoid_act_len.hpp"
 
 long long op_sum(long long a, long long, long long b, long long){ return a + b; }
@@ -25,11 +26,34 @@ bool composition_id(bool, bool){ return false; }
 bool id_bool(){ return false; }
 constexpr Monoid_Act_Len<op_concat, e_concat, mapping_id, composition_id, id_bool> concat_act;
 
+constexpr AffineAssignmentAction<long long> affine_assignment;
+
+void test_affine_assignment(){
+    using Affine = MonoidAffine<long long>;
+    LazyReversibleSplayTree<affine_assignment, 16> tree(
+        std::vector<Affine>{{2, 1}, {3, 4}, {1, -2}});
+    assert((tree.all_prod() == Affine{6, 5}));
+    tree.reverse(0, 3);
+    assert((tree.all_prod() == Affine{6, -3}));
+    tree.apply(0, 2, Affine{2, 3});
+    assert((tree.prod(0, 2) == Affine{4, 9}));
+    assert((tree.all_prod() == Affine{8, 19}));
+    tree.apply(1, 3, Affine{0, 5});
+    assert((tree.all_prod() == Affine{0, 5}));
+    tree.reverse(0, 3);
+    assert((tree.all_prod() == Affine{0, 13}));
+    tree.apply(0, 3, affine_assignment.id());
+    assert((tree.all_prod() == Affine{0, 13}));
+    assert((tree.prod(1, 1) == Affine{}));
+    assert(affine_assignment.composition(affine_assignment.id(), Affine{2, 3})
+        == AffineAssignmentAction<long long>::T(Affine{2, 3}));
+}
+
 long long range_sum(const std::vector<long long>& a, int l, int r){
     return std::accumulate(a.begin() + l, a.begin() + r, 0LL);
 }
 
-void check_all(LazyReversibleSplayTree<range_add_sum, 512>& tree, const std::vector<long long>& a){
+void check_all(LazyReversibleSplayTree<range_add_sum>& tree, const std::vector<long long>& a){
     assert(tree.size() == static_cast<int>(a.size()));
     assert(tree.empty() == a.empty());
     assert(tree.all_prod() == range_sum(a, 0, static_cast<int>(a.size())));
@@ -44,11 +68,12 @@ void check_all(LazyReversibleSplayTree<range_add_sum, 512>& tree, const std::vec
 }
 
 int main(){
+    test_affine_assignment();
     int input_n, q;
     if(std::cin >> input_n >> q){
         std::vector<long long> input(static_cast<std::size_t>(input_n));
         for(long long& value: input) std::cin >> value;
-        LazyReversibleSplayTree<range_add_sum, 1024> tree(input);
+        LazyReversibleSplayTree<range_add_sum> tree(input);
         while(q--){
             std::string type;
             std::cin >> type;
@@ -109,7 +134,7 @@ int main(){
     std::mt19937 rng(27182818);
     std::vector<long long> init(60);
     for(auto& x: init) x = static_cast<int>(rng() % 200) - 80;
-    LazyReversibleSplayTree<range_add_sum, 512> tree(init);
+    LazyReversibleSplayTree<range_add_sum> tree(init);
     std::vector<long long> naive = init;
 
     for(int step = 0; step < 3000; step++){

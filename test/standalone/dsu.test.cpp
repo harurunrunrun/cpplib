@@ -55,6 +55,8 @@ void compare_all(const RollbackDSU<20, 2000>& dsu, const NaiveDSU& naive){
 }
 
 int main(){
+    {DSU<> d(1001); assert(d.groups()==1001); d.merge(0,1000); assert(d.same(0,1000) && d.component_size(0)==2); DSU<> empty(0); assert(empty.groups()==0);}
+
     int n, q;
     if(std::cin >> n >> q){
         DSU<128> dsu(n);

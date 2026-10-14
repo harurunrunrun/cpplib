@@ -6,7 +6,7 @@
 #include "dynamic_monochromatic_tree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct MonochromaticComponentSizeTree{
 private:
     DynamicMonochromaticTree<AddMonoid<int>{}, MAX_SIZE> tree;

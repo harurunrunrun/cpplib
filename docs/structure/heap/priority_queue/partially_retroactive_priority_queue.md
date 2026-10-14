@@ -116,3 +116,15 @@ void clear() noexcept;
 - `operation_kind` にない時刻、`pushed_value` にない時刻またはpop時刻を渡すと `runtime_error` を送出する。
 - `Compare` と `TimeCompare` はstrict weak orderingを満たし、比較中に例外を送出してはならない。
 - 同値な値のpop対象は区別しない。現在queueはmultisetとして重複を保持する。
+
+## 可変長版
+
+```cpp
+using Dynamic = PartiallyRetroactivePriorityQueue<int, long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。操作列の編集は期待償却 O(log(m + 1))、保存領域は同時に保持した操作数の最大値に対して O(m)。解放ノードを再利用する。可変長版の capacity() は確保済みのノード数を返す。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+
+可変長ストレージから返された値への参照は、後続の更新に伴う再確保で無効になることがある。必要な値は更新前にコピーする。

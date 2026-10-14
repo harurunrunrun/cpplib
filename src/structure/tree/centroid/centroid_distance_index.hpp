@@ -2,6 +2,8 @@
 #define CPPLIB_SRC_STRUCTURE_TREE_CENTROID_CENTROID_DISTANCE_INDEX_HPP_INCLUDED
 
 #include <array>
+#include <algorithm>
+#include "../../array/static_or_vector.hpp"
 #include <bit>
 #include <cstddef>
 #include <limits>
@@ -35,9 +37,9 @@ T checked_add(T left, T right){
 
 } // namespace centroid_distance_index_internal
 
-template<class Distance, int MAX_SIZE>
+template<class Distance, int MAX_SIZE = -1>
 struct CentroidDistanceIndex{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     static_assert(std::is_integral_v<Distance>);
 
     struct Entry{
@@ -48,26 +50,41 @@ struct CentroidDistanceIndex{
 
     static constexpr int MAX_LOG =
         static_cast<int>(std::bit_width(static_cast<unsigned int>(MAX_SIZE)));
-    static constexpr int MAX_BRANCH = 2 * MAX_SIZE;
+    static constexpr int MAX_BRANCH = MAX_SIZE < 0 ? std::numeric_limits<int>::max() : 2 * MAX_SIZE;
 
 private:
-    static constexpr int EDGE_CAPACITY = 2 * (MAX_SIZE - 1);
+    static constexpr int EDGE_CAPACITY = MAX_SIZE < 0 ? 0 : 2 * (MAX_SIZE - 1);
 
     struct State{
-        std::array<int, MAX_SIZE> head{};
-        std::array<int, EDGE_CAPACITY> to{};
-        std::array<int, EDGE_CAPACITY> next{};
-        std::array<Distance, EDGE_CAPACITY> weight{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> head{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : EDGE_CAPACITY)> to{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : EDGE_CAPACITY)> next{};
+        cpplib_detail::StaticOrVector<Distance, (MAX_SIZE < 0 ? -1 : EDGE_CAPACITY)> weight{};
 
-        std::array<int, MAX_SIZE> centroid_parent{};
-        std::array<int, MAX_SIZE> centroid_depth{};
-        std::array<int, MAX_SIZE> subtree_size{};
-        std::array<int, MAX_SIZE> component_parent{};
-        std::array<unsigned char, MAX_SIZE> removed{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> centroid_parent{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> centroid_depth{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> subtree_size{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> component_parent{};
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> removed{};
 
-        std::array<std::array<Entry, MAX_LOG>, MAX_SIZE> path{};
-        std::array<int, MAX_SIZE> path_size{};
-        std::array<int, MAX_BRANCH> branch_centroid{};
+        cpplib_detail::StaticOrVector<std::array<Entry, MAX_LOG>, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> path{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> path_size{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : MAX_BRANCH)> branch_centroid{};
+        explicit State(int n){
+            if(n < 0 || (MAX_SIZE < 0 && n > std::numeric_limits<int>::max() / 2)) throw std::length_error("tree index capacity exceeded");
+            head.resize(static_cast<std::size_t>(n));
+            to.resize(static_cast<std::size_t>(2 * std::max(0, n - 1)));
+            next.resize(static_cast<std::size_t>(2 * std::max(0, n - 1)));
+            weight.resize(static_cast<std::size_t>(2 * std::max(0, n - 1)));
+            centroid_parent.resize(static_cast<std::size_t>(n));
+            centroid_depth.resize(static_cast<std::size_t>(n));
+            subtree_size.resize(static_cast<std::size_t>(n));
+            component_parent.resize(static_cast<std::size_t>(n));
+            removed.resize(static_cast<std::size_t>(n));
+            path.resize(static_cast<std::size_t>(n));
+            path_size.resize(static_cast<std::size_t>(n));
+            branch_centroid.resize(static_cast<std::size_t>(2 * n));
+        }
     };
 
     int _n = 0;
@@ -170,7 +187,7 @@ private:
             }
         }
 
-        const int component_size = static_cast<int>(nodes.size());
+        const int component_size = cpplib_detail::checked_int_size(nodes.size());
         for(const int vertex: nodes){
             int largest = component_size - state->subtree_size[vertex];
             for(int edge = state->head[vertex]; edge != -1; edge = state->next[edge]){
@@ -209,14 +226,14 @@ private:
     }
 
 public:
-    explicit CentroidDistanceIndex(int n = MAX_SIZE):
+    explicit CentroidDistanceIndex(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
         _n(n), state(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
-        state = std::make_unique<State>();
+        state = std::make_unique<State>(_n);
         state->head.fill(-1);
         initialize_metadata();
     }
@@ -236,7 +253,7 @@ public:
         }
         check_vertex(left, "library assertion fault: range violation (add_edge).");
         check_vertex(right, "library assertion fault: range violation (add_edge).");
-        if(edge_count + 2 > EDGE_CAPACITY)[[unlikely]]{
+        if(edge_count + 2 > (MAX_SIZE < 0 ? 2 * std::max(0, _n - 1) : EDGE_CAPACITY))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: edge capacity exceeded (add_edge)."
             );

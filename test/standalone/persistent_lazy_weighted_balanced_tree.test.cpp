@@ -19,7 +19,7 @@ long long mapping_add(long long f, long long x, long long len){ return x + f * l
 long long composition_add(long long f, long long g){ return f + g; }
 long long id_add(){ return 0; }
 constexpr Monoid_Act_Len<op_sum, e_sum, mapping_add, composition_add, id_add> range_add_sum{};
-using Tree = PersistentLazyWeightedBalancedTree<range_add_sum, 400000, 2000>;
+using Tree = PersistentLazyWeightedBalancedTree<range_add_sum>;
 
 constexpr std::int64_t MOD = 1'000'000'007;
 constexpr std::int64_t BASE = 911'382'323;
@@ -84,7 +84,7 @@ constexpr Monoid_Act_Len<
     affine_composition,
     affine_id
 > affine_hash{};
-using HashTree = PersistentLazyWeightedBalancedTree<affine_hash, 350000, 1200>;
+using HashTree = PersistentLazyWeightedBalancedTree<affine_hash>;
 
 long long range_sum(const std::vector<long long>& a, int l, int r){
     return std::accumulate(a.begin() + l, a.begin() + r, 0LL);

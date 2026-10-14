@@ -212,3 +212,21 @@ recover_subtract_with_carry_seed_in_range<Engine>(
 - <code>ranlux24</code> / <code>ranlux48</code> は
   <code>std::discard_block_engine</code> による間引き後の列なので直接対象にしない。
   生の <code>ranlux24_base</code> / <code>ranlux48_base</code> に使用する。
+
+## 観測数を実行時に決める
+
+状態復元、標準 seed の直接復元、有限 seed 候補探索へ `span` を渡せる。
+観測数のテンプレート引数は不要で、従来の `array` overload も同じ header にある。
+
+~~~cpp
+std::ranlux24_base generator(123);
+std::vector<std::ranlux24_base::result_type> outputs(40);
+for(auto& value: outputs) value = generator();
+auto observations = std::span<const std::ranlux24_base::result_type>(outputs);
+Ranlux24BaseCracker cracker(observations);
+auto seed_classes = recover_ranlux24_base_standard_seed(observations);
+~~~
+
+観測数を $K$、長い lag を $L$ とすると状態復元は $O(K)$ 時間・$O(L)$ 保存領域。
+`next()` は $O(1)$ 時間・$O(1)$ 追加空間。観測列はコピーせず、入力 `vector` は $O(K)$ 空間。
+標準 seed の直接復元も、固定された生成器の語幅・lag に対して $O(K)$ 時間である。

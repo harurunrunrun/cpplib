@@ -44,3 +44,13 @@ public:
 - `MOD` は正でなければならない。
 - 列長は `MAX_SIZE` 以下、区間は `0 <= left <= right <= size()` でなければならない。
 - 前提違反時は `runtime_error` を送出する。
+
+## 可変長版
+
+```cpp
+using Dynamic = StaticRangeProductLessEqualMod<998244353>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log(n + 1))、上限付き区間積 O(log²(n + 1))。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

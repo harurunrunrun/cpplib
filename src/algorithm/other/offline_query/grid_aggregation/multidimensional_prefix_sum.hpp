@@ -1,13 +1,15 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_OFFLINE_QUERY_GRID_AGGREGATION_MULTIDIMENSIONAL_PREFIX_SUM_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_OFFLINE_QUERY_GRID_AGGREGATION_MULTIDIMENSIONAL_PREFIX_SUM_HPP_INCLUDED
 
+#include "../../../../structure/array/static_or_vector.hpp"
+
 #include <array>
 #include <bit>
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
 
-template<class T, std::size_t Dimension, std::size_t MAX_STORAGE_SIZE>
+template<class T, std::size_t Dimension, std::size_t MAX_STORAGE_SIZE = static_cast<std::size_t>(-1)>
 class MultidimensionalPrefixSum{
     static_assert(Dimension > 0);
     static_assert(Dimension < std::numeric_limits<std::size_t>::digits);
@@ -23,7 +25,7 @@ private:
     std::size_t cell_count = 0;
     std::size_t used_storage = 0;
     bool prefix_built = false;
-    std::array<T, MAX_STORAGE_SIZE> data{};
+    cpplib_detail::StaticOrVector<T, (MAX_STORAGE_SIZE == static_cast<std::size_t>(-1) ? -1 : static_cast<std::ptrdiff_t>(MAX_STORAGE_SIZE))> data{};
 
     static std::size_t checked_product(
         std::size_t left,
@@ -104,6 +106,7 @@ public:
                 );
             }
         }
+        data.resize(storage_product);
         used_storage = storage_product;
         cell_count = value_product;
     }

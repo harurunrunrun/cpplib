@@ -6,16 +6,16 @@
 #include <utility>
 #include <vector>
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class WeightedParentForestDistance{
-    static_assert(0 <= MAX_SIZE);
+    static_assert(-1 <= MAX_SIZE);
 
     int vertex_count_;
     std::vector<int> parent_;
     std::vector<T> distance_to_parent_;
 
     static int checked_size(int vertex_count){
-        if(vertex_count < 0 || MAX_SIZE < vertex_count)[[unlikely]]{
+        if(vertex_count < 0 || (MAX_SIZE >= 0 && MAX_SIZE < vertex_count))[[unlikely]]{
             throw std::out_of_range(
                 "WeightedParentForestDistance size is out of range"
             );

@@ -9,7 +9,7 @@
 #include "../basic/segtree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class StaticTwoRangesMaximumSubarraySum{
     static constexpr NonEmptyMaxSubarrayMonoid<T> monoid_{};
     std::unique_ptr<Segtree<monoid_, MAX_SIZE>> tree_;

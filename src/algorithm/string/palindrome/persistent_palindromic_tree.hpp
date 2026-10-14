@@ -1,18 +1,21 @@
 #ifndef CPPLIB_SRC_ALGORITHM_STRING_PALINDROME_PERSISTENT_PALINDROMIC_TREE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_STRING_PALINDROME_PERSISTENT_PALINDROMIC_TREE_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <array>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
 
-template<int ALPHABET, int MAX_NODES, int MAX_LENGTH, char OFFSET = 'a'>
+template<int ALPHABET, int MAX_NODES = -1, int MAX_LENGTH = -1, char OFFSET = 'a'>
 struct PersistentPalindromicTree{
     static_assert(ALPHABET > 0);
-    static_assert(MAX_NODES >= 2);
-    static_assert(MAX_LENGTH >= 0);
+    static_assert(MAX_NODES == -1 || MAX_NODES >= 2);
+    static_assert(MAX_LENGTH >= -1);
 
     struct Node{
         std::array<int, ALPHABET> next;
@@ -32,11 +35,11 @@ private:
     int used = 2;
     int current_last = 1;
     std::string text;
-    std::array<Node, MAX_NODES> nodes{};
-    std::array<int, MAX_LENGTH + 1> last_at{};
-    std::array<int, MAX_LENGTH + 1> distinct_at{};
-    std::array<int, MAX_LENGTH + 1> longest_at{};
-    std::array<long long, MAX_LENGTH + 1> pal_substrings_at{};
+    cpplib_detail::StaticOrVector<Node, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_NODES))> nodes{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_LENGTH + 1))> last_at{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_LENGTH + 1))> distinct_at{};
+    cpplib_detail::StaticOrVector<int, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_LENGTH + 1))> longest_at{};
+    cpplib_detail::StaticOrVector<long long, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_LENGTH + 1))> pal_substrings_at{};
 
     int char_id(char c) const{
         int id = static_cast<int>(c - OFFSET);
@@ -47,9 +50,10 @@ private:
     }
 
     int new_node(){
-        if(used == MAX_NODES)[[unlikely]]{
+        if(used == MAX_NODES || used == std::numeric_limits<int>::max())[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (append).");
         }
+        nodes.ensure(static_cast<std::size_t>(used) + 1);
         nodes[used] = Node();
         return used++;
     }
@@ -72,6 +76,8 @@ private:
 
 public:
     PersistentPalindromicTree(){
+        nodes.resize(2);
+        last_at.resize(1); distinct_at.resize(1); longest_at.resize(1); pal_substrings_at.resize(1);
         nodes[0] = Node();
         nodes[1] = Node();
         nodes[0].length = -1;
@@ -110,6 +116,8 @@ public:
     int series_link(int node) const{ return (*this)[node].series_link; }
 
     int append(char c){
+        if(text.size() >= static_cast<std::size_t>(std::numeric_limits<int>::max() - 2))
+            throw std::length_error("palindrome text exceeds int index range");
         if(static_cast<int>(text.size()) == MAX_LENGTH)[[unlikely]]{
             throw std::runtime_error("library assertion fault: length capacity exceeded (append).");
         }
@@ -142,6 +150,8 @@ public:
         }
 
         int version = static_cast<int>(text.size());
+        last_at.ensure(text.size() + 1); distinct_at.ensure(text.size() + 1);
+        longest_at.ensure(text.size() + 1); pal_substrings_at.ensure(text.size() + 1);
         last_at[static_cast<std::size_t>(version)] = current_last;
         distinct_at[static_cast<std::size_t>(version)] = used - 2;
         int previous_longest = longest_at[static_cast<std::size_t>(version - 1)];
@@ -154,6 +164,8 @@ public:
     }
 
     int add(char c){
+        if(text.size() >= static_cast<std::size_t>(std::numeric_limits<int>::max() - 2))
+            throw std::length_error("palindrome text exceeds int index range");
         return append(c);
     }
 

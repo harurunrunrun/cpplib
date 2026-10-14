@@ -26,7 +26,7 @@ struct ParenthesesMonoid{
     static constexpr S e(){ return {0, 0}; }
 };
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class DynamicParenthesesSequence{
     static constexpr ParenthesesMonoid monoid_{};
     std::string sequence_;

@@ -33,3 +33,14 @@ documentation_of: ../../../../src/algorithm/tree/query/tree_path_minmax.hpp
 - 頂点数は `MAX_SIZE` 以下、辺集合は連結な木でなければならない。
 - 同じ頂点の空パスでは `{numeric_limits<Weight>::max(), numeric_limits<Weight>::lowest()}` を返す。
 - `build` 前や範囲外頂点では `runtime_error`。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+TreePathMinmax<long long> dynamic(vertex_count);
+TreePathMinmax<long long, 100000> fixed(vertex_count);
+```
+
+構築・前処理・保存領域は $O(N\log N)$、クエリは $O(\log N)$ 時間。

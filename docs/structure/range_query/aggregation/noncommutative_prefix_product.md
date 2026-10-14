@@ -85,3 +85,13 @@ $N=\mathrm{size}$ とする。
 - `get` と `set` のindexが `[0, size())` 外なら `runtime_error` を送出する。
 - queryの端点が `0 <= left <= right <= size()` を満たさなければ `runtime_error` を送出する。
 - `op` は結合則を満たし、`e()` は左右の単位元でなければならない。可換性は不要である。
+
+## 可変長版
+
+```cpp
+using Dynamic = NoncommutativePrefixProduct<Monoid>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n)、点変更・区間積は O(log(n + 1))。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

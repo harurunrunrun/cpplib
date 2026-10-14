@@ -33,3 +33,14 @@ $N=|text|$ とする。
   `runtime_error` を送出する。
 - 出現は開始位置で区別し、互いに重なる出現もそれぞれ数える。
 - `MAX_LENGTH * 2 + 1` が `int` に収まる必要がある。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = maximum_substring_occurrences_by_length(text);
+auto fixed = maximum_substring_occurrences_by_length<100000>(text);
+```
+
+長さ $N$、alphabet サイズ $A$ に対し $O(AN)$ 時間・空間。

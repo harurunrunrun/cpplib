@@ -5,7 +5,7 @@
 
 #include "binary_tree_traversal_reconstruction.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 bool binary_tree_traversal_compatibility(
     const std::vector<int>& preorder,
     const std::vector<int>& postorder,

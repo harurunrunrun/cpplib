@@ -4,14 +4,16 @@
 #include <array>
 #include <cstddef>
 #include <memory>
+#include <limits>
+#include <type_traits>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-template<class T, int MAX_ROW, int MAX_COL>
+template<class T, int MAX_ROW = -1, int MAX_COL = -1>
 struct Matrix{
-    static_assert(MAX_ROW >= 0);
-    static_assert(MAX_COL >= 0);
+    static_assert(MAX_ROW >= -1);
+    static_assert(MAX_COL >= -1);
 
 private:
     template<class, int, int>
@@ -19,14 +21,27 @@ private:
 
     int _rows = 0;
     int _cols = 0;
-    std::array<T, static_cast<std::size_t>(MAX_ROW) * MAX_COL> data{};
+    using DynamicValue = std::conditional_t<std::is_same_v<T, bool>, std::array<T, 1>, T>;
+    std::conditional_t<(MAX_ROW < 0 || MAX_COL < 0), std::vector<DynamicValue>,
+        std::array<T, static_cast<std::size_t>(MAX_ROW < 0 ? 0 : MAX_ROW) * (MAX_COL < 0 ? 0 : MAX_COL)>> data{};
 
-    static constexpr std::size_t index(int i, int j){
-        return static_cast<std::size_t>(i) * MAX_COL + j;
+    constexpr int stride() const{return MAX_COL < 0 ? _cols : MAX_COL;}
+
+    constexpr std::size_t index(int i, int j) const{
+        return static_cast<std::size_t>(i) * stride() + j;
+    }
+
+    void allocate(){
+        if constexpr(MAX_ROW < 0 || MAX_COL < 0){
+            const auto width = static_cast<std::size_t>(stride());
+            if(width && static_cast<std::size_t>(_rows) > data.max_size() / width)
+                throw std::length_error("matrix storage is too large");
+            data.resize(static_cast<std::size_t>(_rows) * width);
+        }
     }
 
     void check_shape(int rows, int cols, const char* message) const{
-        if(rows < 0 || MAX_ROW < rows || cols < 0 || MAX_COL < cols)[[unlikely]]{
+        if(rows < 0 || (MAX_ROW >= 0 && MAX_ROW < rows) || cols < 0 || (MAX_COL >= 0 && MAX_COL < cols))[[unlikely]]{
             throw std::runtime_error(message);
         }
     }
@@ -74,7 +89,7 @@ private:
         std::vector<T> current;
         std::vector<T> previous;
         std::vector<T> backup;
-        const std::size_t capacity = static_cast<std::size_t>(sequence_size + 1);
+        const std::size_t capacity = static_cast<std::size_t>(sequence_size) + 1;
         current.reserve(capacity);
         previous.reserve(capacity);
         backup.reserve(capacity);
@@ -104,7 +119,7 @@ private:
                 current[j + static_cast<std::size_t>(shift)] -= coeff * previous[j];
             }
 
-            if(2 * degree <= i){
+            if(degree <= i / 2){
                 degree = i + 1 - degree;
                 previous = backup;
                 last = diff;
@@ -157,8 +172,8 @@ private:
         std::vector<T> next_p;
         std::vector<T> next_q;
         q_neg.reserve(static_cast<std::size_t>(degree + 1));
-        next_p_full.reserve(static_cast<std::size_t>(2 * degree));
-        next_q_full.reserve(static_cast<std::size_t>(2 * degree + 1));
+        next_p_full.reserve(2 * static_cast<std::size_t>(degree));
+        next_q_full.reserve(2 * static_cast<std::size_t>(degree) + 1);
         next_p.reserve(static_cast<std::size_t>(degree));
         next_q.reserve(static_cast<std::size_t>(degree + 1));
 
@@ -201,9 +216,14 @@ public:
             cols,
             "library assertion fault: range violation (constructor)."
         );
+        allocate();
     }
 
     explicit Matrix(const std::vector<std::vector<T>>& values){
+        if(values.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))
+            throw std::length_error("too many matrix rows");
+        if(!values.empty() && values[0].size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))
+            throw std::length_error("too many matrix columns");
         int rows = static_cast<int>(values.size());
         int cols = rows == 0 ? 0 : static_cast<int>(values[0].size());
         check_shape(
@@ -213,7 +233,7 @@ public:
         );
 
         for(int i = 0; i < rows; i++){
-            if(static_cast<int>(values[static_cast<std::size_t>(i)].size()) != cols){
+            if(values[static_cast<std::size_t>(i)].size() != static_cast<std::size_t>(cols)){
                 throw std::runtime_error(
                     "library assertion fault: rectangular violation (constructor)."
                 );
@@ -222,6 +242,7 @@ public:
 
         _rows = rows;
         _cols = cols;
+        allocate();
         for(int i = 0; i < _rows; i++){
             for(int j = 0; j < _cols; j++){
                 (*this)(i, j) = values[static_cast<std::size_t>(i)][
@@ -237,12 +258,14 @@ public:
 
     T& operator()(int i, int j){
         check_index(i, j, "library assertion fault: range violation (operator()).");
-        return data[index(i, j)];
+        if constexpr((MAX_ROW < 0 || MAX_COL < 0) && std::is_same_v<T, bool>) return data[index(i, j)][0];
+        else return data[index(i, j)];
     }
 
     const T& operator()(int i, int j) const{
         check_index(i, j, "library assertion fault: range violation (operator()).");
-        return data[index(i, j)];
+        if constexpr((MAX_ROW < 0 || MAX_COL < 0) && std::is_same_v<T, bool>) return data[index(i, j)][0];
+        else return data[index(i, j)];
     }
 
     static Matrix zero(int rows, int cols){
@@ -363,15 +386,21 @@ public:
         Matrix<T, MAX_ROW, RHS_MAX_COL> res(_rows, rhs.cols());
         const int rhs_cols = rhs._cols;
         if(_rows == 0 || _cols == 0 || rhs_cols == 0) return res;
-        for(int i = 0; i < _rows; i++){
+        if constexpr(std::is_same_v<T, bool>){
+            for(int i = 0; i < _rows; i++){
+                for(int k = 0; k < _cols; k++){
+                    for(int j = 0; j < rhs_cols; j++) res(i, j) += (*this)(i, k) * rhs(k, j);
+                }
+            }
+        }else for(int i = 0; i < _rows; i++){
             T* result_row = res.data.data() +
-                static_cast<std::size_t>(i) * RHS_MAX_COL;
+                static_cast<std::size_t>(i) * res.stride();
             const T* left_row = data.data() +
-                static_cast<std::size_t>(i) * MAX_COL;
+                static_cast<std::size_t>(i) * stride();
             for(int k = 0; k < _cols; k++){
                 const T& left_value = left_row[k];
                 const T* right_row = rhs.data.data() +
-                    static_cast<std::size_t>(k) * RHS_MAX_COL;
+                    static_cast<std::size_t>(k) * rhs.stride();
                 for(int j = 0; j < rhs_cols; j++){
                     result_row[j] += left_value * right_row[j];
                 }
@@ -390,6 +419,8 @@ public:
         check_index(row, col, "library assertion fault: range violation (pow_entry_bmbm).");
 
         int n = _rows;
+        if(n > (std::numeric_limits<int>::max() - 1) / 2)
+            throw std::length_error("matrix recurrence size exceeds the index type");
         const int sample_size = 2 * n;
         auto workspace = std::make_unique_for_overwrite<T[]>(
             static_cast<std::size_t>(n) * 4
@@ -399,14 +430,16 @@ public:
         T* next = vec + n;
         for(int i = 0; i < n; i++) vec[i] = T();
         vec[col] = T(1);
-        for(int step = 0; step < 2 * n; step++){
+        for(int step = 0; step < sample_size; step++){
             samples[step] = vec[row];
             for(int i = 0; i < n; i++){
                 T value{};
-                const T* matrix_row = data.data() +
-                    static_cast<std::size_t>(i) * MAX_COL;
-                for(int j = 0; j < n; j++){
-                    value += matrix_row[j] * vec[j];
+                if constexpr(std::is_same_v<T, bool>){
+                    for(int j = 0; j < n; j++) value += (*this)(i, j) * vec[j];
+                }else{
+                    const T* matrix_row = data.data() +
+                        static_cast<std::size_t>(i) * stride();
+                    for(int j = 0; j < n; j++) value += matrix_row[j] * vec[j];
                 }
                 next[i] = value;
             }

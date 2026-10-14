@@ -2,30 +2,33 @@
 #define CPPLIB_SRC_STRUCTURE_DSU_BASIC_EDGE_COUNT_DSU_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <utility>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct EdgeCountDSU{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     int _n = 0;
     int group_count = 0;
-    std::array<int, MAX_SIZE> parent_or_size{};
-    std::array<int, MAX_SIZE> edge_count{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> parent_or_size{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> edge_count{};
 
     void check_vertex(int v, const char* message) const{
         if(v < 0 || _n <= v)[[unlikely]] throw std::runtime_error(message);
     }
 
 public:
-    explicit EdgeCountDSU(int n = MAX_SIZE): _n(n), group_count(n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit EdgeCountDSU(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), group_count(n){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        parent_or_size.resize(static_cast<std::size_t>(n));
+        edge_count.resize(static_cast<std::size_t>(n));
         for(int i = 0; i < _n; i++){
             parent_or_size[i] = -1;
             edge_count[i] = 0;

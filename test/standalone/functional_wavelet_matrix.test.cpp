@@ -17,8 +17,8 @@ int main(){
         std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
         for(int& value: input_value) std::cin >> value;
         for(auto& weight_value: input_weight) std::cin >> weight_value;
-        FunctionalWaveletMatrix<int, 512, long long> functional(input_value);
-        CompressedWeightedWaveletMatrix<int, long long, 512> weighted(
+        FunctionalWaveletMatrix<int, -1, long long> functional(input_value);
+        CompressedWeightedWaveletMatrix<int, long long> weighted(
             input_value, input_weight
         );
         while(q--){
@@ -62,8 +62,8 @@ int main(){
     }
     std::shuffle(values.begin(), values.end(), rng);
 
-    FunctionalWaveletMatrix<int, 200, long long> functional(values);
-    CompressedWeightedWaveletMatrix<int, long long, 200> weighted(values, weights);
+    FunctionalWaveletMatrix<int, -1, long long> functional(values);
+    CompressedWeightedWaveletMatrix<int, long long> weighted(values, weights);
 
     for(int k = 0; k < n; k++){
         assert(functional[k] == values[k]);

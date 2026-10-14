@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_HEAP_PRIORITY_QUEUE_KINETIC_TOURNAMENT_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -9,7 +10,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-template<class T, std::size_t MAX_SIZE, bool Minimum = true>
+template<class T, std::size_t MAX_SIZE = std::numeric_limits<std::size_t>::max(), bool Minimum = true>
 class KineticTournament{
     static_assert(std::is_integral_v<T> && std::is_signed_v<T>,
         "KineticTournament requires a signed integral type");
@@ -36,14 +37,14 @@ public:
     };
 
 private:
-    static constexpr std::size_t TREE_SIZE = 4 * MAX_SIZE + 1;
+    static constexpr std::size_t TREE_SIZE = MAX_SIZE == std::numeric_limits<std::size_t>::max() ? 0 : 4 * MAX_SIZE + 1;
 
     struct State{
-        std::array<Line, MAX_SIZE> lines{};
-        std::array<unsigned char, MAX_SIZE> active{};
-        std::array<int, TREE_SIZE> winner{};
-        std::array<T, TREE_SIZE> event_time{};
-        std::array<unsigned char, TREE_SIZE> has_event{};
+        cpplib_detail::StaticOrVector<Line, (MAX_SIZE == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> lines{};
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> active{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(TREE_SIZE))> winner{};
+        cpplib_detail::StaticOrVector<T, (MAX_SIZE == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(TREE_SIZE))> event_time{};
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE == std::numeric_limits<std::size_t>::max() ? -1 : static_cast<std::ptrdiff_t>(TREE_SIZE))> has_event{};
     };
 
     std::size_t size_ = 0;
@@ -93,7 +94,7 @@ private:
     void combine(std::size_t node){
         const std::size_t left_node = node * 2;
         const std::size_t right_node = left_node + 1;
-        if(right_node >= TREE_SIZE){
+        if(right_node >= state_->winner.size()){
             throw std::logic_error("kinetic tournament tree capacity");
         }
         const int left = state_->winner[left_node];
@@ -157,7 +158,7 @@ private:
         std::size_t right,
         std::size_t node
     ){
-        if(node >= TREE_SIZE){
+        if(node >= state_->winner.size()){
             throw std::logic_error("kinetic tournament tree capacity");
         }
         if(right <= left + 1){
@@ -178,7 +179,7 @@ private:
         std::size_t right,
         std::size_t node
     ){
-        if(node >= TREE_SIZE){
+        if(node >= state_->winner.size()){
             throw std::logic_error("kinetic tournament tree capacity");
         }
         if(!state_->has_event[node] || time_ < state_->event_time[node]) return;
@@ -199,7 +200,7 @@ private:
         std::size_t right,
         std::size_t node
     ) const{
-        if(node >= TREE_SIZE){
+        if(node >= state_->winner.size()){
             throw std::logic_error("kinetic tournament tree capacity");
         }
         if(query_right <= left || right <= query_left) return -1;
@@ -227,9 +228,14 @@ private:
     }
 
 public:
-    explicit KineticTournament(std::size_t size = MAX_SIZE, T initial_time = T{}):
+    explicit KineticTournament(std::size_t size = (MAX_SIZE == std::numeric_limits<std::size_t>::max() ? 0 : MAX_SIZE), T initial_time = T{}):
         size_(size), time_(initial_time), state_(std::make_unique<State>()){
-        if(size > MAX_SIZE) throw std::length_error("kinetic tournament capacity");
+        if(size > static_cast<std::size_t>(std::numeric_limits<int>::max()) || size > MAX_SIZE) throw std::length_error("kinetic tournament capacity");
+        state_->lines.resize(size);
+        state_->active.resize(size);
+        state_->winner.resize(4 * size + 1);
+        state_->event_time.resize(4 * size + 1);
+        state_->has_event.resize(4 * size + 1);
         state_->winner.fill(-1);
     }
 

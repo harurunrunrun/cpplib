@@ -15,7 +15,7 @@
 #include "../../src/structure/bbst/map/aa_tree_map.hpp"
 
 static void verify(
-    const AATreeMap<int, long long, 500>& tree,
+    const AATreeMap<int, long long>& tree,
     const std::map<int, long long>& reference
 ){
     assert(tree.size() == static_cast<int>(reference.size()));
@@ -50,7 +50,7 @@ static void verify(
 static void test_random(){
     std::mt19937_64 rng(2026071624);
     for(int iteration = 0; iteration < 300; ++iteration){
-        AATreeMap<int, long long, 500> tree;
+        AATreeMap<int, long long> tree;
         std::map<int, long long> reference;
         for(int step = 0; step < 3000; ++step){
             const int key = static_cast<int>(rng() % 201) - 100;
@@ -143,7 +143,7 @@ int main(){
         test_large();
         return 0;
     }
-    auto tree_storage = std::make_unique<AATreeMap<long long, long long, 200000>>();
+    auto tree_storage = std::make_unique<AATreeMap<long long, long long>>();
     auto& tree = *tree_storage;
     while(query_count-- > 0){
         std::string operation;

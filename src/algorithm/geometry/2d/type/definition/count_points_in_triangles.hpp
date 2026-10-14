@@ -9,26 +9,27 @@
 #include <utility>
 #include <vector>
 
-template<std::integral Coordinate>
+template<std::integral Coordinate, class Weight = int>
 class CountPointsInTriangles{
     struct Point{
         Coordinate x;
         Coordinate y;
+        Weight weight{};
     };
 
     struct FenwickTree{
-        std::vector<int> values;
+        std::vector<Weight> values;
 
         explicit FenwickTree(std::size_t size) : values(size + 1, 0){}
 
-        void add(std::size_t index){
+        void add(std::size_t index, const Weight& weight){
             for(++index; index < values.size(); index += index & -index){
-                ++values[index];
+                values[index] += weight;
             }
         }
 
-        int prefix_sum(std::size_t end) const{
-            int result = 0;
+        Weight prefix_sum(std::size_t end) const{
+            Weight result = 0;
             for(; end > 0; end -= end & -end) result += values[end];
             return result;
         }
@@ -65,8 +66,12 @@ class CountPointsInTriangles{
 public:
     CountPointsInTriangles(
         const std::vector<std::pair<Coordinate, Coordinate>>& vertices,
-        const std::vector<std::pair<Coordinate, Coordinate>>& query_points
+        const std::vector<std::pair<Coordinate, Coordinate>>& query_points,
+        const std::vector<Weight>& weights = {}
     ){
+        if(!weights.empty() && weights.size() != query_points.size()){
+            throw std::invalid_argument("triangle point weight size mismatch");
+        }
         if(query_points.size() > static_cast<std::size_t>(
             std::numeric_limits<int>::max()
         ))[[unlikely]]{
@@ -77,15 +82,22 @@ public:
         for(const auto& [x, y]: vertices) vertices_.push_back({x, y});
         std::vector<Point> points;
         points.reserve(query_points.size());
-        for(const auto& [x, y]: query_points) points.push_back({x, y});
+        for(std::size_t i = 0; i < query_points.size(); ++i){
+            const auto& [x, y] = query_points[i];
+            points.push_back({x, y, weights.empty() ? Weight{1} : weights[i]});
+        }
 
         const std::size_t size = vertices_.size();
         point_left_.assign(size, 0);
         point_on_.assign(size, 0);
-        edge_left_.assign(size, std::vector<int>(size, 0));
-        edge_on_.assign(size, std::vector<int>(size, 0));
+        edge_left_.assign(size, std::vector<Weight>(size, 0));
+        edge_on_.assign(size, std::vector<Weight>(size, 0));
 
         std::sort(points.begin(), points.end(), less_yx);
+        std::vector<Weight> point_prefix(points.size() + 1, 0);
+        for(std::size_t i = 0; i < points.size(); ++i){
+            point_prefix[i + 1] = point_prefix[i] + points[i].weight;
+        }
         for(std::size_t vertex = 0; vertex < size; ++vertex){
             const Point& value = vertices_[vertex];
             const auto y_begin = std::lower_bound(
@@ -104,8 +116,10 @@ public:
                 x_begin, y_end, value.x,
                 [](Coordinate x, const Point& point){ return x < point.x; }
             );
-            point_left_[vertex] = static_cast<int>(x_begin - y_begin);
-            point_on_[vertex] = static_cast<int>(x_end - x_begin);
+            point_left_[vertex] = point_prefix[x_begin - points.begin()]
+                - point_prefix[y_begin - points.begin()];
+            point_on_[vertex] = point_prefix[x_end - points.begin()]
+                - point_prefix[x_begin - points.begin()];
         }
 
         for(std::size_t first = 0; first < size; ++first){
@@ -175,8 +189,8 @@ public:
                 }
                 for(std::size_t index = begin; index < end; ++index){
                     if(!events[index].is_vertex) continue;
-                    const int less = tree.prefix_sum(events[index].rank);
-                    const int at_most = tree.prefix_sum(
+                    const Weight less = tree.prefix_sum(events[index].rank);
+                    const Weight at_most = tree.prefix_sum(
                         events[index].rank + 1
                     );
                     edge_left_[first][events[index].vertex] = less;
@@ -184,7 +198,7 @@ public:
                 }
                 for(std::size_t index = begin; index < end; ++index){
                     if(!events[index].is_vertex){
-                        tree.add(events[index].rank);
+                        tree.add(events[index].rank, events[index].point.weight);
                     }
                 }
                 begin = end;
@@ -192,7 +206,7 @@ public:
         }
     }
 
-    int count(std::size_t first, std::size_t second, std::size_t third) const{
+    Weight count(std::size_t first, std::size_t second, std::size_t third) const{
         if(first >= vertices_.size() || second >= vertices_.size()
             || third >= vertices_.size())[[unlikely]]{
             throw std::out_of_range("CountPointsInTriangles::count");
@@ -212,7 +226,7 @@ public:
         );
         if(determinant == 0) return 0;
 
-        int result = 0;
+        Weight result = 0;
         if(vertices_[first].y == vertices_[second].y){
             result = edge_left_[second][third]
                 - edge_left_[first][third] - edge_on_[first][third];
@@ -238,10 +252,10 @@ public:
 
 private:
     std::vector<Point> vertices_;
-    std::vector<int> point_left_;
-    std::vector<int> point_on_;
-    std::vector<std::vector<int>> edge_left_;
-    std::vector<std::vector<int>> edge_on_;
+    std::vector<Weight> point_left_;
+    std::vector<Weight> point_on_;
+    std::vector<std::vector<Weight>> edge_left_;
+    std::vector<std::vector<Weight>> edge_on_;
 };
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TYPE_DEFINITION_COUNT_POINTS_IN_TRIANGLES_HPP_INCLUDED

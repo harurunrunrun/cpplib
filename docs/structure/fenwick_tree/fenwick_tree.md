@@ -53,3 +53,13 @@ long long s = fw.sum(2, 5);
 - indexは`[0,n)`、prefix終端は`[0,n]`、区間は`0 <= l <= r <= n`。違反時は例外。
 - `T`はdefault構築、加算、減算を使える必要がある。
 - 保存領域は固定$O(MAX\_SIZE)$、各更新・queryの追加領域は$O(1)$。
+
+## 可変長版
+
+```cpp
+FenwickTree<long long> bit(n);
+```
+
+容量の template 引数を省略すると、実行時の要素数に合わせて `std::vector` を確保する。要素数からの構築は O(n)、vector からの構築は O(n log n)、保存領域 O(n)。更新・区間和は O(log n)。
+
+容量を明示した固定長版も同じヘッダに含まれる。既存の固定上限に関する説明は容量を明示した場合に適用される。

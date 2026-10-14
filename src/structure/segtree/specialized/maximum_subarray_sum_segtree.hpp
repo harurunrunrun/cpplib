@@ -8,7 +8,7 @@
 #include "../basic/segtree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class MaximumSubarraySumSegtree{
     static constexpr NonEmptyMaxSubarrayMonoid<T> monoid_{};
     using Aggregate = NonEmptyMaxSubarrayAggregate<T>;

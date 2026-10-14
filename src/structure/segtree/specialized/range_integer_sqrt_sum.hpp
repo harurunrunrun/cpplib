@@ -10,7 +10,7 @@
 #include "../basic/segtree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class RangeIntegerSqrtSum{
     static constexpr AddMonoid<long long> addition_{};
     std::unique_ptr<Segtree<addition_, MAX_SIZE>> tree_;

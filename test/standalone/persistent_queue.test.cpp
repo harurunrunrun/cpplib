@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -78,6 +80,18 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic wrappers: runtime capacities.
+    {
+        PersistentArrayQueue<int> first(129); PersistentSegtreeQueue<MaxMonoid<int>{}> second(129);
+        int a = 0, b = 0;
+        for(int i = 0; i < 129; ++i){a = first.push(a, i); b = second.push(b, i);}
+        const int old_a = a, old_b = b;
+        for(int i = 0; i < 300; ++i){
+            assert(first.front(a) == i && second.front(b) == i);
+            a = first.push(first.pop(a), 129 + i); b = second.push(second.pop(b), 129 + i);
+        }
+        assert(first.front(old_a) == 0 && second.front(old_b) == 0);
+    }
     int capacity, query_count;
     if(!(std::cin >> capacity >> query_count)){
         self_test();

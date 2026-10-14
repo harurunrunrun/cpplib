@@ -8,7 +8,7 @@
 #include "../basic/lazysegtree.hpp"
 #include "../../types/monoid/residue_count_monoid.hpp"
 
-template<class Count, int MOD, int MAX_SIZE>
+template<class Count, int MOD, int MAX_SIZE = -1>
 class ResidueCountRangeTree{
     static_assert(MOD > 0);
 
@@ -19,7 +19,7 @@ class ResidueCountRangeTree{
     LazySegtree<action_, MAX_SIZE> tree_;
 
     static std::vector<Aggregate> zero_initial(int size){
-        if(size < 0 || MAX_SIZE < size)[[unlikely]]{
+        if(size < 0 || (MAX_SIZE >= 0 && MAX_SIZE < size))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
@@ -42,7 +42,7 @@ class ResidueCountRangeTree{
     }
 
 public:
-    explicit ResidueCountRangeTree(int size = MAX_SIZE):
+    explicit ResidueCountRangeTree(int size = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
         size_(size), tree_(zero_initial(size)){}
 
     explicit ResidueCountRangeTree(const std::vector<long long>& values):

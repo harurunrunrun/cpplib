@@ -9,7 +9,7 @@
 #include "../decomposition/euler_tour.hpp"
 #include "../../../structure/wavelet_matrix/static/compressed_wavelet_matrix.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct SubtreeLabelOrderStatistics{
 private:
     int _n;
@@ -19,7 +19,7 @@ private:
 
 public:
     explicit SubtreeLabelOrderStatistics(const std::vector<int>& vertex_labels):
-        _n(static_cast<int>(vertex_labels.size())),
+        _n(cpplib_detail::checked_int_size(vertex_labels.size())),
         labels(vertex_labels),
         tour(std::make_unique<TreeEulerTour<MAX_SIZE>>(_n)){}
 

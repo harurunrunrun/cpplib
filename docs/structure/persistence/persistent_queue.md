@@ -116,3 +116,13 @@ versionは0から始まり、成功した`push`または`pop`が返す番号は�
 
 内部添字は循環させるため、`pop`後に別の要素を`push`しても、同時要素数が
 `capacity`以下なら領域を再利用できる。過去versionの値はstorageの永続性により変化しない。
+
+## 可変長版
+
+```cpp
+using Dynamic = PersistentArrayQueue<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。キューの論理容量は constructor の引数で指定する。push/pop は基礎ストレージの更新時間、ArrayQueue は O(log(n + 1))、保存領域は O(n + u log(n + 1) + v)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

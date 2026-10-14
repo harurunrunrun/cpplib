@@ -58,3 +58,13 @@ $N$ を列長、$L=O(\log\log(N+2))$ をlayer数とし、semigroup演算を $O(1
 要求する。空列の `all_prod` を含む範囲違反では `runtime_error`。
 固定保存領域は $O(\mathtt{MAX\_SIZE}\log\log(\mathtt{MAX\_SIZE}+2))$。
 `get`, `prod`, `all_prod` の追加領域は $O(1)$。
+
+## 可変長版
+
+```cpp
+using Dynamic = SqrtTree<Semigroup>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log log(n + 2))、区間積 O(1)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

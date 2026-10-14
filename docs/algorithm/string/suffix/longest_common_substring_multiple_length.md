@@ -32,3 +32,14 @@ heap上に確保する。
 - 各文字 `c` は `OFFSET <= c < OFFSET + ALPHABET` を満たさなければならない。
 - 前提違反時は `runtime_error` を送出する。
 - 戻り値は長さのみで、位置や内容は返さない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = longest_common_substring_multiple_length(texts);
+auto fixed = longest_common_substring_multiple_length<100000>(texts);
+```
+
+最短文字列長 $N$、文字列数 $K$、総文字数 $L$、alphabet サイズ $A$ に対し $O(AN+KN+L)$ 時間・$O(AN+K)$ 空間。

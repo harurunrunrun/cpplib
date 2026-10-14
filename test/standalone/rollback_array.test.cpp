@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -72,6 +74,21 @@ void self_test(){
 }
 
 int main(){
+    {
+        RollbackArray<bool> values(std::vector<bool>{true, false});
+        for(int i = 0; i < 100; ++i) values.set(1, values.get(0));
+        const bool& bit = values.get(1); assert(bit);
+        values.rollback(0); assert(values.get(0) && !values.get(1));
+    }
+
+    // Dynamic storage: verify growth and retained values.
+    {
+        RollbackArray<std::string> values(5, "original");
+        const auto initial = values.snapshot();
+        for(int i = 0; i < 300; ++i) values.set(i % 5, values.get((i + 1) % 5));
+        assert(values.get(4) == "original"); values.rollback(initial);
+        assert(values.get(0) == "original");
+    }
     int n, q;
     if(!(std::cin >> n >> q)){
         self_test();

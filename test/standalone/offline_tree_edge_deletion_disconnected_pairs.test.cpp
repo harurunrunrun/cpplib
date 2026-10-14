@@ -1,12 +1,21 @@
 // competitive-verifier: STANDALONE
 
 #include <iostream>
+#include <cassert>
+
 #include <utility>
 #include <vector>
 
 #include "../../src/structure/dsu/specialized/offline_tree_edge_deletion_disconnected_pairs.hpp"
 
 int main(){
+    // Dynamic wrappers: runtime capacities.
+    {
+        OfflineTreeEdgeDeletionDisconnectedPairs<> tree(129);
+        for(int i = 0; i < 128; ++i) tree.add_edge(i, i + 1);
+        tree.add_query(); tree.delete_edge(63); tree.add_query();
+        assert((tree.solve() == std::vector<long long>{0, 4160}));
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

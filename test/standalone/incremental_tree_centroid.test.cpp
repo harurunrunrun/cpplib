@@ -35,7 +35,7 @@ static bool is_centroid(int candidate, const std::vector<int>& parent,
 static void test_random(){
     std::mt19937_64 random(2026071631ULL);
     for(int iteration = 0; iteration < 80; ++iteration){
-        Tree tree;
+        IncrementalTreeCentroid<> tree;
         std::vector<int> parent;
         assert(tree.centroid() == -1);
         assert(tree.add_root() == 0);

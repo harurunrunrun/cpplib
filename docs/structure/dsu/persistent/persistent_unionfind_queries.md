@@ -75,3 +75,13 @@ $O(\log N\log MAX\_SIZE)$。
 - 範囲違反、操作容量超過、内部永続領域の容量超過では `runtime_error`。
 - 失敗した操作は操作数を増やさない。
 - copyは禁止し、moveを許可する。
+
+## 可変長版
+
+```cpp
+using Dynamic = PersistentUnionFindQueries<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。版管理は O(q) 領域、併合・同一判定は PersistentDSU の O(log²(n + 1)) に従う。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

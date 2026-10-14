@@ -72,7 +72,7 @@ Matrix reference_product(
 }
 
 void verify_random_state(
-    const AATreeMonoidMap<int, matrix_monoid, 512>& tree,
+    const AATreeMonoidMap<int, matrix_monoid>& tree,
     const std::map<int, Matrix>& reference,
     std::mt19937_64& engine
 ){
@@ -127,7 +127,7 @@ void verify_random_state(
 void test_random_noncommutative(){
     std::mt19937_64 engine(2026071701ULL);
     for(int iteration = 0; iteration < 80; ++iteration){
-        AATreeMonoidMap<int, matrix_monoid, 512> tree;
+        AATreeMonoidMap<int, matrix_monoid> tree;
         std::map<int, Matrix> reference;
         for(int step = 0; step < 2500; ++step){
             const int key = static_cast<int>(engine() % 241) - 120;
@@ -172,8 +172,7 @@ void test_random_noncommutative(){
 void test_descending_and_errors(){
     AATreeMonoidMap<
         int,
-        matrix_monoid,
-        512,
+        matrix_monoid, -1,
         std::greater<int>
     > descending;
     const Matrix first{1, 1, 0, 1};
@@ -280,7 +279,7 @@ int main(){
     }
 
     auto tree = std::make_unique<
-        AATreeMonoidMap<long long, sum_monoid, 500000>
+        AATreeMonoidMap<long long, sum_monoid>
     >();
     while(query_count-- > 0){
         int type;

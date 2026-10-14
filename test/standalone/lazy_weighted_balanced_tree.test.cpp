@@ -29,7 +29,7 @@ long long range_sum(const std::vector<long long>& a, int l, int r){
     return std::accumulate(a.begin() + l, a.begin() + r, 0LL);
 }
 
-void check_all(LazyWeightedBalancedTree<range_add_sum, 512>& tree, const std::vector<long long>& a){
+void check_all(LazyWeightedBalancedTree<range_add_sum>& tree, const std::vector<long long>& a){
     assert(tree.size() == static_cast<int>(a.size()));
     assert(tree.empty() == a.empty());
     assert(tree.all_prod() == range_sum(a, 0, static_cast<int>(a.size())));
@@ -48,7 +48,7 @@ int main(){
     if(std::cin >> input_n >> q){
         std::vector<long long> input(static_cast<std::size_t>(input_n));
         for(long long& value: input) std::cin >> value;
-        LazyWeightedBalancedTree<range_add_sum, 1024> tree(input);
+        LazyWeightedBalancedTree<range_add_sum> tree(input);
         while(q--){
             std::string type;
             std::cin >> type;
@@ -108,7 +108,7 @@ int main(){
     std::mt19937 rng(16180339);
     std::vector<long long> init(60);
     for(auto& x: init) x = static_cast<int>(rng() % 200) - 80;
-    LazyWeightedBalancedTree<range_add_sum, 512> tree(init);
+    LazyWeightedBalancedTree<range_add_sum> tree(init);
     std::vector<long long> naive = init;
 
     for(int step = 0; step < 3000; step++){

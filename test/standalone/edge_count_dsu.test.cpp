@@ -63,6 +63,8 @@ struct NaiveGraph{
 };
 
 int main(){
+    {EdgeCountDSU<> d(1001); d.add_edge(0,1000); assert(d.same(0,1000)); assert(d.component_size(0)==2);}
+
     int n, q;
     if(std::cin >> n >> q){
         EdgeCountDSU<128> dsu(n);

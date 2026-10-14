@@ -90,3 +90,14 @@ int edge_multiplicity(int u, int v)
 - `add_edge`は新しい端点対なら`true`、既存辺の多重度増加なら`false`。
 - `erase_edge`は1本削除できた場合`true`、存在しなければ`false`。
 - 自己loopと多重辺は記録するが、`groups`, `same`, `component_size`には影響しない。
+
+## 容量を省略した可変長版
+
+```cpp
+OnlineDynamicConnectivity<> graph(n);
+OnlineDynamicConnectivity<N> fixed(n);
+```
+
+容量省略時の `MAX_SIZE=-1` はvectorを使い、固定容量版と同じAPIを提供する。
+実行時頂点数 $N$ からレベル数を $O(\log(N+1))$ で計算し、必要な森を遅延生成する。既存版と同じ償却操作計算量・$O(N\log(N+1)+M)$ 領域。
+整数添字の表現上限を超えるノード数と無効な頂点は検証する。

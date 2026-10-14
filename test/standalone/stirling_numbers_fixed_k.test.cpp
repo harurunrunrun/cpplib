@@ -1,11 +1,23 @@
 // competitive-verifier: STANDALONE
 
+#include <cassert>
 #include <cstddef>
 #include <iostream>
 
+#include "../../src/algorithm/math/combinatorics/restricted_stirling_numbers.hpp"
 #include "../../src/algorithm/math/combinatorics/stirling_numbers.hpp"
 
 int main(){
+    using mint = Modint998244353;
+    // Two cycles of lengths at least two: 2+2, 2+3, and 2+4 or 3+3.
+    assert((math::restricted_stirling_numbers_first_kind_fixed_k<998244353>(6, 2, 2)
+        == std::vector<mint>{0, 0, 0, 0, 3, 20, 130}));
+    assert((math::restricted_stirling_numbers_second_kind_fixed_k<998244353>(6, 2, 2)
+        == std::vector<mint>{0, 0, 0, 0, 3, 10, 25}));
+    assert((math::restricted_stirling_numbers_first_kind_fixed_k<998244353>(0, 0, 3)
+        == std::vector<mint>{1}));
+    assert((math::restricted_stirling_numbers_second_kind_fixed_k<998244353>(5, 2, 3)
+        == std::vector<mint>(6)));
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
     int query_count;

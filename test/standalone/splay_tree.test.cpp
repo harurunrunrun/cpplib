@@ -42,7 +42,7 @@ std::optional<int> max_less_naive(const std::set<int>& s, int x){
     return *it;
 }
 
-void check_all(SplaySet<int, 256>& tree, const std::set<int>& s){
+void check_all(SplaySet<int>& tree, const std::set<int>& s){
     assert(tree.size() == static_cast<int>(s.size()));
     assert(tree.empty() == s.empty());
     for(int x = -20; x <= 220; x++){
@@ -62,7 +62,7 @@ void check_all(SplaySet<int, 256>& tree, const std::set<int>& s){
 int main(){
     int input_q;
     if(std::cin >> input_q){
-        SplaySet<int, 512> tree;
+        SplaySet<int> tree;
         auto print_optional = [](std::optional<int> value){
             if(value.has_value()){
                 std::cout << *value << '\n';
@@ -138,7 +138,7 @@ int main(){
         assert(thrown);
     }
 
-    SplaySet<int, 256> tree;
+    SplaySet<int> tree;
     std::set<int> naive;
     std::mt19937 rng(20260712);
     for(int step = 0; step < 10000; step++){

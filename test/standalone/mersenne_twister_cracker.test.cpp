@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include <array>
+#include <span>
+#include <vector>
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
@@ -22,7 +24,10 @@ int run_case(bool corrupted){
     if(!(std::cin >> prediction_count)) return 1;
 
     try{
+        const std::vector<result_type> dynamic_outputs(outputs.begin(), outputs.end());
+        Cracker dynamic_cracker{std::span<const result_type>(dynamic_outputs)};
         Cracker cracker(outputs);
+        if(dynamic_cracker.state() != cracker.state()) return 1;
         if(corrupted){
             std::cout << "accepted\n";
             return 0;
@@ -37,7 +42,9 @@ int run_case(bool corrupted){
         }
 
         for(int index = 0; index < prediction_count; ++index){
-            std::cout << cracker() << '\n';
+            const auto value = cracker();
+            if(dynamic_cracker() != value) return 1;
+            std::cout << value << '\n';
         }
     }catch(const std::invalid_argument&){
         std::cout << "invalid\n";

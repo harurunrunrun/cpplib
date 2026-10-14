@@ -136,7 +136,7 @@ void test_basic(){
 }
 
 void test_random(){
-    SlopeTrick<long long, 1024> slope;
+    SlopeTrick<long long> slope;
     NaiveConvexFunction naive;
     std::mt19937 rng(20260713);
 
@@ -217,7 +217,7 @@ void test_errors(){
 int main(){
     int query_count;
     if(std::cin >> query_count){
-        SlopeTrick<long long, 4096> slope;
+        SlopeTrick<long long> slope;
         while(query_count--){
             std::string operation;
             std::cin >> operation;

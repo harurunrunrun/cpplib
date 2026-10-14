@@ -53,3 +53,13 @@ $N=vertex\_count$、操作数を $Q$、回答数を $A$ とする。
 - 登録辺は頂点 $[0,N)$ 上の木でなければならない。
 - 本数、頂点番号、削除番号、重複削除の違反時は `runtime_error`、閉路を含む登録辺には `invalid_argument` を送出する。
 - `solve` は状態を変更せず、同じ操作列に対して繰り返し呼べる。
+
+## 可変長版
+
+```cpp
+using Dynamic = OfflineTreeEdgeDeletionDisconnectedPairs<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。保存領域 O(n + q)、solve は O((n + q) alpha(n))。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

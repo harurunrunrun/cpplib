@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_SEQUENCE_COUNT_UNDOMINATED_RANK_TRIPLES_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_SEQUENCE_COUNT_UNDOMINATED_RANK_TRIPLES_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <limits>
@@ -11,11 +13,11 @@
 #include "../../../structure/segtree/basic/segtree.hpp"
 #include "../../../structure/types/monoid/common_monoids.hpp"
 
-template<int MAX_SIZE = 100000>
+template<int MAX_SIZE = -1>
 int count_undominated_rank_triples(
     const std::vector<std::array<int, 3>>& ranks
 ){
-    const int size = static_cast<int>(ranks.size());
+    const int size = cpplib_detail::checked_int_size(ranks.size());
     std::vector<std::array<int, 3>> ordered = ranks;
     for(const auto& rank: ordered){
         for(int value: rank){

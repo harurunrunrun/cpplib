@@ -17,7 +17,7 @@ struct AhoCorasickRepresentation{
     }
 };
 
-template<int ALPHABET, int MAX_NODES, char OFFSET = 'a'>
+template<int ALPHABET, int MAX_NODES = -1, char OFFSET = 'a'>
 AhoCorasickRepresentation aho_corasick_representation(
     const std::vector<std::string>& patterns
 ){

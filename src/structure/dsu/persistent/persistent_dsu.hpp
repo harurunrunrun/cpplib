@@ -2,22 +2,23 @@
 #define CPPLIB_SRC_STRUCTURE_DSU_PERSISTENT_PERSISTENT_DSU_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
 #include <utility>
 
-template<int MAX_SIZE, int MAX_VERSION>
+template<int MAX_SIZE = -1, int MAX_VERSION = -1>
 struct PersistentDSU{
-    static_assert(MAX_SIZE > 0);
-    static_assert(MAX_VERSION >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
+    static_assert(MAX_VERSION >= -1);
     static_assert(MAX_VERSION < std::numeric_limits<int>::max());
 
 private:
     static constexpr int height = []{
         std::size_t width = 1;
         int h = 0;
-        while(width < static_cast<std::size_t>(MAX_SIZE)){
+        while(width < static_cast<std::size_t>(MAX_SIZE < 0 ? 0 : MAX_SIZE)){
             width <<= 1;
             h++;
         }
@@ -28,7 +29,7 @@ private:
         static_cast<std::size_t>(height) + 1;
 
     static_assert(
-        static_cast<std::size_t>(MAX_VERSION) <=
+        MAX_VERSION < 0 || static_cast<std::size_t>(MAX_VERSION) <=
         std::numeric_limits<std::size_t>::max() / 2 / nodes_per_update
     );
 
@@ -36,7 +37,7 @@ private:
         static_cast<std::size_t>(MAX_VERSION) * 2 * nodes_per_update;
 
     static_assert(
-        node_capacity <= static_cast<std::size_t>(std::numeric_limits<int>::max())
+        MAX_SIZE < 0 || MAX_VERSION < 0 || node_capacity <= static_cast<std::size_t>(std::numeric_limits<int>::max())
     );
 
     struct Node{
@@ -49,9 +50,9 @@ private:
     int version_count = 1;
     int node_count = 0;
 
-    std::array<int, static_cast<std::size_t>(MAX_VERSION) + 1> root;
-    std::array<int, static_cast<std::size_t>(MAX_VERSION) + 1> group_count;
-    std::array<Node, node_capacity> nodes;
+    cpplib_detail::StaticOrVector<int, (MAX_VERSION < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSION) + 1)> root;
+    cpplib_detail::StaticOrVector<int, (MAX_VERSION < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSION) + 1)> group_count;
+    cpplib_detail::StaticOrVector<Node, (MAX_SIZE < 0 || MAX_VERSION < 0 ? -1 : static_cast<std::ptrdiff_t>(node_capacity))> nodes;
 
     void check_vertex(int v, const char* message) const{
         if(v < 0 || _n <= v)[[unlikely]] throw std::runtime_error(message);
@@ -64,18 +65,16 @@ private:
     }
 
     int new_node(int source){
-        if(static_cast<std::size_t>(node_count) >= node_capacity)[[unlikely]]{
+        if(node_count == std::numeric_limits<int>::max() || (MAX_SIZE >= 0 && MAX_VERSION >= 0 && static_cast<std::size_t>(node_count) >= node_capacity))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: node capacity exceeded (set)."
             );
         }
 
+        const Node copy = source == -1 ? Node{-1, -1, -1} : nodes[source];
+        nodes.ensure(static_cast<std::size_t>(node_count) + 1);
         int res = node_count++;
-        if(source == -1){
-            nodes[res] = {-1, -1, -1};
-        }else{
-            nodes[res] = nodes[source];
-        }
+        nodes[res] = copy;
         return res;
     }
 
@@ -99,13 +98,13 @@ private:
     }
 
     int set_value(int source_root, int k, int x){
-        return set_impl(source_root, 0, MAX_SIZE, k, x);
+        return set_impl(source_root, 0, (MAX_SIZE < 0 ? _n : MAX_SIZE), k, x);
     }
 
     int get_value(int source_root, int k) const{
         int current = source_root;
         int l = 0;
-        int r = MAX_SIZE;
+        int r = MAX_SIZE < 0 ? _n : MAX_SIZE;
 
         while(current != -1 && r - l > 1){
             int mid = l + (r - l) / 2;
@@ -131,10 +130,12 @@ private:
     }
 
     int append_version(int source_root, int groups, const char* message){
-        if(version_count > MAX_VERSION)[[unlikely]]{
+        if(version_count == std::numeric_limits<int>::max() || (MAX_VERSION >= 0 && version_count > MAX_VERSION))[[unlikely]]{
             throw std::runtime_error(message);
         }
 
+        root.ensure(static_cast<std::size_t>(version_count) + 1);
+        group_count.ensure(static_cast<std::size_t>(version_count) + 1);
         int res = version_count++;
         root[res] = source_root;
         group_count[res] = groups;
@@ -142,18 +143,20 @@ private:
     }
 
     void check_version_capacity(const char* message) const{
-        if(version_count > MAX_VERSION)[[unlikely]]{
+        if(version_count == std::numeric_limits<int>::max() || (MAX_VERSION >= 0 && version_count > MAX_VERSION))[[unlikely]]{
             throw std::runtime_error(message);
         }
     }
 
 public:
-    explicit PersistentDSU(int n = MAX_SIZE): _n(n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit PersistentDSU(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
+        root.ensure(1);
+        group_count.ensure(1);
         root.fill(-1);
         group_count.fill(0);
         group_count[0] = _n;

@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_OFFLINE_QUERY_BATCH_FRAMEWORK_TIME_SEGMENT_TREE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_OFFLINE_QUERY_BATCH_FRAMEWORK_TIME_SEGMENT_TREE_HPP_INCLUDED
 
+#include "../../../../structure/array/static_or_vector.hpp"
+
 #include <array>
 #include <cstddef>
 #include <functional>
@@ -10,10 +12,10 @@
 #include <stdexcept>
 #include <utility>
 
-template<class Event, int MAX_TIME, int MAX_EVENTS>
+template<class Event, int MAX_TIME = -1, int MAX_EVENTS = -1>
 class TimeSegmentTree{
-    static_assert(MAX_TIME > 0);
-    static_assert(MAX_EVENTS >= 0);
+    static_assert(MAX_TIME == -1 || MAX_TIME > 0);
+    static_assert(MAX_EVENTS >= -1);
 
     static constexpr std::size_t ceil_pow2(std::size_t n){
         std::size_t result = 1;
@@ -27,14 +29,14 @@ class TimeSegmentTree{
         return result;
     }
 
-    static constexpr std::size_t TREE_BASE = ceil_pow2(static_cast<std::size_t>(MAX_TIME));
+    static constexpr std::size_t TREE_BASE = ceil_pow2(static_cast<std::size_t>(MAX_TIME < 0 ? 1 : MAX_TIME));
     static constexpr std::size_t NODE_COUNT = TREE_BASE * 2;
     static constexpr int REFERENCES_PER_EVENT = tree_log(TREE_BASE) * 2 + 1;
     static constexpr std::size_t MAX_REFERENCES =
         static_cast<std::size_t>(MAX_EVENTS) * static_cast<std::size_t>(REFERENCES_PER_EVENT);
 
     static_assert(TREE_BASE <= static_cast<std::size_t>(std::numeric_limits<int>::max() / 2));
-    static_assert(MAX_REFERENCES <= static_cast<std::size_t>(std::numeric_limits<int>::max()));
+    static_assert((MAX_TIME < 0 || MAX_EVENTS < 0) || MAX_REFERENCES <= static_cast<std::size_t>(std::numeric_limits<int>::max()));
 
     struct Reference{
         int event;
@@ -42,10 +44,10 @@ class TimeSegmentTree{
     };
 
     struct Storage{
-        std::array<std::optional<Event>, static_cast<std::size_t>(MAX_EVENTS)> events;
-        std::array<Reference, MAX_REFERENCES> references;
-        std::array<int, NODE_COUNT> head;
-        std::array<int, NODE_COUNT> tail;
+        cpplib_detail::StaticOrVector<std::optional<Event>, ((MAX_TIME < 0 || MAX_EVENTS < 0) ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_EVENTS)))> events;
+        cpplib_detail::StaticOrVector<Reference, ((MAX_TIME < 0 || MAX_EVENTS < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_REFERENCES))> references;
+        cpplib_detail::StaticOrVector<int, ((MAX_TIME < 0 || MAX_EVENTS < 0) ? -1 : static_cast<std::ptrdiff_t>(NODE_COUNT))> head;
+        cpplib_detail::StaticOrVector<int, ((MAX_TIME < 0 || MAX_EVENTS < 0) ? -1 : static_cast<std::ptrdiff_t>(NODE_COUNT))> tail;
 
         Storage(){
             head.fill(-1);
@@ -53,6 +55,7 @@ class TimeSegmentTree{
         }
     };
 
+    std::size_t tree_base_ = 1;
     int time_count_ = 0;
     int event_count_ = 0;
     int reference_count_ = 0;
@@ -65,6 +68,7 @@ class TimeSegmentTree{
     }
 
     void append_reference(int node, int event){
+        storage_->references.ensure(static_cast<std::size_t>(reference_count_) + 1);
         const int index = reference_count_++;
         storage_->references[static_cast<std::size_t>(index)] = {event, -1};
         int& head = storage_->head[static_cast<std::size_t>(node)];
@@ -79,10 +83,11 @@ class TimeSegmentTree{
 
     template<class... Args>
     void emplace_nonempty_interval(int left, int right, Args&&... args){
-        std::array<int, static_cast<std::size_t>(REFERENCES_PER_EVENT)> nodes{};
+        cpplib_detail::StaticOrVector<int, ((MAX_TIME < 0 || MAX_EVENTS < 0) ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(REFERENCES_PER_EVENT)))> nodes{};
+        nodes.resize(static_cast<std::size_t>(tree_log(tree_base_) * 2 + 1));
         int node_count = 0;
-        int l = left + static_cast<int>(TREE_BASE);
-        int r = right + static_cast<int>(TREE_BASE);
+        int l = left + static_cast<int>(tree_base_);
+        int r = right + static_cast<int>(tree_base_);
         while(l < r){
             if(l & 1) nodes[static_cast<std::size_t>(node_count++)] = l++;
             if(r & 1) nodes[static_cast<std::size_t>(node_count++)] = --r;
@@ -92,10 +97,13 @@ class TimeSegmentTree{
         if(event_count_ == MAX_EVENTS)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (TimeSegmentTree::add_interval event).");
         }
-        if(static_cast<std::size_t>(reference_count_) + static_cast<std::size_t>(node_count) > MAX_REFERENCES)[[unlikely]]{
+        if((!(MAX_TIME < 0 || MAX_EVENTS < 0) && static_cast<std::size_t>(reference_count_) + static_cast<std::size_t>(node_count) > MAX_REFERENCES)
+            || node_count > std::numeric_limits<int>::max() - reference_count_)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (TimeSegmentTree::add_interval reference).");
         }
 
+        if(event_count_ == std::numeric_limits<int>::max()) throw std::length_error("time segment event index overflow");
+        storage_->events.ensure(static_cast<std::size_t>(event_count_) + 1);
         const int event = event_count_;
         storage_->events[static_cast<std::size_t>(event)].emplace(std::forward<Args>(args)...);
         ++event_count_;
@@ -144,12 +152,19 @@ class TimeSegmentTree{
     }
 
 public:
-    explicit TimeSegmentTree(int time_count = MAX_TIME):
+    explicit TimeSegmentTree(int time_count = (MAX_TIME < 0 ? 0 : MAX_TIME)):
         time_count_(time_count){
-        if(time_count < 0 || MAX_TIME < time_count)[[unlikely]]{
+        if(time_count < 0 || (MAX_TIME >= 0 && MAX_TIME < time_count))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (TimeSegmentTree::TimeSegmentTree).");
         }
+        tree_base_ = MAX_TIME < 0 ? ceil_pow2(static_cast<std::size_t>(time_count)) : TREE_BASE;
+        if(tree_base_ > static_cast<std::size_t>(std::numeric_limits<int>::max() / 2))
+            throw std::length_error("time segment tree index overflow");
         storage_ = std::make_unique<Storage>();
+        storage_->head.resize(tree_base_ * 2);
+        storage_->tail.resize(tree_base_ * 2);
+        storage_->head.fill(-1);
+        storage_->tail.fill(-1);
     }
 
     TimeSegmentTree(const TimeSegmentTree&) = delete;
@@ -199,7 +214,7 @@ public:
         dfs(
             1,
             0,
-            static_cast<int>(TREE_BASE),
+            static_cast<int>(tree_base_),
             apply,
             snapshot,
             rollback,
@@ -208,7 +223,7 @@ public:
     }
 };
 
-template<class Event, int MAX_TIME, int MAX_EVENTS>
+template<class Event, int MAX_TIME = -1, int MAX_EVENTS = -1>
 using OfflineIntervalEvents = TimeSegmentTree<Event, MAX_TIME, MAX_EVENTS>;
 
 #endif  // CPPLIB_SRC_ALGORITHM_OTHER_OFFLINE_QUERY_BATCH_FRAMEWORK_TIME_SEGMENT_TREE_HPP_INCLUDED

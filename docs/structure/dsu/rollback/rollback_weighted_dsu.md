@@ -86,3 +86,13 @@ int groups()
 - `merge`は併合・既存制約との一致・矛盾のいずれでも履歴を1個進める。
 - 履歴が`MAX_HISTORY`に達したmerge、空履歴のundo、範囲外rollbackは例外。
 - 経路圧縮を行わずunion by sizeを使うため、各DSU操作はworst-case $O(\log N)$。
+
+## 可変長版
+
+```cpp
+using Dynamic = RollbackWeightedDSU<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、併合・差取得 O(log(n + 1))、undo 償却 O(1)、保存領域 O(n + u)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

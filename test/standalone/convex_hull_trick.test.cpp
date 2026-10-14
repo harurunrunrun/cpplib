@@ -17,8 +17,8 @@ int main(){
         std::vector<std::pair<long long, long long>> input_lines(
             static_cast<std::size_t>(line_count)
         );
-        ConvexHullTrick<512> arbitrary;
-        ConvexHullTrick<512> monotone;
+        ConvexHullTrick<> arbitrary;
+        ConvexHullTrick<> monotone;
         for(auto& [a, b]: input_lines){
             std::cin >> a >> b;
             arbitrary.add_line(a, b);
@@ -37,7 +37,7 @@ int main(){
         return 0;
     }
 
-    ConvexHullTrick<300> cht;
+    ConvexHullTrick<> cht;
     assert(cht.empty());
     assert(cht.size() == 0);
     bool thrown = false;
@@ -82,7 +82,7 @@ int main(){
         }
     }
 
-    ConvexHullTrick<300> monotone_query;
+    ConvexHullTrick<> monotone_query;
     for(auto [a, b]: lines) monotone_query.add_line(a, b);
     for(long long x = -100; x <= 100; x++){
         long long expected = std::numeric_limits<long long>::max();

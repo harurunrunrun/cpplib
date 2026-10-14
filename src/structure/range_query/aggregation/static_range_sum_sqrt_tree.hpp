@@ -10,7 +10,7 @@
 template<class T>
 inline constexpr AddMonoid<T> static_range_sum_add_monoid{};
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class StaticRangeSumSqrtTree{
     SqrtTree<static_range_sum_add_monoid<T>, MAX_SIZE> tree;
 

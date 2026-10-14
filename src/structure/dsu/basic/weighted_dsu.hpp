@@ -2,29 +2,32 @@
 #define CPPLIB_SRC_STRUCTURE_DSU_BASIC_WEIGHTED_DSU_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <optional>
 #include <stdexcept>
 #include <utility>
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 struct WeightedDSU{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     int _n = 0;
     int group_count = 0;
-    std::array<int, MAX_SIZE> parent_or_size{};
-    std::array<T, MAX_SIZE> diff_weight{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> parent_or_size{};
+    cpplib_detail::StaticOrVector<T, MAX_SIZE> diff_weight{};
 
     void check_vertex(int v, const char* message) const{
         if(v < 0 || _n <= v)[[unlikely]] throw std::runtime_error(message);
     }
 
 public:
-    explicit WeightedDSU(int n = MAX_SIZE): _n(n), group_count(n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit WeightedDSU(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), group_count(n){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
+        parent_or_size.resize(static_cast<std::size_t>(n));
+        diff_weight.resize(static_cast<std::size_t>(n));
         for(int i = 0; i < _n; i++){
             parent_or_size[i] = -1;
             diff_weight[i] = T();

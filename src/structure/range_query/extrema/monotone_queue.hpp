@@ -2,19 +2,23 @@
 #define CPPLIB_SRC_STRUCTURE_RANGE_QUERY_EXTREMA_MONOTONE_QUEUE_HPP_INCLUDED
 
 #include <array>
+#include <limits>
+#include <optional>
+#include "../../array/static_or_vector.hpp"
+#include <algorithm>
 #include <functional>
 #include <memory>
 #include <stdexcept>
 #include <vector>
 
-template<class T, int MAX_SIZE, class Compare = std::less<T>>
+template<class T, int MAX_SIZE = -1, class Compare = std::less<T>>
 struct MonotoneQueue{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     struct State{
-        std::array<T, MAX_SIZE> values;
-        std::array<long long, MAX_SIZE> indices{};
+        cpplib_detail::StaticOrVector<T, MAX_SIZE> values;
+        cpplib_detail::StaticOrVector<long long, MAX_SIZE> indices{};
     };
 
     int head = 0;
@@ -25,9 +29,9 @@ private:
     std::unique_ptr<State> state;
 
     int position(int offset) const{
-        int result = head + offset;
-        if(result >= MAX_SIZE) result -= MAX_SIZE;
-        return result;
+        const std::size_t capacity = state->values.size();
+        const std::size_t result = static_cast<std::size_t>(head) + offset;
+        return static_cast<int>(result >= capacity ? result - capacity : result);
     }
 
     [[noreturn]] static void throw_empty(const char* operation){
@@ -68,8 +72,26 @@ public:
                 "library assertion fault: capacity exceeded (MonotoneQueue::push)."
             );
         }
+        std::optional<T> copied;
+        if constexpr(MAX_SIZE < 0){
+            copied.emplace(value);
+            if(static_cast<std::size_t>(count) == state->values.size()){
+                if(count == std::numeric_limits<int>::max()) throw std::length_error("MonotoneQueue size overflow");
+                const std::size_t next = std::min(static_cast<std::size_t>(std::numeric_limits<int>::max()), std::max(std::size_t(1), state->values.size() * 2));
+                cpplib_detail::StaticOrVector<T, -1> values(next);
+                cpplib_detail::StaticOrVector<long long, -1> indices(next);
+                for(int i = 0; i < count; ++i){
+                    const auto old = position(i);
+                    values[i] = std::move(state->values[old]);
+                    indices[i] = state->indices[old];
+                }
+                state->values.swap(values);
+                state->indices.swap(indices);
+                head = 0;
+            }
+        }
         int tail = position(count);
-        state->values[static_cast<std::size_t>(tail)] = value;
+        state->values[static_cast<std::size_t>(tail)] = MAX_SIZE < 0 ? *copied : value;
         state->indices[static_cast<std::size_t>(tail)] = index;
         count++;
         has_last_index = true;
@@ -81,7 +103,7 @@ public:
             throw_empty("library assertion fault: empty queue (MonotoneQueue::pop_front).");
         }
         head++;
-        if(head == MAX_SIZE) head = 0;
+        if(static_cast<std::size_t>(head) == state->values.size()) head = 0;
         count--;
     }
 
@@ -92,7 +114,7 @@ public:
         }
     }
 
-    const T& best() const{
+    typename cpplib_detail::StaticOrVector<T, MAX_SIZE>::const_reference best() const{
         if(count == 0)[[unlikely]]{
             throw_empty("library assertion fault: empty queue (MonotoneQueue::best).");
         }
@@ -107,20 +129,20 @@ public:
     }
 };
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using MonotoneMinQueue = MonotoneQueue<T, MAX_SIZE, std::less<T>>;
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using MonotoneMaxQueue = MonotoneQueue<T, MAX_SIZE, std::greater<T>>;
 
-template<class T, int MAX_WINDOW, class Compare>
+template<class T, int MAX_WINDOW = -1, class Compare = std::less<T>>
 std::vector<T> sliding_window_extreme(
     const std::vector<T>& values,
     int window,
     const Compare& compare
 ){
-    if(window <= 0 || MAX_WINDOW < window ||
-       static_cast<int>(values.size()) < window)[[unlikely]]{
+    if(window <= 0 || (MAX_WINDOW >= 0 && MAX_WINDOW < window) ||
+       cpplib_detail::checked_int_size(values.size()) < window)[[unlikely]]{
         throw std::runtime_error(
             "library assertion fault: range violation (sliding_window_extreme)."
         );
@@ -128,7 +150,7 @@ std::vector<T> sliding_window_extreme(
     MonotoneQueue<T, MAX_WINDOW, Compare> queue(compare);
     std::vector<T> result;
     result.reserve(values.size() - static_cast<std::size_t>(window) + 1);
-    for(int i = 0; i < static_cast<int>(values.size()); i++){
+    for(int i = 0; i < cpplib_detail::checked_int_size(values.size()); i++){
         queue.expire(static_cast<long long>(i) - window + 1);
         queue.push(i, values[static_cast<std::size_t>(i)]);
         if(i + 1 >= window) result.push_back(queue.best());
@@ -136,7 +158,7 @@ std::vector<T> sliding_window_extreme(
     return result;
 }
 
-template<class T, int MAX_WINDOW>
+template<class T, int MAX_WINDOW = -1>
 std::vector<T> sliding_window_min(const std::vector<T>& values, int window){
     return sliding_window_extreme<T, MAX_WINDOW>(values, window, std::less<T>());
 }

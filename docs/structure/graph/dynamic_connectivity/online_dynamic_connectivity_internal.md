@@ -49,3 +49,14 @@ $O(\log N)$ がかかる。保存領域は $O(\mathtt{MAX\_SIZE}+M)$。
 - `OnlineDynamicConnectivity` の内部部品であり、通常は直接使用しない。
 - 頂点は `[0,n)`、`0 <= n <= MAX_SIZE`。上位クラスがこの範囲を検査する。
 - `link` は未接続な両端、`cut` は存在する木辺、`erase_non_tree` は存在する非木辺を要求する。内部状態またはnode容量の違反では `runtime_error`。
+
+## 容量を省略した可変長版
+
+```cpp
+online_dynamic_connectivity_internal::EulerTourForest<> graph(n);
+online_dynamic_connectivity_internal::EulerTourForest<N> fixed(n);
+```
+
+容量省略時の `MAX_SIZE=-1` はvectorを使い、固定容量版と同じAPIを提供する。
+各森のノードはvectorへ必要に応じて追加し、削除した辺のノードを再利用する。操作の償却 $O(\log(N+1))$ を維持し、領域は実体化した頂点・木辺・非木辺の数に比例する。
+整数添字の表現上限を超えるノード数と無効な頂点は検証する。

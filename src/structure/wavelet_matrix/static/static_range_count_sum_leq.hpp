@@ -16,7 +16,7 @@ struct StaticRangeCountSumResult{
 template<
     class T,
     class W,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >
 class StaticRangeCountSumLeq{

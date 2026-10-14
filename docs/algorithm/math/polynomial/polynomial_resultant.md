@@ -82,3 +82,16 @@ $mathcal M(D)=O(D\log D)$である。
 高速経路は素数法であることも検査する。入力係数数は`CAPACITY`以下で
 なければならない。整数型を係数に使う場合、除算の切り捨てや中間値の
 overflowをこのライブラリは補償しない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+std::vector<Mint> f{-1, 1}, g{-2, 1};
+auto value = polynomial_resultant(f, g);
+std::array<Mint, 2> fixed_f{-1, 1}, fixed_g{-2, 1};
+auto fixed_value = polynomial_resultant(fixed_f, fixed_f.size(), fixed_g, fixed_g.size());
+```
+
+余り計算は $O((A-B+1)B)$ 時間・$O(A)$ 空間。終結式は高速 Modint 経路で $O(M(D)\log D)$ 時間・$O(D)$ 空間、一般の体で $O(D^2)$ 時間・$O(D)$ 空間。`PolynomialRemainderResult<T>` の係数列も可変長になる。

@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 
 #include "../../src/structure/dsu/persistent/persistent_unionfind_queries.hpp"
@@ -46,6 +48,13 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        PersistentUnionFindQueries<> queries(129);
+        for(int i = 0; i < 128; ++i) queries.merge(i - 1, i, i + 1);
+        for(int i = 0; i < 300; ++i) assert(queries.same(127, 0, 128));
+        assert(!queries.same(-1, 0, 128));
+    }
     self_test();
 
     int size, query_count;

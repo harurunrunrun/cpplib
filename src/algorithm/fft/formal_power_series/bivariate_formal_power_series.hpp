@@ -7,8 +7,9 @@
 #include <limits>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
-template<class T, std::size_t XDegree, std::size_t YDegree>
+template<class T, std::size_t XDegree = static_cast<std::size_t>(-1), std::size_t YDegree = static_cast<std::size_t>(-1)>
 struct BivariateFormalPowerSeries{
     static constexpr std::size_t x_degree = XDegree;
     static constexpr std::size_t y_degree = YDegree;
@@ -265,6 +266,301 @@ public:
         const BivariateFormalPowerSeries& right
     ){
         return left.coefficients == right.coefficients;
+    }
+
+    friend BivariateFormalPowerSeries operator+(
+        BivariateFormalPowerSeries left,
+        const BivariateFormalPowerSeries& right
+    ){
+        left += right;
+        return left;
+    }
+
+    friend BivariateFormalPowerSeries operator-(
+        BivariateFormalPowerSeries left,
+        const BivariateFormalPowerSeries& right
+    ){
+        left -= right;
+        return left;
+    }
+
+    friend BivariateFormalPowerSeries operator*(
+        BivariateFormalPowerSeries left,
+        const BivariateFormalPowerSeries& right
+    ){
+        left *= right;
+        return left;
+    }
+};
+
+template<class T>
+struct BivariateFormalPowerSeries<T, static_cast<std::size_t>(-1), static_cast<std::size_t>(-1)>{
+    std::size_t x_degree, y_degree, x_size, y_size, coefficient_count;
+
+private:
+    std::vector<T> coefficients;
+
+    std::size_t flat_index(
+        std::size_t x,
+        std::size_t y
+    ) const noexcept{
+        return x * y_size + y;
+    }
+
+    void check_index(std::size_t x, std::size_t y) const{
+        if(x > x_degree || y > y_degree)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: coefficient out of range "
+                "(BivariateFormalPowerSeries)."
+            );
+        }
+    }
+
+    BivariateFormalPowerSeries& divide_scalar(const T& scalar){
+        for(T& coefficient: coefficients) coefficient /= scalar;
+        return *this;
+    }
+
+public:
+    explicit BivariateFormalPowerSeries(std::size_t xd = 0, std::size_t yd = 0):
+        x_degree(xd), y_degree(yd), x_size(xd + 1), y_size(yd + 1){
+        if(xd == std::numeric_limits<std::size_t>::max() ||
+           yd == std::numeric_limits<std::size_t>::max() ||
+           x_size > std::numeric_limits<std::size_t>::max() / y_size)
+            throw std::length_error("bivariate polynomial shape overflow");
+        coefficient_count = x_size * y_size;
+        coefficients.resize(coefficient_count);
+    }
+
+    BivariateFormalPowerSeries(std::size_t xd, std::size_t yd, const std::vector<T>& values):
+        BivariateFormalPowerSeries(xd, yd){
+        if(values.size() != coefficient_count) throw std::invalid_argument("bivariate polynomial shape");
+        coefficients = values;
+    }
+
+    const std::vector<T>& data() const noexcept{ return coefficients; }
+
+    T& operator()(std::size_t x, std::size_t y){
+        check_index(x, y);
+        return coefficients[flat_index(x, y)];
+    }
+
+    const T& operator()(std::size_t x, std::size_t y) const{
+        check_index(x, y);
+        return coefficients[flat_index(x, y)];
+    }
+
+    const T& constant_term() const noexcept{
+        return coefficients[0];
+    }
+
+    static BivariateFormalPowerSeries constant(const T& value, std::size_t xd = 0, std::size_t yd = 0){
+        BivariateFormalPowerSeries result(xd, yd);
+        result.coefficients[0] = value;
+        return result;
+    }
+
+    BivariateFormalPowerSeries& operator+=(
+        const BivariateFormalPowerSeries& other
+    ){
+        if(x_degree != other.x_degree || y_degree != other.y_degree)
+            throw std::invalid_argument("bivariate polynomial shape mismatch");
+        for(std::size_t index = 0; index < coefficient_count; ++index){
+            coefficients[index] += other.coefficients[index];
+        }
+        return *this;
+    }
+
+    BivariateFormalPowerSeries& operator-=(
+        const BivariateFormalPowerSeries& other
+    ){
+        if(x_degree != other.x_degree || y_degree != other.y_degree)
+            throw std::invalid_argument("bivariate polynomial shape mismatch");
+        for(std::size_t index = 0; index < coefficient_count; ++index){
+            coefficients[index] -= other.coefficients[index];
+        }
+        return *this;
+    }
+
+    BivariateFormalPowerSeries& operator*=(
+        const BivariateFormalPowerSeries& other
+    ){
+        if(x_degree != other.x_degree || y_degree != other.y_degree)
+            throw std::invalid_argument("bivariate polynomial shape mismatch");
+        std::vector<T> product(coefficient_count);
+        for(std::size_t first_x = 0; first_x <= x_degree; ++first_x){
+            for(std::size_t first_y = 0; first_y <= y_degree; ++first_y){
+                const T& first = coefficients[flat_index(first_x, first_y)];
+                for(std::size_t second_x = 0;
+                    second_x + first_x <= x_degree;
+                    ++second_x
+                ){
+                    for(std::size_t second_y = 0;
+                        second_y + first_y <= y_degree;
+                        ++second_y
+                    ){
+                        product[flat_index(
+                            first_x + second_x,
+                            first_y + second_y
+                        )] += first * other.coefficients[
+                            flat_index(second_x, second_y)
+                        ];
+                    }
+                }
+            }
+        }
+        coefficients = std::move(product);
+        return *this;
+    }
+
+    BivariateFormalPowerSeries inverse() const{
+        if(constant_term() == T{})[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: zero constant term "
+                "(BivariateFormalPowerSeries::inverse)."
+            );
+        }
+        BivariateFormalPowerSeries result(x_degree, y_degree);
+        result.coefficients[0] = T{1} / constant_term();
+        for(std::size_t total = 1; total <= x_degree + y_degree; ++total){
+            const std::size_t first_x = total > y_degree ? total - y_degree : 0;
+            const std::size_t last_x = total < x_degree ? total : x_degree;
+            for(std::size_t x = first_x; x <= last_x; ++x){
+                const std::size_t y = total - x;
+                T convolution{};
+                for(std::size_t source_x = 0; source_x <= x; ++source_x){
+                    for(std::size_t source_y = 0; source_y <= y; ++source_y){
+                        if(source_x == 0 && source_y == 0) continue;
+                        convolution += coefficients[flat_index(source_x, source_y)]
+                            * result.coefficients[flat_index(
+                                x - source_x, y - source_y
+                            )];
+                    }
+                }
+                result.coefficients[flat_index(x, y)] =
+                    -convolution / constant_term();
+            }
+        }
+        return result;
+    }
+
+    BivariateFormalPowerSeries logarithm() const{
+        if(!(constant_term() == T{1}))[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: constant term is not one "
+                "(BivariateFormalPowerSeries::logarithm)."
+            );
+        }
+        BivariateFormalPowerSeries term = *this;
+        term.coefficients[0] -= T{1};
+        BivariateFormalPowerSeries power = term;
+        BivariateFormalPowerSeries result(x_degree, y_degree);
+        const std::size_t maximum_total_degree = x_degree + y_degree;
+        for(std::size_t exponent = 1;
+            exponent <= maximum_total_degree;
+            ++exponent
+        ){
+            BivariateFormalPowerSeries contribution = power;
+            contribution.divide_scalar(T{static_cast<long long>(exponent)});
+            if((exponent & 1U) != 0) result += contribution;
+            else result -= contribution;
+            if(exponent != maximum_total_degree) power *= term;
+        }
+        return result;
+    }
+
+    BivariateFormalPowerSeries exponential() const{
+        if(!(constant_term() == T{}))[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: constant term is not zero "
+                "(BivariateFormalPowerSeries::exponential)."
+            );
+        }
+        BivariateFormalPowerSeries result = constant(T{1}, x_degree, y_degree);
+        BivariateFormalPowerSeries power = constant(T{1}, x_degree, y_degree);
+        T factorial{1};
+        const std::size_t maximum_total_degree = x_degree + y_degree;
+        for(std::size_t exponent = 1;
+            exponent <= maximum_total_degree;
+            ++exponent
+        ){
+            power *= *this;
+            factorial *= T{static_cast<long long>(exponent)};
+            BivariateFormalPowerSeries contribution = power;
+            contribution.divide_scalar(factorial);
+            result += contribution;
+        }
+        return result;
+    }
+
+    BivariateFormalPowerSeries pow(long long exponent) const{
+        bool negative = exponent < 0;
+        std::uint64_t magnitude = static_cast<std::uint64_t>(exponent);
+        if(negative) magnitude = 0 - magnitude;
+        BivariateFormalPowerSeries base = negative ? inverse() : *this;
+        BivariateFormalPowerSeries result = constant(T{1}, x_degree, y_degree);
+        while(magnitude != 0){
+            if((magnitude & 1U) != 0) result *= base;
+            magnitude >>= 1;
+            if(magnitude != 0) base *= base;
+        }
+        return result;
+    }
+
+    BivariateFormalPowerSeries square_root(
+        const T& constant_square_root
+    ) const{
+        if(!(constant_square_root * constant_square_root == constant_term()))[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: invalid constant square root "
+                "(BivariateFormalPowerSeries::square_root)."
+            );
+        }
+        const T twice_root = constant_square_root + constant_square_root;
+        if(twice_root == T{})[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: non-invertible doubled root "
+                "(BivariateFormalPowerSeries::square_root)."
+            );
+        }
+        BivariateFormalPowerSeries result(x_degree, y_degree);
+        result.coefficients[0] = constant_square_root;
+        for(std::size_t total = 1; total <= x_degree + y_degree; ++total){
+            const std::size_t first_x = total > y_degree ? total - y_degree : 0;
+            const std::size_t last_x = total < x_degree ? total : x_degree;
+            for(std::size_t x = first_x; x <= last_x; ++x){
+                const std::size_t y = total - x;
+                T known{};
+                for(std::size_t first_term_x = 0;
+                    first_term_x <= x;
+                    ++first_term_x
+                ){
+                    for(std::size_t first_term_y = 0;
+                        first_term_y <= y;
+                        ++first_term_y
+                    ){
+                        if(first_term_x == 0 && first_term_y == 0) continue;
+                        if(first_term_x == x && first_term_y == y) continue;
+                        known += result.coefficients[flat_index(
+                            first_term_x, first_term_y
+                        )] * result.coefficients[flat_index(
+                            x - first_term_x, y - first_term_y
+                        )];
+                    }
+                }
+                result.coefficients[flat_index(x, y)] =
+                    (coefficients[flat_index(x, y)] - known) / twice_root;
+            }
+        }
+        return result;
+    }
+
+    friend bool operator==(
+        const BivariateFormalPowerSeries& left,
+        const BivariateFormalPowerSeries& right
+    ){
+        return left.x_degree == right.x_degree && left.y_degree == right.y_degree
+            && left.coefficients == right.coefficients;
     }
 
     friend BivariateFormalPowerSeries operator+(

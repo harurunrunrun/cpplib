@@ -16,7 +16,7 @@ struct ConstantHash{
 
 void test_random(){
     std::mt19937_64 rng(2026071401);
-    AssociativeArray<std::uint64_t, long long, 512> table;
+    AssociativeArray<std::uint64_t, long long> table;
     std::unordered_map<std::uint64_t, long long> expected;
     for(int step = 0; step < 20000; ++step){
         const std::uint64_t key = rng() % 700;
@@ -101,7 +101,7 @@ int main(){
         return 0;
     }
 
-    AssociativeArray<std::uint64_t, std::int64_t, 200000> table;
+    AssociativeArray<std::uint64_t, std::int64_t> table;
     while(query_count-- > 0){
         std::string operation;
         std::cin >> operation;

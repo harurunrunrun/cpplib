@@ -8,7 +8,7 @@
 
 #include "../spanning_tree/matrix_tree_theorem.hpp"
 
-template<class T, std::size_t MAX_VERTEX>
+template<class T, std::size_t MAX_VERTEX = static_cast<std::size_t>(-1)>
 T count_eulerian_circuits(
     int vertex_count,
     const std::vector<std::pair<int, int>>& directed_edges

@@ -55,3 +55,14 @@ $O(ALPHABET\cdot MAX\_LENGTH+|text|)$。固定node配列はheap上に確保す�
 - `text.size() <= MAX_LENGTH` が必要である。
 - 各文字 `c` は `OFFSET <= c < OFFSET + ALPHABET` を満たさなければならない。
 - 容量または文字範囲の違反では `runtime_error` を送出する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = palindromic_tree_representation(text);
+auto fixed = palindromic_tree_representation<100000>(text);
+```
+
+長さ $N$、alphabet サイズ $A$ に対し $O(AN)$ 時間・空間。

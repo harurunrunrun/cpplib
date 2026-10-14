@@ -6,7 +6,7 @@
 
 #include "../decomposition/tree_mo.hpp"
 
-template<class Value, int MAX_SIZE>
+template<class Value, int MAX_SIZE = -1>
 struct OfflineTreePathDistinct{
 private:
     int _n;
@@ -17,7 +17,7 @@ private:
 
 public:
     explicit OfflineTreePathDistinct(const std::vector<Value>& vertex_values):
-        _n(static_cast<int>(vertex_values.size())), mo(_n), values(vertex_values){}
+        _n(cpplib_detail::checked_int_size(vertex_values.size())), mo(_n), values(vertex_values){}
 
     void add_edge(int left, int right){ mo.add_edge(left, right); }
 

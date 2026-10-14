@@ -98,7 +98,7 @@ int main(){
             std::cin >> input;
             value = max_subarray_singleton(input);
         }
-        LazyLinkCutTree<max_subarray_assignment, 100000> tree(initial);
+        LazyLinkCutTree<max_subarray_assignment> tree(initial);
         for(int edge = 1; edge < vertex_count; ++edge){
             int left, right;
             std::cin >> left >> right;

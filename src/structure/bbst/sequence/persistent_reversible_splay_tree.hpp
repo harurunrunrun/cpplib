@@ -3,15 +3,16 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
-template<auto Monoid, int MAX_NODE, int MAX_VERSION>
+template<auto Monoid, int MAX_NODE = -1, int MAX_VERSION = -1>
 struct PersistentReversibleSplayTree{
-    static_assert(MAX_NODE > 0);
-    static_assert(MAX_VERSION > 0);
+    static_assert(MAX_NODE == -1 || MAX_NODE > 0);
+    static_assert(MAX_VERSION == -1 || MAX_VERSION > 0);
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
 
 private:
@@ -25,8 +26,8 @@ private:
         S rev_aggregate{};
     };
 
-    std::array<Node, MAX_NODE> nodes{};
-    std::array<int, MAX_VERSION> roots{};
+    cpplib_detail::StaticOrVector<Node, (MAX_NODE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_NODE))> nodes{};
+    cpplib_detail::StaticOrVector<int, (MAX_VERSION < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_VERSION))> roots{};
     int used = 0;
     int version_count = 1;
 
@@ -43,19 +44,20 @@ private:
     }
 
     void pull(int node){
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        current.size = 1 + size_or_zero(current.left) + size_or_zero(current.right);
-        current.aggregate = Monoid.op(
-            aggregate_or_e(current.left),
-            Monoid.op(current.value, aggregate_or_e(current.right))
+        const auto current_node_index_1 = static_cast<std::size_t>(node);
+        nodes[current_node_index_1].size = 1 + size_or_zero(nodes[current_node_index_1].left) + size_or_zero(nodes[current_node_index_1].right);
+        nodes[current_node_index_1].aggregate = Monoid.op(
+            aggregate_or_e(nodes[current_node_index_1].left),
+            Monoid.op(nodes[current_node_index_1].value, aggregate_or_e(nodes[current_node_index_1].right))
         );
-        current.rev_aggregate = Monoid.op(
-            rev_aggregate_or_e(current.right),
-            Monoid.op(current.value, rev_aggregate_or_e(current.left))
+        nodes[current_node_index_1].rev_aggregate = Monoid.op(
+            rev_aggregate_or_e(nodes[current_node_index_1].right),
+            Monoid.op(nodes[current_node_index_1].value, rev_aggregate_or_e(nodes[current_node_index_1].left))
         );
     }
 
     int copy_node(int node){
+        if constexpr(MAX_NODE < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(node == -1) return -1;
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentReversibleSplayTree).");
@@ -65,6 +67,7 @@ private:
     }
 
     int new_node(const S& value){
+        if constexpr(MAX_NODE < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(used == MAX_NODE)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentReversibleSplayTree).");
         }
@@ -75,26 +78,26 @@ private:
 
     void toggle(int node){
         if(node == -1) return;
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        std::swap(current.left, current.right);
-        std::swap(current.aggregate, current.rev_aggregate);
-        current.reversed = !current.reversed;
+        const auto current_node_index_2 = static_cast<std::size_t>(node);
+        std::swap(nodes[current_node_index_2].left, nodes[current_node_index_2].right);
+        std::swap(nodes[current_node_index_2].aggregate, nodes[current_node_index_2].rev_aggregate);
+        nodes[current_node_index_2].reversed = !nodes[current_node_index_2].reversed;
     }
 
     // Returns a writable copy whose reversal flag has been propagated.
     int expose(int root){
         int node = copy_node(root);
-        auto& current = nodes[static_cast<std::size_t>(node)];
-        if(!current.reversed) return node;
-        if(current.left != -1){
-            current.left = copy_node(current.left);
-            toggle(current.left);
+        const auto current_node_index_3 = static_cast<std::size_t>(node);
+        if(!nodes[current_node_index_3].reversed) return node;
+        if(nodes[current_node_index_3].left != -1){
+            nodes[current_node_index_3].left = copy_node(nodes[current_node_index_3].left);
+            toggle(nodes[current_node_index_3].left);
         }
-        if(current.right != -1){
-            current.right = copy_node(current.right);
-            toggle(current.right);
+        if(nodes[current_node_index_3].right != -1){
+            nodes[current_node_index_3].right = copy_node(nodes[current_node_index_3].right);
+            toggle(nodes[current_node_index_3].right);
         }
-        current.reversed = false;
+        nodes[current_node_index_3].reversed = false;
         return node;
     }
 
@@ -219,6 +222,7 @@ private:
         int checkpoint = used;
         try{
             int root = operation();
+            if constexpr(MAX_VERSION < 0) roots.ensure(static_cast<std::size_t>(version_count) + 1);
             roots[static_cast<std::size_t>(version_count)] = root;
             return version_count++;
         }catch(...){
@@ -228,13 +232,13 @@ private:
     }
 
     S get_rec(int node, int k, bool flip) const{
-        const auto& current = nodes[static_cast<std::size_t>(node)];
-        int left = flip ? current.right : current.left;
-        int right = flip ? current.left : current.right;
-        bool child_flip = flip ^ current.reversed;
+        const auto current_node_index_4 = static_cast<std::size_t>(node);
+        int left = flip ? nodes[current_node_index_4].right : nodes[current_node_index_4].left;
+        int right = flip ? nodes[current_node_index_4].left : nodes[current_node_index_4].right;
+        bool child_flip = flip ^ nodes[current_node_index_4].reversed;
         int left_size = size_or_zero(left);
         if(k < left_size) return get_rec(left, k, child_flip);
-        if(k == left_size) return current.value;
+        if(k == left_size) return nodes[current_node_index_4].value;
         return get_rec(right, k - left_size - 1, child_flip);
     }
 
@@ -244,17 +248,17 @@ private:
         if(l == 0 && r == node_size){
             return flip ? rev_aggregate_or_e(node) : aggregate_or_e(node);
         }
-        const auto& current = nodes[static_cast<std::size_t>(node)];
-        int left = flip ? current.right : current.left;
-        int right = flip ? current.left : current.right;
-        bool child_flip = flip ^ current.reversed;
+        const auto current_node_index_5 = static_cast<std::size_t>(node);
+        int left = flip ? nodes[current_node_index_5].right : nodes[current_node_index_5].left;
+        int right = flip ? nodes[current_node_index_5].left : nodes[current_node_index_5].right;
+        bool child_flip = flip ^ nodes[current_node_index_5].reversed;
         int left_size = size_or_zero(left);
         S result = Monoid.e();
         if(l < left_size){
             result = prod_rec(left, l, std::min(r, left_size), child_flip);
         }
         if(l <= left_size && left_size < r){
-            result = Monoid.op(result, current.value);
+            result = Monoid.op(result, nodes[current_node_index_5].value);
         }
         if(left_size + 1 < r){
             result = Monoid.op(
@@ -267,25 +271,25 @@ private:
 
     void collect(int node, bool flip, std::vector<S>& result) const{
         if(node == -1) return;
-        const auto& current = nodes[static_cast<std::size_t>(node)];
-        int left = flip ? current.right : current.left;
-        int right = flip ? current.left : current.right;
-        bool child_flip = flip ^ current.reversed;
+        const auto current_node_index_6 = static_cast<std::size_t>(node);
+        int left = flip ? nodes[current_node_index_6].right : nodes[current_node_index_6].left;
+        int right = flip ? nodes[current_node_index_6].left : nodes[current_node_index_6].right;
+        bool child_flip = flip ^ nodes[current_node_index_6].reversed;
         collect(left, child_flip, result);
-        result.push_back(current.value);
+        result.push_back(nodes[current_node_index_6].value);
         collect(right, child_flip, result);
     }
 
 public:
     PersistentReversibleSplayTree(){
-        roots.fill(-1);
+        roots.ensure(1); roots.fill(-1);
     }
 
     explicit PersistentReversibleSplayTree(const std::vector<S>& values) : PersistentReversibleSplayTree(){
         if(values.size() > static_cast<std::size_t>(MAX_NODE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (PersistentReversibleSplayTree).");
         }
-        roots[0] = build(values, 0, static_cast<int>(values.size()));
+        roots[0] = build(values, 0, cpplib_detail::checked_int_size(values.size()));
     }
 
     int versions() const{
@@ -335,11 +339,11 @@ public:
             auto [left, right] = split(roots[static_cast<std::size_t>(version)], p);
             auto [middle, tail] = split(right, 1);
             middle = copy_node(middle);
-            auto& current = nodes[static_cast<std::size_t>(middle)];
-            current.value = value;
-            current.aggregate = value;
-            current.rev_aggregate = value;
-            current.reversed = false;
+            const auto current_node_index_7 = static_cast<std::size_t>(middle);
+            nodes[current_node_index_7].value = value;
+            nodes[current_node_index_7].aggregate = value;
+            nodes[current_node_index_7].rev_aggregate = value;
+            nodes[current_node_index_7].reversed = false;
             return merge(merge(left, middle), tail);
         });
     }

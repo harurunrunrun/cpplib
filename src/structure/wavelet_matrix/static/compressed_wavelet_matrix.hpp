@@ -1,5 +1,6 @@
 #ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_STATIC_COMPRESSED_WAVELET_MATRIX_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_STATIC_COMPRESSED_WAVELET_MATRIX_HPP_INCLUDED
+#include "../../array/static_or_vector.hpp"
 
 #include <algorithm>
 #include <array>
@@ -13,11 +14,11 @@
 
 template<
     class T,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     int ID_BIT_WIDTH = std::numeric_limits<unsigned>::digits
 >
 struct CompressedWaveletMatrix{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
     static_assert(0 < ID_BIT_WIDTH && ID_BIT_WIDTH <= std::numeric_limits<unsigned>::digits);
 
 private:
@@ -40,7 +41,7 @@ private:
     }
     std::optional<int> find_id(const T& value) const{
         int id = lower_id(value);
-        if(id == static_cast<int>(values.size()) || values[static_cast<std::size_t>(id)] != value){
+        if(id == cpplib_detail::checked_int_size(values.size()) || values[static_cast<std::size_t>(id)] != value){
             return std::nullopt;
         }
         return id;
@@ -48,13 +49,13 @@ private:
     int count_id_less(int l, int r, int upper) const{
         check_range(l, r, "library assertion fault: range violation (range_freq).");
         if(upper <= 0) return 0;
-        if(static_cast<int>(values.size()) <= upper) return r - l;
+        if(cpplib_detail::checked_int_size(values.size()) <= upper) return r - l;
         return matrix->range_freq(l, r, static_cast<internal_id_type>(upper));
     }
 
 public:
     explicit CompressedWaveletMatrix(const std::vector<T>& sequence):
-        _n(static_cast<int>(sequence.size())), values(sequence), matrix(nullptr){
+        _n(cpplib_detail::checked_int_size(sequence.size())), values(sequence), matrix(nullptr){
         if(sequence.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
@@ -80,9 +81,9 @@ public:
     CompressedWaveletMatrix& operator=(CompressedWaveletMatrix&&) = default;
 
     int size() const{ return _n; }
-    int value_count() const{ return static_cast<int>(values.size()); }
+    int value_count() const{ return cpplib_detail::checked_int_size(values.size()); }
     const T& value(int id) const{
-        if(id < 0 || static_cast<int>(values.size()) <= id)[[unlikely]]{
+        if(id < 0 || cpplib_detail::checked_int_size(values.size()) <= id)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (value).");
         }
         return values[static_cast<std::size_t>(id)];

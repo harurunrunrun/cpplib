@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <string>
 #include <vector>
@@ -110,6 +112,14 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        RollbackWeightedDSU<long long> dsu(129);
+        const auto before = dsu.snapshot();
+        for(int i = 1; i < 129; ++i) dsu.merge(i - 1, i, 2);
+        for(int i = 0; i < 300; ++i) dsu.merge(0, 128, 256);
+        assert(dsu.diff(0, 128) == 256); dsu.rollback(before); assert(!dsu.same(0, 128));
+    }
     int n, q;
     if(!(std::cin >> n >> q)){
         self_test();

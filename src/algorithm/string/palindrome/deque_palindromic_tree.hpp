@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_STRING_PALINDROME_DEQUE_PALINDROMIC_TREE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_STRING_PALINDROME_DEQUE_PALINDROMIC_TREE_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <array>
 #include <cstddef>
 #include <memory>
@@ -12,11 +14,11 @@ struct DequePalindromeStatistics{
     int longest_suffix;
 };
 
-template<int ALPHABET, int MAX_NODES, int MAX_LENGTH, char OFFSET = 'a'>
+template<int ALPHABET, int MAX_NODES = -1, int MAX_LENGTH = -1, char OFFSET = 'a'>
 struct DequePalindromicTree{
     static_assert(ALPHABET > 0);
-    static_assert(MAX_NODES >= 2);
-    static_assert(MAX_LENGTH > 0);
+    static_assert(MAX_NODES == -1 || MAX_NODES >= 2);
+    static_assert(MAX_LENGTH == -1 || MAX_LENGTH > 0);
 
 private:
     static constexpr int ODD_ROOT = 0;
@@ -43,14 +45,26 @@ private:
     };
 
     struct CircularDeque{
-        std::unique_ptr<std::array<DequeNode, MAX_LENGTH>> data =
-            std::make_unique<std::array<DequeNode, MAX_LENGTH>>();
+        std::unique_ptr<cpplib_detail::StaticOrVector<DequeNode, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_LENGTH))>> data =
+            std::make_unique<cpplib_detail::StaticOrVector<DequeNode, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_LENGTH))>>();
         int begin = 0;
         int count = 0;
 
+        CircularDeque(){ data->resize(MAX_LENGTH < 0 ? 1 : MAX_LENGTH); }
+        void ensure_space(){
+            if constexpr(MAX_LENGTH < 0){
+                if(static_cast<std::size_t>(count) < data->size()) return;
+                std::vector<DequeNode> saved(static_cast<std::size_t>(count));
+                for(int i = 0; i < count; ++i) saved[static_cast<std::size_t>(i)] = (*this)[i];
+                data->resize(data->size() * 2);
+                begin = 0;
+                for(int i = 0; i < count; ++i) (*data)[static_cast<std::size_t>(i)] = saved[static_cast<std::size_t>(i)];
+            }
+        }
+
         int physical_index(int index) const{
             int result = begin + index;
-            if(result >= MAX_LENGTH) result -= MAX_LENGTH;
+            if(result >= static_cast<int>(data->size())) result -= static_cast<int>(data->size());
             return result;
         }
 
@@ -68,24 +82,26 @@ private:
         int size() const{ return count; }
 
         void push_back(const DequeNode& value){
+            ensure_space();
             (*this)[count] = value;
             ++count;
         }
         void push_front(const DequeNode& value){
-            begin = begin == 0 ? MAX_LENGTH - 1 : begin - 1;
+            ensure_space();
+            begin = begin == 0 ? static_cast<int>(data->size()) - 1 : begin - 1;
             (*data)[static_cast<std::size_t>(begin)] = value;
             ++count;
         }
         void pop_back(){ --count; }
         void pop_front(){
             ++begin;
-            if(begin == MAX_LENGTH) begin = 0;
+            if(begin == static_cast<int>(data->size())) begin = 0;
             --count;
         }
     };
 
-    std::unique_ptr<std::array<Node, MAX_NODES>> nodes =
-        std::make_unique<std::array<Node, MAX_NODES>>();
+    std::unique_ptr<cpplib_detail::StaticOrVector<Node, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_NODES))>> nodes =
+        std::make_unique<cpplib_detail::StaticOrVector<Node, ((MAX_NODES < 0 || MAX_LENGTH < 0) ? -1 : static_cast<std::ptrdiff_t>(MAX_NODES))>>();
     CircularDeque text;
     int used_nodes = 2;
     int active_nodes = 0;
@@ -116,6 +132,7 @@ private:
         if(used_nodes == MAX_NODES)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (node).");
         }
+        nodes->ensure(static_cast<std::size_t>(used_nodes) + 1);
         node(used_nodes) = Node();
         return used_nodes++;
     }
@@ -159,6 +176,7 @@ private:
 
 public:
     DequePalindromicTree(){
+        nodes->resize(2);
         node(ODD_ROOT) = Node();
         node(ODD_ROOT).length = -1;
         node(ODD_ROOT).parent = ODD_ROOT;

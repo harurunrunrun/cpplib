@@ -1,11 +1,21 @@
 // competitive-verifier: STANDALONE
 
+#include <cassert>
 #include <cstddef>
 #include <iostream>
 
+#include "../../src/algorithm/math/combinatorics/small_prime_permutation_cycle_counts.hpp"
 #include "../../src/algorithm/math/combinatorics/stirling_numbers.hpp"
 
 int main(){
+    const SmallPrimePermutationCycleCounts permutations(7);
+    assert(permutations.count(0, 0, 0) == 1);
+    assert(permutations.count(4, 2, 0) == 3); // Three pairs of transpositions.
+    assert(permutations.count(4, 2, 1) == 1); // 4 choices of fixed point, two 3-cycles: 8 mod 7.
+    assert(permutations.count(5, 2, 0) == 6); // Choose a 2-cycle, order the 3-cycle: 20 mod 7.
+    assert(permutations.count(4, 1, 1) == 0);
+    assert(permutations.count(1000000000000000000LL, 1000000000000000000LL,
+                              1000000000000000000LL) == 1);
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
     int query_count;

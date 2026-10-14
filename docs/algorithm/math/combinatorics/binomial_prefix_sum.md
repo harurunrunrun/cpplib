@@ -49,3 +49,14 @@ Mint prefix_sum(int n, int k)
   $k<0$ または $k>n$ では0を返す。
 - `prefix_sum(n,k)` は $n$ が範囲外なら例外、$k<0$ なら0。
   $k>MAX_N$ は `MAX_N` に丸めるため、$k\ge n$ では $2^n$ に一致する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+BinomialPrefixSum<Mint> dynamic(n);
+BinomialPrefixSum<Mint, 1000> fixed;
+```
+
+前処理・保存領域は $O(N^2)$、クエリは $O(1)$ 時間。

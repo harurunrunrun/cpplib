@@ -52,3 +52,14 @@ $O(MAX\_SIZE + N)$。再帰は使用しない。
 - `vertex_count == 1` では `product == 0`、3つの辺fieldは `-1`、
   両直径は0となる。
 - 長さ0の1頂点パスを許す。積は `long long` で返す。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = maximum_product_of_two_vertex_disjoint_tree_paths(vertex_count, edges);
+auto fixed = maximum_product_of_two_vertex_disjoint_tree_paths<100000>(vertex_count, edges);
+```
+
+$N$ 頂点に対して $O(N)$ 時間・空間。

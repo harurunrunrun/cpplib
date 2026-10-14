@@ -7,19 +7,19 @@
 #include <utility>
 #include "../../persistence/partially_persistent_storage.hpp"
 
-template<int MAX_SIZE, int MAX_UPDATE>
+template<int MAX_SIZE = -1, int MAX_UPDATE = -1>
 struct PartiallyPersistentDSU{
-    static_assert(MAX_SIZE > 0);
-    static_assert(MAX_UPDATE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
+    static_assert(MAX_UPDATE >= -1);
 
 private:
     static constexpr int INF = std::numeric_limits<int>::max();
 
     int _n = 0;
     int version_count = 1;
-    std::array<int, MAX_SIZE> parent{};
-    std::array<int, MAX_SIZE> parent_time{};
-    std::array<int, static_cast<std::size_t>(MAX_UPDATE) + 1> group_count{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> parent{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> parent_time{};
+    cpplib_detail::StaticOrVector<int, (MAX_UPDATE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_UPDATE) + 1)> group_count{};
     PartiallyPersistentStorage<int, MAX_SIZE, MAX_UPDATE> component_size_history;
 
     void check_vertex(int v, const char* message) const{
@@ -36,10 +36,13 @@ private:
     }
 
 public:
-    explicit PartiallyPersistentDSU(int n = MAX_SIZE): _n(n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit PartiallyPersistentDSU(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
+        parent.resize(static_cast<std::size_t>(n));
+        parent_time.resize(static_cast<std::size_t>(n));
+        group_count.ensure(1);
         for(int i = 0; i < _n; i++){
             parent[i] = i;
             parent_time[i] = INF;
@@ -77,9 +80,10 @@ public:
     int merge(int u, int v){
         check_vertex(u, "library assertion fault: range violation (merge).");
         check_vertex(v, "library assertion fault: range violation (merge).");
-        if(version_count > MAX_UPDATE)[[unlikely]]{
+        if(version_count == std::numeric_limits<int>::max() || (MAX_UPDATE >= 0 && version_count > MAX_UPDATE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: version capacity exceeded (merge).");
         }
+        group_count.ensure(static_cast<std::size_t>(version_count) + 1);
         int new_version = version_count;
         int prev_version = version_count - 1;
         u = leader_unchecked(prev_version, u);

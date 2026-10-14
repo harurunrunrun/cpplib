@@ -81,7 +81,7 @@ int main(){
     if(std::cin >> input_n >> input_m >> q){
         std::vector<long long> input(static_cast<std::size_t>(input_n));
         for(long long& value: input) std::cin >> value;
-        LazyLinkCutTree<range_add_sum, 128> tree(input);
+        LazyLinkCutTree<range_add_sum> tree(input);
         for(int i = 0; i < input_m; i++){
             int u, v;
             std::cin >> u >> v;
@@ -138,7 +138,7 @@ int main(){
     std::mt19937 rng(20260712);
     std::vector<long long> value(n);
     for(auto& x: value) x = static_cast<int>(rng() % 200) - 80;
-    LazyLinkCutTree<range_add_sum, 80> tree(value);
+    LazyLinkCutTree<range_add_sum> tree(value);
 
     std::vector<std::vector<int>> graph(n);
     std::vector<std::pair<int, int>> edges;

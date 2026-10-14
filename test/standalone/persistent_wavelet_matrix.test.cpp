@@ -16,7 +16,7 @@ int main(){
     if(std::cin >> input_n >> input_q){
         std::vector<int> input(static_cast<std::size_t>(input_n));
         for(int& value: input) std::cin >> value;
-        PersistentWaveletMatrix<int, 128, 700, 32> matrix(input);
+        PersistentWaveletMatrix<int, -1, -1, 32> matrix(input);
         auto print_optional = [](std::optional<int> value){
             if(value.has_value()){
                 std::cout << *value << '\n';
@@ -77,7 +77,7 @@ int main(){
     std::vector<int> initial(n);
     for(int& value: initial) value = static_cast<int>(rng() % 401) - 200;
 
-    PersistentWaveletMatrix<int, 220, max_version, 32> persistent(initial);
+    PersistentWaveletMatrix<int, -1, max_version, 32> persistent(initial);
     std::vector<std::vector<int>> versions(1, initial);
 
     for(int q = 0; q < max_version; q++){
@@ -152,7 +152,7 @@ int main(){
     assert(persistent.versions() == static_cast<int>(versions.size()));
     assert(persistent.latest_version() == static_cast<int>(versions.size()) - 1);
 
-    PartiallyPersistentWaveletMatrix<int, 220, max_version, 32> partial(initial);
+    PartiallyPersistentWaveletMatrix<int, -1, max_version, 32> partial(initial);
     std::vector<std::vector<int>> history(1, initial);
     for(int q = 0; q < max_version; q++){
         int k = static_cast<int>(rng() % n);

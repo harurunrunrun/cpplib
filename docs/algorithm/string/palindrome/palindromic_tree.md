@@ -127,3 +127,14 @@ $N$ を現在長、$V$ を使用node数、$L$ をquery回文長、$D=V-2$、$K$ 
 ## 注意点
 
 文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+PalindromicTree<26> dynamic(text);
+PalindromicTree<26, 100002> fixed(text);
+```
+
+長さ $N$、alphabet サイズ $A$ に対し構築は $O(AN)$ 時間・空間、全体の文字追加は償却線形（固定 $A$）。alphabet は定数として残る。

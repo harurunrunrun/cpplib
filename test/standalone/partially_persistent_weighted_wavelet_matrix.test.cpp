@@ -66,6 +66,16 @@ void self_test(){
 } // namespace
 
 int main(){
+    {
+        PartiallyPersistentWeightedWaveletMatrix<int, long long> growing(
+            std::vector<int>{0, 1, 2}, std::vector<long long>{3, 4, 5});
+        for(int i = 1; i <= 1024; ++i){
+            assert(growing.set(0, i, i + 3) == i);
+            assert(growing.access(i, 0) == i);
+            assert(growing.sum(i, 0, 3) == i + 12);
+            assert(growing.sum(0, 0, 3) == 12);
+        }
+    }
     int n, q;
     if(!(std::cin >> n >> q)){
         self_test();

@@ -21,7 +21,7 @@ int main(){
             initial[static_cast<std::size_t>(k)] = bits[static_cast<std::size_t>(k)] == '1';
         }
         auto dictionary =
-            std::make_unique<PersistentFullyIndexableDictionary<512, 2048>>(initial);
+            std::make_unique<PersistentFullyIndexableDictionary<>>(initial);
         while(input_q--){
             std::string type;
             std::cin >> type;
@@ -64,7 +64,7 @@ int main(){
     std::vector<bool> initial(n);
     for(int i = 0; i < n; i++) initial[i] = rng() & 1;
 
-    PersistentFullyIndexableDictionary<300, max_version> persistent(initial);
+    PersistentFullyIndexableDictionary< -1, max_version> persistent(initial);
     std::vector<std::vector<bool>> versions(1, initial);
 
     for(int q = 0; q < max_version; q++){
@@ -116,7 +116,7 @@ int main(){
     assert(persistent.versions() == static_cast<int>(versions.size()));
     assert(persistent.latest_version() == static_cast<int>(versions.size()) - 1);
 
-    PartiallyPersistentFullyIndexableDictionary<300, max_version> partial(initial);
+    PartiallyPersistentFullyIndexableDictionary< -1, max_version> partial(initial);
     std::vector<std::vector<bool>> history(1, initial);
     for(int q = 0; q < max_version; q++){
         int k = static_cast<int>(rng() % n);

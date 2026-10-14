@@ -44,3 +44,13 @@ public:
 - 列長は `MAX_SIZE` 以下でなければならない。
 - 問い合わせ区間は空でない `0 <= left < right <= size()` を満たす必要がある。
 - 前提違反時は `runtime_error` を送出する。
+
+## 可変長版
+
+```cpp
+using Dynamic = StaticRangeMinimum<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log(n + 1))、区間最小値は O(1)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

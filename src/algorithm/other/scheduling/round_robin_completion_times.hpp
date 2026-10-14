@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_SCHEDULING_ROUND_ROBIN_COMPLETION_TIMES_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_SCHEDULING_ROUND_ROBIN_COMPLETION_TIMES_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <memory>
 #include <stdexcept>
@@ -9,11 +11,11 @@
 
 #include "../../../structure/fenwick_tree/fenwick_tree.hpp"
 
-template<int MAX_TASKS = 50000>
+template<int MAX_TASKS = -1>
 std::vector<long long> round_robin_completion_times(
     const std::vector<long long>& processing_times
 ){
-    const int task_count = static_cast<int>(processing_times.size());
+    const int task_count = cpplib_detail::checked_int_size(processing_times.size());
     std::vector<std::pair<long long, int>> tasks;
     tasks.reserve(processing_times.size());
     for(int index = 0; index < task_count; ++index){

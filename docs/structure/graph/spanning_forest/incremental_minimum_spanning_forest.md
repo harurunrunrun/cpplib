@@ -63,3 +63,15 @@ int component_count() const;
 型でなければならない。重みが相異なる場合、管理される最小全域森は一意である。
 同じ重みを許す場合は既に森にある辺を優先する。
 頂点、辺番号、容量の範囲違反では例外を送出する。
+
+## 容量を省略する可変長版
+
+```cpp
+IncrementalMinimumSpanningForest<long long> dynamic(vertex_count);
+IncrementalMinimumSpanningForest<long long, 100000, 200000> fixed(vertex_count);
+```
+
+容量省略時は `std::vector` で頂点と追加済みの辺だけを保持し、各辺追加で Link-Cut Tree のノードを増やす。
+構築は $O(V)$ 時間・空間、$E$ 本追加後の保持領域は $O(V+E)$。
+`add_edge` は償却 $O(\log(V+E))$ 時間、各状態参照は $O(1)$ 時間。
+容量を指定する版の固定配列も同じヘッダに残る。

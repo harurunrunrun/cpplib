@@ -1,8 +1,11 @@
 #ifndef CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_TREE_MO_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_TREE_MO_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <bit>
 #include <cmath>
 #include <cstddef>
@@ -10,9 +13,9 @@
 #include <stdexcept>
 #include <vector>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class TreeMo{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
     static constexpr int EDGE_CAPACITY =
         MAX_SIZE == 0 ? 0 : 2 * (MAX_SIZE - 1);
@@ -28,20 +31,21 @@ class TreeMo{
     };
 
     struct State{
-        std::array<int, MAX_SIZE> head{};
-        std::array<int, EDGE_CAPACITY> to{};
-        std::array<int, EDGE_CAPACITY> next{};
-        std::array<int, MAX_SIZE> parent{};
-        std::array<int, MAX_SIZE> depth{};
-        std::array<int, MAX_SIZE> tin{};
-        std::array<int, MAX_SIZE> tout{};
-        std::array<int, 2 * MAX_SIZE> euler{};
-        std::array<int, MAX_LOG * MAX_SIZE> up{};
-        std::array<int, MAX_SIZE> stack_vertex{};
-        std::array<int, MAX_SIZE> stack_edge{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> head{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> to{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> next{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> parent{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> depth{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tin{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tout{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> euler{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_LOG * MAX_SIZE))> up{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack_vertex{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> stack_edge{};
     };
 
     int _n;
+    int log_ = 1;
     int directed_edge_count = 0;
     int _root = -1;
     bool built = false;
@@ -61,17 +65,32 @@ class TreeMo{
     }
 
     int table(int level, int vertex) const{
-        return state->up[static_cast<std::size_t>(level * MAX_SIZE + vertex)];
+        return state->up[static_cast<std::size_t>(level * (MAX_SIZE < 0 ? _n : MAX_SIZE) + vertex)];
     }
 
 public:
-    explicit TreeMo(int n = MAX_SIZE): _n(n), state(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit TreeMo(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), state(nullptr){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
         }
         state = std::make_unique<State>();
+        log_ = static_cast<int>(std::bit_width(static_cast<unsigned>(std::max(1, _n))));
+        if(_n > std::numeric_limits<int>::max() / std::max(2, log_))
+            throw std::length_error("tree tables exceed int index range");
+        state->head.resize(static_cast<std::size_t>(_n));
+        state->to.resize(static_cast<std::size_t>(2 * std::max(0, _n - 1)));
+        state->next.resize(static_cast<std::size_t>(2 * std::max(0, _n - 1)));
+        state->parent.resize(static_cast<std::size_t>(_n));
+        state->depth.resize(static_cast<std::size_t>(_n));
+        state->tin.resize(static_cast<std::size_t>(_n));
+        state->tout.resize(static_cast<std::size_t>(_n));
+        state->euler.resize(static_cast<std::size_t>(2 * _n));
+        state->up.resize(static_cast<std::size_t>(log_ * _n));
+        state->stack_vertex.resize(static_cast<std::size_t>(_n));
+        state->stack_edge.resize(static_cast<std::size_t>(_n));
+
         state->head.fill(-1);
         queries.reserve(static_cast<std::size_t>(n));
     }
@@ -116,7 +135,7 @@ public:
             right,
             "library assertion fault: range violation (add_edge)."
         );
-        if(directed_edge_count + 2 > EDGE_CAPACITY)[[unlikely]]{
+        if(directed_edge_count + 2 > (MAX_SIZE < 0 ? static_cast<std::size_t>(2) * static_cast<std::size_t>(std::max(0, _n - 1)) : EDGE_CAPACITY))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: edge capacity exceeded (add_edge)."
             );
@@ -220,9 +239,9 @@ public:
                     ? vertex
                     : state->parent[static_cast<std::size_t>(vertex)];
         }
-        for(int level = 1; level < MAX_LOG; ++level){
-            const int base = level * MAX_SIZE;
-            const int previous = (level - 1) * MAX_SIZE;
+        for(int level = 1; level < log_; ++level){
+            const int base = level * (MAX_SIZE < 0 ? _n : MAX_SIZE);
+            const int previous = (level - 1) * (MAX_SIZE < 0 ? _n : MAX_SIZE);
             for(int vertex = 0; vertex < _n; ++vertex){
                 const int middle = state->up[
                     static_cast<std::size_t>(previous + vertex)
@@ -290,7 +309,7 @@ public:
         if(left == right){
             return left;
         }
-        for(int level = MAX_LOG - 1; level >= 0; --level){
+        for(int level = log_ - 1; level >= 0; --level){
             if(table(level, left) != table(level, right)){
                 left = table(level, left);
                 right = table(level, right);
@@ -316,7 +335,8 @@ public:
             std::swap(left, right);
         }
         const int ancestor = lca(left, right);
-        const int index = static_cast<int>(queries.size());
+        const int index = cpplib_detail::checked_int_size(queries.size());
+        if(index == std::numeric_limits<int>::max()) throw std::length_error("too many tree queries");
         if(ancestor == left){
             queries.push_back({
                 state->tin[static_cast<std::size_t>(left)],

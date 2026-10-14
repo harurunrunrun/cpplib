@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -18,18 +19,21 @@ template<
     class X,
     class Y,
     class W,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits
 >
 struct WaveletMatrix2DWeighted{
     static_assert(std::is_integral_v<X>);
     static_assert(std::is_integral_v<Y>);
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
 
 private:
     struct State{
-        std::array<X, MAX_SIZE> x{};
+        cpplib_detail::StaticOrVector<X, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> x{};
         std::unique_ptr<WeightedWaveletMatrix<Y, W, MAX_SIZE, Y_BIT_WIDTH>> matrix;
+        explicit State(int n){
+            x.resize(static_cast<std::size_t>(n));
+        }
     };
 
     int _n = 0;
@@ -51,14 +55,14 @@ public:
         const std::vector<X>& xs,
         const std::vector<Y>& ys,
         const std::vector<W>& weights
-    ): _n(static_cast<int>(xs.size())), state(nullptr){
+    ): _n(cpplib_detail::checked_int_size(xs.size())), state(nullptr){
         if(xs.size() != ys.size() || xs.size() != weights.size())[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
         if(xs.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
-        state = std::make_unique<State>();
+        state = std::make_unique<State>(_n);
         std::vector<int> order(static_cast<std::size_t>(_n));
         std::iota(order.begin(), order.end(), 0);
         std::sort(order.begin(), order.end(), [&](int a, int b){
@@ -81,11 +85,11 @@ public:
     }
 
     explicit WaveletMatrix2DWeighted(const std::vector<std::tuple<X, Y, W>>& points):
-        _n(static_cast<int>(points.size())), state(nullptr){
+        _n(cpplib_detail::checked_int_size(points.size())), state(nullptr){
         if(points.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
-        state = std::make_unique<State>();
+        state = std::make_unique<State>(_n);
         std::vector<std::tuple<X, Y, W>> sorted = points;
         std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b){
             if(std::get<0>(a) != std::get<0>(b)) return std::get<0>(a) < std::get<0>(b);

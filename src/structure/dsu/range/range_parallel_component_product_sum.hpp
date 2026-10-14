@@ -10,12 +10,12 @@
 
 #include "range_parallel_unionfind.hpp"
 
-template<int MAX_SIZE, class T>
+template<int MAX_SIZE = -1, class T = long long>
 class RangeParallelComponentProductSum{
     std::unique_ptr<RangeParallelUnionFind<MAX_SIZE>> dsu_;
     static int checked_size(std::size_t size){
         if(size > static_cast<std::size_t>(std::numeric_limits<int>::max()) ||
-           size > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+           (MAX_SIZE >= 0 && size > static_cast<std::size_t>(MAX_SIZE)))[[unlikely]]{
             throw std::length_error(
                 "RangeParallelComponentProductSum size is out of range"
             );

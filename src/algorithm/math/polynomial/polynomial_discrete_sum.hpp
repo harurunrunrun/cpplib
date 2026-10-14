@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <cstddef>
 #include <stdexcept>
 #include <vector>
@@ -60,7 +61,7 @@ std::vector<Modint<MOD>> inverse_series(
 
 }  // namespace polynomial_discrete_sum_detail
 
-template<class Mint, std::size_t MAX_DEGREE>
+template<class Mint, std::size_t MAX_DEGREE = static_cast<std::size_t>(-1)>
 struct PolynomialDiscreteSum{
     using CoefficientArray = std::array<Mint, MAX_DEGREE + 1>;
     using AntiderivativeArray = std::array<Mint, MAX_DEGREE + 2>;
@@ -174,6 +175,147 @@ public:
         std::size_t coefficient_count
     ) const{
         check_coefficient_count(coefficient_count);
+        using traits =
+            polynomial_discrete_sum_detail::StaticModintTraits<Mint>;
+        if constexpr(traits::supported){
+            if constexpr(traits::modulus >= 2){
+                return discrete_antiderivative_fast<traits::modulus>(
+                    coefficients, coefficient_count
+                );
+            }
+        }
+        return discrete_antiderivative_quadratic(
+            coefficients, coefficient_count
+        );
+    }
+
+    Mint polynomial_prefix_sum(
+        const CoefficientArray& coefficients,
+        std::size_t coefficient_count,
+        Mint n
+    ) const{
+        const AntiderivativeArray antiderivative = discrete_antiderivative(
+            coefficients, coefficient_count
+        );
+        return polynomial_evaluate(antiderivative, coefficient_count + 1, n);
+    }
+
+    Mint polynomial_prefix_sum(
+        const CoefficientArray& coefficients,
+        std::size_t coefficient_count,
+        long long n
+    ) const{
+        if(n < 0)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: negative length (polynomial_prefix_sum)."
+            );
+        }
+        return polynomial_prefix_sum(coefficients, coefficient_count, Mint(n));
+    }
+};
+
+template<class Mint>
+struct PolynomialDiscreteSum<Mint, static_cast<std::size_t>(-1)>{
+    using CoefficientArray = std::vector<Mint>;
+    using AntiderivativeArray = std::vector<Mint>;
+
+private:
+    polynomial_interpolation_detail::ConsecutiveLagrangeTable<
+        Mint, static_cast<std::size_t>(-1)
+    > lagrange;
+
+    AntiderivativeArray discrete_antiderivative_quadratic(
+        const CoefficientArray& coefficients,
+        std::size_t coefficient_count
+    ) const{
+        AntiderivativeArray result(coefficient_count + 1);
+        for(std::size_t reverse = coefficient_count; reverse > 0; --reverse){
+            const std::size_t degree = reverse - 1;
+            Mint residual = coefficients[degree];
+            for(std::size_t target_degree = degree + 2;
+                target_degree <= coefficient_count;
+                ++target_degree){
+                residual -= result[target_degree]
+                    * lagrange.combination(target_degree, degree);
+            }
+            result[degree + 1] = residual
+                / Mint(static_cast<long long>(degree + 1));
+        }
+        return result;
+    }
+
+    template<int MOD>
+    AntiderivativeArray discrete_antiderivative_fast(
+        const CoefficientArray& coefficients,
+        std::size_t coefficient_count
+    ) const{
+        using CanonicalMint = Modint<MOD>;
+        if(coefficient_count == 0) return AntiderivativeArray(1);
+
+        std::vector<CanonicalMint> denominator(coefficient_count);
+        for(std::size_t index = 0; index < coefficient_count; ++index){
+            denominator[index] = CanonicalMint(
+                lagrange.inverse_factorial[index + 1].val()
+            );
+        }
+        const std::vector<CanonicalMint> bernoulli_over_factorial =
+            polynomial_discrete_sum_detail::inverse_series<MOD>(
+                denominator, coefficient_count
+            );
+
+        std::vector<CanonicalMint> reversed_scaled(coefficient_count);
+        for(std::size_t degree = 0; degree < coefficient_count; ++degree){
+            reversed_scaled[coefficient_count - 1 - degree] =
+                CanonicalMint(coefficients[degree].val())
+                * CanonicalMint(lagrange.factorial[degree].val());
+        }
+        const std::vector<CanonicalMint> correlation =
+            arbitrary_mod_convolution<MOD>(
+                reversed_scaled, bernoulli_over_factorial
+            );
+
+        AntiderivativeArray result(coefficient_count + 1);
+        for(std::size_t degree = 0; degree < coefficient_count; ++degree){
+            result[degree + 1] = Mint(
+                correlation[coefficient_count - 1 - degree].val()
+            ) * lagrange.inverse_factorial[degree + 1];
+        }
+        return result;
+    }
+
+public:
+    Mint faulhaber(Mint n, std::size_t exponent) const{
+        if(exponent > static_cast<std::size_t>(std::numeric_limits<long long>::max())
+           || exponent > std::numeric_limits<std::size_t>::max() - 2)
+            throw std::length_error("power sum exponent is too large");
+        lagrange.prepare(exponent + 1);
+        if(exponent == 0) return n;
+
+        AntiderivativeArray values(exponent + 2);
+        for(std::size_t index = 0; index <= exponent; ++index){
+            values[index + 1] = values[index]
+                + Mint(static_cast<long long>(index)).pow(
+                    static_cast<long long>(exponent)
+                );
+        }
+        return lagrange.evaluate(values, exponent + 2, n);
+    }
+
+    Mint power_sum(long long n, std::size_t exponent) const{
+        if(n < 0)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: negative length (power_sum)."
+            );
+        }
+        return faulhaber(Mint(n), exponent);
+    }
+
+    AntiderivativeArray discrete_antiderivative(
+        const CoefficientArray& coefficients,
+        std::size_t coefficient_count
+    ) const{
+        if(coefficient_count > coefficients.size()) throw std::out_of_range("polynomial coefficient count");
+        lagrange.prepare(coefficient_count);
         using traits =
             polynomial_discrete_sum_detail::StaticModintTraits<Mint>;
         if constexpr(traits::supported){

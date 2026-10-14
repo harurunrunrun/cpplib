@@ -1,0 +1,1273 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/yosupo06/library-checker-problems",
+  "revision": "1814c4e5205517e368bb57a8d1127eb961cfeaae",
+  "committed_at": "2026-09-16",
+  "problems": [
+    {
+      "id": "addition_of_big_integers",
+      "directory": "big_integer/addition_of_big_integers",
+      "title": "Addition of Big Integers"
+    },
+    {
+      "id": "addition_of_hex_big_integers",
+      "directory": "big_integer/addition_of_hex_big_integers",
+      "title": "Addition of Hex Big Integers"
+    },
+    {
+      "id": "adjugate_matrix",
+      "directory": "linear_algebra/adjugate_matrix",
+      "title": "Adjugate Matrix"
+    },
+    {
+      "id": "aho_corasick",
+      "directory": "string/aho_corasick",
+      "title": "Aho Corasick"
+    },
+    {
+      "id": "all_furthest_neighbors",
+      "directory": "geo/all_furthest_neighbors",
+      "title": "All Furthest Neighbors of a Convex Polygon"
+    },
+    {
+      "id": "aplusb",
+      "directory": "sample/aplusb",
+      "title": "A + B"
+    },
+    {
+      "id": "area_of_union_of_rectangles",
+      "directory": "data_structure/area_of_union_of_rectangles",
+      "title": "Area of Union of Rectangles"
+    },
+    {
+      "id": "assignment",
+      "directory": "graph/assignment",
+      "title": "Assignment Problem"
+    },
+    {
+      "id": "associative_array",
+      "directory": "data_structure/associative_array",
+      "title": "Associative Array"
+    },
+    {
+      "id": "bell_number",
+      "directory": "enumerative_combinatorics/bell_number",
+      "title": "Bell Number"
+    },
+    {
+      "id": "bernoulli_number",
+      "directory": "number_theory/bernoulli_number",
+      "title": "Bernoulli Number"
+    },
+    {
+      "id": "biconnected_components",
+      "directory": "graph/biconnected_components",
+      "title": "Biconnected Components"
+    },
+    {
+      "id": "binomial_coefficient",
+      "directory": "enumerative_combinatorics/binomial_coefficient",
+      "title": "Binomial Coefficient"
+    },
+    {
+      "id": "binomial_coefficient_prime_mod",
+      "directory": "enumerative_combinatorics/binomial_coefficient_prime_mod",
+      "title": "Binomial Coefficient (Prime Mod)"
+    },
+    {
+      "id": "bipartite_edge_coloring",
+      "directory": "graph/bipartite_edge_coloring",
+      "title": "Edge Coloring of Bipartite Graph"
+    },
+    {
+      "id": "bipartitematching",
+      "directory": "graph/bipartitematching",
+      "title": "Matching on Bipartite Graph"
+    },
+    {
+      "id": "bitwise_and_convolution",
+      "directory": "convolution/bitwise_and_convolution",
+      "title": "Bitwise And Convolution"
+    },
+    {
+      "id": "bitwise_xor_convolution",
+      "directory": "convolution/bitwise_xor_convolution",
+      "title": "Bitwise Xor Convolution"
+    },
+    {
+      "id": "cartesian_tree",
+      "directory": "tree/cartesian_tree",
+      "title": "Cartesian Tree"
+    },
+    {
+      "id": "characteristic_polynomial",
+      "directory": "linear_algebra/characteristic_polynomial",
+      "title": "Characteristic Polynomial"
+    },
+    {
+      "id": "chordal_graph_recognition",
+      "directory": "graph/chordal_graph_recognition",
+      "title": "Chordal Graph Recognition"
+    },
+    {
+      "id": "chromatic_number",
+      "directory": "graph/chromatic_number",
+      "title": "Chromatic Number"
+    },
+    {
+      "id": "chromatic_polynomial",
+      "directory": "graph/chromatic_polynomial",
+      "title": "Chromatic Polynomial"
+    },
+    {
+      "id": "closest_pair",
+      "directory": "geo/closest_pair",
+      "title": "Closest Pair of Points"
+    },
+    {
+      "id": "common_interval_decomposition_tree",
+      "directory": "tree/common_interval_decomposition_tree",
+      "title": "Common Interval Decomposition Tree"
+    },
+    {
+      "id": "composition_of_formal_power_series",
+      "directory": "polynomial/composition_of_formal_power_series",
+      "title": "Composition of Formal Power Series"
+    },
+    {
+      "id": "composition_of_formal_power_series_large",
+      "directory": "polynomial/composition_of_formal_power_series_large",
+      "title": "Composition of Formal Power Series (Large)"
+    },
+    {
+      "id": "compositional_inverse_of_formal_power_series",
+      "directory": "polynomial/compositional_inverse_of_formal_power_series",
+      "title": "Compositional Inverse of Formal Power Series"
+    },
+    {
+      "id": "compositional_inverse_of_formal_power_series_large",
+      "directory": "polynomial/compositional_inverse_of_formal_power_series_large",
+      "title": "Compositional Inverse of Formal Power Series (Large)"
+    },
+    {
+      "id": "connected_components_of_complement_graph",
+      "directory": "graph/connected_components_of_complement_graph",
+      "title": "Connected Components of Complement Graph"
+    },
+    {
+      "id": "consecutive_terms_of_linear_recurrent_sequence",
+      "directory": "other/consecutive_terms_of_linear_recurrent_sequence",
+      "title": "Consecutive Terms of Linear Recurrent Sequence"
+    },
+    {
+      "id": "conversion_from_monomial_basis_to_newton_basis",
+      "directory": "polynomial/conversion_from_monomial_basis_to_newton_basis",
+      "title": "Conversion from Monomial Basis to Newton Basis"
+    },
+    {
+      "id": "convex_layers",
+      "directory": "geo/convex_layers",
+      "title": "Convex Layers"
+    },
+    {
+      "id": "convolution_F_2_64",
+      "directory": "convolution/convolution_F_2_64",
+      "title": "Convolution ($\\mathbb{F}_{2^{64}}$)"
+    },
+    {
+      "id": "convolution_mod",
+      "directory": "convolution/convolution_mod",
+      "title": "Convolution"
+    },
+    {
+      "id": "convolution_mod_1000000007",
+      "directory": "convolution/convolution_mod_1000000007",
+      "title": "Convolution (Mod 1,000,000,007)"
+    },
+    {
+      "id": "convolution_mod_2_64",
+      "directory": "convolution/convolution_mod_2_64",
+      "title": "Convolution (Mod 2^64)"
+    },
+    {
+      "id": "convolution_mod_large",
+      "directory": "convolution/convolution_mod_large",
+      "title": "Convolution (Large)"
+    },
+    {
+      "id": "count_points_in_triangle",
+      "directory": "geo/count_points_in_triangle",
+      "title": "Count Points in Triangles"
+    },
+    {
+      "id": "counting_c4",
+      "directory": "graph/counting_c4",
+      "title": "Counting $C _ 4$'s"
+    },
+    {
+      "id": "counting_eulerian_circuits",
+      "directory": "graph/counting_eulerian_circuits",
+      "title": "Counting Eulerian Circuits"
+    },
+    {
+      "id": "counting_primes",
+      "directory": "number_theory/counting_primes",
+      "title": "Counting Primes"
+    },
+    {
+      "id": "counting_spanning_tree_directed",
+      "directory": "graph/counting_spanning_tree_directed",
+      "title": "Counting Spanning Trees (Directed)"
+    },
+    {
+      "id": "counting_spanning_tree_undirected",
+      "directory": "graph/counting_spanning_tree_undirected",
+      "title": "Counting Spanning Trees (Undirected)"
+    },
+    {
+      "id": "counting_squarefrees",
+      "directory": "number_theory/counting_squarefrees",
+      "title": "Counting Square-free Integers"
+    },
+    {
+      "id": "cycle_detection",
+      "directory": "graph/cycle_detection",
+      "title": "Cycle Detection (Directed)"
+    },
+    {
+      "id": "cycle_detection_undirected",
+      "directory": "graph/cycle_detection_undirected",
+      "title": "Cycle Detection (Undirected)"
+    },
+    {
+      "id": "deque",
+      "directory": "data_structure/deque",
+      "title": "Deque"
+    },
+    {
+      "id": "deque_operate_all_composite",
+      "directory": "data_structure/deque_operate_all_composite",
+      "title": "Deque Operate All Composite"
+    },
+    {
+      "id": "directedmst",
+      "directory": "graph/directedmst",
+      "title": "Directed MST"
+    },
+    {
+      "id": "dirichlet_convolution_and_prefix_sums",
+      "directory": "number_theory/dirichlet_convolution_and_prefix_sums",
+      "title": "Dirichlet Convolution and Prefix Sums"
+    },
+    {
+      "id": "dirichlet_inverse_and_prefix_sums",
+      "directory": "number_theory/dirichlet_inverse_and_prefix_sums",
+      "title": "Dirichlet Inverse and Prefix Sums"
+    },
+    {
+      "id": "discrete_logarithm_fixed_mod",
+      "directory": "number_theory/discrete_logarithm_fixed_mod",
+      "title": "Discrete Logarithm (Fixed Mod)"
+    },
+    {
+      "id": "discrete_logarithm_mod",
+      "directory": "number_theory/discrete_logarithm_mod",
+      "title": "Discrete Logarithm"
+    },
+    {
+      "id": "division_of_big_integers",
+      "directory": "big_integer/division_of_big_integers",
+      "title": "Division of Big Integers"
+    },
+    {
+      "id": "division_of_hex_big_integers",
+      "directory": "big_integer/division_of_hex_big_integers",
+      "title": "Division of Hex Big Integers"
+    },
+    {
+      "id": "division_of_polynomials",
+      "directory": "polynomial/division_of_polynomials",
+      "title": "Division of Polynomials"
+    },
+    {
+      "id": "dominatortree",
+      "directory": "graph/dominatortree",
+      "title": "Dominator Tree"
+    },
+    {
+      "id": "double_ended_priority_queue",
+      "directory": "data_structure/double_ended_priority_queue",
+      "title": "Double-Ended Priority Queue"
+    },
+    {
+      "id": "dynamic_graph_vertex_add_component_sum",
+      "directory": "graph/dynamic_graph_vertex_add_component_sum",
+      "title": "Dynamic Graph Vertex Add Component Sum"
+    },
+    {
+      "id": "dynamic_point_set_rectangle_affine_rectangle_sum",
+      "directory": "data_structure/dynamic_point_set_rectangle_affine_rectangle_sum",
+      "title": "Dynamic Point Rectangle Affine Rectangle Sum"
+    },
+    {
+      "id": "dynamic_sequence_range_affine_range_sum",
+      "directory": "data_structure/dynamic_sequence_range_affine_range_sum",
+      "title": "Dynamic Sequence Range Affine Range Sum"
+    },
+    {
+      "id": "dynamic_tree_subtree_add_subtree_sum",
+      "directory": "tree/dynamic_tree_subtree_add_subtree_sum",
+      "title": "Dynamic Tree Subtree Add Subtree Sum"
+    },
+    {
+      "id": "dynamic_tree_vertex_add_path_sum",
+      "directory": "tree/dynamic_tree_vertex_add_path_sum",
+      "title": "Dynamic Tree Vertex Add Path Sum"
+    },
+    {
+      "id": "dynamic_tree_vertex_add_subtree_sum",
+      "directory": "tree/dynamic_tree_vertex_add_subtree_sum",
+      "title": "Dynamic Tree Vertex Add Subtree Sum"
+    },
+    {
+      "id": "dynamic_tree_vertex_set_path_composite",
+      "directory": "tree/dynamic_tree_vertex_set_path_composite",
+      "title": "Dynamic Tree Vertex Set Path Composite"
+    },
+    {
+      "id": "eertree",
+      "directory": "string/eertree",
+      "title": "Eertree"
+    },
+    {
+      "id": "enumerate_cliques",
+      "directory": "graph/enumerate_cliques",
+      "title": "Enumerate Cliques"
+    },
+    {
+      "id": "enumerate_palindromes",
+      "directory": "string/enumerate_palindromes",
+      "title": "Enumerate Palindromes"
+    },
+    {
+      "id": "enumerate_primes",
+      "directory": "number_theory/enumerate_primes",
+      "title": "Enumerate Primes"
+    },
+    {
+      "id": "enumerate_quotients",
+      "directory": "number_theory/enumerate_quotients",
+      "title": "Enumerate Quotients"
+    },
+    {
+      "id": "enumerate_triangles",
+      "directory": "graph/enumerate_triangles",
+      "title": "Enumerate Triangles"
+    },
+    {
+      "id": "euclidean_mst",
+      "directory": "geo/euclidean_mst",
+      "title": "Euclidean MST"
+    },
+    {
+      "id": "eulerian_trail_directed",
+      "directory": "graph/eulerian_trail_directed",
+      "title": "Eulerian Trail (Directed)"
+    },
+    {
+      "id": "eulerian_trail_undirected",
+      "directory": "graph/eulerian_trail_undirected",
+      "title": "Eulerian Trail (Undirected)"
+    },
+    {
+      "id": "exp_of_formal_power_series",
+      "directory": "polynomial/exp_of_formal_power_series",
+      "title": "Exp of Formal Power Series"
+    },
+    {
+      "id": "exp_of_formal_power_series_sparse",
+      "directory": "polynomial/exp_of_formal_power_series_sparse",
+      "title": "Exp of Formal Power Series (Sparse)"
+    },
+    {
+      "id": "exp_of_set_power_series",
+      "directory": "set_power_series/exp_of_set_power_series",
+      "title": "Exp of Set Power Series"
+    },
+    {
+      "id": "factorial",
+      "directory": "enumerative_combinatorics/factorial",
+      "title": "Factorial"
+    },
+    {
+      "id": "factorization_of_polynomials",
+      "directory": "polynomial/factorization_of_polynomials",
+      "title": "Factorization of Polynomial (Mod)"
+    },
+    {
+      "id": "factorize",
+      "directory": "number_theory/factorize",
+      "title": "Factorize"
+    },
+    {
+      "id": "find_linear_recurrence",
+      "directory": "other/find_linear_recurrence",
+      "title": "Find Linear Recurrence"
+    },
+    {
+      "id": "frequency_table_of_tree_distance",
+      "directory": "tree/frequency_table_of_tree_distance",
+      "title": "Frequency Table of Tree Distance"
+    },
+    {
+      "id": "furthest_pair",
+      "directory": "geo/furthest_pair",
+      "title": "Furthest Pair of Points"
+    },
+    {
+      "id": "gcd_convolution",
+      "directory": "convolution/gcd_convolution",
+      "title": "Gcd Convolution"
+    },
+    {
+      "id": "gcd_of_gaussian_integers",
+      "directory": "number_theory/gcd_of_gaussian_integers",
+      "title": "Gcd of Gaussian Integers"
+    },
+    {
+      "id": "general_matching",
+      "directory": "graph/general_matching",
+      "title": "Matching on General Graph"
+    },
+    {
+      "id": "general_weighted_matching",
+      "directory": "graph/general_weighted_matching",
+      "title": "General Weighted Matching"
+    },
+    {
+      "id": "global_minimum_cut_of_dynamic_star_augmented_graph",
+      "directory": "graph/global_minimum_cut_of_dynamic_star_augmented_graph",
+      "title": "Global Minimum Cut of Dynamic Star Augmented Graph"
+    },
+    {
+      "id": "hafnian_of_matrix",
+      "directory": "linear_algebra/hafnian_of_matrix",
+      "title": "Hafnian of Matrix"
+    },
+    {
+      "id": "incremental_minimum_spanning_forest",
+      "directory": "graph/incremental_minimum_spanning_forest",
+      "title": "Incremental Minimum Spanning Forest"
+    },
+    {
+      "id": "incremental_scc",
+      "directory": "graph/incremental_scc",
+      "title": "Strongly Connected Components (Incremental)"
+    },
+    {
+      "id": "intersection_of_f2_vector_spaces",
+      "directory": "linear_algebra/intersection_of_f2_vector_spaces",
+      "title": "Intersection of $\\mathbb{F}_{2}$ vector spaces"
+    },
+    {
+      "id": "inv_of_formal_power_series",
+      "directory": "polynomial/inv_of_formal_power_series",
+      "title": "Inv of Formal Power Series"
+    },
+    {
+      "id": "inv_of_formal_power_series_2d",
+      "directory": "polynomial/inv_of_formal_power_series_2d",
+      "title": "Inv of Bivariate Formal Power Series"
+    },
+    {
+      "id": "inv_of_formal_power_series_sparse",
+      "directory": "polynomial/inv_of_formal_power_series_sparse",
+      "title": "Inv of Formal Power Series (Sparse)"
+    },
+    {
+      "id": "inv_of_polynomials",
+      "directory": "polynomial/inv_of_polynomials",
+      "title": "Inv of Polynomials"
+    },
+    {
+      "id": "inverse_matrix",
+      "directory": "linear_algebra/inverse_matrix",
+      "title": "Inverse Matrix"
+    },
+    {
+      "id": "inverse_matrix_mod_2",
+      "directory": "linear_algebra/inverse_matrix_mod_2",
+      "title": "Inverse Matrix (Mod 2)"
+    },
+    {
+      "id": "jump_on_tree",
+      "directory": "tree/jump_on_tree",
+      "title": "Jump on Tree"
+    },
+    {
+      "id": "k_shortest_walk",
+      "directory": "graph/k_shortest_walk",
+      "title": "K-Shortest Walk"
+    },
+    {
+      "id": "kth_root_integer",
+      "directory": "number_theory/kth_root_integer",
+      "title": "Kth Root (Integer)"
+    },
+    {
+      "id": "kth_root_mod",
+      "directory": "number_theory/kth_root_mod",
+      "title": "Kth Root (Mod)"
+    },
+    {
+      "id": "kth_term_of_linearly_recurrent_sequence",
+      "directory": "other/kth_term_of_linearly_recurrent_sequence",
+      "title": "Kth term of Linearly Recurrent Sequence"
+    },
+    {
+      "id": "lca",
+      "directory": "tree/lca",
+      "title": "Lowest Common Ancestor"
+    },
+    {
+      "id": "lcm_convolution",
+      "directory": "convolution/lcm_convolution",
+      "title": "Lcm Convolution"
+    },
+    {
+      "id": "line_add_get_min",
+      "directory": "data_structure/line_add_get_min",
+      "title": "Line Add Get Min"
+    },
+    {
+      "id": "log_of_formal_power_series",
+      "directory": "polynomial/log_of_formal_power_series",
+      "title": "Log of Formal Power Series"
+    },
+    {
+      "id": "log_of_formal_power_series_sparse",
+      "directory": "polynomial/log_of_formal_power_series_sparse",
+      "title": "Log of Formal Power Series (Sparse)"
+    },
+    {
+      "id": "log_of_set_power_series",
+      "directory": "set_power_series/log_of_set_power_series",
+      "title": "Log of Set Power Series"
+    },
+    {
+      "id": "longest_common_substring",
+      "directory": "string/longest_common_substring",
+      "title": "Longest Common Substring"
+    },
+    {
+      "id": "longest_increasing_subsequence",
+      "directory": "other/longest_increasing_subsequence",
+      "title": "Longest Increasing Subsequence"
+    },
+    {
+      "id": "lyndon_factorization",
+      "directory": "string/lyndon_factorization",
+      "title": "Lyndon Factorization"
+    },
+    {
+      "id": "majority_voting",
+      "directory": "data_structure/majority_voting",
+      "title": "Majority Voting"
+    },
+    {
+      "id": "manhattanmst",
+      "directory": "geo/manhattanmst",
+      "title": "Manhattan MST"
+    },
+    {
+      "id": "many_aplusb",
+      "directory": "sample/many_aplusb",
+      "title": "Many A + B"
+    },
+    {
+      "id": "many_aplusb_128bit",
+      "directory": "sample/many_aplusb_128bit",
+      "title": "Many A + B (128 bit)"
+    },
+    {
+      "id": "many_factorials",
+      "directory": "enumerative_combinatorics/many_factorials",
+      "title": "Many Factorials"
+    },
+    {
+      "id": "matrix_det",
+      "directory": "linear_algebra/matrix_det",
+      "title": "Determinant of Matrix"
+    },
+    {
+      "id": "matrix_det_arbitrary_mod",
+      "directory": "linear_algebra/matrix_det_arbitrary_mod",
+      "title": "Determinant of Matrix (Arbitrary Mod)"
+    },
+    {
+      "id": "matrix_det_mod_2",
+      "directory": "linear_algebra/matrix_det_mod_2",
+      "title": "Determinant of Matrix (Mod 2)"
+    },
+    {
+      "id": "matrix_product",
+      "directory": "linear_algebra/matrix_product",
+      "title": "Matrix Product"
+    },
+    {
+      "id": "matrix_product_mod_2",
+      "directory": "linear_algebra/matrix_product_mod_2",
+      "title": "Matrix Product (Mod 2)"
+    },
+    {
+      "id": "matrix_rank",
+      "directory": "linear_algebra/matrix_rank",
+      "title": "Rank of Matrix"
+    },
+    {
+      "id": "matrix_rank_mod_2",
+      "directory": "linear_algebra/matrix_rank_mod_2",
+      "title": "Rank of Matrix (Mod 2)"
+    },
+    {
+      "id": "maximum_independent_set",
+      "directory": "graph/maximum_independent_set",
+      "title": "Maximum Independent Set"
+    },
+    {
+      "id": "min_cost_b_flow",
+      "directory": "graph/min_cost_b_flow",
+      "title": "Minimum Cost b-flow"
+    },
+    {
+      "id": "min_of_mod_of_linear",
+      "directory": "number_theory/min_of_mod_of_linear",
+      "title": "Min of Mod of Linear"
+    },
+    {
+      "id": "min_plus_convolution_concave_arbitrary",
+      "directory": "convolution/min_plus_convolution_concave_arbitrary",
+      "title": "Min Plus Convolution (Concave and Arbitrary)"
+    },
+    {
+      "id": "min_plus_convolution_convex_arbitrary",
+      "directory": "convolution/min_plus_convolution_convex_arbitrary",
+      "title": "Min Plus Convolution (Convex and Arbitrary)"
+    },
+    {
+      "id": "min_plus_convolution_convex_convex",
+      "directory": "convolution/min_plus_convolution_convex_convex",
+      "title": "Min Plus Convolution (Convex and Convex)"
+    },
+    {
+      "id": "minimum_diameter_spanning_tree",
+      "directory": "graph/minimum_diameter_spanning_tree",
+      "title": "Minimum Diameter Spanning Tree"
+    },
+    {
+      "id": "minimum_enclosing_circle",
+      "directory": "geo/minimum_enclosing_circle",
+      "title": "Minimum Enclosing Circle"
+    },
+    {
+      "id": "minimum_spanning_tree",
+      "directory": "graph/minimum_spanning_tree",
+      "title": "Minimum Spanning Tree"
+    },
+    {
+      "id": "minimum_steiner_tree",
+      "directory": "graph/minimum_steiner_tree",
+      "title": "Minimum Steiner Tree"
+    },
+    {
+      "id": "montmort_number_mod",
+      "directory": "enumerative_combinatorics/montmort_number_mod",
+      "title": "Montmort Number"
+    },
+    {
+      "id": "mul_mod2n_convolution",
+      "directory": "convolution/mul_mod2n_convolution",
+      "title": "Convolution on the Multiplicative Monoid of $\\mathbb{Z} / 2^N\\mathbb{Z}$"
+    },
+    {
+      "id": "mul_modp_convolution",
+      "directory": "convolution/mul_modp_convolution",
+      "title": "Convolution on the Multiplicative Monoid of $\\mathbb{Z} / P\\mathbb{Z}$"
+    },
+    {
+      "id": "multiplication_of_big_integers",
+      "directory": "big_integer/multiplication_of_big_integers",
+      "title": "Multiplication of Big Integers"
+    },
+    {
+      "id": "multiplication_of_hex_big_integers",
+      "directory": "big_integer/multiplication_of_hex_big_integers",
+      "title": "Multiplication of Hex Big Integers"
+    },
+    {
+      "id": "multipoint_evaluation",
+      "directory": "polynomial/multipoint_evaluation",
+      "title": "Multipoint Evaluation"
+    },
+    {
+      "id": "multipoint_evaluation_on_geometric_sequence",
+      "directory": "polynomial/multipoint_evaluation_on_geometric_sequence",
+      "title": "Multipoint Evaluation (Geometric Sequence)"
+    },
+    {
+      "id": "multivariate_convolution",
+      "directory": "convolution/multivariate_convolution",
+      "title": "Multidimensional Convolution (Truncated)"
+    },
+    {
+      "id": "multivariate_convolution_cyclic",
+      "directory": "convolution/multivariate_convolution_cyclic",
+      "title": "Multidimensional Convolution (Circular)"
+    },
+    {
+      "id": "nim_product_64",
+      "directory": "number_theory/nim_product_64",
+      "title": "Nim Product ($\\mathbb{F}_{2^{64}}$)"
+    },
+    {
+      "id": "number_of_increasing_sequences_between_two_sequences",
+      "directory": "enumerative_combinatorics/number_of_increasing_sequences_between_two_sequences",
+      "title": "Number of Increasing Sequences Between Two Sequences"
+    },
+    {
+      "id": "number_of_subsequences",
+      "directory": "enumerative_combinatorics/number_of_subsequences",
+      "title": "Number of Subsequences "
+    },
+    {
+      "id": "number_of_substrings",
+      "directory": "string/number_of_substrings",
+      "title": "Number of Substrings"
+    },
+    {
+      "id": "ordered_set",
+      "directory": "data_structure/ordered_set",
+      "title": "Ordered Set"
+    },
+    {
+      "id": "palindromes_in_deque",
+      "directory": "string/palindromes_in_deque",
+      "title": "Palindromes in Deque"
+    },
+    {
+      "id": "partition_function",
+      "directory": "enumerative_combinatorics/partition_function",
+      "title": "Partition Function"
+    },
+    {
+      "id": "persistent_queue",
+      "directory": "data_structure/persistent_queue",
+      "title": "Persistent Queue"
+    },
+    {
+      "id": "persistent_range_affine_range_sum",
+      "directory": "data_structure/persistent_range_affine_range_sum",
+      "title": "Persistent Range Affine Range Sum"
+    },
+    {
+      "id": "persistent_unionfind",
+      "directory": "data_structure/persistent_unionfind",
+      "title": "Persistent Unionfind"
+    },
+    {
+      "id": "pfaffian_of_matrix",
+      "directory": "linear_algebra/pfaffian_of_matrix",
+      "title": "Pfaffian of Matrix"
+    },
+    {
+      "id": "point_add_range_sum",
+      "directory": "data_structure/point_add_range_sum",
+      "title": "Point Add Range Sum"
+    },
+    {
+      "id": "point_add_rectangle_sum",
+      "directory": "data_structure/point_add_rectangle_sum",
+      "title": "Point Add Rectangle Sum"
+    },
+    {
+      "id": "point_set_range_composite",
+      "directory": "data_structure/point_set_range_composite",
+      "title": "Point Set Range Composite"
+    },
+    {
+      "id": "point_set_range_composite_large_array",
+      "directory": "data_structure/point_set_range_composite_large_array",
+      "title": "Point Set Range Composite (Large Array)"
+    },
+    {
+      "id": "point_set_range_frequency",
+      "directory": "data_structure/point_set_range_frequency",
+      "title": "Point Set Range Frequency"
+    },
+    {
+      "id": "point_set_range_sort_range_composite",
+      "directory": "data_structure/point_set_range_sort_range_composite",
+      "title": "Point Set Range Sort Range Composite"
+    },
+    {
+      "id": "point_set_tree_path_composite_sum",
+      "directory": "tree/point_set_tree_path_composite_sum",
+      "title": "Point Set Tree Path Composite Sum"
+    },
+    {
+      "id": "point_set_tree_path_composite_sum_fixed_root",
+      "directory": "tree/point_set_tree_path_composite_sum_fixed_root",
+      "title": "Point Set Tree Path Composite Sum (Fixed Root)"
+    },
+    {
+      "id": "polynomial_composite_set_power_series",
+      "directory": "set_power_series/polynomial_composite_set_power_series",
+      "title": "Polynomial Composite Set Power Series"
+    },
+    {
+      "id": "polynomial_interpolation",
+      "directory": "polynomial/polynomial_interpolation",
+      "title": "Polynomial Interpolation"
+    },
+    {
+      "id": "polynomial_interpolation_on_geometric_sequence",
+      "directory": "polynomial/polynomial_interpolation_on_geometric_sequence",
+      "title": "Polynomial Interpolation (Geometric Sequence)"
+    },
+    {
+      "id": "polynomial_root_finding",
+      "directory": "polynomial/polynomial_root_finding",
+      "title": "Polynomial Root Finding (Mod 998244353)"
+    },
+    {
+      "id": "polynomial_taylor_shift",
+      "directory": "polynomial/polynomial_taylor_shift",
+      "title": "Polynomial Taylor Shift"
+    },
+    {
+      "id": "pow_of_formal_power_series",
+      "directory": "polynomial/pow_of_formal_power_series",
+      "title": "Pow of Formal Power Series"
+    },
+    {
+      "id": "pow_of_formal_power_series_sparse",
+      "directory": "polynomial/pow_of_formal_power_series_sparse",
+      "title": "Pow of Formal Power Series (Sparse)"
+    },
+    {
+      "id": "pow_of_matrix",
+      "directory": "linear_algebra/pow_of_matrix",
+      "title": "Pow of Matrix"
+    },
+    {
+      "id": "power_projection_of_set_power_series",
+      "directory": "set_power_series/power_projection_of_set_power_series",
+      "title": "Power Projection of Set Power Series"
+    },
+    {
+      "id": "predecessor_problem",
+      "directory": "data_structure/predecessor_problem",
+      "title": "Predecessor Problem"
+    },
+    {
+      "id": "prefix_substring_lcs",
+      "directory": "string/prefix_substring_lcs",
+      "title": "Prefix-Substring LCS"
+    },
+    {
+      "id": "prefix_sum_of_polynomial",
+      "directory": "polynomial/prefix_sum_of_polynomial",
+      "title": "Prefix Sum of Polynomial"
+    },
+    {
+      "id": "primality_test",
+      "directory": "number_theory/primality_test",
+      "title": "Primality Test"
+    },
+    {
+      "id": "primitive_root",
+      "directory": "number_theory/primitive_root",
+      "title": "Primitive Root"
+    },
+    {
+      "id": "product_of_polynomial_sequence",
+      "directory": "polynomial/product_of_polynomial_sequence",
+      "title": "Product of Polynomial Sequence"
+    },
+    {
+      "id": "q_binomial_coefficient_prime_mod",
+      "directory": "enumerative_combinatorics/q_binomial_coefficient_prime_mod",
+      "title": "$q$-Binomial Coefficient (Prime Mod)"
+    },
+    {
+      "id": "queue_operate_all_composite",
+      "directory": "data_structure/queue_operate_all_composite",
+      "title": "Queue Operate All Composite"
+    },
+    {
+      "id": "range_add_range_min",
+      "directory": "data_structure/range_add_range_min",
+      "title": "Range Add Range Min"
+    },
+    {
+      "id": "range_affine_point_get",
+      "directory": "data_structure/range_affine_point_get",
+      "title": "Range Affine Point Get"
+    },
+    {
+      "id": "range_affine_range_sum",
+      "directory": "data_structure/range_affine_range_sum",
+      "title": "Range Affine Range Sum"
+    },
+    {
+      "id": "range_affine_range_sum_large_array",
+      "directory": "data_structure/range_affine_range_sum_large_array",
+      "title": "Range Affine Range Sum (Large Array)"
+    },
+    {
+      "id": "range_chmin_chmax_add_range_sum",
+      "directory": "data_structure/range_chmin_chmax_add_range_sum",
+      "title": "Range Chmin Chmax Add Range Sum"
+    },
+    {
+      "id": "range_kth_smallest",
+      "directory": "data_structure/range_kth_smallest",
+      "title": "Range Kth Smallest"
+    },
+    {
+      "id": "range_linear_add_range_min",
+      "directory": "data_structure/range_linear_add_range_min",
+      "title": "Range Linear Add Range Min"
+    },
+    {
+      "id": "range_parallel_unionfind",
+      "directory": "data_structure/range_parallel_unionfind",
+      "title": "Range Parallel Unionfind"
+    },
+    {
+      "id": "range_reverse_range_sum",
+      "directory": "data_structure/range_reverse_range_sum",
+      "title": "Range Reverse Range Sum"
+    },
+    {
+      "id": "range_set_range_composite",
+      "directory": "data_structure/range_set_range_composite",
+      "title": "Range Set Range Composite"
+    },
+    {
+      "id": "rational_approximation",
+      "directory": "number_theory/rational_approximation",
+      "title": "Rational Approximation"
+    },
+    {
+      "id": "rectangle_add_point_get",
+      "directory": "data_structure/rectangle_add_point_get",
+      "title": "Rectangle Add Point Get"
+    },
+    {
+      "id": "rectangle_sum",
+      "directory": "data_structure/rectangle_sum",
+      "title": "Rectangle Sum"
+    },
+    {
+      "id": "rooted_tree_isomorphism_classification",
+      "directory": "tree/rooted_tree_isomorphism_classification",
+      "title": "Rooted Tree Isomorphism Classification"
+    },
+    {
+      "id": "rooted_tree_topological_order_with_minimum_inversions",
+      "directory": "tree/rooted_tree_topological_order_with_minimum_inversions",
+      "title": "Rooted Tree Topological Order with Minimum Inversions"
+    },
+    {
+      "id": "runenumerate",
+      "directory": "string/runenumerate",
+      "title": "Run Enumerate"
+    },
+    {
+      "id": "scc",
+      "directory": "graph/scc",
+      "title": "Strongly Connected Components"
+    },
+    {
+      "id": "segment_add_get_min",
+      "directory": "data_structure/segment_add_get_min",
+      "title": "Segment Add Get Min"
+    },
+    {
+      "id": "set_xor_min",
+      "directory": "data_structure/set_xor_min",
+      "title": "Set Xor-Min"
+    },
+    {
+      "id": "sharp_p_subset_sum",
+      "directory": "enumerative_combinatorics/sharp_p_subset_sum",
+      "title": "$\\#_p$ Subset Sum"
+    },
+    {
+      "id": "shift_of_sampling_points_of_polynomial",
+      "directory": "polynomial/shift_of_sampling_points_of_polynomial",
+      "title": "Shift of Sampling Points of Polynomial"
+    },
+    {
+      "id": "shortest_path",
+      "directory": "graph/shortest_path",
+      "title": "Shortest Path"
+    },
+    {
+      "id": "sort_points_by_argument",
+      "directory": "geo/sort_points_by_argument",
+      "title": "Sort Points by Argument"
+    },
+    {
+      "id": "sparse_matrix_det",
+      "directory": "linear_algebra/sparse_matrix_det",
+      "title": "Determinant of Sparse Matrix"
+    },
+    {
+      "id": "sqrt_mod",
+      "directory": "number_theory/sqrt_mod",
+      "title": "Sqrt Mod"
+    },
+    {
+      "id": "sqrt_of_formal_power_series",
+      "directory": "polynomial/sqrt_of_formal_power_series",
+      "title": "Sqrt of Formal Power Series"
+    },
+    {
+      "id": "sqrt_of_formal_power_series_sparse",
+      "directory": "polynomial/sqrt_of_formal_power_series_sparse",
+      "title": "Sqrt of Formal Power Series (Sparse)"
+    },
+    {
+      "id": "st_numbering",
+      "directory": "graph/st_numbering",
+      "title": "st-Numbering"
+    },
+    {
+      "id": "static_convex_hull",
+      "directory": "geo/static_convex_hull",
+      "title": "Static Convex Hull"
+    },
+    {
+      "id": "static_range_count_distinct",
+      "directory": "data_structure/static_range_count_distinct",
+      "title": "Static Range Count Distinct"
+    },
+    {
+      "id": "static_range_frequency",
+      "directory": "data_structure/static_range_frequency",
+      "title": "Static Range Frequency"
+    },
+    {
+      "id": "static_range_inversions_query",
+      "directory": "data_structure/static_range_inversions_query",
+      "title": "Static Range Inversions Query"
+    },
+    {
+      "id": "static_range_lis_query",
+      "directory": "data_structure/static_range_lis_query",
+      "title": "Static Range LIS Query"
+    },
+    {
+      "id": "static_range_mode_query",
+      "directory": "data_structure/static_range_mode_query",
+      "title": "Static Range Mode Query"
+    },
+    {
+      "id": "static_range_sum",
+      "directory": "data_structure/static_range_sum",
+      "title": "Static Range Sum"
+    },
+    {
+      "id": "static_range_sum_with_upper_bound",
+      "directory": "data_structure/static_range_sum_with_upper_bound",
+      "title": "Static Range Sum with Upper Bound"
+    },
+    {
+      "id": "static_rectangle_add_rectangle_sum",
+      "directory": "data_structure/static_rectangle_add_rectangle_sum",
+      "title": "Static Rectangle Add Rectangle Sum"
+    },
+    {
+      "id": "staticrmq",
+      "directory": "data_structure/staticrmq",
+      "title": "Static RMQ"
+    },
+    {
+      "id": "stern_brocot_tree",
+      "directory": "number_theory/stern_brocot_tree",
+      "title": "Stern–Brocot Tree"
+    },
+    {
+      "id": "stirling_number_of_the_first_kind",
+      "directory": "enumerative_combinatorics/stirling_number_of_the_first_kind",
+      "title": "Stirling Number of the First Kind"
+    },
+    {
+      "id": "stirling_number_of_the_first_kind_fixed_k",
+      "directory": "enumerative_combinatorics/stirling_number_of_the_first_kind_fixed_k",
+      "title": "Stirling Number of the First Kind (Fixed K)"
+    },
+    {
+      "id": "stirling_number_of_the_first_kind_small_p_large_n",
+      "directory": "enumerative_combinatorics/stirling_number_of_the_first_kind_small_p_large_n",
+      "title": "Stirling Number of the First Kind (Small p, Large n)"
+    },
+    {
+      "id": "stirling_number_of_the_second_kind",
+      "directory": "enumerative_combinatorics/stirling_number_of_the_second_kind",
+      "title": "Stirling Number of the Second Kind"
+    },
+    {
+      "id": "stirling_number_of_the_second_kind_fixed_k",
+      "directory": "enumerative_combinatorics/stirling_number_of_the_second_kind_fixed_k",
+      "title": "Stirling Number of the Second Kind (Fixed K)"
+    },
+    {
+      "id": "stirling_number_of_the_second_kind_small_p_large_n",
+      "directory": "enumerative_combinatorics/stirling_number_of_the_second_kind_small_p_large_n",
+      "title": "Stirling Number of the Second Kind (Small p, Large n)"
+    },
+    {
+      "id": "subset_convolution",
+      "directory": "set_power_series/subset_convolution",
+      "title": "Subset Convolution"
+    },
+    {
+      "id": "suffixarray",
+      "directory": "string/suffixarray",
+      "title": "Suffix Array"
+    },
+    {
+      "id": "sum_of_exponential_times_polynomial",
+      "directory": "other/sum_of_exponential_times_polynomial",
+      "title": "$\\sum_{i=0}^{n-1} r^i i^d$"
+    },
+    {
+      "id": "sum_of_exponential_times_polynomial_limit",
+      "directory": "other/sum_of_exponential_times_polynomial_limit",
+      "title": "$\\sum_{i=0}^{\\infty} r^i i^d$"
+    },
+    {
+      "id": "sum_of_floor_of_linear",
+      "directory": "number_theory/sum_of_floor_of_linear",
+      "title": "Sum of Floor of Linear"
+    },
+    {
+      "id": "sum_of_multiplicative_function",
+      "directory": "number_theory/sum_of_multiplicative_function",
+      "title": "Sum of Multiplicative Function"
+    },
+    {
+      "id": "sum_of_multiplicative_function_large",
+      "directory": "number_theory/sum_of_multiplicative_function_large",
+      "title": "Sum of Multiplicative Function(Large)"
+    },
+    {
+      "id": "sum_of_totient_function",
+      "directory": "number_theory/sum_of_totient_function",
+      "title": "Sum of Totient Function"
+    },
+    {
+      "id": "system_of_linear_equations",
+      "directory": "linear_algebra/system_of_linear_equations",
+      "title": "System of Linear Equations"
+    },
+    {
+      "id": "system_of_linear_equations_mod_2",
+      "directory": "linear_algebra/system_of_linear_equations_mod_2",
+      "title": "System of Linear Equations (Mod 2)"
+    },
+    {
+      "id": "tetration_mod",
+      "directory": "number_theory/tetration_mod",
+      "title": "Tetration Mod"
+    },
+    {
+      "id": "three_edge_connected_components",
+      "directory": "graph/three_edge_connected_components",
+      "title": "Three-Edge-Connected Components"
+    },
+    {
+      "id": "tree_decomposition_width_2",
+      "directory": "graph/tree_decomposition_width_2",
+      "title": "Tree Decomposition (Width 2)"
+    },
+    {
+      "id": "tree_diameter",
+      "directory": "tree/tree_diameter",
+      "title": "Tree Diameter"
+    },
+    {
+      "id": "tree_path_composite_sum",
+      "directory": "tree/tree_path_composite_sum",
+      "title": "Tree Path Composite Sum"
+    },
+    {
+      "id": "two_edge_connected_components",
+      "directory": "graph/two_edge_connected_components",
+      "title": "Two-Edge-Connected Components"
+    },
+    {
+      "id": "two_sat",
+      "directory": "other/two_sat",
+      "title": "2 Sat"
+    },
+    {
+      "id": "two_square_sum",
+      "directory": "number_theory/two_square_sum",
+      "title": "Represent A Number As Two Square Sum"
+    },
+    {
+      "id": "unionfind",
+      "directory": "data_structure/unionfind",
+      "title": "Unionfind"
+    },
+    {
+      "id": "unionfind_with_potential",
+      "directory": "data_structure/unionfind_with_potential",
+      "title": "Unionfind with Potential"
+    },
+    {
+      "id": "unionfind_with_potential_non_commutative_group",
+      "directory": "data_structure/unionfind_with_potential_non_commutative_group",
+      "title": "Unionfind with Potential (Non-Commutative Group)"
+    },
+    {
+      "id": "vertex_add_path_sum",
+      "directory": "tree/vertex_add_path_sum",
+      "title": "Vertex Add Path Sum"
+    },
+    {
+      "id": "vertex_add_range_contour_sum_on_tree",
+      "directory": "tree/vertex_add_range_contour_sum_on_tree",
+      "title": "Vertex Add Range Contour Sum on Tree"
+    },
+    {
+      "id": "vertex_add_subtree_sum",
+      "directory": "tree/vertex_add_subtree_sum",
+      "title": "Vertex Add Subtree Sum"
+    },
+    {
+      "id": "vertex_get_range_contour_add_on_tree",
+      "directory": "tree/vertex_get_range_contour_add_on_tree",
+      "title": "Vertex Get Range Contour Add on Tree"
+    },
+    {
+      "id": "vertex_set_path_composite",
+      "directory": "tree/vertex_set_path_composite",
+      "title": "Vertex Set Path Composite"
+    },
+    {
+      "id": "wildcard_pattern_matching",
+      "directory": "string/wildcard_pattern_matching",
+      "title": "Wildcard Pattern Matching"
+    },
+    {
+      "id": "zalgorithm",
+      "directory": "string/zalgorithm",
+      "title": "Z Algorithm"
+    }
+  ]
+}

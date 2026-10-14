@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_RANGE_OFFLINE_QUERY_COUNT_UNBLOCKED_HEIGHT_QUERIES_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_RANGE_OFFLINE_QUERY_COUNT_UNBLOCKED_HEIGHT_QUERIES_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <memory>
 #include <stdexcept>
@@ -10,13 +12,13 @@
 #include "../../../structure/range_query/aggregation/sparse_table.hpp"
 #include "../../../structure/types/monoid/common_monoids.hpp"
 
-template<int MAX_SIZE = 50000>
+template<int MAX_SIZE = -1>
 int count_unblocked_height_queries(
     const std::vector<int>& height,
     const std::vector<std::pair<int, int>>& queries
 ){
     constexpr MaxMonoid<int> maximum{};
-    const int size = static_cast<int>(height.size());
+    const int size = cpplib_detail::checked_int_size(height.size());
     auto table = std::make_unique<SparseTable<maximum, MAX_SIZE>>(height);
     int answer = 0;
     for(const auto [from, to]: queries){

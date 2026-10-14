@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <memory>
 #include <map>
@@ -12,9 +13,9 @@
 #include <vector>
 #include "top_tree_internal.hpp"
 
-template<auto Monoid, int MAX_SIZE>
+template<auto Monoid, int MAX_SIZE = -1>
 struct TopTree{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
 
     struct ClusterStatistics{
@@ -45,10 +46,14 @@ private:
 
     struct State{
         Engine engine;
-        std::array<Vertex*, MAX_SIZE> vertex{};
-        std::array<int, MAX_SIZE> free_edge{};
+        cpplib_detail::StaticOrVector<Vertex*, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> vertex{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> free_edge{};
         int free_edge_count = 0;
         std::map<std::pair<int, int>, int> edge_index;
+        explicit State(int n): engine(n){
+            vertex.resize(static_cast<std::size_t>(n));
+            free_edge.resize(static_cast<std::size_t>(n));
+        }
     };
 
     int _n = 0;
@@ -74,11 +79,11 @@ private:
     }
 
 public:
-    explicit TopTree(int n = MAX_SIZE): _n(n), state(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit TopTree(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), state(nullptr){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
-        state = std::make_unique<State>();
+        state = std::make_unique<State>(_n);
         for(int index = 0; index < _n; ++index){
             state->free_edge[state->free_edge_count++] = index;
         }
@@ -88,7 +93,7 @@ public:
     }
 
     explicit TopTree(const std::vector<S>& values):
-        TopTree(static_cast<int>(values.size())){
+        TopTree(cpplib_detail::checked_int_size(values.size())){
         if(values.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }

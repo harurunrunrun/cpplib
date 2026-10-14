@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_TREE_TREAP_TREAP_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstdint>
 #include <functional>
 #include <memory>
@@ -10,18 +11,34 @@
 #include <type_traits>
 #include <utility>
 
-template<class Key, int MAX_SIZE, class Compare = std::less<Key>>
+template<class Key, int MAX_SIZE = -1, class Compare = std::less<Key>>
 struct TreapSet{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
 private:
     struct State{
-        std::array<int, MAX_SIZE> left{};
-        std::array<int, MAX_SIZE> right{};
-        std::array<int, MAX_SIZE> size{};
-        std::array<int, MAX_SIZE> free_stack{};
-        std::array<std::uint64_t, MAX_SIZE> priority{};
-        std::array<Key, MAX_SIZE> key;
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> left{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> right{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> size{};
+        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> free_stack{};
+        cpplib_detail::StaticOrVector<std::uint64_t, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> priority{};
+        cpplib_detail::StaticOrVector<Key, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> key;
+        void ensure(std::size_t n){
+            left.ensure(n);
+            right.ensure(n);
+            size.ensure(n);
+            free_stack.ensure(n);
+            priority.ensure(n);
+            key.ensure(n);
+        }
+        explicit State(int n){
+            left.resize(static_cast<std::size_t>(n));
+            right.resize(static_cast<std::size_t>(n));
+            size.resize(static_cast<std::size_t>(n));
+            free_stack.resize(static_cast<std::size_t>(n));
+            priority.resize(static_cast<std::size_t>(n));
+            key.resize(static_cast<std::size_t>(n));
+        }
     };
 
     int root_node = -1;
@@ -48,6 +65,7 @@ private:
         return z ^ (z >> 31);
     }
     int new_node(const Key& x){
+        if constexpr(MAX_SIZE < 0) state->ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         int v;
         if(free_count > 0){
             v = state->free_stack[--free_count];
@@ -109,7 +127,7 @@ public:
     explicit TreapSet(
         std::uint64_t seed = 0x123456789abcdef0ULL,
         const Compare& compare = Compare()
-    ): rng_state(seed), comp(compare), state(std::make_unique<State>()){}
+    ): rng_state(seed), comp(compare), state(std::make_unique<State>(0)){}
 
     TreapSet(const TreapSet&) = delete;
     TreapSet& operator=(const TreapSet&) = delete;

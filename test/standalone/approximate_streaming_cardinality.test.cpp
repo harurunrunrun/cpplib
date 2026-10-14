@@ -7,13 +7,33 @@
 #include <limits>
 #include <stdexcept>
 #include <unordered_set>
+#include <vector>
 
 #include "../../src/approximate/streaming/hyperloglog.hpp"
 #include "../../src/approximate/streaming/linear_counting.hpp"
 #include "../../src/approximate/streaming/minhash.hpp"
 #include "../../src/approximate/streaming/simhash.hpp"
 
+void dynamic_capacity_test(){
+    HyperLogLog<> dynamic_hll(8, 17); HyperLogLog<8> fixed_hll(17);
+    LinearCounting<> dynamic_linear(2048, 18); LinearCounting<2048> fixed_linear(18);
+    MinHash<> dynamic_hash(64, 19); MinHash<64> fixed_hash(19);
+    for(int i = 0; i < 1000; ++i){
+        dynamic_hll.add(i % 157); fixed_hll.add(i % 157);
+        dynamic_linear.add(i % 157); fixed_linear.add(i % 157);
+        dynamic_hash.add(i % 157); fixed_hash.add(i % 157);
+    }
+    assert(dynamic_hll.estimate() == fixed_hll.estimate());
+    assert(dynamic_linear.estimate() == fixed_linear.estimate());
+    assert(dynamic_hash.signature() == std::vector<std::uint64_t>(fixed_hash.signature().begin(), fixed_hash.signature().end()));
+    assert(dynamic_hash.similarity(dynamic_hash) == 1);
+    bool invalid_dynamic_precision = false;
+    try{ HyperLogLog<> invalid(100); }catch(const std::invalid_argument&){ invalid_dynamic_precision = true; }
+    assert(invalid_dynamic_precision);
+}
+
 int main(){
+    dynamic_capacity_test();
     int first_count, second_count;
     if(!(std::cin >> first_count >> second_count)) return 0;
     HyperLogLog<12> hyperloglog(314159);

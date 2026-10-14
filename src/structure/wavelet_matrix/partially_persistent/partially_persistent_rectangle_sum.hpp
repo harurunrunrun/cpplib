@@ -9,8 +9,8 @@ template<
     class X,
     class Y,
     class W,
-    int MAX_SIZE,
-    int MAX_VERSION,
+    int MAX_SIZE = -1,
+    int MAX_VERSION = -1,
     int Y_BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<Y>>::digits
 >
 struct PartiallyPersistentRectangleSum :

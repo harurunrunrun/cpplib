@@ -1,5 +1,5 @@
 ---
-title: Polynomial Composition (多項式合成)
+title: Polynomial Composition (多項式合成) [composition_of_formal_power_series]
 documentation_of: ../../../../src/algorithm/math/polynomial/polynomial_composition.hpp
 ---
 

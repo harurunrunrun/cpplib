@@ -90,3 +90,13 @@ $O(MAX\_SIZE+MAX\_OPERATION+MAX\_QUERY)$。
 `base_operation` は `-1` または追加済み操作の番号でなければならない。
 頂点、操作番号、固定容量の範囲外では `out_of_range` または `length_error` を
 送出する。答えが必要になるまで `solve` を呼ぶ必要がある。
+
+## 可変長版
+
+```cpp
+using Dynamic = OfflinePersistentUnionFindQueries<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。保存領域 O(n + v + q)、solve は O((v + q) log(n + 1))。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

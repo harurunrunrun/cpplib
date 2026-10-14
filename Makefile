@@ -25,6 +25,8 @@ CXXFLAGS ?= -std=c++20 -O2 -Wall -Wextra
 STANDALONE_SPLIT_SIZE ?= 1
 STANDALONE_SPLIT_INDEX ?= 0
 LOCAL_VERIFY_JOBS ?= 4
+LIBRARY_CHECKER_JOBS ?= 4
+LIBRARY_CHECKER_ARGS ?=
 VERIFIER_GXX_WRAPPER_DIR := $(CURDIR)/scripts/competitive_verifier_gcc13
 VERIFIER_REAL_GXX := $(shell command -v $(GXX13) 2>/dev/null)
 VERIFIER_COMMAND_ENV := COMPETITIVE_VERIFIER_REAL_GXX="$(VERIFIER_REAL_GXX)" PATH="$(VERIFIER_GXX_WRAPPER_DIR):$(PATH)"
@@ -42,6 +44,8 @@ JEKYLL_BUILD_ARGS := $(strip \
 help:
 	@echo "make verify  competitive-verifierでtestを実行"
 	@echo "make verify LOCAL_VERIFY_JOBS=N  local verifyの並列数を指定 (default: $(LOCAL_VERIFY_JOBS))"
+	@echo "make library-checker-coverage  Library Checker全問題のdriver対応状況を表示"
+	@echo "make library-checker-verify LIBRARY_CHECKER_ARGS='--problem unionfind'  公式testをGCC 13・公式時間制限で検証"
 	@echo "make standalone-assets  standalone testのgenerator/checkerを実行"
 	@echo "make standalone-results-prune  削除・改名済みstandaloneの古いmanifestを除去"
 	@echo "make standalone-results-check  standalone全件の最新成功manifestを検査"
@@ -80,6 +84,22 @@ verifier-setup: $(VERIFIER)
 
 verifier-wrapper-test:
 	$(PYTHON) scripts/test_competitive_verifier_gcc13_wrapper.py
+
+.PHONY: library-checker-test library-checker-coverage library-checker-prepare library-checker-verify
+
+library-checker-test:
+	$(PYTHON) scripts/test_library_checker.py
+
+library-checker-coverage:
+	$(PYTHON) scripts/library_checker.py coverage $(LIBRARY_CHECKER_ARGS)
+
+library-checker-prepare: gcc13-check library-checker-test
+	$(PYTHON) scripts/library_checker.py prepare --cxx "$(GXX13)" \
+		--jobs "$(LIBRARY_CHECKER_JOBS)" $(LIBRARY_CHECKER_ARGS)
+
+library-checker-verify: gcc13-check verifier-setup library-checker-test
+	$(PYTHON) scripts/library_checker.py verify --cxx "$(GXX13)" \
+		--jobs "$(LIBRARY_CHECKER_JOBS)" $(LIBRARY_CHECKER_ARGS)
 
 header-guard-check:
 	$(PYTHON) scripts/test_check_header_guards.py

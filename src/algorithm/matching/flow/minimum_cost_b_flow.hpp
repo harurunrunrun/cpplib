@@ -58,7 +58,8 @@ struct MinimumCostBFlow{
     ){
         if(from < 0 || vertex_count <= from
             || to < 0 || vertex_count <= to
-            || lower < 0 || upper < lower)[[unlikely]]{
+            || upper < lower
+            || static_cast<Wide>(upper) - lower > std::numeric_limits<long long>::max())[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: invalid edge "
                 "(MinimumCostBFlow::add_edge)."
@@ -97,6 +98,34 @@ struct MinimumCostBFlow{
         }
         balance[static_cast<std::size_t>(vertex)] =
             static_cast<long long>(value);
+    }
+
+    std::vector<Wide> dual_potentials(const std::vector<long long>& flow) const{
+        if(flow.size() != edges.size())
+            throw std::invalid_argument("MinimumCostBFlow::dual_potentials: wrong flow size");
+        for(std::size_t index = 0; index < edges.size(); ++index){
+            if(flow[index] < edges[index].lower || flow[index] > edges[index].upper)
+                throw std::invalid_argument("MinimumCostBFlow::dual_potentials: invalid flow");
+        }
+        std::vector<Wide> potential(static_cast<std::size_t>(vertex_count));
+        for(int round = 0; round < vertex_count; ++round){
+            bool changed = false;
+            for(std::size_t index = 0; index < edges.size(); ++index){
+                const auto& edge = edges[index];
+                if(flow[index] < edge.upper && potential[edge.to] > potential[edge.from]+edge.cost){
+                    potential[edge.to] = potential[edge.from]+edge.cost;
+                    changed = true;
+                }
+                if(flow[index] > edge.lower && potential[edge.from] > potential[edge.to]-edge.cost){
+                    potential[edge.from] = potential[edge.to]-edge.cost;
+                    changed = true;
+                }
+            }
+            if(!changed) return potential;
+        }
+        if(vertex_count != 0)
+            throw std::domain_error("MinimumCostBFlow::dual_potentials: negative residual cycle");
+        return potential;
     }
 
     std::optional<MinimumCostBFlowResult> solve() const{

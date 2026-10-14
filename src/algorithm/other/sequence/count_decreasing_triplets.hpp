@@ -1,13 +1,15 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_SEQUENCE_COUNT_DECREASING_TRIPLETS_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_SEQUENCE_COUNT_DECREASING_TRIPLETS_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <memory>
 #include <vector>
 
 #include "../../../structure/fenwick_tree/fenwick_tree.hpp"
 
-template<class T, int MAX_SIZE = 100000>
+template<class T, int MAX_SIZE = -1>
 long long count_decreasing_triplets(const std::vector<T>& values){
     std::vector<T> coordinates = values;
     std::sort(coordinates.begin(), coordinates.end());
@@ -15,7 +17,7 @@ long long count_decreasing_triplets(const std::vector<T>& values){
         std::unique(coordinates.begin(), coordinates.end()),
         coordinates.end()
     );
-    const int rank_count = static_cast<int>(coordinates.size());
+    const int rank_count = cpplib_detail::checked_int_size(coordinates.size());
     auto left = std::make_unique<FenwickTree<int, MAX_SIZE>>(rank_count);
     auto right = std::make_unique<FenwickTree<int, MAX_SIZE>>(rank_count);
     std::vector<int> rank;
@@ -30,7 +32,7 @@ long long count_decreasing_triplets(const std::vector<T>& values){
     }
 
     long long answer = 0;
-    for(int position = 0; position < static_cast<int>(rank.size()); ++position){
+    for(int position = 0; position < cpplib_detail::checked_int_size(rank.size()); ++position){
         const int value_rank = rank[static_cast<std::size_t>(position)];
         right->add(value_rank, -1);
         const int greater_on_left = position - left->prefix_sum(value_rank + 1);

@@ -133,3 +133,15 @@ math::Polynomial<MOD> math::polynomial_interpolation(
 - `Modint<MOD>` を使う固定配列APIと高速版では、NTTに必要な2冪変換長が
   `MOD - 1` を割り切る必要がある。
 - 高速版の $M(n)$ は長さ $n$ の多項式積の計算量で、この実装では $O(n\log n)$ である。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+math::PolynomialInterpolation<Mint> dynamic;
+math::PolynomialInterpolation<Mint, 1000> fixed;
+auto coefficients = dynamic.interpolate_coefficients(xs, ys, xs.size());
+```
+
+連続点評価は $O(n)$ 時間・空間、係数復元は `Modint<MOD>` で $O(M(n)\log n)$ 時間・$O(n\log n)$ 空間、一般の体では $O(n^2)$ 時間・$O(n)$ 空間。階乗表は使った最大次数まで保持する。

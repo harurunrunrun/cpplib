@@ -68,3 +68,14 @@ mint x = comb.combination(n, k);
   $n+k-1\le MAX_N$ が必要。`homogeneous(0,0)=1`、`homogeneous(0,k)=0\ (k>0)`。
 - `bell_number(n)` は要素数 $n$ の集合の分割数を返す。
   $0\le n\le MAX_N$ が必要。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+Combinatorics<Mint> dynamic(n);
+Combinatorics<Mint, 100000> fixed;
+```
+
+前処理は $O(N)$ 時間・空間、組合せ・順列は $O(1)$ 時間。Bell 数は $O(n^2)$ 時間、作業領域 $O(n)$。

@@ -1,5 +1,5 @@
 ---
-title: Polynomial Discrete Sum (多項式の離散和)
+title: Polynomial Discrete Sum (多項式の離散和) [prefix_sum_of_polynomial]
 documentation_of: ../../../../src/algorithm/math/polynomial/polynomial_discrete_sum.hpp
 ---
 
@@ -127,3 +127,15 @@ Mint polynomial_prefix_sum(
 - 高速経路では対応する法で畳み込みが実行可能でなければならない。変換長の
   上限超過など、畳み込み由来の例外はそのまま伝播する。
 - 合成数 mod では途中に現れる整数が逆元を持たず、構築または除算が失敗することがある。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+math::PolynomialDiscreteSum<Mint> dynamic;
+math::PolynomialDiscreteSum<Mint, 1000> fixed;
+auto answer = dynamic.power_sum(n, exponent);
+```
+
+冪和は $O(k\log(k+1))$ 時間・$O(k)$ 空間。次数 $d$ の離散不定和は `Modint<MOD>` で $O(M(d)\log d)$ 時間、一般の体では $O(d^2)$ 時間、いずれも $O(d)$ 保存・作業領域。結果は実際の次数に応じた `vector` を返す。

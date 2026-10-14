@@ -123,3 +123,14 @@ copy構築・copy代入は、辺集合と構築済み索引を複製する。mov
 - `build` 前の索引API、範囲外の頂点・根・jump距離、`build` 後の辺追加、連結木でない入力では `runtime_error` を送出する。
 - `build` 後は辺を変更できない。別の根での `build` は可能であり、パス積自体は根の選び方に依存しない。
 - 再度 `build` を呼ぶと以前の索引は直ちに無効になる。再構築が例外で失敗した場合、索引APIは次の正常な `build` まで `runtime_error` を送出する。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+StaticTreePathFold<AddMonoid<long long>{}> dynamic(vertex_count);
+StaticTreePathFold<AddMonoid<long long>{}, 100000> fixed(vertex_count);
+```
+
+構築・前処理・保存領域は $O(N\log N)$、パス演算・祖先・距離は $O(\log N)$ 時間。

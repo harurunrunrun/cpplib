@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_TREE_CENTROID_DYNAMIC_NEAREST_MARKED_VERTEX_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <limits>
 #include <memory>
 #include <optional>
@@ -11,20 +12,23 @@
 
 #include "centroid_distance_index.hpp"
 
-template<class Distance, int MAX_SIZE>
+template<class Distance, int MAX_SIZE = -1>
 struct DynamicNearestMarkedVertex{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
     static_assert(!std::is_same_v<std::remove_cv_t<Distance>, bool>);
 
 private:
     struct State{
         CentroidDistanceIndex<Distance, MAX_SIZE> index;
-        std::array<std::multiset<Distance>, MAX_SIZE> centroid_distances;
-        std::array<bool, MAX_SIZE> marked{};
+        cpplib_detail::StaticOrVector<std::multiset<Distance>, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> centroid_distances;
+        cpplib_detail::StaticOrVector<unsigned char, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> marked{};
         bool built = false;
         int marked_count = 0;
 
-        explicit State(int n): index(n){}
+        explicit State(int n): index(n){
+            centroid_distances.resize(static_cast<std::size_t>(n));
+            marked.resize(static_cast<std::size_t>(n));
+        }
     };
 
     int _n;
@@ -87,8 +91,8 @@ private:
     }
 
 public:
-    explicit DynamicNearestMarkedVertex(int n = MAX_SIZE): _n(n), state(nullptr){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit DynamicNearestMarkedVertex(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), state(nullptr){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );

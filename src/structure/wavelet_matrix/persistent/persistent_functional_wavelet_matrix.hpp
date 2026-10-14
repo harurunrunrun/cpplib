@@ -10,8 +10,8 @@
 
 template<
     class T,
-    int MAX_SIZE,
-    int MAX_VERSION,
+    int MAX_SIZE = -1,
+    int MAX_VERSION = -1,
     class Sum = long long,
     int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits
 >

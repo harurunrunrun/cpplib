@@ -2,13 +2,14 @@
 #define CPPLIB_SRC_STRUCTURE_TRIE_STRING_TRIE_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <string_view>
 
-template<int ALPHABET, int MAX_NODES, char OFFSET = 'a'>
+template<int ALPHABET = 26, int MAX_NODES = -1, char OFFSET = 'a'>
 struct Trie{
     static_assert(ALPHABET > 0);
-    static_assert(MAX_NODES > 0);
+    static_assert(MAX_NODES == -1 || MAX_NODES > 0);
 
 private:
     struct Node{
@@ -19,7 +20,7 @@ private:
 
     int used = 1;
     int word_count = 0;
-    std::array<Node, MAX_NODES> nodes{};
+    cpplib_detail::StaticOrVector<Node, MAX_NODES> nodes{};
 
     int char_id(char c) const{
         int id = static_cast<int>(c - OFFSET);
@@ -29,6 +30,7 @@ private:
         return id;
     }
     int new_node(){
+        if constexpr(MAX_NODES < 0) nodes.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(used) + 1));
         if(used == MAX_NODES)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (insert).");
         }
@@ -39,6 +41,7 @@ private:
 
 public:
     Trie(){
+        nodes.ensure(1);
         nodes[0] = Node();
     }
 

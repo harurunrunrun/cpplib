@@ -42,13 +42,13 @@ struct ModularPotentialValue{
     }
 };
 
-template<int MOD, int MAX_SIZE>
+template<int MOD, int MAX_SIZE = -1>
 class ModularPotentialDSU{
     using Potential = ModularPotentialValue<MOD>;
     WeightedDSU<Potential, MAX_SIZE> dsu_;
 
 public:
-    explicit ModularPotentialDSU(int n = MAX_SIZE): dsu_(n){}
+    explicit ModularPotentialDSU(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): dsu_(n){}
 
     int size() const{ return dsu_.size(); }
     int groups() const{ return dsu_.groups(); }

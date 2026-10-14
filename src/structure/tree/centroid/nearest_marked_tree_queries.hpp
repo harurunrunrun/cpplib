@@ -5,7 +5,7 @@
 
 #include "dynamic_nearest_marked_vertex.hpp"
 
-template<class Weight, int MAX_SIZE>
+template<class Weight, int MAX_SIZE = -1>
 struct NearestMarkedTreeQueries{
 private:
     DynamicNearestMarkedVertex<Weight, MAX_SIZE> tree;

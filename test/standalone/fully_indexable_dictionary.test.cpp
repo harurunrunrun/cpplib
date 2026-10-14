@@ -21,8 +21,8 @@ int main(){
             std::cin >> value;
             input[static_cast<std::size_t>(k)] = value;
         }
-        FullyIndexableDictionary<512> fixed(input);
-        DynamicFullyIndexableDictionary<512> dynamic(input);
+        FullyIndexableDictionary<> fixed(input);
+        DynamicFullyIndexableDictionary<> dynamic(input);
         while(q--){
             std::string type;
             std::cin >> type;
@@ -69,8 +69,8 @@ int main(){
             }else if(type == "DSIZE"){
                 std::cout << dynamic.size() << '\n';
             }else if(type == "DCOPY"){
-                DynamicFullyIndexableDictionary<512> constructed(dynamic);
-                DynamicFullyIndexableDictionary<512> assigned;
+                DynamicFullyIndexableDictionary<> constructed(dynamic);
+                DynamicFullyIndexableDictionary<> assigned;
                 assigned = dynamic;
                 const bool original = dynamic[0];
                 constructed.flip(0);
@@ -80,11 +80,11 @@ int main(){
                     << constructed[0] << ' ' << dynamic[0] << ' '
                     << assigned[0] << '\n';
             }else if(type == "DMOVE"){
-                DynamicFullyIndexableDictionary<512> source(dynamic);
-                DynamicFullyIndexableDictionary<512> moved(
+                DynamicFullyIndexableDictionary<> source(dynamic);
+                DynamicFullyIndexableDictionary<> moved(
                     std::move(source)
                 );
-                DynamicFullyIndexableDictionary<512> assigned;
+                DynamicFullyIndexableDictionary<> assigned;
                 assigned = std::move(moved);
                 std::cout << assigned.size() << ' '
                     << assigned.rank(true, assigned.size()) << ' '
@@ -99,8 +99,8 @@ int main(){
     std::vector<bool> values(n);
     for(int k = 0; k < n; k++) values[k] = rng() & 1;
 
-    FullyIndexableDictionary<300> fixed(values);
-    DynamicFullyIndexableDictionary<300> dynamic(values);
+    FullyIndexableDictionary<> fixed(values);
+    DynamicFullyIndexableDictionary<> dynamic(values);
 
     auto check = [&]{
         for(int value = 0; value < 2; value++){
@@ -134,7 +134,7 @@ int main(){
                 else if(pattern == 2) bits[static_cast<std::size_t>(i)] = (i & 1) != 0;
                 else if(pattern == 3) bits[static_cast<std::size_t>(i)] = i % 3 == 0;
             }
-            FullyIndexableDictionary<130> dictionary(bits);
+            FullyIndexableDictionary<> dictionary(bits);
             for(int value = 0; value < 2; ++value){
                 std::vector<int> position;
                 for(int i = 0; i < length; ++i){
@@ -167,7 +167,7 @@ int main(){
     }
 
     std::vector<bool> changing(values.begin(), values.begin() + 41);
-    DynamicFullyIndexableDictionary<512> sequence(changing);
+    DynamicFullyIndexableDictionary<> sequence(changing);
     for(int step = 0; step < 5000; step++){
         const int operation = static_cast<int>(rng() % 6);
         if(operation == 0 && changing.size() < 500){

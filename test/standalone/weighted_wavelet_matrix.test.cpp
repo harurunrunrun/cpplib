@@ -17,7 +17,7 @@ int main(){
         std::vector<long long> input_weight(static_cast<std::size_t>(input_n));
         for(int& value: input_value) std::cin >> value;
         for(long long& weight: input_weight) std::cin >> weight;
-        WeightedWaveletMatrix<int, long long, 512> matrix(input_value, input_weight);
+        WeightedWaveletMatrix<int, long long> matrix(input_value, input_weight);
         auto print_optional = [](const std::optional<int>& value){
             if(value) std::cout << *value << '\n';
             else std::cout << "NONE\n";
@@ -77,7 +77,7 @@ int main(){
         values[k] = static_cast<int>(rng() % 241) - 120;
         weights[k] = static_cast<int>(rng() % 151) - 50;
     }
-    WeightedWaveletMatrix<int, long long, 200> matrix(values, weights);
+    WeightedWaveletMatrix<int, long long> matrix(values, weights);
 
     for(int k = 0; k < n; k++) assert(matrix[k] == values[k]);
     for(int step = 0; step < 3000; step++){

@@ -1,5 +1,7 @@
 #ifndef CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_DYNAMIC_SEGTREE_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_SEGTREE_DYNAMIC_DYNAMIC_SEGTREE_HPP_INCLUDED
+#include <memory>
+#include <vector>
 #include <vector>
 #include <stdexcept>
 #include <type_traits>
@@ -8,12 +10,11 @@
 #include <algorithm>
 #include "../../types/monoid/monoid.hpp"
 
-
-template<auto Monoid, long long MAX_SIZE>
+template<auto Monoid, long long MAX_SIZE = -1>
 struct DynamicSegtree{
     static_assert(0 < MAX_SIZE && MAX_SIZE < 0x3FFFFFFFFFFFFFFF);
     using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
-    
+
     private:
         struct Node{
             S val = Monoid.e();
@@ -153,7 +154,6 @@ struct DynamicSegtree{
             }
         }
 
-
     public:
         explicit DynamicSegtree(){
             root = new Node();
@@ -213,6 +213,217 @@ struct DynamicSegtree{
             if(r == 0) return 0;
             S acc = Monoid.e();
             return std::max(0LL, internal_min_left(root, 0, MAX_SIZE, acc, r, f, args...));
+        }
+};
+
+// Capacity omitted: storage follows the runtime shape and actual updates.
+template<auto Monoid>
+struct DynamicSegtree<Monoid, -1>{    long long limit_ = 0;
+
+    using S = typename std::remove_cvref_t<decltype(Monoid)>::S;
+
+    private:
+        struct Node{
+            S val = Monoid.e();
+            Node* left = nullptr;
+            Node* right = nullptr;
+        };
+
+        std::vector<std::unique_ptr<Node>> pool_;
+        Node* make_node(){ pool_.push_back(std::make_unique<Node>()); return pool_.back().get(); }
+        void delete_subtree(Node*){}
+
+        Node* root;
+
+        void internal_set(Node* node, long long l, long long r, long long idx, const S& x){
+            if(r - l == 1){
+                node->val = x;
+                return;
+            }
+            long long mid = (l + r) >> 1;
+            if(idx < mid){
+                if(node->left == nullptr){
+                    node->left = make_node();
+                }
+                internal_set(node->left, l, mid, idx, x);
+            }else{
+                if(node->right == nullptr){
+                    node->right = make_node();
+                }
+                internal_set(node->right, mid, r, idx, x);
+            }
+            S left = Monoid.e();
+            S right = Monoid.e();
+            if(node->left != nullptr){
+                left = node->left->val;
+            }
+            if(node->right != nullptr){
+                right = node->right->val;
+            }
+            node->val = Monoid.op(left, right);
+        }
+
+        S internal_get(Node* node, long long l, long long r, long long idx)const{
+            if(r - l == 1){
+                return node->val;
+            }
+            long long mid = (l + r) >> 1;
+            if(idx < mid){
+                if(node->left == nullptr){
+                    return Monoid.e();
+                }else{
+                    return internal_get(node->left, l, mid, idx);
+                }
+            }else{
+                if(node->right == nullptr){
+                    return Monoid.e();
+                }else{
+                    return internal_get(node->right, mid, r, idx);
+                }
+            }
+        }
+
+        S internal_prod(Node* node, long long now_l, long long now_r, long long q_l, long long q_r)const{
+            if(now_r <= q_l || q_r <= now_l){
+                return Monoid.e();
+            }
+            if(q_l <= now_l && now_r <=q_r){
+                return node->val;
+            }
+            long long mid = (now_l + now_r) >> 1;
+            S left = Monoid.e();
+            S right = Monoid.e();
+            if(node->left != nullptr){
+                left = internal_prod(node->left, now_l, mid, q_l, q_r);
+            }
+            if(node->right != nullptr){
+                right = internal_prod(node->right, mid, now_r, q_l, q_r);
+            }
+            return Monoid.op(left, right);
+        }
+
+        long long internal_max_right(Node* node, long long now_l, long long now_r, S& acc, long long l, auto f, auto&&... args)const{
+            if(now_r <= l){
+                return limit_;
+            }
+            if(l <= now_l){
+                S nxt = Monoid.op(acc, node->val);
+                if(std::invoke(f, nxt, args...)){
+                    acc = nxt;
+                    return limit_;
+                }
+                if(now_r - now_l == 1){
+                    return now_l;
+                }
+            }
+            long long mid = (now_l + now_r) >> 1;
+            if(node->left != nullptr){
+                long long res = internal_max_right(node->left, now_l, mid, acc, l, f, args...);
+                if(res != limit_){
+                    return res;
+                }
+            }
+            if(node->right != nullptr){
+                return internal_max_right(node->right, mid, now_r, acc, l, f, args...);
+            }else{
+                return limit_;
+            }
+        }
+
+        long long internal_min_left(Node* node, long long now_l, long long now_r, S& acc, long long r, auto f, auto&&... args)const{
+            if(r <= now_l){
+                return -1;
+            }
+            if(now_r <= r){
+                S nxt = Monoid.op(node->val, acc);
+                if(std::invoke(f, nxt, args...)){
+                    acc = nxt;
+                    return -1;
+                }
+                if(now_r - now_l == 1){
+                    return now_r;
+                }
+            }
+            long long mid = (now_l + now_r) >> 1;
+            if(node->right != nullptr){
+                long long res = internal_min_left(node->right, mid, now_r, acc, r, f, args...);
+                if(res != -1){
+                    return res;
+                }
+            }
+            if(node->left != nullptr){
+                return internal_min_left(node->left, now_l, mid, acc, r, f, args...);
+            }else{
+                return -1;
+            }
+        }
+
+    public:
+        long long size() const{return limit_;}
+        void reset_size(long long n){
+            if(n < 0 || n >= 0x3fffffffffffffffLL) throw std::length_error("segment tree size");
+            pool_.clear(); limit_ = n; root = make_node();
+        }
+
+        explicit DynamicSegtree(long long n = 0): limit_(n){
+            if(n < 0 || n >= 0x3FFFFFFFFFFFFFFFLL) throw std::length_error("segment tree size");
+            root = make_node();
+        }
+
+        ~DynamicSegtree(){
+            delete_subtree(root);
+        }
+
+        DynamicSegtree(const DynamicSegtree&) = delete;
+        DynamicSegtree& operator=(const DynamicSegtree&) = delete;
+
+        void set(long long k, const S& x){
+            if(k < 0 || limit_ <= k)[[unlikely]]{
+                throw std::runtime_error("library assertion fault: range violation (set).");
+            }
+            internal_set(root, 0, limit_, k, x);
+        }
+
+        S get(long long k)const{
+            if(k < 0 || limit_ <= k)[[unlikely]]{
+                throw std::runtime_error("library assertion fault: range violation (get).");
+            }
+            return internal_get(root, 0, limit_, k);
+        }
+
+        S prod(long long l, long long r)const{
+            if(l < 0 || l > r || limit_ < r)[[unlikely]]{
+                throw std::runtime_error("library assertion fault: range violation (prod).");
+            }
+            return internal_prod(root, 0, limit_, l, r);
+        }
+
+        S all_prod()const{
+            return root->val;
+        }
+
+        long long max_right(long long l, auto f, auto&&... args)const{
+            if(l < 0 || limit_ < l)[[unlikely]]{
+                throw std::runtime_error("library assertion fault: range violation (max_right).");
+            }
+            if(!std::invoke(f, Monoid.e(), args...))[[unlikely]]{
+                throw std::runtime_error("library assertion fault: f(e) must be true (max_right).");
+            }
+            if(l == limit_) return limit_;
+            S acc = Monoid.e();
+            return internal_max_right(root, 0, limit_, acc, l, f, args...);
+        }
+
+        long long min_left(long long r, auto f, auto&&... args)const{
+            if(r < 0 || limit_ < r)[[unlikely]]{
+                throw std::runtime_error("library assertion fault: range violation (min_left).");
+            }
+            if(!std::invoke(f, Monoid.e(), args...))[[unlikely]]{
+                throw std::runtime_error("library assertion fault: f(e) must be true (min_left).");
+            }
+            if(r == 0) return 0;
+            S acc = Monoid.e();
+            return std::max(0LL, internal_min_left(root, 0, limit_, acc, r, f, args...));
         }
 };
 

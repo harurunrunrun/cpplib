@@ -2,12 +2,13 @@
 #define CPPLIB_SRC_STRUCTURE_CONVEX_HULL_TRICK_LINE_CONTAINER_CONVEX_HULL_TRICK_HPP_INCLUDED
 
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <limits>
 #include <stdexcept>
 
-template<int MAX_LINE>
+template<int MAX_LINE = -1>
 struct ConvexHullTrick{
-    static_assert(MAX_LINE >= 0);
+    static_assert(MAX_LINE == -1 || MAX_LINE >= 0);
 
     static constexpr long long INF =
         std::numeric_limits<long long>::max() / 4;
@@ -35,7 +36,7 @@ struct ConvexHullTrick{
 private:
     int line_count = 0;
     int pointer = 0;
-    std::array<Line, MAX_LINE> hull;
+    cpplib_detail::StaticOrVector<Line, MAX_LINE> hull;
 
     static bool product_ge(
         __int128 lhs_x, __int128 lhs_y,
@@ -96,12 +97,13 @@ public:
             if(pointer > line_count) pointer = line_count;
         }
 
-        if(line_count >= MAX_LINE)[[unlikely]]{
+        if((MAX_LINE >= 0 && line_count >= MAX_LINE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: line capacity exceeded (add_line)."
             );
         }
 
+        if constexpr(MAX_LINE < 0) hull.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(line_count) + 1));
         hull[line_count++] = line;
     }
 

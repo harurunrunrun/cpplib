@@ -15,7 +15,7 @@ int main(){
     if(std::cin >> input_n >> q){
         std::vector<int> input(static_cast<std::size_t>(input_n));
         for(int& value: input) std::cin >> value;
-        WaveletMatrix<int, 512> matrix(input);
+        WaveletMatrix<int> matrix(input);
         auto print_optional = [](const std::optional<int>& value){
             if(value) std::cout << *value << '\n';
             else std::cout << "NONE\n";
@@ -62,7 +62,7 @@ int main(){
     std::mt19937 rng(918273);
     std::vector<int> values(n);
     for(int& value: values) value = static_cast<int>(rng() % 401) - 200;
-    WaveletMatrix<int, 200> matrix(values);
+    WaveletMatrix<int> matrix(values);
 
     for(int k = 0; k < n; k++) assert(matrix[k] == values[k]);
     for(int step = 0; step < 3000; step++){

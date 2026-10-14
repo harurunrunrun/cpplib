@@ -3,6 +3,8 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -82,6 +84,23 @@ void self_test(){
 }
 
 int main(){
+    {
+        MonotoneMinQueue<bool> values;
+        values.push(0, true); values.push(1, false);
+        assert(!values.best()); values.push(2, values.best());
+        assert(!values.best()); values.expire(2); assert(!values.best());
+    }
+    // Dynamic storage: verify growth and retained values.
+    {
+        MonotoneMinQueue<int> queue;
+        for(int i = 0; i < 1000; ++i){
+            queue.push(i, i); queue.expire(i - 64);
+            assert(queue.best() == std::max(0, i - 64));
+        }
+        queue.push(1000, queue.best()); assert(queue.best() == 935);
+        const auto result = sliding_window_min(std::vector<int>{3, 1, 4, 2}, 2);
+        assert((result == std::vector<int>{1, 1, 2}));
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

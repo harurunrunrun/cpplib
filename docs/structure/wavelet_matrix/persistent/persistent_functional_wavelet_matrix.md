@@ -28,3 +28,17 @@ $D=\mathtt{BIT\_WIDTH}$、$H=O(\log(N+1))$。
 
 `Sum` は `T` から変換でき、`Sum{}`、加算、減算を使える型とする。
 version・添字・半開区間・bit幅・容量・例外時rollbackの契約は基底型と同じ。
+
+## 容量を省略した可変長版
+
+容量のテンプレート引数 `MAX_SIZE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
+容量を指定した既存の固定配列版も同じヘッダで利用できる。
+
+```cpp
+using Variable = PersistentFunctionalWaveletMatrix<T>;
+using Fixed = PersistentFunctionalWaveletMatrix<T, N, Versions>;
+```
+
+可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
+再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
+整数添字の表現上限は残り、不正な添字や上限超過は検証する。

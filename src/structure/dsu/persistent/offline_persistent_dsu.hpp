@@ -10,16 +10,16 @@
 
 #include "../../array/rollback_array.hpp"
 
-template<int MAX_SIZE, int MAX_VERSION, int MAX_QUERY = MAX_VERSION>
+template<int MAX_SIZE = -1, int MAX_VERSION = -1, int MAX_QUERY = MAX_VERSION>
 class OfflinePersistentDSU{
-    static_assert(MAX_SIZE > 0);
-    static_assert(MAX_VERSION >= 0);
-    static_assert(MAX_QUERY >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
+    static_assert(MAX_VERSION >= -1);
+    static_assert(MAX_QUERY >= -1);
     static_assert(MAX_VERSION <= std::numeric_limits<int>::max() / 2);
     static_assert(MAX_QUERY < std::numeric_limits<int>::max());
 
     static int checked_size(int size){
-        if(size < 0 || MAX_SIZE < size)[[unlikely]]{
+        if(size < 0 || (MAX_SIZE >= 0 && MAX_SIZE < size))[[unlikely]]{
             throw std::out_of_range("OfflinePersistentDSU size is out of range");
         }
         return size;
@@ -36,14 +36,14 @@ class OfflinePersistentDSU{
         int right;
     };
     struct State{
-        RollbackArray<int, MAX_SIZE, 2 * MAX_VERSION> parent_or_size;
+        RollbackArray<int, MAX_SIZE, (MAX_VERSION < 0 ? -1 : 2 * MAX_VERSION)> parent_or_size;
 
         explicit State(int size): parent_or_size(size, -1){}
     };
     struct Frame{
         int version;
         std::size_t next_child;
-        typename RollbackArray<int, MAX_SIZE, 2 * MAX_VERSION>::Snapshot snapshot;
+        typename RollbackArray<int, MAX_SIZE, (MAX_VERSION < 0 ? -1 : 2 * MAX_VERSION)>::Snapshot snapshot;
         bool entered;
     };
 
@@ -87,10 +87,14 @@ class OfflinePersistentDSU{
     }
     int append_version(int parent, int left, int right){
         check_version(parent, "OfflinePersistentDSU version is out of range");
-        if(version_count_ > MAX_VERSION)[[unlikely]]{
+        if(version_count_ == std::numeric_limits<int>::max() || (MAX_VERSION >= 0 && version_count_ > MAX_VERSION))[[unlikely]]{
             throw std::length_error("OfflinePersistentDSU version capacity exceeded");
         }
         const int created = version_count_;
+        if constexpr(MAX_VERSION < 0){
+            children_.resize(static_cast<std::size_t>(created) + 1);
+            queries_.resize(static_cast<std::size_t>(created) + 1);
+        }
         children_[static_cast<std::size_t>(parent)].push_back({
             created, left, right
         });
@@ -99,11 +103,11 @@ class OfflinePersistentDSU{
     }
 
 public:
-    explicit OfflinePersistentDSU(int size = MAX_SIZE):
+    explicit OfflinePersistentDSU(int size = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
         size_(checked_size(size)),
         state_(std::make_unique<State>(size_)),
-        children_(static_cast<std::size_t>(MAX_VERSION + 1)),
-        queries_(static_cast<std::size_t>(MAX_VERSION + 1)){}
+        children_(static_cast<std::size_t>(MAX_VERSION < 0 ? 1 : MAX_VERSION + 1)),
+        queries_(static_cast<std::size_t>(MAX_VERSION < 0 ? 1 : MAX_VERSION + 1)){}
 
     OfflinePersistentDSU(const OfflinePersistentDSU&) = delete;
     OfflinePersistentDSU& operator=(const OfflinePersistentDSU&) = delete;
@@ -128,7 +132,7 @@ public:
         check_version(version, "OfflinePersistentDSU query version is out of range");
         check_vertex(left, "OfflinePersistentDSU query vertex is out of range");
         check_vertex(right, "OfflinePersistentDSU query vertex is out of range");
-        if(query_count_ == MAX_QUERY)[[unlikely]]{
+        if(query_count_ == std::numeric_limits<int>::max() || query_count_ == MAX_QUERY)[[unlikely]]{
             throw std::length_error("OfflinePersistentDSU query capacity exceeded");
         }
         const int index = query_count_;

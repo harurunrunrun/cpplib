@@ -59,6 +59,8 @@ void run_direct_tests(){
 }
 
 int main(){
+    {CommutativeMonoidDSU<sum_monoid> d(std::vector<long long>{4,-7,10}); d.merge(0,2); assert(d.component_product(0)==14);}
+
     int vertex_count, query_count;
     if(!(std::cin >> vertex_count >> query_count)){
         run_direct_tests();

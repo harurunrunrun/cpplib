@@ -25,8 +25,8 @@ int main(){
                 >> input_y[static_cast<std::size_t>(k)]
                 >> input_weight[static_cast<std::size_t>(k)];
         }
-        DynamicWaveletMatrix2D<int, int, 8192, 32> plain(input_x, input_y);
-        DynamicWaveletMatrix2DWeighted<int, int, long long, 8192, 32> weighted(
+        DynamicWaveletMatrix2D<int, int, -1, 32> plain(input_x, input_y);
+        DynamicWaveletMatrix2DWeighted<int, int, long long, -1, 32> weighted(
             input_x, input_y, input_weight
         );
         auto print_optional = [](const std::optional<int>& value){

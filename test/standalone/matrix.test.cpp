@@ -33,6 +33,21 @@ Matrix<T, N, N> matrix_pow(Matrix<T, N, N> base, long long exponent){
 }
 
 int main(){
+    {
+        Matrix<bool> matrix(std::vector<std::vector<bool>>{{true, false}, {false, true}});
+        static_assert(std::is_same_v<decltype(matrix(0, 0)), bool&>);
+        const auto& view = matrix;
+        static_assert(std::is_same_v<decltype(view(0, 0)), const bool&>);
+        matrix(0, 1) = true;
+        const auto square = matrix * matrix;
+        assert(square(0, 0) && square(0, 1) && !square(1, 0) && square(1, 1));
+        assert(matrix.transposed()(1, 0));
+        Matrix<bool, 2, 2> fixed(std::vector<std::vector<bool>>{{true, false}, {false, true}});
+        assert((fixed * matrix)(0, 1) && (matrix * fixed)(0, 1));
+    }
+
+    {using mint = Modint998244353; Matrix<mint> a(std::vector<std::vector<mint>>{{1,1},{1,0}}); auto b=a*a; assert(b(0,0)==mint(2)); assert(a.pow_entry_bmbm(20,0,1)==mint(6765)); Matrix<mint,3,4> f(std::vector<std::vector<mint>>{{1,1},{1,0}}); assert((f*a)(0,0)==mint(2)); assert((a*f)(0,0)==mint(2)); assert(a.transposed()==a); Matrix<mint> z(0,7); assert(z.rows()==0 && z.cols()==7);}
+
     int q;
     if(std::cin >> q){
         using input_mint = Modint998244353;

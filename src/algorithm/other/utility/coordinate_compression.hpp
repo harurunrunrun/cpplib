@@ -1,19 +1,22 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_UTILITY_COORDINATE_COMPRESSION_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_UTILITY_COORDINATE_COMPRESSION_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <array>
 #include <cstddef>
 #include <span>
 #include <stdexcept>
+#include <type_traits>
 #include <vector>
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 struct CoordinateCompression{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
 private:
-    std::array<T, static_cast<std::size_t>(MAX_SIZE)> coordinates{};
+    cpplib_detail::StaticOrVector<T, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> coordinates{};
     std::size_t coordinate_count = 0;
 
 public:
@@ -32,6 +35,7 @@ public:
         std::vector<T> next = values;
         std::sort(next.begin(), next.end());
         next.erase(std::unique(next.begin(), next.end()), next.end());
+        coordinates.resize(next.size());
         std::copy(next.begin(), next.end(), coordinates.begin());
         coordinate_count = next.size();
     }
@@ -44,8 +48,10 @@ public:
         return coordinate_count == 0;
     }
 
-    std::span<const T> values() const noexcept{
-        return {coordinates.data(), coordinate_count};
+    auto values() const noexcept(!(MAX_SIZE < 0 && std::is_same_v<T, bool>)){
+        if constexpr(MAX_SIZE < 0 && std::is_same_v<T, bool>)
+            return std::vector<bool>(coordinates.begin(), coordinates.end());
+        else return std::span<const T>(coordinates.data(), coordinate_count);
     }
 
     std::size_t lower_bound_index(const T& value) const{
@@ -79,7 +85,8 @@ public:
         return position;
     }
 
-    const T& value(std::size_t index_) const{
+    std::conditional_t<MAX_SIZE < 0 && std::is_same_v<T, bool>, bool, const T&>
+    value(std::size_t index_) const{
         if(index_ >= coordinate_count)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (CoordinateCompression::value)."

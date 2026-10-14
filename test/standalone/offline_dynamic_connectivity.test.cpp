@@ -45,6 +45,16 @@ bool naive_same(
 }
 
 int main(){
+    {
+        OfflineDynamicConnectivity<> dynamic(3, 4);
+        dynamic.add_edge(0, 0, 1);
+        dynamic.add_edge(1, 1, 2);
+        dynamic.erase_edge(3, 0, 1);
+        for(int repeat = 0; repeat < 2; ++repeat)
+            dynamic.run([](int t, const auto& d){ assert(d.same(0, 2) == (t == 1 || t == 2)); });
+        OfflineDynamicConnectivity<> empty;
+        empty.run([](int, const auto&){ assert(false); });
+    }
     int input_n, input_q;
     if(std::cin >> input_n >> input_q){
         OfflineDynamicConnectivity<128, 2048, 8192> dc(input_n, input_q);

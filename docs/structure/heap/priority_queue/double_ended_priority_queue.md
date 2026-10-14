@@ -60,3 +60,15 @@ $N$ を現在の要素数とし、比較・swapを $O(1)$ とする。
 - 空queueへの`min`, `max`, `pop_min`, `pop_max`は例外。
 - `min`と`max`は保存要素へのconst参照、pop系は削除した値を返す。
 - `clear`は$O(1)$で論理的に空にし、固定$O(MAX\_SIZE)$storageを再利用する。
+
+## 可変長版
+
+```cpp
+using Dynamic = DoubleEndedPriorityQueue<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。保存領域は O(n)、push は償却 O(log(n + 1))、pop は O(log(n + 1))、両端取得は O(1)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+
+可変長版で `T=bool` の場合、`min()/max()` は bool を値で返す。他の型は従来どおり const 参照を返す。参照は後続の再確保で無効になることがある。

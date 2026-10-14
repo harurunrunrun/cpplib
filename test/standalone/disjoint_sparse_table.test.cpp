@@ -1,7 +1,10 @@
 // competitive-verifier: STANDALONE
 
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 #include <cassert>
 #include <iostream>
+#include <cassert>
+
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -129,6 +132,19 @@ void test_exceptions(){
 }
 
 int main(){
+    {
+        constexpr MinMonoid<bool> monoid{};
+        const std::vector<bool> bits{true, true, false, true, false, true, true};
+        DisjointSparseTable<monoid> table(bits);
+        assert(table.get(0) && table.prod(0, 2) && !table.prod(0, 7));
+    }
+
+    // Dynamic wrappers: runtime capacities.
+    {
+        DisjointSparseTable<add_monoid> table(std::vector<long long>(129, 2));
+        for(int left = 0; left < 129; ++left) for(int right = left; right <= 129; ++right)
+            assert(table.prod(left, right) == 2 * (right - left));
+    }
     int n, q;
     if(std::cin >> n >> q){
         std::vector<long long> values(static_cast<std::size_t>(n));

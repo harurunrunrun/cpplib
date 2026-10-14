@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <iostream>
+#include "../../src/structure/array/static_or_vector.hpp"
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -62,6 +63,34 @@ void self_test(){
 }
 
 int main(){
+    {
+        using cpplib_detail::checked_int_size;
+        const std::size_t maximum = static_cast<std::size_t>(std::numeric_limits<int>::max());
+        assert(checked_int_size(maximum) == std::numeric_limits<int>::max());
+        bool thrown = false;
+        try{ (void)checked_int_size(maximum + 1); }catch(const std::length_error&){ thrown = true; }
+        assert(thrown);
+        PartiallyPersistentStorage<bool> storage;
+        storage.initialize(0, true);
+        for(int i = 0; i < 100; ++i) storage.write(0, i, storage.current(0));
+        const bool& retained = storage.current(0);
+        assert(retained && storage.get(0, 0));
+        storage.write(0, 101, false);
+        assert(!storage.current(0)); storage.rollback(0); assert(storage.current(0));
+    }
+
+    {
+        cpplib_detail::StaticOrVector<int, -1> values;
+        values.ensure(3); values[1] = 7; values.ensure(129);
+        assert(values[1] == 7 && values.size() == 129);
+        values.resize(2); assert(values.at(1) == 7);
+        cpplib_detail::StaticOrVector<int, 3> fixed;
+        fixed.ensure(3); bool threw = false;
+        try{fixed.ensure(4);}catch(const std::length_error&){threw = true;}
+        assert(threw && fixed.size() == 3);
+    }
+    {PartiallyPersistentStorage<std::string> s; s.initialize(19,"initial"); for(int i=0;i<40;++i)s.write(19,i,s.current(19)); assert(s.get(19,0)=="initial"); s.write(19,41,"new"); assert(s.get(19,40)=="initial"); assert(s.current(19)=="new"); s.rollback(0); assert(s.current(19)=="initial");}
+
     self_test();
 
     int size;

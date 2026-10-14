@@ -7,12 +7,37 @@
 #include <vector>
 
 #include "../../src/algorithm/graph/spanning_tree/matrix_tree_theorem.hpp"
+#include "../../src/algorithm/graph/spanning_tree/rooted_spanning_forest_count.hpp"
 #include "../../src/algorithm/math/linear_algebra/elimination/fast_determinant.hpp"
 #include "../../src/structure/modint/fast_modint.hpp"
 
 using Mint = FastModint998244353;
 
 void self_test(){
+    // On two vertices: either both are roots, or the edge connects them
+    // and exactly one endpoint is chosen as root: ab + w(a + b).
+    struct ForestCase{
+        std::vector<long long> roots;
+        std::vector<RootedForestEdge> edges;
+        long long expected;
+    };
+    for(const ForestCase& item: std::vector<ForestCase>{
+        {{}, {}, 1},
+        {{2, 3}, {}, 6},
+        {{2, 3}, {{0, 1, 5}, {0, 0, 999}}, 31},
+        {{2, 3}, {{0, 1, -7}}, -29},
+        // K3: 1 empty forest + 3 * 2 one-edge forests + 3 * 3 trees.
+        {{1, 1, 1}, {{0, 1, 1}, {1, 2, 1}, {2, 0, 1}}, 16},
+        {{0, 0, 0}, {{0, 1, 1}, {1, 2, 1}}, 0},
+    }){
+        for(long long modulus: {1LL, 6LL, 97LL, 1000LL}){
+            const long long expected = (item.expected % modulus + modulus) % modulus;
+            assert(count_rooted_spanning_forests_mod(item.roots, item.edges, modulus) == expected);
+        }
+        assert((count_rooted_spanning_forests_prime<998244353, 16>(
+            item.roots, item.edges, 998877) == Modint<998244353>(item.expected)));
+    }
+
     assert(fast_determinant(std::vector<std::vector<Mint>>{}) == Mint(1));
     assert(fast_determinant(std::vector<std::vector<Mint>>{{7}}) == Mint(7));
     assert(fast_determinant(std::vector<std::vector<Mint>>{

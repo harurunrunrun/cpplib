@@ -83,3 +83,15 @@ heap.meld(left_version, right_version)
 - 論理的な要素数が `std::size_t` に収まらないmeldでは `overflow_error`。
 - 更新が例外を送出した場合、version数と使用node数は更新前に戻る。
 - object本体に固定容量配列を持つ。容量を大きくする場合はstatic storageまたはheap上へ配置する。
+
+## 可変長版
+
+```cpp
+using Dynamic = PersistentLeftistHeap<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。push/pop/meld は O(log(n + 1)) 個のノードを追加し、版とノードの保存領域は使用量に合わせて伸びる。vector の拡張は償却計算に含む。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+
+可変長ストレージから返された値への参照は、後続の更新に伴う再確保で無効になることがある。必要な値は更新前にコピーする。

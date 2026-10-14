@@ -1,9 +1,16 @@
 // competitive-verifier: STANDALONE
 
 #include <array>
+#include "../../src/structure/types/monoid/common_monoids.hpp"
 #include <cassert>
 #include <cstdint>
 #include <iostream>
+#include <cassert>
+#include "../../src/structure/range_query/value_query/static_range_maximum_frequency.hpp"
+#include "../../src/structure/range_query/value_query/static_range_product_less_equal_mod.hpp"
+#include "../../src/structure/range_query/value_query/static_range_lis.hpp"
+#include <cassert>
+#include <string>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -213,6 +220,30 @@ void self_test(){
 }
 
 int main(){
+    {
+        constexpr MinMonoid<bool> monoid{};
+        MonoidMergeSortTree<int, monoid> tree(std::vector<int>{3, 1, 2}, std::vector<bool>{true, false, true});
+        assert(tree.weight(0) && !tree.weight(1));
+        assert(!tree.fold(0, 3) && tree.fold_less(0, 3, 1));
+    }
+
+    // Dynamic wrappers: runtime capacities.
+    {
+        StaticRangeMaximumFrequency<int> frequency({1, 1, 1, 2, 2, 3, 3, 3});
+        assert(frequency.maximum_frequency(1, 7) == 2 && frequency.maximum_frequency(0, 8) == 3);
+        StaticRangeProductLessEqualMod<998244353> products({3, 2, 7, 4});
+        assert(products.product_less_equal(0, 4, 4) == 24);
+        StaticRangeLIS<int> lis({3, 1, 2, 2, 4});
+        assert(lis.query(0, 5) == 3 && lis.query(1, 4) == 2);
+        StaticRangeLIS<int> nondecreasing({3, 1, 2, 2, 4}, true); assert(nondecreasing.query(0, 5) == 4);
+    }
+    // Dynamic storage: verify growth and retained values.
+    {
+        std::vector<int> keys(129); std::vector<long long> weights(129, 1);
+        for(int i = 0; i < 129; ++i) keys[i] = 128 - i;
+        MonoidMergeSortTree<int, add_monoid> tree(keys, weights);
+        assert(tree.fold(0, 129) == 129); assert(tree.fold_less_equal(0, 129, 63) == 64);
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

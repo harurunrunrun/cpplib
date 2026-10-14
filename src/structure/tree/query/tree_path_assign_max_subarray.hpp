@@ -6,7 +6,7 @@
 #include "../dynamic_forest/lazy_link_cut_tree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class Value, int MAX_SIZE>
+template<class Value, int MAX_SIZE = -1>
 struct TreePathAssignMaxSubarray{
 private:
     static constexpr AssignMaxSubarrayMonoidAct<Value> action{};

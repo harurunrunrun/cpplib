@@ -1,6 +1,8 @@
 // competitive-verifier: STANDALONE
 
 #include <array>
+#include <span>
+#include <vector>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -106,13 +108,18 @@ void check_stream(
     std::array<typename Engine::result_type, Count> observations{};
     for(auto& value: observations) value = source();
 
+    const std::vector<typename Engine::result_type> dynamic_outputs(observations.begin(), observations.end());
+    Cracker dynamic_cracker{std::span<const typename Engine::result_type>(dynamic_outputs)};
     Cracker cracker(observations);
+    assert(dynamic_cracker.state() == cracker.state());
     const auto state = cracker.state();
     for(std::size_t index = 0; index < LongLag; ++index){
         assert(state[index] == observations[Count - LongLag + index]);
     }
     for(std::size_t index = 0; index < prediction_count; ++index){
-        assert(cracker.next() == source());
+        const auto expected = source();
+        assert(cracker.next() == expected);
+        assert(dynamic_cracker.next() == expected);
     }
 }
 

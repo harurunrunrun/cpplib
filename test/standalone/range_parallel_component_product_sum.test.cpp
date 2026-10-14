@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -29,6 +31,21 @@ void self_test(){
 }
 
 int main(){
+    // Deduce the weight type without a capacity argument.
+    {
+        RangeParallelComponentProductSum components(
+            std::vector<FastModint998244353>(129, FastModint998244353(1))
+        );
+        components.merge_ranges(0, 128, 1, 129);
+        assert(components.product_sum() == FastModint998244353(8256));
+    }
+    // Dynamic storage: verify growth and retained values.
+    {
+        RangeParallelComponentProductSum<> dsu(std::vector<long long>(129, 1));
+        dsu.merge_ranges(0, 128, 1, 129);
+        assert(dsu.groups() == 1); assert(dsu.component_sum(128) == 129);
+        assert(dsu.product_sum() == 8256);
+    }
     self_test();
     int size, query_count;
     if(!(std::cin >> size >> query_count)) return 0;

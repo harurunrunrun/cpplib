@@ -54,3 +54,14 @@ AhoCorasickRepresentation aho_corasick_representation(
 - 範囲外の文字、または状態数が `MAX_NODES` を超える場合は
   `runtime_error` を送出する。
 - 状態番号はpatternを入力順にtrieへ追加したときの生成順で、rootは0。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto result = aho_corasick_representation<26>(patterns);
+auto fixed = aho_corasick_representation<26, 100000>(patterns);
+```
+
+総入力長 $L$、ノード数 $S$、alphabet サイズ $A$ に対し $O(L+AS)$ 時間・$O(AS)$ 空間。

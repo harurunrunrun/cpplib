@@ -89,3 +89,19 @@ seedの一意復元には $\gcd(A,M)=1$、$2^W$ 法では $A$ が奇数である
 <code>recovered_seed()</code> が返すのは観測出力の直前状態であり、正規化前に
 渡したseedと一致しない場合がある。非可逆でも最後の出力から次値は予測できる。
 値域変換後や一部bitだけの出力には適用できない。
+
+## 観測数を実行時に決める
+
+容量引数なしの `span` overload に `vector` の観測列を渡せる。
+固定長の `array` overload と同じ header にある。
+
+~~~cpp
+std::vector<std::uint32_t> outputs{1, 6, 31, 59};
+auto parameters = recover_linear_congruential_parameters<std::uint32_t, 97>(
+    std::span<const std::uint32_t>(outputs)
+);
+~~~
+
+観測数を $K$ とすると、既知法 $M>0$ の復元は $O(K+\log M)$ 時間・
+$O(1)$ 追加空間。法 0 の $W$ bit 版は $O(K+\log W)$ 時間。
+入力 `vector` 自体の保存領域は $O(K)$ で、復元時に観測列をコピーしない。

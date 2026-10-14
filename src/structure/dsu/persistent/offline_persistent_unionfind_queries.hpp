@@ -1,7 +1,9 @@
 #ifndef CPPLIB_SRC_STRUCTURE_DSU_PERSISTENT_OFFLINE_PERSISTENT_UNIONFIND_QUERIES_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_DSU_PERSISTENT_OFFLINE_PERSISTENT_UNIONFIND_QUERIES_HPP_INCLUDED
 
+#include <limits>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
@@ -9,15 +11,15 @@
 
 #include "offline_persistent_dsu.hpp"
 
-template<int MAX_SIZE, int MAX_OPERATION, int MAX_QUERY = MAX_OPERATION>
+template<int MAX_SIZE = -1, int MAX_OPERATION = -1, int MAX_QUERY = MAX_OPERATION>
 class OfflinePersistentUnionFindQueries{
-    static_assert(MAX_SIZE > 0);
-    static_assert(MAX_OPERATION >= 0);
-    static_assert(MAX_QUERY >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
+    static_assert(MAX_OPERATION >= -1);
+    static_assert(MAX_QUERY >= -1);
 
     struct State{
-        std::array<int, static_cast<std::size_t>(MAX_OPERATION) + 1>
-            version_at{};
+        cpplib_detail::StaticOrVector<int, (MAX_OPERATION < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_OPERATION) + 1)>
+            version_at{std::size_t(1)};
     };
 
     OfflinePersistentDSU<MAX_SIZE, MAX_OPERATION, MAX_QUERY> dsu_;
@@ -25,7 +27,7 @@ class OfflinePersistentUnionFindQueries{
     int operation_count_ = 0;
 
     void check_capacity() const{
-        if(operation_count_ == MAX_OPERATION)[[unlikely]]{
+        if(operation_count_ == std::numeric_limits<int>::max() || operation_count_ == MAX_OPERATION)[[unlikely]]{
             throw std::length_error(
                 "OfflinePersistentUnionFindQueries operation capacity exceeded"
             );
@@ -42,13 +44,14 @@ class OfflinePersistentUnionFindQueries{
     }
 
     void append_operation(int version){
+        state_->version_at.ensure(static_cast<std::size_t>(operation_count_) + 2);
         state_->version_at[static_cast<std::size_t>(operation_count_ + 1)] =
             version;
         ++operation_count_;
     }
 
 public:
-    explicit OfflinePersistentUnionFindQueries(int size = MAX_SIZE):
+    explicit OfflinePersistentUnionFindQueries(int size = (MAX_SIZE < 0 ? 0 : MAX_SIZE)):
         dsu_(size), state_(std::make_unique<State>()){}
 
     OfflinePersistentUnionFindQueries(

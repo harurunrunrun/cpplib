@@ -32,3 +32,14 @@ Euler順序と順序統計索引を構築する。時間計算量は $O(n\log n)
 - 木は連結で、頂点数は `MAX_SIZE` 以下でなければならない。
 - 同じラベルでは頂点番号が小さいものを先に数える。
 - `build` 前または部分木サイズ以上の `order` では `runtime_error`。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+SubtreeLabelOrderStatistics<> dynamic(labels);
+SubtreeLabelOrderStatistics<100000> fixed(labels);
+```
+
+前処理・保存領域は $O(N\log N)$、部分木の順位クエリは $O(\log N)$ 時間。

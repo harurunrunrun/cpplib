@@ -75,3 +75,25 @@ state_type recover(
 加算の上位bit、乗算、carryを含む遷移などは一般には$GF(2)$線形ではない。
 線形でない`step`を渡しても検出はできず、復元結果は保証されない。
 出力の欠落や順序の入れ替えがある場合にも適用できない。
+
+## 容量を省略する可変長版
+
+`Gf2LinearStateCracker<>` は状態 bit 数をコンストラクタで受け取り、
+状態と消去用行列を `vector` に保存する。固定版と同じ header に実装されている。
+
+~~~cpp
+std::size_t state_bits = 16;
+auto step = [](std::vector<std::uint64_t>& state, std::size_t){
+    const bool output = (state[0] & 1ULL) != 0;
+    state[0] = (state[0] >> 1) | ((state[0] & 1ULL) << 15);
+    return output;
+};
+Gf2LinearStateCracker<> cracker(state_bits, step);
+std::vector<std::uint8_t> observations(state_bits, 0);
+auto recovered = cracker.recover(observations);
+~~~
+
+$N$ を実行時の状態 bit 数、$W=\lceil N/64\rceil$、1 回の `step` の時間を $T$ とすると、
+構築は $O(N^2T+N^2W)$ 時間・$O(NW)$ 空間、復元は $O(NW)$ 時間・
+$O(W)$ 追加空間。`rank()` と `uniquely_recoverable()` は $O(1)$。
+状態数を明示した `Gf2LinearStateCracker<N>` は従来の固定配列版を選ぶ。

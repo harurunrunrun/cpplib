@@ -12,9 +12,9 @@
 #include "../../segtree/basic/lazysegtree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<int MAX_SIZE = 100000>
+template<int MAX_SIZE = -1>
 class ThresholdUpdatedIndexedMultiset{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
     using Wide = __int128_t;
 
     static constexpr AddMaxMonoidAct<Wide> action_{};
@@ -34,7 +34,7 @@ public:
     explicit ThresholdUpdatedIndexedMultiset(
         const std::vector<long long>& values
     ){
-        if(values.size() > static_cast<std::size_t>(MAX_SIZE) ||
+        if((MAX_SIZE >= 0 && values.size() > static_cast<std::size_t>(MAX_SIZE)) ||
            values.size() >
                static_cast<std::size_t>(std::numeric_limits<int>::max()))[[unlikely]]{
             throw std::length_error(

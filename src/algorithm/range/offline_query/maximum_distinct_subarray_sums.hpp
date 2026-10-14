@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_RANGE_OFFLINE_QUERY_MAXIMUM_DISTINCT_SUBARRAY_SUMS_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_RANGE_OFFLINE_QUERY_MAXIMUM_DISTINCT_SUBARRAY_SUMS_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
 #include <memory>
 #include <stdexcept>
@@ -11,16 +13,16 @@
 #include "../../../structure/segtree/basic/lazysegtree.hpp"
 #include "../../../structure/types/monoid/common_monoids.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 std::vector<T> maximum_distinct_subarray_sums(
     const std::vector<T>& values,
     const std::vector<std::pair<int, int>>& ranges
 ){
     struct Query{ int left; int right; int index; };
-    const int size = static_cast<int>(values.size());
+    const int size = cpplib_detail::checked_int_size(values.size());
     std::vector<Query> queries;
     queries.reserve(ranges.size());
-    for(int index = 0; index < static_cast<int>(ranges.size()); ++index){
+    for(int index = 0; index < cpplib_detail::checked_int_size(ranges.size()); ++index){
         const auto [left, right] = ranges[static_cast<std::size_t>(index)];
         if(left < 0 || right <= left || size < right)[[unlikely]]{
             throw std::runtime_error(

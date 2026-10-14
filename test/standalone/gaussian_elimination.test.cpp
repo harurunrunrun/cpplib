@@ -146,6 +146,14 @@ void print_bits(const std::bitset<MAX_COL>& value, int columns){
 }
 
 int main(){
+    Matrix<double> dynamic_matrix(2, 2);
+    dynamic_matrix(0, 0) = 1; dynamic_matrix(0, 1) = 2;
+    dynamic_matrix(1, 0) = 0; dynamic_matrix(1, 1) = 1;
+    assert(gaussian_determinant(dynamic_matrix) == 1 && gaussian_rank(dynamic_matrix) == 2);
+    const auto dynamic_inverse = gaussian_inverse(dynamic_matrix);
+    assert(dynamic_inverse && (*dynamic_inverse)(0, 1) == -2);
+    const auto dynamic_solution = solve_linear_system(dynamic_matrix, std::vector<double>{5, 2});
+    assert(dynamic_solution.consistent && dynamic_solution.particular[0] == 1 && dynamic_solution.particular[1] == 2);
     int query_count;
     if(!(std::cin >> query_count)){
         self_test();

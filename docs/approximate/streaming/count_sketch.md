@@ -22,3 +22,16 @@ documentation_of: ../../../src/approximate/streaming/count_sketch.hpp
 $O(\lVert f_{\ne x}\rVert_2/\sqrt{Width})$。median を取ることで定数誤差の
 失敗確率は $e^{-\Theta(Depth)}$ まで下がる。保存に必要な空間計算量は $O(Width\,Depth)$。
 counter は表現範囲で飽和する。理論保証は飽和しない更新列に対するもの。
+
+## 容量を省略する可変長版
+
+~~~cpp
+CountSketch<> sketch(1024, 5, 123); // 幅、深さ、seed
+sketch.add(42, -3);
+auto frequency = sketch.estimate(42);
+~~~
+
+幅 $W$ と深さ $D$ を実行時に指定し、counter を `vector` に保存する。
+構築・`clear` は $O(WD)$ 時間、追加は $O(D)$ 時間、推定は $O(D\log D)$ 時間。
+保存領域は $O(WD)$、推定時の一時領域は $O(D)$、追加時は $O(1)$。
+容量を明示した固定配列版も同じ header で利用できる。

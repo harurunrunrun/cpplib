@@ -6,7 +6,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <limits>
 #include <stdexcept>
+#include <type_traits>
 #include <vector>
 
 #include "../../fft/transform/convolution.hpp"
@@ -23,6 +25,14 @@ struct BostanMoriWorkspace{
     std::array<T, static_cast<std::size_t>(2) * MAX_DEGREE + 1> product{};
 };
 
+template<class T>
+struct BostanMoriWorkspace<T, -1>{
+    std::vector<T> p, q, q_negative, next_p, next_q, product;
+    explicit BostanMoriWorkspace(int degree): p(degree), q(degree + 1),
+        q_negative(degree + 1), next_p(degree), next_q(degree + 1),
+        product(static_cast<std::size_t>(degree) * 2 + 1){}
+};
+
 template<class T, int MAX_DEGREE>
 T bostan_mori_fixed(
     const T* initial,
@@ -35,7 +45,13 @@ T bostan_mori_fixed(
         return initial[static_cast<std::size_t>(index)];
     }
 
-    auto workspace = std::make_unique<BostanMoriWorkspace<T, MAX_DEGREE>>();
+    auto workspace = [degree]{
+        if constexpr(MAX_DEGREE == -1){
+            return std::make_unique<BostanMoriWorkspace<T, -1>>(degree);
+        }else{
+            return std::make_unique<BostanMoriWorkspace<T, MAX_DEGREE>>();
+        }
+    }();
     workspace->q[0] = T(1);
     for(int i = 0; i < degree; ++i){
         workspace->q[static_cast<std::size_t>(i + 1)] =
@@ -92,17 +108,19 @@ T bostan_mori_fixed(
 
 } // namespace linear_recurrence_internal
 
-template<class T, int MAX_DEGREE>
+template<class T, int MAX_DEGREE = -1>
 struct LinearRecurrence{
-    static_assert(MAX_DEGREE >= 0);
+    static_assert(MAX_DEGREE >= -1);
 
 private:
     int _degree = 0;
-    std::array<T, static_cast<std::size_t>(MAX_DEGREE)> _initial{};
-    std::array<T, static_cast<std::size_t>(MAX_DEGREE)> _coefficient{};
+    using Storage = std::conditional_t<MAX_DEGREE == -1, std::vector<T>,
+        std::array<T, static_cast<std::size_t>(MAX_DEGREE < 0 ? 0 : MAX_DEGREE)>>;
+    Storage _initial{};
+    Storage _coefficient{};
 
     static void check_degree(int degree){
-        if(degree < 0 || MAX_DEGREE < degree)[[unlikely]]{
+        if(degree < 0 || degree > (std::numeric_limits<int>::max() - 1) / 2 || (MAX_DEGREE >= 0 && MAX_DEGREE < degree))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity violation (LinearRecurrence)."
             );
@@ -120,6 +138,10 @@ public:
                 "library assertion fault: null pointer (LinearRecurrence)."
             );
         }
+        if constexpr(MAX_DEGREE == -1){
+            _initial.resize(static_cast<std::size_t>(degree));
+            _coefficient.resize(static_cast<std::size_t>(degree));
+        }
         if(degree != 0){
             std::copy_n(initial, degree, _initial.begin());
             std::copy_n(coefficient, degree, _coefficient.begin());
@@ -135,12 +157,19 @@ public:
                 "library assertion fault: size violation (LinearRecurrence)."
             );
         }
-        if(initial.size() > static_cast<std::size_t>(MAX_DEGREE))[[unlikely]]{
+        if constexpr(MAX_DEGREE != -1) if(initial.size() > static_cast<std::size_t>(MAX_DEGREE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity violation (LinearRecurrence)."
             );
         }
+        if(initial.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))
+            throw std::length_error("linear recurrence degree overflow");
         _degree = static_cast<int>(initial.size());
+        check_degree(_degree);
+        if constexpr(MAX_DEGREE == -1){
+            _initial.resize(initial.size());
+            _coefficient.resize(initial.size());
+        }
         std::copy_n(initial.begin(), _degree, _initial.begin());
         std::copy_n(coefficient.begin(), _degree, _coefficient.begin());
     }
@@ -172,21 +201,26 @@ public:
     }
 };
 
-template<class T, int MAX_DEGREE>
+template<class T, int MAX_DEGREE = -1>
 LinearRecurrence<T, MAX_DEGREE> berlekamp_massey(
     const T* sequence,
     int sequence_size
 ){
-    static_assert(MAX_DEGREE >= 0);
+    static_assert(MAX_DEGREE >= -1);
     if(sequence_size < 0 || (sequence_size != 0 && sequence == nullptr))[[unlikely]]{
         throw std::runtime_error(
             "library assertion fault: invalid input (berlekamp_massey)."
         );
     }
 
-    std::array<T, static_cast<std::size_t>(MAX_DEGREE) + 1> current{};
-    std::array<T, static_cast<std::size_t>(MAX_DEGREE) + 1> previous{};
-    std::array<T, static_cast<std::size_t>(MAX_DEGREE) + 1> backup{};
+    using Coefficients = std::conditional_t<MAX_DEGREE == -1, std::vector<T>,
+        std::array<T, static_cast<std::size_t>(MAX_DEGREE < 0 ? 0 : MAX_DEGREE + 1)>>;
+    Coefficients current{}, previous{}, backup{};
+    if constexpr(MAX_DEGREE == -1){
+        current.resize(static_cast<std::size_t>(sequence_size) + 1);
+        previous.resize(current.size());
+        backup.resize(current.size());
+    }
     current[0] = previous[0] = T(1);
     int current_size = 1;
     int previous_size = 1;
@@ -208,7 +242,7 @@ LinearRecurrence<T, MAX_DEGREE> berlekamp_massey(
         std::copy_n(current.begin(), current_size, backup.begin());
         const int backup_size = current_size;
         const int required_size = previous_size + shift;
-        if(MAX_DEGREE + 1 < required_size)[[unlikely]]{
+        if constexpr(MAX_DEGREE != -1) if(MAX_DEGREE + 1 < required_size)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity violation (berlekamp_massey)."
             );
@@ -222,7 +256,7 @@ LinearRecurrence<T, MAX_DEGREE> berlekamp_massey(
 
         if(2 * degree <= i){
             degree = i + 1 - degree;
-            if(MAX_DEGREE < degree)[[unlikely]]{
+            if constexpr(MAX_DEGREE != -1) if(MAX_DEGREE < degree)[[unlikely]]{
                 throw std::runtime_error(
                     "library assertion fault: capacity violation (berlekamp_massey)."
                 );
@@ -236,8 +270,13 @@ LinearRecurrence<T, MAX_DEGREE> berlekamp_massey(
         }
     }
 
-    std::array<T, static_cast<std::size_t>(MAX_DEGREE)> initial{};
-    std::array<T, static_cast<std::size_t>(MAX_DEGREE)> coefficient{};
+    using InitialStorage = std::conditional_t<MAX_DEGREE == -1, std::vector<T>,
+        std::array<T, static_cast<std::size_t>(MAX_DEGREE < 0 ? 0 : MAX_DEGREE)>>;
+    InitialStorage initial{}, coefficient{};
+    if constexpr(MAX_DEGREE == -1){
+        initial.resize(static_cast<std::size_t>(degree));
+        coefficient.resize(initial.size());
+    }
     for(int i = 0; i < degree; ++i){
         initial[static_cast<std::size_t>(i)] = sequence[static_cast<std::size_t>(i)];
         coefficient[static_cast<std::size_t>(i)] =
@@ -246,7 +285,7 @@ LinearRecurrence<T, MAX_DEGREE> berlekamp_massey(
     return LinearRecurrence<T, MAX_DEGREE>(initial.data(), coefficient.data(), degree);
 }
 
-template<class T, int MAX_DEGREE>
+template<class T, int MAX_DEGREE = -1>
 LinearRecurrence<T, MAX_DEGREE> berlekamp_massey(
     const std::vector<T>& sequence
 ){

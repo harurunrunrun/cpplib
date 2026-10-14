@@ -3,21 +3,22 @@
 
 #include <algorithm>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <functional>
 #include <limits>
 #include <stdexcept>
 #include <tuple>
 #include <utility>
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 struct SlopeTrick{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
 
 private:
     template<class Compare>
     struct FixedHeap{
         int count = 0;
-        std::array<T, MAX_SIZE> data{};
+        cpplib_detail::StaticOrVector<T, MAX_SIZE> data{};
 
         bool empty() const{ return count == 0; }
         int size() const{ return count; }
@@ -25,7 +26,9 @@ private:
         void clear(){ count = 0; }
 
         void push(const T& value){
-            data[static_cast<std::size_t>(count)] = value;
+            const T copy = value;
+            if constexpr(MAX_SIZE < 0) data.ensure(cpplib_detail::checked_int_size(static_cast<std::size_t>(count) + 1));
+            data[static_cast<std::size_t>(count)] = copy;
             count++;
             std::push_heap(data.begin(), data.begin() + count, Compare{});
         }

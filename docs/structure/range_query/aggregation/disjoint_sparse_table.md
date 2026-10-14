@@ -52,3 +52,13 @@ long long x = dst.prod(l, r);
 - `get(k)`は`0 <= k < n`、`prod(l,r)`は`0 <= l <= r <= n`。違反時は例外。
 - 空区間の`prod`と空列の`all_prod`は単位元を返す。
 - `Monoid.op`は結合的で、`e`は左右の単位元である必要がある。可換性・冪等性は不要。
+
+## 可変長版
+
+```cpp
+using Dynamic = DisjointSparseTable<Monoid>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log(n + 1))、区間積 O(1)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

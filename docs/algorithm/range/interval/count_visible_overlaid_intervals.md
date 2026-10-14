@@ -31,3 +31,14 @@ int count_visible_overlaid_intervals(
 - 端点と隣接端点間の開区間を別々の原子セルとして扱います。
 - $2M-1 <= MAX_ATOMS$ が必要です。
 - `Coordinate` は全順序と等値比較を持たなければなりません。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+auto count = count_visible_overlaid_intervals(intervals);
+auto fixed = count_visible_overlaid_intervals<Coordinate, 400000>(intervals);
+```
+
+$N$ 区間に対して $O(N\log N)$ 時間・$O(N)$ 空間。圧縮後の端点と間隙の個数から内部容量を決める。

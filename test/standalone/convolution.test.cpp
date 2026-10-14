@@ -1,12 +1,15 @@
 // competitive-verifier: STANDALONE
 
 #include <cassert>
+#include <cstdint>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "../../src/algorithm/fft/transform/convolution.hpp"
+#include "../../src/algorithm/fft/transform/montgomery_ntt.hpp"
+#include "../../src/algorithm/fft/transform/multiplicative_convolution_power.hpp"
 
 template<int MOD>
 std::vector<Modint<MOD>> naive_convolution(const std::vector<Modint<MOD>>& a, const std::vector<Modint<MOD>>& b){
@@ -28,6 +31,35 @@ void assert_equal(const std::vector<Modint<MOD>>& a, const std::vector<Modint<MO
     for(std::size_t i = 0; i < a.size(); i++){
         assert(a[i] == b[i]);
     }
+}
+
+void test_fast_and_multiplicative(){
+    using mint = Modint998244353;
+    std::vector<mint> a(70), b(67);
+    for(std::size_t i = 0; i < a.size(); ++i) a[i] = static_cast<long long>(i * i) - 9;
+    for(std::size_t i = 0; i < b.size(); ++i) b[i] = static_cast<long long>(i) * 7 - 31;
+    assert_equal(fast_convolution_ntt(a, b), naive_convolution(a, b));
+    assert(fast_convolution_ntt(std::vector<mint>{}, a).empty());
+    for(int n: {5, 8}){
+        std::vector<mint> weights(n);
+        for(int i = 0; i < n; ++i) weights[i] = i - 2;
+        std::vector<mint> expected(n);
+        expected[1] = 1;
+        for(int length = 0; length <= 7; ++length){
+            const auto actual = n == 5 ? prime_multiplicative_power(weights, length)
+                                       : power_two_multiplicative_power(weights, length);
+            assert_equal(actual, expected);
+            std::vector<mint> next(n);
+            for(int i = 0; i < n; ++i)
+                for(int j = 0; j < n; ++j) next[i * j % n] += expected[i] * weights[j];
+            expected.swap(next);
+        }
+    }
+    assert_equal(power_two_multiplicative_power(std::vector<mint>{7}, 3), std::vector<mint>{343});
+    const std::uint64_t exponent = UINT64_MAX;
+    const std::vector<mint> unit{0, 37};
+    assert_equal(prime_multiplicative_power(unit, exponent),
+                 std::vector<mint>{0, mint(37).pow(exponent % (998244353 - 1))});
 }
 
 void test_ntt(){
@@ -95,6 +127,7 @@ void test_exceptions(){
 }
 
 int main(){
+    test_fast_and_multiplicative();
     int q;
     if(std::cin >> q){
         while(q--){

@@ -342,6 +342,57 @@ struct LinearCongruentialParameters{
     }
 };
 
+template<class UInt, UInt Modulus>
+constexpr std::optional<LinearCongruentialParameters<UInt, Modulus>>
+recover_linear_congruential_parameters(
+    std::span<const UInt> consecutive_outputs
+) noexcept{
+    const std::size_t observation_count = consecutive_outputs.size();
+    static_assert(std::is_unsigned_v<UInt>);
+    if(!(observation_count >= 3)) return std::nullopt;
+    using namespace linear_congruential_cracker_internal;
+    if constexpr(Modulus != 0){
+        for(const UInt output: consecutive_outputs){
+            if(output >= Modulus) return std::nullopt;
+        }
+    }
+
+    const UInt first_difference = subtract<UInt, Modulus>(
+        consecutive_outputs[1],
+        consecutive_outputs[0]
+    );
+    const UInt second_difference = subtract<UInt, Modulus>(
+        consecutive_outputs[2],
+        consecutive_outputs[1]
+    );
+    const auto inverse_difference =
+        inverse<UInt, Modulus>(first_difference);
+    if(!inverse_difference) return std::nullopt;
+
+    LinearCongruentialParameters<UInt, Modulus> result{
+        multiply<UInt, Modulus>(
+            second_difference,
+            *inverse_difference
+        ),
+        0,
+    };
+    result.increment = subtract<UInt, Modulus>(
+        consecutive_outputs[1],
+        multiply<UInt, Modulus>(
+            result.multiplier,
+            consecutive_outputs[0]
+        )
+    );
+
+    for(std::size_t index = 1; index < observation_count; ++index){
+        if(result.next(consecutive_outputs[index - 1])
+            != consecutive_outputs[index]){
+            return std::nullopt;
+        }
+    }
+    return result;
+}
+
 template<class UInt, UInt Modulus, std::size_t N>
 constexpr std::optional<LinearCongruentialParameters<UInt, Modulus>>
 recover_linear_congruential_parameters(

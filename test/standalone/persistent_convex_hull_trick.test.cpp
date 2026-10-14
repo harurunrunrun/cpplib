@@ -19,7 +19,7 @@ long long naive_query(const std::vector<std::pair<long long, long long>>& lines,
 int main(){
     int input_q;
     if(std::cin >> input_q){
-        PersistentConvexHullTrick<512, 2048, 40000> cht;
+        PersistentConvexHullTrick<> cht;
         while(input_q--){
             std::string type;
             std::cin >> type;
@@ -46,7 +46,7 @@ int main(){
         return 0;
     }
 
-    PersistentConvexHullTrick<256, 512, 6000> cht;
+    PersistentConvexHullTrick<> cht;
     std::vector<std::vector<std::pair<long long, long long>>> naive(1);
     std::vector<long long> last_slope = {1000};
     std::mt19937 rng(314159265);

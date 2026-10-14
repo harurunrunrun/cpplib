@@ -47,3 +47,13 @@ public:
 - 各区間は `0 <= left <= right < coordinate_count` を満たす必要がある。
 - `coordinate_count` は `MAX_COORDINATE` 以下でなければならない。
 - 前提違反時は `runtime_error` を送出する。
+
+## 可変長版
+
+```cpp
+using Dynamic = StaticIntervalCoverage<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域は O(n + m)、一点の被覆数取得は O(1)（n は座標数、m は区間数）。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

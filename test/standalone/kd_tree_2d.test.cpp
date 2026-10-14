@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -48,6 +50,14 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        std::vector<KdTreePoint2D<int>> points;
+        for(int i = 0; i < 129; ++i) points.push_back({i, i, i});
+        KdTree2D<int> tree(points); assert(tree.nearest_neighbor(128, 128).id == 128);
+        auto found = tree.range_search(100, 128, 100, 128); assert(found.size() == 29);
+        tree.build({{7, 8, 9}}); assert(tree.nearest_neighbor(0, 0).id == 9);
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

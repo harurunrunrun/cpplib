@@ -109,6 +109,26 @@ public:
     }
   }
 
+  void readi128(__int128 &x) {
+    readspeoln();
+    int c = getch();
+    const bool negative = c == '-';
+    if (negative) c = getch();
+    __uint128_t value = 0;
+    while ('0' <= c && c <= '9') {
+      value = value * 10 + static_cast<unsigned int>(c & 15);
+      c = getch();
+    }
+    if (c != EOF) ungetch();
+    const __uint128_t sign_bit = __uint128_t(1) << 127;
+    if (negative && value == sign_bit) {
+      x = -static_cast<__int128>(sign_bit - 1) - 1;
+    } else {
+      x = negative ? -static_cast<__int128>(value)
+                   : static_cast<__int128>(value);
+    }
+  }
+
   // [a, z]
   void readstr(char *s) {
     readspeoln();
@@ -182,6 +202,21 @@ public:
     }
 
     while (n--) write(s[n]);
+  }
+
+  void writei128(__int128 x) {
+    __uint128_t value = static_cast<__uint128_t>(x);
+    if (x < 0) {
+      write('-');
+      value = __uint128_t(0) - value;
+    }
+    char digits[40];
+    int count = 0;
+    do {
+      digits[count++] = char('0' + value % 10);
+      value /= 10;
+    } while (value != 0);
+    while (count != 0) write(digits[--count]);
   }
 };
 

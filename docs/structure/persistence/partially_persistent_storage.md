@@ -41,3 +41,13 @@ const T& old = storage.get(index, old_version);
 `initialize` / `current` / `write` の追加空間計算量は $O(1)$、`get` は反復二分探索で
 $O(1)$、`rollback` も戻り値以外は $O(1)$ の一時領域を使う。保存領域は
 $O(\mathtt{SIZE}+\mathtt{MAX\_CHANGE})$。
+
+## 可変長版
+
+```cpp
+PartiallyPersistentStorage<int> storage(n);
+```
+
+容量の template 引数を省略すると、実行時の要素数に合わせて `std::vector` を確保する。初期領域 O(n)、履歴 H 件の保存領域 O(n + H)。write は償却 O(1)、get は頂点ごとの履歴の対数時間。initialize は容量省略時に添字まで領域を拡張する。get/current の参照は後続の領域拡張で無効になり得る。
+
+容量を明示した固定長版も同じヘッダに含まれる。既存の固定上限に関する説明は容量を明示した場合に適用される。

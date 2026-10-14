@@ -11,14 +11,16 @@
 #include <numeric>
 #include <optional>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
+#include <vector>
 
 namespace math{
 
-template<std::signed_integral Int = long long, int MAX_RUNS = 128>
+template<std::signed_integral Int = long long, int MAX_RUNS = -1>
 struct SternBrocotTree{
     static_assert(sizeof(Int) <= 8);
-    static_assert(MAX_RUNS >= 0);
+    static_assert(MAX_RUNS >= -1);
 
     using integer_type = Int;
     using wide_type = __int128_t;
@@ -49,7 +51,9 @@ struct SternBrocotTree{
 
     class Path{
     private:
-        std::array<Run, static_cast<std::size_t>(MAX_RUNS)> _runs{};
+        using Storage = std::conditional_t<MAX_RUNS == -1, std::vector<Run>,
+            std::array<Run, static_cast<std::size_t>(MAX_RUNS < 0 ? 0 : MAX_RUNS)>>;
+        Storage _runs{};
         int _size = 0;
 
     public:
@@ -70,7 +74,10 @@ struct SternBrocotTree{
             return _runs[static_cast<std::size_t>(index)];
         }
 
-        void clear() noexcept{ _size = 0; }
+        void clear() noexcept{
+            _size = 0;
+            if constexpr(MAX_RUNS == -1) _runs.clear();
+        }
 
         void push_back(Direction direction, std::uint64_t length){
             if(length == 0)[[unlikely]]{
@@ -84,10 +91,15 @@ struct SternBrocotTree{
                 last += length;
                 return;
             }
-            if(_size == MAX_RUNS)[[unlikely]]{
+            if constexpr(MAX_RUNS != -1) if(_size == MAX_RUNS)[[unlikely]]{
                 throw std::length_error("library assertion fault: capacity violation (SternBrocotTree::Path). ");
             }
-            _runs[static_cast<std::size_t>(_size++)] = Run{direction, length};
+            if constexpr(MAX_RUNS == -1){
+                _runs.push_back(Run{direction, length});
+                ++_size;
+            }else{
+                _runs[static_cast<std::size_t>(_size++)] = Run{direction, length};
+            }
         }
 
         std::uint64_t depth() const{

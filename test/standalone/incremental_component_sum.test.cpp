@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -53,6 +55,12 @@ void run_direct_tests(){
 }
 
 int main(){
+    // Dynamic wrappers: runtime capacities.
+    {
+        IncrementalComponentSum<long long> components(std::vector<long long>(129, 1));
+        for(int i = 1; i < 129; ++i) components.add_edge(i - 1, i);
+        components.add_vertex(128, 5); assert(components.component_sum(0) == 134);
+    }
     int vertex_count, query_count;
     if(!(std::cin >> vertex_count >> query_count)){
         run_direct_tests();

@@ -1,6 +1,8 @@
 #ifndef CPPLIB_SRC_ALGORITHM_RANGE_STATIC_QUERY_STATIC_RANGE_COUNT_DISTINCT_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_RANGE_STATIC_QUERY_STATIC_RANGE_COUNT_DISTINCT_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <cstddef>
 #include <functional>
 #include <stdexcept>
@@ -11,12 +13,12 @@
 
 template<
     class T,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     class Hash = std::hash<T>,
     class KeyEqual = std::equal_to<T>
 >
 class StaticRangeCountDistinct{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
     int n_;
     WaveletMatrix<int, MAX_SIZE> previous_occurrence_;
@@ -28,14 +30,14 @@ class StaticRangeCountDistinct{
                 "(StaticRangeCountDistinct constructor)."
             );
         }
-        return static_cast<int>(values.size());
+        return cpplib_detail::checked_int_size(values.size());
     }
 
     static std::vector<int> build_previous(const std::vector<T>& values){
         std::unordered_map<T, int, Hash, KeyEqual> last;
         last.reserve(values.size() * 2 + 1);
         std::vector<int> previous(values.size(), -1);
-        for(int index = 0; index < static_cast<int>(values.size()); ++index){
+        for(int index = 0; index < cpplib_detail::checked_int_size(values.size()); ++index){
             auto [iterator, inserted] = last.emplace(
                 values[static_cast<std::size_t>(index)], index
             );

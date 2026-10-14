@@ -1,6 +1,19 @@
 // competitive-verifier: STANDALONE
 
 #include <algorithm>
+#include "../../src/structure/tree/query/tree_edge_point_set_path_maximum.hpp"
+#include "../../src/structure/tree/query/monochromatic_component_size_tree.hpp"
+#include "../../src/structure/tree/query/monochromatic_component_max_tree.hpp"
+#include "../../src/structure/tree/query/root_path_first_marked.hpp"
+#include "../../src/structure/tree/query/tree_path_assign_max_subarray.hpp"
+#include "../../src/structure/tree/query/subtree_add_sum_minimum_tree.hpp"
+#include "../../src/structure/tree/centroid/tree_contour_fenwick.hpp"
+#include "../../src/structure/tree/centroid/marked_tree_diameter_queries.hpp"
+#include "../../src/structure/tree/centroid/nearest_marked_tree_queries.hpp"
+#include "../../src/structure/tree/dynamic_forest/dynamic_forest_connectivity.hpp"
+#include "../../src/structure/bbst/sequence/dynamic_maximum_subarray_sum_sequence.hpp"
+#include "../../src/structure/bbst/sequence/dynamic_power_moment_sequence.hpp"
+
 #include <cassert>
 #include <iostream>
 #include <queue>
@@ -70,12 +83,66 @@ std::vector<int> component(int s, const std::vector<std::vector<int>>& graph){
     return result;
 }
 
+void dynamic_capacity_wrapper_regression(){
+    DynamicForestConnectivity<> forest(3);
+    assert(forest.add_edge(0, 1)); assert(forest.connected(0, 1));
+    assert(forest.remove_edge(0, 1)); assert(!forest.connected(0, 1));
+    DynamicMaximumSubarraySumSequence<long long> sequence(std::vector<long long>{-1, 3, -2});
+    sequence.insert(3, 5); assert(sequence.maximum_sum(0, 4) == 6);
+    DynamicPowerMomentSequence<long long, 2> moments(std::vector<long long>{1, 2, 3});
+    assert(moments.power_moment(0, 3, 0) == 6);
+    TreePathAssignMaxSubarray<long long> paths(std::vector<long long>{-1, 3, -2});
+    assert(paths.add_edge(0, 1)); assert(paths.add_edge(1, 2));
+    assert(paths.path_max_subarray(0, 2) == 3); paths.assign_path(0, 2, 2);
+    assert(paths.path_max_subarray(2, 0) == 6);
+    MonochromaticComponentSizeTree<> sizes(3);
+    MonochromaticComponentMaxTree<int> maxima(3);
+    RootPathFirstMarked<> marked(3);
+    TreeEdgePointSetPathMaximum<int> edges(3);
+    SubtreeAddSumMinimumTree<> subtrees(3);
+    MarkedTreeDiameterQueries<int> diameter(3);
+    NearestMarkedTreeQueries<int> nearest(3);
+    for(int v = 0; v < 3; ++v){maxima.set_value(v, v + 1); subtrees.set_value(v, v + 1);}
+    for(int v = 1; v < 3; ++v){
+        sizes.add_edge(v - 1, v); maxima.add_edge(v - 1, v); marked.add_edge(v - 1, v);
+        edges.add_edge(v - 1, v, v); subtrees.add_edge(v - 1, v);
+        diameter.add_edge(v - 1, v, 1); nearest.add_edge(v - 1, v);
+    }
+    sizes.build(); maxima.build(); marked.build(); edges.build(); subtrees.build();
+    diameter.build(); nearest.build();
+    assert(sizes.component_size(1) == 3); assert(maxima.component_maximum(0) == 3);
+    sizes.toggle(1); assert(sizes.component_size(0) == 1);
+    assert(marked.toggle(1)); assert(marked.first_marked(2) == 1);
+    assert(edges.path_maximum(0, 2) == 2); edges.set_edge(0, 7); assert(edges.path_maximum(0, 2) == 7);
+    assert(subtrees.subtree_sum(1) == 5); subtrees.subtree_add(1, 4); assert(subtrees.subtree_minimum(0) == 1);
+    assert(diameter.diameter() == 2); nearest.toggle(2); assert(nearest.nearest_distance(0) == 2);
+    const std::vector<std::tuple<int, int, int>> weighted{{0, 1, 1}, {1, 2, 1}};
+    TreeContourFenwick<long long, int> contours(std::vector<long long>{1, 2, 3}, weighted);
+    assert(contours.contour_sum(0, 1, 3) == 5);
+    TreeContourFenwick<long long, int, -1, true> dual(std::vector<long long>{1, 2, 3}, weighted);
+    dual.contour_add(0, 1, 2, 7); assert(dual.point_get(1) == 9); assert(dual.point_get(2) == 3);
+}
+
 int main(){
+    {
+        LinkCutTree<AddMonoid<bool>{}> boolean_tree(2);
+        assert(boolean_tree.link(0, 1)); boolean_tree.set(1, true);
+        boolean_tree.evert(0); assert(boolean_tree.path_prod(0, 1));
+    }
+    dynamic_capacity_wrapper_regression();
+    {
+        LinkCutTree<sum_monoid> growing(0);
+        for(int v = 0; v < 1024; ++v){
+            assert(growing.add_vertex(1) == v);
+            if(v) assert(growing.link(v - 1, v));
+            assert(growing.path_prod(0, v) == v + 1);
+        }
+    }
     int input_n, input_m, q;
     if(std::cin >> input_n >> input_m >> q){
         std::vector<long long> input(static_cast<std::size_t>(input_n));
         for(long long& value: input) std::cin >> value;
-        LinkCutTree<sum_monoid, 128> tree(input);
+        LinkCutTree<sum_monoid> tree(input);
         for(int i = 0; i < input_m; i++){
             int u, v;
             std::cin >> u >> v;
@@ -125,7 +192,7 @@ int main(){
     std::mt19937 rng(424242);
     std::vector<long long> value(n);
     for(auto& x: value) x = static_cast<int>(rng() % 200) - 80;
-    LinkCutTree<sum_monoid, 80> tree(value);
+    LinkCutTree<sum_monoid> tree(value);
 
     std::vector<std::vector<int>> graph(n);
     std::vector<std::pair<int, int>> edges;

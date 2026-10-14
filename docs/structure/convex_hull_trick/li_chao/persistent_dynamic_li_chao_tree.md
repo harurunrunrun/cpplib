@@ -85,3 +85,17 @@ $W=X\_MAX-X\_MIN+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間treeの最大lev
 - `add_line`と`fork`でversion/node容量を超える場合は例外で、既存状態を変えない。
 - `latest_version`は最後のversion番号、`nodes_used`は使用node数を返す。
 - `empty(version)`は指定versionに直線がないかを返す。
+
+## 容量を省略した可変長版
+
+容量テンプレートを省略すると既定値 `-1` でvectorを使い、必要な保存領域を明示的に伸長する。
+固定容量を指定する既存版も同じヘッダに残る。
+
+```cpp
+using Variable = PersistentDynamicLiChaoTree<X_MIN, X_MAX>;
+using Fixed = PersistentDynamicLiChaoTree<X_MIN, X_MAX, Versions>;
+```
+
+伸長の費用は追加操作全体で償却され、上記の各操作の計算量を維持する。
+領域は確保済みノード・履歴・heap要素などの個数に比例する。
+整数添字の表現上限を超える要素数は例外。構造上の文字種類・bit幅・座標域は、件数容量とは別に指定できる。

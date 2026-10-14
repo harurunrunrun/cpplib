@@ -108,3 +108,14 @@ $D=\mathrm{Dimension}$、$N=\prod_i(\mathrm{shape}_i+1)$、$C=\mathrm{MAX\_STORA
 - `set`、`add`、再度の `build` を `build()` 後に呼ぶと `runtime_error` を送出する。
 - `range_sum` で `begin[i] > end[i]`、またはcornerがshape外なら `runtime_error` を送出する。
 - `Dimension` は正で、`size_t` のbit数未満でなければならない。queryは $2^D$ 個のcornerを列挙するため、Dimensionが大きい用途には適さない。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+MultidimensionalPrefixSum<long long, 2> dynamic({rows, columns});
+MultidimensionalPrefixSum<long long, 2, 1000000> fixed({rows, columns});
+```
+
+次元数 $D$、各軸に番兵を加えた格子点数の積 $S$ として構築は $O(S)$、累積は $O(DS)$ 時間、保存領域は $O(S)$、領域和は $O(2^D D)$ 時間。次元数は演算の定義なのでテンプレート引数に残る。

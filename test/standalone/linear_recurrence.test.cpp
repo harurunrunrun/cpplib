@@ -8,11 +8,19 @@
 #include <vector>
 
 #include "../../src/algorithm/math/sequence/linear_recurrence.hpp"
+#include "../../src/algorithm/math/sequence/linear_recurrence_sum.hpp"
 #include "../../src/structure/modint/modint.hpp"
 
 using mint = Modint998244353;
 
 void self_test(){
+    assert(math::linear_recurrence_prefix_sum<998244353>({0, 1}, {1, 1}, 0) == mint(0));
+    assert(math::linear_recurrence_prefix_sum<998244353>({0, 1}, {1, 1}, 8) == mint(33));
+    assert(math::linear_recurrence_interval_sum<998244353>({0, 1}, {1, 1}, 3, 7) == mint(18));
+    assert(math::linear_recurrence_interval_sum<998244353>({3}, {1},
+        1000000000000000000ULL, 1000000000000000007ULL) == mint(21));
+    assert(math::linear_recurrence_interval_sum<998244353>({3}, {1}, 7, 7) == mint(0));
+    assert(math::linear_recurrence_prefix_sum<998244353>({}, {}, 100) == mint(0));
     const mint initial[] = {mint(0), mint(1)};
     const mint coefficient[] = {mint(1), mint(1)};
     const std::vector<mint> sequence = {

@@ -101,3 +101,14 @@ predicate呼出し回数は $O(R\log(max\_component+1))$、固定長path以外�
 - 不正な分数・空の開区間・0以下の探索上限は `invalid_argument`。
 - pathのrun数が `MAX_RUNS` を超える場合は `length_error`。
 - path indexが範囲外なら `out_of_range`。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+math::SternBrocotTree<> dynamic;
+math::SternBrocotTree<long long, 128> fixed;
+```
+
+run 数を $R$ として経路の保存領域は $O(R)$。run 追加は償却 $O(1)$ 時間、経路変換は $O(R)$ 時間。`Path::capacity()` は可変長版では `-1` を返す。

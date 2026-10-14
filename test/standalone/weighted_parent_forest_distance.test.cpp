@@ -1,10 +1,18 @@
 // competitive-verifier: STANDALONE
 
 #include <iostream>
+#include <cassert>
+
 
 #include "../../src/structure/dsu/specialized/weighted_parent_forest_distance.hpp"
 
 int main(){
+    // Dynamic wrappers: runtime capacities.
+    {
+        WeightedParentForestDistance<long long> tree(129);
+        for(int i = 0; i < 128; ++i) tree.link_root(i, i + 1, 3);
+        assert(tree.distance_to_root(0) == 384); assert(tree.root(0) == 128);
+    }
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
 

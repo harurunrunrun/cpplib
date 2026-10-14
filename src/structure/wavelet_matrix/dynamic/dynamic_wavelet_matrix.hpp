@@ -1,5 +1,6 @@
 #ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_DYNAMIC_WAVELET_MATRIX_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DYNAMIC_DYNAMIC_WAVELET_MATRIX_HPP_INCLUDED
+#include "../../array/static_or_vector.hpp"
 
 #include <algorithm>
 #include <array>
@@ -38,11 +39,11 @@ constexpr int ceil_log2_nonzero(unsigned int value){
     return result;
 }
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 struct default_sum_type{
     using U = std::make_unsigned_t<T>;
     static constexpr int value_bits = std::numeric_limits<U>::digits;
-    static constexpr int count_bits = MAX_SIZE <= 1
+    static constexpr int count_bits = MAX_SIZE < 0 ? 31 : MAX_SIZE <= 1
         ? 0 : ceil_log2_nonzero(static_cast<unsigned int>(MAX_SIZE));
     static constexpr int required_digits = MAX_SIZE == 0
         ? 0
@@ -58,21 +59,21 @@ struct default_sum_type{
 #endif
 };
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 using default_sum_type_t = typename default_sum_type<T, MAX_SIZE>::type;
 
 }
 
 template<
     class T,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     int BIT_WIDTH = std::numeric_limits<std::make_unsigned_t<T>>::digits,
     class SUM_TYPE = dynamic_wavelet_matrix_detail::default_sum_type_t<T, MAX_SIZE>,
     int LEAF_WORDS = 2
 >
 struct DynamicWaveletMatrix{
     static_assert(std::is_integral_v<T>);
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
 
     using value_type = T;
     using sum_type = SUM_TYPE;
@@ -412,7 +413,7 @@ private:
             }
 
             recalculate(internal);
-            if(static_cast<int>(internal->children.size()) <= internal_capacity){
+            if(cpplib_detail::checked_int_size(internal->children.size()) <= internal_capacity){
                 return nullptr;
             }
 
@@ -909,7 +910,7 @@ private:
 
             std::vector<std::unique_ptr<Node>> current;
             auto leaf_sizes = balanced_group_sizes(
-                static_cast<int>(bits.size()),
+                cpplib_detail::checked_int_size(bits.size()),
                 leaf_capacity
             );
             current.reserve(leaf_sizes.size());
@@ -922,7 +923,7 @@ private:
 
             while(current.size() > 1){
                 auto group_sizes = balanced_group_sizes(
-                    static_cast<int>(current.size()),
+                    cpplib_detail::checked_int_size(current.size()),
                     internal_capacity
                 );
                 std::vector<std::unique_ptr<Node>> next;
@@ -1182,7 +1183,7 @@ private:
                 stable_partition_avx512_32(
                     input.data(),
                     output.data(),
-                    static_cast<int>(input.size()),
+                    cpplib_detail::checked_int_size(input.size()),
                     bit,
                     zero_count_value
                 );
@@ -1192,7 +1193,7 @@ private:
                 stable_partition_avx512_64(
                     input.data(),
                     output.data(),
-                    static_cast<int>(input.size()),
+                    cpplib_detail::checked_int_size(input.size()),
                     bit,
                     zero_count_value
                 );
@@ -1801,7 +1802,7 @@ public:
     DynamicWaveletMatrix() = default;
 
     explicit DynamicWaveletMatrix(const std::vector<T>& sequence):
-        _n(static_cast<int>(sequence.size())){
+        _n(cpplib_detail::checked_int_size(sequence.size())){
         if(sequence.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
@@ -1865,7 +1866,7 @@ public:
     }
 
     int distinct_size() const{
-        return static_cast<int>(global_frequency.size());
+        return cpplib_detail::checked_int_size(global_frequency.size());
     }
 
     int bit_size() const{
@@ -1898,7 +1899,7 @@ public:
     }
 
     void insert(int k, T value){
-        if(k < 0 || _n < k || _n == MAX_SIZE)[[unlikely]]{
+        if(k < 0 || _n < k || (_n == MAX_SIZE || _n == std::numeric_limits<int>::max()))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (insert)."
             );
@@ -2441,7 +2442,7 @@ public:
         std::vector<std::pair<T, int>> result;
         result.reserve(static_cast<std::size_t>(std::min(k, r - l)));
 
-        while(!queue.empty() && static_cast<int>(result.size()) < k){
+        while(!queue.empty() && cpplib_detail::checked_int_size(result.size()) < k){
             State state = queue.top();
             queue.pop();
             if(state.level == BIT_WIDTH){
@@ -3011,7 +3012,7 @@ public:
             if(left.second != right.second) return left.second > right.second;
             return left.first < right.first;
         });
-        if(static_cast<int>(result.size()) > k) result.resize(static_cast<std::size_t>(k));
+        if(cpplib_detail::checked_int_size(result.size()) > k) result.resize(static_cast<std::size_t>(k));
         return result;
     }
 

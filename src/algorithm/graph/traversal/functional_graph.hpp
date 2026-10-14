@@ -1,15 +1,17 @@
 #ifndef CPPLIB_SRC_ALGORITHM_GRAPH_TRAVERSAL_FUNCTIONAL_GRAPH_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_GRAPH_TRAVERSAL_FUNCTIONAL_GRAPH_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <array>
 #include <cstddef>
 #include <span>
 #include <stdexcept>
 #include <vector>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct FunctionalGraph{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
 private:
     static constexpr int LOG = 64;
@@ -17,18 +19,18 @@ private:
     int _size = 0;
     int _component_count = 0;
     int _cycle_vertex_count = 0;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _successor;
-    std::array<std::array<int, static_cast<std::size_t>(MAX_SIZE)>, LOG> _jump;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _component;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _distance_to_cycle;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _cycle_entry;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _cycle_position;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _cycle_length;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _component_size;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE) + 1> _cycle_offset;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _cycle_vertices;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _work_indegree;
-    std::array<int, static_cast<std::size_t>(MAX_SIZE)> _work_order;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _successor;
+    cpplib_detail::StaticOrVector<cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))>, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(LOG))> _jump;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _component;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _distance_to_cycle;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _cycle_entry;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _cycle_position;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _cycle_length;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _component_size;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE) + 1))> _cycle_offset;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _cycle_vertices;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _work_indegree;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _work_order;
 
     void check_vertex(int v, const char* message) const{
         if(v < 0 || _size <= v)[[unlikely]] throw std::runtime_error(message);
@@ -40,12 +42,26 @@ private:
 
     template<class Getter>
     void build_impl(int n, Getter get_successor){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity violation (FunctionalGraph::build)."
             );
         }
         _size = n;
+        _successor.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _jump.resize(static_cast<std::size_t>(LOG));
+        for(auto& row: _jump) row.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _component.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _distance_to_cycle.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _cycle_entry.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _cycle_position.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _cycle_length.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _component_size.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _cycle_offset.resize(static_cast<std::size_t>(static_cast<std::size_t>(n) + 1));
+        _cycle_vertices.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _work_indegree.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+        _work_order.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
+
         for(int v = 0; v < n; ++v){
             const int to = get_successor(v);
             if(to < 0 || n <= to)[[unlikely]]{
@@ -149,7 +165,7 @@ public:
     }
 
     void build(const std::vector<int>& successor){
-        build_impl(static_cast<int>(successor.size()), [&](int v){
+        build_impl(cpplib_detail::checked_int_size(successor.size()), [&](int v){
             return successor[static_cast<std::size_t>(v)];
         });
     }

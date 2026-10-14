@@ -4,6 +4,8 @@
 #include <cassert>
 #include <cstdint>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -19,6 +21,20 @@ struct Box{
 };
 
 int main(){
+    {
+        PartiallyPersistentArray<bool> values(std::vector<bool>{true, false});
+        for(int i = 0; i < 100; ++i) values.set(1, values.get(0));
+        const bool& bit = values.get(1); assert(bit);
+        assert(!values.get(0, 1));
+    }
+
+    // Dynamic storage: verify growth and retained values.
+    {
+        PartiallyPersistentArray<std::string> values(5, "original");
+        for(int i = 0; i < 300; ++i) values.set(i % 5, values.get(values.latest_version(), (i + 1) % 5));
+        assert(values.get(0, 0) == "original");
+        assert(values.get(values.latest_version(), 4) == "original");
+    }
     int input_n, input_q;
     if(std::cin >> input_n >> input_q){
         std::vector<std::int64_t> initial(static_cast<std::size_t>(input_n));

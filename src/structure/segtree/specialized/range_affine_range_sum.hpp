@@ -7,7 +7,7 @@
 #include "../../types/monoid/common_monoids.hpp"
 #include "../basic/lazysegtree.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class RangeAffineRangeSum{
 public:
     using affine_type = MonoidAffine<T>;

@@ -30,7 +30,7 @@ int count_naive(const std::vector<int>& values, int x){
 int main(){
     int q;
     if(std::cin >> q){
-        BinaryTrie<int, 20, 30000> trie;
+        BinaryTrie<int, 20> trie;
         auto print_optional = [](const std::optional<int>& value){
             if(value) std::cout << *value << '\n';
             else std::cout << "NONE\n";
@@ -77,7 +77,7 @@ int main(){
         return 0;
     }
 
-    BinaryTrie<int, 10, 20000> trie;
+    BinaryTrie<int, 10> trie;
     std::vector<int> values;
     std::mt19937 rng(20260716);
 

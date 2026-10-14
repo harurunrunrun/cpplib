@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <functional>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <map>
 #include <optional>
 #include <random>
@@ -198,6 +200,25 @@ void print_state(const Queue& queue, bool success){
 }
 
 int main(){
+    {
+        PartiallyRetroactivePriorityQueue<int, int> aliasing_time;
+        aliasing_time.insert_push(10, 20);
+        aliasing_time.insert_push(aliasing_time.top(), 30);
+        assert(aliasing_time.size() == 2);
+        assert(aliasing_time.top() == 20);
+    }
+    // Dynamic storage: verify growth and retained values.
+    {
+        PartiallyRetroactivePriorityQueue<int, int> queue;
+        for(int i = 0; i < 300; ++i) queue.insert_push(i, 300 - i);
+        for(int i = 0; i < 150; ++i) queue.insert_pop(300 + i);
+        assert(queue.size() == 150); assert(queue.top() == 151);
+        for(int i = 0; i < 150; ++i) queue.erase(300 + i);
+        for(int i = 0; i < 300; ++i) queue.erase(i);
+        assert(queue.empty());
+        for(int i = 0; i < 300; ++i) queue.insert_push(i, i);
+        queue.insert_push(400, queue.top()); assert(queue.top() == 0);
+    }
     int query_count;
     if(!(std::cin >> query_count)){
         self_test();

@@ -15,7 +15,33 @@
 #include "../../src/approximate/streaming/tdigest.hpp"
 #include "../../src/approximate/streaming/space_saving.hpp"
 
+void dynamic_capacity_test(){
+    MisraGries<int> dynamic_misra(7); MisraGries<int, 7> fixed_misra;
+    SpaceSaving<int> dynamic_saving(8); SpaceSaving<int, 8> fixed_saving;
+    AMSSketch<> dynamic_ams(5, 8, 17); AMSSketch<5, 8> fixed_ams(17);
+    KLLSketch<int> dynamic_kll(16, 12, 18); KLLSketch<int, 16, 12> fixed_kll(18);
+    TDigest<> dynamic_digest(16); TDigest<16> fixed_digest;
+    for(int i = 0; i < 300; ++i){
+        int value = (i * 19) % 37;
+        dynamic_misra.add(value); fixed_misra.add(value);
+        dynamic_saving.add(value); fixed_saving.add(value);
+        dynamic_ams.add(value); fixed_ams.add(value);
+        dynamic_kll.add(value); fixed_kll.add(value);
+        dynamic_digest.add(value); fixed_digest.add(value);
+    }
+    for(int key = 0; key < 37; ++key){
+        assert(dynamic_misra.estimate_lower_bound(key) == fixed_misra.estimate_lower_bound(key));
+        assert(dynamic_saving.estimate(key).estimate == fixed_saving.estimate(key).estimate);
+    }
+    assert(dynamic_ams.estimate_second_moment() == fixed_ams.estimate_second_moment());
+    for(long double probability: {0.0L, 0.25L, 0.5L, 1.0L}){
+        assert(dynamic_kll.quantile(probability) == fixed_kll.quantile(probability));
+        assert(dynamic_digest.quantile(probability) == fixed_digest.quantile(probability));
+    }
+}
+
 int main(){
+    dynamic_capacity_test();
     int count;
     if(!(std::cin >> count)) return 0;
     MisraGries<int, 15> misra_gries;

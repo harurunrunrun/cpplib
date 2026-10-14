@@ -24,3 +24,15 @@ group 平均に Chebyshev、group median に Chernoff bound を適用でき、
 `SamplesPerGroup = O(1/epsilon^2)`, `Groups = O(log(1/delta))` で
 相対誤差 `epsilon`、失敗確率 `delta`。保存に必要な空間計算量は
 $O(Groups\,SamplesPerGroup)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+AMSSketch<> sketch(9, 32, 123); // group 数、group ごとの標本数、seed
+sketch.add(42, 3);
+auto second_moment = sketch.estimate_second_moment();
+~~~
+
+`vector` に保存し、$G$ group と各 $S$ 標本を実行時に指定する。
+構築・`add`・`clear` は $O(GS)$ 時間、推定は $O(GS+G\log G)$ 時間。
+保存領域は $O(GS)$、推定の一時領域は $O(G)$。容量指定の固定配列版も同じ header にある。

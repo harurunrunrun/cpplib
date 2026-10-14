@@ -60,3 +60,15 @@ $N$ を入力列長、$K$ をwindow幅とする。比較を $O(1)$ とする。
 - sliding-window関数は`1 <= window <= MAX_WINDOW`かつ`window <= values.size()`を要求し、違反時は例外。
 - `best`は`Compare`で最良の値への参照、`best_index`はその入力indexを返す。
 - copyは禁止、moveは可能。
+
+## 可変長版
+
+```cpp
+using Dynamic = MonotoneMinQueue<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。push/pop/expire は各要素あたり償却 O(1)、保存領域は保持候補数の最大値に比例する。sliding_window_min は容量指定なしで呼べ、O(n) 時間・O(window) 補助領域。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+
+可変長版で `T=bool` の場合、`best()` は bool を値で返す。他の型は従来どおり const 参照を返す。参照は後続の再確保で無効になることがある。

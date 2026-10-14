@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include <string>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -103,6 +105,15 @@ void self_test(){
 }
 
 int main(){
+    // Dynamic storage: verify growth and retained values.
+    {
+        RollbackDSU<> dsu(129);
+        const auto before = dsu.snapshot();
+        for(int i = 1; i < 129; ++i) dsu.merge(i - 1, i);
+        for(int i = 0; i < 300; ++i) dsu.merge(0, 128);
+        assert(dsu.component_size(128) == 129); dsu.rollback(before);
+        assert(dsu.groups() == 129); assert(!dsu.same(0, 128));
+    }
     int n, q;
     if(!(std::cin >> n >> q)){
         self_test();

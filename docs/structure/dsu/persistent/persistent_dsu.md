@@ -91,3 +91,13 @@ int nodes_used()
 - 異なる成分の`merge`は永続配列nodeを$O(\log MAX\_SIZE)$個生成する。
 - 同じ成分の`merge`と`fork`はnodeを生成しない。
 - node容量超過時はnode数とversion数を操作前へ戻す。
+
+## 可変長版
+
+```cpp
+using Dynamic = PersistentDSU<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、併合・同一判定 O(log²(n + 1))、保存領域 O(n + u log(n + 1) + v)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

@@ -150,3 +150,15 @@ constructor、get、snapshot、undo、rollback、can_undo、history_size、size�
 - `undo`は`can_undo()==true`を要求し、履歴が空なら例外。
 - `rollback(s)`は`0 <= s <= history_size()`を要求し、範囲外なら例外。
 - 更新値の構築に失敗した場合は履歴と現在値を操作前へ戻す。
+
+## 可変長版
+
+```cpp
+using Dynamic = RollbackArray<long long>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、set と undo は償却 O(1)、保存領域は O(n + u)（u は保存中の更新数）。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+
+可変長ストレージから返された値への参照は、後続の更新に伴う再確保で無効になることがある。必要な値は更新前にコピーする。

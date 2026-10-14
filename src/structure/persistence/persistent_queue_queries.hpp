@@ -1,12 +1,13 @@
 #ifndef CPPLIB_SRC_STRUCTURE_PERSISTENCE_PERSISTENT_QUEUE_QUERIES_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_PERSISTENCE_PERSISTENT_QUEUE_QUERIES_HPP_INCLUDED
 
+#include <limits>
 #include <memory>
 #include <stdexcept>
 
-template<class Queue, int MAX_QUERY>
+template<class Queue, int MAX_QUERY = -1>
 class PersistentQueueQueries{
-    static_assert(MAX_QUERY >= 0);
+    static_assert(MAX_QUERY >= -1);
 
     std::unique_ptr<Queue> queue_;
     int processed_ = 0;
@@ -21,7 +22,7 @@ class PersistentQueueQueries{
     }
 
     void check_capacity() const{
-        if(processed_ == MAX_QUERY)[[unlikely]]{
+        if(processed_ == std::numeric_limits<int>::max() || processed_ == MAX_QUERY)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: query capacity exceeded (PersistentQueueQueries)."
             );

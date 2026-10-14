@@ -2,6 +2,11 @@
 
 #include <cassert>
 #include <iostream>
+#include <cassert>
+#include "../../src/structure/interval/static_interval_coverage.hpp"
+#include "../../src/structure/interval/static_interval_maximum_overlap.hpp"
+#include <cassert>
+#include <string>
 #include <stdexcept>
 #include <vector>
 
@@ -95,6 +100,22 @@ void test_exceptions(){
 }
 
 int main(){
+    // Dynamic wrappers: runtime capacities.
+    {
+        StaticIntervalCoverage<> coverage(129, {{0, 100}, {64, 128}});
+        assert(coverage.coverage_at(0) == 1 && coverage.coverage_at(64) == 2 && coverage.coverage_at(128) == 1);
+        StaticIntervalMaximumOverlap<int> overlap({{0, 100}, {64, 128}});
+        assert(overlap.maximum_overlap(0, 128) == 2 && overlap.maximum_overlap(101, 128) == 1);
+    }
+    // Dynamic storage: verify growth and retained values.
+    {
+        PrefixSum<long long> prefix(std::vector<long long>(129, 3));
+        assert(prefix.sum(1, 129) == 384);
+        prefix.build({7}); assert(prefix.sum(0, 1) == 7);
+        PrefixSum2D<long long> grid(std::vector<std::vector<long long>>(17, std::vector<long long>(19, 2)));
+        assert(grid.sum(1, 2, 17, 19) == 544);
+        grid.build({{9}}); assert(grid.get(0, 0) == 9);
+    }
     int n, query_count;
     if(std::cin >> n >> query_count){
         std::vector<long long> values(static_cast<std::size_t>(n));

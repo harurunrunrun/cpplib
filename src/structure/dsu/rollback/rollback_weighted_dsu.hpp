@@ -1,14 +1,16 @@
 #ifndef CPPLIB_SRC_STRUCTURE_DSU_ROLLBACK_ROLLBACK_WEIGHTED_DSU_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_DSU_ROLLBACK_ROLLBACK_WEIGHTED_DSU_HPP_INCLUDED
 
+#include <limits>
 #include <array>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <utility>
 
-template<class T, int MAX_SIZE, int MAX_HISTORY>
+template<class T, int MAX_SIZE = -1, int MAX_HISTORY = -1>
 struct RollbackWeightedDSU{
-    static_assert(MAX_SIZE > 0);
-    static_assert(MAX_HISTORY >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
+    static_assert(MAX_HISTORY >= -1);
 
 private:
     struct Change{
@@ -24,18 +26,19 @@ private:
     int _n = 0;
     int group_count = 0;
     int history_size = 0;
-    std::array<int, MAX_SIZE> parent_or_size{};
-    std::array<T, MAX_SIZE> diff_weight{};
-    std::array<Change, MAX_HISTORY> history{};
+    cpplib_detail::StaticOrVector<int, MAX_SIZE> parent_or_size{};
+    cpplib_detail::StaticOrVector<T, MAX_SIZE> diff_weight{};
+    cpplib_detail::StaticOrVector<Change, MAX_HISTORY> history{};
 
     void check_vertex(int v, const char* message) const{
         if(v < 0 || _n <= v)[[unlikely]] throw std::runtime_error(message);
     }
 
     void save(int u, int v){
-        if(history_size == MAX_HISTORY)[[unlikely]]{
+        if(history_size == std::numeric_limits<int>::max() || history_size == MAX_HISTORY)[[unlikely]]{
             throw std::runtime_error("library assertion fault: capacity exceeded (history).");
         }
+        history.ensure(static_cast<std::size_t>(history_size) + 1);
         history[history_size++] = {
             u, parent_or_size[static_cast<std::size_t>(u)], diff_weight[static_cast<std::size_t>(u)],
             v, parent_or_size[static_cast<std::size_t>(v)], diff_weight[static_cast<std::size_t>(v)],
@@ -53,10 +56,12 @@ private:
     }
 
 public:
-    explicit RollbackWeightedDSU(int n = MAX_SIZE): _n(n), group_count(n){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+    explicit RollbackWeightedDSU(int n = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _n(n), group_count(n){
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
+        parent_or_size.resize(static_cast<std::size_t>(n));
+        diff_weight.resize(static_cast<std::size_t>(n));
         for(int i = 0; i < _n; i++){
             parent_or_size[static_cast<std::size_t>(i)] = -1;
             diff_weight[static_cast<std::size_t>(i)] = T();

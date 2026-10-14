@@ -3,13 +3,14 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <limits>
 #include <vector>
 
 #include "../detail/mutable_btree_bit_sequence.hpp"
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 struct DynamicFullyIndexableDictionary{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE >= 0);
 
 private:
     using Storage = wavelet_matrix_detail::MutableBTreeBitSequence<
@@ -38,7 +39,7 @@ private:
 
 public:
     explicit DynamicFullyIndexableDictionary(int n = 0){
-        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || (MAX_SIZE >= 0 && MAX_SIZE < n))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
@@ -93,7 +94,7 @@ public:
     }
 
     void insert(int position, bool value){
-        if(position < 0 || size() < position || size() == MAX_SIZE)[[unlikely]]{
+        if(position < 0 || size() < position || (size() == MAX_SIZE || size() == std::numeric_limits<int>::max()))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (insert)."
             );

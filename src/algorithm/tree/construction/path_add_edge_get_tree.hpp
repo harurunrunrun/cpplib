@@ -7,9 +7,9 @@
 #include "../decomposition/heavy_light_decomposition.hpp"
 #include "../../../structure/fenwick_tree/fenwick_tree.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class PathAddEdgeGetTree{
-    static_assert(0 < MAX_SIZE);
+    static_assert(MAX_SIZE == -1 || 0 < MAX_SIZE);
 
     int vertex_count_;
     HeavyLightDecomposition decomposition_;
@@ -17,7 +17,7 @@ class PathAddEdgeGetTree{
     bool built_ = false;
 
     static int checked_size(int vertex_count){
-        if(vertex_count < 0 || MAX_SIZE < vertex_count)[[unlikely]]{
+        if(vertex_count < 0 || (MAX_SIZE >= 0 && MAX_SIZE < vertex_count))[[unlikely]]{
             throw std::out_of_range(
                 "PathAddEdgeGetTree size is out of range"
             );

@@ -88,3 +88,14 @@ $V$ を使用node数、$P$ を追加pattern長、$T$ をtext長、$\Sigma=ALPHAB
   例外。
 - `count_matches(text)` は重複pattern・重なる出現・空patternを含む総出現数。
   遷移・output・検索はbuild前、またはstate範囲外なら例外。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+AhoCorasick<26> dynamic;
+AhoCorasick<26, 100000> fixed;
+```
+
+ノード数 $S$、alphabet サイズ $A$ に対し構築・保存は $O(AS)$、1文字遷移は $O(1)$ 時間。ノード追加時の vector 再配置を含めて償却する。alphabet は演算の定義として残る。

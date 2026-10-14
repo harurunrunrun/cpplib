@@ -67,3 +67,19 @@ int groups() const
 構築時の違反は `length_error`。頂点・区間は範囲内で、2区間の長さは等しく
 なければならず、違反時は `runtime_error`。`T` のoverflowと例外は型自身の
 契約に従う。
+
+## 可変長版
+
+```cpp
+using Dynamic = RangeParallelComponentProductSum<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。頂点重みと各層の配列を実行時の n に合わせる。補助領域 O(n log(n + 1))、併合の計算量は RangeParallelUnionFind に従う。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+
+型を指定した重みでも CTAD により容量を省略できる。重みの型は `weights` から推論する。
+
+```cpp
+RangeParallelComponentProductSum components(weights);
+```

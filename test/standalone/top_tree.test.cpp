@@ -76,7 +76,7 @@ int main(){
     if(std::cin >> input_n >> input_m >> q){
         std::vector<long long> input(static_cast<std::size_t>(input_n));
         for(long long& value: input) std::cin >> value;
-        TopTree<sum_monoid, 128> tree(input);
+        TopTree<sum_monoid> tree(input);
         for(int i = 0; i < input_m; i++){
             int u, v;
             std::cin >> u >> v;
@@ -155,7 +155,7 @@ int main(){
     std::mt19937 rng(11235813);
     std::vector<long long> value(n);
     for(auto& x: value) x = static_cast<int>(rng() % 200) - 80;
-    TopTree<sum_monoid, 80> tree(value);
+    TopTree<sum_monoid> tree(value);
 
     std::vector<std::vector<int>> graph(n);
     std::vector<std::pair<int, int>> edges;

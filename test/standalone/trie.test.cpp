@@ -71,7 +71,7 @@ int main(){
     test_node_api();
     int query_count;
     if(std::cin >> query_count){
-        Trie<4, 65536> trie;
+        Trie<4> trie;
         while(query_count--){
             int type;
             std::string s;
@@ -91,7 +91,7 @@ int main(){
         }
         return 0;
     }
-    Trie<4, 2048> trie;
+    Trie<4> trie;
     std::map<std::string, int> naive;
     std::mt19937 rng(20260715);
     int total = 0;

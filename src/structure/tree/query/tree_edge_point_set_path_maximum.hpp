@@ -1,5 +1,6 @@
 #ifndef CPPLIB_SRC_STRUCTURE_TREE_QUERY_TREE_EDGE_POINT_SET_PATH_MAXIMUM_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_TREE_QUERY_TREE_EDGE_POINT_SET_PATH_MAXIMUM_HPP_INCLUDED
+#include "../../array/static_or_vector.hpp"
 
 #include <algorithm>
 #include <stdexcept>
@@ -10,7 +11,7 @@
 #include "../../segtree/basic/segtree.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class Weight, int MAX_SIZE>
+template<class Weight, int MAX_SIZE = -1>
 struct TreeEdgePointSetPathMaximum{
 private:
     struct Edge{
@@ -25,7 +26,7 @@ private:
     std::vector<Edge> edges;
     bool built = false;
     static int checked_vertex_count(int vertex_count){
-        if(vertex_count < 0 || MAX_SIZE < vertex_count)[[unlikely]]{
+        if(vertex_count < 0 || (MAX_SIZE >= 0 && MAX_SIZE < vertex_count))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (constructor)."
             );
@@ -58,7 +59,7 @@ public:
         }
         decomposition.add_edge(left, right);
         edges.push_back({left, right, weight});
-        return static_cast<int>(edges.size()) - 1;
+        return cpplib_detail::checked_int_size(edges.size()) - 1;
     }
 
     void build(int root = 0){
@@ -76,7 +77,7 @@ public:
                 "library assertion fault: not built (set_edge)."
             );
         }
-        if(edge_index < 0 || static_cast<int>(edges.size()) <= edge_index)[[unlikely]]{
+        if(edge_index < 0 || cpplib_detail::checked_int_size(edges.size()) <= edge_index)[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (set_edge)."
             );

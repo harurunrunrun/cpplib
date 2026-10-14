@@ -96,3 +96,18 @@ max_leq は upper_bound(x) の直前、max_less は lower_bound(x) の直前の�
 - updateでversion数またはnode数が容量を超える場合は例外で、既存versionを変えない。
 - `kth`と境界探索は該当なしなら`nullopt`。
 - updateは常にversionを1個作り、読み取り操作はversion/nodeを消費しない。
+
+## 容量を省略した可変長版
+
+容量のテンプレート引数 `MAX_NODE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
+容量を指定した既存の固定配列版も同じヘッダで利用できる。
+
+```cpp
+using Variable = PersistentSplaySet<Key>;
+using Fixed = PersistentSplaySet<Key, Nodes, Versions>;
+```
+
+可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
+再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
+整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+内部vectorの再確保をまたいでノード参照を保持せず、ノード番号から取り直す。

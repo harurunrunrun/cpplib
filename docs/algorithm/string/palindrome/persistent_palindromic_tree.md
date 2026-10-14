@@ -104,3 +104,14 @@ $V$ を全prefixで作られたnode数、$L$ をquery長、$D$ を指定version�
   node初出区間・回文文字列。長さ-1のrootでは例外。
 - `palindrome_nodes/palindromes(version)` は指定prefixに存在する全非空回文。
   suffix列挙は指定prefixの回文suffixを長い順に返す。
+
+## 容量を省略する可変長版
+
+容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+
+```cpp
+PersistentPalindromicTree<26> dynamic(text);
+PersistentPalindromicTree<26, 100002, 100000> fixed(text);
+```
+
+長さ $N$、alphabet サイズ $A$ に対し $O(AN)$ 保存領域、全体の文字追加は償却 $O(AN)$ 時間。各 prefix の統計値参照は $O(1)$ 時間。

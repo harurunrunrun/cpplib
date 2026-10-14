@@ -103,8 +103,8 @@ void check_path(PlainTree& plain,
 void test_random_forest(){
     constexpr int n = 80;
     std::vector<long long> initial(static_cast<std::size_t>(n), 1);
-    LinkCutTree<sum_monoid, 100> plain(initial);
-    LazyLinkCutTree<range_add_sum, 100> lazy(initial);
+    LinkCutTree<sum_monoid> plain(initial);
+    LazyLinkCutTree<range_add_sum> lazy(initial);
     std::vector<std::vector<int>> graph(static_cast<std::size_t>(n));
     std::vector<std::pair<int, int>> edges;
     std::mt19937 rng(2026071331);
@@ -246,8 +246,8 @@ int main(){
         return 0;
     }
     std::vector<long long> initial(static_cast<std::size_t>(n), 0);
-    LinkCutTree<sum_monoid, 20000> plain(initial);
-    LazyLinkCutTree<range_add_sum, 20000> lazy(initial);
+    LinkCutTree<sum_monoid> plain(initial);
+    LazyLinkCutTree<range_add_sum> lazy(initial);
     for(int index = 0; index < edge_count; ++index){
         int left, right;
         std::cin >> left >> right;

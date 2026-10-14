@@ -1,15 +1,19 @@
 #ifndef CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_AUXILIARY_TREE_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_AUXILIARY_TREE_HPP_INCLUDED
 
+#include "../../../structure/array/static_or_vector.hpp"
+
 #include <algorithm>
+#include <bit>
+#include <limits>
 #include <array>
 #include <cstddef>
 #include <span>
 #include <stdexcept>
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class AuxiliaryTree{
-    static_assert(MAX_SIZE >= 0);
+    static_assert(MAX_SIZE >= -1);
 
     static constexpr int EDGE_CAPACITY = MAX_SIZE == 0 ? 0 : MAX_SIZE - 1;
 
@@ -26,31 +30,32 @@ class AuxiliaryTree{
     static constexpr int LOG = binary_lifting_log();
 
     int _size;
+    int log_ = 1;
     int _edge_count = 0;
     int _compressed_size = 0;
     bool prepared = false;
 
-    std::array<int, EDGE_CAPACITY> edge_u;
-    std::array<int, EDGE_CAPACITY> edge_v;
-    std::array<int, MAX_SIZE + 1> offset;
-    std::array<int, 2 * EDGE_CAPACITY> adjacency;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> edge_u;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(EDGE_CAPACITY))> edge_v;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE + 1))> offset;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * EDGE_CAPACITY))> adjacency;
 
-    std::array<int, MAX_SIZE> parent_vertex;
-    std::array<int, MAX_SIZE> depth_vertex;
-    std::array<int, MAX_SIZE> tin_vertex;
-    std::array<int, MAX_SIZE> tout_vertex;
-    std::array<int, LOG * MAX_SIZE> ancestors;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> parent_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> depth_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tin_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> tout_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(LOG * MAX_SIZE))> ancestors;
 
-    std::array<int, MAX_SIZE> dfs_vertex;
-    std::array<int, MAX_SIZE> dfs_next;
-    std::array<int, MAX_SIZE> cursor;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> dfs_vertex;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> dfs_next;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> cursor;
 
-    std::array<int, 2 * MAX_SIZE> compressed_vertices;
-    std::array<int, 2 * MAX_SIZE> compressed_parents;
-    std::array<int, 2 * MAX_SIZE> compressed_edge_lengths;
-    std::array<bool, 2 * MAX_SIZE> compressed_selected;
-    std::array<int, 2 * MAX_SIZE> compressed_stack;
-    std::array<int, MAX_SIZE> selected_vertices;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> compressed_vertices;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> compressed_parents;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> compressed_edge_lengths;
+    cpplib_detail::StaticOrVector<bool, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> compressed_selected;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(2 * MAX_SIZE))> compressed_stack;
+    cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> selected_vertices;
 
     void check_vertex(int vertex, const char* message) const{
         if(vertex < 0 || _size <= vertex)[[unlikely]]{
@@ -69,16 +74,38 @@ class AuxiliaryTree{
     }
 
     int ancestor(int level, int vertex) const{
-        return ancestors[static_cast<std::size_t>(level * MAX_SIZE + vertex)];
+        return ancestors[static_cast<std::size_t>(level * (MAX_SIZE < 0 ? _size : MAX_SIZE) + vertex)];
     }
 
 public:
-    explicit AuxiliaryTree(int size = MAX_SIZE): _size(size){
-        if(size < 0 || MAX_SIZE < size)[[unlikely]]{
+    explicit AuxiliaryTree(int size = (MAX_SIZE < 0 ? 0 : MAX_SIZE)): _size(size){
+        if(size < 0 || (MAX_SIZE >= 0 && MAX_SIZE < size))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: range violation (AuxiliaryTree constructor)."
             );
         }
+        log_ = static_cast<int>(std::bit_width(static_cast<unsigned>(std::max(1, _size) - 1))) + 1;
+        if(_size > std::numeric_limits<int>::max() / std::max(2, log_))
+            throw std::length_error("tree tables exceed int index range");
+        edge_u.resize(static_cast<std::size_t>(std::max(0, _size - 1)));
+        edge_v.resize(static_cast<std::size_t>(std::max(0, _size - 1)));
+        offset.resize(static_cast<std::size_t>(_size + 1));
+        adjacency.resize(static_cast<std::size_t>(2 * std::max(0, _size - 1)));
+        parent_vertex.resize(static_cast<std::size_t>(_size));
+        depth_vertex.resize(static_cast<std::size_t>(_size));
+        tin_vertex.resize(static_cast<std::size_t>(_size));
+        tout_vertex.resize(static_cast<std::size_t>(_size));
+        ancestors.resize(static_cast<std::size_t>(log_ * _size));
+        dfs_vertex.resize(static_cast<std::size_t>(_size));
+        dfs_next.resize(static_cast<std::size_t>(_size));
+        cursor.resize(static_cast<std::size_t>(_size));
+        compressed_vertices.resize(static_cast<std::size_t>(2 * _size));
+        compressed_parents.resize(static_cast<std::size_t>(2 * _size));
+        compressed_edge_lengths.resize(static_cast<std::size_t>(2 * _size));
+        compressed_selected.resize(static_cast<std::size_t>(2 * _size));
+        compressed_stack.resize(static_cast<std::size_t>(2 * _size));
+        selected_vertices.resize(static_cast<std::size_t>(_size));
+
     }
 
     int size() const{
@@ -92,7 +119,7 @@ public:
     void add_edge(int u, int v){
         check_vertex(u, "library assertion fault: range violation (AuxiliaryTree::add_edge).");
         check_vertex(v, "library assertion fault: range violation (AuxiliaryTree::add_edge).");
-        if(_edge_count == EDGE_CAPACITY)[[unlikely]]{
+        if(_edge_count == (MAX_SIZE < 0 ? std::max(0, _size - 1) : EDGE_CAPACITY))[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity exceeded (AuxiliaryTree::add_edge)."
             );
@@ -186,9 +213,9 @@ public:
                     ? vertex
                     : parent_vertex[static_cast<std::size_t>(vertex)];
         }
-        for(int level = 1; level < LOG; ++level){
+        for(int level = 1; level < log_; ++level){
             for(int vertex = 0; vertex < _size; ++vertex){
-                ancestors[static_cast<std::size_t>(level * MAX_SIZE + vertex)] =
+                ancestors[static_cast<std::size_t>(level * (MAX_SIZE < 0 ? _size : MAX_SIZE) + vertex)] =
                     ancestor(level - 1, ancestor(level - 1, vertex));
             }
         }
@@ -229,7 +256,7 @@ public:
         check_vertex(v, "library assertion fault: range violation (AuxiliaryTree::lca).");
         if(is_ancestor(u, v)) return u;
         if(is_ancestor(v, u)) return v;
-        for(int level = LOG - 1; level >= 0; --level){
+        for(int level = log_ - 1; level >= 0; --level){
             const int next = ancestor(level, u);
             if(!is_ancestor(next, v)) u = next;
         }
@@ -250,7 +277,7 @@ public:
                 "library assertion fault: capacity exceeded (AuxiliaryTree::compress)."
             );
         }
-        int selected_size = static_cast<int>(vertices.size());
+        int selected_size = cpplib_detail::checked_int_size(vertices.size());
         for(int index = 0; index < selected_size; ++index){
             const int vertex = vertices[static_cast<std::size_t>(index)];
             check_vertex(
@@ -361,7 +388,7 @@ public:
     }
 };
 
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 using VirtualTree = AuxiliaryTree<MAX_SIZE>;
 
 #endif  // CPPLIB_SRC_ALGORITHM_TREE_DECOMPOSITION_AUXILIARY_TREE_HPP_INCLUDED

@@ -35,3 +35,18 @@ $n\ge Capacity$ のとき、各要素が標本に含まれる確率は厳密に 
 
 指数 race による重複なしの重み付き抽出であり、次に選ばれる要素の条件付き確率は
 残存重みに比例する。保存に必要な空間計算量は $O(Capacity)$。
+
+## 容量を省略する可変長版
+
+~~~cpp
+ReservoirSampler<int> uniform(32, 123); // 標本数、seed
+WeightedReservoirSampler<int> weighted(32, 123);
+uniform.add(42);
+weighted.add(42, 2.0L);
+auto samples = uniform.samples();
+~~~
+
+標本数 $C$ を実行時に指定し、`vector` に保存する。構築は $O(C)$ 時間・保存領域 $O(C)$。
+通常版の追加は期待 $O(1)$、重み付き版は $O(\log C)$ 時間で、追加の一時領域は $O(1)$。
+標本取得は $O(C)$ 時間・返り値 $O(C)$ 空間、`clear` は $O(1)$ 時間。
+容量を明示した固定配列版も同じ header にある。

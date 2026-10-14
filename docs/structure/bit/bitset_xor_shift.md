@@ -110,3 +110,13 @@ object自体は $O(\lceil\mathrm{MAX\_BITS}/64\rceil)$ wordを持つ。
 - bit位置が `size()` 以上なら、位置を受け取るAPIは `runtime_error` を送出する。
 - 異なる有効bit数のobjectに `operator^=` または `operator^` を使うと `runtime_error` を送出する。
 - shiftは通常の左辺更新と同じく、各右辺bitを変更前のbit列から読む。
+
+## 可変長版
+
+```cpp
+using Dynamic = BitsetXorShift<>;
+```
+
+容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。保存領域は O(ceil(n / 64)) word、全体の XOR・shift・count は O(ceil(n / 64))、一点操作は O(1)。
+
+容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

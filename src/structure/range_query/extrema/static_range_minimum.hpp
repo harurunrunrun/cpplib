@@ -7,7 +7,7 @@
 #include "../aggregation/sparse_table.hpp"
 #include "../../types/monoid/common_monoids.hpp"
 
-template<class T, int MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
 class StaticRangeMinimum{
     static constexpr MinMonoid<T> minimum_{};
     std::unique_ptr<SparseTable<minimum_, MAX_SIZE>> table_;

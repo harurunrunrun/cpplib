@@ -143,3 +143,13 @@ $C=\mathtt{MAX\_SIZE}^2$ とする。
 | `+=`, `-=`, scalar `*=`, `/=` | 返却値以外 $O(1)$ |
 | 値を返す演算、行列 `*=`, `zero`, `identity`, `transposed` | 一時または戻り値に $O(C)$ |
 | `pow(k)` | accumulatorとbaseに $O(C)$ |
+
+## 可変長版
+
+```cpp
+SquareMatrix<long long> matrix(n);
+```
+
+容量の template 引数を省略すると、実行時の要素数に合わせて `std::vector` を確保する。構築・保存領域は O(n^2)。演算の計算量は固定長版と同じ。
+
+容量を明示した固定長版も同じヘッダに含まれる。既存の固定上限に関する説明は容量を明示した場合に適用される。

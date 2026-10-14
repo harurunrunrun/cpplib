@@ -105,3 +105,17 @@ nconstructor、clear、find、contains、at、insert_or_assign、operator[]、er
 `find` が返すpointerと `at` / `operator[]` が返す参照は、erase、clear、moveまたは破棄後に使えない。
 構築・`clear` 以外の各APIの追加領域は $O(1)$。挿入したkey・valueを含む保存領域は
 $O(\mathtt{MAX\_SIZE})$。
+
+## 容量を省略した可変長版
+
+容量テンプレートを省略すると既定値 `-1` でvectorを使い、必要な保存領域を明示的に伸長する。
+固定容量を指定する既存版も同じヘッダに残る。
+
+```cpp
+using Variable = AssociativeArray<Key, T>;
+using Fixed = AssociativeArray<Key, T, N>;
+```
+
+要素数 $N$ に対し領域 $O(N)$。負荷率が半分を超える前に表を倍増して再hashするため、良好なhashで検索・挿入・削除は期待償却 $O(1)$、一回の再hashは $O(N)$。
+可変長版の `capacity()` は現在の表のスロット数を返す。再hashは既存の要素参照を無効化する。
+整数添字の表現上限を超える要素数は例外。構造上の文字種類・bit幅・座標域は、件数容量とは別に指定できる。

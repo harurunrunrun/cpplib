@@ -2,25 +2,26 @@
 #define CPPLIB_SRC_STRUCTURE_RANGE_QUERY_VALUE_QUERY_STATIC_RANGE_KTH_SMALLEST_HPP_INCLUDED
 
 #include <cstddef>
+#include "../../array/static_or_vector.hpp"
 #include <stdexcept>
 #include <vector>
 
 #include "../../../algorithm/tree/query/tree_path_order_statistics.hpp"
 
-template<class Value, int MAX_SIZE>
+template<class Value, int MAX_SIZE = -1>
 class StaticRangeKthSmallest{
-    static_assert(MAX_SIZE > 0);
+    static_assert(MAX_SIZE == -1 || MAX_SIZE > 0);
 
     int size_;
     TreePathOrderStatistics<Value, MAX_SIZE> statistics_;
 
     static int checked_size(std::size_t size){
-        if(static_cast<std::size_t>(MAX_SIZE) < size)[[unlikely]]{
+        if(MAX_SIZE >= 0 && static_cast<std::size_t>(MAX_SIZE) < size)[[unlikely]]{
             throw std::length_error(
                 "StaticRangeKthSmallest size capacity exceeded"
             );
         }
-        return static_cast<int>(size);
+        return cpplib_detail::checked_int_size(size);
     }
 
 public:
