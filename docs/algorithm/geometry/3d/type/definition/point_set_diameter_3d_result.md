@@ -5,14 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/po
 
 ## API
 
-- `PointSetDiameter3DResult::first`: 直径を与える点対の小さい側のindex。
-- `PointSetDiameter3DResult::second`: 直径を与える点対の大きい側のindex。
-- `PointSetDiameter3DResult::distance`: 2点間のEuclidean距離。
+- `PointSetDiameter3DResult::first`: 直径を与える点対のうち、小さい方のインデックス（`std::size_t`）。
+- `PointSetDiameter3DResult::second`: 直径を与える点対のうち、大きい方のインデックス（`std::size_t`）。
+- `PointSetDiameter3DResult::distance`: 2 点間のユークリッド距離（`long double`）。
 
 ## API別の時間計算量・空間計算量
 
-- 構築・各fieldへのアクセス: 時間・追加領域 $O(1)$。
+- 構築・各メンバへのアクセス: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-型自体はindexや距離を検査しない。直径計算APIが返す値では `first < second` が成り立つ。
+型自体はインデックスや距離を検査しない。直径計算 API が返す値では `first < second` が成り立つ。

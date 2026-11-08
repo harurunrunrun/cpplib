@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/segment_segm
 
 ## API
 
-- `segment_intersection(first, second)`: 2閉線分の一意な共通点を返す。
+- `Point segment_intersection(first, second)`: 2 本の閉線分のただ 1 つの共通点を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/segment_segm
 
 ## 注意点
 
-共通点がない場合、または重なりが線分となり一意でない場合は `std::domain_error` を送出する。退化線分同士にも対応する。
+- 共通点がない場合、または重なりが線分となり共通点が一意に定まらない場合は `std::domain_error` を送出する。
+- 退化線分（長さ $0$ の線分）を含む場合にも対応する。

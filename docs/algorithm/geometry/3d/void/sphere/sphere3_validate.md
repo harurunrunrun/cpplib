@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/void/sphere/sphere
 
 ## API
 
-- `geometry3d_validate(sphere)` は中心・半径の有限性と半径の非負性を検査する。
+- `geometry3d_validate(sphere)`: 中心・半径が有限であることと、半径が非負であることを検査する。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/void/sphere/sphere
 
 ## 注意点
 
-契約違反時は `std::invalid_argument` を送出する。
+条件に違反した場合は `std::invalid_argument` を送出する。

@@ -5,17 +5,19 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/clos
 
 ## API
 
-- `closest_point(ray, point)`: 半直線上の最近点。
-- `closest_point(segment, point)`: 閉線分上の最近点。
-- `closest_point(triangle, point)`: 閉三角形上の最近点。
+- `closest_point(ray, point)`: 半直線上で `point` に最も近い点を返す。
+- `closest_point(segment, point)`: 閉線分上で `point` に最も近い点を返す。
+- `closest_point(triangle, point)`: 閉三角形上で `point` に最も近い点を返す。
 
-## API別の時間計算量・空間計算量
+いずれも戻り値は `Point3` である。
 
-- 各overload: 時間・追加領域 $O(1)$。
+## API 別の時間計算量・空間計算量
+
+- 各オーバーロード: 時間・追加空間ともに $O(1)$。
 
 ## 注意点
 
-退化線分には対応する。退化半直線・退化三角形・非有限入力には
-`std::invalid_argument` を送出する。半直線・線分は共通の局所座標ソルバ、三角形は
-辺scaleで正規化したVoronoi領域判定を使い、FMAで最近点を復元する。結果を表現できない
-場合は `std::overflow_error` を送出する。
+- 退化した線分（両端点が一致するもの）には対応する。
+- 退化した半直線・退化した三角形・非有限な入力には `std::invalid_argument` を送出する。
+- 半直線と線分は共通の局所座標ソルバで、三角形は辺のスケールで正規化した Voronoi 領域判定で計算し、FMA を用いて最近点を復元する。
+- 結果を `long double` で表現できない場合は `std::overflow_error` を送出する。

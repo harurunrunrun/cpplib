@@ -9,11 +9,11 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/segment_poin
 
 ## 引数
 
-線分と照会点を渡す。
+線分 `segment` と照会点 `point` を渡す。
 
 ## 戻り値
 
-照会点からの距離を最小にする線分上の点。
+線分上の点のうち、照会点からの距離が最小となる点。
 
 ## API別の時間計算量・空間計算量
 
@@ -21,4 +21,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/segment_poin
 
 ## 注意点
 
-退化線分ではその端点を返す。
+線分の長さが `GEOMETRY_EPS` 以下の退化線分では、端点 `segment.a` を返す。

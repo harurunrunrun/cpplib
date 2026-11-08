@@ -3,36 +3,32 @@ title: Fast Bivariate Formal Power Series Inverse (高速二変数形式的冪�
 documentation_of: ../../../../src/algorithm/fft/formal_power_series/bivariate_formal_power_series_inverse.hpp
 ---
 
-矩形領域で打ち切った二変数形式的冪級数の乗法逆元を、
-2次元Number Theoretic TransformとNewton反復で計算する。
-Newton反復は列方向、行方向の順に一軸ずつ打ち切り次数を倍化する。
+長方形領域で打ち切った二変数形式的冪級数の乗法逆元を、二次元 NTT と Newton 法で計算する。Newton 法では、まず列方向（$y$ の次数）、次に行方向（$x$ の次数）の順に、一軸ずつ打ち切り次数を倍にしていく。
 
 ## `bivariate_formal_power_series_inverse`
 
 ```cpp
 template<int MOD>
-vector<vector<Modint<MOD>>>
+std::vector<std::vector<Modint<MOD>>>
 bivariate_formal_power_series_inverse(
-    const vector<vector<Modint<MOD>>>& series
+    const std::vector<std::vector<Modint<MOD>>>& series
 );
 ```
 
-`series[i][j]` を $x^iy^j$ の係数とする。
-入力と同じ $N\times M$ の係数行列 `inverse` を返し、
+`series[i][j]` を $x^i y^j$ の係数とする。入力が $N \times M$ の行列のとき、同じ $N \times M$ の係数行列 `inverse` を返す。これは
 
 $$
-\mathtt{series}\cdot\mathtt{inverse}\equiv1\pmod{(x^N,y^M)}
+\mathtt{series} \cdot \mathtt{inverse} \equiv 1 \pmod{(x^N, y^M)}
 $$
 
 を満たす。
 
-- 時間計算量: $O(NM(\log N+\log M))$
+- 時間計算量: $O(NM (\log N + \log M))$
 - 空間計算量: $O(NM)$
 
 ## 注意点
 
-入力は空でない矩形行列で、定数項 `series[0][0]` は可逆でなければならない。
-各段階の行数・列数を2冪へzero paddingするため、その長さは `MOD - 1` を
-割り切る必要がある。998244353では各軸について最大 $2^{23}$ のtransformを
-利用できる。空入力、非矩形入力、零定数項、transform長または容量の違反では
-例外を送出する。
+- 入力は空でない長方形の行列でなければならない。空なら、または行の長さが揃っていなければ `std::invalid_argument` を送出する。
+- 定数項 `series[0][0]` は可逆でなければならない。$0$ なら `std::domain_error` を送出する。
+- 各段階で行数・列数を 2 の冪へゼロ埋めして変換する。その変換長は `MOD - 1` を割り切る必要があり、満たさなければ `std::runtime_error` を送出する。$998244353$ では各軸について長さ $2^{23}$ までの変換を利用できる。
+- 変換用配列の大きさが `std::size_t` に収まらない場合は `std::length_error` を送出する。

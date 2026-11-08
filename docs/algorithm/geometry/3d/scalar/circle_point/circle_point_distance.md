@@ -9,11 +9,11 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/circle_poin
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-計算結果が long double で表現できない場合は std::overflow_error を送出する。交差計算は共通移動量を保つ正規化で中間 overflow を避ける。
-Circle3 は中心・法線・半径が有限、法線が非零、半径が非負でなければならず、違反時は std::invalid_argument を送出する。
-
-円板ではなく円周への距離である。負半径または零法線には `std::invalid_argument` を送出する。
+- 円板ではなく円周への距離である。
+- `Circle3` は中心・法線・半径が有限で、法線が非零、半径が非負でなければならない。違反時（負の半径、零法線を含む）や点が非有限の場合は `std::invalid_argument` を送出する。
+- 点と中心の差を半径も含めた共通のスケールで正規化してから計算するため、中間計算でのオーバーフローを避けられる。
+- 計算結果が `long double` で表現できない場合は `std::overflow_error` を送出する。

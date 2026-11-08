@@ -5,14 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/void/circle/valida
 
 ## API
 
-- `validate_circle(circle)`: 円の半径が有効か検査する。有効なら何も返さない。
+- `validate_circle(circle)`: 円の中心座標と半径が有効か検査する。有効なら何もせずに戻る（戻り値は `void`）。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- `validate_circle`: 時間 $O(1)$、追加領域 $O(1)$。
+- `validate_circle`: 時間 $O(1)$、追加空間 $O(1)$。
 
 ## 注意点
 
-負の半径には `std::invalid_argument` を送出する。半径0は有効である。
-
-中心座標・半径の非有限値と負半径にはstd::invalid_argumentを送出する。有限な半径0は有効である。
+- 中心座標または半径が非有限値（NaN・無限大）なら `std::invalid_argument` を送出する。
+- 半径が負なら `std::invalid_argument` を送出する。
+- 有限な半径 0 は有効である。
