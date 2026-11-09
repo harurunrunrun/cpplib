@@ -3,7 +3,7 @@ title: Bipartite Graph Test (二部グラフ判定) [BUGLIFE]
 documentation_of: ../../../../../src/algorithm/graph/constraints/coloring/is_bipartite.hpp
 ---
 
-無向グラフを2色で矛盾なく彩色できるかを判定する。
+無向グラフを矛盾なく 2 色で彩色できるかを、BFS で判定する。
 
 ## is_bipartite
 
@@ -14,12 +14,12 @@ bool is_bipartite(
 );
 ```
 
-頂点集合を、各辺の両端が異なる集合に属するよう2分割できる場合に `true` を返す。非連結グラフにも対応する。
+各辺の両端が異なる集合に属するように頂点集合を 2 つに分割できる場合に `true` を返す。非連結グラフにも対応する。
 
 ## 引数
 
-- `vertex_count`: 頂点数。
-- `edges`: 0-indexedの端点を持つ無向辺列。
+- `vertex_count`: 頂点数 $N$。
+- `edges`: 0-indexed の端点を持つ無向辺の列。
 
 ## 戻り値
 
@@ -31,10 +31,10 @@ bool is_bipartite(
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `is_bipartite` | $O(N+M)$ | $O(N+M)$ |
+| `is_bipartite` | $O(N + M)$ | $O(N + M)$ |
 
 ## 注意点
 
-- `vertex_count` は非負、各端点は $[0,N)$ でなければならない。違反時は `runtime_error` を送出する。
+- `vertex_count` は非負、各端点は $[0, N)$ でなければならない。違反時は `std::runtime_error` を送出する。
 - 自己ループを含むグラフでは `false` を返す。
 - 多重辺を許す。

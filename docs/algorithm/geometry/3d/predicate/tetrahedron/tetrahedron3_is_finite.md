@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/tetrahed
 
 ## API
 
-- `geometry3d_is_finite(tetrahedron)` は `Tetrahedron3` の四頂点の全座標が有限なら `true` を返す。
+- `geometry3d_is_finite(tetrahedron)`: `Tetrahedron3` の 4 頂点の全座標が有限なら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/tetrahed
 
 ## 注意点
 
-体積0かどうかは検査しない。
+- 例外は送出しない（`noexcept`）。
+- 体積が 0 かどうかは検査しない。

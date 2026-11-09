@@ -3,9 +3,7 @@ title: 3D Line-Plane Common Intersection (三次元直線・平面共通部分)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/result/line_plane/line_plane_common_intersection.hpp
 ---
 
-## 概要
-
-直線と平面の共通部分を、空集合・一点・直線のすべてについて返す。
+直線と平面の共通部分を、空集合・1 点・直線のすべての場合について返す。
 
 ## API
 
@@ -17,6 +15,6 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/result/line_plane/
 
 ## 注意点
 
-直線は非退化、平面法線は非零でなければならない。非有限入力には `std::invalid_argument` を送出する。
-位置判定と一意な交点はexact dyadic演算を共有する。真の交点が `long double` で
-表現できない場合は `std::overflow_error` を送出する。
+- 直線は非退化、平面の法線は非零でなければならず、違反時は `std::invalid_argument` を送出する。非有限な入力にも `std::invalid_argument` を送出する。
+- 位置関係の判定と一意な交点の計算は、厳密な二進有理数（dyadic）演算を共有する。
+- 真の交点が `long double` で表現できない場合は `std::overflow_error` を送出する。

@@ -6,12 +6,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/line
 ## API
 
 - `parallel(line, ray)`: `Line3` と `Ray3` の方向が平行なら `true` を返す。
-- `parallel(ray, line)`: 引数順を逆にした同じ判定を行う。
+- `parallel(ray, line)`: 引数の順序を入れ替えた同じ判定を行う。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 全overload: 時間・追加領域 $O(1)$。
+- 全オーバーロード: 時間・追加空間ともに $O(1)$。
 
 ## 注意点
 
-支持直線が一致するかは判定しない。退化直線または退化半直線なら `std::invalid_argument` を送出する。
+- 支持直線が一致するかどうかは判定しない。
+- 退化した直線または退化した半直線には `std::invalid_argument` を送出する。

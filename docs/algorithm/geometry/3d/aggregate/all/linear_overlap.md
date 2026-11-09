@@ -5,13 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/line
 
 ## API
 
-- `overlap(first, second)`: `Line3`, `Ray3`, `Segment3` の全組合せについて、共通部分が正の長さを持つかを返す。
-- このヘッダは型ペア別の `*_overlap.hpp` をまとめてincludeする互換用集約ヘッダである。
+- `overlap(first, second)`: `Line3`, `Ray3`, `Segment3` のすべての組合せについて、共通部分が正の長さを持つかを返す。
 
-## API別の時間計算量・空間計算量
+このヘッダは型の組ごとの `*_overlap.hpp` をまとめて include する、互換用の集約ヘッダである。必要な型の組だけを使う場合は、対応する個別ヘッダを直接 include すればよい。
 
-- 全overload: 時間・追加領域 $O(1)$。
+## API 別の時間計算量・空間計算量
+
+- 全オーバーロード: 時間・追加空間ともに $O(1)$。
 
 ## 注意点
 
-必要な型ペアだけを使う場合は対応するleafヘッダを直接includeできる。1点だけの接触は `false`。
+- 1 点だけで接する場合は `false` を返す。

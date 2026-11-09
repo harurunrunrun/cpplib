@@ -3,46 +3,46 @@ title: Recursive Sequence Term (線形漸化式の指定項) [SEQ]
 documentation_of: ../../../../src/algorithm/math/sequence/recursive_sequence_term.hpp
 ---
 
-係数が一定の線形漸化式について、1始まりの指定項を法付きで求める。
+係数が一定の線形漸化式について、1-indexed で指定した項を、指定した法で求める。
 
-## `recursive_sequence_term`
+## `math::recursive_sequence_term`
 
 ```cpp
-uint64_t recursive_sequence_term(
-    const vector<uint64_t>& initial,
-    const vector<uint64_t>& coefficient,
-    uint64_t one_based_index
+std::uint64_t math::recursive_sequence_term(
+    const std::vector<std::uint64_t>& initial,
+    const std::vector<std::uint64_t>& coefficient,
+    std::uint64_t one_based_index
 );
 
-uint64_t recursive_sequence_term(
-    const vector<uint64_t>& initial,
-    const vector<uint64_t>& coefficient,
-    uint64_t one_based_index,
-    uint64_t modulus
+std::uint64_t math::recursive_sequence_term(
+    const std::vector<std::uint64_t>& initial,
+    const std::vector<std::uint64_t>& coefficient,
+    std::uint64_t one_based_index,
+    std::uint64_t modulus
 );
 ```
 
-`initial[i] = a_(i+1)`、`coefficient[j]` は直前から `j+1` 個前の項に掛かる係数を表す。
-3引数版の法は $10^9$ であり、高速畳み込みを使う。
-4引数版は任意の64-bit法を受け取り、二乗時間の多項式剰余を使う。
+`initial[i]` は $a_{i+1}$ を表し、`coefficient[j]` は $j+1$ 個前の項に掛かる係数を表す。すなわち $a_n = \sum_{j} \mathtt{coefficient}_j \, a_{n-1-j}$ である。
+3 引数版の法は $10^9$ で、`recursive_sequence_term_static_modulus<1'000'000'000>` を呼んで高速な畳み込みを使う。
+4 引数版は任意の 64 ビットの法を受け取り、二乗時間の多項式剰余（Kitamasa 法）を使う。
 
-## `recursive_sequence_term_static_modulus`
+## `math::recursive_sequence_term_static_modulus`
 
 ```cpp
 template<int MOD>
-uint64_t recursive_sequence_term_static_modulus(
-    const vector<uint64_t>& initial,
-    const vector<uint64_t>& coefficient,
-    uint64_t one_based_index
+std::uint64_t math::recursive_sequence_term_static_modulus(
+    const std::vector<std::uint64_t>& initial,
+    const std::vector<std::uint64_t>& coefficient,
+    std::uint64_t one_based_index
 );
 ```
 
 コンパイル時定数 `MOD` を法として同じ項を求める。
-Bostan--Mori 法と任意法畳み込みを使うため、高次数向けである。
+Bostan–Mori 法と任意法の畳み込み（`arbitrary_mod_convolution`）を使うため、次数が大きい場合に向く。
 
 ## API別の時間計算量・空間計算量
 
-次数を $K$、求める添字を $N$、次数 $K$ の多項式乗算時間を $M(K)$ とする。
+次数を $K$、求める添字を $N$、次数 $K$ の多項式乗算の時間を $M(K)$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -52,6 +52,6 @@ Bostan--Mori 法と任意法畳み込みを使うため、高次数向けであ�
 
 ## 注意点
 
-- 初期値と係数は同じ非0長で、添字と法は正でなければならない。
+- 初期値と係数は同じ長さで、長さは $1$ 以上でなければならない。添字と法は正でなければならない。違反時は `std::invalid_argument` を送出する。
 - `MOD` は正の `int` の範囲で指定する。
-- 任意の64-bit法が必要な場合は4引数版を使う。
+- 任意の 64 ビットの法が必要な場合は 4 引数版を使う。

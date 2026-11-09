@@ -3,17 +3,17 @@ title: LCM Sum Table (LCM総和表) [LCMSUM]
 documentation_of: ../../../../../src/algorithm/math/number_theory/multiplicative/lcm_sum.hpp
 ---
 
-`sum(lcm(i,n), 1 <= i <= n)` を繰り返し問い合わせるための前計算表。
+$\sum_{i=1}^{n} \operatorname{lcm}(i, n)$ を繰り返し求めるための前計算表。最小素因数の表を持ち、$\frac{n}{2}\left(1 + \sum_{d \mid n} d \, \varphi(d)\right)$ を素因数分解から計算する。
 
 ## API
 
-### `LcmSumTable(limit)`
+### コンストラクタ `math::LcmSumTable(limit)`
 
 ```cpp
 explicit LcmSumTable(int limit);
 ```
 
-`1` 以上 `limit` 以下の問い合わせを処理できる表を構築する。
+$1$ 以上 `limit` 以下の $n$ に対するクエリを処理できる表（最小素因数の篩）を構築する。
 
 ### `limit()`
 
@@ -26,28 +26,21 @@ int limit() const;
 ### `value(n)`
 
 ```cpp
-uint64_t value(int n) const;
+std::uint64_t value(int n) const;
 ```
 
-`sum(lcm(i,n), 1 <= i <= n)` を返す。
+$\sum_{i=1}^{n} \operatorname{lcm}(i, n)$ を返す。
 
-## 引数・戻り値
-
-- `limit`: 構築する表の上限。
-- `n`: 問い合わせる正整数。
-- `limit()` は構築時の `limit` を返す。
-- `value(n)` は $\sum_{i=1}^{n}\operatorname{lcm}(i,n)$ を返す。
-
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| コンストラクタ | $O(limit\log\log limit)$ | $O(limit)$ |
+| コンストラクタ | $O(L \log \log L)$（$L$ は `limit`） | $O(L)$ |
 | `limit` | $O(1)$ | $O(1)$ |
 | `value` | $O(\log n)$ | $O(1)$ |
 
 ## 注意点
 
-- `limit >= 1` を前提とする。
-- `n < 1` または `n > limit()` なら `out_of_range` を送出する。
-- `value(n)` の答えは `uint64_t` に収まる必要がある。
+- `limit >= 1` が必要である。`limit == 0` では `std::invalid_argument` を送出する（負の値は表の確保の時点で失敗する）。
+- `n < 1` または `n > limit()` なら `std::out_of_range` を送出する。
+- `value(n)` の答えは `uint64_t` に収まる必要がある（中間値は `unsigned __int128` で計算する）。

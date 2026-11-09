@@ -5,12 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/ray_line
 
 ## API
 
-- `skew(first, second)`: `Ray3` と `Line3` の支持直線がねじれの位置にあるとき `true` を返す。
+- `skew(first, second)`: 半直線 `first`（`Ray3`）の支持直線と直線 `second`（`Line3`）がねじれの位置にあるとき `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- `skew`: 時間・追加領域 $O(1)$。
+- `skew`: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-平行な場合と同一平面上で交差しない場合は `false`。入力順は半直線、直線である。
+- 半直線の範囲（始点と向き）は考慮しない。平行な場合と、支持直線同士が交わる場合（半直線自体とは交わらない場合も含む）は `false` を返す。
+- 引数の順序は半直線、直線である。
+- 退化した半直線・直線には `std::invalid_argument` を送出する。

@@ -35,7 +35,7 @@ Combinatorics<mint> dynamic(n);     // 可変長版（上限を実行時に指�
 - `Mint combination(int n, int k) const`
     - ${}_nC_k$ を返す。
 - `Mint homogeneous(int n, int k) const`
-    - 重複組合せ ${}_nH_k = {}_{n+k-1}C_k$ を返す。
+    - 重複組合せ $\binom{n+k-1}{k}$ を返す。
 - `Mint bell_number(int n) const`
     - Bell 数 $B_n$（要素数 $n$ の集合の分割の総数）を返す。
 

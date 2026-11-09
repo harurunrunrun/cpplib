@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/point/rotate
 
 ## API
 
-- `rotate90(point)`: `point` を反時計回りへ90度回転した `{-y, x}` を返す。
+- `Point rotate90(const Point& point)`: `point` を反時計回りに 90 度回転した `{-y, x}` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/point/rotate
 
 ## 注意点
 
-原点を回転中心とする。
+回転の中心は原点である。浮動小数点の誤差は生じない。

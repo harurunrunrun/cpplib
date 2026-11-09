@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/ray_segm
 
 ## API
 
-- `skew(first, second)`: `Ray3` と `Segment3` の支持直線がねじれの位置にあるとき `true` を返す。
+- `skew(first, second)`: 半直線 `first`（`Ray3`）と線分 `second`（`Segment3`）の支持直線同士がねじれの位置にあるとき `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- `skew`: 時間・追加領域 $O(1)$。
+- `skew`: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-平行な場合と同一平面上で交差しない場合は `false`。入力は各幾何型の有効条件を満たす必要がある。
+- 半直線・線分の範囲は考慮しない。平行な場合と、支持直線同士が交わる場合は `false` を返す。
+- 退化した半直線・線分には `std::invalid_argument` を送出する。

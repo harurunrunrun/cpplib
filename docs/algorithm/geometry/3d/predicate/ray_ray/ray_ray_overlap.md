@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/ray_ray/
 
 ## API
 
-- `overlap(first, second)`: 2本の `Ray3` の共通部分が正の長さを持つなら `true` を返す。共通部分が半直線または非退化線分のときに該当する。
+- `overlap(first, second)`: 2 本の `Ray3` の共通部分が正の長さを持つ、すなわち半直線または非退化な線分になるなら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- `overlap`: 時間・追加領域 $O(1)$。
+- `overlap`: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-始点1点だけを共有する場合は `false`。いずれかが退化半直線なら `std::invalid_argument` を送出する。
+- 始点の 1 点だけを共有する場合は `false` を返す。
+- いずれかが退化した半直線なら `std::invalid_argument` を送出する。

@@ -5,12 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/ray_ray/
 
 ## API
 
-- `coincident(first, second)`: 2本の `Ray3` が同じ始点と同じ向きを持ち、点集合として一致するなら `true` を返す。
+- `coincident(first, second)`: 2 本の `Ray3` が同じ始点と同じ向きを持ち、点集合として一致するなら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- `coincident`: 時間・追加領域 $O(1)$。
+- `coincident`: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-支持直線が同じでも向きが反対なら `false`。いずれかが退化半直線なら `std::invalid_argument` を送出する。
+- 支持直線が同じでも向きが反対なら `false` を返す。
+- 始点の一致は `Point3` の `==`（各座標の差が `GEOMETRY3D_EPS` 以下）で判定する。
+- いずれかが退化した半直線なら `std::invalid_argument` を送出する。

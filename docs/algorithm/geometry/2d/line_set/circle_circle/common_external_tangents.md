@@ -5,20 +5,22 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/line_set/circle_ci
 
 ## API
 
-- `common_external_tangents(first, second)`: 2円の共通外接線を返す。
+- `std::vector<Line> common_external_tangents(first, second)`: 2 円の共通外接線を返す。
 
 ## 引数
 
-`first`, `second` は非負半径の円である。
+`first`, `second` は非負の半径を持つ円である。
 
 ## 戻り値
 
-異なる共通外接線を0〜2本返す。
+相異なる共通外接線を 0〜2 本返す。中心が（許容誤差の範囲で）一致し半径が異なる場合は空を返す。
 
 ## API別の時間計算量・空間計算量
 
-時間・出力・追加領域 $O(1)$。
+時間・出力・追加領域とも $O(1)$。
 
 ## 注意点
 
-一致円では無限本あるため `std::domain_error` を送出する。
+- 2 円が一致する場合は共通接線が無限に存在するため `std::domain_error` を送出する。
+- 非有限な座標・半径や負の半径には `std::invalid_argument` を送出する。
+- 判定は `common_tangents` と同じく、比較する各項の大きさに `GEOMETRY_EPS` を掛けた相対許容誤差で行う。

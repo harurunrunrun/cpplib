@@ -3,7 +3,7 @@ title: Segment Intersection Record (線分交差記録)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/type/definition/segment_intersection_record.hpp
 ---
 
-交差する線分対と、その交差形状を保持する結果型。
+交差する線分の対と、その交差の形状を保持する結果型。
 
 ## API
 
@@ -18,19 +18,19 @@ struct SegmentIntersectionRecord {
 ```
 
 - `first`, `second`: 入力線分の添字で、常に `first < second`。
-- `kind`: 一点交差または正の長さを持つ重複区間の種類。
-- `first_point`, `second_point`: 一点交差では同じ交点。区間交差では重複区間の両端。
+- `kind`: 1 点での交差か、正の長さをもつ重なり区間かの種類。
+- `first_point`, `second_point`: 1 点での交差では同じ交点。区間での交差では重なり区間の両端。
 
 ## 時間計算量
 
 | 操作 | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| 構築、全fieldの参照 | $O(1)$ | $O(1)$ |
+| 構築、全フィールドの参照 | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-`kind == SEGMENT_INTERSECTION_POINT` なら両点は同じ幾何点である。
-`kind == SEGMENT_INTERSECTION_SEGMENT` なら両点はライブラリの標準順序で並ぶ。
+`kind == SEGMENT_INTERSECTION_POINT` なら両点は同じ幾何的な点である。
+`kind == SEGMENT_INTERSECTION_SEGMENT` なら両点はライブラリの標準の順序（`Point::operator<`）で並ぶ。
 
 ## 使用例
 

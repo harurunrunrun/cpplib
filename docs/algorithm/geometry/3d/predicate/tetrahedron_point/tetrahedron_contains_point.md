@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/tetrahed
 
 ## API
 
-- `contains(tetrahedron, point)`: 点が四面体の内部または境界にあれば`true`を返す。
+- `contains(tetrahedron, point)`: 点 `point` が四面体 `tetrahedron` の内部または境界にあれば `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 全API: 時間・追加領域 $O(1)$。
+- `contains`: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-退化四面体または非有限入力では例外を送出する。
+- 重心座標を計算し、4 つの重みがすべて許容誤差の範囲で非負なら `true` とする。
+- 退化した四面体や非有限な入力には `std::invalid_argument` を、重心座標が `long double` で表現できない場合は `std::overflow_error` を送出する。

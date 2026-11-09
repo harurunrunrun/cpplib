@@ -3,9 +3,13 @@ title: Convex Hull Perimeter (凸包周長)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/scalar/point_set/convex_hull_perimeter.hpp
 ---
 
+点集合の凸包の周長を求める。
+
 ## API
 
-- `convex_hull_perimeter(points)`: 点集合の凸包境界長を返す。
+```cpp
+long double convex_hull_perimeter(std::vector<Point> points);
+```
 
 ## 引数
 
@@ -15,10 +19,10 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/scalar/point_set/c
 
 凸包の周長を `long double` で返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量
 
-点数を $N$ として時間 $O(N\log N)$、領域 $O(N)$。
+点数を $N$ として、時間計算量 $O(N \log N)$、空間計算量 $O(N)$。
 
 ## 注意点
 
-空集合・1点は0、線分へ退化した凸包は線分長の2倍を返す。
+空集合と 1 点（重複のみの場合を含む）では 0 を、凸包が線分に退化する場合はその線分の長さの 2 倍を返す。

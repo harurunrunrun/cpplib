@@ -1,18 +1,30 @@
 ---
-title: Four Russians Boolean Matrix Multiplication (Four Russians法によるBoolean行列積)
+title: Four Russians Boolean Matrix Multiplication (Four Russians 法による Boolean 行列積)
 documentation_of: ../../../../../src/algorithm/other/dynamic_programming/bitset/four_russians_boolean_matrix.hpp
 ---
 
-小blockの全bit patternに対応する行ORを表引きし、Boolean semiring上の行列積を高速化する。
+内側の次元を幅 $t$ のブロックに分け、各ブロックのすべてのビットパターンに対応する行の OR を表に前計算して引くことで、Boolean 半環上の行列積を高速化する。名前空間は `dynamic_programming` である。
 
 ## `BooleanMatrix`
 
-0/1を `unsigned char` で保持する二次元vector。
+0/1 を `unsigned char` で保持する二次元の `std::vector`（`std::vector<std::vector<unsigned char>>`）。
 
-## `four_russians_boolean_matrix_multiply(first, second, block_size=0)`
+## `four_russians_boolean_matrix_multiply(first, second, block_size = 0)`
 
-$m\times k$ と $k\times n$ のBoolean行列積を返す。block幅を $t$ とすると時間計算量 $O(mkn/t + (k/t)2^t n)$、追加空間計算量 $O(2^t n+mn)$。`block_size == 0` では $t=\max(1,\lfloor\log_2 k\rfloor/2)$ を選ぶ。
+$m\times k$ と $k\times n$ の Boolean 行列の積（$m \times n$）を返す。
+`block_size == 0` では、$k$ のビット幅 $\lfloor\log_2 k\rfloor + 1$ を $2$ で割って切り捨てた値と $1$ の大きい方を $t$ に選ぶ。
+
+## 時間計算量
+
+$O(mkn/t + (k/t)2^t n + mk)$。
+
+## 空間計算量
+
+追加領域 $O(2^t n+mn)$（表と戻り値）。
 
 ## 注意点
 
-要素は0または1、内側次元は一致しなければならない。表の暴発を防ぐため `block_size <= 20`。不正入力には `std::invalid_argument` を送出する。
+- 要素は $0$ または $1$ で、各行列は長方形であり、内側の次元が一致しなければならない。
+- 表が大きくなりすぎるのを防ぐため、`block_size <= 20` でなければならない。
+- 不正な入力には `std::invalid_argument` を送出する。
+- いずれかの次元が $0$ なら、零行列（$m \times n$）を返す。

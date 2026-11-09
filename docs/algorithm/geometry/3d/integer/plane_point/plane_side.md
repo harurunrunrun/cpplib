@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/integer/plane_poin
 
 ## API
 
-- `plane_side(plane, point)`: 法線側なら1、平面上なら0、反対側なら-1を返す。
+- `plane_side(plane, point)`: 点が法線の側にあれば `1`、平面上にあれば `0`、反対側にあれば `-1` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-零法線には `std::invalid_argument` を送出する。符号は `plane.normal` の向きに依存する。
+符号付き距離を絶対許容誤差 `GEOMETRY3D_EPS` で判定するため、距離の絶対値が `GEOMETRY3D_EPS` 以下なら平面上とみなす。符号は `plane.normal` の向きに依存する。
+法線が零ベクトルの場合や非有限な入力には `std::invalid_argument` を、符号付き距離を `long double` で表現できない場合は `std::overflow_error` を送出する。

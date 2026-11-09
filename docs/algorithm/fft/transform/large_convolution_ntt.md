@@ -3,14 +3,29 @@ title: Blocked Large NTT Convolution (変換長の上限を超える畳み込み
 documentation_of: ../../../../src/algorithm/fft/transform/large_convolution_ntt.hpp
 ---
 
-`large_convolution_ntt<MOD>(a,b,maximum_transform_size)` は、出力長が素数体の最大NTT長を超えても通常の畳み込みを計算する。第3引数の既定値は `MOD-1` を割る最大2冪で、より小さい2冪も指定できる。`MOD` の条件は `montgomery_ntt.hpp` と同じ。
+```cpp
+template<int MOD>
+std::vector<Modint<MOD>> large_convolution_ntt(
+    const std::vector<Modint<MOD>>& a,
+    const std::vector<Modint<MOD>>& b,
+    std::size_t maximum_transform_size = (MOD - 1 を割り切る最大の 2 の冪)
+);
+```
 
-## 時間計算量
+出力長が素数体での最大 NTT 長を超える場合でも、通常の畳み込みを計算する。第 3 引数 `maximum_transform_size` には、デフォルト値より小さい 2 の冪も指定できる。`MOD` の条件は `montgomery_ntt.hpp` と同じである。
 
-長さ $L/2$ のブロックへ分け、各ブロックを長さ $L$ で一度変換する。同じブロック番号和を持つ積を周波数領域で足し、対角線ごとに1回逆変換する。左・右のブロック数を $A,B$ として、時間 $O((A+B)L\log L+ABL)$、領域 $O((A+B)L+N+M)$。すべての対角線の配列を同時保持しない。
+出力長が `maximum_transform_size` 以下なら `fast_convolution_ntt` をそのまま呼ぶ。
 
-類題: 各入力が最大 $2^{24}$ の列を法998244353で畳み込む。小さい変換上限を指定すれば、同じ処理のブロック境界を小規模な愚直解と比較できる。
+## 計算量
+
+$L = \texttt{maximum_transform_size}$ とする。入力を長さ $L/2$ のブロックに分け、各ブロックを長さ $L$ で 1 回だけ変換する。ブロック番号の和が等しい積を周波数領域で足し合わせ、その和（対角線）ごとに 1 回逆変換する。
+
+左右のブロック数を $A, B$、入力長を $N, M$ として、時間 $O((A+B) L \log L + ABL)$、空間 $O((A+B) L + N + M)$ である。対角線ごとの配列は 1 本ずつ使い回し、すべてを同時には保持しない。
+
+例えば、各入力が最大 $2^{24}$ 項の列を法 $998244353$（最大 NTT 長 $2^{23}$）で畳み込む問題に使える。小さい変換上限を指定すれば、同じ処理のブロック境界を小規模な愚直解と比較してテストできる。
 
 ## 注意点
 
-GCC 13 / C++20。法・可逆性・添字範囲は上記の各APIの条件を満たす必要がある。
+- GCC 13 / C++20 を想定する。
+- `maximum_transform_size` が 2 の冪でない、または `MOD - 1` を割り切らない場合は `std::invalid_argument` を送出する。
+- どちらかの入力が空なら空列を返す。

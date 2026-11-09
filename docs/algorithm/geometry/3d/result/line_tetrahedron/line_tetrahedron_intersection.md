@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/result/line_tetrah
 
 ## API
 
-- `line_tetrahedron_intersection(line, tetrahedron)`: 閉四面体との共通部分を空、点、線分として返す。
+- `line_tetrahedron_intersection(line, tetrahedron)`: 直線と閉四面体の共通部分を `LinearIntersection3` で返す。結果は空集合（`std::monostate`）、点（`Point3`）、線分（`Segment3`）のいずれかである。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-重心座標の4半空間で直線parameterをclipする。退化直線・退化四面体には `std::invalid_argument` を送出する。
+- 直線を `line.a + t * (line.b - line.a)` とパラメータ表示し、重心座標が非負となる 4 つの半空間でパラメータ $t$ の区間を切り詰めて求める。
+- 退化した直線・四面体には `std::invalid_argument` を送出する。

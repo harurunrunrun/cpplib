@@ -5,11 +5,18 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/integer/scalar/int
 
 ## API
 
-`int integer_orientation(first, second, third)`
+```cpp
+template<std::integral Coordinate>
+int integer_orientation(
+    const IntegerPoint<Coordinate>& first,
+    const IntegerPoint<Coordinate>& second,
+    const IntegerPoint<Coordinate>& third
+);
+```
 
 ## 引数
 
-向きを調べる同じ整数座標型の3点を渡す。
+向きを調べる、同じ整数座標型の 3 点を渡す。
 
 ## 戻り値
 
@@ -17,8 +24,8 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/integer/scalar/int
 
 ## API別の時間計算量・空間計算量
 
-- `integer_orientation`: 固定256 bit演算で時間 $O(1)$、追加領域 $O(1)$。
+- `integer_orientation`: 時間 $O(1)$、追加領域 $O(1)$（多倍長整数の演算を定数回行う）。
 
 ## 注意点
 
-座標差を `__int128` で求め、積と差を256 bitで求めるため `long long` の端点差にも対応する。
+座標差を `__int128_t` で求め、積と差を多倍長整数 `GeometryIntegerWide`（`ExactInteger`）で計算するので、`long long` の座標差でもオーバーフローせず厳密に判定できる。

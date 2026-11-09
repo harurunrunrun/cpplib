@@ -5,13 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/line
 
 ## API
 
-- `parallel(first, second)`: `Line3`, `Ray3`, `Segment3` の全順序付き組合せについて方向が平行かを返す。
-- このヘッダは型ペア別の `*_parallel.hpp` をまとめてincludeする互換用集約ヘッダである。
+- `parallel(first, second)`: `Line3`, `Ray3`, `Segment3` のすべての順序付きの組合せについて、方向が平行かを返す。
 
-## API別の時間計算量・空間計算量
+このヘッダは型の組ごとの `*_parallel.hpp` をまとめて include する、互換用の集約ヘッダである。必要な型の組だけを使う場合は、対応する個別ヘッダを直接 include すればよい。
 
-- 全overload: 時間・追加領域 $O(1)$。
+## API 別の時間計算量・空間計算量
+
+- 全オーバーロード: 時間・追加空間ともに $O(1)$。
 
 ## 注意点
 
-必要な型ペアだけを使う場合は対応するleafヘッダを直接includeできる。退化して方向を持たない図形には `std::invalid_argument` を送出する。
+- 退化して方向を持たない図形には `std::invalid_argument` を送出する。

@@ -9,7 +9,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/scalar/e
 
 ## 引数
 
-比較する2実数を渡す。
+比較する 2 つの実数 `first`, `second` を渡す。
 
 ## 戻り値
 
@@ -21,4 +21,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/scalar/e
 
 ## 注意点
 
-絶対誤差による判定であり、相対誤差判定ではない。
+絶対誤差による判定であり、相対誤差による判定ではない。

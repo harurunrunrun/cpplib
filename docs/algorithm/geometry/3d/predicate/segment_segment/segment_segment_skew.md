@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/segment_
 
 ## API
 
-- `skew(first, second)`: 2本の `Segment3` の支持直線同士がねじれの位置にあるなら `true` を返す。
+- `skew(first, second)`: 2 本の `Segment3` の支持直線同士がねじれの位置にあるなら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- `skew`: 時間・追加領域 $O(1)$。
+- `skew`: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-線分の有限範囲は考慮しない。いずれかが退化線分なら `std::invalid_argument` を送出する。
+- 線分の有限な範囲は考慮しない。
+- いずれかが退化した線分なら `std::invalid_argument` を送出する。

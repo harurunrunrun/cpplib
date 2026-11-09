@@ -5,10 +5,10 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/po
 
 ## API
 
-- `Point3{x, y, z}`: 三次元点またはベクトルを構築する。
-- 単項符号、加減算、スカラー倍・除算、複合代入を提供する。
-- `operator==`: 各座標を絶対誤差付きで比較する。
-- `operator<`: 座標を厳密な辞書順で比較する。
+- `Point3{x, y, z}`: 三次元の点またはベクトルを構築する。デフォルトコンストラクタは原点 $(0, 0, 0)$ を表す。
+- 単項の符号演算、加減算、スカラー倍（左右どちらからでも可）・スカラーによる除算、それらの複合代入を提供する。
+- `operator==`: 各座標の差の絶対値がすべて `GEOMETRY3D_EPS`（$10^{-10}$）以下なら等しいとみなす。
+- `operator<`: 座標 $(x, y, z)$ を許容誤差なしの辞書順で比較する。
 
 ## API別の時間計算量・空間計算量
 
@@ -16,4 +16,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/po
 
 ## 注意点
 
-`operator==` と `operator<` の同値関係は一致しない。
+- `operator==` は絶対誤差による比較なので推移的ではなく、`operator<` が定める同値関係とも一致しない。`std::set` や `std::sort` のキーとして使う場合は `operator<` の厳密な順序になる点に注意する。

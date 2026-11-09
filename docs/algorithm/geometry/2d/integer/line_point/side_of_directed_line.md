@@ -5,11 +5,11 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/integer/line_point
 
 ## API
 
-`int side_of_directed_line(line, point)`
+`int side_of_directed_line(const Line& line, const Point& point)`
 
 ## 引数
 
-有向非退化直線 `a -> b` と判定点を渡す。
+退化していない有向直線 `line`（`line.a` から `line.b` へ向かう）と、判定する点 `point` を渡す。
 
 ## 戻り値
 
@@ -21,5 +21,6 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/integer/line_point
 
 ## 注意点
 
-退化直線では `invalid_argument`。判定誤差は直線までの符号付き垂直距離に対する `GEOMETRY_EPS` と丸め誤差に従う。
-退化判定に該当しない範囲では、方向ベクトル `line.b - line.a` を正の定数倍しても戻り値は変わらない。
+方向ベクトルの長さが `GEOMETRY_EPS` 以下の退化直線では `std::invalid_argument` を送出する。
+判定は、直線までの符号付き垂直距離を `GEOMETRY_EPS` と丸め誤差の和と比較して行う。
+したがって退化判定に該当しない範囲では、方向ベクトル `line.b - line.a` を正の定数倍しても戻り値は変わらない。

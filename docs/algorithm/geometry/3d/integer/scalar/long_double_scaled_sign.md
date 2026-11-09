@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/integer/scalar/lon
 
 ## API
 
-- `geometry3d_scaled_sign(value, scale)` は `GEOMETRY3D_EPS * scale` を許容幅として -1、0、1 を返す。
+- `geometry3d_scaled_sign(value, scale)`: `GEOMETRY3D_EPS * scale` を許容幅として、`value` の符号を `-1`, `0`, `1` で返す。
 
 ## API別の時間計算量・空間計算量
 

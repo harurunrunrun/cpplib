@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point_set/ray_plan
 
 ## API
 
-- `closest_points(ray, plane)`: `Ray3` 上の点と `Plane3` 上の点を引数順のpairで返す。
+- `closest_points(ray, plane)`: `Ray3` 上の点と `Plane3` 上の点を、引数と同じ順の `std::pair<Point3, Point3>` で返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-退化半直線・零法線平面・非有限入力には `std::invalid_argument` を送出する。交差時は同一点のpair、非交差時は半直線始点とその平面射影を返す。
+- 半直線と平面が交わるときは交点を 2 つ並べた組を、交わらないときは半直線の始点とその平面への射影の組を返す。
+- 退化した半直線、零法線の平面、非有限な入力には `std::invalid_argument` を送出する。

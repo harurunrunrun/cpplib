@@ -3,9 +3,7 @@ title: Ford Fulkerson (フォード・ファルカーソン法)
 documentation_of: ../../../../src/algorithm/matching/flow/ford_fulkerson.hpp
 ---
 
-`FordFulkerson` という既存APIを保った最大流。
-`max_flow` は流量値に依存する単純な増加路反復ではなく、
-Dinic法のlevel graphとblocking flowを使う。
+`FordFulkerson` という既存の API を保ったまま最大流を求める。`max_flow` は流量の値に依存する単純な増加路の反復ではなく、Dinic 法のレベルグラフとブロッキングフローを用いる。
 
 ## コンストラクタ
 
@@ -13,43 +11,39 @@ Dinic法のlevel graphとblocking flowを使う。
 FordFulkerson<T> graph(n)
 ```
 
-## 関数
+$n$ 頂点の空のネットワークを作る。
+
+## メンバ関数
 
 ```cpp
 graph.add_edge(from, to, cap)
-graph.max_flow(s, t, flow_limit)
+graph.max_flow(s, t, flow_limit = numeric_limits<T>::max() / 4)
 ```
 
-`max_flow` は整数・実数容量のどちらでも、容量値そのものに依存しない
-回数のlevel graph構築で残余流を追加する。
+- `add_edge(from, to, cap)`: 容量 `cap` の有向辺を追加する。戻り値はない。
+- `max_flow(s, t, flow_limit)`: `flow_limit` を上限として、`s` から `t` へ追加で流せる最大流量を返す。整数容量・実数容量のどちらでも、容量の値そのものに依存しない回数のレベルグラフ構築で残余流を追加する。
 
 `flow_limit` は非負である必要がある。`s == t` の場合は `0` を返す。
 
-self-loop を追加できるが、最大流量には寄与しない。
+自己ループを追加できるが、最大流量には寄与しない。
 
 ## 時間計算量
 
-$V$ を頂点数、$E$ を追加済み辺数とする。
+$V$ を頂点数、$E$ を追加済みの辺数とする。
 
 - `FordFulkerson(n)`: $O(V)$
 - `add_edge`: 償却 $O(1)$
-- `dfs`: 互換用の増加路探索1回につき $O(V+E)$
-- `max_flow`: 一般容量で $O(EV^2)$
+- `dfs`: 互換用の増加路探索 1 回につき $O(V+E)$
+- `max_flow`: 一般の容量で $O(V^2 E)$
 
-`max_flow` の上界は最大流量 $F$ や、容量の数値の大きさに依存しない。
+`max_flow` の上界は、最大流量 $F$ や容量の数値の大きさに依存しない。
 
 ## 空間計算量
 
-- 残余グラフとDFS領域を含めて $O(V+E)$
+- 残余グラフと DFS の作業領域を含めて $O(V+E)$
 
 ## 注意点
 
-`FordFulkersonEdge` は `to`、逆辺index `rev`、残余容量 `cap` を持つ。
-互換性のためpublicの `graph`, `used`, `dfs` を維持する。
-`dfs` は呼出し側が `used` を0で初期化してから使う低水準APIであり、
-通常は `max_flow` を使う。`max_flow` 自体は `dfs` を使わない。
-`level` と `iter` はDinic法の作業配列で、`max_flow` の途中状態だけを表す。
-複数回の `max_flow` は現在の残余graphから続行し、
-各呼出しで新たに流した量を返す。
+`FordFulkersonEdge` は行き先 `to`、逆辺の添字 `rev`、残余容量 `cap` を持つ。互換性のため、公開メンバ `graph`, `used`, `dfs` を維持している。`dfs` は呼び出し側が `used` を $0$ で初期化してから使う低水準 API であり、通常は `max_flow` を使う。`max_flow` 自体は `dfs` を使わない。`level` と `iter` は Dinic 法の作業配列で、`max_flow` の途中状態だけを表す。`max_flow` を複数回呼ぶと現在の残余グラフから続行し、各呼び出しで新たに流した量を返す。
 
-頂点数は非負、各端点は対応する頂点範囲内でなければならず、違反時は `runtime_error`。容量・cost・総和の演算結果が `T` に収まることを前提とする。記載した計算量には引数検査とResultの構築を含む。
+頂点数と容量は非負、各端点は頂点範囲内でなければならず、違反時は `runtime_error` を送出する。容量や流量の総和が `T` に収まることを前提とする。記載した計算量には引数検査を含む。

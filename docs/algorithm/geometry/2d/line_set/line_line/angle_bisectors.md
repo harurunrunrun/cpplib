@@ -5,15 +5,16 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/line_set/line_line
 
 ## API
 
-`array<Line, 2> angle_bisectors(first, second)`
+`std::array<Line, 2> angle_bisectors(const Line& first, const Line& second)`
 
 ## 引数
 
-交差する2本の非退化直線を渡す。
+交差する 2 本の非退化な直線を渡す。
 
 ## 戻り値
 
-交点を通る互いに直交した2本の角二等分線を返す。入力方向を辞書方向へ正規化した単位方向の和、差の順である。
+交点を通り、互いに直交する 2 本の角の二等分線を返す。
+各入力直線の単位方向ベクトルを、$x$ 成分が正（0 なら $y$ 成分が正）になるよう向きをそろえ、その和の方向の直線、差の方向の直線の順に返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -21,5 +22,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/line_set/line_line
 
 ## 注意点
 
-退化直線では `invalid_argument`、平行または一致する直線では `domain_error`。
-平行判定は正規化方向同士の角度に対する `GEOMETRY_EPS` を用いる。
+退化直線では `std::invalid_argument` を、平行または一致する直線では `std::domain_error` を送出する。
+平行の判定は、正規化した方向ベクトル同士の外積（角度の正弦）を `GEOMETRY_EPS` と比較して行う。

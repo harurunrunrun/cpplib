@@ -3,29 +3,30 @@ title: Enumerate Triangles (三角形列挙)
 documentation_of: ../../../../../src/algorithm/graph/specialized/subgraph_analysis/enumerate_triangles.hpp
 ---
 
-単純無向グラフのtriangleを1回ずつ列挙する。辺を次数の小さい頂点から大きい頂点へ向け、長さ2の有向pathを調べる。
+単純無向グラフの三角形を 1 回ずつ列挙する。各辺を次数の小さい頂点から大きい頂点へ（次数が等しければ番号の小さい方から）向け、長さ 2 の有向パスを調べる。
 
-## triangle列挙
+## 三角形の列挙
 
 ```cpp
+template<class Callback>
 long long enumerate_triangles(
     int vertex_count,
     const vector<pair<int, int>>& edges,
-    Callback callback
+    Callback&& callback
 )
 ```
 
-triangle $(a,b,c)$ごとに`callback(a,b,c)`を1回呼ぶ。callbackへ渡す頂点は`a < b < c`。返り値はtriangle数。
+三角形 $(a,b,c)$ ごとに `callback(a, b, c)` を 1 回呼ぶ。`callback` に渡す頂点は `a < b < c` を満たす。戻り値は三角形の個数である。
 
-入力は自己loopと多重辺を含まない単純無向グラフでなければならない。頂点番号範囲外と自己loopは例外を送出する。
+入力は自己ループと多重辺を含まない単純無向グラフでなければならない。頂点数が負、頂点番号が範囲外、または自己ループがある場合は `runtime_error` を送出する。多重辺は検査しない。
 
-## 時間計算量
+### 時間計算量
 
-- $O(N+M\sqrt M+T_{callback})$
+- $O(N+M\sqrt{M}+T_{\mathrm{cb}})$
 
-`T_callback`はcallback全体の実行時間。
+$N$ は頂点数、$M$ は辺数、$T_{\mathrm{cb}}$ は `callback` の実行時間の合計である。
 
-## triangle数
+## 三角形の個数
 
 ```cpp
 long long count_triangles(
@@ -34,11 +35,11 @@ long long count_triangles(
 )
 ```
 
-triangle数だけを返す。
+三角形の個数だけを返す。
 
-## 時間計算量
+### 時間計算量
 
-- $O(N+M\sqrt M)$
+- $O(N+M\sqrt{M})$
 
 ## 空間計算量
 
@@ -46,4 +47,4 @@ triangle数だけを返す。
 
 ## 注意点
 
-頂点番号は $[0,N)$ に収め、辺の向き、多重辺、自己loop、連結性は各APIで記した入力条件に従う。戻り値の頂点番号も同じ0-indexedである。
+頂点番号は $[0,N)$ の 0-indexed で、`callback` に渡される頂点番号も同じである。

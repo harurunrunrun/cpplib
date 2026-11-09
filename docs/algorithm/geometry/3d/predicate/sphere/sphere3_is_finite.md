@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/sphere/s
 
 ## API
 
-- `geometry3d_is_finite(sphere)` は `Sphere3` の中心座標と半径がすべて有限なら `true` を返す。
+- `geometry3d_is_finite(sphere)`: `Sphere3` の中心座標と半径がすべて有限なら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/sphere/s
 
 ## 注意点
 
-半径の符号は検査しない。契約検査には `geometry3d_validate` を使う。
+- 例外は送出しない（`noexcept`）。
+- 半径の符号は検査しない。契約の検査には `geometry3d_validate` を使う。

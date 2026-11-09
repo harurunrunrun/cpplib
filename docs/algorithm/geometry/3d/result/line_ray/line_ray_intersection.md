@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/result/line_ray/li
 
 ## API
 
-- `line_ray_intersection(line, ray)`: 共通部分を `LinearIntersection3` で返す。空、点、半直線のいずれかである。
+- `line_ray_intersection(line, ray)`: 直線と半直線の共通部分を `LinearIntersection3` で返す。結果は空集合（`std::monostate`）、点（`Point3`）、半直線（`Ray3`、`ray` そのもの）のいずれかである。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-退化直線または退化半直線には `std::invalid_argument` を送出する。半直線の始点を含む。
+- 半直線は始点を含む。
+- 退化した直線・半直線には `std::invalid_argument` を送出する。

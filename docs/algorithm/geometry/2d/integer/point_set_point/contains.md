@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/integer/point_set_
 
 ## API
 
-- `contains(polygon, point)`: 外部なら0、境界上なら1、内部なら2を返す。
+- `int contains(const std::vector<Point>& polygon, const Point& point)`: 外部なら 0、境界上なら 1、内部なら 2 を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/integer/point_set_
 ## 注意点
 
 単純多角形を頂点順に与える。時計回り・反時計回りのどちらでもよい。
-境界は `on_segment` と同じ絶対距離 `GEOMETRY_EPS` で判定し、ray crossingのy方向比較はhalf-open規則を厳密比較で行う。
+境界上かどうかは `on_segment` と同じ絶対距離 `GEOMETRY_EPS` で判定する。半直線との交差判定では、$y$ 方向の比較を半開区間の規則に従い、許容誤差なしの厳密な比較で行う。

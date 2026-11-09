@@ -3,21 +3,22 @@ title: 2D Ray (二次元半直線)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/type/definition/ray.hpp
 ---
 
+始点と進行方向上の 1 点で半直線を表す集成体型。
+
 ## API
 
-`Ray{origin, through}`
+```cpp
+struct Ray {
+    Point origin;
+    Point through;
+};
+```
 
-## 引数
+- `Ray{origin, through}`: `origin` は始点、`through` は進行方向上の点である。
 
-`origin` は始点、`through` は進行方向上の点である。
+## 計算量
 
-## 戻り値
-
-公開field `origin`, `through` を持つaggregate型である。
-
-## API別の時間計算量・空間計算量
-
-- 構築: 時間 $O(1)$、領域 $O(1)$。
+構築: 時間 $O(1)$、空間 $O(1)$。
 
 ## 注意点
 

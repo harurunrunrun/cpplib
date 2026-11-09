@@ -5,11 +5,11 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/point_po
 
 ## API
 
-- `coplanar(first, second, third, fourth)`: 4 点の向き付き体積を適応的精度で評価し、厳密に同一平面上なら `true` を返す。
+- `coplanar(first, second, third, fourth)`: 4 点の向き付き体積の符号を `adaptive_orient3d` で適応的精度により評価し、符号が 0、すなわち 4 点が同一平面上にあれば `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- `coplanar(first, second, third, fourth)`: 通常は時間 $O(1)$、追加空間 $O(1)$。誤差境界内では入力浮動小数点数の二進表現に対する多倍長整数の厳密計算へフォールバックする。
+- `coplanar(first, second, third, fourth)`: 通常は時間 $O(1)$、追加空間 $O(1)$。浮動小数点数による評価が誤差限界内に収まらない場合は、入力の浮動小数点数の二進表現に対する多倍長整数の厳密計算にフォールバックする。
 
 ## 注意点
 

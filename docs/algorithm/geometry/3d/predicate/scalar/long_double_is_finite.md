@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/scalar/l
 
 ## API
 
-- `geometry3d_is_finite(value)` は `long double` が有限なら `true` を返す。
+- `geometry3d_is_finite(value)`: `long double` の値 `value` が有限なら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/scalar/l
 
 ## 注意点
 
-NaNと正負の無限大には `false` を返す。例外は送出しない。
+- NaN と正負の無限大には `false` を返す。例外は送出しない（`noexcept`）。

@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_segment
 
 ## API
 
-`Point line_segment_intersection(line, segment)`
+`Point line_segment_intersection(const Line& line, const Segment& segment)`
 
 ## 引数
 
@@ -13,7 +13,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_segment
 
 ## 戻り値
 
-一意な交点を返す。線分が1点なら、その点が直線上にある場合に返す。
+直線と線分の一意な交点を返す。線分が 1 点に退化している場合は、その点が直線上にあればその点を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -21,5 +21,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_segment
 
 ## 注意点
 
-退化直線では `invalid_argument`、交点なしまたは交点が無数なら `domain_error`。
+退化直線では `std::invalid_argument` を、交点がない場合や交点が無数にある（線分が直線上にある）場合は `std::domain_error` を送出する。
 退化判定に該当しない範囲では、直線の方向ベクトルを正の定数倍しても交点は変わらない。

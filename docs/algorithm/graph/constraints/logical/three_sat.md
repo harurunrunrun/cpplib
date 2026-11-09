@@ -3,37 +3,37 @@ title: 3-SAT (3充足可能性問題)
 documentation_of: ../../../../../src/algorithm/graph/constraints/logical/three_sat.hpp
 ---
 
-3-SAT。
+各節がちょうど 3 個のリテラルからなる CNF の充足可能性を、単位伝播付きの分岐探索（DPLL）で判定する。分岐には、未充足の節に最も多く現れる未割当変数を選ぶ。
 
 ## 関数
 
 ```cpp
-three_sat(n, clauses)
+ThreeSatResult three_sat(int n, const vector<ThreeSatClause>& clauses)
 ```
 
-`clauses` は `ThreeSatClause` の列。各節は3つの `ThreeSatLiteral{variable, value}` を持つ。
+`clauses` は `ThreeSatClause` の列。各節は 3 つの `ThreeSatLiteral{variable, value}` を `literal` に持ち、リテラルは「変数 `variable` の値が `value` である」ことを表す。
 
-戻り値 `ThreeSatResult` は次を持つ。
+戻り値の `ThreeSatResult` は次のメンバを持つ。
 
 ```cpp
 bool satisfiable;
 vector<int> assignment;
 ```
 
-充足不能なら `assignment` は空。
+充足可能なら `assignment[i]` は変数 $i$ の値（0 または 1）である。充足不能なら `assignment` は空。
 
 ## 時間計算量
 
-$N$ を変数数、$M$ を節数とする。
+$N$ を変数の個数、$M$ を節の個数とする。
 
-- `three_sat`: worst-case $O(2^N N(M+1))$
+- `three_sat`: 最悪 $O(2^N N (M + 1))$
 
-各探索nodeでunit propagationと分岐変数選択に $O(NM+N)$ を使う。充足可能な場合の長さ $N$ の割当出力もこの範囲に含む。
+各探索ノードで、単位伝播と分岐変数の選択に $O(NM + N)$ を使う。充足可能な場合に長さ $N$ の割当を出力する時間もこの範囲に含む。
 
 ## 空間計算量
 
-- 再帰ごとの割当コピーと戻り値を含めて $O(N^2+M)$
+- 再帰ごとの割当のコピーと戻り値を含めて $O(N^2 + M)$
 
 ## 注意点
 
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+`n` が負、またはリテラルの変数番号が $[0, n)$ の範囲外の場合は `std::runtime_error` を送出する。記載した計算量には引数の検査と戻り値の構築を含む。探索は再帰で行い、再帰の深さは最大 $N$ である。

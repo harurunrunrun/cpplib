@@ -24,7 +24,7 @@ graph.solve()
 
 - `add_one_cost(v, zero_cost, one_cost)`: 変数 `v` が $0$ のとき `zero_cost`、$1$ のとき `one_cost` を加える。定数 `zero_cost` の加算と `add_one_delta(v, one_cost - zero_cost)` に等しい。
 - `add_one_delta(v, delta)`: 変数 `v` が $1$ のときだけ `delta` を加える。`delta` は負でもよい。
-- `add_pair_cost(i, j, cost00, cost01, cost10, cost11)`: 変数 `i`, `j` の値が $(a, b)$ のとき `cost`$ab$ を加える。劣モジュラ性、すなわち次を満たす必要がある。
+- `add_pair_cost(i, j, cost00, cost01, cost10, cost11)`: 変数 `i`, `j` の値の組が $(0, 0), (0, 1), (1, 0), (1, 1)$ のとき、それぞれ `cost00`, `cost01`, `cost10`, `cost11` を加える。劣モジュラ性、すなわち次を満たす必要がある。
 
 ```text
 cost00 + cost11 <= cost01 + cost10

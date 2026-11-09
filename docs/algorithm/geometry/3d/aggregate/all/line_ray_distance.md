@@ -5,15 +5,15 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/line
 
 ## API
 
-- `distance(first, second)`: `Line3` と `Ray3` の集合間距離を返す。異種型では逆順overloadも提供する。
-- この互換集約ヘッダは `line_ray` 順と `ray_line` 順の両leafを提供する。
+- `distance(first, second)`: `Line3` と `Ray3` の集合としての距離を `long double` で返す。引数の型の順序を入れ替えたオーバーロードも提供する。
+- この互換用集約ヘッダは `(Line3, Ray3)` 版と `(Ray3, Line3)` 版の両方の個別ヘッダを提供する。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 全overload: 時間・追加領域 $O(1)$。
+- 全オーバーロード: 時間・追加空間ともに $O(1)$。
 
 ## 注意点
 
-交差または重なる場合は0を返す。退化した直線・半直線・非有限入力には
-`std::invalid_argument` を送出する。最近点対を局所座標で求め、距離を表現できない
-場合は `std::overflow_error` を送出する。
+- 交差する場合、または重なる場合は 0 を返す。
+- 退化した直線・半直線、非有限な入力には `std::invalid_argument` を送出する。
+- 最近点対を局所座標で求める。距離を表現できない場合は `std::overflow_error` を送出する。

@@ -18,13 +18,11 @@ convex_polygon_maximum_area_triangle(
 );
 ```
 
-返り値の `indices` は `polygon.vertices()` に対する昇順添字である。同面積の
-候補が複数ある場合はそのうち1つを返す。
+戻り値の `indices` は `polygon.vertices()` に対する昇順の添字 3 つ、`doubled_area` は面積の 2 倍である。`area()` で面積、`valid()` で有効な結果かを取得できる。面積が等しい候補が複数ある場合は、`indices` が辞書順で最小のものを返す。
 
 ## 退化入力
 
-頂点数が3未満、または正規化後に3頂点未満となる共線入力では
-`valid() == false`、`doubled_area == 0` を返す。
+頂点数が $3$ 未満の場合（正規化によって $3$ 頂点未満になる共線な入力を含む）は、`valid() == false`、`doubled_area == 0` の結果を返す。
 
 ## 時間計算量
 
@@ -34,12 +32,11 @@ convex_polygon_maximum_area_triangle(
 | --- | --- | --- |
 | `convex_polygon_maximum_area_triangle(polygon)` | $O(N^2)$ | $O(1)$ |
 
-第1・第2頂点を走査し、第3頂点を単調に進めるrotating calipersを用いる。
+第 1・第 2 頂点を全通り走査し、第 3 頂点を単調に進める rotating calipers を用いる。
 
 ## 注意点
 
-入力は `NormalizedConvexPolygon` の契約を満たす必要がある。座標と中間演算は
-有限な `long double` の範囲に収まる必要がある。
+入力は `NormalizedConvexPolygon` の契約を満たす必要がある。座標と中間演算は有限な `long double` の範囲に収まる必要がある。
 
 ## 使用例
 

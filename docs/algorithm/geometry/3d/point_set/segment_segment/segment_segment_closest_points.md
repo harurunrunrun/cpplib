@@ -5,12 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point_set/segment_
 
 ## API
 
-- `closest_points(first, second)`: 二閉線分間の距離を達成する点対を返す。
+- `closest_points(first, second)`: 2 本の閉線分の間の距離を達成する点対を、引数と同じ順の `std::pair<Point3, Point3>` で返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 対応API: 時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-退化線分も一点として扱う。最近点を表せない場合は例外を送出する。
+- 退化した線分（両端点が一致）は 1 点として扱う。
+- 最近点対が複数ある場合は、そのうち 1 組を返す。
+- 非有限な入力には `std::invalid_argument` を、最近点が `long double` で表現できない場合は `std::overflow_error` を送出する。
