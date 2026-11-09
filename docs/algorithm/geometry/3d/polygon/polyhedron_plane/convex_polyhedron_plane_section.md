@@ -5,14 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/polygon/polyhedron
 
 ## API
 
-- `convex_polyhedron_plane_section(polyhedron, plane)`: 平面との共通部分の頂点を平面上の凸順序で返す。空・点・線分も頂点列で表す。
+- `convex_polyhedron_plane_section(polyhedron, plane)`: 凸多面体と平面の共通部分の頂点を、平面上の凸順序（法線方向から見て反時計回り）で `Polygon3` として返す。共通部分が空・1 点・線分の場合も、それぞれ $0$・$1$・$2$ 頂点の列で表す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 辺数を $E$、交点数を $K$ として時間 $O(E+K\log K)$、領域 $O(E+K)$。
+辺数を $E$、交点数を $K$ として、時間 $O(E \log E + K \log K)$、領域 $O(E + K)$。辺の列挙（`convex_polyhedron_edges`）は `std::map` を使うため $O(E \log E)$ かかる。
 
 ## 注意点
 
-ゼロ法線と非有限入力を拒否する。共面する三角形分割対角線は辺列挙時に除外する。
-頂点の側判定、辺交点、重複除去、凸順序はraw法線とexact dyadic predicateで処理するため、
-巨大な平行移動に比べて非常に薄い断面も保持する。
+- 零法線の平面、非有限な入力には `std::invalid_argument` を送出する。
+- 同一平面上にある三角形分割の対角線は、辺の列挙時に除外する。
+- 頂点の側判定と凸順序の判定は、法線を正規化せずに入力の `long double` を exact dyadic 数とみなす厳密演算（側判定は相対許容誤差付き）で行う。このため、巨大な平行移動に比べて非常に薄い断面も保持する。辺との交点は `line_plane_intersection` で求める。

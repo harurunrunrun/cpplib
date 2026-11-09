@@ -5,7 +5,7 @@ documentation_of: ../../../../src/algorithm/graph/traversal/is_undirected_tree.h
 
 無向グラフが木であるかを判定する。
 
-## is_undirected_tree
+## `is_undirected_tree`
 
 ```cpp
 bool is_undirected_tree(
@@ -14,18 +14,19 @@ bool is_undirected_tree(
 );
 ```
 
-頂点数が正で、グラフが連結かつ閉路を持たない場合に限り `true` を返す。
+頂点数が正で、グラフが連結かつ閉路を持たない場合に限り `true` を返す。辺数が頂点数 $-1$ と異なる場合は、端点を検査したうえで直ちに `false` を返す。
 
 ## API別の時間計算量・空間計算量
 
-頂点数を $N$、辺数を $M$、逆 Ackermann 関数を $\alpha$ とする。
+頂点数を $N$、辺数を $M$、逆アッカーマン関数を $\alpha$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `is_undirected_tree` | $O(M\alpha(N))$ | $O(N)$ |
+| `is_undirected_tree` | $O(N+M\alpha(N))$ | $O(N)$ |
 
 ## 注意点
 
 - 頂点番号は `0` 以上 `vertex_count` 未満でなければならない。
 - `vertex_count` が負、または頂点番号が範囲外の場合は `runtime_error` を送出する。
-- 頂点数 `0` のグラフは木ではないものとして `false` を返す。
+- 頂点数 $0$ のグラフは木ではないものとして `false` を返す。
+- 自己ループや多重辺があれば閉路とみなして `false` を返す。

@@ -3,35 +3,39 @@ title: Complement Shortest Path (補グラフ最短路)
 documentation_of: ../../../../../src/algorithm/graph/shortest_path/state_space/complement_shortest_path.hpp
 ---
 
-補グラフ上の単一始点無重み最短路。
+補グラフ上の重みなし単一始点最短路を、補グラフを明示的に作らずに BFS で求める。
 
-`graph[v]` に元のグラフの辺を入れる。補グラフでは、`v != u` かつ `v -> u` が元のグラフに存在しないときに辺がある。
+`graph[v]` には元のグラフの辺を入れる。補グラフには、`v != u` かつ元のグラフに辺 `v -> u` が存在しないときに辺 `v -> u` がある。無向グラフの補グラフを扱う場合は、元のグラフの各辺を両方向に入れる。
 
 ## 関数
 
 ```cpp
-complement_shortest_path(graph, source)
+ComplementShortestPathResult complement_shortest_path(
+    const std::vector<std::vector<int>>& graph,
+    int source
+)
 ```
 
-`ComplementShortestPathResult` は次を持つ。
+戻り値 `ComplementShortestPathResult` は次のメンバをもつ。
 
 ```cpp
-vector<int> dist;
-vector<int> parent;
+std::vector<int> dist;
+std::vector<int> parent;
 ```
 
-到達不能な頂点の `dist` は `-1`。
+- `dist[v]`: 補グラフ上での `source` から `v` への最短距離。到達不能なら `-1`。
+- `parent[v]`: 最短路における `v` の直前の頂点。始点と到達不能な頂点では `-1`。
 
 ## 時間計算量
 
-- `complement_shortest_path`: $O(N^2+M)$
+頂点数を $N$、元のグラフの辺数を $M$ として $O(N + M)$。
 
-元グラフの全辺検査と、未到達頂点列の反復走査、長さ $N$ の結果列構築を含む。
+未到達の頂点の列を走査するとき、未到達のまま残る頂点は取り出した頂点から出る元のグラフの辺に対応するので、走査の総量は $O(N + M)$ に収まる。元のグラフの全辺の検査と長さ $N$ の結果列の構築を含む。
 
 ## 空間計算量
 
-- 戻り値と探索領域を含めて $O(N)$
+戻り値と探索領域を含めて $O(N)$（入力を除く）。
 
 ## 注意点
 
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+`source` や隣接リストの行き先が $[0, N)$ の範囲外なら `runtime_error` を送出する。

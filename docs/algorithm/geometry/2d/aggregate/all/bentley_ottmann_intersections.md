@@ -3,25 +3,20 @@ title: Bentley Ottmann Intersections Aggregator (Bentley–Ottmann交差列挙�
 documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/bentley_ottmann_intersections.hpp
 ---
 
-交差記録型と線分列入力APIをまとめて読み込む後方互換集約ヘッダ。
+交差記録の型と、線分列を入力とする API をまとめて読み込む後方互換の集約ヘッダである。Bentley-Ottmann 法により、交差する線分の組とその交差の形状を列挙する。
 
 ## 構成
 
-| leaf header | 提供するAPI |
+| leaf header | 提供する API |
 | --- | --- |
 | `segment_intersection_record.hpp` | `SegmentIntersectionRecord` |
 | `bentley_ottmann_intersections_segments.hpp` | `bentley_ottmann_intersections(segments)` |
 
-必要なleafだけを直接includeできる。従来の
-`bentley_ottmann_intersections.hpp` は引き続き全APIを提供する。
-
-## 集約されるAPI
-
-Bentley–Ottmann法によって、交差する線分対とその交差形状を列挙する。
+必要な leaf header だけを直接 include することもできる。従来どおり `bentley_ottmann_intersections.hpp` を include すれば全 API を使える。
 
 ## API
 
-~~~cpp
+```cpp
 struct SegmentIntersectionRecord {
     std::size_t first;
     std::size_t second;
@@ -33,29 +28,24 @@ struct SegmentIntersectionRecord {
 std::vector<SegmentIntersectionRecord> bentley_ottmann_intersections(
     const std::vector<Segment>& segments
 );
-~~~
+```
 
-first < second であり、同じ線分対は一度だけ返す。
-一点で交わるとき kind == SEGMENT_INTERSECTION_POINT で
-first_point == second_point となる。正の長さを持つ区間で重なるとき
-kind == SEGMENT_INTERSECTION_SEGMENT で、その両端を
-first_point, second_point に返す。結果は (first, second) の辞書順である。
+`first < second` であり、同じ線分の組は 1 度だけ返す。1 点で交わるときは `kind == SEGMENT_INTERSECTION_POINT` で、`first_point == second_point` となる。正の長さを持つ区間で重なるときは `kind == SEGMENT_INTERSECTION_SEGMENT` で、その両端を `first_point`, `second_point` に返す。結果は `(first, second)` の辞書順に並ぶ。
 
-垂直線分、長さ0の線分、端点共有、多数の線分が同一点で交わる場合、
-および同一直線上の重なりを扱う。
+垂直な線分、長さ $0$ の線分、端点の共有、多数の線分が同一点で交わる場合、同一直線上の重なりも扱う。
 
-## API別の時間計算量・空間計算量
+## 計算量
 
-$N$ を線分数、$K$ を交差する線分対数とする。
+$N$ を線分の本数、$K$ を交差する線分の組の個数とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| bentley_ottmann_intersections(segments) | $O((N+K)\log N)$ | $O(N+K)$ |
+| `bentley_ottmann_intersections(segments)` | $O((N+K)\log N)$ | $O(N+K)$ |
 
-shear方向の選択は $O(N)$ であり、全線分対の総当たりは行わない。
+せん断（shear）方向の選択は $O(N)$ であり、全線分の組の総当たりは行わない。
 
 ## 注意点
 
-座標は有限でなければならず、shear変換と幾何演算が有限な long double
-の範囲を超える入力には std::invalid_argument または
-std::overflow_error を送出する。交差判定は2次元幾何共通の許容誤差を用いる。
+- 座標は有限でなければならない。せん断変換や幾何演算が有限な `long double` の範囲を超える入力には、`std::invalid_argument` または `std::overflow_error` を送出する。
+- せん断方向の選択に使える線分数を超える場合は `std::length_error` を送出する。
+- 交差判定には 2 次元幾何で共通の許容誤差を用いる。

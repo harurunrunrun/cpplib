@@ -3,7 +3,7 @@ title: Lexicographically Smallest Topological Order (辞書順最小トポロジ
 documentation_of: ../../../../src/algorithm/graph/traversal/lexicographically_smallest_topological_order.hpp
 ---
 
-## lexicographically_smallest_topological_order
+## `lexicographically_smallest_topological_order`
 
 ```cpp
 optional<vector<int>> lexicographically_smallest_topological_order(
@@ -11,13 +11,13 @@ optional<vector<int>> lexicographically_smallest_topological_order(
 )
 ```
 
-## 引数
+### 引数
 
-- `graph`: 0-indexed頂点の有向隣接リスト。
+- `graph`: 頂点番号が 0-indexed の有向グラフの隣接リスト
 
-## 戻り値
+### 戻り値
 
-辞書順最小のトポロジカル順序。cycleがあれば `nullopt`。
+辞書順最小のトポロジカル順序を返す。閉路があれば `nullopt` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -25,8 +25,9 @@ optional<vector<int>> lexicographically_smallest_topological_order(
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `lexicographically_smallest_topological_order` | $O((N+M)\log(N+1))$ | $O(N)$ |
+| `lexicographically_smallest_topological_order` | $O(N\log(N+1)+M)$ | $O(N)$ |
 
 ## 注意点
 
 - 各辺の行き先は $[0,N)$ でなければならない。違反時は `runtime_error` を送出する。
+- 頂点数が `int` に収まらない場合は `length_error` を送出する。

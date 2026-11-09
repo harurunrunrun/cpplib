@@ -9,25 +9,31 @@ $$
 \mathrm{next}[i]=\min_{0\le j<i}\{\mathrm{previous}[j]+\mathrm{cost}(j,i)\}
 $$
 
-の最適な $j$ が $i$ に関して単調な場合に、1層を分割統治で計算する。
+の最適な $j$ が $i$ に関して単調非減少である場合に、1 層分を分割統治で計算する。
 
 ## API
 
 ```cpp
 template<class Value, class Cost>
 DivideAndConquerDPResult<Value> divide_and_conquer_dp_layer(
-    const vector<Value>& previous,
+    const std::vector<Value>& previous,
     Cost cost,
     Value infinity
 );
 ```
 
-`value[i]` と最左の最適遷移元 `optimum[i]` を返す。添字 `0` は遷移対象外で、`infinity` と `-1` のままである。
+`value[i]` と、最適な遷移元のうち最も左のもの `optimum[i]` を返す。添字 $0$ は遷移の対象外で、`infinity` と `-1` のままである。
 
 ## 時間計算量
 
-$N=previous.size()-1$ として、`cost` 評価が $O(1)$ なら $O(N\log N)$ 時間、$O(N+\log N)$ 空間。
+$N$ を `previous.size() - 1` として、`cost` の評価が $O(1)$ なら $O(N\log N)$ である。
+
+## 空間計算量
+
+$O(N)$（再帰の深さ $O(\log N)$ を含む）。
 
 ## 注意点
 
-最適遷移元の単調性を呼出側が保証する。空の `previous` では `runtime_error` を送出する。加算が `Value` の範囲内であることを前提とする。
+- 最適な遷移元の単調性は呼び出し側が保証する。
+- 空の `previous` では `std::runtime_error` を送出する。
+- `previous[j] + cost(j, i)` の加算が `Value` の範囲に収まることを前提とする（`previous` に `infinity` が含まれる場合も加算される）。

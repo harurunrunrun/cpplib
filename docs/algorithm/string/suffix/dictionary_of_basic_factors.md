@@ -3,24 +3,29 @@ title: Dictionary of Basic Factors (基本因子辞書)
 documentation_of: ../../../../src/algorithm/string/suffix/dictionary_of_basic_factors.hpp
 ---
 
-長さ $2^k$ の全部分文字列を同値類IDで管理する。任意長の部分文字列は先頭・末尾の
-2基本因子で比較でき、2接尾辞のLCEは大きい基本因子から貪欲に延長して求める。
+長さ $2^k$ のすべての部分文字列（基本因子）に同値類 ID を割り当てて管理する。
+任意長の部分文字列は先頭と末尾の 2 つの基本因子で比較でき、2 つの接尾辞の LCE は大きい基本因子から貪欲に延長して求める。
 
 ## API
 
 ```cpp
-DictionaryOfBasicFactors(const std::string& text)
+explicit DictionaryOfBasicFactors(const std::string& text)
 int size() const
 int rank(int position, int level) const
 bool equal(int first, int second, int length) const
 int lce(int first, int second) const
 ```
 
-`rank(position,level)` は長さ $2^{level}$ の因子IDを返す。範囲外では例外を送出する。
+- `size()` は `text` の長さを返す。
+- `rank(position, level)` は位置 `position` から始まる長さ $2^{\mathrm{level}}$ の因子の ID を返す。ID は同じ長さの因子の間で辞書順を保つ。`level` または `position` が範囲外の場合は `std::runtime_error` を送出する。
+- `equal(first, second, length)` は `text.substr(first, length)` と `text.substr(second, length)` が等しいかを返す。`length < 0` または部分文字列が範囲外の場合は `std::runtime_error` を送出する。`length == 0` なら `true` を返す。
+- `lce(first, second)` は位置 `first` と `second` から始まる接尾辞の最長共通接頭辞長を返す。`first`, `second` は $[0, N]$ の範囲でなければならず、範囲外では `std::runtime_error` を送出する。
 
-## API別の時間計算量・空間計算量
+各文字は `unsigned char` として扱う。
 
-$N=|text|$ とする。
+## API 別の時間計算量・空間計算量
+
+$N$ を `text` の長さとする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -31,4 +36,4 @@ $N=|text|$ とする。
 
 ## 注意点
 
-空文字列ではlevelを持たず、`rank` は呼び出せない。
+空文字列では level を 1 つも持たないため、`rank` は呼び出せない（常に例外になる）。

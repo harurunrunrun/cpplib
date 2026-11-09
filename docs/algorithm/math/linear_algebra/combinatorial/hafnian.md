@@ -11,6 +11,16 @@ $$
 
 を求める。ここで $M$ は頂点集合全体の完全マッチングを走る。対角成分は参照しない。
 
+## 使い方
+
+```cpp
+using Mint = Modint998244353;
+std::vector<std::vector<Mint>> values{ {0, 3}, {3, 0} };
+auto from_vector = hafnian(values);
+Matrix<Mint> matrix(values);
+auto from_matrix = hafnian(matrix);
+```
+
 ## `hafnian(vector)`
 
 ```cpp
@@ -19,17 +29,17 @@ T answer = hafnian(matrix);
 
 `std::vector<std::vector<T>>` で与えた対称行列のハフニアンを返す。行列が正方行列でない場合、次数が奇数の場合、または対称でない場合は `std::invalid_argument` を送出する。$0\times0$ 行列に対しては `T(1)` を返す。
 
-要素型 `T` には零元・単位元、加減算、乗算、等値比較が必要である。
+要素型 `T` には零元・単位元、加減算、乗算、等値比較が必要である（除算は使わない）。
 
 ## `hafnian(Matrix)`
 
 ```cpp
-T answer = hafnian(fixed_capacity_matrix);
+T answer = hafnian(matrix);
 ```
 
-`Matrix<T, MAX_ROW, MAX_COL>` 用のオーバーロード。実際の行数と列数が一致しない場合は `std::invalid_argument` を送出する。
+`Matrix<T, MAX_ROW, MAX_COL>` 用のオーバーロード。容量を省略した可変長の `Matrix<T>` も、容量を明示した固定長の `Matrix<T, R, C>` も渡せる。実際の行数と列数が一致しない場合は `std::invalid_argument` を送出する。内部で `std::vector` の行列にコピーしてから計算する。
 
-## API別の時間計算量・空間計算量
+## 計算量
 
 $N$ を行列の次数とする。
 
@@ -38,24 +48,9 @@ $N$ を行列の次数とする。
 | `hafnian(vector)` | $O(N^2 2^{N/2})$ | $O(N2^{N/2})$ |
 | `hafnian(Matrix)` | $O(N^2 2^{N/2})$ | $O(N2^{N/2}+N^2)$ |
 
-固定した頂点対を含む一閉路の重みを bit DP で求め、集合べき級数の exponential を subset convolution で計算する。
+頂点を 2 個ずつ組にし、固定した組を含む 1 つの閉路（組を交互にたどる閉路）の重みを bit DP で求め、集合冪級数の指数関数を subset convolution で計算する。
 
 ## 注意点
 
-法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
-
-## 容量を省略する可変長版
-
-~~~cpp
-using Mint = Modint998244353;
-std::vector<std::vector<Mint>> values{ {0, 3}, {3, 0} };
-auto from_vector = hafnian(values);
-Matrix<Mint> matrix(values);
-auto from_matrix = hafnian(matrix);
-~~~
-
-`vector` overload では容量のテンプレート引数を使わない。
-`Matrix<Mint>` も実寸だけの `vector` 保存領域を使い、同じ関数へ渡せる。
-実行時の次数を $N$、高速行列積の指数を $\omega=\log_2 7$ とすると、
-時間計算量は $O(N^2 2^{N/2})$、追加空間計算量は $O(N2^{N/2}+N^2)$。
-固定容量を明示する `Matrix<Mint, R, C>` も同じ header の overload で利用できる。
+- 要素型の演算でオーバーフローしないことは呼び出し側が保証する（剰余環 `Modint` などを想定する）。
+- $N/2$ が `size_t` のビット幅以上になる場合は `std::length_error` を送出するが、実用上は $N$ が 40 程度までが現実的な範囲である。

@@ -30,7 +30,7 @@ struct SegmentIntersectionRecord {
 ## 注意点
 
 `kind == SEGMENT_INTERSECTION_POINT` なら両点は同じ幾何的な点である。
-`kind == SEGMENT_INTERSECTION_SEGMENT` なら両点はライブラリの標準の順序（`Point::operator<`）で並ぶ。
+`kind == SEGMENT_INTERSECTION_SEGMENT` なら両点はライブラリの標準の順序で並ぶ。
 
 ## 使用例
 
