@@ -3,32 +3,36 @@ title: Convex Polyhedron Diameter (凸多面体の直径)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/convex_polyhedron_diameter.hpp
 ---
 
-このheaderは全頂点対走査版とAABB分枝限定版のleafをまとめる後方互換aggregatorである。
-新規コードでは必要な計算法のleafだけをincludeできる。
+凸多面体のユークリッド直径を、直径を達成する頂点対とともに求める。
 
-凸多面体のEuclidean直径を、直径を達成する頂点対とともに求める。
+このヘッダは `convex_polyhedron_diameter_default.hpp` と `convex_polyhedron_diameter_aabb_branch_and_bound.hpp` をまとめて include する、後方互換のための集約ヘッダである。
 
 ## API
 
-- `convex_polyhedron_diameter(polyhedron)`: 全頂点対を調べ、最遠頂点対の添字と距離を
-  返す。頂点が2個未満なら `std::nullopt`。
-- `convex_polyhedron_diameter_aabb_branch_and_bound(polyhedron)`: 頂点集合のAABB木を
-  作り、現在の直径を超えられない部分木対を枝刈りして同じ結果を正確に返す。
+```cpp
+std::optional<PointSetDiameter3DResult> convex_polyhedron_diameter(const ConvexPolyhedron3& polyhedron);
+std::optional<PointSetDiameter3DResult> convex_polyhedron_diameter_aabb_branch_and_bound(const ConvexPolyhedron3& polyhedron);
+```
 
-## API別の時間計算量・空間計算量
+- `convex_polyhedron_diameter(polyhedron)`: 頂点集合 `polyhedron.vertices` に `point_set_diameter_3d` を適用し、最遠頂点対の添字 `first`, `second`（`first < second`）と距離 `distance` を返す。頂点が 2 個未満なら `std::nullopt` を返す。
+- `convex_polyhedron_diameter_aabb_branch_and_bound(polyhedron)`: 頂点集合の AABB 木を作り、現在の直径を超えられない部分木の対を枝刈りして、厳密な結果を返す。
+
+現在の実装では `point_set_diameter_3d` 自体が AABB 分枝限定法を呼ぶため、2 つの API は同一の処理を行い、同一の結果を返す。
+
+## API 別の時間計算量・空間計算量
+
+頂点数を $V$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `convex_polyhedron_diameter(polyhedron)` | $O(V^2)$ | $O(1)$ |
-| `convex_polyhedron_diameter_aabb_branch_and_bound(polyhedron)` | 平均前処理 $O(V\log V)$ と探索 $O(R+C)$、最悪 $O(V^2)$ | $O(V)$ |
+| `convex_polyhedron_diameter(polyhedron)` | 平均前処理 $O(V \log V)$ と探索 $O(R+C)$、最悪 $O(V^2)$ | $O(V)$ |
+| `convex_polyhedron_diameter_aabb_branch_and_bound(polyhedron)` | 平均前処理 $O(V \log V)$ と探索 $O(R+C)$、最悪 $O(V^2)$ | $O(V)$ |
 
-$R$ は訪れたAABBノード対数、$C$ は葉で実比較した頂点対数である。細長い形状や
-空間的に分離した頂点群では枝刈りが効くが、全頂点が直径候補になり得る形状では
-最悪二乗時間になる。
+$R$ は訪れた AABB ノード対の数、$C$ は葉で実際に比較した頂点対の数である。細長い形状や空間的に分離した頂点群では枝刈りがよく効くが、すべての頂点が直径の候補になり得る形状では最悪で二乗時間になる。
 
 ## 注意点
 
 - 凸多面体の直径は頂点対で達成されるため、面や辺の内部を別に調べる必要はない。
-- 同距離ならindex対が辞書順最小のものを返す。
-- 非有限頂点を拒否し、`std::invalid_argument` を送出する。
-- AABB版も近似を行わず、単純版と同じ直径とindex対を返す。
+- 距離が等しい対が複数あれば、添字対が辞書順最小のものを返す。
+- 非有限な頂点があれば `std::invalid_argument` を送出する。
+- 近似は行わない。

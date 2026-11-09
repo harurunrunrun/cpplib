@@ -3,7 +3,7 @@ title: Sparse Undirected Component Count (疎頂点無向グラフの連結成�
 documentation_of: ../../../../../src/algorithm/graph/connectivity/components/sparse_undirected_component_count.hpp
 ---
 
-頂点数に対して辺に現れる頂点が少ない無向グラフの連結成分数を、出現頂点だけを保持して求める。
+頂点数に比べて辺に現れる頂点が少ない無向グラフの連結成分数を、辺に現れる頂点だけを座標圧縮して保持することで求める。
 
 ## sparse_undirected_component_count
 
@@ -16,8 +16,8 @@ long long sparse_undirected_component_count(
 
 ## 引数
 
-- `vertex_count`: 頂点数。頂点番号は `long long` で扱う。
-- `edges`: 無向辺列。
+- `vertex_count`: 頂点数 $N$。頂点番号は `long long` で扱う。
+- `edges`: 無向辺の列。
 
 ## 戻り値
 
@@ -29,10 +29,10 @@ long long sparse_undirected_component_count(
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `sparse_undirected_component_count` | $O(M\log(M+1))$ | $O(M)$ |
+| `sparse_undirected_component_count` | $O(M \log (M + 1))$ | $O(M)$ |
 
 ## 注意点
 
-- `vertex_count` は非負、各端点は $[0,\mathtt{vertex\_count})$ でなければならない。違反時は `runtime_error` を送出する。
+- `vertex_count` は非負、各端点は $[0, N)$ でなければならない。違反時は `std::runtime_error` を送出する。
 - 自己ループと多重辺は連結成分数を変えない。
-- $O(N)$ の頂点配列を確保しないため、`vertex_count` が大きくても辺数に比例するメモリだけを使用する。
+- 長さ $N$ の配列を確保しないため、`vertex_count` が大きくても辺数に比例するメモリしか使わない。

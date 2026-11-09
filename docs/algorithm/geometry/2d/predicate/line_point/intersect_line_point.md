@@ -7,7 +7,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/line_poi
 
 ## API
 
-- `intersect(line, point)`: `point` が `line` 上にあれば `true` を返す。
+- `bool intersect(const Line& line, const Point& point)`: `point` が `line` 上にあれば `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -15,4 +15,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/line_poi
 
 ## 注意点
 
-`line.a == line.b` の退化直線には `std::invalid_argument` を送出する。判定には方向のscaleを考慮した許容誤差を用いる。
+- 方向ベクトル `line.b - line.a` の長さが `GEOMETRY_EPS` 以下の退化直線には `std::invalid_argument` を送出する。
+- 判定には、方向ベクトルの長さを考慮した許容誤差を用いる。

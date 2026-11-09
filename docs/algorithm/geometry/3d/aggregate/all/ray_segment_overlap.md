@@ -5,13 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/ray_
 
 ## API
 
-- `overlap(ray, segment)`: `Ray3` と `Segment3` の共通部分が正の長さを持つなら `true` を返す。
-- `overlap(segment, ray)`: 引数順を逆にした同じ判定を行う。
+- `overlap(ray, segment)`: `Ray3` と `Segment3` の共通部分が正の長さを持つ（共通部分が線分になる）なら `true` を返す。
+- `overlap(segment, ray)`: 引数の順を逆にした同じ判定を行う。
 
 ## API別の時間計算量・空間計算量
 
-- 全overload: 時間・追加領域 $O(1)$。
+- 全オーバーロード: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-退化線分や1点だけの接触には `false` を返す。退化半直線なら `std::invalid_argument` を送出する。
+退化した線分や、1 点だけで接する場合には `false` を返す。退化した半直線には `std::invalid_argument` を送出する。

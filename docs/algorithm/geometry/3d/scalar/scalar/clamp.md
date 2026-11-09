@@ -9,12 +9,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/scalar/clam
 long double clamp(value, lower_bound, upper_bound)
 ```
 
-有限な値を閉区間 `[lower_bound, upper_bound]` へクランプする。
+有限な値 `value` を閉区間 `[lower_bound, upper_bound]` にクランプする。
 
 ## API別の時間計算量・空間計算量
 
-時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-値または境界が非有限、あるいは下限が上限より大きい場合は `std::invalid_argument`。`NaN` を境界値へ黙って変換しない。丸め誤差で `acos` の引数などが僅かに範囲外へ出た場合の構成計算に用いる。
+- 値または境界が非有限の場合や、下限が上限より大きい場合は `std::invalid_argument` を送出する。`NaN` を黙って境界値に変換することはない。
+- 丸め誤差で `acos` の引数などがわずかに範囲外へ出る場合の補正に用いる。

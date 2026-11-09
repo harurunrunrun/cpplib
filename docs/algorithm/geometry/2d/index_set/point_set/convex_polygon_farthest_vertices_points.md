@@ -13,8 +13,8 @@ std::vector<std::size_t> convex_polygon_farthest_vertices(
 );
 ```
 
-入力を `NormalizedConvexPolygon` に変換して正規化済みoverloadへ委譲する。
-返す添字は正規化後の頂点列に対する。
+入力を `NormalizedConvexPolygon` に変換し、正規化済み多角形版に処理を委ねる。
+返す列の添字・値はどちらも、正規化後の頂点列 `NormalizedConvexPolygon::vertices()` に対するものである。
 
 ## 時間計算量
 
@@ -22,9 +22,9 @@ std::vector<std::size_t> convex_polygon_farthest_vertices(
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| 頂点列overload | $O(N)$ | $O(N)$ |
+| 頂点列版 | $O(N)$ | $O(N)$ |
 
 ## 注意点
 
-入力は凸多角形の弱凸な周回列でなければならない。非凸入力には
-`std::invalid_argument` を送出する。重複点と同一直線上の中間点は正規化で除かれる。
+入力は凸多角形の弱凸な周回列でなければならない。非凸な入力には `std::invalid_argument` を送出する。
+重複点と同一直線上の中間点は正規化で取り除かれる。入力位置ごとの結果が必要な場合は `integer_convex_farthest_neighbors` を使う。

@@ -5,12 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/polyhedron/
 
 ## API
 
-- `convex_polyhedron_signed_volume(polyhedron)`: 向き付き三角形面と基準点が作る四面体の体積和を返す。外向き面では正になる。
+- `convex_polyhedron_signed_volume(polyhedron)`: 各向き付き三角形面と基準点（先頭頂点）が作る四面体の符号付き体積の和を返す。面が外向きなら正になる。
 
 ## API別の時間計算量・空間計算量
 
-- 頂点数を $V$、面数を $F$ として時間 $O(V+F)$、追加領域 $O(1)$。
+- 頂点数を $V$、面数を $F$ として、時間 $O(V + F)$、追加領域 $O(1)$。
 
 ## 注意点
 
-閉じた一貫した向きの面を前提とする。アフィン次元3未満は0を返し、overflowは `std::overflow_error` とする。
+- 面が閉じていて、向きが一貫していることを前提とする。
+- アフィン次元が 3 未満の場合や頂点が空の場合は $0$ を返す。
+- 非有限な頂点には `std::invalid_argument` を、範囲外の頂点添字には `std::out_of_range` を、結果のオーバーフローには `std::overflow_error` を送出する。

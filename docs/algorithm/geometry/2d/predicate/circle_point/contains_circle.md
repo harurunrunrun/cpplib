@@ -5,11 +5,11 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/circle_p
 
 ## API
 
-- `contains_circle(circle, point)`: 点が閉円盤に含まれるか判定する。
+- `bool contains_circle(circle, point)`: 点が閉円盤に含まれるか判定する。
 
 ## 引数
 
-`circle` は中心と非負半径を持つ円、`point` は判定点である。
+`circle` は中心と非負の半径を持つ円、`point` は判定する点である。
 
 ## 戻り値
 
@@ -17,8 +17,9 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/circle_p
 
 ## API別の時間計算量・空間計算量
 
-時間・追加領域 $O(1)$。
+- `contains_circle`: 時間・追加領域 $O(1)$。
 
 ## 注意点
 
-負半径には `std::invalid_argument` を送出し、境界判定には許容誤差を用いる。
+- 非有限値または負の半径には `std::invalid_argument` を送出する。
+- 中心からの距離と半径の差を絶対許容誤差 `GEOMETRY_EPS` で比較し、境界を判定する。

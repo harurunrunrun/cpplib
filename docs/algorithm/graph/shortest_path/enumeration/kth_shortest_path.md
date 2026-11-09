@@ -3,52 +3,59 @@ title: K-th Shortest Path (K番目最短路)
 documentation_of: ../../../../../src/algorithm/graph/shortest_path/enumeration/kth_shortest_path.hpp
 ---
 
-非負重み有向グラフで、単純パスを距離の小さい順に列挙する。
+非負重みの有向グラフで、`source` から `target` への単純パスを距離の小さい順に列挙する（Yen のアルゴリズム）。
 
-同じ頂点列は1つのパスとして扱う。
+同じ頂点列は 1 つのパスとして扱う（多重辺があっても、頂点列が同じなら区別しない）。
 
 ## 関数
 
 ```cpp
-kth_shortest_paths<T>(graph, source, target, k, inf)
+template <class T>
+std::vector<KthShortestPathResult<T>> kth_shortest_paths(
+    const std::vector<std::vector<KthShortestPathEdge<T>>>& graph,
+    int source,
+    int target,
+    int k,
+    T inf = std::numeric_limits<T>::max() / 4
+)
 ```
 
-`graph[v]` は `KthShortestPathEdge<T>{to, cost}` の列。
+`graph[v]` は `KthShortestPathEdge<T>{to, cost}` の列で、頂点 `v` から出る辺を表す。
 
-戻り値は高々 `k` 個の `KthShortestPathResult<T>`。
+戻り値は距離の小さい順に並んだ高々 `k` 個の `KthShortestPathResult<T>` であり、各要素は次のメンバをもつ。
 
 ```cpp
 T cost;
-vector<int> vertices;
-vector<T> prefix_cost;
+std::vector<int> vertices;
+std::vector<T> prefix_cost;
 ```
 
-`prefix_cost[i]` は `source` から `vertices[i]` までの距離。
+- `cost`: パスの距離。
+- `vertices`: パスの頂点列（両端を含む）。
+- `prefix_cost[i]`: `source` から `vertices[i]` までの距離。`vertices` と同じ長さである。
 
-`inf` は内部の初期値であり、到達可能なパスの距離が `inf` 以上でも扱える。
-
-パスの距離と辺コストの加算結果は `T` で表現できる必要がある。
+`inf` は内部の初期値にすぎず、到達可能なパスの距離が `inf` 以上でも正しく扱える。
 
 ## 時間計算量
 
-Yen法。受理済みpathは頂点列のprefix trieで管理し、各spurで全受理済みpathを比較しない。
+受理済みのパスは頂点列の接頭辞トライで管理し、各スパー（分岐点）で受理済みの全パスと比較することはしない。
 
-受理したpath長の総和を $P$、生成した候補path数を $Q$ とする。$P,Q\leq KN$。
+受理したパスの長さの総和を $P$、生成した候補パスの個数を $Q$ とする。$P, Q \le KN$ である。
 
-- `kth_shortest_paths` 内のshortest path探索: $O(P(M+N)\log(M+N+1))$
-- prefix trieの構築・走査と禁止辺判定: $O((P+KM)\log(P+1))$
-- 候補heapと重複除外集合: $O(QN\log(Q+1))$
-- 全体: $O(P(M+N)\log(M+N+1)+(P+KM)\log(P+1)+QN\log(Q+1))$
+- 最短路探索: $O(P(M + N)\log(M + N + 1))$
+- 接頭辞トライの構築・走査と禁止辺の判定: $O((P + KM)\log(P + 1))$
+- 候補のヒープと重複除外の集合: $O(QN\log(Q + 1))$
+- 全体: $O(P(M + N)\log(M + N + 1) + (P + KM)\log(P + 1) + QN\log(Q + 1))$
 
-禁止nextのtrie探索はspur頂点から出る辺だけで行う。pathは単純なので、全受理path・全spurにわたる対象辺数は $O(KM)$。戻り値の出力要素数は $P$。
+禁止する次の頂点のトライ探索は、スパー頂点から出る辺についてだけ行う。パスは単純なので、全受理パス・全スパーにわたる対象の辺の本数は $O(KM)$ である。戻り値の要素数の総和は $P$ である。
 
 ## 空間計算量
 
-- prefix trieは $O(P)$
-- 戻り値、候補path、重複除外集合を含めて $O(P+QN)$
+- 接頭辞トライ: $O(P)$
+- 戻り値、候補パス、重複除外の集合を含めて $O(P + QN)$
 
 ## 注意点
 
-`source`, `target`, 辺の行き先は頂点範囲内、`k` と辺costは非負とする。戻り値は高々 `k` 個の単純pathで、各 `vertices` と `prefix_cost` の長さは等しい。違反時は `runtime_error`。
-
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+- `source`, `target` と辺の行き先は $[0, N)$ の範囲内、`k` と辺の重みは非負でなければならない。違反時は `runtime_error` を送出する。
+- `source == target` のときは長さ 0 のパス 1 本だけを返す（`k >= 1` の場合）。
+- パスの距離と辺の重みの加算結果は `T` で表現できなければならない。

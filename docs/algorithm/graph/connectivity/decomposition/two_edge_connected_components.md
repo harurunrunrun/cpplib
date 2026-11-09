@@ -3,17 +3,18 @@ title: Two Edge Connected Components (二重辺連結成分分解) [two_edge_con
 documentation_of: ../../../../../src/algorithm/graph/connectivity/decomposition/two_edge_connected_components.hpp
 ---
 
-無向グラフの二重辺連結成分分解。
-
-橋を取り除いた後の連結成分を求める。
+無向グラフの二重辺連結成分分解。橋を取り除いた後の連結成分を求める。
 
 ## 関数
 
 ```cpp
-two_edge_connected_components(n, edges)
+TwoEdgeConnectedComponentsResult two_edge_connected_components(
+    int n,
+    const vector<pair<int, int>>& edges
+)
 ```
 
-`TwoEdgeConnectedComponentsResult` は次を持つ。
+`TwoEdgeConnectedComponentsResult` は次のメンバを持つ。
 
 ```cpp
 int count;
@@ -22,22 +23,27 @@ vector<vector<int>> groups;
 vector<int> bridges;
 ```
 
-`bridges` には入力辺の id が入る。
+- `count`: 成分の個数。
+- `id[v]`: 頂点 `v` が属する成分の番号。
+- `groups[c]`: 成分 `c` の頂点列。
+- `bridges`: 橋である入力辺の ID を昇順に並べたもの。
 
 ## 時間計算量
 
-$N$ を頂点数、$M$ を辺数とする。
+頂点数を $N$、辺数を $M$、関節点数を $A$、橋の本数を $B$ とする。
 
-- lowlinkと成分DFS: $O(N+M)$
-- 橋IDの整列: $O(M\log(M+1))$
-- `two_edge_connected_components` 全体: $O(N+M\log(M+1))$
+- Lowlink と成分を求める DFS: $O(N + M)$
+- 関節点と橋の ID のソート（`lowlink` 内）: $O(A \log (A + 1) + B \log (B + 1))$
+- `two_edge_connected_components` 全体: $O(N + M + A \log (A + 1) + B \log (B + 1))$
 
 全頂点を `groups` へ出力する時間を含む。
 
 ## 空間計算量
 
-- 戻り値と隣接リストを含めて $O(N+M)$
+- 戻り値と隣接リストを含めて $O(N + M)$
 
 ## 注意点
 
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+- `n` は非負、辺の端点は $[0, n)$ でなければならない。違反時は `std::runtime_error` を送出する。記載した計算量には引数の検査と戻り値の構築を含む。
+- 多重辺を扱える。
+- 内部で呼ぶ `lowlink` の DFS は再帰で実装されており、再帰の深さは最大 $N$ になる。

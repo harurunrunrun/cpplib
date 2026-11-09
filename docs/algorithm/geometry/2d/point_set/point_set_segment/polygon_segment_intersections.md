@@ -5,22 +5,20 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point_set/point_se
 
 ## API
 
-`vector<Point> polygon_segment_intersections(polygon, segment)`
+`std::vector<Point> polygon_segment_intersections(polygon, segment)`
 
 ## 引数
 
-多角形の周回順頂点列と線分を渡す。
+多角形の頂点を周回順に並べた列 `polygon` と、線分 `segment` を渡す。
 
 ## 戻り値
 
-境界との交点を線分始点から終点方向の順に重複なく返す。辺との重なりは共通部分の端点を含める。
+多角形の境界と線分の交点を、`segment.a` から `segment.b` へ向かう順に重複なく返す。辺と線分が重なる場合は、共通部分の両端点を含める。
 
 ## API別の時間計算量・空間計算量
 
-- `polygon_segment_intersections`: 頂点数を $N$、境界辺から得られる交点候補数を
-  $K$ として、時間 $O(N+K\log K)$、追加領域 $O(K)$。重なり区間の端点も
-  候補へ加え、線分parameter順のsort後に隣接重複を除く。
+- `polygon_segment_intersections`: 頂点数を $N$、境界の辺から得られる交点候補の個数を $K$ として、時間 $O(N + K \log K)$、追加領域 $O(K)$。重なり区間の端点も候補に加え、線分上のパラメータ順にソートしてから隣接する重複を除く。
 
 ## 注意点
 
-退化線分では、その点が境界上なら1点を返す。
+退化線分（長さ $0$ の線分）では、その点が境界上にあれば 1 点を返す。

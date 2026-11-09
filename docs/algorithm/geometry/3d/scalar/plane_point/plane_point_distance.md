@@ -9,8 +9,9 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/plane_point
 
 ## API別の時間計算量・空間計算量
 
-- `distance`: 時間・追加領域 $O(1)$。
+- `distance`: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-平面法線は零ベクトルであってはならない。
+- `signed_distance(plane, point)` の絶対値を返すため、前提と例外は `signed_distance` と同じである。
+- 平面の法線は零ベクトルであってはならず、入力は有限でなければならない。違反時は `std::invalid_argument` を送出する。

@@ -1,13 +1,13 @@
 ---
-title: Vector Orthogonality (ベクトル直交判定)
+title: Vector Orthogonality (ベクトルの直交判定)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/point_point/orthogonal_vectors.hpp
 ---
 
-2本の二次元ベクトルが直交するか判定する。
+2 本の二次元ベクトルが直交するか判定する。
 
 ## API
 
-- `orthogonal(left, right)`: ベクトル `left` と `right` が直交すれば `true` を返す。
+- `bool orthogonal(const Point& left, const Point& right)`: ベクトル `left` と `right` が直交すれば `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -15,4 +15,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/point_po
 
 ## 注意点
 
-長さの積をscaleとする許容誤差付き内積判定を行う。零ベクトルを含む場合は互換性のため `true` を返す。
+- 長さの積をスケールとする許容誤差付きで内積が $0$ かを判定する。
+- 長さが `GEOMETRY_EPS` 以下の零ベクトルを含む場合は、互換性のため `true` を返す。

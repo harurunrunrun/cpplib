@@ -8,12 +8,12 @@ documentation_of: ../../../../../src/algorithm/graph/connectivity/decomposition/
 ## 関数
 
 ```cpp
-lowlink(n, edges)
+LowlinkResult lowlink(int n, const vector<pair<int, int>>& edges)
 ```
 
 `edges` は無向辺の列。多重辺を扱える。
 
-`LowlinkResult` は次を持つ。
+`LowlinkResult` は次のメンバを持つ。
 
 ```cpp
 vector<int> ord;
@@ -22,20 +22,24 @@ vector<int> articulation;
 vector<int> bridges;
 ```
 
-`bridges` には入力辺の id が入る。
+- `ord[v]`: DFS で頂点 `v` を訪れた順番（行きがけ順）。
+- `low[v]`: `v` から DFS 木の辺を下り、後退辺を高々 1 本使って到達できる頂点の `ord` の最小値。
+- `articulation`: 関節点を昇順に並べたもの。
+- `bridges`: 橋である入力辺の ID を昇順に並べたもの。
 
 ## 時間計算量
 
-$A$ を関節点数、$B$ を橋数とする。
+頂点数を $N$、辺数を $M$、関節点数を $A$、橋の本数を $B$ とする。
 
-- DFSと隣接リスト構築: $O(N+M)$
-- 出力IDの整列: $O(A\log(A+1)+B\log(B+1))$
-- `lowlink` 全体: $O(N+M+A\log(A+1)+B\log(B+1))$
+- DFS と隣接リストの構築: $O(N + M)$
+- 出力 ID のソート: $O(A \log (A + 1) + B \log (B + 1))$
+- `lowlink` 全体: $O(N + M + A \log (A + 1) + B \log (B + 1))$
 
 ## 空間計算量
 
-- 戻り値と隣接リストを含めて $O(N+M)$
+- 戻り値と隣接リストを含めて $O(N + M)$
 
 ## 注意点
 
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+- `n` は非負、辺の端点は $[0, n)$ でなければならない。違反時は `std::runtime_error` を送出する。記載した計算量には引数の検査と戻り値の構築を含む。
+- DFS は再帰で実装されており、再帰の深さは最大 $N$ になる。

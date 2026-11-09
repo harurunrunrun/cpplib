@@ -3,7 +3,7 @@ title: Convex Polygon Diameter for Normalized Polygon (正規化済み凸多角�
 documentation_of: ../../../../../../src/algorithm/geometry/2d/result/polygon/convex_polygon_diameter_normalized.hpp
 ---
 
-正規化済み凸多角形の最遠点対と直径を求める。
+正規化済みの凸多角形について、最遠点対と直径を求める。
 
 ```cpp
 #include "../../../../../../src/algorithm/geometry/2d/result/polygon/convex_polygon_diameter_normalized.hpp"
@@ -17,15 +17,13 @@ ConvexPolygonDiameterResult convex_polygon_diameter(
 );
 ```
 
-返り値の `first`, `second` は `polygon.vertices()` に対する添字であり、
-`squared_distance` はその2点間の距離の二乗である。複数の最遠点対がある場合は
-そのうち1組を返す。
+返り値の `first`, `second`（`first <= second`）は `polygon.vertices()` に対する添字であり、`squared_distance` はその 2 点間の距離の 2 乗である。距離そのものは `distance()` で得られる。最遠点対が複数ある場合は、そのうちの 1 組を返す。
 
 ## 退化入力
 
-- 0点: 無効添字と距離0を返す。
-- 1点: `(first, second) == (0, 0)` と距離0を返す。
-- 2点または全点が一直線上: 正規化後の両端を返す。
+- 0 点: 無効な添字と距離 0 を返す。
+- 1 点: `(first, second) == (0, 0)` と距離 0 を返す。
+- 2 点（全点が一直線上の場合も正規化で 2 点になる）: 正規化後の両端点を返す。
 
 ## 時間計算量
 
@@ -35,12 +33,11 @@ ConvexPolygonDiameterResult convex_polygon_diameter(
 | --- | --- | --- |
 | `convex_polygon_diameter(polygon)` | $O(N)$ | $O(N)$ |
 
-各頂点の最遠頂点を暗黙totally monotone matrix上のSMAWKで求め、その最大を選ぶ。
+各頂点から最も遠い頂点を、暗黙に表した totally monotone な行列上の SMAWK で求め、その中の最大を選ぶ。
 
 ## 注意点
 
-入力は `NormalizedConvexPolygon` の契約を満たす必要がある。座標と中間演算は
-有限な `long double` の範囲に収まる必要がある。
+入力は `NormalizedConvexPolygon` の契約を満たす必要がある。座標と中間演算の値は有限な `long double` の範囲に収まる必要がある。
 
 ## 使用例
 

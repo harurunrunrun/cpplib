@@ -3,35 +3,26 @@ title: Discrete Log (離散対数) [discrete_logarithm_mod]
 documentation_of: ../../../../../src/algorithm/math/number_theory/modular/discrete_log.hpp
 ---
 
-離散対数問題。
+$a^x \equiv b \pmod{m}$ を満たす最小の非負整数 $x$ を baby-step giant-step 法で求める。解が存在しない場合は $-1$ を返す。
 
-`a^x = b (mod m)` となる最小の非負整数 `x` を返す。存在しない場合は `-1`。
+## API
 
-## 関数
+- `math::discrete_log_coprime(a, b, mod)`: $\gcd(a, \mathrm{mod}) = 1$ の場合に使う。
+- `math::discrete_log(a, b, mod)`: $\gcd(a, \mathrm{mod}) \ne 1$ の場合も扱う。共通因子を順に取り除いてから `discrete_log_coprime` に帰着する。
 
-- `math::discrete_log_coprime(a, b, mod)`
-    - `gcd(a, mod) = 1` の場合。
-- `math::discrete_log(a, b, mod)`
-    - `gcd(a, mod) != 1` の場合も処理する。
+引数・戻り値はすべて `long long`。
 
-## 計算量の概要
-
-- $O(\sqrt {mod})$
-
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `math::discrete_log_coprime(a,b,mod)` | 期待 $O(\sqrt{mod})$ | $O(\sqrt{mod})$ |
-| `math::discrete_log(a,b,mod)` | 期待 $O(\sqrt{mod}+\log mod)$ | $O(\sqrt{mod})$ |
+| `math::discrete_log_coprime(a, b, mod)` | 期待 $O(\sqrt{\mathrm{mod}})$ | $O(\sqrt{\mathrm{mod}})$ |
+| `math::discrete_log(a, b, mod)` | 期待 $O(\sqrt{\mathrm{mod}} + \log \mathrm{mod})$ | $O(\sqrt{\mathrm{mod}})$ |
 
-baby-step giant-step の表に `unordered_map` を使うため、表の検索・挿入を期待 $O(1)$ とした計算量である。衝突が偏る場合の最悪計算量は保証しない。非互いに素な場合の前処理は $O(\log mod)$。
+baby-step の表に `std::unordered_map` を使うので、表の検索・挿入を期待 $O(1)$ とみなした計算量である。ハッシュの衝突が偏った場合の最悪計算量は保証しない。互いに素でない場合の前処理（共通因子の除去）は $O(\log \mathrm{mod})$ 回の反復である。
 
 ## 注意点
 
-- 両APIとも `a`, `b` を $[0,mod)$ に正規化し、
-  $a^x\equiv b\pmod {mod}$ を満たす最小の非負整数 $x$ を返す。
-  `mod==1` では0、解がなければ-1。
-- `discrete_log_coprime` は $\gcd(a,mod)=1$ を要求し、違反時は例外。
-- `discrete_log` は互いに素でない場合もgcdを順に除去して処理する。
-- `mod>0` が必要で、違反時は `runtime_error`。
+- どちらの API も `a`, `b` を $[0, \mathrm{mod})$ に正規化してから計算する。`mod == 1` または $b \equiv 1$ のときは $0$ を返す。
+- `discrete_log_coprime` は $\gcd(a, \mathrm{mod}) = 1$ を要求し、違反時は `std::runtime_error` を送出する（ただし $b \equiv 1$ なら検査前に $0$ を返す）。
+- `mod > 0` が必要で、違反時は `std::runtime_error` を送出する。

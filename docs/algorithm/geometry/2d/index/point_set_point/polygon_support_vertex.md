@@ -14,8 +14,8 @@ std::size_t polygon_support_vertex(
 );
 ```
 
-最大値を取る頂点が複数ある場合は最小添字を返す。空入力では
-`POLYGON_SUPPORT_VERTEX_NPOS` を返す。
+最大値を取る頂点が複数ある場合は最小の添字を返す。内積は許容誤差なしで比較する。
+空の入力では `POLYGON_SUPPORT_VERTEX_NPOS`（`std::size_t` の最大値）を返す。
 
 ## 時間計算量
 
@@ -26,6 +26,5 @@ std::size_t polygon_support_vertex(
 
 ## 注意点
 
-頂点順や凸性は問わない。座標と方向は有限でなければならず、違反時は
-`std::invalid_argument` を送出する。多数queryには凸包を構築して
-`convex_polygon_support_vertex` を使う方が高速である。
+頂点の順序や凸性は問わない。座標と方向は有限でなければならず、違反した場合は `std::invalid_argument` を送出する。
+クエリが多い場合は、凸包を構築して `convex_polygon_support_vertex` を使う方が速い。

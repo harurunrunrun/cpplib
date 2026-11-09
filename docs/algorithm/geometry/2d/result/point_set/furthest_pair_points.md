@@ -3,7 +3,7 @@ title: Furthest Pair from Integer Points (整数点列の最遠点対)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/result/point_set/furthest_pair_points.hpp
 ---
 
-整数座標点集合の最遠点対を、凸包とrotating calipersで求める。
+整数座標の点集合の最遠点対を、凸包と rotating calipers で求める。
 
 ## API
 
@@ -14,8 +14,7 @@ FurthestPairResult furthest_pair(
 );
 ```
 
-平方距離が最大となる組を返す。同率なら
-`(min(i, j), max(i, j))` が辞書順最小の組を選ぶ。重複座標の異なる点も区別する。
+平方距離が最大となる添字の組を返す。返り値は `first < second` を満たす添字 `first`, `second` と、平方距離 `squared_distance`（`ExactInteger`）を持つ。同率の組が複数あるときは `(first, second)` が辞書順最小のものを選ぶ。座標が重複する異なる点も区別する。
 
 ## 時間計算量
 
@@ -23,13 +22,13 @@ FurthestPairResult furthest_pair(
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| `furthest_pair(points)` | $O(N\log N)$ | $O(N)$ |
+| `furthest_pair(points)` | $O(N \log N)$ | $O(N)$ |
 
 ## 注意点
 
-- `Coordinate` は符号付き・符号なしの64-bit以下の整数型でなければならない。
-- 0点または1点では `exists()` がfalseの結果を返す。
-- 2点以上がすべて同じ座標なら添字対 `(0, 1)` を返す。
+- `Coordinate` は 64 bit 以下の整数型（符号の有無は問わない）でなければならない。
+- 点が 0 個または 1 個のときは、`exists()` が `false` を返す結果を返す。
+- 2 点以上がすべて同じ座標なら、添字の組 $(0, 1)$ と平方距離 $0$ を返す。
 - 外積と平方距離は `ExactInteger` で誤差なく計算する。
 
 ## 使用例

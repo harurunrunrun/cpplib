@@ -1,5 +1,5 @@
 ---
-title: Tetrahedron Signed Volume (四面体の符号付き体積)
+title: Signed Tetrahedron Volume (四面体の符号付き体積)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/tetrahedron/signed_volume.hpp
 ---
 

@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/circle_l
 
 ## API
 
-- `intersect_circle_line(circle, line)`: 円周と無限直線が共通点を持つか判定する。
+- `bool intersect_circle_line(circle, line)`: 円周と無限直線が共通点を持つか判定する。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,8 +13,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/circle_l
 
 ## 注意点
 
-接する場合も真。負半径または退化直線には `std::invalid_argument` を送出する。
-
-- 円の中心座標と半径は有限値であること。非有限値または負半径にはstd::invalid_argumentを送出する。
-- 接触・包含の距離二乗や4次量は、比較する各項の大きさにGEOMETRY_EPSを掛けた相対許容誤差で判定する。中間値は有限なlong doubleに収まること。
-- lineの方向vector長がGEOMETRY_EPS以下ならstd::invalid_argumentを送出する。
+- 接する場合も `true` を返す。
+- 円の中心座標と半径は有限値でなければならない。非有限値または負の半径には `std::invalid_argument` を送出する。
+- `line` の方向ベクトルの長さが `GEOMETRY_EPS` 以下なら `std::invalid_argument` を送出する。
+- 判定では、比較する 4 次の量（外積の二乗と、半径の二乗と方向ベクトルの長さの二乗の積）を、各項の大きさに `GEOMETRY_EPS` を掛けた相対許容誤差で比較する。中間値は有限な `long double` に収まる必要がある。

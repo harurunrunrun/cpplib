@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/li
 
 ## API
 
-- `Line3{a, b}`: 相異なる二点を通る直線を表すaggregate型。
+- `Line3{a, b}`: 相異なる 2 点 `a`, `b` を通る直線を表す集成体型。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/li
 
 ## 注意点
 
-`a == b` の退化直線を許容するかは利用する個別APIに従う。
+- 型自体は値を検査しない。`a == b` の退化した直線を許容するかどうかは、利用する個々の API に従う。

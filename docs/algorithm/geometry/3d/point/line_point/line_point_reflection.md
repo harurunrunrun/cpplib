@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point/line_point/l
 
 ## API
 
-- `reflection(line, point)`: 点を直線の周りに180度回転した点を返す。
+- `reflection(line, point)`: `point` を直線の周りに $180$ 度回転した点（直線に関する鏡映）を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 
-直線の二点は相異なり、入力座標は有限値でなければならない。違反時は `std::invalid_argument` を送出する。
+- 直線の 2 点は相異なり、入力座標は有限値でなければならない。違反時は `std::invalid_argument` を送出する。
+- 内部で `projection(line, point)` を用いる。

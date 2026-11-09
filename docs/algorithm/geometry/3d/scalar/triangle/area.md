@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/triangle/ar
 
 ## API
 
-- `area(triangle)`: 三角形の非負面積を返す。
+- `area(triangle)`: 三角形の面積（非負） $\lVert (b - a) \times (c - a) \rVert / 2$ を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/triangle/ar
 
 ## 注意点
 
-退化三角形では0を返す。
+- 退化した三角形では $0$ を返す（浮動小数点誤差により厳密に $0$ になるとは限らない）。
+- 座標は有限値でなければならない。外積が非有限値になった場合（座標が巨大な場合）は `std::invalid_argument` を送出する。

@@ -5,14 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/cl
 
 ## API
 
-- `ClosestPair3DResult::first`: 点対の小さい側のindex。
-- `ClosestPair3DResult::second`: 点対の大きい側のindex。
-- `ClosestPair3DResult::distance`: 2点間のEuclidean距離。
+- `ClosestPair3DResult::first`: 点対のうち小さい方のインデックス。
+- `ClosestPair3DResult::second`: 点対のうち大きい方のインデックス。
+- `ClosestPair3DResult::distance`: 2 点間のユークリッド距離。
 
 ## API別の時間計算量・空間計算量
 
-- 構築・各fieldへのアクセス: 時間・追加領域 $O(1)$。
+- 構築・各メンバへのアクセス: 時間・追加領域 $O(1)$。
 
 ## 注意点
 
-型自体はindexや距離を検査しない。`closest_pair_3d` が返す値では `first < second` が成り立つ。
+- 型自体はインデックスや距離を検査しない。`closest_pair_3d` が返す値では `first < second` が成り立つ。

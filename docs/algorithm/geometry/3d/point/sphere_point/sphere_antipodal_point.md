@@ -5,15 +5,15 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point/sphere_point
 
 ## API
 
-- `sphere_antipodal_point(sphere, point)`: 球の中心に関して反対側の球面点を返す。
+- `sphere_antipodal_point(sphere, point)`: 球面上の点 `point` に対し、球の中心に関して反対側にある球面上の点を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 
-計算結果が long double で表現できない場合は std::overflow_error を送出する。交差計算は共通移動量を保つ正規化で中間 overflow を避ける。
-Sphere3 は中心・半径が有限かつ半径が非負でなければならず、違反時は std::invalid_argument を送出する。
-
-負半径または球面上にない点には `std::invalid_argument` を送出する。半径0では中心自身を返す。
+- `Sphere3` は中心・半径が有限で、半径が非負でなければならない。違反時は `std::invalid_argument` を送出する。
+- `point` が非有限、または（許容誤差の範囲で）球面上にない場合は `std::invalid_argument` を送出する。
+- 半径 $0$ では中心自身を返す。
+- 中心からの差分を正規化して計算し、中間値のオーバーフローを避ける。結果を `long double` で表現できない場合は `std::overflow_error` を送出する。

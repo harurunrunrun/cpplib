@@ -24,22 +24,22 @@ struct CoreDecompositionResult {
 };
 ```
 
-- `core_number[v]`: 頂点 `v` が属する最大の `k`-core の `k`
-- `degeneracy_order`: 各時点で最小次数の頂点を取り除く順序
-- `degeneracy`: グラフの退化数。`core_number` の最大値
+- `core_number[v]`: 頂点 `v` を含む最大の $k$-コアの $k$
+- `degeneracy_order`: 各時点で次数最小の頂点を取り除いていく順序
+- `degeneracy`: グラフの退化数（`core_number` の最大値）
 
 ## 時間計算量
 
 頂点数を $N$、自己ループを除く辺数を $M$ とする。
 
-- 入力検査と隣接リスト構築: $O(N+M)$
-- 全頂点のコア数と退化順序の計算: $O(N+M)$
-- `core_decomposition` 全体: $O(N+M)$
+- 入力検査と隣接リストの構築: $O(N + M)$
+- 全頂点のコア数と退化順序の計算（バケットソートによる）: $O(N + M)$
+- `core_decomposition` 全体: $O(N + M)$
 
 ## 空間計算量
 
-$O(N+M)$。
+$O(N + M)$。
 
 ## 注意点
 
-頂点番号は $[0,N)$ でなければならない。範囲外の頂点または負の頂点数を受け取ると `runtime_error` を送出する。空グラフの退化数は `0`。
+頂点番号は $[0, N)$ でなければならない。範囲外の頂点または負の頂点数を受け取ると `std::runtime_error` を送出する。頂点数 0 のグラフの退化数は 0 である。

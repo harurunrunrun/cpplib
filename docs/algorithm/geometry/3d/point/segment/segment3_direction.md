@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point/segment/segm
 
 ## API
 
-- `segment3_direction(segment)`: `segment.b - segment.a` を返す。
+- `segment3_direction(segment)`: 方向ベクトル `segment.b - segment.a` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 
-退化線分には方向がないため `std::invalid_argument` を送出する。
+- `is_zero_vector`（デフォルトの許容誤差）で零とみなされる退化線分には方向がないため、`std::invalid_argument` を送出する。方向ベクトルが非有限の場合も `std::invalid_argument` を送出する。
+- 戻り値は単位化されない。

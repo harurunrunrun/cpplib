@@ -3,12 +3,12 @@ title: Undirected Maximum Flow (無向最大流) [FASTFLOW]
 documentation_of: ../../../../src/algorithm/graph/flow_cut/undirected_max_flow.hpp
 ---
 
-容量付き無向グラフの2頂点間最大流を返す。
+容量付き無向グラフの 2 頂点間の最大流量を Dinic 法で求める。
 
-## UndirectedFlowEdge
+## `UndirectedFlowEdge`
 
 ```cpp
-template<class T>
+template <class T>
 struct UndirectedFlowEdge {
     int from;
     int to;
@@ -18,30 +18,31 @@ struct UndirectedFlowEdge {
 
 `from` と `to` を結ぶ容量 `capacity` の無向辺を表す。
 
-## undirected_max_flow
+## `undirected_max_flow`
 
 ```cpp
-template<class T>
+template <class T>
 T undirected_max_flow(
     int n,
-    const vector<UndirectedFlowEdge<T>>& edges,
+    const std::vector<UndirectedFlowEdge<T>>& edges,
     int source,
     int sink
 );
 ```
 
-`n` 頂点の無向グラフにおける `source` から `sink` への最大流量を返す。多重辺と自己辺を入力でき、自己辺は結果に影響しない。
+`n` 頂点の無向グラフにおける `source` から `sink` への最大流量を返す。多重辺と自己ループを入力でき、自己ループは結果に影響しない。`source == sink` のときは $0$ を返す。
 
-## API別の時間計算量・空間計算量
+## 計算量
 
-$N=n$、$M=edges.size()$ とする。
+$N = n$、$M$ を `edges` の要素数とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `undirected_max_flow` | $O(N^2M)$ | $O(N+M)$ |
+| `undirected_max_flow` | $O(N^2 M)$ | $O(N + M)$ |
 
 ## 注意点
 
-- `n` は正で、両端点と `source`, `sink` は $[0,n)$ でなければならない。
+- `source`, `sink` と各辺の両端点は $[0, n)$ の範囲内でなければならない。違反時は `runtime_error` を送出する。
 - 容量は非負でなければならず、違反時は `runtime_error` を送出する。
-- 最大流量と中間計算は `T` で表現できる必要がある。
+- `T` は算術型でなければならない。最大流量と途中の計算結果は `T` で表現できなければならない。
+- 内部の `Dinic::max_flow` をデフォルトの流量上限 `std::numeric_limits<T>::max() / 4` で呼ぶため、真の最大流量がこれを超える場合は上限値で打ち切られる。

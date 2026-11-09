@@ -5,15 +5,15 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point_set/line_sph
 
 ## API
 
-- `line_sphere_intersections(line, sphere)`: 無限直線と球面の異なる交点を直線方向順に0～2個返す。
+- `line_sphere_intersections(line, sphere)`: 無限直線と球面の相異なる交点を、直線の向き（`line.a` から `line.b` への向き）の順に $0$ 個から $2$ 個の `std::vector<Point3>` で返す。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・出力・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$（出力を含む）。
 
 ## 注意点
 
-計算結果が long double で表現できない場合は std::overflow_error を送出する。交差計算は共通移動量を保つ正規化で中間 overflow を避ける。
-Sphere3 は中心・半径が有限かつ半径が非負でなければならず、違反時は std::invalid_argument を送出する。
-
-接点は1個。退化直線または負半径には `std::invalid_argument` を送出する。
+- `Sphere3` は中心・半径が有限で、半径が非負でなければならない。違反時は `std::invalid_argument` を送出する。
+- 退化直線（`line.a == line.b`）や非有限の直線にも `std::invalid_argument` を送出する。
+- 接する場合は 1 点だけ返す。
+- 差分を正規化して計算し、中間値のオーバーフローを避ける。結果を `long double` で表現できない場合は `std::overflow_error` を送出する。

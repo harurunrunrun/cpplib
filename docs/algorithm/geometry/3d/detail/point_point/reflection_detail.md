@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/detail/point_point
 
 ## API
 
-- `geometry3d_reflection_detail::reflect_from_projection(point, projected)`: 元の点と射影点から鏡映点を復元する内部関数。
+- `geometry3d_reflection_detail::reflect_from_projection(point, projected)`: 元の点 `point` と射影点 `projected` から、鏡映点 $2\,\mathrm{projected} - \mathrm{point}$ を復元する内部関数。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-公開APIではない。座標差を正規化してから復元し、中間計算のoverflowを避ける。
+公開 API ではない。座標差を正規化してから FMA で復元し、中間計算のオーバーフローを避ける。結果を `long double` で表現できない場合は `std::overflow_error` を送出する。

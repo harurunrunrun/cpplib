@@ -5,15 +5,15 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point_set/line_cir
 
 ## API
 
-- `line_circle_intersections(line, circle)`: 無限直線と円周の相異なる交点を0個から2個返す。
+- `line_circle_intersections(line, circle)`: 無限直線と円周の相異なる交点を、$0$ 個から $2$ 個の `std::vector<Point3>` で返す。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・出力以外の追加領域 $O(1)$。
+- 時間 $O(1)$、出力以外の追加領域 $O(1)$。
 
 ## 注意点
 
-計算結果が long double で表現できない場合は std::overflow_error を送出する。交差計算は共通移動量を保つ正規化で中間 overflow を避ける。
-Circle3 は中心・法線・半径が有限、法線が非零、半径が非負でなければならず、違反時は std::invalid_argument を送出する。
-
-退化直線、負半径、零法線には `std::invalid_argument` を送出する。接するときは1点だけ返す。
+- `Circle3` は中心・法線・半径が有限、法線が非零、半径が非負でなければならない。違反時は `std::invalid_argument` を送出する。
+- 退化直線（`line.a == line.b`）や非有限の直線にも `std::invalid_argument` を送出する。
+- 接する場合は 1 点だけ返す。
+- 直線と円を含む球との交点を求め、そのうち円の平面上にあるものを返す。差分を正規化して計算し、中間値のオーバーフローを避ける。結果を `long double` で表現できない場合は `std::overflow_error` を送出する。

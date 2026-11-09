@@ -9,8 +9,9 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/polyhedron/
 
 ## API別の時間計算量・空間計算量
 
-- 頂点数を $V$、面数を $F$ として時間 $O(V+F)$、追加領域 $O(1)$。
+- 頂点数を $V$、面数を $F$ として、時間 $O(V + F)$、追加領域 $O(1)$。
 
 ## 注意点
 
-非有限頂点・不正添字を拒否する。有限型で表せない結果には `std::overflow_error` を送出する。
+- 非有限な頂点には `std::invalid_argument` を、範囲外の頂点添字には `std::out_of_range` を送出する。
+- 結果が `long double` で表現できない場合は `std::overflow_error` を送出する。

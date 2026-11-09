@@ -8,10 +8,13 @@ documentation_of: ../../../../../src/algorithm/graph/connectivity/decomposition/
 ## 関数
 
 ```cpp
-two_vertex_connected_components(n, edges)
+TwoVertexConnectedComponentsResult two_vertex_connected_components(
+    int n,
+    const vector<pair<int, int>>& edges
+)
 ```
 
-`TwoVertexConnectedComponentsResult` は次を持つ。
+`TwoVertexConnectedComponentsResult` は次のメンバを持つ。
 
 ```cpp
 int count;
@@ -20,22 +23,27 @@ vector<vector<int>> vertex_groups;
 vector<vector<int>> edge_groups;
 ```
 
-`edge_groups` には入力辺の id が入る。
+- `count`: 成分の個数。
+- `articulation`: 関節点を昇順に並べたもの。
+- `vertex_groups[c]`: 成分 `c` の頂点を昇順に並べたもの。
+- `edge_groups[c]`: 成分 `c` に属する入力辺の ID を昇順に並べたもの。
 
-孤立点は1頂点の成分として返す。
+孤立点は、頂点 1 個・辺 0 本の成分として返す。
 
 ## 時間計算量
 
-$N$ を頂点数、$M$ を辺数とする。
+頂点数を $N$、辺数を $M$、関節点数を $A$ とする。
 
-- `two_vertex_connected_components`: $O(N+M\log(M+1))$
+- `two_vertex_connected_components`: $O(N + M \log (M + 1) + A \log (A + 1))$
 
-lowlinkとDFSは $O(N+M)$。各成分の頂点・辺IDを整列する合計時間が $O(M\log(M+1))$。孤立点を含む戻り値の総要素数は $O(N+M)$。
+Lowlink（関節点を求めるため `lowlink` を別に呼ぶ）と成分を求める DFS は $O(N + M)$。各成分の頂点と辺 ID をソートする時間の合計が $O(M \log (M + 1))$、関節点のソートが $O(A \log (A + 1))$。孤立点を含む戻り値の総要素数は $O(N + M)$。
 
 ## 空間計算量
 
-- 戻り値を含めて $O(N+M)$
+- 戻り値を含めて $O(N + M)$
 
 ## 注意点
 
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+- `n` は非負、辺の端点は $[0, n)$ でなければならない。違反時は `std::runtime_error` を送出する。記載した計算量には引数の検査と戻り値の構築を含む。
+- 多重辺を扱える。自己ループを含む入力は想定しない。
+- DFS は再帰で実装されており、再帰の深さは最大 $N$ になる。

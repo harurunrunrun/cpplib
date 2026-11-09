@@ -3,7 +3,7 @@ title: Maximum-Weight Bipartite Pairing (最大重み二部対応) [SCITIES]
 documentation_of: ../../../../src/algorithm/matching/bipartite/maximum_weight_bipartite_pairing.hpp
 ---
 
-左右の各要素を高々1回ずつ使用する対応について、重み和の最大値を返す。
+左右の各要素を高々 1 回ずつ使う対応について、重みの和の最大値を返す。
 
 ## MaximumWeightBipartitePairingEdge
 
@@ -15,7 +15,7 @@ struct MaximumWeightBipartitePairingEdge {
 };
 ```
 
-左側の添字、右側の添字、対応させたときの非負重みを表す。添字は0始まり。
+左側の添字、右側の添字、対応させたときの非負の重みを表す。添字は 0-indexed。
 
 ## maximum_weight_bipartite_pairing
 
@@ -27,14 +27,16 @@ long long maximum_weight_bipartite_pairing(
 );
 ```
 
-指定された辺だけを候補とする最大重み対応の重み和を返す。要素を対応させずに残すことができる。同じ端点対が複数回指定された場合は最大の重みを使用する。
+指定された辺だけを候補とする最大重み対応の重みの和を返す。要素を対応させずに残してもよい。同じ端点の組が複数回指定された場合は最大の重みを使う。
+
+内部では $N \times N$ の重み表（候補でない組は重み $0$）を作り、ハンガリー法で解く。
 
 ## 時間計算量
 
-$N=\max(L,R)$、$E=\lvert\mathrm{edges}\rvert$ とする。
+$L$ を `left_size`、$R$ を `right_size`、$N = \max(L, R)$、$E$ を `edges` の要素数とする。
 
-- 入力検査と重み表の構築: $O(N^2+E)$
-- `maximum_weight_bipartite_pairing`: $O(N^3+E)$
+- 入力検査と重み表の構築: $O(N^2 + E)$
+- `maximum_weight_bipartite_pairing`: $O(N^3 + E)$
 
 ## 空間計算量
 

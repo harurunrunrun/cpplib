@@ -14,8 +14,8 @@ std::size_t convex_polygon_support_vertex(
 );
 ```
 
-入力を `NormalizedConvexPolygon` に変換して正規化済みoverloadへ委譲する。
-返す添字は正規化後の頂点列に対する。
+入力を `NormalizedConvexPolygon` に変換し、正規化済み多角形版に処理を委ねる。
+返す添字は、正規化後の頂点列 `NormalizedConvexPolygon::vertices()` に対するものである。
 
 ## 時間計算量
 
@@ -23,9 +23,9 @@ std::size_t convex_polygon_support_vertex(
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| 頂点列overload | $O(N)$ | $O(N)$ |
+| 頂点列版 | $O(N)$ | $O(N)$ |
 
 ## 注意点
 
-入力は凸多角形の弱凸な周回列でなければならない。非凸入力には
-`std::invalid_argument` を送出する。空入力では `CONVEX_POLYGON_NPOS` を返す。
+入力は凸多角形の弱凸な周回列でなければならない。非凸な入力には `std::invalid_argument` を送出する。空の入力では `CONVEX_POLYGON_NPOS` を返す。
+同じ多角形に多数のクエリを投げる場合は、`NormalizedConvexPolygon` を一度だけ構築して正規化済み多角形版を使うと、1 回あたり $O(\log N)$ になる。

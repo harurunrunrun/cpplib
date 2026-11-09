@@ -5,20 +5,21 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point_set/point_se
 
 ## API
 
-- `convex_polygon_minkowski_difference(first, second)`: $\{a-b\mid a\in A,b\in B\}$ を返す。
+- `std::vector<Point> convex_polygon_minkowski_difference(first, second)`: `first` を $A$、`second` を $B$ として、$\lbrace a - b \mid a \in A, b \in B \rbrace$ を返す。
 
 ## 引数
 
-`first`, `second` は弱凸な周回列である。
+`first`, `second` は弱凸な周回列（`std::vector<Point>`、値渡し）である。
 
 ## 戻り値
 
-差集合を正規化済みの点・線分・反時計回り凸多角形として返す。
+差集合を、`normalize_convex_polygon` で正規化した点・線分・反時計回りの凸多角形として返す。
 
 ## API別の時間計算量・空間計算量
 
-頂点数を $N,M$ として時間・領域 $O(N+M)$。
+- `convex_polygon_minkowski_difference`: 頂点数を $N, M$ として、時間・領域 $O(N + M)$。
 
 ## 注意点
 
-どちらかが空なら空を返す。非凸入力には `std::invalid_argument` を送出する。
+- `second` の各点の符号を反転し、`convex_polygon_minkowski_sum` に帰着する。
+- どちらかが空なら空列を返す。凸でない入力には `std::invalid_argument` を送出する。
