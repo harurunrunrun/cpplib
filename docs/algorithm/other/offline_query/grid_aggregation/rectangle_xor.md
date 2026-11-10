@@ -16,7 +16,7 @@ T rectangle_xor_area(vector<RectangleXorRectangle<T>> rectangles)
 
 y 方向の被覆の偶奇を区間反転の遅延伝播で管理するセグメント木を使った平面走査で求める。
 
-## 計算量
+## 時間計算量・空間計算量
 
 $N$ を入力長方形数とする。
 

@@ -3,15 +3,15 @@ title: Three-Row Domino Tilings (3行ドミノ敷き詰め数) [M3TILE]
 documentation_of: ../../../../../src/algorithm/other/dynamic_programming/profile_grid/count_three_row_domino_tilings.hpp
 ---
 
-3行の長方形を $1\times2$ ドミノで敷き詰める方法数を返す。
+高さ $3$ の長方形を $1\times2$ のドミノで敷き詰める方法の数を、列ごとのビット DP で求める。
 
 ## count_three_row_domino_tilings
 
 ```cpp
-uint64_t count_three_row_domino_tilings(int width);
+std::uint64_t count_three_row_domino_tilings(int width);
 ```
 
-幅 `width` の盤面を隙間なく覆う方法数を返す。
+幅 `width` の盤面を隙間なく覆う方法の数を返す。`width == 0` では $1$ を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -21,4 +21,5 @@ uint64_t count_three_row_domino_tilings(int width);
 
 ## 注意点
 
-- 負の幅は `runtime_error`、答えの範囲違反は `overflow_error` となる。
+- 負の幅では `std::runtime_error` を送出する。
+- 途中の値が `std::uint64_t` に収まらない場合は `std::overflow_error` を送出する。

@@ -95,7 +95,7 @@ T range_sum(
 
 各軸について `begin[i] <= p[i] < end[i]` を満たす半開直方体の総和を返す。空区間の総和は `T{}` である。
 
-## 計算量
+## 時間計算量・空間計算量
 
 $D$ を `Dimension`、$N=\prod_i(\mathrm{shape}_i+1)$、$C$ を `MAX_STORAGE_SIZE` とする。
 

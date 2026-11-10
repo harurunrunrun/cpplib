@@ -16,7 +16,7 @@ T rectangle_union_area(vector<RectangleUnionRectangle<T>> rectangles)
 
 y 方向の被覆回数を管理するセグメント木を使った平面走査で求める。
 
-## 計算量
+## 時間計算量・空間計算量
 
 $N$ を入力長方形数とする。
 

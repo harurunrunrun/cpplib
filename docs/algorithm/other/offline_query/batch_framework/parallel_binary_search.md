@@ -28,7 +28,7 @@ callback の意味は次のとおり。
 
 各ラウンドでは `reset()` を 1 回呼び、必要な最大の接頭辞まで `apply(0), apply(1), ...` の順に呼ぶ。適用数 `t` のバケットに属するクエリの `predicate` を呼ぶ直前には、ちょうど `t` 個の操作が適用されている。同じバケットの `predicate` はクエリ番号の昇順に呼ぶ。未確定のクエリが残っていなければ次のラウンドは開始しない。`query_count == 0` では callback を一度も呼ばない。
 
-## 計算量
+## 時間計算量・空間計算量
 
 $Q$ を `query_count`、$M$ を `operation_count`、$L=\lceil\log_2(M+2)\rceil$ とする。`reset` 1 回、`apply` 1 回、`predicate` 1 回の時間をそれぞれ $R, A, P$ とすると、最悪計算量は次のとおり。
 
