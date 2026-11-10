@@ -3,9 +3,9 @@ title: Chinese Whispers Community Detection (Chinese Whispersコミュニティ�
 documentation_of: ../../../src/approximate/graph/chinese_whispers.hpp
 ---
 
-重み付きChinese Whispersによるcommunity detection heuristicである。正解communityや最大modularityを保証しない。
+重み付き Chinese Whispers によるコミュニティ検出のヒューリスティックである。正解のコミュニティや最大のモジュラリティは保証しない。
 
-## chinese_whispers
+## `chinese_whispers`
 
 ~~~cpp
 CommunityResult chinese_whispers(
@@ -16,13 +16,14 @@ CommunityResult chinese_whispers(
 )
 ~~~
 
-iterationごとに頂点順をshuffleし、隣接辺重み和が最大のclassへ非同期更新する。同点候補は一様乱択する。同じ入力・`seed`・標準ライブラリ実装では同じ結果を返す。孤立頂点は固有classのまま残る。
+反復ごとに頂点の順序をシャッフルし、各頂点のクラスを、隣接辺の重みの和が最大になるクラスへ非同期に更新する。同点の候補からは一様ランダムに選ぶ。同じ入力・`seed`・標準ライブラリの実装なら同じ結果を返す。孤立頂点は自身のクラスのまま残る。
+
+頂点数を $N$、辺数を $E$、実行した反復回数を $I$（$I\le$ `maximum_iterations`）とすると、
 
 - 時間計算量: $O(E\log E+I(N+E\log N))$
 - 追加空間計算量: $O(N+E)$
 
-`I <= maximum_iterations` である。これは確率的heuristicであり、異なるseedでは異なる局所解になり得る。空グラフを許す。
-
 ## 注意点
 
-頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。
+- 確率的なヒューリスティックであり、`seed` が異なれば異なる局所解になりうる。
+- 空グラフも受理する。頂点番号は `vertex_count` の範囲内でなければならない。
