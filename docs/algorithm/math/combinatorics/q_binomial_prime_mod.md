@@ -3,16 +3,14 @@ title: q-Binomial Coefficient Modulo a Prime (素数を法とするq二項係数
 documentation_of: ../../../../src/algorithm/math/combinatorics/q_binomial_prime_mod.hpp
 ---
 
-素数 $p$ と $0\leq q<p$ を固定し、Gaussian 二項係数
-$\binom{n}{k}_q$ を $p$ で割った余りを求める。
+素数 $p$ と $0 \leq q < p$ を固定し、Gauss の二項係数（$q$ 二項係数）$\binom{n}{k}_q$ を $p$ で割った余りを求める。
 
 $$
 [i]_q=1+q+\cdots+q^{i-1},\qquad
 [i]_q!=\prod_{j=1}^{i}[j]_q
 $$
 
-を前計算する。$[D]_q=0$ となる最小の正整数 $D$ が前計算範囲内に
-存在する場合は、$q$-Lucas の定理
+を前計算する。$[D]_q=0$ となる最小の正整数 $D$ が前計算範囲内に存在する場合は、$q$-Lucas の定理
 
 $$
 \binom{aD+b}{cD+d}_q=
@@ -32,14 +30,9 @@ QBinomialPrimeMod(
 )
 ```
 
-$0\leq n\leq$ `maximum_n` のクエリを前計算する。
-`prime_modulus` は素数、`q < prime_modulus`、
-`maximum_n < prime_modulus` でなければならない。条件を満たさない場合は
-`std::invalid_argument` を投げる。
+$0 \leq n \leq$ `maximum_n` のクエリに答えるための前計算を行う。`prime_modulus` は素数、`q < prime_modulus`、`maximum_n < prime_modulus` でなければならず、満たさない場合は `std::invalid_argument` を送出する。
 
-`maximum_n` を $L$ とする。構築時間は $O(\sqrt p+L)$、空間計算量は
-$O(L)$ である。実際には $D$ が範囲内にある場合、階乗表の要素数は
-$O(D+L/D)$ となる。
+`maximum_n` を $L$ とする。構築時間は $O(\sqrt p + L)$（素数判定が試し割り）、空間計算量は $O(L)$ である。$D$ が範囲内にある場合、階乗表の要素数は実際には $O(D + L/D)$ となる。
 
 ### `modulus`
 
@@ -71,8 +64,7 @@ std::size_t maximum_n() const noexcept
 std::size_t period() const noexcept
 ```
 
-$[D]_q=0$ となる最小の正整数 $D$ が `maximum_n` 以下なら $D$、
-存在しなければ $0$ を返す。時間計算量・空間計算量（追加領域）は $O(1)$。
+$[D]_q=0$ となる最小の正整数 $D$ が `maximum_n` 以下なら $D$ を、存在しなければ $0$ を返す。時間計算量・空間計算量（追加領域）は $O(1)$。
 
 ### `binomial`
 
@@ -80,11 +72,11 @@ $[D]_q=0$ となる最小の正整数 $D$ が `maximum_n` 以下なら $D$、
 std::uint32_t binomial(std::size_t n, std::size_t k) const
 ```
 
-$\binom{n}{k}_q\bmod p$ を返す。$k>n$ なら $0$ を返す。
-`n > maximum_n` なら `std::out_of_range` を投げる。
+$\binom{n}{k}_q \bmod p$ を返す。$k > n$ なら $0$ を返す。`n > maximum_n` なら `std::out_of_range` を送出する。
 
 時間計算量・空間計算量（追加領域）は $O(1)$。
 
 ## 注意点
 
-法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
+- 中間の積は `uint64_t` で計算するため、`uint32_t` の範囲の素数で利用できる。
+- $q = 0$ のときは $[i]_q = 1$、$q = 1$ のときは $[i]_q = i$ となり、いずれも $L < p$ の範囲では $D$ は存在しない（`period()` は $0$）。

@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/circle/point_point
 
 ## API
 
-- `incircle(first, second, third)`: 三角形の内接円を返す。
+- `Circle incircle(first, second, third)`: 三角形の内接円を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/circle/point_point
 
 ## 注意点
 
-退化三角形には `std::invalid_argument` を送出する。半径は1辺の単位方向と内心への差分の外積から求め、辺ベクトル同士の積を避ける。
+中心は `incenter(first, second, third)` で求める。退化三角形には `incenter` が `std::invalid_argument` を送出する。
+半径は、辺 `first`→`second` の単位方向ベクトルと、`first` から内心への差分との外積の絶対値として求め、辺ベクトル同士の積を避ける。

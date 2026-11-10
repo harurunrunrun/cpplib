@@ -3,7 +3,7 @@ title: Minimum Enclosing Rectangle for Normalized Polygon (正規化済み凸多
 documentation_of: ../../../../../../src/algorithm/geometry/2d/result/point_set/minimum_enclosing_rectangle_normalized.hpp
 ---
 
-正規化済み凸多角形を含む面積最小の長方形を求める。
+正規化済みの凸多角形を含む、面積最小の長方形を求める。
 
 ```cpp
 #include "../../../../../../src/algorithm/geometry/2d/result/point_set/minimum_enclosing_rectangle_normalized.hpp"
@@ -17,13 +17,13 @@ MinimumEnclosingRectangleResult minimum_enclosing_rectangle(
 );
 ```
 
-各辺方向に対する4本の支持直線を単調に更新し、面積が最小の候補を返す。
+各辺の方向について 4 本の支持直線を単調に更新し、面積が最小となる候補を返す。返り値は 4 頂点 `corners`、幅 `width`、高さ `height`、面積 `area`、有効フラグ `valid` を持つ。
 
 ## 退化入力
 
-- 0点: `valid == false` で、全数値が0の結果を返す。
-- 1点: 4頂点がその点と等しく、幅、高さ、面積が0の有効な結果を返す。
-- 2点または全点が一直線上: 両端を辺とする高さ0の有効な結果を返す。
+- 0 点: `valid == false` で、数値がすべて 0 の結果を返す。
+- 1 点: 4 頂点がすべてその点に等しく、幅・高さ・面積が 0 の有効な結果を返す。
+- 2 点（全点が一直線上の場合も正規化で 2 点になる）: 両端点を結ぶ線分を辺とする、高さ 0 の有効な結果を返す。
 
 ## 時間計算量
 
@@ -33,13 +33,11 @@ MinimumEnclosingRectangleResult minimum_enclosing_rectangle(
 | --- | --- | --- |
 | `minimum_enclosing_rectangle(polygon)` | $O(N)$ | $O(1)$ |
 
-4本の支持点は多角形を高々定数回巡回する。
+4 本の支持点はそれぞれ多角形を高々定数周しかしない。
 
 ## 注意点
 
-入力は `NormalizedConvexPolygon` の契約を満たす必要がある。複数の最小長方形が
-存在する場合はそのうち1つを返す。座標と内積、面積は有限な `long double` の
-範囲に収まる必要がある。
+入力は `NormalizedConvexPolygon` の契約を満たす必要がある。最小の長方形が複数存在する場合は、そのうちの 1 つを返す。座標・内積・面積は有限な `long double` の範囲に収まる必要がある。
 
 ## 使用例
 

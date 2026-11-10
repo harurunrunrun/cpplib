@@ -3,38 +3,41 @@ title: Prim MST (プリム法)
 documentation_of: ../../../../src/algorithm/graph/spanning_tree/prim_mst.hpp
 ---
 
-Prim法で最小全域木を求める。
+Prim 法で最小全域木を求める。
 
 ## 関数
 
 ```cpp
-prim_mst<T>(graph)
+template <class T>
+PrimMstResult<T> prim_mst(const std::vector<std::vector<PrimEdge<T>>>& graph)
 ```
 
-`graph[v]` は `PrimEdge<T>{to, cost}` の列。無向グラフでは両方向に辺を入れる。
+`graph[v]` は `PrimEdge<T>{to, cost}` の列で、頂点 `v` から出る辺を表す。無向グラフでは各辺を両方向に入れる。
 
-`PrimMstResult<T>` は次を持つ。
+戻り値 `PrimMstResult<T>` は次のメンバをもつ。
 
 ```cpp
 T cost;
-vector<PrimTreeEdge<T>> edges;
+std::vector<PrimTreeEdge<T>> edges;
 bool connected;
 ```
 
-非連結なら最小全域森を返し、`connected` は `false`。
+- `cost`: 採用した辺のコストの総和。
+- `edges`: 採用した辺 `PrimTreeEdge<T>{from, to, cost}` の列。
+- `connected`: グラフが連結なら `true`。
+
+非連結なら最小全域森を返し、`connected` は `false` になる。
 
 ## 時間計算量
 
-$N$ を頂点数、$M$ を隣接リストの総要素数とする。
+$N$ を頂点数、$M$ を隣接リストの総要素数として $O(N + M\log(M + 1))$。
 
-- `prim_mst`: $O(N+M\log(M+1))$
-
-非連結時も全成分を処理する。森の出力辺数は高々 $N-1$。
+非連結の場合もすべての連結成分を処理する。出力する森の辺数は高々 $N-1$ である。
 
 ## 空間計算量
 
-- 戻り値とpriority queueを含めて $O(N+M)$
+戻り値と優先度付きキューを含めて $O(N + M)$。
 
 ## 注意点
 
-頂点引数と隣接リストの行き先は、各APIで定めた頂点範囲内でなければならない。違反時は `runtime_error` を送出する。記載した計算量には引数検査とResultの構築を含む。
+隣接リストの行き先が $[0, N)$ の範囲外なら `runtime_error` を送出する。

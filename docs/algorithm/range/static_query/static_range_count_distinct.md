@@ -4,6 +4,7 @@ documentation_of: ../../../../src/algorithm/range/static_query/static_range_coun
 ---
 
 静的配列の半開区間に含まれる相異なる値の個数を返す。
+各位置について直前の同じ値の出現位置を求め、それを Wavelet Matrix に載せて数える。
 
 ## API
 
@@ -12,7 +13,7 @@ documentation_of: ../../../../src/algorithm/range/static_query/static_range_coun
 ```cpp
 template<
     class T,
-    int MAX_SIZE,
+    int MAX_SIZE = -1,
     class Hash = std::hash<T>,
     class KeyEqual = std::equal_to<T>
 >
@@ -25,56 +26,37 @@ public:
 };
 ```
 
-### `count(left,right)` / `count_distinct(left,right)`
-
 ```cpp
-int count(int left, int right) const
-int count_distinct(int left, int right) const
-```
-
-### `size()`
-
-```cpp
-int size() const noexcept
+StaticRangeCountDistinct<int> dynamic(values);          // 実行時サイズに合わせた std::vector を使う
+StaticRangeCountDistinct<int, 100000> fixed(values);    // 容量 100000 の固定長版
 ```
 
 ## テンプレート引数・引数・戻り値
 
-- `T`: 配列要素型。
-- `MAX_SIZE`: 配列長の上限。0以上でなければならない。
-- `Hash`, `KeyEqual`: `T` に対するhash関数と等値比較。
-- `values`: 問い合わせ対象となる静的列。
-- `left`, `right`: 0-indexed半開区間 `[left,right)`。
-- `count`, `count_distinct`: 区間に現れる相異なる値数。
-  `count_distinct` は `count` の別名で、空区間では `0`。
-- `size()`: 構築時の `values.size()`。
+- `T`: 配列の要素型。
+- `MAX_SIZE`: 配列長の上限。省略時の `-1` は可変長版（実行時サイズに合わせて確保する）を表す。`0` 以上を指定すると、その容量の固定長版になる。
+- `Hash`, `KeyEqual`: `T` に対するハッシュ関数と等値比較。
+- `values`: 問い合わせ対象の静的な列。
+- `left`, `right`: 0-indexed の半開区間 `[left, right)`。
+- `count`, `count_distinct`: 区間に現れる相異なる値の個数を返す。
+  `count_distinct` は `count` の別名である。空区間では `0` を返す。
+- `size()`: 構築時の `values.size()` を返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-$N=values.size()$、$W$ を `int` のbit数とする。
+$N$ を `values.size()`、$W=32$ を `int` のビット数とする。Wavelet Matrix の段数は可変長版でも $W$ である。
+固定長版では $N$ の代わりに $\texttt{MAX_SIZE}$ 分の領域を確保・初期化する。
 
 | API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
-| コンストラクタ | expected $O(MAX_SIZE\cdot W+N)$、hash worst case $O(MAX_SIZE\cdot W+N^2)$ | $O(MAX_SIZE\cdot W+N)$ |
-| `count(left,right)`, `count_distinct(left,right)` | $O(W)$ | $O(1)$ |
+| コンストラクタ | 期待 $O(NW)$、ハッシュの最悪ケースで $O(NW+N^2)$ | $O(NW)$ |
+| `count(left, right)`, `count_distinct(left, right)` | $O(W)$ | $O(1)$ |
 | `size()` | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-- `values.size() > MAX_SIZE` なら `runtime_error` を送出する。
-- `left < 0`、`right < left`、`right > size()` のいずれかなら
-  `runtime_error` を送出する。
-- `Hash` と `KeyEqual` は互いに整合し、同値な要素へ同じhash値を返す必要がある。
+- `MAX_SIZE` を指定した場合、`values.size() > MAX_SIZE` なら `std::runtime_error` を送出する。
+- `left < 0`、`right < left`、`right > size()` のいずれかなら `std::runtime_error` を送出する。
+- `Hash` と `KeyEqual` は互いに整合し、同値な要素に同じハッシュ値を返す必要がある。
 - `Hash` と `KeyEqual` はデフォルト構築可能でなければならない。
 - 構築後の列は変更できない。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
-
-```cpp
-StaticRangeCountDistinct<int> dynamic(values);
-StaticRangeCountDistinct<int, 100000> fixed(values);
-```
-
-$N$ 要素の構築は $O(N\log N)$ 時間・空間、区間内種類数は $O(\log N)$ 時間。

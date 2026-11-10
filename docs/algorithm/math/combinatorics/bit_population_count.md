@@ -3,9 +3,7 @@ title: Bit Population Count over Integer Ranges (整数区間のビット数え�
 documentation_of: ../../../../src/algorithm/math/combinatorics/bit_population_count.hpp
 ---
 
-非負整数の連続区間に現れる 1-bit の個数を、bit ごとの周期性から数える。
-答えは最大で $64\cdot2^{63}$ になるため `unsigned __int128` の別名
-`math::WideBitCount` を使う。
+非負整数の連続区間に現れる 1 のビットの個数を、ビットごとの周期性を利用して数える。答えは最大で $64 \cdot 2^{63}$ になるため、`unsigned __int128` の別名 `math::WideBitCount` を使う。
 
 ## `count_bit_ones_inclusive`
 
@@ -16,7 +14,7 @@ math::WideBitCount count_bit_ones_inclusive(
 )
 ```
 
-$0\le x\le maximum$ の各 $x$ について、`bit` 番目が 1 である個数を返す。
+`maximum` を $m$、`bit` を $b$ とする。$0 \le x \le m$ を満たす $x$ のうち、第 $b$ ビットが 1 であるものの個数を返す。
 
 - 時間計算量: $O(1)$
 - 追加空間計算量: $O(1)$
@@ -30,7 +28,7 @@ math::WideBitCount count_bit_ones_half_open(
 )
 ```
 
-$0\le x<right$ の各 $x$ について、`bit` 番目が 1 である個数を返す。
+`right` を $r$ とする。$0 \le x < r$ を満たす $x$ のうち、第 $b$ ビットが 1 であるものの個数を返す。
 
 - 時間計算量: $O(1)$
 - 追加空間計算量: $O(1)$
@@ -42,10 +40,10 @@ std::array<math::WideBitCount, 64>
 bit_one_counts_inclusive(std::uint64_t maximum)
 ```
 
-$[0,maximum]$ における各 bit の個数をまとめて返す。配列の添字が bit 番号。
+区間 $[0, m]$ における各ビットの 1 の個数をまとめて返す。配列の添字がビット番号である。
 
 - 時間計算量: $O(64)$
-- 追加空間計算量: 戻り値 $O(64)$
+- 追加空間計算量: 戻り値の $O(64)$
 
 ## `bit_one_counts_half_open`
 
@@ -54,10 +52,10 @@ std::array<math::WideBitCount, 64>
 bit_one_counts_half_open(std::uint64_t right)
 ```
 
-$[0,right)$ における各 bit の個数をまとめて返す。
+区間 $[0, r)$ における各ビットの 1 の個数をまとめて返す。
 
 - 時間計算量: $O(64)$
-- 追加空間計算量: 戻り値 $O(64)$
+- 追加空間計算量: 戻り値の $O(64)$
 
 ## `total_set_bits_inclusive`
 
@@ -65,7 +63,7 @@ $[0,right)$ における各 bit の個数をまとめて返す。
 math::WideBitCount total_set_bits_inclusive(std::uint64_t maximum)
 ```
 
-$[0,maximum]$ の全整数の `popcount` の和を返す。
+区間 $[0, m]$ の全整数の `popcount` の和を返す。
 
 - 時間計算量: $O(64)$
 - 追加空間計算量: $O(64)$
@@ -76,12 +74,11 @@ $[0,maximum]$ の全整数の `popcount` の和を返す。
 math::WideBitCount total_set_bits_half_open(std::uint64_t right)
 ```
 
-$[0,right)$ の全整数の `popcount` の和を返す。
+区間 $[0, r)$ の全整数の `popcount` の和を返す。
 
 - 時間計算量: $O(64)$
 - 追加空間計算量: $O(64)$
 
 ## 注意点
 
-bit 番号は $0\le bit<64$。違反時は `runtime_error`。`WideBitCount` の入出力は
-標準streamに直接対応していないため、必要なら10進文字列への変換を用意する。
+ビット番号は $0 \le b < 64$ でなければならず、違反時は `runtime_error` を送出する。いずれの関数も `constexpr` である。`WideBitCount` は標準ストリームでの入出力に直接対応していないため、必要なら 10 進文字列への変換を用意する。

@@ -5,13 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/line
 
 ## API
 
-- `distance(first, second)`: `Line3` と `Plane3` の集合間距離を返す。異種型では逆順overloadも提供する。
-- この互換集約ヘッダは `line_plane` 順と `plane_line` 順の両leafを提供する。
+- `distance(first, second)`: `Line3` と `Plane3` の集合としての距離を `long double` で返す。引数の型の順序を入れ替えたオーバーロードも提供する。
+- この互換用集約ヘッダは `(Line3, Plane3)` 版と `(Plane3, Line3)` 版の両方の個別ヘッダを提供する。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 全overload: 時間・追加領域 $O(1)$。
+- 全オーバーロード: 時間・追加空間ともに $O(1)$。
 
 ## 注意点
 
-交差または重なる場合は0を返す。退化直線・零法線平面・非有限入力には `std::invalid_argument` を送出する。
+- 交差する場合、または平面に含まれる場合は 0 を返す。
+- 退化した直線、法線が零ベクトルの平面、非有限な入力には `std::invalid_argument` を送出する。

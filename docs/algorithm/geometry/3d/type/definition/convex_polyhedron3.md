@@ -5,14 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/co
 
 ## API
 
-- `ConvexPolyhedron3::affine_dimension`: 空集合を-1、点・線分・平面図形・立体を0から3で表す。
-- `vertices`: 凸包頂点列。
-- `faces`: 外向き反時計回りの三角形面を頂点indexで保持する。2次元の場合は片面の三角形分割である。
+- `ConvexPolyhedron3::affine_dimension`: 空集合を $-1$、点・線分・平面図形・立体をそれぞれ $0$ から $3$ で表す。
+- `vertices`: 凸包の頂点列（`std::vector<Point3>`）。
+- `faces`: 外側から見て反時計回りの三角形面を、頂点インデックスの組（`std::array<std::size_t, 3>`）で保持する。二次元の場合は片面の三角形分割である。
 
 ## API別の時間計算量・空間計算量
 
-- 各member参照は時間・追加領域$O(1)$。列挙は要素数に比例する。
+- 各メンバの参照は時間・追加領域 $O(1)$。列挙は要素数に比例する。
 
 ## 注意点
 
-`affine_dimension < 2`では`faces`は空である。3次元の場合だけ閉じた多面体を表す。
+- `affine_dimension < 2` のとき `faces` は空である。閉じた多面体を表すのは三次元の場合だけである。

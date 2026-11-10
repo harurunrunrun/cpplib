@@ -3,16 +3,21 @@ title: Exact Geometry Intersection Aggregates (厳密幾何交差集約)
 documentation_of: ../../../../../src/algorithm/integer_geometry/aggregate/all/intersection.hpp
 ---
 
-直線・線分の交差判定と交点計算APIを一括で読み込む。
+直線・線分の交差判定と交点計算の API、および厳密判定の API を一括で読み込む。
 
 ## API
 
-- 交差集約ヘッダ: 交差APIを読み込む。
+このヘッダ自体は関数を定義せず、次のヘッダを読み込む。
+
+- `point_set/segment_segment/segment_intersection.hpp`
+- `result/line_line/line_intersection.hpp`
+- `result/segment_segment/segment_intersection_point.hpp`
+- `aggregate/all/predicates.hpp（判定の集約ヘッダ）`
 
 ## API別の時間計算量・空間計算量
 
-- 交差集約ヘッダ: 時間 実行時処理なし、追加領域 O(1)。
+- 集約ヘッダ自体: 実行時の処理はなく、追加領域は $O(1)$。
 
 ## 注意点
 
-計算は任意精度整数と既約有理数で厳密に行う。記載した回数に加え、座標のbit長に応じた多倍長整数演算コストが掛かる。
+計算は任意精度整数（`Integer`）と既約有理数（`Rational`）で厳密に行う。記載した計算量は算術演算の回数であり、実際にはこれに加えて座標のビット長に応じた多倍長整数演算のコストがかかる。

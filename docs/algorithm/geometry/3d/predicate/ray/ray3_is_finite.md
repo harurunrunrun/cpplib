@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/ray/ray3
 
 ## API
 
-- `geometry3d_is_finite(ray)` は `Ray3` の始点と通過点の全座標が有限なら `true` を返す。
+- `geometry3d_is_finite(ray)`: `Ray3` の始点 `origin` と通過点 `through` の全座標が有限なら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/ray/ray3
 
 ## 注意点
 
-始点と通過点の一致は検査しない。
+- 例外は送出しない（`noexcept`）。
+- 始点と通過点の一致（退化した半直線）は検査しない。

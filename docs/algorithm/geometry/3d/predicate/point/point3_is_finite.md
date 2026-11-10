@@ -5,13 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/point/po
 
 ## API
 
-- `geometry3d_is_finite(point)` は `Point3` の全座標が有限なら `true` を返す。
+- `geometry3d_is_finite(point)`: `Point3` の全座標が有限なら `true` を返す（`noexcept`）。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 時間計算量: $O(1)$
-- 追加空間計算量: $O(1)$
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-座標値の有限性だけを判定し、点の用途に固有な退化条件は検査しない。
+座標値が有限かだけを判定し、点の用途に固有な退化条件は検査しない。

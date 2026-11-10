@@ -150,6 +150,7 @@ jobs:
           python3 scripts/test_normalize_competitive_verifier_plan.py
           python3 scripts/normalize_competitive_verifier_plan.py verify-files.json
           python3 scripts/test_filter_competitive_verifier_result.py
+          python3 scripts/test_competitive_verifier_needs_retry.py
           python3 scripts/test_report_competitive_verifier_failures.py
           python3 scripts/test_run_competitive_verifier_shards.py
 
@@ -294,9 +295,18 @@ jobs:
           timeout: "780"
           check: false
 
+      - name: Check attempt 1 for unfinished entries
+        id: attempt_1_status
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          python3 scripts/competitive_verifier_needs_retry.py \
+            --result .competitive-verifier/shards/result-${{ matrix.index }}-attempt-1.json \
+            --is-success "${{ steps.verifier_initial.outputs.is-success }}"
+
       - name: Prepare successful results for attempt 2
         id: retry_previous_1
-        if: ${{ always() && steps.verifier_initial.outputs.is-success != 'true' }}
+        if: ${{ always() && steps.attempt_1_status.outputs.needs_retry != 'false' }}
         shell: bash
         env:
           CANDIDATE: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-1.json
@@ -317,7 +327,7 @@ jobs:
 
       - name: Retry failed verification entries (attempt 2)
         id: verifier_retry_1
-        if: ${{ always() && steps.verifier_initial.outputs.is-success != 'true' }}
+        if: ${{ always() && steps.attempt_1_status.outputs.needs_retry != 'false' }}
         uses: competitive-verifier/actions/verify@v2
         timeout-minutes: 8
         continue-on-error: true
@@ -330,9 +340,18 @@ jobs:
           timeout: "420"
           check: false
 
+      - name: Check attempt 2 for unfinished entries
+        id: attempt_2_status
+        if: ${{ always() && steps.verifier_retry_1.outcome != 'skipped' }}
+        shell: bash
+        run: |
+          python3 scripts/competitive_verifier_needs_retry.py \
+            --result .competitive-verifier/shards/result-${{ matrix.index }}-attempt-2.json \
+            --is-success "${{ steps.verifier_retry_1.outputs.is-success }}"
+
       - name: Prepare successful results for attempt 3
         id: retry_previous_2
-        if: ${{ always() && steps.verifier_retry_1.outcome != 'skipped' && steps.verifier_retry_1.outputs.is-success != 'true' }}
+        if: ${{ always() && steps.verifier_retry_1.outcome != 'skipped' && steps.attempt_2_status.outputs.needs_retry != 'false' }}
         shell: bash
         env:
           CANDIDATE: .competitive-verifier/shards/result-${{ matrix.index }}-attempt-2.json
@@ -353,7 +372,7 @@ jobs:
 
       - name: Retry failed verification entries (attempt 3)
         id: verifier_retry_2
-        if: ${{ always() && steps.verifier_retry_1.outcome != 'skipped' && steps.verifier_retry_1.outputs.is-success != 'true' }}
+        if: ${{ always() && steps.verifier_retry_1.outcome != 'skipped' && steps.attempt_2_status.outputs.needs_retry != 'false' }}
         uses: competitive-verifier/actions/verify@v2
         timeout-minutes: 8
         continue-on-error: true

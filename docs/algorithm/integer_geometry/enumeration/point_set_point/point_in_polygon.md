@@ -7,12 +7,13 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/enumeration/poin
 
 ## API
 
-- `point_in_polygon(polygon, point)`: 点の位置を `PointLocation` で返す。
+- `PointLocation point_in_polygon(const std::vector<Point>& polygon, const Point& point)`: 点の位置を `PointLocation::outside`、`PointLocation::boundary`、`PointLocation::inside` のいずれかで返す。多角形は頂点を巡回順に並べたものとし、いずれかの辺上にあれば `boundary`、そうでなければ回転数が $0$ でないとき `inside` を返す。空の多角形では `outside` を返す。
 
 ## API別の時間計算量・空間計算量
 
-- `point_in_polygon(polygon, point)`: 時間 O(n)、追加領域 O(1)。
+- `point_in_polygon(polygon, point)`: 時間 $O(n)$、追加領域 $O(1)$（$n$ は頂点数）
 
 ## 注意点
 
-計算は任意精度整数と既約有理数で厳密に行う。記載した回数に加え、座標のbit長に応じた多倍長整数演算コストが掛かる。
+- 計算は任意精度整数（`Integer`）と既約有理数（`Rational`）で厳密に行う。記載した計算量は算術演算の回数であり、実際にはこれに加えて座標のビット長に応じた多倍長整数演算のコストがかかる。
+- すべての API は名前空間 `integer_geometry` に属する。

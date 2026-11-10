@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/triangle
 
 ## API
 
-- `geometry3d_is_finite(triangle)` は `Triangle3` の三頂点の全座標が有限なら `true` を返す。
+- `geometry3d_is_finite(triangle)`: `Triangle3` の 3 頂点の全座標が有限なら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/triangle
 
 ## 注意点
 
-面積0かどうかは検査しない。
+- 例外は送出しない（`noexcept`）。
+- 面積が 0 かどうかは検査しない。

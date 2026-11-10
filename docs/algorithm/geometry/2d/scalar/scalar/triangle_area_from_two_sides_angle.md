@@ -3,22 +3,30 @@ title: Triangle Area from Two Sides and Angle (二辺と挟角から求める三
 documentation_of: ../../../../../../src/algorithm/geometry/2d/scalar/scalar/triangle_area_from_two_sides_angle.hpp
 ---
 
+2 辺の長さとその挟角から三角形の面積を求める。
+
 ## API
 
-`long double triangle_area_from_two_sides_angle(first, second, angle)`
+```cpp
+long double triangle_area_from_two_sides_angle(
+    long double first,
+    long double second,
+    long double angle
+);
+```
 
 ## 引数
 
-有限な非負の2辺長とrad単位の挟角を渡す。
+有限かつ非負の 2 辺の長さ `first`, `second` と、ラジアン単位の挟角 `angle` を渡す。
 
 ## 戻り値
 
-`|first * second * sin(angle)| / 2`。
+$\lvert \mathit{first} \cdot \mathit{second} \cdot \sin(\mathit{angle}) \rvert / 2$ を返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-- `triangle_area_from_two_sides_angle`: 時間 $O(1)$、追加領域 $O(1)$。
+時間 $O(1)$、追加空間 $O(1)$。
 
 ## 注意点
 
-非有限値または負辺長では `invalid_argument`。
+引数に非有限値がある場合、または辺長が負の場合は `std::invalid_argument` を送出する。

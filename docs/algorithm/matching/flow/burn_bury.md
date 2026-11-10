@@ -3,9 +3,7 @@ title: Binary Submodular Optimization (燃やす埋める)
 documentation_of: ../../../../src/algorithm/matching/flow/burn_bury.hpp
 ---
 
-燃やす埋める。
-
-二値変数のsubmodularなコストを最小カットで最小化する。
+燃やす埋める問題を解く。二値変数についての劣モジュラなコストの和を、最小カットにより最小化する。
 
 ## コンストラクタ
 
@@ -13,46 +11,51 @@ documentation_of: ../../../../src/algorithm/matching/flow/burn_bury.hpp
 BurnBury<T> graph(n)
 ```
 
-## 関数
+$n$ 個の二値変数を持つ問題を作る。
+
+## メンバ関数
 
 ```cpp
 graph.add_one_cost(v, zero_cost, one_cost)
+graph.add_one_delta(v, delta)
 graph.add_pair_cost(i, j, cost00, cost01, cost10, cost11)
 graph.solve()
 ```
 
-`add_pair_cost` は
+- `add_one_cost(v, zero_cost, one_cost)`: 変数 `v` が $0$ のとき `zero_cost`、$1$ のとき `one_cost` を加える。定数 `zero_cost` の加算と `add_one_delta(v, one_cost - zero_cost)` に等しい。
+- `add_one_delta(v, delta)`: 変数 `v` が $1$ のときだけ `delta` を加える。`delta` は負でもよい。
+- `add_pair_cost(i, j, cost00, cost01, cost10, cost11)`: 変数 `i`, `j` の値の組が $(0, 0), (0, 1), (1, 0), (1, 1)$ のとき、それぞれ `cost00`, `cost01`, `cost10`, `cost11` を加える。劣モジュラ性、すなわち次を満たす必要がある。
 
 ```text
 cost00 + cost11 <= cost01 + cost10
 ```
 
-を満たす必要がある。
+- `solve()`: 最小コストと、それを達成する割当を `BurnBuryResult<T>` で返す。
 
-`BurnBuryResult<T>` は次を持つ。
+`BurnBuryResult<T>` は次のメンバを持つ。
 
 ```cpp
 T cost;
 vector<int> assignment;
 ```
 
-`assignment[v]` は `0` または `1`。
+`assignment[v]` は `0` または `1` である。
 
 ## 時間計算量
 
-$V'=N+2$ をflow networkの頂点数、$E'$ を追加済みflow辺数とする。
+フローネットワークの頂点数を $V' = N+2$、追加済みのフロー辺数を $E'$ とする。
 
 - `BurnBury(n)`: $O(N)$
 - `add_one_delta`, `add_one_cost`: 償却 $O(1)$
-- `add_pair_cost`: 償却 $O(1)$（flow辺を高々3本追加）
-- `solve`: Dinic法 $O(V'^2E')$、min-cutと長さ $N$ の割当出力 $O(V'+E')$
+- `add_pair_cost`: 償却 $O(1)$（フロー辺を高々 3 本追加する）
+- `solve`: Dinic 法に $O(V'^2 E')$、最小カットと長さ $N$ の割当の出力に $O(V'+E')$
 
 ## 空間計算量
 
-- flow graph、min-cut、戻り値を含めて $O(V'+E')$
+- フローグラフ、最小カット、戻り値を含めて $O(V'+E')$
 
 ## 注意点
 
-`add_one_delta(v,d)` はvが1のときだけdを加える。`add_one_cost(v,c0,c1)` は定数c0とdelta `c1-c0` に等価。index違反または非submodularなpair costで `runtime_error`。solveは最小costと0/1割当を返す。
+変数の個数が負の場合、添字が範囲外の場合、劣モジュラでないペアコストを与えた場合は `runtime_error` を送出する。コストや流量の総和の演算結果が `T` に収まることを前提とする。記載した計算量には引数検査と戻り値の構築を含む。
 
-頂点数は非負、各端点は対応する頂点範囲内でなければならず、違反時は `runtime_error`。容量・cost・総和の演算結果が `T` に収まることを前提とする。記載した計算量には引数検査とResultの構築を含む。
+内部のフローは `solve` 後も流れたまま残るため、`solve` は 1 回だけ呼ぶこと（2 回目以降は追加の流量しか数えず、正しいコストにならない）。

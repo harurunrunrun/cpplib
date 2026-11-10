@@ -16,12 +16,12 @@ vector<pair<int, int>> irreducible_pairs_from_distance_matrix(
 `left < right` であり、どの `middle != left, right` に対しても
 
 $$
-distances[left][right]
-\ne distances[left][middle] + distances[middle][right]
+D[\mathit{left}][\mathit{right}]
+\ne D[\mathit{left}][\mathit{middle}] + D[\mathit{middle}][\mathit{right}]
 $$
 
-となる組だけを辞書順で返す。
-この組を無向辺として重み `distances[left][right]` を与えると、入力距離を保つために直接残す必要がある辺集合が得られる。
+となる組（$D$ は `distances`）だけを辞書順で返す。
+これらの組を重み `distances[left][right]` の無向辺とすると、入力の距離を保つために直接残す必要がある辺の集合が得られる。
 
 ## API別の時間計算量・空間計算量
 
@@ -33,7 +33,7 @@ $$
 
 ## 注意点
 
-- 行列は正方、非負、対称、対角成分0で、三角不等式を満たさなければならない。
+- 行列は正方、非負、対称、対角成分 $0$ で、三角不等式を満たさなければならない。
 - 頂点数は `int` に収まる必要がある。
-- 前提違反には `invalid_argument` または `length_error` を送出する。
-- 距離和は符号付き128 bit整数で比較する。
+- 構造・非負性・対称性・三角不等式の違反には `invalid_argument`、頂点数が大きすぎる場合には `length_error` を送出する。
+- 距離の和は符号付き 128 bit 整数で比較するため、オーバーフローは起きない。

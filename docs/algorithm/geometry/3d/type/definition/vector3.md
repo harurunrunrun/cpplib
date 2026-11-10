@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/ve
 
 ## API
 
-- `Vector3`: `Point3` の型別名。点とベクトルで同じ座標演算を利用できる。
+- `Vector3`: `Point3` の型別名。点とベクトルで同じ座標演算を使える。
 
 ## API別の時間計算量・空間計算量
 
-- 型別名なので追加の時間・領域を使わない。
+- 型別名なので、追加の時間・領域は使わない。
 
 ## 注意点
 
-`Vector3` と `Point3` は同一型であり、型システム上は区別されない。
+`Vector3` と `Point3` は同一の型であり、型システム上は区別されない。

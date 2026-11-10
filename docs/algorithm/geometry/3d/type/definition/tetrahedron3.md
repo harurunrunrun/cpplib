@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/te
 
 ## API
 
-- `Tetrahedron3{a, b, c, d}`: 四頂点を持つ四面体を表すaggregate型。
+- `Tetrahedron3{a, b, c, d}`: 4 頂点 `a`, `b`, `c`, `d` を持つ四面体を表す集成体型。
 
 ## API別の時間計算量・空間計算量
 
-- 全操作: 時間・追加領域 $O(1)$。
+- 全操作: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-四頂点が同一平面上の場合は退化四面体を表す。
+4 頂点が同一平面上にある場合は、退化した四面体を表す。

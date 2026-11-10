@@ -3,58 +3,47 @@ title: Dynamic Point Add Rectangle Sum (動的点加算長方形和)
 documentation_of: ../../../../../src/algorithm/other/offline_query/point_rectangle/dynamic_point_add_rectangle_sum.hpp
 ---
 
-点加算・長方形和。
+点への加算と長方形内の和を処理する。更新に現れる点を事前に `reserve_point` で登録してから `build` する（Fenwick 木の各ノードに y 座標の Fenwick 木を持つ 2 次元 BIT）。
 
-更新に現れる点を `reserve_point` で登録してから `build` する。
-
-## コンストラクタ
+## 使い方
 
 ```cpp
-DynamicPointAddRectangleSum<T, Coordinate> seg
+DynamicPointAddRectangleSum<T, Coordinate = long long> seg;
+seg.reserve_point(x, y);
+seg.build();
+seg.add(x, y, value);
+seg.prefix_sum_less(x, y);
+seg.prefix_sum_leq(x, y);
+seg.sum(x1, y1, x2, y2);
 ```
 
-## 関数
+## API
 
-```cpp
-seg.reserve_point(x, y)
-seg.build()
-seg.add(x, y, value)
-seg.prefix_sum_less(x, y)
-seg.prefix_sum_leq(x, y)
-seg.sum(x1, y1, x2, y2)
-```
+- `reserve_point(x, y)`: 将来 `add` する座標を登録する。重複登録してよい。
+- `build()`: 登録座標を圧縮し、更新できる状態にする。
+- `add(x, y, value)`: 予約済みの点 $(x, y)$ に `value` を加える。点 $(x, y)$ が予約されていなければ例外を送出する。
+- `prefix_sum_less(x, y)`: $p_x<x$ かつ $p_y<y$ を満たす点の重みの和を返す。
+- `prefix_sum_leq(x, y)`: $p_x\le x$ かつ $p_y\le y$ を満たす点の重みの和を返す。
+- `sum(x1, y1, x2, y2)`: 半開長方形 $[x_1, x_2) \times [y_1, y_2)$ 内の重みの和を返す。`prefix_sum_less` を 4 回呼ぶ。
 
-`sum(x1, y1, x2, y2)` は半開長方形 $[x1, x2) \times [y1, y2)$ の和を返す。
+クエリの座標は予約しなくてよい。
 
-## 時間計算量
-
-- `build`: $O(N \log^2 N)$
-- `add`, `sum`: $O(\log^2 N)$
-
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
 $N$ を `reserve_point` した点数とする。
 
 | API | 時間計算量 |
 | --- | --- |
 | `DynamicPointAddRectangleSum()` | $O(1)$ |
-| `reserve_point(x,y)` | 償却 $O(1)$ |
-| `build()` | $O(N\log^2 N)$（前処理） |
-| `add(x,y,value)` | $O(\log^2 N)$ |
-| `prefix_sum_less(x,y)` / `prefix_sum_leq(x,y)` | $O(\log^2 N)$ |
-| `sum(x1,y1,x2,y2)` | $O(\log^2 N)$ |
+| `reserve_point(x, y)` | 償却 $O(1)$ |
+| `build()` | $O(N\log^2 N)$ |
+| `add(x, y, value)` | $O(\log^2 N)$ |
+| `prefix_sum_less(x, y)` / `prefix_sum_leq(x, y)` | $O(\log^2 N)$ |
+| `sum(x1, y1, x2, y2)` | $O(\log^2 N)$ |
 
-`sum` は4回のprefix queryを行う。`build` 後の保持領域は $O(N\log N)$。
+`build` 後の保持領域は $O(N\log N)$。
 
 ## 注意点
 
-- `reserve_point(x,y)` は将来 `add` する座標を登録する。重複登録してよい。
-- `build()` は登録座標を圧縮して更新可能状態にする。
-  build後の再予約・再build、build前のquery/updateは例外。
-- `add(x,y,value)` は予約済みの点へ `value` を加える。
-  xまたはyが未予約なら例外。
-- `prefix_sum_less(x,y)` は $p_x<x,p_y<y$、
-  `prefix_sum_leq(x,y)` は $p_x\le x,p_y\le y$ の重み和。
-  query座標自体は予約不要。
-- `sum(x1,y1,x2,y2)` は半開矩形の和。端点順序は検査せず、
-  $x1\le x2,y1\le y2$ を前提とする。
+- `build` 後の `reserve_point` と再度の `build`、`build` 前の `add` とクエリは例外を送出する。
+- `sum` は端点の順序を検査しない。$x_1\le x_2$ かつ $y_1\le y_2$ を前提とする。

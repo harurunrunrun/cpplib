@@ -7,11 +7,11 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/type
 
 ## API
 
-- `#include "types.hpp"`: 二次元幾何の基本型をすべて読み込む。
+- `#include "types.hpp"`: 二次元幾何の基本型 `Point`、`Line`、`Segment`、`Circle` と、`supporting_line(segment)` をすべて読み込む。
 
 ## API別の時間計算量・空間計算量
 
-- 型の読み込み自体に実行時計算量と追加領域はない。
+- 型の読み込み自体には実行時の計算量も追加領域もない。
 
 ## 注意点
 

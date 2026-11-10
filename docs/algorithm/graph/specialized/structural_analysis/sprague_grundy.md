@@ -3,17 +3,17 @@ title: Sprague-Grundy Numbers on DAG (DAG上のスプレイグ・グランディ
 documentation_of: ../../../../../src/algorithm/graph/specialized/structural_analysis/sprague_grundy.hpp
 ---
 
-有限非巡回な不偏ゲームを有向グラフで表し、各状態の Grundy 数を遷移先 Grundy 数の MEX として求める。
+有限かつ非巡回な不偏ゲームを有向グラフで表し、各状態の Grundy 数を、遷移先の Grundy 数の mex として求める。
 
-## dag_grundy_numbers
+## `dag_grundy_numbers`
 
 ```cpp
 vector<size_t> dag_grundy_numbers(const vector<vector<size_t>>& graph)
 ```
 
-`graph[v]` を状態 `v` から 1 手で移れる状態列として、全状態の Grundy 数を返す。
+`graph[v]` を状態 `v` から 1 手で移れる状態の列として、全状態の Grundy 数を返す。
 
-## normal_play_nim_sum
+## `normal_play_nim_sum`
 
 ```cpp
 size_t normal_play_nim_sum(
@@ -22,7 +22,7 @@ size_t normal_play_nim_sum(
 )
 ```
 
-独立な複数局面の Grundy 数を XOR する。戻り値が 0 なら通常手番規則で後手必勝、非 0 なら先手必勝である。
+独立な複数の局面 `positions` について、それぞれの Grundy 数 `grundy[p]` の XOR を返す。通常ルール（最後に動けた方が勝ち）のもとで、戻り値が $0$ なら後手必勝、$0$ でなければ先手必勝である。
 
 ## 時間計算量
 
@@ -35,4 +35,6 @@ size_t normal_play_nim_sum(
 
 ## 注意点
 
-自己 loop を含む cycle があれば `invalid_argument`、範囲外の頂点番号があれば `out_of_range` を送出する。有限 DAG 上の通常手番・不偏ゲームを前提とする。
+- `dag_grundy_numbers` は、グラフに閉路（自己ループを含む）があれば `invalid_argument`、範囲外の頂点番号があれば `out_of_range` を送出する。
+- `normal_play_nim_sum` は、`positions` に `grundy.size()` 以上の値があれば `out_of_range` を送出する。
+- 有限 DAG 上の通常ルールの不偏ゲームを前提とする。

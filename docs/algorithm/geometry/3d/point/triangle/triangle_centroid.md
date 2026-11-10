@@ -5,12 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point/triangle/tri
 
 ## API
 
-- `centroid(triangle)`: 三頂点の算術平均を返す。
+- `centroid(triangle)`: 3 頂点の算術平均を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 
-頂点は有限でなければならず、違反時は `std::invalid_argument` を送出する。退化三角形にも算術平均を返す。
+- 頂点は有限でなければならず、違反時は `std::invalid_argument` を送出する。
+- 座標ごとに最大絶対値で正規化してから平均するため、和の途中でオーバーフローしにくい。
+- 退化三角形に対しても算術平均を返す。

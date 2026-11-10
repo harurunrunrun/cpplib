@@ -11,9 +11,9 @@ documentation_of: ../../../../src/algorithm/math/combinatorics/grid_square_count
 long long grid_square_count(long long side_length);
 ```
 
-一辺が単位正方形 `side_length` 個の格子について返す。
+一辺が単位正方形 `side_length` 個分の正方格子について、含まれる正方形の総数 $\sum_{i=1}^{n} i^2 = n(n+1)(2n+1)/6$（$n$ は `side_length`）を返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -21,4 +21,4 @@ long long grid_square_count(long long side_length);
 
 ## 注意点
 
-- 負の辺長は `runtime_error`、結果の範囲違反は `overflow_error` となる。
+- 辺長が負なら `runtime_error`、結果が `long long` に収まらなければ `overflow_error` を送出する。

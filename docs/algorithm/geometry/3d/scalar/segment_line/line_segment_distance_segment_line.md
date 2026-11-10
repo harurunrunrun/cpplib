@@ -9,8 +9,8 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/segment_lin
 
 ## API別の時間計算量・空間計算量
 
-時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-逆順leafは `distance(line, segment)` へ委譲する。返り値と例外条件は順方向leafと同じである。
+- 引数の順序を入れ替えて `distance(line, segment)` に委譲する。戻り値と例外の条件は `distance(line, segment)` と同じである。

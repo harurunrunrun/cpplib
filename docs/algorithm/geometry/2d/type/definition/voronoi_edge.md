@@ -1,49 +1,48 @@
 ---
-title: Voronoi Edge (Voronoi辺)
+title: Voronoi Edge (Voronoi 辺)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/type/definition/voronoi_edge.hpp
 ---
 
-2つのsiteのcell境界となるVoronoi辺を保持する結果型。
+2 つのサイトのセル境界となる Voronoi 辺を保持する結果型。
 
 ## API
 
 ```cpp
-inline constexpr std::size_t VORONOI_NO_VERTEX;
+inline constexpr std::size_t VORONOI_NO_VERTEX = std::numeric_limits<std::size_t>::max();
 
 struct VoronoiEdge {
-    VoronoiEdgeKind kind;
-    std::size_t first_site;
-    std::size_t second_site;
+    VoronoiEdgeKind kind = VoronoiEdgeKind::SEGMENT;
+    std::size_t first_site = 0;
+    std::size_t second_site = 0;
     Point origin;
     Point endpoint_or_direction;
-    std::size_t first_vertex;
-    std::size_t second_vertex;
+    std::size_t first_vertex = VORONOI_NO_VERTEX;
+    std::size_t second_vertex = VORONOI_NO_VERTEX;
 };
 ```
 
-- `first_site`, `second_site`: 辺を共有する2つのsiteの元入力添字。
-- `origin`: 線分の一端、半直線の始点、または直線上の1点。
-- `endpoint_or_direction`: `SEGMENT` では他端、`RAY` と `LINE` では長さ1の方向。
-- `first_vertex`, `second_vertex`: 図の `vertices` に対する有限端点の添字。
+- `kind`: 辺の種類（線分・半直線・直線）。
+- `first_site`, `second_site`: 辺を共有する 2 つのサイトの、元の入力における添字。
+- `origin`: 線分の一端、半直線の始点、または直線上の 1 点。
+- `endpoint_or_direction`: `SEGMENT` では他端、`RAY` と `LINE` では長さ 1 の方向ベクトル。
+- `first_vertex`, `second_vertex`: 図の `vertices` における有限端点の添字。
 - `VORONOI_NO_VERTEX`: 対応する有限端点がないことを表す値。
 
-`SEGMENT` は2つ、`RAY` は1つ、`LINE` は0個の有限端点を持つ。
+有限端点の個数は `SEGMENT` が 2 個、`RAY` が 1 個、`LINE` が 0 個である。
 
-## 既定値
+## デフォルト値
 
-既定構築では `kind == SEGMENT`、site添字と座標は0、両頂点添字は
-`VORONOI_NO_VERTEX` になる。
+デフォルト構築では `kind == VoronoiEdgeKind::SEGMENT`、サイト添字と座標は 0、両端点の頂点添字は `VORONOI_NO_VERTEX` になる。
 
 ## 時間計算量
 
 | 操作 | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| 既定構築、全fieldの参照 | $O(1)$ | $O(1)$ |
+| デフォルト構築、全メンバの参照 | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-既定構築値は有効なVoronoi辺を意味しない。`endpoint_or_direction` の意味と
-有限頂点添字の個数は必ず `kind` に従って解釈する。
+デフォルト構築した値は有効な Voronoi 辺を表さない。`endpoint_or_direction` の意味と有限端点の添字の個数は、必ず `kind` に従って解釈する。
 
 ## 使用例
 

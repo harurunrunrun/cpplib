@@ -3,17 +3,19 @@ title: 2D Orthogonality (二次元直交判定)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/orthogonal.hpp
 ---
 
+ベクトルどうし、直線どうしの直交判定の API をまとめた集約ヘッダである。
+
 ## API
 
-- `orthogonal(left, right)`: 2ベクトルが直交するか判定する。
-- `orthogonal(left_line, right_line)`: 2直線の方向ベクトルが直交するか判定する。
+- `orthogonal(left, right)`: 2 つのベクトルが直交するかどうかを判定する。
+- `orthogonal(left_line, right_line)`: 2 直線の方向ベクトルが直交するかどうかを判定する。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-- 各overload: 時間 $O(1)$、追加領域 $O(1)$。
+各オーバーロードとも、時間 $O(1)$、追加の空間 $O(1)$ である。
 
 ## 注意点
 
-2ベクトルの長さの積をscaleとする許容誤差付き内積判定を行うため、各ベクトルの非零定数倍に対して判定は不変である。
-零ベクトルを含むベクトルoverloadは従来互換のため `true` を返す。
-直線overloadは退化直線に `std::invalid_argument` を送出する。
+- 2 つのベクトルの長さの積をスケールとする、許容誤差付きの内積の判定を行う。そのため、各ベクトルを非零の定数倍しても判定は変わらない。
+- ベクトル版は、零ベクトルを含む場合に従来との互換性のため `true` を返す。
+- 直線版は、退化した直線に対して `std::invalid_argument` を送出する。

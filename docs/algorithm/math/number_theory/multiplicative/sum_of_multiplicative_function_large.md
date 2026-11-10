@@ -3,9 +3,7 @@ title: Sum of Multiplicative Function (Large) (大きなNまでの乗法的関�
 documentation_of: ../../../../../src/algorithm/math/number_theory/multiplicative/sum_of_multiplicative_function_large.hpp
 ---
 
-素数冪での値と素数上の累積和が分かる乗法的関数を、
-$N$ 以下で高速に総和する。乗法的関数なので $f(1)=1$ とする。
-`LinearPrimePowerMultiplicativeFunction` は、次の関数族を表す。
+素数冪での値と素数上の累積和が分かる乗法的関数 $f$ について、$N$ 以下での総和を高速に求める。乗法的関数なので $f(1)=1$ とする。付属の `LinearPrimePowerMultiplicativeFunction` は、次の関数族を表す。
 
 $$
 f(p^e)=ae+bp
@@ -18,9 +16,9 @@ inline constexpr std::uint64_t
     math::sum_multiplicative_function_large_max_n;
 ```
 
-保証する最大値 $10^{13}$ を表す。
+この実装が保証する $N$ の最大値 $10^{13}$ を表す定数。
 
-## 素数累積和の2成分
+## 素数累積和の 2 成分
 
 ```cpp
 template<int MOD>
@@ -32,16 +30,12 @@ struct math::LargePrimePrefixComponents {
 
 同じ添字 `i` について次を保持する。
 
-- `prime_count[i]`:
-  $\pi(x_i)=\sum_{p\le x_i}1$
-- `prime_sum[i]`:
-  $\sum_{p\le x_i}p$
+- `prime_count[i]`: $\pi(x_i)=\sum_{p\le x_i}1$
+- `prime_sum[i]`: $\sum_{p\le x_i}p$
 
-$x_i$ は `quotient_values()[i]` である。添字0は内部の番兵であり値0を持つ。
-この2成分から、$f(p)=a+bp$ の素数累積和を
-`a * prime_count[i] + b * prime_sum[i]` として作れる。
+$x_i$ は `quotient_values()[i]` である。添字 $0$ は内部の番兵で、値 $0$ を持つ。この 2 成分から、$f(p)=a+bp$ の素数累積和を `a * prime_count[i] + b * prime_sum[i]` として作れる。
 
-## 公式関数族の素数冪 evaluator
+## 付属の関数族の素数冪での値
 
 ```cpp
 template<int MOD>
@@ -56,10 +50,9 @@ struct math::LinearPrimePowerMultiplicativeFunction {
 };
 ```
 
-`exponent_coefficient * exponent + prime_coefficient * prime`、
-すなわち $ae+bp$ を返す。`operator()` は $O(1)$。
+`exponent_coefficient * exponent + prime_coefficient * prime`、すなわち $ae+bp$ を返す。`operator()` は $O(1)$。
 
-## 汎用総和器
+## 汎用の総和クラス
 
 ```cpp
 template<int MOD>
@@ -68,11 +61,9 @@ class math::LargeMultiplicativeFunctionSummatory;
 math::LargeMultiplicativeFunctionSummatory<469762049> summatory(n);
 ```
 
-コンストラクタは $\sqrt n$ 以下の素数を列挙する。
-`n > sum_multiplicative_function_large_max_n` では
-`std::invalid_argument` を送出する。
+コンストラクタは $\sqrt n$ 以下の素数を列挙する。`n > sum_multiplicative_function_large_max_n` では `std::invalid_argument` を送出する。
 
-### 上限を取得
+### 上限の取得
 
 ```cpp
 std::uint64_t limit() const;
@@ -80,34 +71,31 @@ std::uint64_t limit() const;
 
 構築時の `n` を返す。$O(1)$。
 
-### 商テーブルの大きさ
+### 商の表の大きさ
 
 ```cpp
 std::size_t quotient_table_size() const;
 ```
 
-$\lfloor n/i\rfloor$ の相異なる値を格納する内部表の長さを返す。$O(1)$。
+$\lfloor n/i\rfloor$ の相異なる値を格納する内部表の長さ（番兵を含む）を返す。$O(1)$。
 
-### 商テーブルの引数列
+### 商の表の引数列
 
 ```cpp
 std::vector<std::uint64_t> quotient_values() const;
 ```
 
-各内部添字が表す $x_i$ を返す。添字0は0で、それ以外には
-$\lfloor n/i\rfloor$ の相異なる値が入る。時間・追加領域は
-$O(\sqrt n)$。
+各内部添字が表す $x_i$ を返す。添字 $0$ は $0$ で、それ以外には $\lfloor n/i\rfloor$ の相異なる値が降順に入る。時間・追加領域は $O(\sqrt n)$。
 
-### 素数累積和の2成分を構築
+### 素数累積和の 2 成分の構築
 
 ```cpp
 LargePrimePrefixComponents<MOD> prime_prefix_components() const;
 ```
 
-`quotient_values()` と同じ配置で $\pi(x_i)$ と
-$\sum_{p\le x_i}p$ を返す。素数版の商列篩を2成分同時に行う。
+`quotient_values()` と同じ配置で $\pi(x_i)$ と $\sum_{p\le x_i}p$ を返す。素数についての商ごとの篩を 2 成分同時に行う。
 
-### 任意の乗法的関数を総和
+### 任意の乗法的関数の総和
 
 ```cpp
 template<class PrimePowerFunction>
@@ -117,22 +105,17 @@ Modint<MOD> sum(
 ) const;
 ```
 
-`function(p, e)` が $f(p^e)$ を返す乗法的関数について
-$\sum_{i=1}^{n}f(i)$ を返す。`prime_prefix[i]` には
+`function(p, e)` が $f(p^e)$ を返す乗法的関数について $\sum_{i=1}^{n}f(i)$ を返す。`prime_prefix[i]` には、$x_i$ を `quotient_values()[i]` として
 
 $$
-\sum_{p\le quotient\_values()[i]} f(p)
+\sum_{p\le x_i} f(p)
 $$
 
-を与える必要がある。表の長さが `quotient_table_size()` と異なる場合は
-`std::invalid_argument` を送出する。
+を与える必要がある。表の長さが `quotient_table_size()` と異なる場合（$n = 0$ では表が空でない場合）は `std::invalid_argument` を送出する。
 
-例として $f(n)=n^2$ では `function(p,e)=p^{2e}` とし、
-各 $x_i$ までの素数平方和を `prime_prefix[i]` に入れる。
-このように `quotient_values()` を使えば、$a+bp$ 以外の素数累積和 provider
-も安全に接続できる。
+例として $f(n)=n^2$ では `function(p, e)` が $p^{2e}$ を返すようにし、各 $x_i$ までの素数の平方和を `prime_prefix[i]` に入れる。このように `quotient_values()` を使えば、$a+bp$ 以外の形の素数累積和を求める処理とも安全に組み合わせられる。
 
-## 線形素数冪関数用の高水準 API
+## 付属の関数族用の API
 
 ```cpp
 template<int MOD = 469762049>
@@ -143,24 +126,19 @@ Modint<MOD> math::sum_of_multiplicative_function_large(
 );
 ```
 
-$f(p^e)=ae+bp$ を満たす乗法的関数の
-$\sum_{i=1}^{n}f(i)$ を返す。内部で2成分の素数累積和を作って合成する。
-`n == 0` では0を返し、保証上限超過では `std::invalid_argument` を送出する。
+$f(p^e)=ae+bp$（$a$ は `exponent_coefficient`、$b$ は `prime_coefficient`）を満たす乗法的関数について $\sum_{i=1}^{n}f(i)$ を返す。内部で 2 成分の素数累積和を作って合成する。`n == 0` では $0$ を返し、保証する上限を超えると `std::invalid_argument` を送出する。
 
 ## アルゴリズム
 
-$\lfloor N/i\rfloor$ の相異なる $O(\sqrt N)$ 個だけを保持し、
-素数計数と素数和を Eratosthenes 型に更新する。その後、最小素因数と指数を固定する
-DFS で素数冪を列挙する。$p^3$ が残り上限を超える枝は
-素数累積和を使って一括処理するため、全整数や全合成数は列挙しない。
+$\lfloor N/i\rfloor$ の相異なる $O(\sqrt N)$ 個の値だけを保持し、素数の個数と素数の和をエラトステネスの篩の要領で更新する。その後、最小素因数とその指数を固定する DFS で素数冪を列挙する。$p^3$ が残りの上限を超える枝は素数累積和を使って一括で処理するので、すべての整数やすべての合成数を列挙することはない。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `sum_multiplicative_function_large_max_n` | $O(1)$ | $O(1)$ |
 | `LinearPrimePowerMultiplicativeFunction::operator()` | $O(1)$ | $O(1)$ |
-| constructor | $O(\sqrt n\log\log n)$ | オブジェクトに $O(\sqrt n/\log n)$ |
+| コンストラクタ | $O(\sqrt n\log\log n)$ | オブジェクトに $O(\sqrt n/\log n)$ |
 | `limit` / `quotient_table_size` | $O(1)$ | $O(1)$ |
 | `quotient_values` | $O(\sqrt n)$ | $O(\sqrt n)$ |
 | `prime_prefix_components` | $O(n^{3/4}/\log n)$ | $O(\sqrt n)$ |
@@ -169,7 +147,7 @@ DFS で素数冪を列挙する。$p^3$ が残り上限を超える枝は
 
 ## 注意点
 
-- `MOD >= 1`。
-- `function(p,e)` は `Modint<MOD>` に変換できる値を返す。
-- `prime_prefix` は同じ `n` の総和器が返す商配置に対応させる。
-- `n <= sum_multiplicative_function_large_max_n` が必要。
+- `MOD >= 1` でなければならない（`static_assert` で検査する）。
+- `function(p, e)` は `Modint<MOD>` に変換できる値を返す必要がある。
+- `prime_prefix` は、同じ `n` で構築した総和クラスが返す商の配置に合わせる。
+- `n <= sum_multiplicative_function_large_max_n` が必要である。

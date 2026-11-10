@@ -15,4 +15,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/do
 
 ## 注意点
 
-`dominant_axis` の結果や `dominant_axis_projection` で除去する軸を表す列挙型である。
+- `dominant_axis` の結果や、`dominant_axis_projection` で取り除く軸を表す列挙型（`enum class`）である。

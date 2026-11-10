@@ -3,27 +3,30 @@ title: 2D Integer Dot Product Aggregator (二次元整数内積集約ヘッダ)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/integer_dot.hpp
 ---
 
-厳密整数型と整数点入力の内積APIをまとめる後方互換集約ヘッダ。
+厳密な整数型と、整数点を入力とする内積の API をまとめた後方互換の集約ヘッダである。既存のコードはこのヘッダをそのまま利用できる。
 
 ## 構成
 
-| leaf header | 提供するAPI |
+| leaf header | 提供する API |
 | --- | --- |
-| `geometry_integer_wide.hpp` | `GeometryIntegerWide` |
+| `geometry_integer_wide.hpp` | `GeometryIntegerWide`（`ExactInteger` の別名） |
 | `integer_dot_integer_points.hpp` | `integer_dot(first, second)` |
 
-## 集約されるAPI
+## 集約される API
 
 ```cpp
-GeometryIntegerWide integer_dot(first, second);
+template<std::integral Coordinate>
+GeometryIntegerWide integer_dot(const IntegerPoint<Coordinate>& first, const IntegerPoint<Coordinate>& second);
 ```
 
-## API別の時間計算量・空間計算量
+内積 $x_1 x_2 + y_1 y_2$ を、オーバーフローなしに `GeometryIntegerWide` で返す。
 
-| API・操作 | 時間計算量 | 追加空間計算量 |
+## 計算量
+
+| API・操作 | 時間計算量 | 追加の空間計算量 |
 | --- | --- | --- |
-| 64-bit以下の座標の `integer_dot` | $O(1)$ | $O(1)$ |
+| 64 bit 以下の座標での `integer_dot` | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-既存コードはこのヘッダを変更せず利用できる。
+集約用のヘッダであり、各 API の前提条件と例外は個別のヘッダの説明に従う。

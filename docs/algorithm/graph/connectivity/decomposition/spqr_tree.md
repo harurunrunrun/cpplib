@@ -3,7 +3,7 @@ title: SPQR Tree (SPQR木)
 documentation_of: ../../../../../src/algorithm/graph/connectivity/decomposition/spqr_tree.hpp
 ---
 
-二重頂点連結な無向多重グラフを、直列・並列・三重頂点連結・1辺の skeleton に分解する。各 tree edge は両端の skeleton に1本ずつ現れる virtual edge の組に対応する。
+二重頂点連結な無向多重グラフを、直列・並列・三重頂点連結・辺 1 本のスケルトンに分解する。SPQR 木の各辺は、両端のノードのスケルトンに 1 本ずつ現れる仮想辺の組に対応する。
 
 ## API
 
@@ -16,10 +16,10 @@ enum class SPQRNodeType {
 };
 ```
 
-- `S`: 単純閉路を表す series node
-- `P`: 同じ2頂点を結ぶ多重辺を表す parallel node
-- `Q`: 入力辺1本を表す edge node
-- `R`: 単純かつ三重頂点連結な rigid node
+- `S`: 単純閉路を表す直列（series）ノード
+- `P`: 同じ 2 頂点を結ぶ多重辺を表す並列（parallel）ノード
+- `Q`: 入力辺 1 本を表す辺ノード
+- `R`: 単純かつ三重頂点連結な剛（rigid）ノード
 
 ```cpp
 struct SPQRSkeletonEdge {
@@ -33,9 +33,10 @@ struct SPQRSkeletonEdge {
 };
 ```
 
-`is_virtual()` が `false` の辺はQ nodeだけにあり、`original_edge_id` が入力順の辺IDを表す。このとき `twin_node = twin_edge = -1` である。
+`is_virtual()` は `original_edge_id == -1` のとき `true` を返す。
 
-`is_virtual()` が `true` の辺では `original_edge_id = -1` であり、`nodes[twin_node].skeleton_edges[twin_edge]` が反対側の virtual edge である。twin同士の端点は、向きを無視して一致する。
+- `is_virtual()` が `false` の辺（実辺）は Q ノードにだけ現れ、`original_edge_id` が入力順の辺 ID を表す。このとき `twin_node` と `twin_edge` はともに $-1$ である。
+- `is_virtual()` が `true` の辺（仮想辺）では `original_edge_id` が $-1$ であり、`nodes[twin_node].skeleton_edges[twin_edge]` が反対側の仮想辺である。対になる仮想辺どうしの端点は、向きを無視すれば一致する。
 
 ```cpp
 struct SPQRTreeNode {
@@ -44,7 +45,7 @@ struct SPQRTreeNode {
 };
 ```
 
-Q nodeだけで完結する1辺グラフを除き、Q nodeの skeleton は入力辺とvirtual edgeの2本からなる。他の種類の node では、Q nodeを明示するため全 skeleton edge がvirtual edgeになる。
+辺 1 本だけのグラフで Q ノード 1 個だけからなる場合を除き、Q ノードのスケルトンは入力辺 1 本と仮想辺 1 本からなる。他の種類のノードでは、Q ノードを明示的に持つため、スケルトンの辺はすべて仮想辺になる。
 
 ```cpp
 struct SPQRTreeResult {
@@ -55,11 +56,11 @@ struct SPQRTreeResult {
 };
 ```
 
-- `nodes`: SPQR木のnodeと各skeleton
-- `tree_edges`: SPQR木の辺。各要素は `nodes` の添字対
-- `original_edge_q_node[e]`: 入力辺 `e` を実辺として持つQ node
+- `nodes`: SPQR 木のノードと、それぞれのスケルトン
+- `tree_edges`: SPQR 木の辺。各要素は `nodes` の添字の組
+- `original_edge_q_node[e]`: 入力辺 `e` を実辺として持つ Q ノードの添字
 
-隣接するS node同士およびP node同士は併合されている。したがって、返るSPQR木はこの併合に関してreducedである。
+隣接する S ノードどうし、および P ノードどうしは併合済みである。したがって、返される SPQR 木はこの併合に関して既約（reduced）である。
 
 ```cpp
 SPQRTreeResult spqr_tree(
@@ -68,26 +69,26 @@ SPQRTreeResult spqr_tree(
 );
 ```
 
-頂点集合を $[0,N)$ とする無向多重グラフのSPQR木を返す。
+頂点集合を $[0, N)$ とする無向多重グラフの SPQR 木を返す。
 
 ## 時間計算量
 
 頂点数を $N$、辺数を $M$ とする。
 
 - `SPQRSkeletonEdge::is_virtual()`: $O(1)$
-- `spqr_tree()`: $O(N+M)$
+- `spqr_tree()`: $O(N + M)$
 
-入力の二重頂点連結性検査、SPQR分解、skeletonのreduction、Q nodeの構築をすべて含む。
+`spqr_tree()` の計算量には、入力の二重頂点連結性の検査、SPQR 分解、スケルトンの併合、Q ノードの構築をすべて含む。
 
 ## 空間計算量
 
-$O(N+M)$。
+$O(N + M)$。
 
 ## 注意点
 
 - 自己ループは扱わない。
-- $N=2$ の多重辺および1辺だけの退化ケースは扱える。
-- $N\geq 3$ では入力が連結かつ関節点を持たない必要がある。
-- 頂点数が2未満、辺集合が空、端点が範囲外、自己ループ、または二重頂点連結でない入力に対して `invalid_argument` を送出する。
-- 頂点数または辺数が実装上の上限を超える場合は `length_error` を送出する。
-- 頂点番号はすべて入力グラフの番号であり、skeletonごとの局所番号へ付け替えない。
+- $N = 2$ の多重辺、および辺 1 本だけの退化したケースは扱える。
+- $N \ge 3$ では、入力が連結かつ関節点を持たない必要がある。
+- 頂点数が 2 未満、辺集合が空、端点が範囲外、自己ループを含む、または二重頂点連結でない入力に対しては `std::invalid_argument` を送出する。
+- 頂点数または辺数が実装上の上限を超える場合は `std::length_error` を送出する。
+- スケルトン中の頂点番号はすべて入力グラフの番号であり、スケルトンごとの局所番号には付け替えない。

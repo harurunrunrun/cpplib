@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/triangle_po
 
 ## API
 
-- `barycentric_coordinates(triangle, point)`: 点を三角形の三頂点に対する重心座標で表す。
+- `barycentric_coordinates(triangle, point)`: 点 `point` を三角形の 3 頂点 $a, b, c$ に対する重心座標 $(w_a, w_b, w_c)$ （和が $1$）で表し、`std::array<long double, 3>` として返す。
 
 ## API別の時間計算量・空間計算量
 
-- 全API: 時間・追加領域 $O(1)$。
+- 時間・追加領域 $O(1)$。
 
 ## 注意点
 
-退化三角形または非有限入力では例外を送出する。点が三角形の平面外でも射影に対応する係数を返す。
+- 点が三角形を含む平面の外にある場合は、その平面への正射影に対応する係数を返す。
+- 退化した三角形や非有限な入力には `std::invalid_argument` を送出する。係数が `long double` で表現できない場合は `std::overflow_error` を送出する。

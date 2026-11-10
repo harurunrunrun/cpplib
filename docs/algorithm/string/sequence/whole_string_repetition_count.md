@@ -3,7 +3,7 @@ title: Whole String Repetition Count (文字列全体の反復回数) [FINDSR]
 documentation_of: ../../../../src/algorithm/string/sequence/whole_string_repetition_count.hpp
 ---
 
-列全体を同じ非空ブロックの反復として表すときの最大反復回数を返す。
+列全体を同じ空でないブロックの反復として表すときの、最大の反復回数を返す。
 
 ## API
 
@@ -13,7 +13,7 @@ int whole_string_repetition_count(const Sequence& sequence)
 ~~~
 
 `sequence = block + block + ... + block` と表せる最大のブロック数を返す。
-空列では `0`、空でない非周期列では `1` を返す。
+空列では `0`、空でない非周期的な列では `1` を返す。
 
 ## 時間計算量
 
@@ -26,4 +26,4 @@ $N$ を列の長さとする。
 ## 注意点
 
 - `Sequence` は `prefix_function` が受理する型でなければならない。
-- 要素の等値比較1回を $O(1)$ とする。
+- 要素の等値比較 1 回を $O(1)$ とする。

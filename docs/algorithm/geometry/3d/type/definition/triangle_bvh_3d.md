@@ -3,35 +3,32 @@ title: 3D Triangle BVH (三次元三角形境界体積階層)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/triangle_bvh_3d.hpp
 ---
 
-`TriangleBVH3D` は三角形のAABBを重心の最大spread軸で中央値分割する静的BVHである。
-AABB broad-phase検索と、三角形との最近交点を返すray castingを提供する。
+`TriangleBVH3D` は、三角形の AABB を、重心の広がりが最大の軸に沿って中央値で分割する静的な BVH である。
+AABB による粗い候補検索（ブロードフェーズ）と、三角形との最も近い交点を返すレイキャストを提供する。
 
 ## API
 
-- `TriangleBVH3D()`: 空のBVHを構築する。
-- `TriangleBVH3D(triangles, leaf_capacity = 4)`: 三角形列をcopyして構築する。
-- `build(triangles)`: 内容を破棄して再構築する。
-- `size()`, `empty()`: 三角形数と空判定を返す。
-- `triangle(index)`: 元のindexの三角形を返す。範囲外なら `std::out_of_range`。
-- `aabb_query(range)`: 自身のAABBが `range` と接触または交差する三角形indexを
-  昇順で返す。これはbroad-phaseであり、三角形そのものと箱の厳密な交差判定ではない。
-- `ray_cast(ray, minimum_parameter = 0, maximum_parameter = infinity)`:
-  `ray.origin + t * (ray.through - ray.origin)` と三角形の交点のうち最小の `t` を、
-  `{triangle_index, t, point}` で返す。なければ `nullopt`。表裏両面を判定する。
+- `TriangleBVH3D()`: 空の BVH を構築する。
+- `TriangleBVH3D(triangles, leaf_capacity = 4)`: 三角形列をコピーして構築する。`leaf_capacity` は葉に入れる三角形数の上限。
+- `build(triangles)`: 現在の内容を破棄し、`triangles` で再構築する（`leaf_capacity` は維持する）。
+- `size()`, `empty()`: 三角形の個数と、空かどうかを返す。
+- `triangle(index)`: 元のインデックス `index` の三角形を返す。範囲外なら `std::out_of_range` を送出する。
+- `aabb_query(range)`: 三角形自身の AABB が `range` と接するか交わる三角形のインデックスを、昇順で返す。これはブロードフェーズであり、三角形そのものと箱との厳密な交差判定ではない。
+- `ray_cast(ray, minimum_parameter = 0, maximum_parameter = infinity)`: `ray.origin + t * (ray.through - ray.origin)` と三角形との交点のうち、$t$ が最小のものを `std::tuple{triangle_index, t, point}` で返す。交点がなければ `std::nullopt` を返す。三角形の表裏の両面を判定する。
 
 ## API別の時間計算量・空間計算量
 
-- `build` と構築子: $O(N\log N)$ 時間、$O(N)$ 領域。
-- `aabb_query`: 木の探索は平均 $O(\log N+K)$、最悪 $O(N)$。返却indexを
-  昇順へsortするため、全体は平均 $O(\log N+K\log(K+1))$、最悪
-  $O(N+K\log(K+1))$ 時間、返却値 $O(K)$。
-- `ray_cast`: 平均 $O(\log N+H)$、最悪 $O(N)$ 時間、再帰stack $O(\log N)$。
-- `size`, `empty`, `triangle`: $O(1)$ 時間・追加領域。
+三角形の個数を $N$、`aabb_query` が返す個数を $K$、`ray_cast` で交差判定を行う三角形の個数を $H$ とする。
+
+- `build` とコンストラクタ: 時間 $O(N \log N)$、領域 $O(N)$。
+- `aabb_query`: 木の探索は平均 $O(\log N + K)$、最悪 $O(N)$。返すインデックスを昇順にソートするため、全体では平均 $O(\log N + K \log (K + 1))$、最悪 $O(N + K \log (K + 1))$ 時間、戻り値の領域 $O(K)$。
+- `ray_cast`: 平均 $O(\log N + H)$、最悪 $O(N)$ 時間、再帰スタック $O(\log N)$。
+- `size`, `empty`, `triangle`: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-- 三角形、ray、AABBは有限でなければならない。`leaf_capacity` は正。
-- `minimum_parameter` は有限かつ非負、`maximum_parameter` はNaNでなく
-  `minimum_parameter` 以上とする。違反時は `std::invalid_argument`。
-- 退化三角形とrayが三角形面に含まれる非一意な共通部分はhitとして返さない。
-- 境界辺・頂点のhitを含み、同じparameterなら元index最小を返す。
+- 三角形・半直線・AABB は有限でなければならない。有限でない三角形を渡すと `build` とコンストラクタは `std::invalid_argument` を送出する。`aabb_query` に不正な `range` を渡した場合は `AABB3` の検査に従って例外を送出する。
+- `leaf_capacity` は正でなければならず、0 なら `std::invalid_argument` を送出する。
+- `ray_cast` では、`ray.origin == ray.through` の退化した半直線、`minimum_parameter` が有限かつ非負でない場合、`maximum_parameter` が NaN または `minimum_parameter` 未満の場合に `std::invalid_argument` を送出する。
+- 退化した三角形との交差や、半直線が三角形の面に含まれて共通部分が一意に定まらない場合は、ヒットとして返さない。
+- 三角形の境界の辺・頂点でのヒットも含む。同じパラメータで複数ヒットした場合は、元のインデックスが最小のものを返す。

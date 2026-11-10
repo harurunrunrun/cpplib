@@ -5,15 +5,16 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/line
 
 ## API
 
-- `closest_points(first, second)`: `Line3` と `Segment3` 上の最近点を引数と同じ順のpairで返す。異種型では逆順overloadも提供する。
-- この互換集約ヘッダは `(Line3, Segment3)` と `(Segment3, Line3)` の両leafを提供する。
+- `closest_points(first, second)`: `Line3` と `Segment3` 上の最近点の対を、引数と同じ順の `std::pair<Point3, Point3>` で返す。引数の型の順序を入れ替えたオーバーロードも提供する。
+- この互換用集約ヘッダは `(Line3, Segment3)` 版と `(Segment3, Line3)` 版の両方の個別ヘッダを提供する。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 全overload: 時間・追加領域 $O(1)$。
+- 全オーバーロード: 時間・追加空間ともに $O(1)$。
 
 ## 注意点
 
-最近点対が複数ある場合はそのうち1組を返す。線分は退化してもよい。退化直線・非有限入力には
-`std::invalid_argument` を送出する。共通anchorの局所座標とparameter区間で解き、
-結果を表現できない場合は `std::overflow_error` を送出する。
+- 最近点対が複数ある場合は、そのうち 1 組を返す。
+- 線分は退化していてもよい。
+- 退化した直線、非有限な入力には `std::invalid_argument` を送出する。
+- 共通の基準点からの局所座標とパラメータ区間で解き、結果を表現できない場合は `std::overflow_error` を送出する。

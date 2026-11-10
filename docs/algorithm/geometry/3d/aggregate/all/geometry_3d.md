@@ -3,18 +3,15 @@ title: 3D Geometry (三次元幾何)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/geometry_3d.hpp
 ---
 
-`long double` を用いる3次元幾何の基本型、距離、交差、三角形、四面体、球をまとめる。判定には `GEOMETRY3D_EPS = 1e-10L` を使う。
+`long double` を用いる三次元幾何の基本型・距離・交差・三角形・四面体・球などの API をまとめる。許容誤差付きの判定には `GEOMETRY3D_EPS = 1e-10L` を使う。
 
-## header
+## ヘッダ
 
-`geometry_3d.hpp` は後方互換用の umbrella header であり、下記の個別 header を
-include するだけである。必要な API だけを使う場合は
-`3d/<name>.hpp` を直接 include できる。
+`geometry_3d.hpp` は後方互換用の包括ヘッダであり、三次元幾何の個別ヘッダ（約 260 個）を include するだけである。下表の基本 API のほか、凸包・凸多面体・Delaunay 分割・GJK/EPA・四元数・球面幾何・多角形などの集約ヘッダも含む。必要な API だけを使う場合は、対応する個別ヘッダ（`src/algorithm/geometry/3d/` 以下の各ディレクトリにある）を直接 include すればよい。
 
-`base.hpp` は定数、`Point3` の member/operator と基本型だけを定義する。
-公開関数は同名 overload 群ごとに次の header に分かれる。
+定数・`Point3` のメンバ関数と演算子・基本型は `geometry_primitives.hpp` が提供する。基本的な公開関数は、同名のオーバーロード群ごとに次のヘッダに分かれている。
 
-| header | 公開 API |
+| ヘッダ | 公開 API |
 | --- | --- |
 | `geometry3d_sign.hpp` | `geometry3d_sign` |
 | `dot.hpp` / `cross.hpp` | `dot` / `cross` |
@@ -22,15 +19,15 @@ include するだけである。必要な API だけを使う場合は
 | `scalar_triple.hpp` | `scalar_triple` |
 | `parallel.hpp` / `orthogonal.hpp` | `parallel` / `orthogonal` |
 | `collinear.hpp` / `coplanar.hpp` | `collinear` / `coplanar` |
-| `line3_direction.hpp` / `ray3_direction.hpp` | 対応する direction |
+| `line3_direction.hpp` / `ray3_direction.hpp` | 対応する方向ベクトルの関数 |
 | `plane3_unit_normal.hpp` | `plane3_unit_normal` |
 | `on_line.hpp` / `on_ray.hpp` / `on_segment.hpp` / `on_plane.hpp` | 対応する `on_*` |
-| `projection.hpp` | `projection` の2 overload |
-| `closest_point.hpp` | `closest_point` の3 overload |
-| `reflection.hpp` | `reflection` の2 overload |
-| `distance.hpp` | `distance` の8 overload |
+| `projection.hpp` | `projection` の 2 オーバーロード |
+| `closest_point.hpp` | `closest_point` の 3 オーバーロード |
+| `reflection.hpp` | `reflection` の 2 オーバーロード |
+| `distance.hpp` | `distance` の 8 オーバーロード |
 | `signed_distance.hpp` | `signed_distance` |
-| `closest_points.hpp` | `closest_points` の2 overload |
+| `closest_points.hpp` | `closest_points` の 2 オーバーロード |
 | `line_plane_intersection.hpp` | `line_plane_intersection` |
 | `ray_plane_intersection.hpp` | `ray_plane_intersection` |
 | `segment_plane_intersection.hpp` | `segment_plane_intersection` |
@@ -41,9 +38,9 @@ include するだけである。必要な API だけを使う場合は
 | `plane_sphere_intersection.hpp` | `plane_sphere_intersection` |
 | `sphere_sphere_intersection.hpp` | `sphere_sphere_intersection` |
 | `triangle_normal.hpp` / `area.hpp` | `triangle_normal` / `area` |
-| `centroid.hpp` | `centroid` の2 overload |
-| `barycentric_coordinates.hpp` | `barycentric_coordinates` の2 overload |
-| `contains.hpp` | `contains` の3 overload |
+| `centroid.hpp` | `centroid` の 2 オーバーロード |
+| `barycentric_coordinates.hpp` | `barycentric_coordinates` の 2 オーバーロード |
+| `contains.hpp` | `contains` の 3 オーバーロード |
 | `signed_volume.hpp` / `volume.hpp` | `signed_volume` / `volume` |
 | `circumcircle.hpp` / `circumsphere.hpp` | `circumcircle` / `circumsphere` |
 | `on_circle.hpp` | `on_circle` |
@@ -53,9 +50,7 @@ include するだけである。必要な API だけを使う場合は
 | `angle.hpp` / `rotate_around_axis.hpp` | `angle` / `rotate_around_axis` |
 | `plane_orthonormal_basis.hpp` | `plane_orthonormal_basis` |
 
-全公開定義は `inline` であり、個別 header と umbrella header を同じ翻訳単位で
-重複して include しても定義は一度だけ読み込まれる。
-
+公開定義はすべて `inline` であり、個別ヘッダと包括ヘッダを同じ翻訳単位で重複して include しても、定義は一度だけ読み込まれる。
 
 ## 基本型
 
@@ -71,50 +66,50 @@ Triangle3{a, b, c}
 Tetrahedron3{a, b, c, d}
 ~~~
 
-`Line3` は `a`, `b` を通る直線、`Ray3` は `origin` から `through` 方向への半直線、`Plane3` は `point` を通り `normal` を法線とする平面である。`Circle3` は `normal` に垂直な平面上の円を表す。
+`Line3` は `a`, `b` を通る直線、`Ray3` は `origin` から `through` の方向へ伸びる半直線、`Plane3` は `point` を通り `normal` を法線とする平面である。`Circle3` は `normal` に垂直な平面上の円を表す。
 
-`Point3` は単項符号、加減算、scalar倍・除算、複合代入、誤差付き等値比較、辞書順比較を持つ。各演算は `O(1)` 時間計算量・空間計算量。
+`Point3` は単項の符号、加減算、スカラー倍・スカラーでの除算、複合代入、誤差付きの等値比較、辞書順比較を持つ。各演算の時間計算量・空間計算量は $O(1)$。
 
 ## ベクトル
 
 | API | 説明 |
 | --- | --- |
-| `geometry3d_sign(value)` | EPS付き符号を `-1,0,1` で返す。 |
+| `geometry3d_sign(value)` | 許容誤差 `GEOMETRY3D_EPS` 付きの符号を $-1, 0, 1$ で返す。 |
 | `dot(a,b)` | 内積。 |
 | `cross(a,b)` | 外積。 |
 | `norm(p)` | 長さの二乗。 |
-| `abs(p)` | Euclidean length。 |
-| `unit(p)` | 単位ベクトル。零ベクトルでは `invalid_argument`。 |
-| `scalar_triple(a,b,c)` | scalar triple product。 |
-| `parallel(a,b)` | 2ベクトルが平行か判定する。 |
-| `orthogonal(a,b)` | 2ベクトルが直交するか判定する。 |
-| `collinear(a,b,c)` | 3点が同一直線上か判定する。 |
-| `coplanar(a,b,c,d)` | 4点が同一平面上か判定する。 |
-| `angle(a,b)` | 2ベクトル間の角を `[0,pi]` で返す。零ベクトルでは例外。 |
-| `rotate_around_axis(p,axis,theta)` | 原点を通る `axis` の周りにRodriguesの公式で回転する。 |
+| `abs(p)` | ユークリッド長。 |
+| `unit(p)` | 単位ベクトル。零ベクトルでは `std::invalid_argument` を送出する。 |
+| `scalar_triple(a, b, c)` | スカラー三重積 $a \cdot (b \times c)$。 |
+| `parallel(a,b)` | 2 ベクトルが平行か判定する。 |
+| `orthogonal(a,b)` | 2 ベクトルが直交するか判定する。 |
+| `collinear(a,b,c)` | 3 点が同一直線上にあるか判定する。 |
+| `coplanar(a,b,c,d)` | 4 点が同一平面上にあるか判定する。 |
+| `angle(a, b)` | 2 ベクトルのなす角を $[0, \pi]$ で返す。零ベクトルでは例外を送出する。 |
+| `rotate_around_axis(p, axis, theta)` | 原点を通る `axis` のまわりに、Rodrigues の回転公式で角 `theta` だけ回転する。 |
 
-すべて `O(1)` 時間計算量・空間計算量。
+すべて時間・空間ともに $O(1)$。
 
-## 所属、射影、鏡映
+## 所属判定・射影・鏡映
 
 | API | 説明 |
 | --- | --- |
-| `line3_direction(line)` | 非零の方向ベクトルを返す。退化直線では例外。 |
-| `ray3_direction(ray)` | 非零の方向ベクトルを返す。退化半直線では例外。 |
-| `plane3_unit_normal(plane)` | 単位法線を返す。零法線では例外。 |
+| `line3_direction(line)` | 非零の方向ベクトルを返す。退化した直線では例外を送出する。 |
+| `ray3_direction(ray)` | 非零の方向ベクトルを返す。退化した半直線では例外を送出する。 |
+| `plane3_unit_normal(plane)` | 単位法線を返す。法線が零ベクトルなら例外を送出する。 |
 | `on_line(line,p)` | 点が直線上か判定する。 |
-| `on_ray(ray,p)` | 点が半直線上か判定する。originを含む。 |
-| `on_segment(segment,p)` | 点が閉線分上か判定する。退化線分にも対応する。 |
+| `on_ray(ray, p)` | 点が半直線上か判定する。始点 `origin` を含む。 |
+| `on_segment(segment,p)` | 点が閉線分上にあるか判定する。退化した線分にも対応する。 |
 | `on_plane(plane,p)` | 点が平面上か判定する。 |
-| `projection(line,p)` | 点の直線への直交射影。 |
-| `projection(plane,p)` | 点の平面への直交射影。 |
+| `projection(line,p)` | 点の直線への正射影。 |
+| `projection(plane,p)` | 点の平面への正射影。 |
 | `closest_point(ray,p)` | 半直線上の最近点。 |
-| `closest_point(segment,p)` | 閉線分上の最近点。退化線分にも対応する。 |
-| `reflection(line,p)` | 点を直線に関して180度回転した点。 |
+| `closest_point(segment,p)` | 閉線分上の最近点。退化した線分にも対応する。 |
+| `reflection(line, p)` | 点を直線のまわりに 180 度回転した点（直線に関する対称点）。 |
 | `reflection(plane,p)` | 点の平面に関する鏡映。 |
-| `plane_orthonormal_basis(plane)` | 平面上の右手系正規直交基底2本を返す。 |
+| `plane_orthonormal_basis(plane)` | 平面上の右手系の正規直交基底 2 本を返す。 |
 
-すべて `O(1)` 時間計算量・空間計算量。
+すべて時間・空間ともに $O(1)$。
 
 ## 距離と最近点対
 
@@ -132,45 +127,45 @@ distance(Segment3, Segment3)
 distance(Triangle3, Point3)
 ~~~
 
-`closest_points` は2つの図形上で距離を最小にする点のpairを返す。平行直線では一意でない最近点対のうち1組を返す。退化線分にも対応する。各APIは `O(1)` 時間計算量・空間計算量。
+`closest_points` は 2 つの図形上で距離を最小にする点の対を `std::pair` で返す。平行な直線では、一意でない最近点対のうち 1 組を返す。退化した線分にも対応する。各 API は時間・空間ともに $O(1)$。
 
 ## 平面との交差
 
 | API | 戻り値・条件 |
 | --- | --- |
-| `line_plane_intersection(line,plane)` | 一意な交点。平行または直線全体が平面上なら `domain_error`。 |
-| `ray_plane_intersection(ray,plane)` | 半直線上の一意な交点。存在しない、または無数にある場合は `nullopt`。 |
-| `segment_plane_intersection(segment,plane)` | 閉線分上の一意な交点。存在しない、または非退化線分全体が平面上なら `nullopt`。平面上の退化線分はその点を返す。 |
-| `plane_plane_intersection(a,b)` | 一意な交線。平行・一致平面では `domain_error`。 |
+| `line_plane_intersection(line,plane)` | 一意な交点。平行、または直線全体が平面上にあるなら `std::domain_error` を送出する。 |
+| `ray_plane_intersection(ray,plane)` | 半直線上の一意な交点。存在しない、または無数にある場合は `std::nullopt`。 |
+| `segment_plane_intersection(segment,plane)` | 閉線分上の一意な交点。存在しない、または非退化な線分全体が平面上にあるなら `std::nullopt`。平面上の退化した線分にはその点を返す。 |
+| `plane_plane_intersection(a,b)` | 一意な交線。平行な平面・一致する平面では `std::domain_error` を送出する。 |
 
-すべて `O(1)` 時間計算量・空間計算量。
+すべて時間・空間ともに $O(1)$。
 
 ## 球との交差
 
 | API | 説明 | 戻り値の最大要素数 |
 | --- | --- | --- |
-| `line_sphere_intersections(line,sphere)` | 直線と球面の交点。直線の向きに沿って並ぶ。 | 2 |
+| `line_sphere_intersections(line,sphere)` | 直線と球面の交点。直線の向きに沿った順に並ぶ。 | 2 |
 | `ray_sphere_intersections(ray,sphere)` | 半直線と球面の交点。 | 2 |
-| `segment_sphere_intersections(segment,sphere)` | 閉線分と球面の交点。退化線分にも対応する。 | 2 |
-| `plane_sphere_intersection(plane,sphere)` | 交円。交わらなければ `nullopt`、接する場合は半径0。 | 1 |
-| `sphere_sphere_intersection(a,b)` | 交円。交わらなければ `nullopt`、接する場合は半径0。一致球では交円が一意でないため `domain_error`。 | 1 |
+| `segment_sphere_intersections(segment,sphere)` | 閉線分と球面の交点。退化した線分にも対応する。 | 2 |
+| `plane_sphere_intersection(plane,sphere)` | 交円。交わらなければ `std::nullopt`、接する場合は半径 0 の円。 | 1 |
+| `sphere_sphere_intersection(a,b)` | 交円。交わらなければ `std::nullopt`、接する場合は半径 0 の円。一致する球では交円が一意でないため `std::domain_error` を送出する。 | 1 |
 
-各APIは返す `vector` の確保を含めて `O(1)` 時間計算量・空間計算量。負の半径では `invalid_argument`。
+各 API は、返す `std::vector` の確保を含めて時間・空間ともに $O(1)$。負の半径では `std::invalid_argument` を送出する。
 
 ## 三角形
 
 | API | 説明 |
 | --- | --- |
-| `triangle_normal(triangle)` | 単位法線。退化三角形では例外。 |
+| `triangle_normal(triangle)` | 単位法線。退化した三角形では例外を送出する。 |
 | `area(triangle)` | 面積。 |
 | `centroid(triangle)` | 重心。 |
-| `barycentric_coordinates(triangle,p)` | 重心座標 `{wa,wb,wc}`。点は平面外でもよい。退化時は例外。 |
+| `barycentric_coordinates(triangle,p)` | 重心座標 `{wa, wb, wc}`。点は平面外でもよい。退化時は例外を送出する。 |
 | `contains(triangle,p)` | 点が閉三角形上にあるか判定する。 |
-| `closest_point(triangle,p)` | 閉三角形上の最近点。退化時は例外。 |
+| `closest_point(triangle,p)` | 閉三角形上の最近点。退化時は例外を送出する。 |
 | `distance(triangle,p)` | 点と閉三角形の距離。 |
-| `circumcircle(triangle)` | 3頂点を通る平面上の外接円。退化時は例外。 |
+| `circumcircle(triangle)` | 3 頂点を通る、三角形の平面上の外接円。退化時は例外を送出する。 |
 
-すべて `O(1)` 時間計算量・空間計算量。
+すべて時間・空間ともに $O(1)$。
 
 ## 四面体
 
@@ -179,29 +174,29 @@ distance(Triangle3, Point3)
 | `signed_volume(tetrahedron)` | 向き付き体積。 |
 | `volume(tetrahedron)` | 非負の体積。 |
 | `centroid(tetrahedron)` | 重心。 |
-| `barycentric_coordinates(tetrahedron,p)` | 重心座標 `{wa,wb,wc,wd}`。退化時は例外。 |
-| `contains(tetrahedron,p)` | 点が閉四面体内にあるか判定する。退化時は例外。 |
-| `circumsphere(tetrahedron)` | 4頂点を通る外接球。退化時は例外。 |
+| `barycentric_coordinates(tetrahedron,p)` | 重心座標 `{wa, wb, wc, wd}`。退化時は例外を送出する。 |
+| `contains(tetrahedron,p)` | 点が閉四面体内にあるか判定する。退化時は例外を送出する。 |
+| `circumsphere(tetrahedron)` | 4 頂点を通る外接球。退化時は例外を送出する。 |
 
-すべて `O(1)` 時間計算量・空間計算量。
+すべて時間・空間ともに $O(1)$。
 
 ## 球と円
 
 | API | 説明 |
 | --- | --- |
-| `contains(sphere,p)` | 内部なら1、球面上なら0、外部なら-1。 |
-| `on_circle(circle,p)` | 点が3次元円周上か判定する。 |
+| `contains(sphere, p)` | 内部なら 1、球面上なら 0、外部なら $-1$ を返す。 |
+| `on_circle(circle,p)` | 点が三次元の円周上にあるか判定する。 |
 | `sphere_surface_area(sphere)` | 球の表面積。 |
 | `sphere_volume(sphere)` | 球の体積。 |
 | `sphere_cap_surface_area(sphere,height)` | 高さ `height` の球冠の曲面積。 |
 | `sphere_cap_volume(sphere,height)` | 高さ `height` の球冠の体積。 |
-| `sphere_intersection_volume(a,b)` | 2つの閉球の共通部分体積。離隔・内包・一致にも対応する。 |
+| `sphere_intersection_volume(a,b)` | 2 つの閉球の共通部分の体積。離れている場合・内包する場合・一致する場合にも対応する。 |
 
-すべて `O(1)` 時間計算量・空間計算量。半径は非負、球冠の高さは `[0,2*radius]` でなければならず、違反時は `invalid_argument`。
+すべて時間・空間ともに $O(1)$。半径は非負、球冠の高さは $[0, 2r]$（$r$ は半径）の範囲でなければならず、違反時は `std::invalid_argument` を送出する。
 
 ## 注意点
 
 - 入力と中間値が有限な `long double` の範囲に収まる必要がある。
-- EPS判定は絶対誤差である。巨大座標や厳密な整数述語が必要な問題では、整数専用の `__int128` 判定を使う。
-- `Line3`, `Ray3`, `Plane3` を使うAPIは非退化な方向・法線を要求する。退化時は `invalid_argument`。
-- 交点の存在と一意性を区別するAPIでは、無数の交点を1点へ縮約しない。
+- `GEOMETRY3D_EPS` による判定は絶対誤差である。巨大な座標を扱う問題や厳密な整数述語が必要な問題では、整数専用の判定（`exact_orient3d` など）を使う。
+- `Line3`, `Ray3`, `Plane3` を使う API は、非退化な方向・法線を要求する。退化時は `std::invalid_argument` を送出する。
+- 交点の存在と一意性を区別する API では、無数にある交点を 1 点に縮約しない。

@@ -1,9 +1,9 @@
 ---
-title: Voronoi Diagram from Points (点列のVoronoi図)
+title: Voronoi Diagram from Points (点列の Voronoi 図)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/result/point_set/voronoi_diagram_points.hpp
 ---
 
-二次元点列をsiteとするVoronoi図を構築する。
+2 次元の点列を site とする Voronoi 図を構築する。
 
 ## API
 
@@ -13,7 +13,12 @@ VoronoiDiagramResult voronoi_diagram(
 );
 ```
 
-Delaunay三角形分割を双対化し、有限頂点、線分、半直線、直線と各cellの辺を返す。
+Delaunay 三角形分割の双対をとり、有限な頂点と、線分・半直線・直線の辺、および各セルの辺を返す。返り値 `VoronoiDiagramResult` のメンバは次のとおり。
+
+- `vertices`: Voronoi 頂点の座標（座標順）。共円な三角形の外心は 1 つの頂点にまとめる。
+- `edges`: `VoronoiEdge` の列。種別 `kind` が `SEGMENT`（線分）、`RAY`（半直線）、`LINE`（直線）のいずれかで、隣接する 2 つの site を `first_site`, `second_site` に持つ。
+- `cell_edges`: 入力添字ごとの、そのセルを囲む辺の添字の列。site の代表添字の位置にのみ要素が入る。
+- `representative`, `sites`: `delaunay_triangulation` と同じ意味の site 代表情報。
 
 ## 時間計算量
 
@@ -21,16 +26,16 @@ Delaunay三角形分割を双対化し、有限頂点、線分、半直線、直
 
 | API | 時間計算量 | 空間計算量（返り値を含む） |
 | --- | --- | --- |
-| `voronoi_diagram(points)` | $O(N\log N)$ | $O(N)$ |
+| `voronoi_diagram(points)` | $O(N \log N)$ | $O(N)$ |
 
 ## 注意点
 
-- 座標は有限でなければならず、NaNまたは無限大には `std::invalid_argument` を送出する。
-- Delaunay述語または外心計算が有限範囲を超える場合は `std::overflow_error` を送出する。
-- 0点または1種類のsiteでは頂点と辺は空となる。
-- 全siteが一直線上なら隣接site間の垂直二等分線を `LINE` として返す。
-- 非退化な凸包に対応する無限辺は `RAY` として返す。
-- `cell_edges` の順序は未規定である。
+- 座標は有限でなければならず、NaN または無限大を含むと `std::invalid_argument` を送出する。
+- Delaunay 述語または外心の計算が有限な範囲を超える場合は `std::overflow_error` を送出する。
+- 点が 0 個、または site が 1 種類しかない場合、頂点と辺は空になる。
+- すべての site が一直線上にある場合は、隣接する site 間の垂直二等分線を `LINE` として返す。
+- 非退化な場合、凸包の辺に対応する無限辺は `RAY` として返す。
+- `cell_edges` の各列内の順序は未規定である。
 
 ## 使用例
 

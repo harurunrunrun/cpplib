@@ -32,18 +32,18 @@ struct MinimumCycleBasisResult {
 ```
 
 - `weight`: 基底に選んだ閉路の重みの総和
-- `cycles`: 各基底ベクトルに含まれる入力辺IDの昇順列
+- `cycles`: 各基底ベクトルに含まれる入力辺の ID を昇順に並べた列
 
-`cycles.size()` は $M-N+C$。$C$ は孤立頂点を含む連結成分数である。
+`cycles.size()` は $M-N+C$ である。ここで $C$ は孤立頂点も 1 つと数えた連結成分の個数である。
 
 ## 時間計算量
 
-頂点数を $N$、辺数を $M$、$W=64$、Horton候補数を $H\le NM$ とする。
+頂点数を $N$、辺数を $M$、ワード長を $W=64$、Horton 候補の個数を $H\le NM$ とする。
 
-- 全始点のDijkstra法: $O(N(M+N)\log(M+N+1))$
-- 最短路の辺ビット集合とHorton候補の構築: $O(N^2\lceil M/W\rceil+HM)$
+- 全始点からの Dijkstra 法: $O(N(M+N)\log(M+N+1))$
+- 最短路の辺ビット集合と Horton 候補の構築: $O(N^2\lceil M/W\rceil+HM)$
 - 候補の整列: $O(H\log(H+1)\lceil M/W\rceil)$
-- GF(2)基底への挿入: $O(HM\lceil M/W\rceil)$
+- $\mathbb F_2$ 上の基底への挿入: $O(HM\lceil M/W\rceil)$
 
 ## 空間計算量
 
@@ -51,4 +51,6 @@ struct MinimumCycleBasisResult {
 
 ## 注意点
 
-重みは非負で、辺の端点は $[0,N)$ でなければならない。違反時は `runtime_error` を送出する。距離と候補重みは符号付き128 bit整数で計算し、基底の総重みが `long long` を超える場合は `overflow_error` を送出する。同重み最短路は辺数、親辺IDの順で決定的に選ぶ。
+- 頂点数と重みは非負で、辺の端点は $[0,N)$ でなければならない。違反時は `runtime_error` を送出する。
+- 距離と候補の重みは符号付き 128 bit 整数で計算し、基底の総重みが `long long` に収まらない場合は `overflow_error` を送出する。
+- 重みが等しい最短路が複数あるときは、辺数が少ないもの、次に親辺の ID が小さいものを選ぶため、結果は決定的である。

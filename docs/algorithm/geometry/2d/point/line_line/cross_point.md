@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_line/cr
 
 ## API
 
-- `cross_point(first, second)`: 2無限直線の一意な交点を返す。
+- `Point cross_point(const Line& first, const Line& second)`: 2 本の無限直線の一意な交点を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,5 +13,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_line/cr
 
 ## 注意点
 
-退化直線には `std::invalid_argument`、平行または一致して一意な交点がない場合には `std::domain_error` を送出する。
-退化判定に該当しない範囲では、各直線の方向ベクトルを任意の正の定数倍しても交点は変わらない。
+方向ベクトルの長さが `GEOMETRY_EPS` 以下の退化直線には `std::invalid_argument` を送出する。平行または一致していて交点が一意に定まらない場合は `std::domain_error` を送出する。
+方向ベクトルを単位ベクトルに正規化してから計算するので、退化判定に該当しない範囲では、各直線の方向ベクトルを正の定数倍しても交点は変わらない。

@@ -7,13 +7,29 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/type/definition/ci
 
 ## API
 
-`CircleArrangementArc` は円番号、両端頂点、角度範囲、全円フラグを持つ。
-`CircleArrangementResult` は `vertices` と `arcs` を持つ。
+```cpp
+struct CircleArrangementArc {
+    std::size_t circle;
+    std::size_t first_vertex;
+    std::size_t second_vertex;
+    long double first_angle;
+    long double second_angle;
+    bool full_circle;
+};
+
+struct CircleArrangementResult {
+    std::vector<Point> vertices;
+    std::vector<CircleArrangementArc> arcs;
+};
+```
+
+- `CircleArrangementArc` は、円の番号 `circle`、両端の頂点番号、角度範囲 `[first_angle, second_angle]`、全円かどうかのフラグ `full_circle` をもつ。
+- `CircleArrangementResult` は頂点列 `vertices` と円弧列 `arcs` をもつ。
 
 ## 時間計算量
 
-各member参照は $O(1)$、全走査は格納要素数に対して線形。
+各メンバの参照は $O(1)$、全走査は格納要素数に対して線形。
 
 ## 注意点
 
-頂点を持たない全円arcでは頂点番号は `size_t(-1)`。
+頂点をもたない全円の弧では、両端の頂点番号は `static_cast<std::size_t>(-1)` である。

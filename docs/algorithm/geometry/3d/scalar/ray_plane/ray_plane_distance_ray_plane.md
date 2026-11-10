@@ -9,8 +9,9 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/ray_plane/r
 
 ## API別の時間計算量・空間計算量
 
-時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-交差または重なる場合は0を返す。退化半直線・零法線平面・非有限入力には `std::invalid_argument` を送出する。
+- 交差する、または半直線が平面上にある場合は $0$ を返す。交差しない場合は始点 `ray.origin` と平面の距離になる。
+- 退化した半直線、法線が零ベクトルの平面、非有限な入力には `std::invalid_argument` を送出する。

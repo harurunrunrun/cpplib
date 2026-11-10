@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/void/circle/circle
 
 ## API
 
-- `geometry3d_validate(circle)` は中心・法線・半径の有限性、法線の非零性、半径の非負性を検査する。
+- `geometry3d_validate(circle)`: 中心・法線・半径が有限であること、半径が非負であること、法線が零ベクトルでないことを検査する。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/void/circle/circle
 
 ## 注意点
 
-契約違反時は `std::invalid_argument` を送出する。
+条件に違反した場合は `std::invalid_argument` を送出する。法線が零ベクトルかどうかは許容誤差なしで判定する。

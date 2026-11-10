@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point/segment_poin
 
 ## API
 
-- `projection(segment, point)`: 閉線分上で点に最も近い射影点を返す。
+- `projection(segment, point)`: 閉線分上で `point` に最も近い点を返す。`closest_point(segment, point)` の別名である。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 
-退化線分では唯一の端点を返す。直交射影のparameterは $[0,1]$ にclampされる。
+- 直交射影の位置が線分の外にある場合は、近い方の端点を返す（媒介変数を $[0, 1]$ に制限するのと同じ）。
+- 退化線分では、その 1 点を返す。

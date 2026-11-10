@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/scalar/polar
 
 ## API
 
-- `polar(radius, theta)`: 長さ `radius`、偏角 `theta` の点を返す。角度はラジアン。
+- `Point polar(long double radius, long double theta)`: 長さ `radius`、偏角 `theta` の点 $(r \cos \theta, r \sin \theta)$ を返す。角度の単位はラジアンである。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/scalar/polar
 
 ## 注意点
 
-負の `radius` も数式どおり計算し、検査しない。
+負の `radius` も検査せず、式どおりに計算する。

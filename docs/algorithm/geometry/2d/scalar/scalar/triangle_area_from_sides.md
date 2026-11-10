@@ -3,22 +3,37 @@ title: Triangle Area from Three Sides (三辺から求める三角形面積)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/scalar/scalar/triangle_area_from_sides.hpp
 ---
 
+3 辺の長さから三角形の面積を求める。
+
 ## API
 
-`long double triangle_area_from_sides(first, second, third)`
+```cpp
+long double triangle_area_from_sides(
+    long double first,
+    long double second,
+    long double third
+);
+```
 
 ## 引数
 
-有限な非負の3辺長を渡す。
+有限かつ非負の 3 辺の長さを渡す。順序は問わない。
 
 ## 戻り値
 
-Heronの公式を数値的に並べ替えて求めた非負面積。
+非負の面積。辺を降順 $a \ge b \ge c$ に並べ、桁落ちを抑えるよう並べ替えたヘロンの公式
 
-## API別の時間計算量・空間計算量
+$$
+S = \frac{1}{4}\sqrt{(a+(b+c))(c-(a-b))(c+(a-b))(a+(b-c))}
+$$
 
-- `triangle_area_from_sides`: 時間 $O(1)$、追加領域 $O(1)$。
+で計算する。
+
+## 時間計算量・空間計算量
+
+時間 $O(1)$、追加空間 $O(1)$。
 
 ## 注意点
 
-三角不等式を満たさない場合と非有限値・負辺長では `invalid_argument`。退化三角形は `0`。
+- 非有限値または負の辺長が含まれる場合、および三角不等式を（許容誤差を超えて）満たさない場合は `std::invalid_argument` を送出する。
+- 退化三角形の面積は $0$ になる。

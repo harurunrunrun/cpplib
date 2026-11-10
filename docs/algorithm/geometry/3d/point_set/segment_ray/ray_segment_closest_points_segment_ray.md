@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point_set/segment_
 
 ## API
 
-- `closest_points(segment, ray)`: `Segment3` 上の点と `Ray3` 上の点を引数順のpairで返す。
+- `closest_points(segment, ray)`: `Segment3` 上の点と `Ray3` 上の点を、引数と同じ順の `std::pair<Point3, Point3>` で返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-逆順leafは `closest_points(ray, segment)` の結果を入れ替える。最近点の選択と例外条件は順方向leafと同じである。
+`closest_points(ray, segment)` の結果を入れ替えて返すだけなので、最近点の選び方と例外条件は `closest_points(ray, segment)` と同じである。

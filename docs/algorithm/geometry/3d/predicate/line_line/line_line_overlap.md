@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/line_lin
 
 ## API
 
-- `overlap(first, second)`: 2本の `Line3` の共通部分が正の長さを持つなら `true` を返す。直線同士では集合として一致するときに限る。
+- `overlap(first, second)`: 2 本の `Line3` の共通部分が正の長さを持つなら `true` を返す。直線同士では、集合として一致するときに限る。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- `overlap`: 時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-1点での交差は `false`。いずれかが退化直線なら `std::invalid_argument` を送出する。
+- 1 点で交わる場合は `false` を返す。
+- いずれかが退化した直線なら `std::invalid_argument` を送出する。

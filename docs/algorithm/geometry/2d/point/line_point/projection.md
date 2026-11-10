@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_point/p
 
 ## API
 
-- `projection(line, point)`: `point` を無限直線 `line` へ正射影した点を返す。
+- `Point projection(const Line& line, const Point& point)`: `point` を無限直線 `line` へ正射影した点を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_point/p
 
 ## 注意点
 
-`line.a` と `line.b` が許容誤差の範囲で一致する場合は `std::invalid_argument` を送出する。
+`line.a` と `line.b` の距離が `GEOMETRY_EPS` 以下（許容誤差の範囲で一致）の場合は `std::invalid_argument` を送出する。

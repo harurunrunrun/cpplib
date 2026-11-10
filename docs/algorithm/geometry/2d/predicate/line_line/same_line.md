@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/line_lin
 
 ## API
 
-- `same_line(first, second)`: 2無限直線が一致するか判定する。
+- `bool same_line(first, second)`: 2 本の無限直線が一致するか判定する。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/line_lin
 
 ## 注意点
 
-退化直線には、内部の直線上判定が `std::invalid_argument` を送出する。
+- 2 直線が平行で、かつ `second.a` が `first` 上にあるとき `true` を返す。
+- 方向ベクトルの長さが `GEOMETRY_EPS` 以下の退化直線を渡すと、内部の平行判定が `std::invalid_argument` を送出する。

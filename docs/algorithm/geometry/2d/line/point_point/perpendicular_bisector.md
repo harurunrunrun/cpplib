@@ -5,15 +5,15 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/line/point_point/p
 
 ## API
 
-`Line perpendicular_bisector(first, second)`
+`Line perpendicular_bisector(const Point& first, const Point& second)`
 
 ## 引数
 
-異なる2点を渡す。
+相異なる 2 点を渡す。
 
 ## 戻り値
 
-中点を `a` とし、線分方向を90度反時計回りに回した方向上の点を `b` とする直線。
+中点を `a` とし、`a` から `second - first` を反時計回りに 90 度回転した方向へ進んだ点を `b` とする直線。
 
 ## API別の時間計算量・空間計算量
 
@@ -21,4 +21,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/line/point_point/p
 
 ## 注意点
 
-2点が誤差付きで一致する場合は `invalid_argument`。
+2 点間の距離が `GEOMETRY_EPS` 以下（許容誤差の範囲で一致）の場合は `std::invalid_argument` を送出する。

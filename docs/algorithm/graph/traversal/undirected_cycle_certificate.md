@@ -3,7 +3,7 @@ title: Undirected Cycle Certificate (無向閉路証明) [cycle_detection_undire
 documentation_of: ../../../../src/algorithm/graph/traversal/undirected_cycle_certificate.hpp
 ---
 
-無向グラフから、頂点列と入力辺番号列を対応させた閉路を1つ取得する。
+無向グラフから、頂点列と入力の辺番号の列を対応させた閉路を 1 つ取得する。`undirected_cycle_with_edges`（`cycle_detection.hpp`）を呼び出す薄いラッパーである。
 
 ## `undirected_cycle_certificate`
 
@@ -14,9 +14,7 @@ CycleDetectionResult undirected_cycle_certificate(
 )
 ```
 
-閉路が存在すれば `vertices[i]` から
-`vertices[(i + 1) % vertices.size()]` へ接続する入力辺番号を
-`edges[i]` に格納して返す。閉路が存在しなければ両方の列が空の結果を返す。
+閉路が存在すれば、`vertices[i]` と `vertices[(i + 1) % vertices.size()]` を結ぶ入力の辺番号を `edges[i]` に格納して返す。閉路が存在しなければ、両方の列が空の結果を返す。
 
 ## 時間計算量
 
@@ -29,6 +27,6 @@ CycleDetectionResult undirected_cycle_certificate(
 ## 注意点
 
 - 頂点番号は $[0,N)$ でなければならない。
-- 自己loopと多重辺を扱える。
-- 頂点数、辺数、端点が表現可能範囲を外れる場合は `runtime_error` を送出する。
+- 自己ループと多重辺を扱える。
+- 頂点数が負、辺数が `int` で表せない、または端点が範囲外の場合は `runtime_error` を送出する。
 - 返される閉路の開始頂点と向きは規定しない。

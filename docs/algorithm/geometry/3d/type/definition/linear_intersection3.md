@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/li
 
 ## API
 
-- `LinearIntersection3`: `std::variant<std::monostate, Point3, Segment3, Ray3, Line3>`。順に空集合、1点、閉線分、閉半直線、無限直線を表す。
+- `LinearIntersection3`: `std::variant<std::monostate, Point3, Segment3, Ray3, Line3>` の別名。各候補は順に空集合、1 点、閉線分、閉半直線、無限直線を表す。
 
 ## API別の時間計算量・空間計算量
 
-- 構築・判別・取得は時間・追加領域 $O(1)$。
+- 構築・判別・取得: 時間・追加領域 $O(1)$。
 
 ## 注意点
 
-交差集合の次元と非有界性を型で保持する。`std::get_if` または `std::holds_alternative` で安全に判別する。
+- 交差集合の次元と有界かどうかを型で保持する。`std::get_if` または `std::holds_alternative` で安全に判別する。

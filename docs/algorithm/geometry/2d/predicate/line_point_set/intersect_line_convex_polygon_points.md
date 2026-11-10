@@ -14,7 +14,7 @@ bool intersect_line_convex_polygon(
 );
 ```
 
-入力を `NormalizedConvexPolygon` に変換して正規化済みoverloadへ委譲する。
+入力を `NormalizedConvexPolygon` に変換し、正規化済みの多角形を受け取るオーバーロードに処理を委ねる。接する場合も交差に含める。
 
 ## 時間計算量
 
@@ -22,9 +22,9 @@ bool intersect_line_convex_polygon(
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| 頂点列overload | $O(N)$ | $O(N)$ |
+| `intersect_line_convex_polygon(line, polygon)`（頂点列版） | $O(N)$ | $O(N)$ |
 
 ## 注意点
 
-入力は凸多角形の弱凸な周回列でなければならない。非凸入力または退化直線には
-`std::invalid_argument` を送出する。空入力にはfalseを返す。
+- 入力は凸多角形を表す弱凸な周回列でなければならない。凸でない入力、または方向ベクトルの長さが `GEOMETRY_EPS` 以下の退化直線には `std::invalid_argument` を送出する。
+- 空の入力には `false` を返す。

@@ -3,40 +3,37 @@ title: Maximum Paths with Distinct Terminal Edges (終端辺を共有しない�
 documentation_of: ../../../../src/algorithm/graph/flow_cut/maximum_paths_with_distinct_terminal_edges.hpp
 ---
 
-有向グラフで、始点から出る辺と終点へ入る辺だけを互いに共有しないように選べる
-始点・終点間パスの最大本数を求めます。中間辺は共有できます。
+有向グラフで、始点から出る辺と終点に入る辺だけは互いに共有しないように選べる、始点から終点へのパスの最大本数を求める。途中の辺は共有してよい。
 
 ## API
 
-### `maximum_paths_with_distinct_terminal_edges(vertex_count, directed_edges, source, sink)`
+### `maximum_paths_with_distinct_terminal_edges`
 
 ```cpp
 long long maximum_paths_with_distinct_terminal_edges(
     int vertex_count,
-    const vector<pair<int, int>>& directed_edges,
+    const std::vector<std::pair<int, int>>& directed_edges,
     int source,
     int sink
 );
 ```
 
-各 `source` 出辺と各 `sink` 入辺の使用回数を1以下にし、それ以外の辺には
-十分大きい容量を与えた最大流を返します。同じ向きの多重辺は別々の終端辺として
-扱います。
+`source` から出る各辺と `sink` に入る各辺の容量を $1$、それ以外の辺の容量を十分大きい値（辺数 $+1$）とした最大流を返す。同じ向きの多重辺は別々の終端辺として扱う。
 
-この関数は通常の辺素パス数とは異なります。中間辺の重複は禁止しません。
+通常の辺素パスの本数とは異なり、途中の辺の重複は禁止しない。
 
-## API別の時間計算量・空間計算量
+## 計算量
 
-$N=vertex\_count$、$M=directed\_edges.size()$ とします。
+$N$ を `vertex_count`、$M$ を `directed_edges` の要素数とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `maximum_paths_with_distinct_terminal_edges` | $O(N^2M)$ | $O(N+M)$ |
+| `maximum_paths_with_distinct_terminal_edges` | $O(N^2 M)$ | $O(N + M)$ |
 
 ## 注意点
 
-- `vertex_count` は非負、辺端点と両終端は $[0,N)$ に入る必要があります。
-- `source != sink` が必要です。
-- 自己loopは結果に影響しないため無視します。
-- 前提違反には `invalid_argument`、`out_of_range` または
-  `length_error` を送出します。
+- 自己ループは結果に影響しないため無視する。
+- 前提条件の違反時には次の例外を送出する。
+  - `vertex_count` が負、または `source == sink`: `invalid_argument`
+  - `source`, `sink` または辺の端点が $[0, N)$ の範囲外: `out_of_range`
+  - 辺数が `long long` の最大値以上: `length_error`

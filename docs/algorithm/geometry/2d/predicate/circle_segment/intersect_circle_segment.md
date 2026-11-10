@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/circle_s
 
 ## API
 
-- `intersect_circle_segment(circle, segment)`: 円周と閉線分が共通点を持つか判定する。
+- `bool intersect_circle_segment(circle, segment)`: 円周と閉線分が共通点を持つか判定する。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,8 +13,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/circle_s
 
 ## 注意点
 
-接触と端点を含む。負半径には `std::invalid_argument` を送出し、退化線分は1点として扱う。
-
-- 円の中心座標と半径は有限値であること。非有限値または負半径にはstd::invalid_argumentを送出する。
-- 接触・包含の距離二乗や4次量は、比較する各項の大きさにGEOMETRY_EPSを掛けた相対許容誤差で判定する。中間値は有限なlong doubleに収まること。
-- segmentの方向vector長がGEOMETRY_EPS以下ならsegment.aの1点として、最小・最大距離二乗の同じ規約で判定する。
+- 接する場合と、端点で交わる場合も `true` を返す。
+- 円の中心座標と半径は有限値でなければならない。非有限値または負の半径には `std::invalid_argument` を送出する。
+- 中心から線分までの最小距離の二乗が半径の二乗以下で、かつ最大距離の二乗が半径の二乗以上のとき交差すると判定する。これらの比較は、各項の大きさに `GEOMETRY_EPS` を掛けた相対許容誤差で行う。中間値は有限な `long double` に収まる必要がある。
+- `segment` の方向ベクトルの長さが `GEOMETRY_EPS` 以下なら、`segment.a` の 1 点として同じ規則で判定する。

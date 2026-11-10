@@ -3,7 +3,7 @@ title: Minimum Enclosing Rectangle from Points (点列からの最小外接長�
 documentation_of: ../../../../../../src/algorithm/geometry/2d/result/point_set/minimum_enclosing_rectangle_points.hpp
 ---
 
-点列を正規化してから、その凸集合を含む面積最小の長方形を求める。
+凸多角形の頂点列を正規化してから、それを含む面積最小の長方形を求める。
 
 ```cpp
 #include "../../../../../../src/algorithm/geometry/2d/result/point_set/minimum_enclosing_rectangle_points.hpp"
@@ -17,7 +17,7 @@ MinimumEnclosingRectangleResult minimum_enclosing_rectangle(
 );
 ```
 
-`polygon` は値渡しされ、向き、重複頂点、共線頂点を正規化する。
+`polygon` は値渡しで受け取り、`NormalizedConvexPolygon` によって向き・重複頂点・共線頂点を正規化する。
 
 ## 時間計算量
 
@@ -27,13 +27,11 @@ MinimumEnclosingRectangleResult minimum_enclosing_rectangle(
 | --- | --- | --- |
 | `minimum_enclosing_rectangle(polygon)` | $O(N)$ | $O(N)$ |
 
-正規化とrotating calipersはいずれも線形時間である。
+正規化と rotating calipers はいずれも線形時間である。
 
 ## 注意点
 
-点列は凸多角形の境界を巡回する順に並んでいる必要がある。非凸または自己交差する
-点列は `std::invalid_argument` の対象となる。複数の最小長方形が存在する場合は
-そのうち1つを返す。座標と中間演算は有限な `long double` の範囲に収まる必要がある。
+点列は凸多角形の境界を巡回する順に並んでいる必要がある。非凸な点列や自己交差する点列に対しては `std::invalid_argument` を送出する。最小の長方形が複数存在する場合は、そのうちの 1 つを返す。座標と中間演算の値は有限な `long double` の範囲に収まる必要がある。
 
 ## 使用例
 

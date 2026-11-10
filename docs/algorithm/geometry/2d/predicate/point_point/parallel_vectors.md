@@ -1,13 +1,13 @@
 ---
-title: Vector Parallelism (ベクトル平行判定)
+title: Vector Parallelism (ベクトルの平行判定)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/point_point/parallel_vectors.hpp
 ---
 
-2本の二次元ベクトルが平行か判定する。
+2 本の二次元ベクトルが平行か判定する。
 
 ## API
 
-- `parallel(left, right)`: ベクトル `left` と `right` が平行なら `true` を返す。
+- `bool parallel(const Point& left, const Point& right)`: ベクトル `left` と `right` が平行なら `true` を返す。逆向きの場合も平行とみなす。
 
 ## API別の時間計算量・空間計算量
 
@@ -15,4 +15,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/point_po
 
 ## 注意点
 
-長さの積をscaleとする許容誤差付き外積判定を行う。零ベクトルを含む場合は互換性のため `true` を返す。
+- 長さの積をスケールとする許容誤差付きで外積が $0$ かを判定する。
+- 長さが `GEOMETRY_EPS` 以下の零ベクトルを含む場合は、互換性のため `true` を返す。

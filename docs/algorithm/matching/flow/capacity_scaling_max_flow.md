@@ -3,7 +3,7 @@ title: Capacity-Scaling Maximum Flow (容量スケーリング最大流)
 documentation_of: ../../../../src/algorithm/matching/flow/capacity_scaling_max_flow.hpp
 ---
 
-残余容量の上位bitから順に有効化する容量スケーリング法で最大流を求める。
+残余容量の上位ビットから順に有効化する容量スケーリング法で最大流を求める。
 
 ## API
 
@@ -31,10 +31,10 @@ struct CapacityScalingMaxFlow {
 };
 ```
 
-- コンストラクタ: `vertex_count` 頂点の空ネットワークを作る
-- `add_edge`: 有向辺を追加し、`edges` における順方向辺IDを返す
-- `max_flow`: 現在の残余ネットワークへ追加できる最大流量を返す
-- `min_cut`: 最後の流れに対し、残余グラフで `source` から到達できる頂点を1で返す
+- コンストラクタ: `vertex_count` 頂点の空のネットワークを作る
+- `add_edge`: 有向辺を追加し、`edges` における順方向辺の番号を返す
+- `max_flow`: 現在の残余ネットワークに追加で流せる最大流量を返す。`source == sink` なら $0$ を返す
+- `min_cut`: 最後の流れについて、残余グラフで `source` から到達できる頂点を `1` とした列を返す
 
 `edges` には順方向辺と残余逆辺が交互に格納される。
 
@@ -44,7 +44,7 @@ struct CapacityScalingMaxFlow {
 
 - コンストラクタ: $O(N)$
 - `add_edge`: 償却 $O(1)$
-- `max_flow`: $O(M^2\log(U+1))$
+- `max_flow`: $O(M(N+M)\log(U+1))$（各スケールで増加路は $O(M)$ 本、1 本あたり BFS に $O(N+M)$）
 - `min_cut`: $O(N+M)$
 
 ## 空間計算量
@@ -53,4 +53,4 @@ $O(N+M)$。
 
 ## 注意点
 
-`T` は符号付き整数型でなければならない。容量は非負、頂点は範囲内でなければならず、違反時は `runtime_error` を送出する。最大流量が `T` を超える場合は `overflow_error` を送出する。同じオブジェクトで再度 `max_flow` を呼ぶと、既存の流れから追加できる流量を返す。
+`T` は符号付き整数型でなければならない。頂点数と容量は非負、頂点番号は範囲内でなければならず、違反時は `runtime_error` を送出する。最大流量が `T` を超える場合は `overflow_error` を送出する。同じオブジェクトで再度 `max_flow` を呼ぶと、既存の流れに追加できる流量を返す。

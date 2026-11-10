@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point/point/to_pla
 
 ## API
 
-- `to_plane_coordinates(system, point)`: 三次元点を`system`の2次元座標へ写す。平面外成分は捨てる。
+- `to_plane_coordinates(system, point)`: 三次元点 `point` を平面座標系 `system` の二次元座標へ写す。各座標は `point - system.origin` と各軸の内積であり、平面外の成分は捨てる。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 
-`system`の軸は正規直交していること。
+- `system` の 2 軸は正規直交していること（検査はしない）。

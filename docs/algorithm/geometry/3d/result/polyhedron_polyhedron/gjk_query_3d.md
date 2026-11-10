@@ -3,18 +3,18 @@ title: GJK Query 3D (3次元GJK問い合わせ)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/result/polyhedron_polyhedron/gjk_query_3d.hpp
 ---
 
+GJK 法により、2 つの凸多面体の交差判定・距離・最近点をまとめて求める。
+
 ## API
 
-- `gjk_query_3d(first, second, tolerance=1e-12L, max_iterations=96)`: support mapping と縮約単体を用い、交差、距離、両形状上の最近点をまとめて返す。
+- `gjk_query_3d(first, second, tolerance = 1e-12L, max_iterations = 96)`: サポート写像と単体の縮約を用いて、`GJKResult3` を返す。結果は交差の有無 `intersects`、距離 `distance`、両形状上の最近点 `point_on_first`, `point_on_second`、法線 `normal`、終了時の単体 `simplex`、反復回数 `iterations`、収束したか `converged` を持つ。
 
 ## API別の時間計算量・空間計算量
 
-- 頂点数を $V_1,V_2$、実反復数を $I$ として時間 $O(I(V_1+V_2))$、追加領域 $O(1)$（返却単体も高々4点）。
+- 頂点数を $V_1, V_2$、実際の反復回数を $I$ とすると、時間 $O(I(V_1+V_2))$。追加空間は、入力の形状を（面の配列も含めて）複製して正規化するため $O(V_1+V_2+F_1+F_2)$（$F_1, F_2$ は面数）である。返す単体は高々 4 点である。
 
 ## 注意点
 
-有限頂点を持つ空でない凸形状が前提。非正または非有限の許容誤差、反復上限0は `std::invalid_argument`。反復上限到達時は `converged=false`。
-
-両入力を共通平行移動した後、全頂点の広がりで無次元化して core を実行する。`tolerance` はこの正規化座標に対する相対許容誤差であり、一様拡大縮小と共通平行移動に依存しない。同符号の巨大座標同士は除算前に差を取るため、有効な低位bitを保持する。
-
-距離、最近点、終了単体は入力と同じ座標系へ戻す。真の距離・Minkowski差・最近点が `long double` で表現できない場合は `std::overflow_error`。非交差時の `normal` は有限な単位ベクトルである。
+- 有限な頂点を持つ空でない凸形状を前提とする。空の形状、非有限な頂点、非正または非有限の `tolerance`、反復上限 $0$ には `std::invalid_argument` を送出する。反復上限に達した場合は `converged = false` となる。
+- 両入力に共通の平行移動を施した後、全頂点の広がりで無次元化してから本体の計算を行う。`tolerance` はこの正規化座標に対する相対許容誤差であり、一様な拡大縮小と共通の平行移動に依存しない。同符号の巨大な座標どうしは除算の前に差を取るため、有効な下位ビットを保持できる。
+- 距離・最近点・終了時の単体は入力と同じ座標系に戻して返す。真の距離・Minkowski 差・最近点が `long double` で表現できない場合は `std::overflow_error` を送出する。交差しない場合の `normal` は有限な単位ベクトルである。

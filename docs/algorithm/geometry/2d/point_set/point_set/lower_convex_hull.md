@@ -5,20 +5,21 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point_set/point_se
 
 ## API
 
-- `lower_convex_hull(points, keep_collinear=false)`: 凸包の下側chainを作る。
+- `std::vector<Point> lower_convex_hull(std::vector<Point> points, bool keep_collinear = false)`: 凸包の下側の折れ線（下側チェーン）を作る。
 
 ## 引数
 
-`points` は点集合、`keep_collinear` はchain上の中間共線点を残す指定である。
+`points` は点集合、`keep_collinear` はチェーン上の中間の共線点を残すかどうかの指定である。
 
 ## 戻り値
 
-左端から右端へ並ぶ下側chainを返す。
+$(x, y)$ の辞書順で最小の点から最大の点へ並ぶ下側チェーンを返す。
 
 ## API別の時間計算量・空間計算量
 
-点数を $N$ として時間 $O(N\log N)$、領域 $O(N)$。
+- `lower_convex_hull`: 点数を $N$ として時間 $O(N \log N)$、領域 $O(N)$。
 
 ## 注意点
 
-重複点は除く。全点共線で `keep_collinear=false` なら両端だけを返す。
+- 座標が完全に一致する重複点は除く。
+- 全点が共線で `keep_collinear = false` なら両端だけを返す。

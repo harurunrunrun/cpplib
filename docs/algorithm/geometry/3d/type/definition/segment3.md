@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/se
 
 ## API
 
-- `Segment3{a, b}`: 二端点を持つ閉線分を表すaggregate型。
+- `Segment3{a, b}`: 2 端点 `a`, `b` を持つ閉線分を表す集成体型。
 
 ## API別の時間計算量・空間計算量
 
-- 全操作: 時間・追加領域 $O(1)$。
+- 全操作: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-`a == b` の場合は一点からなる退化線分を表す。
+`a == b` の場合は 1 点からなる退化した線分を表す。

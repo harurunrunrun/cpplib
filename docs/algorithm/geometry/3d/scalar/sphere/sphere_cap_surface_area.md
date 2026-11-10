@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/sphere/sphe
 
 ## API
 
-- `sphere_cap_surface_area(sphere, height)`: 高さ `height` の球冠の曲面積 $2\pi rh$ を返す。
+- `sphere_cap_surface_area(sphere, height)`: 半径 $r$ の球 `sphere` から切り取った高さ $h$ （`height`）の球冠の曲面積 $2\pi rh$ を返す。底面の円板の面積は含まない。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,7 +13,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/sphere/sphe
 
 ## 注意点
 
-積は各因子を仮数部と指数部へ分解して計算するため、途中の overflow / underflow を避ける。最終結果が `long double` で表現できない場合は `std::overflow_error` を送出する。
-Sphere3 は中心・半径が有限かつ半径が非負でなければならず、違反時は std::invalid_argument を送出する。
-
-半径は非負、`height` は $[0,2r]$ でなければならず、違反時は `std::invalid_argument` を送出する。
+- `sphere` は中心座標と半径が有限、かつ半径が非負でなければならない。また `height` は有限かつ $0 \le h \le 2r$ でなければならない。違反時は `std::invalid_argument` を送出する。
+- 積は各因子を仮数部と指数部に分解して計算するため、途中でオーバーフロー・アンダーフローは起きない。最終結果が `long double` で表現できない場合は `std::overflow_error` を送出する。

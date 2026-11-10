@@ -1,9 +1,9 @@
 ---
-title: View Cone Contains (視野角包含判定)
+title: View Cone Contains (視野角の包含判定)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/predicate/point_point_point/view_cone_contains.hpp
 ---
 
-観測点から方向vectorを中心に広がる対称な視野角に、点が入るかを判定する。
+観測点から方向ベクトルを中心に左右対称に広がる視野角に、点が入るかを判定する。
 
 ## API
 
@@ -17,19 +17,19 @@ bool view_cone_contains(
 )
 ~~~
 
-apertureは視野全体の角度であり、中心方向から左右へaperture / 2ずつ広がる。include_boundaryがtrueなら両境界rayを含み、falseなら除く。観測点自身は常に含む。
+`aperture` は視野全体の角度（ラジアン）であり、中心方向から左右へ $\mathrm{aperture} / 2$ ずつ広がる。`include_boundary` が `true` なら両側の境界の半直線を含み、`false` なら除く。観測点自身（距離が `GEOMETRY_EPS` 以下の点）は常に含む。
 
 ## 時間計算量
 
-O(1)。
+$O(1)$。
 
 ## 空間計算量
 
-O(1)。
+$O(1)$。
 
 ## 注意点
 
-- directionは非零vector、apertureは0以上2π以下であること。違反時はinvalid_argument。
-- Pointの各座標とapertureは有限値であること。違反時はinvalid_argument。
-- aperture 0は、境界を含む場合だけ中心の前向きrayを含む。aperture 2πは全方向を含む。
-- 境界比較にはGEOMETRY_EPSを用いる。
+- `direction` は長さが `GEOMETRY_EPS` より大きいベクトル、`aperture` は $0$ 以上 $2\pi$ 以下（許容誤差 `GEOMETRY_EPS`）でなければならない。違反時は `std::invalid_argument` を送出する。
+- `Point` の各座標と `aperture` は有限値でなければならない。違反時は `std::invalid_argument` を送出する。
+- `aperture` が $0$ のときは、境界を含む場合に限り中心方向の前向きの半直線を含む。`aperture` が $2\pi$ のときは `include_boundary` によらず全方向を含む。
+- 境界の比較では、角度に対して絶対許容誤差 `GEOMETRY_EPS` を用いる。

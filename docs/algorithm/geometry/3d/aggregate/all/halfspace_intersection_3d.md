@@ -3,62 +3,31 @@ title: 3D Halfspace Intersection (三次元半空間交差)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/halfspace_intersection_3d.hpp
 ---
 
-平面が表す閉半空間の共通部分を、点・平面の極双対と三次元凸包を用いて
-有界凸多面体として列挙する。
+平面が表す閉半空間の共通部分を、点と平面の極双対と三次元凸包を用いて、有界な凸多面体として列挙する。
 
-このheaderは `halfspace_intersection_3d_default.hpp` と
-`halfspace_intersection_3d_with_interior_point.hpp` をまとめて読み込む
-後方互換aggregatorである。利用する経路が一つなら対応するleafを直接includeできる。
+このヘッダは `halfspace_intersection_3d_default.hpp` と `halfspace_intersection_3d_with_interior_point.hpp` をまとめて include する、後方互換のための集約ヘッダである。利用する経路が 1 つなら、対応する個別ヘッダを直接 include すればよい。
 
 ## API
 
-- `halfspace_intersection_3d_with_interior_point(halfspaces, interior)`:
-  各 `Plane3{point, normal}` を
-  $normal\cdot(x-point)\leq0$ と解釈する。`interior` が全制約を狭義に満たすとき、
-  極双対凸包から交差の頂点を復元する。非有界なら `std::domain_error`、
-  `interior` が狭義内点でなければ `std::invalid_argument` を送出する。
-- `halfspace_intersection_3d(halfspaces)`: 内点を与えない汎用版。ランダム増分型の
-  固定次元凸二次計画で最小ノルム実行可能点と狭義内点を求め、full-dimensionalな
-  交差には上の極双対法を使う。空集合なら空の `ConvexPolyhedron3` を返し、
-  非空かつ非有界なら `std::domain_error` を送出する。lower-dimensionalな交差と、
-  中間射影を `long double` で表現できない場合だけ、境界面の組合せを調べる
-  完全な退化処理へ移る。
+- `halfspace_intersection_3d_with_interior_point(halfspaces, interior)`: 各 `Plane3{point, normal}` を半空間 $n \cdot (x - p) \le 0$（$p$ は `point`、$n$ は `normal`）と解釈する。`interior` がすべての制約を狭義に満たすとき、極双対凸包から共通部分の頂点を復元する。共通部分が非有界なら `std::domain_error`、`interior` が狭義内点でなければ `std::invalid_argument` を送出する。
+- `halfspace_intersection_3d(halfspaces)`: 内点を与えない汎用版。ランダム増分型の固定次元凸二次計画で最小ノルムの実行可能点と狭義内点を求め、共通部分が三次元なら上の極双対法を使う。空集合なら空の `ConvexPolyhedron3` を返し、空でなく非有界なら `std::domain_error` を送出する。共通部分が低次元の場合と、途中の射影を `long double` で表現できない場合に限り、境界面の組合せを調べる完全な退化処理に移る。
 
-狭義内点を $c$、第 $i$ 制約を
-$a_i\cdot(x-c)\leq s_i$（$s_i>0$）とすると、双対点は
-$q_i=a_i/s_i$ である。実装は $q_i$ を除算して作らず、同次座標
-$(s_i,a_{ix},a_{iy},a_{iz})$ の行列式をexact dyadic整数で判定する。
-双対凸包の各facetが主問題の頂点に対応し、原点が双対凸包の狭義内部にない場合は
-主問題が非有界である。
+狭義内点を $c$、第 $i$ 制約を $a_i \cdot (x - c) \le s_i$（$s_i > 0$）とすると、双対点は $q_i = a_i / s_i$ である。実装では $q_i$ を除算で作らず、同次座標 $(s_i, a_{ix}, a_{iy}, a_{iz})$ の行列式を厳密な 2 進有理数の整数演算で判定する。双対凸包の各 facet が主問題の頂点に対応し、原点が双対凸包の狭義内部にない場合は主問題が非有界である。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
 制約数を $H$、返す頂点と三角形面の総数を $K$ とする。
 
-- `halfspace_intersection_3d_with_interior_point`: ランダム挿入順序の
-  conflict graph解析では期待時間 $O(H\log H+K)$、期待領域 $O(H+K)$。
-- `halfspace_intersection_3d`: full-dimensionalな非空入力では、狭義内点探索を
-  含めて期待時間 $O(H\log H+K)$、期待領域 $O(H+K)$。空集合、
-  lower-dimensional、または表現不能な中間射影を経る退化処理は
-  最悪時間 $O(H^4+K)$、領域 $O(H+K)$。
+- `halfspace_intersection_3d_with_interior_point`: ランダムな挿入順序に対する conflict graph の解析により、期待時間 $O(H \log H + K)$、期待空間 $O(H + K)$。
+- `halfspace_intersection_3d`: 共通部分が三次元で空でない入力では、狭義内点の探索を含めて期待時間 $O(H \log H + K)$、期待空間 $O(H + K)$。空集合・低次元、または表現できない途中の射影を経る退化処理では、最悪時間 $O(H^4 + K)$、空間 $O(H + K)$。
 
-固定seedの双対凸包挿入順序に対する決定的最悪時間は
-$O(H^2\log H+K)$、live conflict pairの領域は最悪 $O(H^2)$ になり得る。
-内点探索も含む汎用API全体の決定的最悪時間は $O(H^4+K)$ である。
-以上はexact整数演算を1回と数える算術演算量で、入力のbit長に応じた
-多倍長整数演算時間は別途掛かる。
+双対凸包の挿入順序を固定シードで決めた場合の決定的な最悪時間は $O(H^2 \log H + K)$ であり、生存している conflict 対の空間は最悪 $O(H^2)$ になり得る。内点探索を含む汎用 API 全体の決定的な最悪時間は $O(H^4 + K)$ である。以上は厳密な整数演算を 1 回と数えた算術演算量であり、入力のビット長に応じた多倍長整数演算の時間が別途かかる。
 
 ## 注意点
 
-- 法線は非零かつ全座標が有限でなければならない。違反時は
-  `std::invalid_argument` を送出する。
-- `interior` も全座標が有限で、すべての半空間を許容誤差を越えて狭義に
-  満たす必要がある。
-- 空集合と非有界集合を区別する。非有界集合のrayを返すAPIではない。狭義内点を
-  要求する高速APIには、空集合やlower-dimensionalな交差を渡せない。
-- lower-dimensionalな有界交差も、3面交点として列挙した頂点から構成する。
-- 制約は単位法線へ丸めずraw法線のまま保持する。実行可能性、双対向き、
-  coplanarityはexact dyadic演算で判定するため、正の定数倍をしても半空間は
-  変わらない。
-- 復元する頂点または内点探索の必須中間値が `long double` で表現不能なら
-  `std::overflow_error` を送出する。
+- 法線は非零で、すべての座標が有限でなければならない。違反時は `std::invalid_argument` を送出する。
+- `interior` もすべての座標が有限で、すべての半空間を許容誤差を超えて狭義に満たす必要がある。
+- 空集合と非有界集合を区別する。非有界集合の半直線を返す API ではない。狭義内点を要求する高速 API には、空集合や低次元の共通部分を渡せない。
+- 低次元の有界な共通部分も、3 平面の交点として列挙した頂点から構成する。
+- 制約は単位法線に丸めず、元の法線のまま保持する。実行可能性、双対の向き、共面性は厳密な 2 進有理数演算で判定するため、制約を正の定数倍しても半空間は変わらない。
+- 復元する頂点、または内点探索に必須の途中の値が `long double` で表現できなければ `std::overflow_error` を送出する。

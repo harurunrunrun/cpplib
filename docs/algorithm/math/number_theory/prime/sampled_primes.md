@@ -3,22 +3,24 @@ title: Sampled Primes (一定間隔の素数列) [TDPRIMES]
 documentation_of: ../../../../../src/algorithm/math/number_theory/prime/sampled_primes.hpp
 ---
 
-上限未満の素数列から、素数添字が一定合同類にある要素を返す。
+上限未満の素数の列から、素数の番号が一定の合同類にあるものだけを返す。
 
 ## `sampled_primes`
 
 ```cpp
-vector<int> sampled_primes(int exclusive_limit, int stride = 100);
+std::vector<int> math::sampled_primes(int exclusive_limit, int stride = 100);
 ```
 
-1始まりの素数添字が `1 mod stride` である素数を昇順に返す。
+`exclusive_limit` 未満の素数のうち、1 始まりの番号を `stride` で割った余りが $1$ であるもの（$1, \mathrm{stride}+1, 2\,\mathrm{stride}+1, \ldots$ 番目）を昇順に返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
+
+$L$ を `exclusive_limit` とする。奇数のみのエラトステネスの篩を用いる。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `sampled_primes` | $O(exclusive\_limit\log\log exclusive\_limit)$ | $O(exclusive\_limit)$ bit |
+| `sampled_primes` | $O(L \log \log L)$ | $O(L)$ bit（出力を除く） |
 
 ## 注意点
 
-- 上限は非負、`stride` は正でなければならない。
+- `exclusive_limit` は非負、`stride` は正でなければならず、違反時は `std::invalid_argument` を送出する。

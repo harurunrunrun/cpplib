@@ -6,12 +6,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/ray_
 ## API
 
 - `skew(ray, segment)`: `Ray3` と `Segment3` の支持直線同士がねじれの位置にあるなら `true` を返す。
-- `skew(segment, ray)`: 引数順を逆にした同じ判定を行う。
+- `skew(segment, ray)`: 引数の順を逆にした同じ判定を行う。
 
 ## API別の時間計算量・空間計算量
 
-- 全overload: 時間・追加領域 $O(1)$。
+- 全オーバーロード: 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-半直線・線分の範囲制限は考慮しない。退化半直線または退化線分なら `std::invalid_argument` を送出する。
+支持直線だけで判定し、半直線・線分としての範囲の制限は考慮しない。退化した半直線または退化した線分には `std::invalid_argument` を送出する。

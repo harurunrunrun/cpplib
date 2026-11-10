@@ -3,14 +3,14 @@ title: Character Labeled Undirected Maximum Flow (文字ラベル付き無向最
 documentation_of: ../../../../src/algorithm/graph/flow_cut/character_labeled_undirected_max_flow.hpp
 ---
 
-1 byteの文字で頂点を識別する無向容量グラフの最大流を求めます。
+1 バイトの文字で頂点を識別する、容量付き無向グラフの最大流量を求める。
 
 ## API
 
 ### `CharacterLabeledUndirectedFlowEdge<T>`
 
 ```cpp
-template<class T>
+template <class T>
 struct CharacterLabeledUndirectedFlowEdge {
     char from;
     char to;
@@ -18,39 +18,34 @@ struct CharacterLabeledUndirectedFlowEdge {
 };
 ```
 
-文字ラベル `from`, `to` を結ぶ容量 `capacity` の無向辺を表します。
+文字ラベル `from`, `to` を結ぶ容量 `capacity` の無向辺を表す。
 
-### `character_labeled_undirected_max_flow(edges, source_label, sink_label)`
+### `character_labeled_undirected_max_flow`
 
 ```cpp
-template<class T>
+template <class T>
 T character_labeled_undirected_max_flow(
-    const vector<CharacterLabeledUndirectedFlowEdge<T>>& edges,
+    const std::vector<CharacterLabeledUndirectedFlowEdge<T>>& edges,
     char source_label,
     char sink_label
 );
 ```
 
-`source_label` から `sink_label` への最大流量を返します。
-入力辺と両終端に現れる文字だけを内部頂点番号へ圧縮します。
-すべての `char` 値をラベルとして使用でき、多重辺と自己loopも入力できます。
+`source_label` から `sink_label` への最大流量を返す。入力の辺と両終端に現れる文字だけを内部の頂点番号に圧縮し、`undirected_max_flow` で解く。すべての `char` 値をラベルとして使え、多重辺と自己ループも入力できる。
 
-## API別の時間計算量・空間計算量
+## 計算量
 
-異なるラベル数を $V\leq256$、辺数を $M$ とします。
+相異なるラベルの個数を $V \le 256$、辺数を $M$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
 | `CharacterLabeledUndirectedFlowEdge` の構築 | $O(1)$ | $O(1)$ |
-| `character_labeled_undirected_max_flow` | $O(V^2M)$ | $O(V+M)$ |
+| `character_labeled_undirected_max_flow` | $O(V^2 M)$ | $O(V + M)$ |
 
-文字ラベルが1 byteに限定されるため、$V$ を定数とみなせば時間計算量は
-$O(M)$ です。
+ラベルは 1 バイトに限られるので、$V$ を定数とみなせば時間計算量は $O(M)$ である。
 
 ## 注意点
 
-- `source_label` と `sink_label` は異なる必要があります。
-- 容量は非負で、最大流量と中間残余容量を `T` で表現できる必要があります。
-- `T` は算術型でなければなりません。
-- 同一終端には `invalid_argument`、不正容量には下位の最大流実装から
-  `runtime_error` を送出します。
+- `source_label` と `sink_label` は異なっていなければならない。同じ場合は `invalid_argument` を送出する。
+- 容量は非負でなければならない。負の容量があると、下位の最大流の実装から `runtime_error` を送出する。
+- `T` は算術型でなければならない。最大流量と途中の残余容量は `T` で表現できなければならない。

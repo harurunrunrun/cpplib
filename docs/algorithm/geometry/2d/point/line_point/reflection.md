@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_point/r
 
 ## API
 
-- `reflection(line, point)`: `point` を無限直線 `line` に関して鏡映した点を返す。
+- `Point reflection(const Line& line, const Point& point)`: `point` を無限直線 `line` に関して鏡映した点を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/line_point/r
 
 ## 注意点
 
-退化直線では、内部の `projection` が `std::invalid_argument` を送出する。
+退化直線では、内部で呼ぶ `projection` が `std::invalid_argument` を送出する。

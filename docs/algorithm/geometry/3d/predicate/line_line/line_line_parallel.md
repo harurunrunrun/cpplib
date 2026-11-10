@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/line_lin
 
 ## API
 
-- `parallel(first, second)`: 2本の `Line3` の方向ベクトルが平行なら `true` を返す。
+- `parallel(first, second)`: 2 本の `Line3` の方向ベクトルが、相対許容誤差 `GEOMETRY3D_EPS` の範囲で平行なら `true` を返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- `parallel`: 時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-同一直線上にあるかは判定しない。いずれかが退化直線なら `std::invalid_argument` を送出する。
+- 同一直線上にあるかは判定しない（一致する直線も `true`）。
+- いずれかが退化した直線なら `std::invalid_argument` を送出する。

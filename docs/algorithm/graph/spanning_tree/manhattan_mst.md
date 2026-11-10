@@ -3,33 +3,37 @@ title: Manhattan MST (マンハッタン最小全域木) [manhattanmst]
 documentation_of: ../../../../src/algorithm/graph/spanning_tree/manhattan_mst.hpp
 ---
 
-2次元点集合のマンハッタン距離に対する最小全域木を求める。
+2 次元の点集合について、マンハッタン距離を辺の重みとする完全グラフの最小全域木を求める。
 
 ## 関数
 
 ```cpp
-manhattan_mst<T>(points)
+template <class T>
+ManhattanMstResult<T> manhattan_mst(std::vector<ManhattanMstPoint<T>> points)
 ```
 
-`points` は `ManhattanMstPoint<T>{x, y}` の列。
+`points` は `ManhattanMstPoint<T>{x, y}` の列である。
 
-`ManhattanMstResult<T>` は次を持つ。
+戻り値 `ManhattanMstResult<T>` は次のメンバをもつ。
 
 ```cpp
 T cost;
-vector<ManhattanMstEdge<T>> edges;
+std::vector<ManhattanMstEdge<T>> edges;
 ```
+
+`edges` の各要素 `ManhattanMstEdge<T>{from, to, cost}` は、入力での点の添字の間の辺とその距離を表す。
 
 ## 時間計算量
 
-- `manhattan_mst`: $O(N\log(N+1))$
+点の個数を $N$ として $O(N\log(N + 1))$。
 
-4方向のsweep、$O(N)$ 本の候補辺整列、DSU処理、最大 $N-1$ 本の辺出力を含む。
+4 方向の走査（`std::map` を使う）、$O(N)$ 本の候補辺のソート、Union-Find の処理、最大 $N-1$ 本の辺の出力を含む。
 
 ## 空間計算量
 
-- 候補辺、DSU、戻り値を含めて $O(N)$
+候補辺、Union-Find、戻り値を含めて $O(N)$。
 
 ## 注意点
 
-点数が1以下ならcost 0・空辺列、それ以外は入力index間の辺を $N-1$ 本返す。座標変換・距離・総和が `T` に収まることを前提とし、本APIはrange例外を送出しない。
+- 点の個数が 1 以下ならコスト $0$ と空の辺列を返し、それ以外は $N-1$ 本の辺を返す。
+- 座標の符号反転、距離、総和が `T` に収まることを前提とする（`std::abs` を使うため `T` は符号付きの型でなければならない）。この API は範囲検査による例外を送出しない。

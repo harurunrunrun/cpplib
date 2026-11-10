@@ -3,16 +3,24 @@ title: Matroid Intersection (マトロイド交差)
 documentation_of: ../../../../../src/algorithm/other/combinatorial_optimization/matroid/matroid_intersection.hpp
 ---
 
-同じground set上の2マトロイドに共通して独立な集合の最大要素数を、交換グラフのaugmenting pathで求める。
+同じ台集合上の 2 つのマトロイドに共通して独立な集合のうち、要素数最大のものを、交換グラフ上の最短増加路（幅優先探索）で求める。名前空間は `combinatorial_optimization` である。
 
 ## `MatroidIntersectionResult`
 
-`elements` が最大共通独立集合。要素番号は `[0, ground_set_size)`。
+`elements` が最大共通独立集合（要素番号の昇順）。要素番号は台集合の大きさ `ground_set_size` を $n$ として $[0, n)$ の範囲である。
 
 ## `matroid_intersection(ground_set_size, first_independent, second_independent)`
 
-各oracleは、昇順の要素番号vectorを受け取り独立性を返す。最大rankを $r$、ground set sizeを $n$、oracle 1回の時間を $T$ とすると時間計算量 $O(rn^2T)$、空間計算量 $O(n)$。
+各独立性オラクルは、要素番号を昇順に並べた `std::vector<std::size_t>` を受け取り、その集合が独立かどうかを返す。
+
+## 時間計算量
+
+最大共通独立集合の大きさを $r$、台集合の大きさを $n$、オラクル 1 回の時間を $T$ とする。1 回の増加路探索でオラクルを $O(n^2)$ 回呼び、呼び出しごとに引数の列を $O(n \log n)$ 時間で構築するため、全体で $O(r n^2 (T + n \log n))$ 時間である。
+
+## 空間計算量
+
+$O(n)$（オラクルに渡す一時的な列を含む）。
 
 ## 注意点
 
-oracleはマトロイド公理を満たし、空集合を受理する必要がある。空集合を拒否した場合は `std::invalid_argument` を送出する。
+オラクルはマトロイドの公理を満たし、空集合を独立と判定する必要がある。空集合を拒否した場合は `std::invalid_argument` を送出する。

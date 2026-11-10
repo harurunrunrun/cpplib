@@ -3,7 +3,7 @@ title: Maximum-Weight Matching in General Graphs (一般グラフの最大重み
 documentation_of: ../../../../src/algorithm/matching/general/maximum_weight_general_matching.hpp
 ---
 
-一般グラフ上で辺重みの総和が最大となるマッチングを、重み付きEdmondsのblossom algorithmで求める。マッチングの辺数は優先しない。
+一般グラフ上で辺の重みの総和が最大となるマッチングを、重み付き Edmonds の blossom 法で求める。マッチングの辺数は優先しない。
 
 ## 型
 
@@ -23,9 +23,7 @@ struct MaximumWeightGeneralMatchingResult {
 };
 ```
 
-`size` は選ばれた辺数、`weight` は重み和である。`match[v]` は対応する頂点で、未マッチなら `-1` になる。
-
-## 関数
+`size` は選ばれた辺の本数、`weight` は重みの和である。`match[v]` は対応する頂点で、未マッチなら `-1` になる。
 
 ## `maximum_weight_general_matching`
 
@@ -37,11 +35,11 @@ MaximumWeightGeneralMatchingResult<T> maximum_weight_general_matching(
 );
 ```
 
-自己ループを無視し、同じ2頂点間に複数の辺がある場合は最大重みだけを使う。負辺しかない頂点は未マッチのままにできる。`T` は `bool` 以外の64bit以下の整数型でなければならない。
+自己ループは無視し、同じ 2 頂点間に複数の辺がある場合は最大の重みだけを使う。負の重みの辺しか持たない頂点は未マッチのままにできる。`T` は `bool` 以外の 64 ビット以下の整数型でなければならない。
 
-- 時間計算量: 多重辺の圧縮を含めて $O(N^3+M)$
-- 空間計算量: denseな重み表とblossom作業領域を含めて $O(N^2+M)$
+- 時間計算量: 多重辺の圧縮を含めて $O(N^3 + M)$
+- 空間計算量: 密な重み表と blossom の作業領域を含めて $O(N^2 + M)$
 
 ## 注意点
 
-これは「重み和」を最優先するAPIであり、「辺数を最大化してから重みを最適化する」`minimum_weight_general_matching` とは目的関数が異なる。頂点数は非負で、すべての端点は $[0,N)$ に含まれなければならない。違反時は `runtime_error`、重み和が `T` に収まらない場合は `overflow_error` を送出する。
+これは「重みの和」を最優先する API であり、「辺数を最大化してから重みを最適化する」`minimum_weight_general_matching` とは目的関数が異なる。頂点数は $0$ 以上 `INT_MAX / 2` 以下で、すべての端点は $[0, N)$ に含まれなければならない。違反時や、多重辺の圧縮後の辺数が多すぎる場合は `runtime_error` を、重みの和が `T` に収まらない場合は `overflow_error` を送出する。

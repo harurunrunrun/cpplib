@@ -3,9 +3,9 @@ title: Incremental Strongly Connected Components (増分強連結成分)
 documentation_of: ../../../../../src/algorithm/graph/connectivity/strongly_connected/incremental_scc.hpp
 ---
 
-空の有向グラフへ辺を順に追加するとき、追加した各辺について、その時点以降に両端が初めて同じstrongly connected componentへ入る時刻をofflineで求める。時刻区間をdivide and conquerし、中央時刻のSCCで後半を縮約する。
+空の有向グラフへ辺を順に追加していくとき、各辺について、その両端が初めて同じ強連結成分に入る時刻をオフラインで求める。時刻区間を分割統治し、中央の時刻での強連結成分で後半の頂点を縮約する。
 
-## merge時刻
+## マージ時刻
 
 ```cpp
 vector<int> incremental_scc(
@@ -14,23 +14,25 @@ vector<int> incremental_scc(
 )
 ```
 
-`added_edges[i]` を時刻 `i + 1` に追加する。返り値 `merge_time[i]` は、時刻 `i + 1` 以降で辺 `i` の両端が同じSCCに属する最初の時刻である。最後まで同じSCCにならない場合は `M + 1`。自己loopと多重辺を許す。
+`added_edges[i]` を時刻 $i + 1$ に追加する。戻り値の `merge_time[i]` は、時刻 $i + 1$ 以降で辺 $i$ の両端が同じ強連結成分に属する最初の時刻である。最後まで同じ強連結成分にならない場合は $M + 1$ になる。自己ループと多重辺を許す。
 
-時刻 `t` ごとに `merge_time[i] == t` となる辺の両端をDSUでmergeすると、辺を `t` 本追加した時点のSCC partitionが得られる。
+各時刻 $t$ について、`merge_time[i] == t` となる辺の両端を DSU でマージしていけば、辺を $t$ 本追加した時点での強連結成分による分割が得られる。
 
 ## 時間計算量
 
-- `O((N+M) log(M+1))`
+頂点数を $N$、辺数を $M$ とする。
 
-各divide-and-conquer階層で扱う頂点数は辺端点数の定数倍以下であり、SCCはCSR上で線形時間に求める。
+- $O((N + M) \log (M + 1))$
+
+分割統治の各階層で扱う頂点数は辺の端点数の定数倍以下であり、強連結成分は CSR 形式の隣接リスト上で線形時間に求める。
 
 ## 空間計算量
 
-- `O(N+M)`
+- $O(N + M)$
 
-SCC探索は再帰を使わない。
+強連結成分の探索は再帰を使わない（分割統治の再帰の深さは $O(\log M)$）。
 
 ## 注意点
 
-`vertex_count`または辺端点が範囲外の場合は `runtime_error`。頂点数または
-辺数が `INT_MAX` 以上なら、内部の `+1` sentinelを表せないため `length_error`。
+- `vertex_count` が負、または辺の端点が範囲外の場合は `std::runtime_error` を送出する。
+- 頂点数が `INT_MAX` に等しい、または辺数が `INT_MAX` 以上の場合は、内部で使う $+1$ の番兵を表せないため `std::length_error` を送出する。

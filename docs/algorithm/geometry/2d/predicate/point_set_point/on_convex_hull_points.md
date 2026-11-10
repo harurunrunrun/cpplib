@@ -14,7 +14,7 @@ bool on_convex_hull(
 );
 ```
 
-呼び出しごとに `ConvexPolygonQuery` を構築してquery overloadへ委譲する。
+呼び出しごとに `ConvexPolygonQuery` を構築し、それを受け取るオーバーロードに処理を委ねる。境界上（頂点・辺上）なら `true`、内部または外部なら `false` を返す。
 
 ## 時間計算量
 
@@ -22,9 +22,9 @@ bool on_convex_hull(
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| 頂点列overload | $O(N)$ | $O(N)$ |
+| `on_convex_hull(polygon, point)`（頂点列版） | $O(N)$ | $O(N)$ |
 
 ## 注意点
 
-入力は凸多角形の弱凸な周回列でなければならない。
-同じ多角形への複数queryには `ConvexPolygonQuery` overloadを使う。
+- 入力は凸多角形を表す弱凸な周回列でなければならない（凸性は検査しない）。
+- 同じ多角形に対して複数回判定する場合は、`ConvexPolygonQuery` を一度構築してそれを受け取るオーバーロードを使う。

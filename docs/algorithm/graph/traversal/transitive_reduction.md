@@ -3,7 +3,7 @@ title: Transitive Reduction (推移簡約)
 documentation_of: ../../../../src/algorithm/graph/traversal/transitive_reduction.hpp
 ---
 
-DAGの到達可能性を変えずに、推移的に不要な辺をすべて取り除く。
+DAG の到達可能性を変えずに、推移的に不要な辺をすべて取り除く。
 
 ## API
 
@@ -13,16 +13,16 @@ vector<pair<int, int>> transitive_reduction(
 )
 ```
 
-簡約後の辺を辞書順で返す。同じ有向辺が複数含まれていても、戻り値には高々1本だけ含める。
+簡約後の辺を辞書順で返す。同じ有向辺が複数含まれていても、戻り値には高々 1 本だけ含める。
 
 ## 時間計算量
 
-頂点数を $N$、入力辺数を $M$、簡約後の辺数を $K$、$W=64$ とする。
+頂点数を $N$、入力の辺数を $M$、簡約後の辺数を $K$、頂点 $v$ の出次数を $d_v$、ワード長を $W=64$ とする。
 
-- DAG判定とトポロジカルソート: $O(N+M)$
-- 隣接頂点の整列と重複除去: $O(\sum_v d_v\log(d_v+1))$
+- DAG の判定とトポロジカルソート: $O(N+M)$
+- 隣接頂点のソートと重複除去: $O(\sum_v d_v\log(d_v+1))$
 - ビット集合による到達可能性の更新: $O(K\lceil N/W\rceil+M)$
-- 戻り値の整列: $O(K\log(K+1))$
+- 戻り値のソート: $O(K\log(K+1))$
 
 全体は $O(N+M+\sum_v d_v\log(d_v+1)+K\lceil N/W\rceil+K\log(K+1))$。
 
@@ -32,4 +32,5 @@ $O(N\lceil N/W\rceil+M)$。
 
 ## 注意点
 
-入力はDAGでなければならない。閉路を含む場合は `runtime_error` を送出する。隣接頂点が範囲外の場合も `runtime_error` を送出する。
+- 入力は DAG でなければならない。閉路を含む場合は `runtime_error` を送出する。
+- 隣接頂点が範囲外の場合も `runtime_error` を送出する。

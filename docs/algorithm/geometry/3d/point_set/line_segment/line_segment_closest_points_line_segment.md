@@ -5,12 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point_set/line_seg
 
 ## API
 
-- `closest_points(line, segment)`: `Line3` 上の点と `Segment3` 上の点をこの順のpairで返す。
+- `closest_points(line, segment)`: `Line3` 上の点と `Segment3` 上の点を、この順の `std::pair` で返す。
 
 ## API別の時間計算量・空間計算量
 
-時間・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 
-線分は退化してもよい。退化直線・非有限入力には `std::invalid_argument`、結果が表現不能なら `std::overflow_error` を送出する。
+- 最近点対が複数ある場合は、そのうち 1 組を返す。
+- 線分は退化していてもよい（1 点として扱う）。
+- 退化直線や非有限入力には `std::invalid_argument` を送出する。結果を表現できない場合は `std::overflow_error` を送出する。

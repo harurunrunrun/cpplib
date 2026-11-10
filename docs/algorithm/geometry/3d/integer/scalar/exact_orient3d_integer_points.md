@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/integer/scalar/exa
 
 ## API
 
-- `exact_orient3d(first, second, third, fourth)`: `det(second-first, third-first, fourth-first)` の正確な符号を `-1,0,1` で返す。
+- `exact_orient3d(first, second, third, fourth)`: `det(second - first, third - first, fourth - first)` の正確な符号を `-1`, `0`, `1` で返す。
 
 ## API別の時間計算量・空間計算量
 
-全座標差が $2^{40}$ 以下なら固定幅整数で時間・追加領域 $O(1)$。それ以外は値のbit長を $B$ として、内部多倍長整数の乗加算時間と追加領域 $O(B)$ を要する。
+座標差の絶対値がすべて $2^{40}$ 以下なら、固定幅整数（`__int128`）で時間・追加領域ともに $O(1)$。それ以外は値のビット長を $B$ として、内部の多倍長整数の乗算・加算の時間と追加領域 $O(B)$ を要する。
 
 ## 注意点
 
-`IntegerPoint3` の全座標域で正確であり、退化入力は0を返す。固定幅fast pathの範囲外ではライブラリ内の `ExactInteger` を使い、外部多倍長ライブラリには依存しない。
+`IntegerPoint3`（`std::int64_t` の 3 つ組）の全座標範囲で正確であり、退化した入力には 0 を返す。固定幅の高速経路の範囲外ではライブラリ内の `ExactInteger` を使い、外部の多倍長整数ライブラリには依存しない。

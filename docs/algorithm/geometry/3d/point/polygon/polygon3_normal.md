@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point/polygon/poly
 
 ## API
 
-- `polygon3_normal(polygon)`: 頂点順に対応する単位法線を返す。
+- `polygon3_normal(polygon)`: 頂点順に対応する単位法線（`polygon3_area_vector` の向き）を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 頂点数を$N$として時間$O(N)$、追加領域$O(1)$。
+- 頂点数を $N$ として時間 $O(N)$、追加領域 $O(1)$。
 
 ## 注意点
 
-面積0の多角形には`std::invalid_argument`を送出する。
+- 頂点数が 3 未満の場合、または面積ベクトルの長さが `GEOMETRY3D_EPS`（$10^{-10}$） 以下（面積が $0$ とみなせる）の場合は `std::invalid_argument` を送出する。

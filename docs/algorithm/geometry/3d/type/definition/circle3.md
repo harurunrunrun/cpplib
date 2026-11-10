@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/ci
 
 ## API
 
-- `Circle3{center, normal, radius}`: 中心、平面法線、半径で円を表すaggregate型。
+- `Circle3{center, normal, radius}`: 中心 `center`、円を含む平面の法線 `normal`、半径 `radius` で三次元空間内の円を表す集成体型。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/ci
 
 ## 注意点
 
-法線は零ベクトルであってはならず、半径は非負でなければならない。
+- 法線は零ベクトルであってはならず、半径は非負でなければならない。型自体はこれらを検査しない。

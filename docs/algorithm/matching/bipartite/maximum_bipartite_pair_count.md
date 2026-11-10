@@ -15,15 +15,15 @@ int maximum_bipartite_pair_count(
 );
 ```
 
-左側 `left_size` 頂点、右側 `right_size` 頂点からなる二部グラフの最大matchingサイズを返す。`allowed_pairs[i]` は接続可能な左頂点と右頂点の組である。
+左側 `left_size` 頂点、右側 `right_size` 頂点からなる二部グラフの最大マッチングの大きさを返す。`allowed_pairs[i]` は接続可能な左頂点と右頂点の組である。内部では `BipartiteMatching`（Hopcroft–Karp 法）を用いる。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-$L=left_size$、$R=right_size$、$E=allowed_pairs.size()$ とする。
+$L$ を `left_size`、$R$ を `right_size`、$E$ を `allowed_pairs.size()` とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `maximum_bipartite_pair_count` | $O(E\sqrt{L+R})$ | $O(L+R+E)$ |
+| `maximum_bipartite_pair_count` | $O(E \sqrt{L + R} + L + R)$ | $O(L + R + E)$ |
 
 ## 注意点
 

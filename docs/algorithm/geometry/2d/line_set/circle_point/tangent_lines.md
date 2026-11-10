@@ -5,7 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/line_set/circle_po
 
 ## API
 
-- `tangent_lines(circle, point)`: `point` を通る円の異なる接線を0～2本返す。
+- `std::vector<Line> tangent_lines(circle, point)`: `point` を通る円の相異なる接線を 0〜2 本返す。
+
+## 戻り値
+
+- 点が円の内部にあれば空。
+- 点が（許容誤差の範囲で）円周上にあれば、その点で円に接する 1 本。
+- 点が外部にあれば 2 本。各直線は `point` と接点を通り、接点の辞書順に並ぶ。
+- 半径 0 の円では、`point` と中心を通る 1 本を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,7 +20,6 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/line_set/circle_po
 
 ## 注意点
 
-点が円内なら空、円周上なら1本、外部なら2本。負半径には `std::invalid_argument` を送出する。
-
-- 円の中心座標と半径は有限値であること。非有限値または負半径にはstd::invalid_argumentを送出する。
-- 接触・包含の距離二乗や4次量は、比較する各項の大きさにGEOMETRY_EPSを掛けた相対許容誤差で判定する。中間値は有限なlong doubleに収まること。
+- 円の中心座標と半径は有限値であること。非有限値または負の半径には `std::invalid_argument` を送出する。
+- 半径 0 の円で `point` が中心と完全に一致する場合は、接線が一意に定まらないため `std::domain_error` を送出する。
+- 円周上かどうかの判定は、距離の 2 乗と半径の 2 乗の大きさに `GEOMETRY_EPS` を掛けた相対許容誤差で行う。中間値は有限な `long double` に収まる必要がある。

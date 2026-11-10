@@ -3,15 +3,9 @@ title: Sparse Formal Power Series (疎な形式的冪級数) [exp_of_formal_powe
 documentation_of: ../../../../src/algorithm/fft/formal_power_series/sparse_formal_power_series.hpp
 ---
 
-非零項だけが与えられる形式的冪級数を扱う。
-項は `(degree, coefficient)` で表し、各演算は先頭 `size` 項を密な
-`std::vector<Modint<MOD>>` として返す。入力順は任意で、同じ次数を複数回与えてもよい。
-各演算は重複次数を加算し、係数が 0 になった項を除去してから計算する。
+非零項だけで与えられる形式的冪級数を扱う。項は `(degree, coefficient)` の組で表し、各演算は先頭 `size` 項を密な `std::vector<Modint<MOD>>` として返す。入力の順序は任意で、同じ次数を複数回与えてもよい。各演算は同じ次数の係数を足し合わせ、係数が $0$ になった項を除去してから計算する。
 
-`MOD` は素数でなければならない。以下で $N=\mathtt{size}$、正規化後に
-次数 $N$ 未満に残る項数を $K$、入力項数を $R$ とする。
-正規化に $O(R\log R)$、各漸化式に $O(NK)$ 時間がかかる。
-NTT などを使う密な形式的冪級数へ変換しない。
+`MOD` は素数でなければならない（`static_assert` で検査する）。以下、$N = \texttt{size}$、正規化後に次数 $N$ 未満に残る項数を $K$、入力の項数を $R$ とする。正規化に $O(R \log R)$ 時間、各漸化式に $O(NK)$ 時間かかる。NTT などを使う密な形式的冪級数への変換は行わない。
 
 ## `SparseFormalPowerSeriesTerm`
 
@@ -32,8 +26,7 @@ std::vector<SparseFormalPowerSeriesTerm<MOD>> sparse_fps_normalize(
 )
 ```
 
-項を次数の昇順に並べ、同じ次数の係数を加算し、0 係数を除去して返す。
-この関数自体は次数による切り捨てを行わない。
+項を次数の昇順に並べ、同じ次数の係数を足し合わせ、係数が $0$ の項を除去して返す。この関数自体は次数による切り捨てを行わない。
 
 - 時間計算量: $O(R\log R)$
 - 追加空間計算量: $O(R)$
@@ -48,9 +41,7 @@ std::vector<Modint<MOD>> sparse_fps_inv(
 )
 ```
 
-$f(x)g(x)\equiv1\pmod{x^N}$ となる $g$ の先頭 $N$ 項を返す。
-$N>0$ では $f$ の定数項が非零でなければならず、満たさない場合は
-`runtime_error` を送出する。$N=0$ では空列を返す。
+$f(x) g(x) \equiv 1 \pmod{x^N}$ を満たす $g$ の先頭 $N$ 項を返す。$N \gt 0$ のとき $f$ の定数項は非零でなければならず、満たさない場合は `std::runtime_error` を送出する。$N = 0$ なら空列を返す。
 
 $g_0=f_0^{-1}$ とし、
 
@@ -58,9 +49,9 @@ $$
 g_n=-f_0^{-1}\sum_{1\le d\le n}f_dg_{n-d}
 $$
 
-で計算する。この演算は次数で割らないため、$N$ と `MOD` の大小に制約はない。
+で計算する。この演算は次数で割らないため、$N$ と `MOD` の大小関係に制約はない。
 
-- 時間計算量: $O(R\log R+NK+\log\mathtt{MOD})$
+- 時間計算量: $O(R\log R+NK+\log\texttt{MOD})$
 - 追加空間計算量: $O(N+K)$
 
 ## `sparse_fps_log`
@@ -73,12 +64,9 @@ std::vector<Modint<MOD>> sparse_fps_log(
 )
 ```
 
-$\log f$ の先頭 $N$ 項を返す。$N>0$ では $f_0=1$ が必要であり、
-満たさない場合は `runtime_error` を送出する。また $1,\ldots,N-1$ を
-法 `MOD` で割れるように $N\le\mathtt{MOD}$ が必要である。
-$N=0$ では条件を検査せず空列を返す。
+$\log f$ の先頭 $N$ 項を返す。$N \gt 0$ のとき $f_0 = 1$ が必要であり、満たさない場合は `std::runtime_error` を送出する。また、$1, \ldots, N - 1$ で割れるように $N \le \texttt{MOD}$ が必要である。$N = 0$ なら条件を検査せずに空列を返す。
 
-$f(\log f)'=f'$ の係数比較による漸化式を使う。
+$f (\log f)' = f'$ の係数比較から得られる漸化式を使う。
 
 - 時間計算量: $O(R\log R+NK)$
 - 追加空間計算量: $O(N+K)$
@@ -93,11 +81,9 @@ std::vector<Modint<MOD>> sparse_fps_exp(
 )
 ```
 
-$\exp f$ の先頭 $N$ 項を返す。$N>0$ では $f_0=0$ が必要であり、
-満たさない場合は `runtime_error` を送出する。$N\le\mathtt{MOD}$ も必要である。
-$N=0$ では空列を返す。
+$\exp f$ の先頭 $N$ 項を返す。$N \gt 0$ のとき $f_0 = 0$ が必要であり、満たさない場合は `std::runtime_error` を送出する。$N \le \texttt{MOD}$ も必要である。$N = 0$ なら空列を返す。
 
-$g_0=1$ として $g'=f'g$、すなわち
+$g_0 = 1$ として $g' = f' g$、すなわち
 
 $$
 g_n=\frac1n\sum_{1\le d\le n}d f_dg_{n-d}
@@ -119,16 +105,11 @@ std::vector<Modint<MOD>> sparse_fps_pow(
 )
 ```
 
-$f^{\mathtt{exponent}}$ の先頭 $N$ 項を返す。指数は非負でなければならず、
-負なら `runtime_error` を送出する。指数 0 では入力にかかわらず定数項 1 を返す。
-$N>0$ では $N\le\mathtt{MOD}$ が必要である。
+$f^{\texttt{exponent}}$ の先頭 $N$ 項を返す。指数は非負でなければならず、負なら（$N = 0$ でも）`std::runtime_error` を送出する。$N \gt 0$ のとき $N \le \texttt{MOD}$ が必要である。指数が $0$ なら入力によらず $1$ を返す。
 
-最初の非零項を $c x^v$ とする。$v\cdot\mathtt{exponent}\ge N$ なら全て 0 である。
-そうでなければ $u=f/(cx^v)$ とおき、$h=u^{\mathtt{exponent}}$ を
-$u h'=\mathtt{exponent}\,u'h$ から得る漸化式で計算する。
-先頭の 0、零多項式、大きな指数による次数計算もオーバーフローしないよう処理する。
+最初の非零項を $c x^v$ とする。$v \cdot \texttt{exponent} \ge N$ ならすべて $0$ を返す。そうでなければ $u = f / (c x^v)$ とおき、$h = u^{\texttt{exponent}}$ を $u h' = \texttt{exponent} \cdot u' h$ から得られる漸化式で計算する。先頭の $0$、零多項式、大きな指数でも次数の計算がオーバーフローしないように処理している。
 
-- 時間計算量: $O(R\log R+N(K+1)+\log\mathtt{MOD}+\log(\mathtt{exponent}+1))$
+- 時間計算量: $O(R\log R+N(K+1)+\log\texttt{MOD}+\log(\texttt{exponent}+1))$
 - 追加空間計算量: $O(N+K)$
 
 ## `sparse_fps_sqrt`
@@ -141,25 +122,17 @@ std::optional<std::vector<Modint<MOD>>> sparse_fps_sqrt(
 )
 ```
 
-$g^2\equiv f\pmod{x^N}$ となる $g$ を返す。存在しなければ `nullopt` を返す。
-零級数の平方根には零級数を返す。最初の非零項の次数が奇数、またはその係数が
-平方剰余でない場合は平方根が存在しない。先頭係数の平方根は
-Tonelli--Shanks 法で求め、小さい方の剰余を選ぶ。
+$g^2 \equiv f \pmod{x^N}$ を満たす $g$ を返し、存在しなければ `std::nullopt` を返す。零級数の平方根としては零級数を返す。最初の非零項の次数が奇数、またはその係数が平方非剰余の場合は平方根が存在しない。先頭係数の平方根は Tonelli-Shanks 法で求め、2 つの候補のうち代表値が小さい方を選ぶ。
 
-非零入力では `MOD` が奇素数、かつ $N\le\mathtt{MOD}$ でなければならない。
-標数 2 の非零入力や $N>\mathtt{MOD}$ では `runtime_error` を送出する。
-$N=0$ では空列を返す。
+$N \gt 0$ のとき $N \le \texttt{MOD}$ でなければならず、$N \gt \texttt{MOD}$ なら（零級数でも）`std::runtime_error` を送出する。また非零入力では `MOD` が奇素数でなければならず、`MOD == 2` なら `std::runtime_error` を送出する。$N = 0$ なら空列を返す。
 
-$f=x^{2v}u$、$g=x^vq$ とし、$u q'=\frac12u'q$ の係数比較を使う。
-入力に現れない高次係数を 0 とした一つの延長を返すため、返り値は常にちょうど
-$N$ 項である。
+$f = x^{2v} u$, $g = x^v q$ とし、$u q' = \frac{1}{2} u' q$ の係数比較を使う。次数 $N$ 以上の係数を $0$ とみなした入力に対する平方根を返すので、返り値は常にちょうど $N$ 項である。
 
-- 時間計算量: $O(R\log R+N(K+1)+\log^2\mathtt{MOD})$
+- 時間計算量: $O(R\log R+N(K+1)+\log^2\texttt{MOD})$
 - 追加空間計算量: $O(N+K)$
 
 ## 注意点
 
-各演算では次数 $N$ 以上の入力項を無視する。定数項条件は重複次数の加算と
-0 係数の除去後に判定する。`sparse_fps_log`、`sparse_fps_exp`、
-`sparse_fps_pow`、`sparse_fps_sqrt` で $N>\mathtt{MOD}$ を指定すると
-必要な次数が標数 0 になり逆元を持たないため `runtime_error` となる。
+- 各演算では次数 $N$ 以上の入力項を無視する。
+- 定数項の条件は、同じ次数の係数の加算と係数 $0$ の項の除去を行った後に判定する。
+- `sparse_fps_log`・`sparse_fps_exp`・`sparse_fps_pow`・`sparse_fps_sqrt` で $N \gt \texttt{MOD}$ を指定すると、次数 $\texttt{MOD}$ の逆元が存在せず漸化式を計算できないため `std::runtime_error` を送出する。

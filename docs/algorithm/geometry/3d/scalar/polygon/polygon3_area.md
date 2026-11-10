@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/polygon/pol
 
 ## API
 
-- `polygon3_area(polygon)`: 多角形の面積を返す。
+- `polygon3_area(polygon)`: 多角形の面積ベクトル `polygon3_area_vector(polygon)` の長さとして面積を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 頂点数を$N$として時間$O(N)$、追加領域$O(1)$。
+- 頂点数を $N$ として、時間 $O(N)$、追加領域 $O(1)$。
 
 ## 注意点
 
-頂点は同一平面上に境界順で与える。
+- 頂点は同一平面上に境界の順に与える。
+- 頂点数が 3 未満の場合は `std::invalid_argument` を送出する。

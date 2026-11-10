@@ -3,7 +3,7 @@ title: Support Vertex of a Normalized Convex Polygon (正規化凸多角形の�
 documentation_of: ../../../../../../src/algorithm/geometry/2d/index/point/convex_polygon_support_vertex_normalized.hpp
 ---
 
-正規化済み凸多角形から指定方向との内積を最大化する頂点を求める。
+正規化済みの凸多角形から、指定方向との内積が最大になる頂点を求める。
 
 ## API
 
@@ -14,7 +14,7 @@ std::size_t convex_polygon_support_vertex(
 );
 ```
 
-保存済みの単調な辺角度列を二分探索し、同率なら小さい添字を返す。
+保存済みの単調な辺の偏角列 `edge_angles()` を二分探索し、見つかった位置の前後 2 頂点ずつを比較して最大の頂点を選ぶ。内積が同じなら小さい添字を返す。
 
 ## 時間計算量
 
@@ -22,10 +22,10 @@ std::size_t convex_polygon_support_vertex(
 
 | API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
-| 正規化済みoverload | $O(\log N)$ | $O(1)$ |
+| 正規化済み多角形版 | $O(\log N)$ | $O(1)$ |
 
 ## 注意点
 
-- 空集合では `CONVEX_POLYGON_NPOS`、1点では0を返す。
-- 2点では内積が大きい端点を返し、同率なら0を返す。
-- directionの長さが許容誤差以下なら、空でない限り0を返す。
+- 空集合では `CONVEX_POLYGON_NPOS`、1 点では 0 を返す。
+- 2 点では内積が大きい方の端点を返し、等しければ 0 を返す。
+- 頂点数が 3 以上で、`direction` の長さが `GEOMETRY_EPS` 以下なら 0 を返す。

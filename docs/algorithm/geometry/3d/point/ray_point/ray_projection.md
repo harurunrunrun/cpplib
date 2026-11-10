@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point/ray_point/ra
 
 ## API
 
-- `projection(ray, point)`: 閉半直線上で点に最も近い射影点を返す。
+- `projection(ray, point)`: 閉半直線上で `point` に最も近い点を返す。`closest_point(ray, point)` の別名である。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 
-退化半直線には `std::invalid_argument` を送出する。直交射影が始点より後方なら始点を返す。
+- 退化半直線や非有限入力には `std::invalid_argument` を送出する。
+- 直交射影が始点より後方にある場合は始点を返す。

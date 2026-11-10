@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/point/unit.h
 
 ## API
 
-- `unit(point)`: `point` と同方向の単位ベクトルを返す。
+- `Point unit(const Point& point)`: `point` と同じ向きの単位ベクトルを返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point/point/unit.h
 
 ## 注意点
 
-許容誤差の範囲で零ベクトルなら `std::invalid_argument` を送出する。
+長さが `GEOMETRY_EPS` 以下（許容誤差の範囲で零ベクトル）の場合は `std::invalid_argument` を送出する。

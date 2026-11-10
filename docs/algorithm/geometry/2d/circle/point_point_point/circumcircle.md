@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/circle/point_point
 
 ## API
 
-- `circumcircle(first, second, third)`: 3点を通る外接円を返す。
+- `Circle circumcircle(first, second, third)`: 3 点を通る外接円を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -13,4 +13,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/circle/point_point
 
 ## 注意点
 
-3点が共線の場合は `std::invalid_argument` を送出する。半径は外心から頂点への差分を `hypot` 相当で求める。
+中心は `circumcenter(first, second, third)` で求め、半径は外心から `first` への差分の長さを `hypot` で求める。
+3 点が共線の場合は `circumcenter` が `std::invalid_argument` を送出する。

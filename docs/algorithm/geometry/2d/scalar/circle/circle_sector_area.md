@@ -3,22 +3,26 @@ title: Circle Sector Area (扇形面積)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/scalar/circle/circle_sector_area.hpp
 ---
 
+円の、指定した中心角に対する扇形の面積を求める。
+
 ## API
 
-- `circle_sector_area(circle, central_angle)`: 指定中心角の扇形面積を返す。
+```cpp
+long double circle_sector_area(const Circle& circle, long double central_angle);
+```
 
 ## 引数
 
-`circle` は非負半径の円、`central_angle` はrad単位の有限な非負角である。
+`circle` は半径が非負の円、`central_angle` はラジアン単位の有限で非負の角である。
 
 ## 戻り値
 
-$r^2\theta/2$ を `long double` で返す。
+半径を $r$、中心角を $\theta$ として $r^2 \theta / 2$ を `long double` で返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量
 
-時間・追加領域 $O(1)$。
+時間計算量・追加領域ともに $O(1)$。
 
 ## 注意点
 
-負半径、負角、非有限角には `std::invalid_argument` を送出する。
+円の中心座標・半径が有限でない場合、半径が負の場合、角が負または有限でない場合は `std::invalid_argument` を送出する。

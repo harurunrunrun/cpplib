@@ -3,7 +3,7 @@ title: Geometry Sign with Absolute Tolerance (絶対許容誤差による幾何�
 documentation_of: ../../../../../../src/algorithm/geometry/2d/integer/scalar/geometry_absolute_sign.hpp
 ---
 
-浮動小数値を固定の絶対許容誤差で-1、0、1へ符号化する。
+浮動小数点数の値を、固定の絶対許容誤差で $-1, 0, 1$ のいずれかに符号化する。
 
 ## API
 
@@ -11,8 +11,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/integer/scalar/geo
 int geometry_sign(long double value);
 ```
 
-`value > GEOMETRY_EPS` なら1、`value < -GEOMETRY_EPS` なら-1、
-それ以外なら0を返す。
+`value > GEOMETRY_EPS` なら 1、`value < -GEOMETRY_EPS` なら -1、それ以外なら 0 を返す。
 
 ## 時間計算量
 
@@ -22,5 +21,5 @@ int geometry_sign(long double value);
 
 ## 注意点
 
-`GEOMETRY_EPS` は `constants.hpp` で一度だけ定義される共通inline定数である。
-NaNは0、正負の無限大はそれぞれ1、-1を返す。
+`GEOMETRY_EPS` は `constants.hpp` で一度だけ定義される共通の inline 定数である。
+NaN に対しては 0 を、正・負の無限大に対してはそれぞれ 1、-1 を返す。

@@ -5,12 +5,13 @@ documentation_of: ../../../../../src/algorithm/math/number_theory/arithmetic/ran
 
 ## API
 
-- <code>math::range_lcm(values)</code>: 整数range <code>values</code> 全体の非負な最小公倍数を返す。
+- `math::range_lcm(values)`: 整数を要素とする range `values` 全体の最小公倍数を、非負の `long long` で返す。各要素は `long long` に変換してから `math::lcm` で順に畳み込む。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-- 要素数を $N$、要素の絶対値の最大値を $U$ として、時間 $O(N\log(U+1))$、追加領域 $O(1)$。
+要素数を $N$、要素の絶対値の最大値を $U$ として、時間 $O(N \log(U+1))$、追加領域 $O(1)$。
 
 ## 注意点
 
-空rangeでは単位元1を返し、0を含むrangeでは0を返す。各要素の絶対値と途中結果は <code>long long</code> で表現できなければならない。最小公倍数の乗算overflowは検査しない。
+- 空の range では単位元 $1$ を返し、$0$ を含む range では $0$ を返す。
+- 各要素の絶対値と途中結果は `long long` で表現できなければならない。最小公倍数の計算でのオーバーフローは検査しない。

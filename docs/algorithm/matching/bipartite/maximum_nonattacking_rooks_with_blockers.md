@@ -3,7 +3,7 @@ title: Maximum Nonattacking Rooks with Blockers (障害物付き非攻撃rook最
 documentation_of: ../../../../src/algorithm/matching/bipartite/maximum_nonattacking_rooks_with_blockers.hpp
 ---
 
-障害物で視線が遮られる格子へ、互いに攻撃しないrookを置ける最大数を求めます。
+障害物で利きが遮られる格子に、互いに攻撃しないルークを置ける最大数を求める。
 
 ## API
 
@@ -17,21 +17,20 @@ int maximum_nonattacking_rooks_with_blockers(
 );
 ```
 
-`placeable_cell` のマスだけを配置候補とし、同じ行または列で2個のrookが
-`blocker_cell` を挟まず向かい合わないように選べる最大数を返します。
-2種類の指定記号以外のマスは、配置できませんが視線を遮らないマスとして扱います。
+`placeable_cell` のマスだけを配置候補とし、同じ行または同じ列にある 2 個のルークが `blocker_cell` を挟まずに向かい合わないように選べる最大数を返す。2 種類の指定記号以外のマスは、ルークを置けないが利きを遮らないマスとして扱う。
 
-## API別の時間計算量・空間計算量
+障害物で区切られた横の区間と縦の区間を頂点とし、配置候補のマスを辺とする二部グラフの最大マッチングとして解く。
 
-格子を $R\times C$、配置候補数を $E$ とします。
+## 時間計算量・空間計算量
+
+格子の大きさを $R \times C$、配置候補の数を $E$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `maximum_nonattacking_rooks_with_blockers` | $O(RC+E\sqrt{RC})$ | $O(RC+E)$ |
+| `maximum_nonattacking_rooks_with_blockers` | $O(RC + E \sqrt{RC})$ | $O(RC + E)$ |
 
 ## 注意点
 
-- `grid` は長方形でなければなりません。空の格子には `0` を返します。
-- `placeable_cell` と `blocker_cell` は互いに異なる必要があります。
-- 記号または形状の前提違反には `invalid_argument`、内部添字を `int` で
-  表せない大きさには `length_error` を送出します。
+- `grid` は長方形でなければならない。空の格子には `0` を返す。
+- `placeable_cell` と `blocker_cell` は互いに異なる必要がある。
+- 記号や形状の前提違反には `invalid_argument` を、内部の添字を `int` で表せない大きさには `length_error` を送出する。

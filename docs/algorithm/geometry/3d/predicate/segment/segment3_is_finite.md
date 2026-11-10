@@ -5,7 +5,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/segment/
 
 ## API
 
-- `geometry3d_is_finite(segment)` は `Segment3` の両端点の全座標が有限なら `true` を返す。
+- `geometry3d_is_finite(segment)`: `Segment3` の両端点の全座標が有限なら `true` を返す。
 
 ## API別の時間計算量・空間計算量
 
@@ -14,4 +14,5 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/segment/
 
 ## 注意点
 
-長さ0の線分も、座標が有限なら `true` になる。
+- 例外は送出しない（`noexcept`）。
+- 長さ 0 の線分も、座標が有限なら `true` を返す。

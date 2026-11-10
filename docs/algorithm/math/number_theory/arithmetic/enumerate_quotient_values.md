@@ -11,17 +11,16 @@ $1\le i\le N$ に対する $\lfloor N/i\rfloor$ の相異なる値を列挙す�
 vector<long long> math::enumerate_quotient_values(long long number)
 ```
 
-相異なる $\lfloor number/i\rfloor$ を昇順で返す。
-`number == 0` では空列を返す。
+`number` を $N$ として、相異なる $\lfloor N/i\rfloor$ を昇順で返す。`number == 0` では空列を返す。内部で `quotient_ranges` を使う。
 
 ## 時間計算量
 
-$O(\sqrt{number})$。
+$O(\sqrt{N})$。
 
 ## 空間計算量
 
-戻り値と一時的な商区間列を含めて $O(\sqrt{number})$。
+戻り値と一時的な商の区間列を含めて $O(\sqrt{N})$。
 
 ## 注意点
 
-`number` は非負でなければならない。負数では `runtime_error` を送出する。
+- `number` は非負でなければならない。負数では `runtime_error` を送出する。

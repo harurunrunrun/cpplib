@@ -5,18 +5,17 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/ep
 
 ## API
 
-- `EPAResult3::intersects`: 入力形状が接触または交差するとき真。
-- `penetration_depth`: 第1形状を `-normal * penetration_depth` だけ動かすと分離できる深さ。
-- `normal`: 第1形状から第2形状を向く接触単位法線。
-- `point_on_first`, `point_on_second`: 終了面の重心座標から復元した接触点。
-- `iterations`, `converged`: EPA の反復回数と収束フラグ。
+- `EPAResult3::intersects`: 入力の 2 形状が接触または交差するとき `true`。
+- `penetration_depth`: 貫通深さ。第 1 の形状を `-normal * penetration_depth` だけ動かすと 2 形状を分離できる。
+- `normal`: 第 1 の形状から第 2 の形状へ向かう接触単位法線。
+- `point_on_first`, `point_on_second`: 終了時の面の重心座標から復元した接触点。
+- `iterations`, `converged`: EPA の反復回数と、収束したかどうか。
 
 ## API別の時間計算量・空間計算量
 
-- 各構造体の構築・参照は $O(1)$。
+- 構築・各メンバの参照: 時間・追加領域 $O(1)$。
 
 ## 注意点
 
-接触点が面や辺に広がる場合、返る代表点は一意でない。
-
-貫通深度と接触点は入力座標系の値。交差時の `normal` は有限な単位ベクトルである。
+- 接触領域が面や辺に広がる場合、返される代表点は一意でない。
+- 貫通深さと接触点は入力座標系での値である。交差する場合の `normal` は有限な単位ベクトルである。

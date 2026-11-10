@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/type/definition/po
 
 ## API
 
-- `polygon3_to_2d(polygon, system)`: 指定した `PlaneCoordinateSystem3` の2基底との内積で、全頂点を二次元の `Point` 列へ変換する。
+- `polygon3_to_2d(polygon, system)`: 指定した `PlaneCoordinateSystem3` の 2 本の基底との内積により、全頂点を二次元の `Point` の列（`std::vector<Point>`）へ変換する。
 
 ## API別の時間計算量・空間計算量
 
-- `polygon3_to_2d`: 頂点数を $N$ として時間 $O(N)$、結果を除く追加領域 $O(1)$、返却領域 $O(N)$。
+- `polygon3_to_2d`: 頂点数を $N$ として時間 $O(N)$、戻り値を除く追加領域 $O(1)$、戻り値の領域 $O(N)$。
 
 ## 注意点
 
-このoverloadは座標系の構築、多角形の頂点数・面積・共面性の検査を行わない。有効な `PlaneCoordinateSystem3` を呼出側で用意する。
+このオーバーロードは座標系を構築せず、多角形の頂点数・面積・共面性も検査しない。有効な `PlaneCoordinateSystem3` は呼び出し側で用意する。

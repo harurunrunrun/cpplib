@@ -7,12 +7,16 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/scalar/segment_poi
 
 ## API
 
-- `distance_segment_point(segment, point)`: `segment` と `point` の距離を返す。
+```cpp
+long double distance_segment_point(const Segment& segment, const Point& point);
+```
 
-## API別の時間計算量・空間計算量
+`segment` と `point` の距離を返す。
 
-- `distance_segment_point`: 時間 $O(1)$、追加領域 $O(1)$。
+## 時間計算量・空間計算量
+
+時間 $O(1)$、追加空間 $O(1)$。
 
 ## 注意点
 
-長さ0の退化線分では端点と点の距離を返す。戻り値の型は `long double` である。
+長さ $0$（許容誤差以下）の退化線分では、端点 `segment.a` と点の距離を返す。

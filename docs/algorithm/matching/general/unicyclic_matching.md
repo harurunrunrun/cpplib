@@ -3,7 +3,7 @@ title: Unicyclic Matching (単一閉路グラフのマッチング)
 documentation_of: ../../../../src/algorithm/matching/general/unicyclic_matching.hpp
 ---
 
-各連結成分が木または $N$ 頂点 $N$ 辺の無向グラフである場合の最大マッチング。
+各連結成分が木、または頂点数と辺数が等しい（閉路をちょうど 1 つ持つ）無向グラフである場合に、最大マッチングを求める。
 
 ## 関数
 
@@ -11,29 +11,29 @@ documentation_of: ../../../../src/algorithm/matching/general/unicyclic_matching.
 unicyclic_matching(n, edges)
 ```
 
-`edges` は `UnicyclicMatchingEdge{from, to}` の列。
+`edges` は `UnicyclicMatchingEdge{from, to}` の列である。
 
-`UnicyclicMatchingResult` は次を持つ。
+`UnicyclicMatchingResult` は次のメンバを持つ。
 
 ```cpp
 int size;
 vector<int> match;
 ```
 
-自己ループは扱わない。多重辺は扱える。
+`match[v]` は `v` と対応する頂点、未マッチなら `-1` である。
 
 ## 時間計算量
 
-- `unicyclic_matching`: $O(N+M)$
+- `unicyclic_matching`: $O(N + M)$
 
-各連結成分の検査、木DP・cycle DP、長さ $N$ の `match` 出力を含む。
+各連結成分の検査、木 DP・閉路 DP、長さ $N$ の `match` の出力を含む。
 
 ## 空間計算量
 
-- 戻り値と作業領域を含めて $O(N+M)$
+- 戻り値と作業領域を含めて $O(N + M)$
 
 ## 注意点
 
-`match[v]` は対応頂点、未matchingなら `-1`。各連結成分は木または閉路を1つだけ持つgraphとする。多重辺を許しself-loopは不可。条件違反で `runtime_error`。
+多重辺は扱える（長さ 2 の閉路とみなす）。自己ループや、木でも単一閉路グラフでもない成分を含む場合は `runtime_error` を送出する。
 
-頂点数は非負、各端点は対応する頂点範囲内でなければならず、違反時は `runtime_error`。容量・cost・総和の演算結果が `T` に収まることを前提とする。記載した計算量には引数検査とResultの構築を含む。
+頂点数は非負、各端点は頂点範囲内でなければならず、違反時は `runtime_error` を送出する。記載した計算量には引数検査と戻り値の構築を含む。

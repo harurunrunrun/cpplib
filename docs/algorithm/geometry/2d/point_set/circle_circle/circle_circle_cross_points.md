@@ -5,16 +5,15 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/point_set/circle_c
 
 ## API
 
-- `circle_circle_cross_points(first, second)`: 2円周の異なる交点を0～2個返す。
+- `std::vector<Point> circle_circle_cross_points(first, second)`: 2 つの円周の相異なる交点を $0$ ～ $2$ 個返す。交点が 2 個のときは $(x, y)$ の辞書順に並べる。
 
 ## API別の時間計算量・空間計算量
 
-- 時間 $O(1)$、出力・追加領域 $O(1)$。
+- `circle_circle_cross_points`: 時間 $O(1)$、出力・追加領域 $O(1)$。
 
 ## 注意点
 
-一致する円は交点が無限にあるため `std::domain_error`、負半径には `std::invalid_argument` を送出する。接点は1個だけ返す。
-
-- 円の中心座標と半径は有限値であること。非有限値または負半径にはstd::invalid_argumentを送出する。
-- 接触・包含の距離二乗や4次量は、比較する各項の大きさにGEOMETRY_EPSを掛けた相対許容誤差で判定する。中間値は有限なlong doubleに収まること。
-- 同一点の半径0円同士は交点1個を返す。std::domain_errorとなるのは一致する正半径円である。
+- 2 円が接する場合は接点を 1 個だけ返す。
+- 一致する正半径の円同士は交点が無限にあるため `std::domain_error` を送出する。同じ点を中心とする半径 $0$ の円同士は、その点を交点として 1 個返す。
+- 円の中心座標と半径は有限値でなければならない。非有限値または負の半径には `std::invalid_argument` を送出する。
+- 接触・包含の判定では、距離の二乗や 4 次の量を、比較する各項の大きさに `GEOMETRY_EPS` を掛けた相対許容誤差で比較する。中間値は有限な `long double` に収まる必要がある。

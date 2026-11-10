@@ -5,14 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/plane_point
 
 ## API
 
-- `signed_distance(plane, point)`: 入力法線の向きを正とする平面への符号付き距離を返す。
+- `signed_distance(plane, point)`: 入力された法線の向きを正として、点から平面への符号付き距離を返す。
 
 ## API別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+- 時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-零法線または非有限入力には `std::invalid_argument` を送出する。点と平面anchorの差を
-局所scaleへ正規化し、安全に単位化した法線との内積から距離を復元する。結果を
-`long double` で表現できない場合は `std::overflow_error` を送出する。
+- 法線が零ベクトルの場合や、入力が非有限の場合は `std::invalid_argument` を送出する。
+- 点と平面上の基準点 `plane.point` の差を局所的なスケールで正規化し、安全に単位化した法線との内積をとってから距離を復元する。
+- 非零の結果を `long double` で表現できない場合（オーバーフローまたはアンダーフローで $0$ になる場合）は `std::overflow_error` を送出する。
