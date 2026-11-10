@@ -3,27 +3,29 @@ title: Dynamic Rolling Hash (動的ローリングハッシュ)
 documentation_of: ../../../../src/algorithm/string/automata/dynamic_rolling_hash.hpp
 ---
 
-1文字更新を行う byte 文字列について、部分文字列ハッシュと最長共通接頭辞を求める。
+1 文字の更新ができるバイト文字列について、部分文字列のハッシュと最長共通接頭辞（LCP）を求める。
 法 $2^{61}-1$ の多項式ハッシュをセグメント木で管理する。
 
 ## API
 
 ```cpp
-DynamicRollingHash(const std::string& text, uint64_t base = default_base)
-int size() const
+explicit DynamicRollingHash(const std::string& text, uint64_t base = default_base)
+int size() const noexcept
 void set(int index, unsigned char symbol)
 Node get(int left, int right) const
 bool equal(int first, int second, int length) const
 int lcp(int first, int second) const
 ```
 
-- `get(left, right)` は半開区間の `hash` と `length` を返す。
-- `equal` は同じ長さの2部分文字列のハッシュを比較する。
-- `lcp` は2接尾辞の最長共通接頭辞長を返す。
+- コンストラクタ: `base` は $[1,2^{61}-1)$ に入る必要があり、違反時は `std::runtime_error` を送出する。`default_base` は `1'000'003` である。
+- `set(index, symbol)`: 位置 `index` の文字を `symbol` に変更する。
+- `get(left, right)`: 半開区間 `[left, right)` のハッシュ値 `hash` と長さ `length` を持つ `Node` を返す。
+- `equal(first, second, length)`: 位置 `first` と `second` から始まる長さ `length` の部分文字列のハッシュ値を比較する。
+- `lcp(first, second)`: 位置 `first` と `second` から始まる接尾辞の最長共通接頭辞の長さを、二分探索で返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-$N=|text|$ とする。
+$N$ を `text` の長さとする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -35,4 +37,5 @@ $N=|text|$ とする。
 
 ## 注意点
 
-ハッシュ衝突の可能性はある。添字または区間が範囲外なら例外を送出する。
+- ハッシュの衝突により、異なる部分文字列を等しいと判定する可能性がある。基数のデフォルトは固定値なので、意図的に衝突させる入力が問題になる場合は乱数の `base` を渡す。
+- 添字または区間が範囲外なら `std::runtime_error` を送出する（`equal` では負の長さも同様）。

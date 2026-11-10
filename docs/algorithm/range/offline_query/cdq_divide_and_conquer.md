@@ -3,7 +3,7 @@ title: CDQ Divide and Conquer (CDQ分割統治)
 documentation_of: ../../../../src/algorithm/range/offline_query/cdq_divide_and_conquer.hpp
 ---
 
-添字区間を再帰分割し、左右間の寄与を後処理するCDQ分割統治の骨格。
+添字区間を再帰分割し、左右間の寄与を後処理する CDQ 分割統治の骨格。
 
 ## API
 

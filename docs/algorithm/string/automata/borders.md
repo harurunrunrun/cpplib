@@ -3,7 +3,8 @@ title: Borders (境界) [SUFEQPRE]
 documentation_of: ../../../../src/algorithm/string/automata/borders.hpp
 ---
 
-列の非空な真のprefixであり、同時にsuffixでもある部分列（border）の長さを列挙する。
+列の空でない真の接頭辞であり、同時に接尾辞でもあるもの（border）の長さを列挙する。
+接頭辞関数（`prefix_function`）の値を末尾からたどる。
 
 ## API
 
@@ -14,23 +15,20 @@ std::vector<int> border_lengths(const Sequence& sequence)
 
 ## 引数・戻り値
 
-- `sequence`: borderを列挙する入力列。
-- 戻り値: すべてのborder長を狭義単調増加順に格納したvector。
-  空列と長さ1の列では空vectorを返す。
+- `sequence`: border を列挙する入力列。
+- 戻り値: すべての border の長さを狭義単調増加順に格納した `std::vector`。
+  空列と長さ 1 の列では空の `std::vector` を返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-$N$ を列長、$K$ をborder数とする。
+$N$ を列長、$K$ を border の個数とし、要素の比較を $O(1)$ とする。
 
-| API | 時間計算量 | 空間計算量（出力・追加領域） |
+| API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `border_lengths(sequence)` | $O(N+K)$ | 追加領域 $O(N)$、出力 $O(K)$ |
-
-要素比較は $O(1)$ とする。
+| `border_lengths(sequence)` | $O(N)$ | 追加領域 $O(N)$、出力 $O(K)$ |
 
 ## 注意点
 
-- 空prefix、空suffix、列全体はborderとして返さない。
-- prefixとsuffixの位置が重なるborderも返す。
-- `Sequence` は `size()`、0-indexed random access、要素の `operator==` に
-  対応し、列長は `int` に収まることを前提とする。
+- 空の接頭辞・空の接尾辞・列全体は border として返さない。
+- 接頭辞と接尾辞の位置が重なる border も返す。
+- `Sequence` は `size()`、0-indexed のランダムアクセス、要素の `operator==` に対応し、列長は `int` に収まることを前提とする。

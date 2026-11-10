@@ -5,7 +5,7 @@ documentation_of: ../../../../src/algorithm/range/offline_query/dynamic_range_me
 
 一点更新と区間 MEX を変更時刻付き Mo 順序で一括処理する。欠損値は階層化した 64 bit 集合で管理する。
 
-## constructor
+## コンストラクタ
 
 ```cpp
 explicit OfflineDynamicRangeMex(vector<int64_t> initial)
@@ -28,7 +28,7 @@ size_t add_query(size_t left, size_t right)
 vector<size_t> solve() const
 ```
 
-登録した全クエリの答えを返す。同じ object で繰り返し呼べる。
+登録した全クエリの答えを返す。同じオブジェクトで繰り返し呼べる。
 
 ## size / update_count / query_count
 

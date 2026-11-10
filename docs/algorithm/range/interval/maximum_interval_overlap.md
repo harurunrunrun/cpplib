@@ -3,8 +3,7 @@ title: Maximum Interval Overlap (区間最大重複数) [BYTESE2]
 documentation_of: ../../../../src/algorithm/range/interval/maximum_interval_overlap.hpp
 ---
 
-区間列をイベントへ変換して走査し、同じ点を同時に含む区間数の最大値を求める。
-端点が等しいときの重複判定を、半開区間と閉区間から選べる。
+区間列をイベントへ変換して走査し、同じ点を同時に含む区間数の最大値を求める。端点が等しいときの重複判定を、半開区間と閉区間から選べる。
 
 ## API
 
@@ -28,7 +27,7 @@ int maximum_interval_overlap(
 
 指定した端点規則で、全区間が共通して含む区間数の最大値を返す。入力が空、または半開の空区間だけなら $0$ を返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
 $N=intervals.size()$ とする。
 

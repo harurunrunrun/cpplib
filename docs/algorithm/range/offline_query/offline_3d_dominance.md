@@ -7,7 +7,7 @@ documentation_of: ../../../../src/algorithm/range/offline_query/offline_3d_domin
 
 ## API
 
-- `DominancePoint3D`: 64-bit整数座標を保持する。
+- `DominancePoint3D`: 64-ビット整数座標を保持する。
 - `offline_3d_dominance(points)`: 入力順の答えを返す。
 
 ## 時間計算量
