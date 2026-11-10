@@ -1,5 +1,5 @@
 ---
-title: GJK Closest Points 3D (3次元GJK最近点)
+title: GJK Closest Points 3D (三次元 GJK 最近点)
 documentation_of: ../../../../../../src/algorithm/geometry/3d/point_set/polyhedron_polyhedron/gjk_closest_points_3d.hpp
 ---
 

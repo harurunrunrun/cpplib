@@ -5,14 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/circle_p
 
 ## API
 
-- `on_circle(circle, point)`: 点が円の平面上かつ中心から半径距離にあるか判定する。
+- `on_circle(circle, point)`: 点が円を含む平面上にあり、かつ中心からの距離が半径に等しいかを、許容誤差 `GEOMETRY3D_EPS` の相対誤差の範囲で判定する。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-Circle3 は中心・法線・半径が有限、法線が非零、半径が非負でなければならず、違反時は std::invalid_argument を送出する。
-
-零法線または負半径には `std::invalid_argument` を送出する。半径0の円は中心1点を表す。
+- `Circle3` は中心・法線・半径が有限、法線が非零、半径が非負でなければならない。違反時、および非有限な点には `std::invalid_argument` を送出する。
+- 半径 $0$ の円は中心の 1 点を表す。

@@ -5,13 +5,14 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/ray_
 
 ## API
 
-- `closest_points(first, second)`: `Ray3` と `Plane3` 上の最近点を引数と同じ順のpairで返す。異種型では逆順overloadも提供する。
-- この互換集約ヘッダは `ray_plane` 順と `plane_ray` 順の両leafを提供する。
+- `closest_points(first, second)`: `Ray3` と `Plane3` 上の最近点の対を、引数と同じ順の `std::pair<Point3, Point3>` で返す。引数の型の順序を入れ替えたオーバーロードも提供する。
+- この互換用集約ヘッダは `(Ray3, Plane3)` 版と `(Plane3, Ray3)` 版の両方の個別ヘッダを提供する。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 全overload: 時間・追加領域 $O(1)$。
+- 全オーバーロード: 時間・追加空間ともに $O(1)$。
 
 ## 注意点
 
-最近点対が複数ある場合はそのうち1組を返す。退化半直線・零法線平面・非有限入力には `std::invalid_argument` を送出する。
+- 最近点対が複数ある場合は、そのうち 1 組を返す。
+- 退化した半直線、法線が零ベクトルの平面、非有限な入力には `std::invalid_argument` を送出する。

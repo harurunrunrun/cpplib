@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/line_ray
 
 ## API
 
-- `overlap(first, second)`: `Line3` と `Ray3` の共通部分が半直線になるとき `true` を返す。
+- `overlap(first, second)`: `Line3` と `Ray3` の共通部分が半直線になる（半直線全体が直線に含まれる）とき `true` を返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- `overlap`: 時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-一点だけで交わる場合は `false`。入力は各幾何型の有効条件を満たす必要がある。
+- 1 点だけで交わる場合は `false` を返す。
+- 入力は各幾何型の有効条件（退化していない、有限である等）を満たさなければならない。

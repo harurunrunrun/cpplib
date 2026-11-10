@@ -5,13 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/plane/pl
 
 ## API
 
-- `geometry3d_is_finite(plane)` は `Plane3` の基準点と法線の全座標が有限なら `true` を返す。
+- `geometry3d_is_finite(plane)`: `Plane3` の基準点と法線の全座標が有限なら `true` を返す（`noexcept`）。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 時間計算量: $O(1)$
-- 追加空間計算量: $O(1)$
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-零法線かどうかは検査しない。
+法線が零ベクトルかどうかは検査しない。

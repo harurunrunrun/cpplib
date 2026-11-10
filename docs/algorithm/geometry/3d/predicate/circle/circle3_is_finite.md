@@ -5,13 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/circle/c
 
 ## API
 
-- `geometry3d_is_finite(circle)` は `Circle3` の中心・法線・半径がすべて有限なら `true` を返す。
+- `geometry3d_is_finite(circle)`: `Circle3` の中心・法線・半径がすべて有限なら `true` を返す（`noexcept`）。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 時間計算量: $O(1)$
-- 追加空間計算量: $O(1)$
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-法線の非零性や半径の符号は検査しない。契約検査には `geometry3d_validate` を使う。
+法線が非零か、半径が非負かは検査しない。契約の検査には `geometry3d_validate` を使う。

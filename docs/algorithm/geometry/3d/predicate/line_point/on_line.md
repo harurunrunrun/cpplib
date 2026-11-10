@@ -5,12 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/line_poi
 
 ## API
 
-- `on_line(line, point)`: 点が無限直線上にあるか判定する。
+- `on_line(line, point)`: 点が無限直線上にあるかを判定する。直線の方向と `point - line.a` が相対許容誤差 `GEOMETRY3D_EPS` の範囲で平行かで判定する。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-退化直線には `std::invalid_argument` を送出する。
+退化した直線、非有限な入力には `std::invalid_argument` を送出する。

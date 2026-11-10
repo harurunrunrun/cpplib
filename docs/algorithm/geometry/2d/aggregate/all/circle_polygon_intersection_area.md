@@ -3,43 +3,38 @@ title: Circle Polygon Intersection Area (円と多角形の共通部分面積) [
 documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/circle_polygon_intersection_area.hpp
 ---
 
-円板と単純多角形の共通部分の面積を求める。多角形は時計回り、反時計回りのどちらでもよい。
+円板と単純多角形の共通部分の面積を求める。多角形の向きは時計回り・反時計回りのどちらでもよい。
 
 ```cpp
 long double circle_polygon_intersection_area(
     const Circle& circle,
-    const vector<Point>& polygon
+    const std::vector<Point>& polygon
 )
 ```
 
-符号付き面積が必要な場合は次を使う。
+符号付き面積（多角形が反時計回りなら正）が必要な場合は次を使う。`circle_polygon_intersection_area` はこの値の絶対値を返す。
 
 ```cpp
 long double signed_circle_polygon_intersection_area(
     const Circle& circle,
-    const vector<Point>& polygon
+    const std::vector<Point>& polygon
 )
 ```
 
-## 計算量の概要
+## 計算量
 
-$O(N)$。
+$N$ を `polygon` の頂点数とする。
 
-## API別の時間計算量・空間計算量
-
-$N$ をpolygon頂点数とする。
-
-| API | 時間計算量 | 空間計算量（追加領域） |
+| API | 時間計算量 | 追加の空間計算量 |
 | --- | --- | --- |
-| `signed_circle_polygon_intersection_area(circle,polygon)` | $O(N)$ | $O(1)$ |
-| `circle_polygon_intersection_area(circle,polygon)` | $O(N)$ | $O(1)$ |
+| `signed_circle_polygon_intersection_area(circle, polygon)` | $O(N)$ | $O(1)$ |
+| `circle_polygon_intersection_area(circle, polygon)` | $O(N)$ | $O(1)$ |
 
-各辺と円の交点候補は高々2個であり、辺ごとの処理は $O(1)$。
+各辺と円の交点の候補は高々 2 個であり、辺ごとの処理は $O(1)$ である。
 
 ## 注意点
 
-座標と中間演算は有限な `long double` の範囲に収まる必要がある。境界・退化判定には各APIで明記した許容誤差を用いる。
-
-- 円の中心座標と半径は有限値であること。非有限値または負半径にはstd::invalid_argumentを送出する。
-- 接触・包含の距離二乗や4次量は、比較する各項の大きさにGEOMETRY_EPSを掛けた相対許容誤差で判定する。中間値は有限なlong doubleに収まること。
-- 同一端点の辺だけを退化辺とする。tinyな正半径や微小多角形も入力scaleに応じて処理する。
+- 円の中心座標と半径は有限値でなければならない。非有限値または負の半径には `std::invalid_argument` を送出する。
+- 半径が $0$、または頂点数が $2$ 未満なら $0$ を返す。
+- 接触・包含の判定に使う距離の二乗や 4 次の量は、比較する各項の大きさに `GEOMETRY_EPS` を掛けた相対的な許容誤差で判定する。座標と中間値は有限な `long double` の範囲に収まる必要がある。
+- 端点が一致する辺だけを退化した辺として扱う。非常に小さい正の半径や微小な多角形も、入力の大きさに応じて処理する。

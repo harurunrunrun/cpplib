@@ -5,13 +5,12 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/line/lin
 
 ## API
 
-- `geometry3d_is_finite(line)` は `Line3` の二点の全座標が有限なら `true` を返す。
+- `geometry3d_is_finite(line)`: `Line3` の 2 点の全座標が有限なら `true` を返す（`noexcept`）。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- 時間計算量: $O(1)$
-- 追加空間計算量: $O(1)$
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-二点の一致は検査しない。直線として非退化かは利用側APIが検査する。
+2 点が一致するかは検査しない。直線として退化していないかは、利用する側の API が検査する。

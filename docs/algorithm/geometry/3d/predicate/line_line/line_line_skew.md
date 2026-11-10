@@ -5,12 +5,13 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/predicate/line_lin
 
 ## API
 
-- `skew(first, second)`: 2本の `Line3` が非平行かつ交点を持たないなら `true` を返す。
+- `skew(first, second)`: 2 本の `Line3` が平行でなく、かつ交点を持たない（ねじれの位置にある）なら `true` を返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-- `skew`: 時間・追加領域 $O(1)$。
+時間・追加領域ともに $O(1)$。
 
 ## 注意点
 
-平行な異なる直線と一致する直線はいずれも `false`。退化直線には `std::invalid_argument` を送出する。
+- 平行な相異なる直線と、一致する直線はいずれも `false` を返す。
+- 退化した直線には `std::invalid_argument` を送出する。
