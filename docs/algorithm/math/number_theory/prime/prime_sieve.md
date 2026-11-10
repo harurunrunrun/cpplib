@@ -3,86 +3,62 @@ title: Prime Sieve (素数篩)
 documentation_of: ../../../../../src/algorithm/math/number_theory/prime/prime_sieve.hpp
 ---
 
-素数判定と線形篩。
-
-`PrimeSieve` は `MAX_N` までの最小素因数を持つ。
+試し割りによる素数判定と、最小素因数を記録する線形篩。
 
 ## 関数
 
 - `math::is_prime_sqrt(n)`
     - 試し割りで素数判定する。
 
-## PrimeSieve
+## `PrimeSieve`
 
 ```cpp
-math::PrimeSieve<1000000> sieve(n);
+math::PrimeSieve<1000000> fixed(n);  // 固定長版
+math::PrimeSieve<> dynamic(n);       // 可変長版
 ```
+
+`PrimeSieve<MAX_N>` は `MAX_N` を容量とする固定長の `std::array` に最小素因数と素数列を持つ。テンプレート引数を省略する（デフォルトの `-1`）と、実行時のサイズに合わせて `std::vector` を使う可変長版になり、再構築のたびに現在の上限に合わせて配列を取り直す。
 
 ## メンバ関数
 
-- `PrimeSieve(int n = MAX_N)`
-    - `n` まで篩を構築する。
+- `PrimeSieve(int n = MAX_N)`（可変長版のデフォルトは `n = 0`）
+    - $n$ まで篩を構築する。
 - `void build(int n)`
-    - `n` まで作り直す。
+    - $n$ まで作り直す。
 - `int size() const`
-    - 構築済みの上限を返す。
+    - 構築した上限 $n$（判定できる最大値）を返す。
 - `int prime_count() const`
-    - `n` 以下の素数の個数を返す。
+    - $[2, n]$ の素数の個数を返す。
 - `int prime(int k) const`
-    - `k` 番目の素数を返す。
-- `vector<int> primes() const`
-    - 素数列を返す。
-- `int min_factor(int n) const`
-    - `n` の最小素因数を返す。
-- `bool is_prime(int n) const`
-    - 素数かを返す。
-- `vector<pair<int,int>> factorize(int n) const`
-    - `n` を素因数分解して `(素数, 指数)` の列を返す。
+    - 0-indexed で $k$ 番目の素数を返す。
+- `std::vector<int> primes() const`
+    - 構築範囲の素数を昇順に並べた列をコピーして返す。
+- `int min_factor(int x) const`
+    - $x$ の最小素因数を返す。$x = 0$ では $0$、$x = 1$ では $1$ を返す。
+- `bool is_prime(int x) const`
+    - $x$ が素数かを返す。
+- `std::vector<std::pair<int, int>> factorize(int x) const`
+    - $x$ を素因数分解して `(素数, 指数)` の列を素数の昇順に返す。
 
-## 計算量の概要
+## 時間計算量・空間計算量
 
-- `is_prime_sqrt`: $O(\sqrt n)$
-- 篩本体は $O(n)$、固定長配列の初期化を含む `build` 全体は $O(MAX_N+n)$
-- `is_prime`, `min_factor`, `prime`: $O(1)$
-- `factorize`: $O(\log n)$
-
-## API別の時間計算量・空間計算量
-
-$P=\pi(n)$、素因数の種類数を $K$ とする。
+$P = \pi(n)$、素因数の種類数を $K$ とする。
 
 | API | 時間計算量 |
 | --- | --- |
 | `math::is_prime_sqrt(n)` | $O(\sqrt n)$ |
-| `PrimeSieve(n)` | $O(MAX_N)$（`build` を含む） |
-| `build(n)` | $O(MAX_N+n)$ |
+| `PrimeSieve(n)` / `build(n)` | 固定長版 $O(\texttt{MAX_N} + n)$、可変長版 $O(n)$ |
 | `size()` / `prime_count()` / `prime(k)` | $O(1)$ |
-| `min_factor(n)` / `is_prime(n)` | $O(1)$ |
-| `primes()` | $O(P)$（出力サイズ依存） |
-| `factorize(n)` | $O(\log n+K)$（出力サイズ $K$） |
+| `min_factor(x)` / `is_prime(x)` | $O(1)$ |
+| `primes()` | $O(P)$（出力サイズに依存） |
+| `factorize(x)` | $O(\log x)$（出力サイズ $K$ を含む） |
 
-`build` は線形篩部分が $O(n)$ だが、固定長 `min_factor_data` の初期化に $O(MAX_N)$ かかる。保持領域は $O(MAX_N)$。
+篩の本体は $O(n)$ だが、固定長版は `min_factor_data` 全体の初期化に $O(\texttt{MAX_N})$ かかる。保持領域は固定長版で $O(\texttt{MAX_N})$、可変長版で $O(n)$。
 
 ## 注意点
 
-- `is_prime_sqrt(n)` は $n\le1$ で `false`。例外は送出しない。
-- constructorと `build(n)` は $0\le n\le MAX_N$ を要求する。
-  `size()` は判定可能な最大値 `n` を返す。
-- `prime_count()` は $[2,n]$ の素数数、`prime(k)` は0-indexedの
-  $k$ 番目の素数。`k` が範囲外なら例外を送出する。
-- `primes()` は構築範囲の素数を昇順でコピーして返す。
-- `min_factor(x)` は $0\le x\le n$ を要求し、0では0、1では1を返す。
-- `is_prime(x)` は $0\le x\le n$ を要求する。
-- `factorize(x)` は $1\le x\le n$ を要求し、素因数と指数を昇順で返す。
-- `min_factor_data`, `prime_data`, `_n`, `_prime_count` は公開storage。
-  通常は対応するaccessorを使用する。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
-
-```cpp
-math::PrimeSieve<> dynamic(n);
-math::PrimeSieve<100000> fixed(n);
-```
-
-構築・`build(n)` は $O(n)$ 時間・空間、素数判定は $O(1)$ 時間、素因数分解は $O(\log n)$ 時間。再構築すると現在の上限に合わせて配列を取り直す。
+- `is_prime_sqrt(n)` は $n \le 1$ で `false` を返し、例外は送出しない。
+- コンストラクタと `build(n)` は $0 \le n$（固定長版ではさらに $n \le \texttt{MAX_N}$）を要求する。
+- `prime(k)` は $0 \le k <$ `prime_count()`、`min_factor(x)` と `is_prime(x)` は $0 \le x \le n$、`factorize(x)` は $1 \le x \le n$ を要求する。違反時はいずれも `std::runtime_error` を送出する。
+- `min_factor_data`、`prime_data`、`_n`、`_prime_count` は公開されたメンバ変数だが、通常は対応するメンバ関数を使う。
+- 固定長版は大きな `std::array` を 2 本メンバに持つので、スタックに置くとあふれる可能性がある。

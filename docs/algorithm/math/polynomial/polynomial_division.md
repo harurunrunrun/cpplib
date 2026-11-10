@@ -3,8 +3,7 @@ title: Division of Polynomials (多項式除算) [division_of_polynomials]
 documentation_of: ../../../../src/algorithm/math/polynomial/polynomial_division.hpp
 ---
 
-体上の多項式除算を、反転した多項式の形式的冪級数逆元を使って高速に行う。
-係数は定数項から昇冪順に並べる。0多項式は空の `std::vector` で表す。
+体上の多項式の除算を、係数を反転した多項式の形式的冪級数としての逆元を使って高速に行う。係数は定数項から次数の昇順に並べ、零多項式は空の `std::vector` で表す。
 
 ```cpp
 #include "src/algorithm/math/polynomial/polynomial_division.hpp"
@@ -25,17 +24,16 @@ math::PolynomialDivModResult<MOD> math::polynomial_divmod(
 次を満たす `quotient` と `remainder` を返す。
 
 $$
-dividend = quotient \cdot divisor + remainder,
-\qquad \deg(remainder) < \deg(divisor)
+\mathrm{dividend} = \mathrm{quotient} \cdot \mathrm{divisor} + \mathrm{remainder},
+\qquad \deg(\mathrm{remainder}) < \deg(\mathrm{divisor})
 $$
 
-`PolynomialDivModResult<MOD>` は次の2メンバを持つ。
+`PolynomialDivModResult<MOD>` は次の 2 つのメンバを持つ。
 
 - `quotient`: 商
 - `remainder`: 余り
 
-入力末尾の0は無視され、結果は正規化される。0多項式による除算は
-`std::invalid_argument` を送出する。
+入力の末尾の $0$ は無視し、結果は正規化して返す。零多項式で割ると `std::invalid_argument` を送出する。
 
 ## 余りだけを求める
 
@@ -49,19 +47,18 @@ math::Polynomial<MOD> math::polynomial_remainder(
 
 `polynomial_divmod` の余りだけを返す。例外条件は同じである。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-`n = dividend.size()`, `m = divisor.size()` とし、NTT による長さ `k` の
-多項式積を $M(k)=O(k\log k)$ とする。
+$n$ を `dividend.size()`、$m$ を `divisor.size()` とし、NTT による長さ $k$ の多項式の積の計算量を $M(k)=O(k\log k)$ とする。
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
 | `polynomial_divmod` | $O(M(n))$ | $O(n)$ |
 | `polynomial_remainder` | $O(M(n))$ | $O(n)$ |
 
-小さい入力では定数を抑えるため $O(nm)$ の筆算へ切り替える。
+小さい入力では、定数倍を抑えるために $O(nm)$ の筆算に切り替える。
 
 ## 注意点
 
-- `divisor` の最高次係数が逆元を持つ必要がある。
-- NTT に必要な2冪変換長が `MOD - 1` を割り切る必要がある。
+- `divisor` の最高次の係数が逆元を持つ必要がある。
+- NTT に必要な 2 の冪の変換長が $\mathrm{MOD} - 1$ を割り切る必要がある。

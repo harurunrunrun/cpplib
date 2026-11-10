@@ -16,26 +16,23 @@ long long math::min_of_mod_of_linear(
 );
 ```
 
-次の値を返す。
+`count`, `modulus`, `coefficient`, `constant` をそれぞれ $n, m, a, b$ として、次の値を返す。
 
 $$
-\min_{0\le x<count}(coefficient\cdot x+constant)\bmod modulus
+\min_{0\le x<n}\,(ax+b)\bmod m
 $$
 
-`count > 0`, `modulus > 0`,
-`0 <= coefficient, constant < modulus`を要求する。条件を満たさない場合は
-`invalid_argument`を送出する。
+`count > 0`, `modulus > 0`, `0 <= coefficient, constant < modulus` を要求し、条件を満たさない場合は `invalid_argument` を送出する。
 
-係数が法の半分より大きいときは添字を反転し、係数を`modulus - coefficient`へ
-置き換える。その後、法の倍数を初めて越えた位置だけを次の問題へ写す。
-次の問題の法は現在の係数以下であり、係数反転により現在の法の半分以下になる。
+係数が法の半分より大きいときは添字を反転し、係数を $m - a$ に置き換える。その後、法の倍数を初めて越えた位置だけを次の問題へ写す。次の問題の法は現在の係数以下であり、係数の反転により現在の法の半分以下になる。
+
+## 時間計算量
 
 | 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| `min_of_mod_of_linear` | $O(\log(modulus+1))$ | $O(1)$ |
-
-積と加算の途中計算には128bit整数を使用する。
+| `min_of_mod_of_linear` | $O(\log(m+1))$ | $O(1)$ |
 
 ## 注意点
 
-法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
+- 積と加算の途中計算には 128 bit 整数を使うため、引数が `long long` の範囲内であればオーバーフローしない。
+- `coefficient` と `constant` は事前に $[0, m)$ に正規化しておく必要がある（負の値は `invalid_argument`）。

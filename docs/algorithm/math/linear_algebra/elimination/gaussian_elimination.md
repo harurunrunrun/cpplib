@@ -3,20 +3,20 @@ title: Gaussian Elimination (ガウスの消去法) [inverse_matrix] [matrix_det
 documentation_of: ../../../../../src/algorithm/math/linear_algebra/elimination/gaussian_elimination.hpp
 ---
 
-体上の行列に対する Gaussian elimination と、$\mathrm{GF}(2)$ に特化した
-bitset 版を提供する。
+体上の行列に対する Gauss の消去法と、$\mathrm{GF}(2)$ に特化した bitset 版を提供する。
 
-通常版の要素型 `T` は、`T{}`、`T{1}`、四則演算、単項マイナス、
-`==` を持つ体である必要がある。典型的には `Modint` を使う。
-浮動小数点数に対する誤差つきのゼロ判定や pivoting は行わない。
+通常版の要素型 `T` は、`T{}`、`T{1}`、四則演算、単項マイナス、`==` を持つ体である必要がある。典型的には `Modint` を使う。浮動小数点数に対する誤差つきのゼロ判定やピボット選択は行わない。
 
-`Matrix<T, MAX_ROW, MAX_COL>` を受け取る overload は、最大容量がコンパイル時に
-決まり、作業領域を1つの連続した固定長配列として確保する。
-`vector<vector<T>>` を受け取る overload は、実際の行列サイズだけの連続作業領域を
-確保する。入力行列はいずれの操作でも変更されない。
+固定長の `Matrix<T, MAX_ROW, MAX_COL>` を受け取るオーバーロードは、最大容量がコンパイル時に決まり、作業領域を 1 つの連続した固定長配列として確保する。容量を省略した可変長の `Matrix<T>` と `std::vector<std::vector<T>>` を受け取るオーバーロードは、実際の行列サイズだけの連続した作業領域を確保する。いずれの操作でも入力行列は変更されない。
 
-以下、行数を $R$、列数を $C$、$K=\min(R,C)$ とする。
-また `Matrix` 版では $R_{max}=MAX\_ROW$、$C_{max}=MAX\_COL$ とする。
+```cpp
+Matrix<Mint> dynamic(rows, columns);
+auto rank = gaussian_rank(dynamic);
+std::vector<std::vector<Mint>> values(rows, std::vector<Mint>(columns));
+auto vector_rank = gaussian_rank(values);
+```
+
+以下、行数を $R$、列数を $C$、$K=\min(R,C)$ とする。また固定長の `Matrix` 版では容量 `MAX_ROW`, `MAX_COL` をそれぞれ $R_{\max}$, $C_{\max}$ と書く。
 
 ## gaussian_rank
 
@@ -24,14 +24,12 @@ bitset 版を提供する。
 int gaussian_rank(matrix)
 ```
 
-行列の rank を返す。
-
-## 時間計算量
+行列の rank を返す。`std::vector<std::vector<T>>` 版で行の長さがそろっていなければ `std::runtime_error` を送出する。
 
 | overload | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| `vector<vector<T>>` | $O(RCK)$ | $O(RC)$ |
-| `Matrix<T, R_MAX, C_MAX>` | $O(R_{max}C_{max}+RCK)$ | $O(R_{max}C_{max})$ |
+| `vector<vector<T>>`、可変長 `Matrix<T>` | $O(RCK)$ | $O(RC)$ |
+| 固定長 `Matrix<T, MAX_ROW, MAX_COL>` | $O(R_{\max}C_{\max}+RCK)$ | $O(R_{\max}C_{\max})$ |
 
 ## gaussian_determinant
 
@@ -39,17 +37,14 @@ int gaussian_rank(matrix)
 T gaussian_determinant(matrix)
 ```
 
-正方行列の determinant を返す。$0\times0$ 行列の値は $1$。
-正方行列でない場合は例外を投げる。
-
-## 時間計算量
+正方行列の行列式を返す。$0\times0$ 行列の値は $1$ である。正方行列でない場合は `std::runtime_error` を送出する。
 
 行列を $N\times N$ とする。
 
 | overload | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| `vector<vector<T>>` | $O(N^3)$ | $O(N^2)$ |
-| `Matrix<T, R_MAX, C_MAX>` | $O(R_{max}C_{max}+N^3)$ | $O(R_{max}C_{max})$ |
+| `vector<vector<T>>`、可変長 `Matrix<T>` | $O(N^3)$ | $O(N^2)$ |
+| 固定長 `Matrix<T, MAX_ROW, MAX_COL>` | $O(R_{\max}C_{\max}+N^3)$ | $O(R_{\max}C_{\max})$ |
 
 ## solve_linear_system
 
@@ -57,45 +52,39 @@ T gaussian_determinant(matrix)
 GaussianLinearSystemSolution<T> solve_linear_system(matrix, rhs)
 ```
 
-$Ax=b$ を解く。`rhs.size()` は行数と一致する必要がある。
+$Ax=b$ を解く。`rhs.size()` は行数と一致する必要があり、一致しなければ `std::runtime_error` を送出する。拡大係数行列の幅が `int` に収まらない場合は `std::length_error` を送出する。
 
-戻り値は次を持つ。
+戻り値は次のメンバを持つ。
 
 - `consistent`: 解が存在するか。
-- `particular`: 特解。解が存在しない場合は空。
-- `nullspace_basis`: $Ax=0$ の基底。自由変数の列番号の昇順で並ぶ。
-- `pivot_columns`: pivot 列の番号。昇順で並ぶ。
+- `particular`: 特解（自由変数を 0 としたもの）。解が存在しない場合は空。
+- `nullspace_basis`: $Ax=0$ の解空間の基底。自由変数の列番号の昇順で並ぶ。
+- `pivot_columns`: ピボット列の番号。昇順で並ぶ。
 
-解が存在するとき、すべての解は `particular` と
-`nullspace_basis` の線形結合で表せる。
+解が存在するとき、すべての解は `particular` に `nullspace_basis` の線形結合を加えた形で表せる。
 
-## 時間計算量
-
-出力する nullspace basis の本数を $D=C-rank(A)$ とする。
+出力する基底の本数を $D=C-\operatorname{rank}(A)$ とする。
 
 | overload | 時間計算量 | 追加領域（戻り値を含む） |
 | --- | --- | --- |
-| `vector<vector<T>>` | $O(RCK+C^2)$ | $O(R(C+1)+CD)$ |
-| `Matrix<T, R_MAX, C_MAX>` | $O(R_{max}(C_{max}+1)+RCK+C^2)$ | $O(R_{max}(C_{max}+1)+CD)$ |
+| `vector<vector<T>>`、可変長 `Matrix<T>` | $O(RCK+C^2)$ | $O(R(C+1)+CD)$ |
+| 固定長 `Matrix<T, MAX_ROW, MAX_COL>` | $O(R_{\max}(C_{\max}+1)+RCK+C^2)$ | $O(R_{\max}(C_{\max}+1)+CD)$ |
 
 ## gaussian_inverse
 
 ```cpp
-optional<Matrix<T, R_MAX, C_MAX>> gaussian_inverse(matrix)
+optional<Matrix<T, MAX_ROW, MAX_COL>> gaussian_inverse(matrix)
 optional<vector<vector<T>>> gaussian_inverse(matrix)
 ```
 
-正方行列の inverse を返す。正則でなければ `nullopt`。
-$0\times0$ 行列には空の行列を返す。正方行列でない場合は例外を投げる。
-
-## 時間計算量
+正方行列の逆行列を返す。正則でなければ `nullopt` を返す。$0\times0$ 行列には空の行列を返す。正方行列でない場合は `std::runtime_error` を送出する。
 
 行列を $N\times N$ とする。
 
 | overload | 時間計算量 | 追加領域（戻り値を含む） |
 | --- | --- | --- |
-| `vector<vector<T>>` | $O(N^3)$ | $O(N^2)$ |
-| `Matrix<T, R_MAX, C_MAX>` | $O(R_{max}C_{max}+N^3)$ | $O(R_{max}C_{max})$ |
+| `vector<vector<T>>`、可変長 `Matrix<T>` | $O(N^3)$ | $O(N^2)$ |
+| 固定長 `Matrix<T, MAX_ROW, MAX_COL>` | $O(R_{\max}C_{\max}+N^3)$ | $O(R_{\max}C_{\max})$ |
 
 ## GF2LinearSystemSolution
 
@@ -103,26 +92,23 @@ $0\times0$ 行列には空の行列を返す。正方行列でない場合は例
 GF2LinearSystemSolution<MAX_COL>
 ```
 
-`consistent`、`particular`、`nullspace_basis`、`pivot_columns` を持つ。
-通常版の `GaussianLinearSystemSolution` と同じ意味で、ベクトルは
-`bitset<MAX_COL>` で保存される。
+`consistent`、`particular`、`nullspace_basis`、`pivot_columns` を持つ。通常版の `GaussianLinearSystemSolution` と同じ意味で、ベクトルは `bitset<MAX_COL>` で保存される。可変長版（`MAX_COL` を省略）ではベクトルを `std::vector<bool>` で保存する。
 
 ## gf2_rank
 
 ```cpp
 int gf2_rank(vector<bitset<MAX_COL>> matrix, int columns)
+int gf2_rank(const vector<vector<bool>>& matrix, int columns)
+int gf2_rank(const vector<vector<bool>>& matrix)
 ```
 
-$\mathrm{GF}(2)$ 上の rank を返す。`0 <= columns <= MAX_COL` が必要で、
-`columns` 以上の bit は無視する。
+$\mathrm{GF}(2)$ 上の rank を返す。bitset 版では `0 <= columns <= MAX_COL` が必要で（違反時は `std::runtime_error`）、`columns` 以上の bit は無視する。`vector<vector<bool>>` 版は内部で 64 bit 語に詰めて処理し、`columns < 0` や行の長さ不足では `std::invalid_argument` を送出する。
 
-## 時間計算量
-
-$W=\lceil MAX\_COL / w\rceil$、$w$ は機械語の bit 数とする。
+$W=\lceil \texttt{MAX_COL} / w\rceil$（可変長版では $\lceil C/64\rceil$）、$w$ は機械語の bit 数とする。
 
 | 操作 | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| `gf2_rank` | $O(RC+RKW)$ | $O(RW)$ machine words |
+| `gf2_rank` | $O(RC+RKW)$ | $O(RW)$ 語 |
 
 ## gf2_solve_linear_system
 
@@ -134,30 +120,15 @@ GF2LinearSystemSolution<MAX_COL> gf2_solve_linear_system(
 )
 ```
 
-$\mathrm{GF}(2)$ 上で $Ax=b$ を解く。`RHS` は `bool` に変換できればよい。
-`rhs.size()` は行数と一致し、`0 <= columns <= MAX_COL` である必要がある。
+$\mathrm{GF}(2)$ 上で $Ax=b$ を解く。`RHS` は `bool` に変換できればよい。`rhs.size()` は行数と一致し、`0 <= columns <= MAX_COL` である必要がある（違反時は `std::runtime_error`）。`vector<vector<bool>>` を受け取る可変長版（`columns` 省略可）もあり、形が不正なら `std::invalid_argument` を送出する。
 
-## 時間計算量
-
-$W=\lceil (MAX\_COL+1) / w\rceil$、nullspace dimension を $D$ とする。
+$W=\lceil (\texttt{MAX_COL}+1) / w\rceil$、解空間の次元を $D$ とする。
 
 | 操作 | 時間計算量 | 追加領域（戻り値を含む） |
 | --- | --- | --- |
-| `gf2_solve_linear_system` | $O(RC+RKW+C^2)$ | $O(RW+DW)$ machine words |
+| `gf2_solve_linear_system` | $O(RC+RKW+C^2)$ | $O(RW+DW)$ 語 |
 
 ## 注意点
 
-法0、非可逆な除算、入力size、整数overflowの扱いは各APIの説明に従う。中間値は明記した内部拡張型または要素型で表現できなければならない。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
-
-```cpp
-Matrix<Mint> dynamic(rows, columns);
-auto rank = gaussian_rank(dynamic);
-std::vector<std::vector<Mint>> values(rows, std::vector<Mint>(columns));
-auto vector_rank = gaussian_rank(values);
-```
-
-行数 $R$、列数 $C$ の rank は $O(RC\min(R,C))$ 時間・$O(RC)$ 空間。正方行列の行列式・逆行列は $O(N^3)$ 時間・$O(N^2)$ 空間。`Matrix<T>` と二次元 `vector` の両方を受け付ける。
+- 通常版の `T` は体であることを前提とする。合成数を法とする剰余環や浮動小数点数では正しく動かない。
+- 形の不正（非矩形・非正方・右辺の長さ不一致・`columns` の範囲外）に対しては、通常版と bitset 版は `std::runtime_error`、`vector<vector<bool>>` 版は `std::invalid_argument` を送出する。

@@ -3,15 +3,15 @@ title: Smallest Prime Factor Prefix Sum (最小素因数の累積和) [APS]
 documentation_of: ../../../../../src/algorithm/math/number_theory/prime/smallest_prime_factor_prefix_sum.hpp
 ---
 
-`2..n` の各整数の最小素因数を合計する前計算表。
+$2$ から $n$ までの各整数の最小素因数の和を求めるための前計算表。
 
 ## `SmallestPrimeFactorPrefixSum`
 
 ```cpp
-explicit SmallestPrimeFactorPrefixSum(int limit);
+explicit math::SmallestPrimeFactorPrefixSum(int limit);
 ```
 
-上限までの最小素因数と累積和を構築する。
+`limit` までの最小素因数をエラトステネスの篩で求め、その累積和を構築する。
 
 ## `limit`
 
@@ -24,19 +24,22 @@ int limit() const;
 ## `value`
 
 ```cpp
-uint64_t value(int n) const;
+std::uint64_t value(int n) const;
 ```
 
-`sum(spf(i), 2 <= i <= n)` を返す。
+$\sum_{i=2}^{n} \mathrm{spf}(i)$（$\mathrm{spf}(i)$ は $i$ の最小素因数）を返す。$n \le 1$ では $0$ を返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
+
+$L$ を `limit` とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| コンストラクタ | $O(limit\log\log limit)$ | $O(limit)$ |
+| コンストラクタ | $O(L \log \log L)$ | $O(L)$ |
 | `limit` | $O(1)$ | $O(1)$ |
 | `value` | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-- 範囲外クエリでは `out_of_range` を送出する。
+- `limit` は非負でなければならない。負の場合は `std::invalid_argument` を送出する意図の検査があるが、表の確保が先に行われるので、実際には確保の時点で失敗する。
+- $0 \le n \le L$ の範囲外のクエリでは `std::out_of_range` を送出する。

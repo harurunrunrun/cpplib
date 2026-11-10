@@ -9,8 +9,7 @@ $$
 q(x)=c+\sum_i l_i x_i+\sum_{i<j} a_{ij}x_ix_j
 $$
 
-を保持する。極形式をシンプレクティック標準形へ変換し、階数、Arf不変量、
-$q(x)=0,1$ の解数を求められる。標準形は
+を保持する。極形式（付随する双線形形式）をシンプレクティック標準形へ変換し、階数、Arf 不変量、$q(x)=0$ および $q(x)=1$ の解の個数を求められる。標準形は
 
 $$
 c+\sum_{i=0}^{r/2-1}(u_iv_i+\alpha_i u_i+\beta_i v_i)
@@ -42,9 +41,7 @@ void set_quadratic(size_t first, size_t second, bool value)
 void toggle_quadratic(size_t first, size_t second)
 ```
 
-定数項、一次係数、二次係数を参照または更新する。係数は `bool` で表す。
-$x_i^2=x_i$ なので `first == second` の二次係数は一次係数として扱う。
-`toggle_*` は係数へ 1 を加える。
+定数項、一次係数、二次係数を参照または更新する。係数は `bool` で表す。$x_i^2=x_i$ なので、`first == second` の二次係数は一次係数として扱う。`toggle_*` は係数に 1 を加える。
 
 ### `evaluate`
 
@@ -60,12 +57,7 @@ bool evaluate(const vector<bool>& assignment) const
 QuadraticFormGF2Canonical canonicalize() const
 ```
 
-可逆な線形変数変換により標準形を作る。返り値の
-`symplectic_linear[i]` は $(\alpha_i,\beta_i)$、
-`radical_linear[j]` は $\gamma_j$ である。
-`canonical_basis[k]` は標準形の第 $k$ 変数に対応する元変数ベクトルを、
-64 bitずつpackして保持する。基底の順は
-$u_0,v_0,u_1,v_1,\ldots,z_0,z_1,\ldots$ である。
+可逆な線形の変数変換により標準形を作る。返り値の `symplectic_linear[i]` は $(\alpha_i,\beta_i)$、`radical_linear[j]` は $\gamma_j$、`constant` は $c$ である。`canonical_basis[k]` は標準形の第 $k$ 変数に対応する元の変数のベクトルを、64 bit ずつ詰めて保持する。基底の順は $u_0,v_0,u_1,v_1,\ldots,z_0,z_1,\ldots$ である。
 
 ## `QuadraticFormGF2Canonical`
 
@@ -83,8 +75,7 @@ size_t bilinear_rank() const
 bool is_balanced() const
 ```
 
-$q=0$ と $q=1$ の代入数が等しいかを返す。これはある $\gamma_j$ が 1 で
-あることと同値である。
+$q=0$ となる代入と $q=1$ となる代入の個数が等しいかを返す。これはある $\gamma_j$ が 1 であることと同値である。
 
 ### `arf_invariant`
 
@@ -92,9 +83,7 @@ $q=0$ と $q=1$ の代入数が等しいかを返す。これはある $\gamma_j
 optional<bool> arf_invariant() const
 ```
 
-二次形式がradical上で0なら、非退化商上のArf不変量
-$\sum_i\alpha_i\beta_i$ を返す。radical上で非零なら `nullopt` を返す。
-定数項はArf不変量へ含めない。
+二次形式が radical（極形式の核）上で 0 なら、非退化な商空間上の Arf 不変量 $\sum_i\alpha_i\beta_i$ を返す。radical 上で 0 でなければ `nullopt` を返す。定数項は Arf 不変量に含めない。
 
 ### `evaluate_canonical`
 
@@ -112,7 +101,7 @@ vector<bool> to_original_assignment(
 ) const
 ```
 
-標準形の代入を、同じ値を与える元の変数の代入へ変換する。
+標準形の変数に対する代入を、同じ値を与える元の変数の代入に変換する。長さが $N$ でなければ `invalid_argument` を送出する。
 
 ### `solution_count`
 
@@ -120,7 +109,7 @@ vector<bool> to_original_assignment(
 BigInteger solution_count(bool value) const
 ```
 
-$q(x)=\mathtt{value}$ となる代入数を任意精度整数で返す。
+$q(x)$ が `value` に等しくなる代入の個数を、任意精度整数（`BigInteger`）で返す。
 
 ## 時間計算量
 
@@ -134,12 +123,11 @@ $q(x)=\mathtt{value}$ となる代入数を任意精度整数で返す。
 | `canonicalize` | $O(N^3/64+N^2)$ | $O(N^2/64)$ |
 | `bilinear_rank`, `is_balanced`, `arf_invariant`, `evaluate_canonical` | $O(N)$ | $O(1)$ |
 | `to_original_assignment` | $O(N^2/64+N)$ | $O(N/64)$ |
-| `solution_count` | $O(N)$ bit操作 | $O(N)$ bit |
+| `solution_count` | $O(N)$ 回の bit 演算 | $O(N)$ bit |
 
 ## 注意点
 
 - 変数番号は $[0,N)$ である。範囲外なら `out_of_range` を送出する。
 - 代入の長さが $N$ でなければ `invalid_argument` を送出する。
-- `QuadraticFormGF2Canonical` の公開フィールドを書き換えると、各補助関数の
-  前提が失われる。
-- 解数には同梱の `BigInteger` を用いる。
+- `QuadraticFormGF2Canonical` の公開メンバを書き換えると、各補助関数の前提が失われる。
+- 解の個数には同梱の `BigInteger`（`big_integer.hpp`）を用いる。
