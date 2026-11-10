@@ -5,48 +5,42 @@ documentation_of: ../../../../src/algorithm/string/suffix/longest_common_substri
 
 2 つの文字列の最長共通部分文字列を求める。
 
-## 構造体
+## API
 
-- `LongestCommonSubstringResult`
-    - `first_pos`
-    - `second_pos`
-    - `length`
+```cpp
+struct LongestCommonSubstringResult{
+    int first_pos;
+    int second_pos;
+    int length;
+};
+LongestCommonSubstringResult longest_common_substring(
+    const std::string& a, const std::string& b
+)
+```
 
-## 関数
+- `first_pos`: 第 1 文字列 `a` における開始位置。
+- `second_pos`: 第 2 文字列 `b` における開始位置。
+- `length`: 共通部分文字列の長さ。
+- `longest_common_substring(a, b)` は
+  `a.substr(first_pos, length) == b.substr(second_pos, length)` を満たす最長の結果を返す。
+  共通する空でない文字列がなければ `{0, 0, 0}` を返す。同じ最大長の候補が複数ある場合、どの位置を返すかは規定しない。
 
-- `longest_common_substring(a, b)`
+## API 別の時間計算量・空間計算量
 
-## 計算量の概要
-
-- $O(n+m)$
-
-## API別の時間計算量・空間計算量
-
-$S=|a|+|b|$ とする。
+$S = \lvert a\rvert + \lvert b\rvert$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `longest_common_substring(a,b)` | $O(S)$ | $O(\lvert a\rvert)$ |
-| `LongestCommonSubstringResult` の各field参照 | $O(1)$ | - |
+| `longest_common_substring(a, b)` | $O(S)$ | $O(\lvert a\rvert)$ |
+| `LongestCommonSubstringResult` の各メンバの参照 | $O(1)$ | - |
 
-第1文字列からbyte suffix automatonを構築し、第2文字列をsuffix linkで後退しながら
-1回走査する。各遷移・suffix link処理の償却回数は線形である。
-
-## API詳細
-
-- `first_pos`: 第1文字列 `a` における開始位置。
-- `second_pos`: 第2文字列 `b` における開始位置。
-- `length`: 共通部分文字列の長さ。
-- `longest_common_substring(a,b)` は
-  `a.substr(first_pos,length) == b.substr(second_pos,length)` を満たす最長結果を返す。
-  共通する非空文字列がなければ `{0,0,0}`。同じ最大長の候補が複数ある場合の
-  位置は規定しない。
+第 1 文字列からバイト単位の suffix automaton を構築し、第 2 文字列を suffix link で後退しながら 1 回走査する。
+遷移と suffix link の処理回数は償却で線形である。
 
 ## 注意点
 
-- 文字は `unsigned char` として扱うため、全256 byteを利用できる。
-- 返すindexと区間は0-indexedである。
-- 第1文字列 `a` の長さは `(numeric_limits<int>::max() / 2) + 1` 以下、
-  第2文字列 `b` の長さは `numeric_limits<int>::max()` 以下でなければならない。
-  違反時は `std::length_error` を送出し、`a` の違反は入力文字に対応する
-  state追加前に検出する。
+- 文字は `unsigned char` として扱うため、全 256 種のバイトを利用できる。
+- 返す位置は 0-indexed である。
+- 第 1 文字列 `a` の長さは `(std::numeric_limits<int>::max() / 2) + 1` 以下、
+  第 2 文字列 `b` の長さは `std::numeric_limits<int>::max()` 以下でなければならない。
+  違反時は `std::length_error` を送出する。`a` の違反は状態を追加する前に検出する。

@@ -3,49 +3,42 @@ title: Suffix Array (接尾辞配列) [SARRAY] [suffixarray]
 documentation_of: ../../../../src/algorithm/string/suffix/suffix_array.hpp
 ---
 
-Suffix Array と LCP Array。
+接尾辞配列（Suffix Array）と LCP 配列を構築する。
 
-## 関数
+## API
 
-- `suffix_array(s)`
-    - `std::string` と `std::vector<T>` に対応。
-- `lcp_array(s, sa)`
-- `lcp_array(s)`
+```cpp
+std::vector<int> suffix_array(const std::string& s)
+template<class T>
+std::vector<int> suffix_array(const std::vector<T>& s)
+template<class Sequence>
+std::vector<int> lcp_array(const Sequence& s, const std::vector<int>& sa)
+template<class Sequence>
+std::vector<int> lcp_array(const Sequence& s)
+```
 
-## 計算量の概要
+- `suffix_array(s)` は、`s[sa[i]:]` が辞書順に並ぶような開始位置の置換を返す。
+  `std::string` 版はバイトを符号なしとして比較し、`std::vector<T>` 版は `T` の `operator<` と等値関係で座標圧縮する。
+  空列では空の列を返す。
+  バイトのアルファベットが定数個である `std::string` 版は、induced sorting と LMS 部分文字列の再帰的な圧縮を行う SA-IS を使う。
+  一般列版は座標圧縮の後にダブリング法を使う。
+- `lcp_array(s, sa)` は長さ `max(0, N - 1)` の列を返し、`lcp[i]` は接尾辞 `sa[i]` と `sa[i+1]` の LCP 長である。
+  `sa` が長さ $N$ の置換でなければ `std::runtime_error` を送出する。
+- `lcp_array(s)` は接尾辞配列を内部で構築し、同じ LCP 列を返す。
 
-- `suffix_array(string)`: $O(n)$
-- `suffix_array(vector<T>)`: $O(n \log n)$
-- `lcp_array(s, sa)`: $O(n)$
-- `lcp_array(s)`: 文字列なら $O(n)$、一般列なら $O(n\log n)$
+## API 別の時間計算量・空間計算量
 
-## API別の時間計算量・空間計算量
-
-$N=|s|$ とする。
+$N = \lvert s\rvert$ とする。
 
 | API | 時間計算量 | 空間計算量（出力・追加領域） |
 | --- | --- | --- |
-| `suffix_array(const string& s)` | $O(N)$ | $O(N)$ |
-| `suffix_array(const vector<T>& s)` | $O(N\log N)$ | $O(N)$ |
-| `lcp_array(s,sa)` | $O(N)$ | $O(N)$ |
-| `lcp_array(const string& s)` | $O(N)$ | $O(N)$ |
-| `lcp_array(const vector<T>& s)` | $O(N\log N)$ | $O(N)$ |
-
-`lcp_array(s)` は内部でsuffix arrayも構築する。suffix arrayは長さ $N$、
-LCP arrayは長さ最大 $N-1$ の列を返す。
-
-## API詳細
-
-- `suffix_array(s)` は `s[sa[i]:]` が辞書順になる開始位置の置換を返す。
-  `string` 版はbyteを符号なしとして比較し、`vector<T>` 版は `T::operator<`
-  と等値関係で座標圧縮する。空列では空を返す。byte alphabet が定数個である
-  `string` 版は induced sorting と LMS substring の再帰圧縮を行う SA-IS、
-  一般列版は座標圧縮後の doubling 法を使う。
-- `lcp_array(s,sa)` は長さ `max(0,N-1)` の列を返し、
-  `lcp[i]` はsuffix `sa[i]` と `sa[i+1]` のLCP長。
-  `sa` が長さ `N` の置換でなければ例外を送出する。
-- `lcp_array(s)` はsuffix arrayを内部構築して同じLCP列を返す。
+| `suffix_array(const std::string& s)` | $O(N)$ | $O(N)$ |
+| `suffix_array(const std::vector<T>& s)` | $O(N\log N)$ | $O(N)$ |
+| `lcp_array(s, sa)` | $O(N)$ | $O(N)$ |
+| `lcp_array(const std::string& s)` | $O(N)$ | $O(N)$ |
+| `lcp_array(const std::vector<T>& s)` | $O(N\log N)$ | $O(N)$ |
 
 ## 注意点
 
-文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。
+- 返す位置はすべて 0-indexed である。
+- 対応する入力型は `std::string` と `std::vector<T>` のみである。

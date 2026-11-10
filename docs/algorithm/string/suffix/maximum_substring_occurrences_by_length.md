@@ -8,39 +8,36 @@ documentation_of: ../../../../src/algorithm/string/suffix/maximum_substring_occu
 ## API
 
 ```cpp
-template<int MAX_LENGTH, int ALPHABET = 26, char OFFSET = 'a'>
-vector<long long> maximum_substring_occurrences_by_length(string_view text)
+template<int MAX_LENGTH = -1, int ALPHABET = 26, char OFFSET = 'a'>
+std::vector<long long> maximum_substring_occurrences_by_length(std::string_view text)
 ```
 
-## 引数・戻り値
-
-- `text`: 対象の文字列。
-- 戻り値の `i` 番目は、長さ `i + 1` の部分文字列の最大出現回数。
-  空文字列では空のvectorを返す。
-
-## API別の時間計算量・空間計算量
-
-$N=|text|$ とする。
-
-| API | 時間計算量 | 追加空間計算量 |
-| --- | --- | --- |
-| `maximum_substring_occurrences_by_length(text)` | $O(MAX_LENGTH\cdot ALPHABET+N)$ | $O(MAX_LENGTH\cdot ALPHABET+N)$ |
-
-## 注意点
-
-- `text.size() <= MAX_LENGTH` が必要で、違反時は `runtime_error` を送出する。
-- すべての文字は `[OFFSET, OFFSET + ALPHABET)` に含まれる必要があり、違反時は
-  `runtime_error` を送出する。
-- 出現は開始位置で区別し、互いに重なる出現もそれぞれ数える。
-- `MAX_LENGTH * 2 + 1` が `int` に収まる必要がある。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+`MAX_LENGTH` を省略する（`-1` にする）と、実行時のサイズに合わせて `std::vector` で suffix automaton の状態を確保する。
+`MAX_LENGTH` を明示すると、状態数 `2 * MAX_LENGTH + 1` の固定容量の suffix automaton をヒープ上に確保する。
 
 ```cpp
 auto result = maximum_substring_occurrences_by_length(text);
 auto fixed = maximum_substring_occurrences_by_length<100000>(text);
 ```
 
-長さ $N$、alphabet サイズ $A$ に対し $O(AN)$ 時間・空間。
+## 引数・戻り値
+
+- `text`: 対象の文字列。
+- 戻り値の `i` 番目は、長さ `i + 1` の部分文字列の最大出現回数である。
+  空文字列では空の `std::vector` を返す。
+
+## API 別の時間計算量・空間計算量
+
+$N = \lvert \mathtt{text}\rvert$、アルファベットの大きさ `ALPHABET` を $A$ とする。
+
+| API | 時間計算量 | 追加空間計算量 |
+| --- | --- | --- |
+| 可変長版 | $O(AN)$ | $O(AN)$ |
+| 固定容量版 `<MAX_LENGTH>` | $O(A \cdot \texttt{MAX_LENGTH}+N)$ | $O(A \cdot \texttt{MAX_LENGTH}+N)$ |
+
+## 注意点
+
+- 固定容量版では `text.size() <= MAX_LENGTH` が必要である。また、いずれの版でも `text.size() <= (INT_MAX - 1) / 2` が必要である。違反時は `std::runtime_error` を送出する。
+- すべての文字は `[OFFSET, OFFSET + ALPHABET)` に含まれる必要があり、違反時は `std::runtime_error` を送出する。
+- 出現は開始位置で区別し、互いに重なる出現もそれぞれ数える。
+- `MAX_LENGTH * 2 + 1` が `int` に収まる必要がある（`static_assert` で検査する）。

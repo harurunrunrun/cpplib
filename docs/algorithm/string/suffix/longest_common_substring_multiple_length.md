@@ -5,41 +5,42 @@ documentation_of: ../../../../src/algorithm/string/suffix/longest_common_substri
 
 複数の文字列すべてに共通する連続部分文字列の最大長を求める。
 
-## longest_common_substring_multiple_length
+## API
 
 ```cpp
-template<int MAX_LENGTH, int ALPHABET = 26, char OFFSET = 'a'>
+template<int MAX_LENGTH = -1, int ALPHABET = 26, char OFFSET = 'a'>
 int longest_common_substring_multiple_length(
-    span<const string> texts
+    std::span<const std::string> texts
 );
 ```
 
-`texts` の全要素に現れる連続部分文字列の最大長を返す。空列では0、文字列が1個ならその長さを返す。
+`texts` のすべての要素に現れる連続部分文字列の最大長を返す。
+`texts` が空なら `0`、文字列が 1 個ならその長さを返す。
+最短の文字列から suffix automaton を構築し、残りの文字列で照合する。
 
-## 時間計算量
-
-最短文字列長を $L$、文字列数を $K$、全文字数を $S$ として
-$O(ALPHABET \cdot MAX\_LENGTH + S + KL)$。
-
-## 空間計算量
-
-$O(ALPHABET \cdot MAX\_LENGTH + L + K)$。固定容量のSuffix Automaton本体は
-heap上に確保する。
-
-## 注意点
-
-- 最短文字列長は `MAX_LENGTH` 以下でなければならない。
-- 各文字 `c` は `OFFSET <= c < OFFSET + ALPHABET` を満たさなければならない。
-- 前提違反時は `runtime_error` を送出する。
-- 戻り値は長さのみで、位置や内容は返さない。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+`MAX_LENGTH` を省略する（`-1` にする）と、実行時のサイズに合わせて `std::vector` で状態を確保する。
+`MAX_LENGTH` を明示すると、状態数 `2 * MAX_LENGTH + 1` の固定容量の suffix automaton をヒープ上に確保する。
 
 ```cpp
 auto result = longest_common_substring_multiple_length(texts);
 auto fixed = longest_common_substring_multiple_length<100000>(texts);
 ```
 
-最短文字列長 $N$、文字列数 $K$、総文字数 $L$、alphabet サイズ $A$ に対し $O(AN+KN+L)$ 時間・$O(AN+K)$ 空間。
+## 時間計算量
+
+最短の文字列長を $L$、文字列数を $K$、全文字数を $S$、アルファベットの大きさ `ALPHABET` を $A$ とする。
+
+- 可変長版: $O(AL + KL + S)$
+- 固定容量版: $O(A \cdot \texttt{MAX_LENGTH} + KL + S)$
+
+## 空間計算量
+
+- 可変長版: $O(AL + K)$
+- 固定容量版: $O(A \cdot \texttt{MAX_LENGTH} + L + K)$
+
+## 注意点
+
+- 固定容量版では、最短の文字列長が `MAX_LENGTH` 以下でなければならない。また、いずれの版でも最短の文字列長は `(INT_MAX - 1) / 2` 以下でなければならない。
+- 各文字 `c` は `OFFSET <= c < OFFSET + ALPHABET` を満たさなければならない。
+- 前提に違反した場合は `std::runtime_error` を送出する。
+- 戻り値は長さのみで、位置や内容は返さない。

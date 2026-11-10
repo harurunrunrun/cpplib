@@ -3,21 +3,27 @@ title: Run Enumeration (Run列挙) [runenumerate]
 documentation_of: ../../../../src/algorithm/string/sequence/run_enumeration.hpp
 ---
 
-周期を保ったまま左右へ延長できない、長さが周期の2倍以上の極大周期区間を列挙する。
-2種類の辞書順におけるLyndon root候補をLCEで左右に延長する。
+run（周期を保ったまま左右に延長できない、長さが最小周期の 2 倍以上の極大周期区間）をすべて列挙する。
+2 種類の辞書順における Lyndon 根の候補を LCE で左右に延長する。
 
 ## API
 
 ```cpp
+struct StringRun {
+    int left;
+    int right;
+    int period;
+};
+
 std::vector<StringRun> enumerate_runs(const std::string& text)
 ```
 
-`StringRun` は半開区間 `left`, `right` と最小周期 `period` を持つ。
-返り値はこの3値の辞書順で重複を除いている。
+`StringRun` は半開区間 `[left, right)` と最小周期 `period` を持つ。
+返り値はこの 3 値の辞書順に並び、重複を除いている。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-$N=|text|$、run数を $R$ とする。run数は $O(N)$ である。
+$N=\lvert \mathrm{text}\rvert$、run の個数を $R$ とする。run の個数は $O(N)$ である。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |

@@ -31,7 +31,7 @@ long long count_encoded_dictionary_segmentations(
 
 ## 時間計算量・空間計算量
 
-$S=\lvert \mathrm{encoded\_text}\rvert$、辞書要素の長さの合計を $D$、
+$S$ を `encoded_text` の長さ、辞書要素の長さの合計を $D$、
 バイトのアルファベットの大きさを $\sigma\le 256$、辞書要素がテキスト中に現れる総数を $z$ とする。
 
 | API | 時間計算量 | 空間計算量 |
