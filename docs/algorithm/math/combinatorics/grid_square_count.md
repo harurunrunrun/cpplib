@@ -13,7 +13,7 @@ long long grid_square_count(long long side_length);
 
 一辺が単位正方形 `side_length` 個分の正方格子について、含まれる正方形の総数 $\sum_{i=1}^{n} i^2 = n(n+1)(2n+1)/6$（$n$ は `side_length`）を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |

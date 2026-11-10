@@ -39,7 +39,7 @@ auto result = adjugate_matrix(matrix);
 
 `Matrix<T, MAX_ROW, MAX_COL>` 用のオーバーロード。容量を省略した可変長の `Matrix<T>` も、容量を明示した固定長の `Matrix<T, R, C>` も渡せる。返り値も同じ型の `Matrix` である。実際の行数と列数が一致しない場合は `std::invalid_argument` を送出する。
 
-## 計算量
+## 時間計算量・空間計算量
 
 $N$ を行列の次数とする。
 

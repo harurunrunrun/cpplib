@@ -33,7 +33,7 @@ T value = pfaffian(matrix);
 
 `Matrix<T, MAX_ROW, MAX_COL>` 用のオーバーロード。容量を省略した可変長の `Matrix<T>` も、容量を明示した固定長の `Matrix<T, R, C>` も渡せる。実際の行数・列数の分を `std::vector` へコピーし、同じ検査と消去を行う。正方行列でなければ `std::invalid_argument` を送出する。
 
-## 計算量
+## 時間計算量・空間計算量
 
 $N$ を行列の次数とする。
 
