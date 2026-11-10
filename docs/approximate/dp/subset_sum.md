@@ -5,7 +5,7 @@ documentation_of: ../../../src/approximate/dp/subset_sum.hpp
 
 非負整数列から、合計が容量以下で最大となる部分集合を求める。`approximate::dp` 名前空間にある。`SubsetSumResult::selected_indices` は選んだ元の添字の昇順、`sum` はその合計である。
 
-## sparse_subset_sum
+## `sparse_subset_sum`
 
 ~~~cpp
 template<class Integer, class Capacity>
@@ -24,7 +24,7 @@ SubsetSumResult sparse_subset_sum(
 
 最悪の場合は $L=\min(2^N,C+1)$ である。容量 $C$ に比例する密 DP と異なり、到達可能和が疎な入力に向く。
 
-## subset_sum_trimming_fptas
+## `subset_sum_trimming_fptas`
 
 ~~~cpp
 template<class Integer, class Capacity>
@@ -35,7 +35,7 @@ SubsetSumResult subset_sum_trimming_fptas(
 )
 ~~~
 
-各要素を追加した後の到達可能和リストをマージし、直前に残した値を $z$ とすると `candidate <= z * (1 + delta)` である近接状態を除く。`delta = epsilon / (2N)` を使い、容量超過状態も除く。残した状態には復元履歴を持たせる。
+各要素を追加した後の到達可能和リストをマージし、直前に残した値を $z$ とすると `candidate <= z * (1 + delta)` を満たす近い状態を除く。ここで `delta = epsilon / (2N)` である。容量を超える状態も除く。残した状態には復元履歴を持たせる。
 
 $0<\varepsilon<1$ に対し、返す合計は最適値の $(1-\varepsilon)$ 以上である。途中で保持する状態数の最大を $L$ とする。
 
@@ -44,10 +44,12 @@ $0<\varepsilon<1$ に対し、返す合計は最適値の $(1-\varepsilon)$ 以�
 
 正の最小到達和を $a$、容量を $C$ とすると、典型的には $L=O((N/\varepsilon)\log(C/a))$ に抑えられる。0 の要素しかない場合も扱える。
 
-## SubsetSumResult
+## `SubsetSumResult`
 
-`sum` の取得は時間・追加空間ともに $O(1)$。`selected_indices` の走査は $O(選択数)$。
+`sum` の取得は時間計算量・追加空間計算量ともに $O(1)$ である。`selected_indices` の走査は選んだ個数に比例する時間がかかる。
 
 ## 注意点
 
-`Integer` と `Capacity` は `bool` 以外の 64-bit 以下の整数型とし、値と容量は非負とする。負値には `std::invalid_argument` を送出する。`subset_sum_trimming_fptas` の `epsilon` は有限かつ $(0,1)$ でなければならず、違反時は `std::invalid_argument` を送出する。必要なメモリを確保できない場合は `std::bad_alloc` が送出され得る。
+- `Integer` と `Capacity` は `bool` 以外の 64 ビット以下の整数型とし、値と容量は非負とする。負の値には `std::invalid_argument` を送出する。
+- `subset_sum_trimming_fptas` の `epsilon` は有限かつ $(0,1)$ でなければならず、違反時は `std::invalid_argument` を送出する。
+- 必要なメモリを確保できない場合は `std::bad_alloc` が送出され得る。

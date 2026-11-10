@@ -3,13 +3,13 @@ title: BIRCH-Style Clustering Features (BIRCH型クラスタリング特徴量)
 documentation_of: ../../../src/approximate/clustering/birch_features.hpp
 ---
 
-BIRCHのclustering featureによる逐次要約と、容量超過時のcondensationを行う。完全な多段CF-treeではなく、boundedなleaf feature集合を提供するBIRCH相当のstreaming heuristicである。入力順に依存し、大域的なcluster最適性を保証しない。
+BIRCH のクラスタリング特徴量（CF）による逐次的な要約と、容量を超えたときの縮約を行う。完全な多段 CF 木ではなく、個数に上限のある葉の特徴量集合を保持する、BIRCH 相当のストリーミング型ヒューリスティックである。
 
-## ClusteringFeature / BirchFeatureResult
+## `ClusteringFeature` / `BirchFeatureResult`
 
-各 `ClusteringFeature` は点数 `count`、`centroid`、各座標の母分散 `coordinate_variance`、その和 `squared_radius` を持つ。`BirchFeatureResult::labels[i]` は最終feature重心の最近傍へ点 `i` を割り当てたindexである。
+各 `ClusteringFeature` は、点数 `count`、重心 `centroid`、各座標の母分散 `coordinate_variance`、その和 `squared_radius` を持つ。`BirchFeatureResult` は特徴量の列 `features` と `labels` を持ち、`labels[i]` は点 `i` を最終的な特徴量の重心のうち最も近いものへ割り当てたときの添字である。
 
-## birch_clustering_features
+## `birch_clustering_features`
 
 ~~~cpp
 BirchFeatureResult birch_clustering_features(
@@ -19,15 +19,16 @@ BirchFeatureResult birch_clustering_features(
 )
 ~~~
 
-各点を最近傍featureへ仮追加し、新しいfeatureのRMS radiusが `threshold` 以下なら吸収する。吸収できなければsingleton featureを追加する。feature数が `maximum_features` を超えた場合は重心間距離が最小の2 featureをmergeする。この容量制約merge後はradiusが `threshold` を超えることがある。平均・分散は和と平方和ではなく安定な逐次式で更新する。
+各点を最も近い特徴量へ仮に追加し、追加後の RMS 半径が `threshold` 以下なら吸収する。吸収できなければ、その点だけからなる特徴量を新たに追加する。特徴量の個数が `maximum_features` を超えた場合は、重心間の距離が最小の 2 つの特徴量をマージする。この容量制約によるマージの後では、半径が `threshold` を超えることがある。平均と分散は、和と平方和からではなく、数値的に安定な逐次更新式で計算する。
 
-点数を $N$、次元を $D$、feature上限を $M$ とする。
+点数を $N$、次元を $D$、特徴量の上限を $M$ とする。
 
 - 時間計算量: $O(NM^2D)$
 - 追加空間計算量: $O(MD+N)$
 
-`threshold` は有限な非負値、`maximum_features` は正でなければならない。空入力を許す。平均・分散・距離を `long double` で表せない場合は `std::overflow_error` を送出する。
-
 ## 注意点
 
-座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。
+- 点は全て同じ正の次元を持ち、座標は有限値でなければならない。空の入力は受理する。
+- `threshold` は非負の有限値、`maximum_features` は正でなければならず、満たさない場合は `std::invalid_argument` を送出する。
+- 平均・分散・距離を `long double` で表せない場合は `std::overflow_error` を送出する。
+- 結果は入力順に依存し、大域的に最適なクラスタリングは保証しない。

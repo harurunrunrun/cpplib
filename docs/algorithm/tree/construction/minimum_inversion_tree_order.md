@@ -3,20 +3,36 @@ title: Minimum Weighted Inversion Tree Order (重み付き転倒和最小の木�
 documentation_of: ../../../../src/algorithm/tree/construction/minimum_inversion_tree_order.hpp
 ---
 
-`minimum_inversion_tree_order(parent,c,d)` は親が子より前の順列を求め、
-`sum_{j<i} c[order[i]]*d[order[j]]` を最小化する。
-根は `parent[root]==-1` の任意の頂点。`c,d` は非負 `int64_t`。
-結果の `order` は頂点順列、`cost` は GCC 13 の `__int128`。
-優先度付き block 統合で最適な密度の成分を親側へ連結する。
-`minimum_inversion_forest_order(parent,c,d)` は根が複数ある森の前提関係も扱い、
-異なる木の頂点を自由に interleave した最適順序を返す。
+根付き木の頂点を、親が子より前に来るように並べる順列 $p$ のうち、重み付き転倒和 $\sum_{j \lt i} c_{p(i)} \, d_{p(j)}$（コードでは `sum_{j<i} c[order[i]] * d[order[j]]`）を最小化するものを求める。
+
+## API
+
+```cpp
+struct MinimumInversionTreeOrderResult{
+    std::vector<int> order;
+    __int128 cost;
+};
+MinimumInversionTreeOrderResult minimum_inversion_tree_order(
+    const std::vector<int>& parent, const std::vector<std::int64_t>& c,
+    const std::vector<std::int64_t>& d)
+MinimumInversionTreeOrderResult minimum_inversion_forest_order(
+    const std::vector<int>& parent, const std::vector<std::int64_t>& c,
+    const std::vector<std::int64_t>& d)
+```
+
+- `minimum_inversion_tree_order(parent, c, d)`: 根は `parent[root] == -1` を満たすただ 1 つの頂点である。`c`, `d` は非負の `std::int64_t` である。結果の `order` は頂点の順列、`cost` は最小値（GCC の `__int128`）である。
+- `minimum_inversion_forest_order(parent, c, d)`: 根が複数ある森の前提関係も扱い、異なる木の頂点を自由に交互に並べた最適な順序を返す。内部では仮想的な根を追加して `minimum_inversion_tree_order` に帰着する。
+
+優先度付きキューでブロックを統合し、密度が最適な成分を親側へ連結していく。
 
 ## 時間計算量
 
-頂点数 $N$ として $O(N\log(N+1))$ 時間、$O(N)$ 空間。
+頂点数を $N$ として $O(N\log(N+1))$ 時間、$O(N)$ 空間である。
 
 ## 注意点
 
-親配列はただ一つの根を持つ木。負の重み、長さ不整合、木以外は `invalid_argument`。
-親範囲外は `out_of_range`。和・密度比較の交差積・総費用が `__int128` に収まること。
-同じ最小費用の順序が複数あるときは一つを返す。空入力も許す。
+- `minimum_inversion_tree_order` の親配列は、ただ 1 つの根を持つ木でなければならない。
+- 負の重み、配列の長さの不整合、根がない・複数ある・閉路があるなど木でない入力では `std::invalid_argument` を送出する。
+- 親の値が範囲外の場合は `std::out_of_range` を送出する。
+- 和、密度比較の交差積、総コストが `__int128` に収まる必要がある。
+- 最小コストを達成する順序が複数あるときは、そのうちの 1 つを返す。空の入力も許す。

@@ -3,21 +3,21 @@ title: k-Median Common API (k-メディアン共通API)
 documentation_of: ../../../src/approximate/facility/common.hpp
 ---
 
-## k-median共通API
+`approximate::facility` 名前空間の k-メディアン系 API で共通に使う結果型と評価関数である。以下、候補施設数を $F$、需要点数を $C$、施設集合の大きさを $k$ とする。
 
 ## `KMedianResult`
 
-`facilities` は昇順の開設施設、`assignment[c]` は需要点 `c` に割り当てた施設IDそのもの、`cost` は距離和、`local_search_iterations` は採用した交換回数を表す。距離が同じ場合は施設IDが小さい方へ割り当てる。
+`facilities` は開設した施設の昇順列、`assignment[c]` は需要点 `c` に割り当てた施設の ID そのもの、`cost` は距離の和、`local_search_iterations` は採用した交換の回数である。距離が同じ場合は ID が小さい施設へ割り当てる。
 
 ## `evaluate_k_median(distance, facilities)`
 
-指定施設集合の割当と目的値を計算する。
+指定した施設集合に対する割当と目的値を計算する。
 
-- 時間計算量: $O(FC+kC)$（行列検査と変換を含む）
+- 時間計算量: $O(FC+kC)$（行列の検査と変換を含む）
 - 追加空間計算量: $O(FC+C+k)$
-
-施設集合は空でなく、添字は範囲内で相異なる必要がある。距離行列の形状、有限性、非負性も検査する。距離和のoverflowは例外とする。
 
 ## 注意点
 
-施設・需要点の添字、距離行列の形状、距離の有限性と非負性は各APIの条件に従う。明記した場合を除き、局所探索が大域最適解や一定の近似比を返す保証はない。
+- 施設集合は空でなく、添字は範囲内で相異なっていなければならない。
+- 距離行列は `distance[facility][client]` 形式の長方形で、全要素が有限かつ非負でなければならない。違反時は `std::invalid_argument` を送出する。
+- 距離の和がオーバーフローした場合は例外を送出する。

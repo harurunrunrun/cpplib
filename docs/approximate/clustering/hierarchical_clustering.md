@@ -3,10 +3,7 @@ title: Agglomerative Hierarchical Clustering (凝集型階層クラスタリン�
 documentation_of: ../../../src/approximate/clustering/hierarchical_clustering.hpp
 ---
 
-`approximate::clustering::Linkage`は`single`、`complete`、`average`を持つ。
-`HierarchicalMerge{left,right,distance,size}`は結合したcluster ID、結合距離、
-結合後サイズを表す。`HierarchicalClusteringResult::merges`では葉を`0..n-1`、
-結合`i`で作るclusterを`n+i`とする。
+`approximate::clustering::Linkage` は `single`、`complete`、`average` を持つ。`HierarchicalMerge{left, right, distance, size}` は、結合した 2 つのクラスタの ID、結合距離、結合後のサイズを表す。`HierarchicalClusteringResult::merges` では葉を `0` から `n-1`、`i` 番目の結合で作られるクラスタを `n+i` とする。
 
 ## `agglomerative_clustering`
 
@@ -14,11 +11,10 @@ documentation_of: ../../../src/approximate/clustering/hierarchical_clustering.hp
 auto result = agglomerative_clustering(n, distance, linkage);
 ```
 
-最小linkage距離のcluster対を反復結合する。同距離ではID対の辞書順を使う。
-距離表とLance--Williams更新を用いるため時間計算量は $O(n^3)$、追加空間計算量は $O(n^2)$。
-`n==0`では空のdendrogramを返す。入力距離は有限かつ非負でなければならず、
-違反時は`std::invalid_argument`を送出する。
+連結距離が最小のクラスタ対を繰り返し結合し、`merges` に $n-1$ 回の結合を格納する。同距離の場合は ID の対の辞書順で選ぶ。距離表と Lance–Williams の更新式を用いるため、時間計算量は $O(n^3)$、追加空間計算量は $O(n^2)$ である。`n == 0` では空のデンドログラムを返す。
 
 ## 注意点
 
-座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。
+- 入力距離 `distance(i, j)` は有限かつ非負でなければならず、違反時や未知の `linkage` では `std::invalid_argument` を送出する。
+- `2n-1` が `size_t` に収まらないほど `n` が大きい場合は `std::length_error` を送出する。
+- 貪欲な結合であり、指定したクラスタ数に対する大域最適性は保証しない。
