@@ -19,7 +19,7 @@ std::vector<Modint<MOD>> chirp_z_transform(
 
 `coefficients` を $f$ の係数列（昇冪順）とし、$k = 0, \ldots, \texttt{count} - 1$ に対する $f(z r^k)$ を返す。ここで $z$ は `initial_point`、$r$ は `ratio` である。
 
-## 計算量
+## 時間計算量・空間計算量
 
 $n$ を `coefficients` の長さ、$m = \texttt{count}$、長さ $n + m$ 程度の多項式乗算（middle product）の時間を $M(n + m)$ とすると、$O(M(n + m) + n + m)$ 時間、$O(n + m)$ の追加領域を使う。
 

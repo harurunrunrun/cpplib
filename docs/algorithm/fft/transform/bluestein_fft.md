@@ -13,7 +13,7 @@ void bluestein_fourier_transform(std::vector<std::complex<double>>& values, bool
 
 `values` を任意長の DFT の結果で上書きする。`inverse == true` なら逆変換を行い、最後に要素数で割る。
 
-## 計算量
+## 時間計算量・空間計算量
 
 要素数を $N$ とすると、$O(N \log N)$ 時間、$O(N)$ の追加領域を使う。長さが 2 の冪なら `fast_fourier_transform` にそのまま委譲する。
 

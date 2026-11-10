@@ -23,7 +23,7 @@ struct HalfPlaneIntersectionResult {
 - `HalfPlaneIntersectionKind`: 共通部分が空、有界、非有界のいずれかを表す unscoped 列挙型。
 - `HalfPlaneIntersectionResult`: 分類 `kind` と、有界のときの頂点列 `polygon` をもつ。
 
-## 計算量
+## 時間計算量・空間計算量
 
 - 列挙値の参照と空の結果の構築: 時間・追加空間 $O(1)$。
 - `polygon` のコピー: 頂点数を $H$ として時間・空間 $O(H)$。

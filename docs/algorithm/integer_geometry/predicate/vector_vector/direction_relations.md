@@ -7,12 +7,12 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/predicate/vector
 
 ## API
 
-- `parallel(first, second)`: 外積が /bin/bash$ なら `true` を返す。零ベクトルはどのベクトルとも平行と判定される。
-- `orthogonal(first, second)`: 内積が /bin/bash$ なら `true` を返す。零ベクトルはどのベクトルとも直交と判定される。
+- `parallel(first, second)`: 外積が $0$ なら `true` を返す。零ベクトルはどのベクトルとも平行と判定される。
+- `orthogonal(first, second)`: 内積が $0$ なら `true` を返す。零ベクトルはどのベクトルとも直交と判定される。
 
 ## 時間計算量・空間計算量
 
-- `parallel`, `orthogonal`: 時間 (1)$、追加領域 (1)$。
+- `parallel`, `orthogonal`: 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 

@@ -11,7 +11,7 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/scalar/point_poi
 
 ## 時間計算量・空間計算量
 
-- `squared_distance(first, second)`: 時間 (1)$、追加領域 (1)$。
+- `squared_distance(first, second)`: 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 

@@ -11,7 +11,7 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/vector/point_poi
 
 ## 時間計算量・空間計算量
 
-- `vector_from(from, to)`: 時間 (1)$、追加領域 (1)$。
+- `vector_from(from, to)`: 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 

@@ -13,7 +13,7 @@ long double distance(const Segment& first, const Segment& second);
 
 閉線分 `first` と `second` の距離を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 時間 $O(1)$、追加空間 $O(1)$。
 

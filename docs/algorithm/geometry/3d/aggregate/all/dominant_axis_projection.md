@@ -14,3 +14,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/aggregate/all/domi
 ## API 別の時間計算量・空間計算量
 
 - 全 API: 時間・追加空間ともに $O(1)$。
+
+## 注意点
+
+必要な機能だけを使う場合は、`dominant_axis3.hpp`、`dominant_axis_from_point3.hpp`、`dominant_axis_projection_to_point.hpp` のいずれかを直接 include できる。

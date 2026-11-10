@@ -23,7 +23,7 @@ long double triangle_area_from_two_sides_angle(
 
 $\lvert \mathit{first} \cdot \mathit{second} \cdot \sin(\mathit{angle}) \rvert / 2$ を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 時間 $O(1)$、追加空間 $O(1)$。
 

@@ -23,7 +23,7 @@ std::vector<std::uint32_t> multivariate_twisted_cyclic_convolution(
 - `multivariate_cyclic_convolution` は、各変数を周期的に扱う（$x_i^{N_i} = 1$ とする）積を法 `prime` で返す。ここで $N_i = \texttt{shape}[i]$ である。
 - `multivariate_twisted_cyclic_convolution` は、関係式 $x_i^{N_i} = \texttt{twists}[i]^{N_i}$ で折り返した積を法 `prime` で返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 次元数を $d$、全係数の個数を $L$ とする。
 

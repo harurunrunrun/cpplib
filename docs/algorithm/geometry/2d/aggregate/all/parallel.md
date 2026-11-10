@@ -10,7 +10,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/para
 - `parallel(left, right)`: 2 つのベクトルが平行かどうかを判定する。
 - `parallel(left_line, right_line)`: 2 直線の方向ベクトルが平行かどうかを判定する。
 
-## 計算量
+## 時間計算量・空間計算量
 
 各オーバーロードとも、時間 $O(1)$、追加の空間 $O(1)$ である。
 

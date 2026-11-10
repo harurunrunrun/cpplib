@@ -7,11 +7,11 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/scalar/point_poi
 
 ## API
 
-- `cross(origin, first, second)`: `cross(first - origin, second - origin)` を返す。正なら `origin`, `first`, `second` は反時計回り、負なら時計回り、/bin/bash$ なら共線である。
+- `cross(origin, first, second)`: `cross(first - origin, second - origin)` を返す。正なら `origin`, `first`, `second` は反時計回り、負なら時計回り、$0$ なら共線である。
 
 ## 時間計算量・空間計算量
 
-- `cross(origin, first, second)`: 時間 (1)$、追加領域 (1)$。
+- `cross(origin, first, second)`: 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 

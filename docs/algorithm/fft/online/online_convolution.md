@@ -17,7 +17,7 @@ class OnlineConvolution;
 - `std::size_t size() const`: 追加済みの係数の個数を返す。
 - `const std::vector<Modint<MOD>>& kernel() const`: 核への const 参照を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 追加する係数の個数を $N$、核の長さを $K$ とすると、`append` を $N$ 回呼ぶ合計で $O(N \log^2 (\max(2, K)))$ 時間、$O(N + K)$ の追加領域を使う。
 

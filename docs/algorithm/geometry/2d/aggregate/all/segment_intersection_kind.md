@@ -31,3 +31,7 @@ SegmentIntersectionKind segment_intersection_kind(const Segment& first, const Se
 | API・操作 | 時間計算量 | 追加の空間計算量 |
 | --- | --- | --- |
 | `segment_intersection_kind`、結果値の参照 | $O(1)$ | $O(1)$ |
+
+## 注意点
+
+集約用のヘッダであり、各 API の前提条件と例外は個別のヘッダの説明に従う。

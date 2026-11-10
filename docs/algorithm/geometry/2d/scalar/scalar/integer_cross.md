@@ -19,7 +19,7 @@ GeometryIntegerWide integer_cross(
 
 `first.x * second.y - first.y * second.x` の厳密値を `GeometryIntegerWide`（`ExactInteger`）で返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 64 bit 以下の座標では時間 $O(1)$、追加空間 $O(1)$。
 

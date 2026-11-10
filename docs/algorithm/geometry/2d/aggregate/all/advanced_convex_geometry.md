@@ -108,7 +108,7 @@ std::vector<Point> convex_polygon_intersection(std::vector<Point> first, std::ve
 
 点・線分への退化を含めて、時間 $O(N + M)$、追加の空間計算量 $O(N + M)$ である。
 
-## EPS と大きな座標
+## 注意点
 
 基準値は既存の API と同じ `GEOMETRY_EPS = 1e-10L` だが、積を絶対的な EPS と直接比較はしない。
 

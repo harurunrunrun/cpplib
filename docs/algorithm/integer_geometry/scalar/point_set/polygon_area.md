@@ -7,16 +7,16 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/scalar/point_set
 
 ## API
 
-- `polygon_twice_signed_area(polygon)`: 符号付き面積の $ 倍を返す。
-- `polygon_twice_area(polygon)`: 面積の $ 倍を返す。
+- `polygon_twice_signed_area(polygon)`: 符号付き面積の $2$ 倍を返す。
+- `polygon_twice_area(polygon)`: 面積の $2$ 倍を返す。
 - `polygon_signed_area(polygon)`: 符号付き面積を返す。
 - `polygon_area(polygon)`: 面積を返す。
 
 ## 時間計算量・空間計算量
 
-頂点数を $ とする。
+頂点数を $n$ とする。
 
-- いずれの関数も時間 (n)$、追加領域 (1)$。
+- いずれの関数も時間 $O(n)$、追加領域 $O(1)$。
 
 ## 注意点
 

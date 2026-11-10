@@ -12,7 +12,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/type/definition/po
 - `const std::vector<Point>& polygon() const`: 元の頂点列への参照を返す。
 - `std::vector<int> enumerate(const std::vector<Point>& points, bool unique = true) const`: 辺上にある入力点の添字を、辺の順、同じ辺の上では辺に沿った進行順に返す。`unique == true` なら各点を最初に該当した 1 辺についてだけ返し、`false` なら点が載るすべての辺について返す（頂点上の点は複数回現れ得る）。
 
-## 計算量
+## 時間計算量・空間計算量
 
 - 構築: 辺数を $N$ として時間 $O(N \log N)$、保持領域 $O(N)$。
 - `uses_convex_fast_path`, `polygon`: 時間・追加空間 $O(1)$。

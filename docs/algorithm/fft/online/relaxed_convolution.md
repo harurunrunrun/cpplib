@@ -17,7 +17,7 @@ class RelaxedConvolution;
 - `std::size_t size() const`: 追加済みの係数の組の個数を返す。
 - `std::size_t capacity() const`: 構築時に指定した上限を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 `append` を合計 $N$ 回呼ぶと $O(N \log^2 N)$ 時間であり、1 回あたりの償却時間は $O(\log^2 N)$ である。構築時に長さ `capacity` の配列を確保するため、空間計算量は $O(\texttt{capacity})$ である。
 

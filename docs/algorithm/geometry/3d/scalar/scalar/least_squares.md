@@ -9,7 +9,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/scalar/leas
 
 - `least_squares(matrix, right_hand_side, relative_epsilon = GEOMETRY3D_EPS)`: 列フルランクなら最小二乗解を `std::vector<long double>` で返す。列ランクが不足する場合や、行数が列数未満の場合は `std::nullopt` を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 - $R \times C$ 行列に対し、時間 $O(RC^2)$、追加領域 $O(RC + C^2)$。
 

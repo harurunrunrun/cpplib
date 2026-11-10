@@ -18,7 +18,7 @@ std::vector<Modint<MOD>> power_two_multiplicative_convolution(
 - `prime_multiplicative_convolution` は、配列長が素数 $p$ の場合を扱う。添字 $0$ の寄与は総和から直接求め、$1, \ldots, p - 1$ は原始根を底とする離散対数に置き換えて長さ $p - 1$ の巡回畳み込み（`arbitrary_mod_convolution`）を行う。
 - `power_two_multiplicative_convolution` は、配列長が $2^n$ の場合を扱う。添字を 2 進付値と奇数部に分け、奇数部を単数群 $\lbrace \pm 1 \rbrace \times \langle 5 \rangle$ の符号と $5$ の冪の指数に分解して NTT で変換する。
 
-## 計算量
+## 時間計算量・空間計算量
 
 配列長を $L$ として、時間 $O(L\log L)$、空間 $O(L)$ である。素数版では原始根の探索（$p - 1$ の試し割り）も行う。
 

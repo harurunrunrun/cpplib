@@ -10,7 +10,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/inte
 - `intersect(first_segment, second_segment)`: 2 つの閉線分が共有点を持つかどうかを判定する。
 - `intersect(line, point)`: 点が無限直線上にあるかどうかを判定する。
 
-## 計算量
+## 時間計算量・空間計算量
 
 各オーバーロードとも、時間 $O(1)$、追加の空間 $O(1)$ である。
 

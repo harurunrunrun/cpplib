@@ -15,7 +15,7 @@ std::vector<Modint<MOD>> power_two_multiplicative_power(std::vector<Modint<MOD>>
 
 `prime_multiplicative_power` は長さが素数の場合、`power_two_multiplicative_power` は長さが 2 の冪の場合に対応する。指数の型は `std::uint64_t` である。$K = 0$ のときは空積に対応する剰余 $1 \bmod N$ の重みだけが $1$ になる。
 
-## 計算量
+## 時間計算量・空間計算量
 
 繰り返し二乗法で乗法畳み込みを繰り返す。長さ $N$ に対して時間 $O(N \log N \log(K+1))$、作業領域 $O(N)$ である。
 

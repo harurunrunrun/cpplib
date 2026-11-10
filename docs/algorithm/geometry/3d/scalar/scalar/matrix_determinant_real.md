@@ -9,7 +9,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/scalar/matr
 
 - `matrix_determinant_real(matrix, relative_epsilon = GEOMETRY3D_EPS)`: 行列式を返す。$0 \times 0$ 行列の値は $1$、数値的に特異な行列の値は $0$ とする。
 
-## 計算量
+## 時間計算量・空間計算量
 
 - $N \times N$ 行列に対し、時間 $O(N^3)$、追加領域 $O(N^2)$。
 

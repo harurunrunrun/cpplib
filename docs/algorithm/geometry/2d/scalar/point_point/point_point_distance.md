@@ -16,3 +16,7 @@ long double distance(const Point& first, const Point& second);
 ## 時間計算量
 
 時間計算量 $O(1)$、追加領域 $O(1)$。
+
+## 注意点
+
+戻り値の型は `long double` である。

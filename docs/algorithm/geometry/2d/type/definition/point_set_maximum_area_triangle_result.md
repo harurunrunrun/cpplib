@@ -21,7 +21,7 @@ struct PointSetMaximumAreaTriangleResult {
 - `valid`: 3 点以上の入力から非退化な三角形を選べたかを表す。
 - `area()`: 面積（`doubled_area / 2`）を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 各メンバの参照と `area()` は、時間・追加空間とも $O(1)$。
 

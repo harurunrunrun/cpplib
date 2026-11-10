@@ -10,7 +10,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/orth
 - `orthogonal(left, right)`: 2 つのベクトルが直交するかどうかを判定する。
 - `orthogonal(left_line, right_line)`: 2 直線の方向ベクトルが直交するかどうかを判定する。
 
-## 計算量
+## 時間計算量・空間計算量
 
 各オーバーロードとも、時間 $O(1)$、追加の空間 $O(1)$ である。
 

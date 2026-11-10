@@ -7,12 +7,12 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/scalar/vector_ve
 
 ## API
 
-- `dot(first, second)`: 内積  x_2 + y_1 y_2$ を返す。
-- `cross(first, second)`: 二次元の外積  y_2 - y_1 x_2$ を返す。
+- `dot(first, second)`: 内積 $x_1 x_2 + y_1 y_2$ を返す。
+- `cross(first, second)`: 二次元の外積 $x_1 y_2 - y_1 x_2$ を返す。
 
 ## 時間計算量・空間計算量
 
-- `dot`, `cross`: 時間 (1)$、追加領域 (1)$。
+- `dot`, `cross`: 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 

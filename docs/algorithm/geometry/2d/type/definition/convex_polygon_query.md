@@ -12,7 +12,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/type/definition/co
 - `const std::vector<Point>& vertices() const`: 正規化後の頂点列への参照を返す。
 - `int contains(const Point& point) const`: 外部なら $0$、境界上なら $1$、内部なら $2$ を返す。頂点数 $0$ では常に $0$、頂点数 $1$ ・ $2$ ではそれぞれ点・線分上にあるとき $1$ を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 正規化後の頂点数を $N$ とする。
 

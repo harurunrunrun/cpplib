@@ -26,3 +26,7 @@ struct MinimumEnclosingEllipseResult {
 ## 時間計算量
 
 `evaluate` と全メンバの参照は時間 $O(1)$、空間 $O(1)$。
+
+## 注意点
+
+`approximation_tolerance` は、構築時に使った停止許容誤差である。

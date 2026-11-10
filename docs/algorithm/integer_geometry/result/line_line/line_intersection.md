@@ -11,7 +11,7 @@ documentation_of: ../../../../../src/algorithm/integer_geometry/result/line_line
 
 ## 時間計算量・空間計算量
 
-- `line_intersection(first, second)`: 時間 (1)$、追加領域 (1)$。
+- `line_intersection(first, second)`: 時間 $O(1)$、追加領域 $O(1)$。
 
 ## 注意点
 

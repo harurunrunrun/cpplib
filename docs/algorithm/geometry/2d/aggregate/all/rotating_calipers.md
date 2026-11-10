@@ -11,7 +11,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/rota
 - `convex_polygon_maximum_area_triangle`, `convex_polygon_support_vertex`, `convex_polygon_tangents`
 - 各結果型と共通の正規化関数については、それぞれのドキュメントを参照すること。
 
-## 計算量
+## 時間計算量・空間計算量
 
 include 自体は実行時の時間・空間 $O(1)$ である。各関数の計算量はそれぞれのドキュメントに従う。
 

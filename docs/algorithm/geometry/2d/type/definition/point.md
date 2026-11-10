@@ -15,7 +15,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/type/definition/po
 - `operator<`: 座標の厳密な辞書順比較。
 - `operator==`: 各座標の差を `geometry_sign` で判定する、許容誤差付きの等値比較。
 
-## 計算量
+## 時間計算量・空間計算量
 
 すべて時間 $O(1)$、追加空間 $O(1)$。
 

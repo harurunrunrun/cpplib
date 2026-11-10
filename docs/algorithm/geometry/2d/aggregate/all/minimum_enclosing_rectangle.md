@@ -36,7 +36,7 @@ MinimumEnclosingRectangleResult minimum_enclosing_rectangle(std::vector<Point> p
 
 `corners` は長方形の 4 頂点を反時計回りに並べたものである。`width` は基準とした辺方向の幅、`height` はそれに垂直な方向の高さ、`area` は面積である。空集合では `valid == false`、それ以外では `valid == true` となる。
 
-## 計算量
+## 時間計算量・空間計算量
 
 頂点数を $N$ とする。
 

@@ -13,7 +13,7 @@ std::vector<Modint<MOD>> fast_convolution_ntt(
 
 `std::vector<Modint<MOD>>` どうしの通常の畳み込み（長さ `a.size() + b.size() - 1`）を返す。空列との積は空列である。`MOD` は $3 \le \texttt{MOD} \lt 2^{30}$ の奇素数（`static_assert` で範囲と奇数性を検査する）で、使用する 2 の冪の変換長が `MOD - 1` を割り切る必要がある。割り切らなければ `std::length_error` を送出する。
 
-## 計算量
+## 時間計算量・空間計算量
 
 内部表現を Montgomery 形式に変換し、bit reversal の後に radix-4 の NTT を行う。入力長を $N, M$ として、時間 $O((N+M)\log(N+M))$、空間 $O(N+M)$ である。短い方の列の長さが $32$ 以下なら、直接 $O(NM)$ で計算する。
 

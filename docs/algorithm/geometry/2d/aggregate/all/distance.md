@@ -14,7 +14,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/dist
 - `distance_line_line(first, second)`: 2 本の無限直線の距離。
 - `distance_line_segment(line, segment)`: 無限直線と閉線分の距離。
 
-## 計算量
+## 時間計算量・空間計算量
 
 すべてのオーバーロードで、時間 $O(1)$、追加の空間 $O(1)$ である。
 

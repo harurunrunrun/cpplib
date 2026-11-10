@@ -18,7 +18,7 @@ long double point_set_segment_minimum_distance(
 
 各点と線分の距離（`distance_segment_point`）の最小値。点集合が空なら正の無限大を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 点数を $N$ として、時間 $O(N)$、追加空間 $O(1)$。
 

@@ -34,7 +34,7 @@ ZeroOneBFSResult zero_one_bfs_implicit(int vertex_count, const std::vector<int>&
 
 ## 計算量
 
-$N$ を頂点数、$M$ を辺数、$S$ を入力した始点の個数、$P$ を復元するパスの頂点数とする。
+$N$ を頂点数、$M$ を辺数、$S$ を入力した始点の個数、$P$ を復元するパスの頂点数とする。時間計算量は次のとおりである。
 
 - `zero_one_bfs(graph, source)`: $O(N + M)$
 - `zero_one_bfs(graph, sources)`: $O(N + M + S)$

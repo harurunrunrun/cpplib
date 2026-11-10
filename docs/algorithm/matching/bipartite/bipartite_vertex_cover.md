@@ -56,3 +56,8 @@ $V = \lvert L \rvert + \lvert R \rvert$、$E$ を辺数とする。
 | --- | --- | --- |
 | `bipartite_konig_decomposition` | $O(V + E)$ | $O(V)$ |
 | `minimum_bipartite_edge_cover` | $O(V + E)$ | $O(V)$（戻り値を含む） |
+
+## 注意点
+
+- `maximum_matching` は同じ `graph` に対して `BipartiteMatching::solve()` などで求めた最大マッチングでなければならない。不整合や最大でないマッチングに対しては `invalid_argument` を送出する。
+- 多重辺があってもよい。

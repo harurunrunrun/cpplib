@@ -3,27 +3,25 @@ title: Grid Forest Diameter (格子森の直径) [LABYR1]
 documentation_of: ../../../../../src/algorithm/graph/specialized/metric_analysis/grid_forest_diameter.hpp
 ---
 
-4近傍格子で、通行可能マスが作る森の各連結成分の直径を求め、その最大値を返します。
+4 近傍の格子で、通行可能なマスが作る森の各連結成分の直径を求め、その最大値を返す。
 
 ## API
 
-### `grid_forest_diameter(grid, traversable_cell, blocked_cell)`
+### `grid_forest_diameter`
 
 ```cpp
 int grid_forest_diameter(
-    const vector<string>& grid,
+    const std::vector<std::string>& grid,
     char traversable_cell = '.',
     char blocked_cell = '#'
 );
 ```
 
-`traversable_cell` 同士を上下左右に接続した無向グラフを作り、その最大直径を
-辺数で返します。通行可能マスが存在しない場合は `0` です。
-`blocked_cell` は頂点に含めません。
+`traversable_cell` のマスどうしを上下左右に接続した無向グラフを考え、その連結成分の直径の最大値を辺数で返す。通行可能なマスが存在しない場合は $0$ を返す。`blocked_cell` のマスは頂点に含めない。
 
-## API別の時間計算量・空間計算量
+## 計算量
 
-行数を $R$、列数を $C$ とします。
+行数を $R$、列数を $C$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -31,10 +29,7 @@ int grid_forest_diameter(
 
 ## 注意点
 
-- `grid` は長方形で、各マスは `traversable_cell` または
-  `blocked_cell` でなければなりません。
-- 2種類のマス記号は互いに異なる必要があります。
-- 通行可能マスが作る各連結成分は木でなければなりません。閉路を検出した場合も
-  `invalid_argument` を送出します。
-- 格子の形状・記号・森の前提違反には `invalid_argument`、内部添字を
-  `int` で表せない大きさには `length_error` を送出します。
+- `grid` は長方形で、各マスは `traversable_cell` または `blocked_cell` でなければならない。
+- 2 種類のマスの記号は互いに異なっていなければならない。
+- 通行可能なマスが作る各連結成分は木でなければならない。
+- 格子の形状・記号の前提違反や閉路の検出時には `invalid_argument` を、内部の添字を `int` で表せない大きさの格子には `length_error` を送出する。

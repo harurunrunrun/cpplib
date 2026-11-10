@@ -16,7 +16,7 @@ struct Ray {
 
 - `Ray{origin, through}`: `origin` は始点、`through` は進行方向上の点である。
 
-## 計算量
+## 時間計算量・空間計算量
 
 構築: 時間 $O(1)$、空間 $O(1)$。
 

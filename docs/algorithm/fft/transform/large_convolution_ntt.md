@@ -16,7 +16,7 @@ std::vector<Modint<MOD>> large_convolution_ntt(
 
 出力長が `maximum_transform_size` 以下なら `fast_convolution_ntt` をそのまま呼ぶ。
 
-## 計算量
+## 時間計算量・空間計算量
 
 $L = \texttt{maximum_transform_size}$ とする。入力を長さ $L/2$ のブロックに分け、各ブロックを長さ $L$ で 1 回だけ変換する。ブロック番号の和が等しい積を周波数領域で足し合わせ、その和（対角線）ごとに 1 回逆変換する。
 

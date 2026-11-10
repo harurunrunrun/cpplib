@@ -13,7 +13,7 @@ long double distance_segment_point(const Segment& segment, const Point& point);
 
 `segment` と `point` の距離を返す。
 
-## 計算量
+## 時間計算量・空間計算量
 
 時間 $O(1)$、追加空間 $O(1)$。
 
