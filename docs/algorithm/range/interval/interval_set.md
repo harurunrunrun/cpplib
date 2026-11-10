@@ -3,9 +3,7 @@ title: Interval Set (区間集合)
 documentation_of: ../../../../src/algorithm/range/interval/interval_set.hpp
 ---
 
-半開区間 $[l, r)$ の集合。
-
-区間は常に互いに素で、隣接する区間は併合される。
+半開区間 $[l, r)$ の和集合を、互いに素な区間の集合として管理する。接する区間は併合される。
 
 ## コンストラクタ
 
@@ -28,29 +26,23 @@ intervals.intervals()
 
 ## 時間計算量
 
-- $O(K \log N)$
-
-`K` は操作で消える区間数。
-
-## API 別の時間計算量・空間計算量
-
 $M$ を現在の互いに素な区間数、$K$ をその呼出しで削除する区間数とする。
 
 | API | 時間計算量 |
 | --- | --- |
 | `IntervalSet()` | $O(1)$ |
-| `empty()` / `size()` | $O(1)$（メタデータクエリ） |
+| `empty()` / `size()` | $O(1)$ |
 | `clear()` | $O(M)$ |
 | `intervals()` | $O(1)$（`const map&` の返却） |
 | `contains(x)` / `covered(l,r)` / `mex(x)` | $O(\log M)$ |
 | `add(l,r)` | $O(\log M+K)$ |
 | `erase(l,r)` | $O(\log M+K)$ |
 
-`intervals()` 自体は列挙しない。返された map を全走査する場合は別途 $O(M)$。保持領域は $O(M)$。
+`intervals()` 自体は列挙しない。返された `std::map` を全走査する場合は別途 $O(M)$ かかる。保持領域は $O(M)$。
 
 ## WeightedIntervalSet
 
-区間ノードごとに Monoid 値を 1 つ持つ区間集合。
+区間ノードごとにモノイドの値を 1 つ持つ区間集合。
 
 ```cpp
 struct ConcatMonoid{
@@ -63,7 +55,7 @@ constexpr ConcatMonoid concat_monoid{};
 WeightedIntervalSet<concat_monoid, long long> weighted;
 ```
 
-第 1 テンプレート引数は既存データ構造と同じく Monoid オブジェクト、第 2 引数は座標型で、既定値は `long long`。公開型は値型 `S`、保存ノード `Interval{right, value}`、列挙用 `Entry{left, right, value}`、map 型 `map_type`。
+第 1 テンプレート引数は既存のデータ構造と同じくモノイドのオブジェクト、第 2 引数は座標型で、デフォルトは `long long` である。公開型は値型 `S`、保存ノード `Interval{right, value}`、列挙用の `Entry{left, right, value}`、内部の map の型 `map_type` である。
 
 ### 更新と不変条件
 
@@ -93,22 +85,22 @@ weighted.enumerate(l, r)
 
 - `get(x)` は点 $x$ を含むノードの値を `optional<S>` で返す。
 - `interval(x)` はそのノードの元の左右端と値を `optional<Entry>` で返す。
-- 引数なし `enumerate` は全ノード、範囲版は $[l,r)$ と交差するノードを左から返す。範囲版も端点を切り詰めせず、保存されている元の `left, right` を返す。
-- `intervals()` は左端をキー、`Interval` を値とする内部 map への `const&`。
+- 引数なし `enumerate` は全ノード、範囲版は $[l,r)$ と交差するノードを左から返す。範囲版も端点を切り詰めず、保存されている元の `left, right` を返す。
+- `intervals()` は左端をキー、`Interval` を値とする内部の map への `const&` を返す。
 - `covered` と `mex` は、値が異なるため併合されていない隣接ノードも連続した被覆として扱う。
 
-### Monoid 積
+### モノイド積
 
 ```cpp
 weighted.prod(l, r)
 weighted.all_prod()
 ```
 
-`prod(l,r)` は $[l,r)$ と交差する各保存ノードの値をちょうど 1 回、左端の昇順に `Monoid.op` で積む。区間の長さだけ繰り返したり、部分交差を重み付けしたりしない。gap は飛ばし、交差ノードがない場合と $l\ge r$ では `Monoid.e()` を返す。`all_prod()` は全ノードを同じ順序で積むため、非可換 Monoid でも順序が保存される。
+`prod(l,r)` は $[l,r)$ と交差する各保存ノードの値をちょうど 1 回、左端の昇順に `Monoid.op` で積む。区間の長さだけ繰り返したり、部分的な交差を重み付けしたりしない。区間の隙間は飛ばし、交差ノードがない場合と $l\ge r$ では `Monoid.e()` を返す。`all_prod()` は全ノードを同じ順序で積むため、非可換なモノイドでも順序が保存される。
 
 ### 計算量
 
-$M$ を現在のノード数、$K$ をその操作で削除・走査・出力するノード数とする。`S` のコピー・move・比較を $O(1)$ とし、`Monoid.op` と `Monoid.e` の計算量をそれぞれ $C_{op}$、$C_e$ とする。
+$M$ を現在のノード数、$K$ をその操作で削除・走査・出力するノード数とする。`S` のコピー・ムーブ・比較を $O(1)$ とし、`Monoid.op` と `Monoid.e` の計算量をそれぞれ $C_{op}$、$C_e$ とする。
 
 | API | 時間計算量 |
 | --- | --- |
@@ -129,12 +121,13 @@ $M$ を現在のノード数、$K$ をその操作で削除・走査・出力す
 
 ## `IntervalSet` API 詳細
 
-- `empty()` は保存区間がないか、`size()` は互いに素な保存区間数。`clear()` はすべて削除する。
-- `intervals()` は「左端から右端」への内部 map の const 参照を返す。参照は次の非 const 操作で無効化され得る。
-- `contains(x)` は点 $x$ が集合内か、`covered(l,r)` は半開区間全体が 1 つの保存区間に覆われるかを返す。`l>=r` の `covered` は `true`。
+- `empty()` は保存区間がないかを、`size()` は互いに素な保存区間の数を返す。`clear()` はすべて削除する。
+- `intervals()` は左端から右端への内部の `std::map<T, T>` の const 参照を返す。参照は次の非 const 操作で無効化され得る。
+- `contains(x)` は点 $x$ が集合に含まれるかを、`covered(l,r)` は半開区間全体が 1 つの保存区間に覆われるかを返す。`l>=r` の `covered` は `true`。
 - `add(l,r)` は $[l,r)$ を加え、重なる区間と隣接区間を併合する。`erase(l,r)` は範囲を除き、必要なら左右の断片を残す。どちらも `l>=r` では何もしない。
-- `mex(x)` は $x$ 以上で集合に含まれない最小座標。座標型 `T` は順序比較可能でなければならない。
+- `mex(x)` は $x$ 以上で集合に含まれない最小の座標を返す。座標型 `T` は順序比較可能でなければならない。
 
 ## 注意点
 
-空入力、退化入力、範囲外の index と容量超過の扱いは各 API の説明に従う。参照・イテレータ・コールバックを受け渡す API では、変更可否とオブジェクトの寿命を守る。
+- `IntervalSet` と `WeightedIntervalSet` の更新・取得は、$l\ge r$ の空区間を空集合として扱う（更新は何もしない、`covered` は `true`）。
+- `intervals()` が返す参照はオブジェクトの生存中は有効だが、その後の非 const 操作で内容が変わる。

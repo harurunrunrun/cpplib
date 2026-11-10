@@ -7,12 +7,12 @@ documentation_of: ../../../../src/algorithm/range/offline_query/offline_3d_domin
 
 ## API
 
-- `DominancePoint3D`: 64-ビット整数座標を保持する。
-- `offline_3d_dominance(points)`: 入力順の答えを返す。
+- `DominancePoint3D`: `long long` の座標 `x`, `y`, `z` を保持する。
+- `vector<long long> offline_3d_dominance(const vector<DominancePoint3D>& points)`: 各点の答えを入力順に返す。
 
 ## 時間計算量
 
-- $O(N\log^2 N)$ 時間、$O(N)$ 追加空間。
+$O(N\log^2 N)$ 時間、$O(N)$ 追加空間（CDQ 分割統治と Fenwick 木）。
 
 ## 注意点
 

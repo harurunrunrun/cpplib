@@ -3,23 +3,28 @@ title: Palindromic Factorization (回文分解)
 documentation_of: ../../../../src/algorithm/string/palindrome/palindromic_factorization.hpp
 ---
 
-文字列を連続する回文へ分割するときの最小factor数と、その分割例を求める。
-palindromic treeのseries link上で動的計画法を行う。
+文字列を連続する回文に分割するときの最小の因子数と、その分割の一例を求める。
+回文木の series link 上で動的計画法を行う。
 
 ## API
 
 ```cpp
+struct PalindromicFactorizationResult {
+    int factor_count = 0;
+    std::vector<std::pair<int, int>> factors;
+};
+
 PalindromicFactorizationResult palindromic_factorization(
     const std::string& text
 )
 ```
 
-結果は `factor_count` と、元文字列上の半開区間 `factors` を持つ。空文字列では
-factor数0、区間列は空である。
+`factor_count` は最小の因子数、`factors` は各因子を元の文字列上の半開区間 `[l, r)` として左から順に並べたものである。
+空文字列では因子数 0、区間の列は空である。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-$N=|text|$ とする。
+$N=\lvert \mathrm{text}\rvert$ とする。回文木の各ノードは長さ 256 の遷移表を持つ。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -27,4 +32,4 @@ $N=|text|$ とする。
 
 ## 注意点
 
-最適分割が複数ある場合はそのうち1つを返す。
+最適な分割が複数ある場合は、そのうちの 1 つを返す。

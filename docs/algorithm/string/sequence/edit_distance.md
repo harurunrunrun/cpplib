@@ -3,38 +3,28 @@ title: Edit Distance (編集距離) [DPL_1_E] [EDIST]
 documentation_of: ../../../../src/algorithm/string/sequence/edit_distance.hpp
 ---
 
-最小編集距離。
+2 つの列の最小編集距離（重み付き）を DP で求める。
 
 ## 関数
 
 ```cpp
-int edit_distance(a, b, insert_cost = 1, erase_cost = 1, replace_cost = 1)
+template<class Sequence>
+int edit_distance(const Sequence& a, const Sequence& b,
+                  int insert_cost = 1, int erase_cost = 1, int replace_cost = 1)
 ```
 
-挿入、削除、置換のコストを指定できる。
+列 `a` を `b` に変換する最小コストを返す。挿入は `b` の要素を 1 つ加え、削除は `a` の要素を
+1 つ除き、置換は異なる要素 1 つを置き換える操作である。等しい要素どうしを対応させるコストは 0 である。
+要素は `operator==` で比較する。
 
-## 時間計算量
+## 時間計算量・空間計算量
 
-- $O(NM)$
-
-## API別の時間計算量・空間計算量
-
-$N=|a|$, $M=|b|$ とする。
+$N=\lvert a\rvert$、$M=\lvert b\rvert$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `edit_distance(a,b,...)` | $O(NM)$ | $O(M)$ |
-
-各挿入・削除・置換候補の評価は $O(1)$ とする。
-
-## API詳細
-
-`edit_distance(a,b,insert_cost,erase_cost,replace_cost)` は列 `a` を `b` へ
-変換する最小コストを返す。挿入は `b` の要素を1つ加え、削除は `a` の要素を
-1つ除き、置換は異なる要素1つを置き換える。同じ要素の対応コストは0。
-要素は `operator==` で比較する。コストの非負性や結果の `int` overflowは
-検査しない。
+| `edit_distance(a, b, ...)` | $O(NM)$ | $O(M)$ |
 
 ## 注意点
 
-文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。
+コストの非負性や、結果の `int` オーバーフローは検査しない。

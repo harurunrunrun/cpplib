@@ -3,31 +3,31 @@ title: Manacher (Manacher法)
 documentation_of: ../../../../src/algorithm/string/palindrome/manacher.hpp
 ---
 
-各中心の回文半径を求める。
+Manacher 法により、各中心の回文半径を求める。
 
 ## 関数
 
-- `manacher_odd(s)`
-    - `i` を中心とする奇数長回文の半径。
-- `manacher_even(s)`
-    - `i - 1` と `i` の間を中心とする偶数長回文の半径。
-- `longest_palindrome(s)`
-    - 最長回文部分文字列の `(開始位置, 長さ)`。
+```cpp
+std::vector<int> manacher_odd(const std::string& s)
+std::vector<int> manacher_even(const std::string& s)
+std::pair<int, int> longest_palindrome(const std::string& s)
+```
 
-## 計算量の概要
+- `manacher_odd(s)[i]`: 文字 `i` を中心とする最長の奇数長回文の半径（中心を含む）。長さは `2 * d - 1` である。
+- `manacher_even(s)[i]`: 文字 `i - 1` と `i` の間を中心とする最長の偶数長回文の半径。長さは `2 * d` である（`i = 0` では 0）。
+- `longest_palindrome(s)`: 最長の回文部分文字列の `(開始位置, 長さ)`。
 
-- $O(n)$
+## 時間計算量・空間計算量
 
-## API別の時間計算量・空間計算量
+$N$ を `s` の長さとする。
 
-| API | 時間計算量 | 空間計算量（出力・追加領域） |
+| API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
 | `manacher_odd(s)` | $O(N)$ | $O(N)$ |
 | `manacher_even(s)` | $O(N)$ | $O(N)$ |
 | `longest_palindrome(s)` | $O(N)$ | 補助 $O(N)$、戻り値 $O(1)$ |
 
-前2関数は全 $N$ 中心の半径を列挙する。
-
 ## 注意点
 
-文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。
+- 返す添字は 0-indexed である。
+- 文字の比較は大文字と小文字を区別する。長さは `int` に収まることを前提とする。
