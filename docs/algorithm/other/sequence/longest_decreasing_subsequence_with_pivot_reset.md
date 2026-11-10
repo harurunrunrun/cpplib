@@ -3,7 +3,7 @@ title: Longest Decreasing Subsequence with Pivot Reset (基準位置で条件を
 documentation_of: ../../../../src/algorithm/other/sequence/longest_decreasing_subsequence_with_pivot_reset.hpp
 ---
 
-列の狭義減少部分列について、指定位置から次に選ぶ1要素だけ大小条件を解除できる場合の最大長を返す。指定位置を使わない通常の減少部分列も候補に含む。
+列の狭義減少部分列について、指定位置の要素を選んだ場合に限り、その次に選ぶ 1 要素だけ大小条件を解除できるときの最大長を返す。指定位置を使わない通常の減少部分列も候補に含む。
 
 ## longest_decreasing_subsequence_with_pivot_reset
 
@@ -14,9 +14,11 @@ int longest_decreasing_subsequence_with_pivot_reset(
 );
 ```
 
-`pivot_index` の要素を選んだ場合、その直後に選ぶ要素は値によらず遷移できる。それ以外の連続する選択要素は、添字が増加し値が真に減少しなければならない。
+`pivot_index` の要素を選んだ場合、その直後に選ぶ要素へは値によらず遷移できる。それ以外の連続する選択要素は、添字が増加し、値が真に減少しなければならない。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
+
+$N$ を `values.size()` とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -25,5 +27,5 @@ int longest_decreasing_subsequence_with_pivot_reset(
 ## 注意点
 
 - `values` は空であってはならない。
-- `pivot_index` は0始まりで `[0, values.size())` に含まれなければならない。
-- 添字または長さを `int` で表せない入力には `length_error`、範囲外の `pivot_index` には `runtime_error` を送出する。
+- `pivot_index` は 0-indexed で $[0, N)$ に含まれなければならない。
+- 長さを `int` で表せない入力には `length_error` を、範囲外の `pivot_index` には `runtime_error` を送出する。

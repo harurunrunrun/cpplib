@@ -22,7 +22,7 @@ std::uint64_t math::recursive_sequence_term(
 );
 ```
 
-`initial[i]` は $a_{i+1}$ を表し、`coefficient[j]` は $j+1$ 個前の項に掛かる係数を表す。すなわち $a_n = \sum_{j} \mathtt{coefficient}_j \, a_{n-1-j}$ である。
+`initial[i]` は $a_{i+1}$ を表し、`coefficient[j]` $= c_j$ は $j+1$ 個前の項に掛かる係数を表す。すなわち $a_n = \sum_{j} c_j a_{n-1-j}$ である。
 3 引数版の法は $10^9$ で、`recursive_sequence_term_static_modulus<1'000'000'000>` を呼んで高速な畳み込みを使う。
 4 引数版は任意の 64 ビットの法を受け取り、二乗時間の多項式剰余（Kitamasa 法）を使う。
 

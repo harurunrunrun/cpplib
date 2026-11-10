@@ -3,26 +3,25 @@ title: Maximum Noncrossing Bipartite Segments (二直線間線分の最大非交
 documentation_of: ../../../../../src/algorithm/other/dynamic_programming/sequence_selection/maximum_noncrossing_bipartite_segments.hpp
 ---
 
-平行な2直線上の点を結ぶ線分から、内部で交差しない最大個数を求める。
+平行な 2 直線上の点を結ぶ線分の集合から、互いに内部で交差しないように選べる線分の最大本数を求める。第 1 直線上の座標でソートし、第 2 直線上の座標の最長非減少部分列として計算する。
 
 ## `maximum_noncrossing_bipartite_segments`
 
 ```cpp
 template<class Coordinate>
-size_t maximum_noncrossing_bipartite_segments(
-    vector<pair<Coordinate, Coordinate>> segments
+std::size_t maximum_noncrossing_bipartite_segments(
+    std::vector<std::pair<Coordinate, Coordinate>> segments
 );
 ```
 
 ## 引数
 
-- `segments[i].first`: 第1直線上の端点座標。
-- `segments[i].second`: 第2直線上の端点座標。
+- `segments[i].first`: 第 1 直線上の端点の座標。
+- `segments[i].second`: 第 2 直線上の端点の座標。
 
 ## 戻り値
 
-内部で交差しないように選べる線分の最大本数。同じ端点で接する線分は
-交差とみなさない。
+内部で交差しないように選べる線分の最大本数。端点を共有するだけの線分同士は交差とみなさない。
 
 ## API別の時間計算量・空間計算量
 

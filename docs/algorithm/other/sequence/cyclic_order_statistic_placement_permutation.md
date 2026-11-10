@@ -3,41 +3,36 @@ title: Cyclic Order-statistic Placement Permutation (巡回順序統計配置順
 documentation_of: ../../../../src/algorithm/other/sequence/cyclic_order_statistic_placement_permutation.hpp
 ---
 
-空き位置を巡回し、空き位置の順位で配置先を選んで得られる順列を構築します。
+空き位置を巡回しながら、空き位置の中での順位で配置先を選んで得られる順列を構築する。
 
 ## API
 
 ### `cyclic_order_statistic_placement_permutation(size)`
 
 ```cpp
-template<int MAX_SIZE = 20000>
+template<int MAX_SIZE = -1>
 vector<int> cyclic_order_statistic_placement_permutation(int size);
 ```
 
-値 `value = 1, 2, ..., size` を順に配置します。最初の順位を0とし、各回で
-`rank = (rank + value) % remaining` と更新して、0始まりで `rank` 番目の
-空き位置へ `value` を置きます。戻り値は位置順の配置結果です。
+値 `value = 1, 2, ..., size` を順に配置する。順位を $0$ で初期化し、残りの空き位置数を `remaining` として、各回で `rank = (rank + value) % remaining` と更新し、0-indexed で `rank` 番目の空き位置へ `value` を置く。置いた後は `remaining` を 1 減らし、それが正なら `rank %= remaining` とする。戻り値は位置順に並べた配置結果である。
 
-## API別の時間計算量・空間計算量
-
-| API | 時間計算量 | 空間計算量 |
-| --- | --- | --- |
-| `cyclic_order_statistic_placement_permutation` | $O(size\log MAX\_SIZE)$ | $O(size\log MAX\_SIZE)$ |
-
-## 注意点
-
-- `0 <= size <= MAX_SIZE` が必要です。
-- `MAX_SIZE` は正でなければなりません。
-- `size` が範囲外なら `out_of_range`、内部の順序統計取得に失敗した場合は
-  `runtime_error` を送出します。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+`MAX_SIZE` を省略すると、空き位置の管理に整数全域（`int` の範囲）を扱う可変長の `Int_Set` を使う。指定すると全域が $[0, \texttt{MAX_SIZE})$ の固定長版になる。
 
 ```cpp
 auto result = cyclic_order_statistic_placement_permutation(n);
 auto fixed = cyclic_order_statistic_placement_permutation<100000>(n);
 ```
 
-$N$ 要素に対して座標 bit 幅を $W$ として $O(NW)$ 時間・$O(NW)$ 空間（分岐数16の trie）。
+## 時間計算量・空間計算量
+
+$N$ を `size`、$W$ を空き位置を管理する分岐数 16 の trie の深さ（固定長版は $O(\log\texttt{MAX_SIZE})$、可変長版は `int` の範囲に対する定数）とする。
+
+| API | 時間計算量 | 空間計算量 |
+| --- | --- | --- |
+| `cyclic_order_statistic_placement_permutation` | $O(NW)$ | $O(NW)$ |
+
+## 注意点
+
+- `0 <= size` かつ、固定長版では `size <= MAX_SIZE` でなければならない。違反時は `out_of_range` を送出する。
+- `MAX_SIZE` を指定する場合は正でなければならない（`static_assert`）。
+- 内部の順序統計の取得に失敗した場合は `runtime_error` を送出する。
