@@ -7,7 +7,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/result/point_point
 
 ## API
 
-- `geometry3d_normalized_difference(left, right, additional_extents = {})`: `left - right` を安全な尺度で正規化し、`Geometry3DNormalizedDifference{value, scale}` を返す。尺度は差の各成分の絶対値と `additional_extents`（`std::initializer_list<long double>`）の各要素の最大値で、差が零なら `{{0, 0, 0}, 1}` を返す。
+- `geometry3d_normalized_difference(left, right, additional_extents = {})`: `left - right` を安全な尺度で正規化し、`Geometry3DNormalizedDifference{value, scale}` を返す。尺度は差の各成分の絶対値と `additional_extents`（`std::initializer_list<long double>`）の各要素の最大値で、差が零なら `value` を零ベクトル、`scale` を $1$ として返す。
 
 ## API別の時間計算量・空間計算量
 
