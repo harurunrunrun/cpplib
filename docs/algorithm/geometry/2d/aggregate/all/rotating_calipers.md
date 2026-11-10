@@ -3,18 +3,18 @@ title: Rotating Calipers Header (回転キャリパ法ヘッダ)
 documentation_of: ../../../../../../src/algorithm/geometry/2d/aggregate/all/rotating_calipers.hpp
 ---
 
-凸多角形向け回転キャリパ法APIをまとめてincludeするheader。
+凸多角形に対する回転キャリパー法の API をまとめて include する集約ヘッダである。
 
 ## API
 
 - `convex_polygon_diameter`, `convex_polygon_farthest_vertices`
 - `convex_polygon_maximum_area_triangle`, `convex_polygon_support_vertex`, `convex_polygon_tangents`
-- 各結果型と共通の正規化関数は、それぞれの個別documentationを参照する。
+- 各結果型と共通の正規化関数については、それぞれのドキュメントを参照すること。
 
-## API別の時間計算量・空間計算量
+## 計算量
 
-- include自体: 実行時の時間・領域 $O(1)$。各関数の計算量は個別documentationに従う。
+include 自体は実行時の時間・空間 $O(1)$ である。各関数の計算量はそれぞれのドキュメントに従う。
 
 ## 注意点
 
-このheader自身は追加の関数や型を定義しない。入力の凸性、頂点順、退化入力の条件は各APIごとに異なる。
+このヘッダ自身は、内部実装（`convex_calipers_detail.hpp`）以外に関数や型を追加で定義しない。入力の凸性、頂点の順序、退化した入力の条件は API ごとに異なる。
