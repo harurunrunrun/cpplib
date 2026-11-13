@@ -3,17 +3,23 @@ title: Dynamic Weighted Wavelet Matrix (動的重み付きウェーブレット�
 documentation_of: ../../../../src/structure/wavelet_matrix/dynamic/dynamic_weighted_wavelet_matrix.hpp
 ---
 
-整数列への挿入・削除・置換と、各要素に付随する重みの更新を扱う。
-固定容量の葉を持つ決定的な平衡 B+ 木を各 bit level に持つため、
-列全体の再構築や平方分割を行わない。
+整数列への挿入・削除・置換と、各要素に付随する重みの更新を扱う動的な重み付きウェーブレット行列。固定容量の葉を持つ決定的な平衡 B+ 木を各 bit 階層に持つため、列全体の再構築や平方分割を行わない。
 
 ## テンプレート引数
 
 ```cpp
-DynamicWeightedWaveletMatrix<T, W, MAX_SIZE, BIT_WIDTH>
+DynamicWeightedWaveletMatrix<T, W, MAX_SIZE = -1, BIT_WIDTH = (T の bit 数)>
 ```
 
-`MAX_SIZE` は列長の上限、`BIT_WIDTH` は値を表す bit 数。
+- `T`: 値の整数型
+- `W`: 重みの型。デフォルト構築（零元）、加算、減算が必要
+- `MAX_SIZE`: 列長の上限。省略時（`-1`）は上限なし（`int` の範囲内）。内部は B+ 木なので、指定しても確保する領域は変わらない。
+- `BIT_WIDTH`: 値に使う bit 数。省略時は `T` の bit 数。符号付きの `T` では省略しなければならない（`static_assert`）。
+
+```cpp
+using Variable = DynamicWeightedWaveletMatrix<T, W>;
+using Fixed = DynamicWeightedWaveletMatrix<T, W, N>;
+```
 
 ## 構築と取得
 
@@ -22,16 +28,16 @@ DynamicWeightedWaveletMatrix()
 DynamicWeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
 DynamicWeightedWaveletMatrix(const array<T, N>& values, const array<W, N>& weights)
 DynamicWeightedWaveletMatrix(const DynamicWeightedWaveletMatrix&)
-DynamicWeightedWaveletMatrix(DynamicWeightedWaveletMatrix&&)
+DynamicWeightedWaveletMatrix(DynamicWeightedWaveletMatrix&&) noexcept
 DynamicWeightedWaveletMatrix& operator=(const DynamicWeightedWaveletMatrix&)
-DynamicWeightedWaveletMatrix& operator=(DynamicWeightedWaveletMatrix&&)
+DynamicWeightedWaveletMatrix& operator=(DynamicWeightedWaveletMatrix&&) noexcept
 int size() const
 T access(int k) const
 T operator[](int k) const
 W weight(int k) const
 ```
 
-値と重みの列長は一致していなければならない。
+`values[k]` に重み `weights[k]` を対応させて構築する。2 つの列の長さは一致しなければならない。`access` / `operator[]` は `k` 番目の値を、`weight` は `k` 番目の重みを返す。
 
 ## 更新
 
@@ -45,9 +51,7 @@ void set_value(int k, T value)
 void set_weight(int k, const W& weight)
 ```
 
-`insert` は `position` の直前へ挿入する。`erase` と `pop_back` は削除した
-`(value, weight)` を返す。`set` は値と重み、`set_value` と `set_weight` は
-片方だけを置換する。
+`insert` は `position` の直前に挿入する（`position == size()` なら末尾）。`erase` と `pop_back` は削除した `(value, weight)` を返す。`set` は値と重みの両方を、`set_value` と `set_weight` は片方だけを置き換える。
 
 ## 順序統計
 
@@ -63,8 +67,7 @@ optional<T> prev_value(int l, int r, T upper) const
 optional<T> next_value(int l, int r, T lower) const
 ```
 
-`select` は指定した出現がなければ `size()` を返す。
-`prev_value` は `upper` 未満の最大値、`next_value` は `lower` 以上の最小値を返す。
+`rank` は区間 $[0, r)$ または $[l, r)$ にある `value` の個数を返す。`select` は `value` の `occurrence` 番目（0-indexed）の出現位置を返し、存在しなければ `size()` を返す。`kth_smallest` / `kth_largest` は区間 $[l, r)$ で `k` 番目（0-indexed）に小さい値 / 大きい値を返す。`range_freq` は `upper` 未満、または $[\mathit{lower}, \mathit{upper})$ に含まれる値の個数を返す。`prev_value` は `upper` 未満の最大値を、`next_value` は `lower` 以上の最小値を返し、存在しなければ `nullopt` を返す。
 
 ## 重みの集約
 
@@ -76,43 +79,30 @@ W sum_k_smallest(int l, int r, int k) const
 W sum_k_largest(int l, int r, int k) const
 ```
 
-値が等しい要素を `sum_k_smallest` / `sum_k_largest` の境界で分ける場合は、
-現在の列における順序を使う。
+`sum` は区間 $[l, r)$ の重みの総和を、`range_sum` は値が `upper` 未満、または $[\mathit{lower}, \mathit{upper})$ に含まれる要素の重みの総和を返す。`sum_k_smallest` / `sum_k_largest` は区間を値の小さい順 / 大きい順に並べたときの先頭 `k` 個（$0 \le k \le r - l$）の重みの総和を返す。値が等しい要素がその境界をまたぐ場合は、現在の列における位置の順に選ぶ。
 
 ## 時間計算量
 
-$D = BIT_WIDTH$、現在の列長を $N$ とする。動的 bitvector は
-決定的な平衡 B+ 木なので、以下は worst-case 計算量である。
+現在の列長を $N$、$D = \texttt{BIT_WIDTH}$ とする。動的ビットベクトルは決定的な平衡 B+ 木なので、以下は最悪計算量である。
 
-- vector/array constructor: $O(DN)$
+- コンストラクタ（`vector` / `array`）: $O(DN)$
 - コピー構築・コピー代入: $O(DN)$
 - ムーブ構築・ムーブ代入: $O(D)$
-- default constructor, `size`: $O(1)$
+- デフォルトコンストラクタ、`size`: $O(1)$
 - `weight`, `sum`: $O(\log N)$
-- `access`, `operator[]`: $O(D\log N)$
-- `insert`, `erase`, `push_back`, `pop_back`: $O(D\log N)$
-- `set`, `set_value`, `set_weight`: $O(D\log N)$
-- `rank`, `select`, `range_freq`: $O(D\log N)$
-- `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(D\log N)$
-- `range_sum`, `sum_k_smallest`, `sum_k_largest`: $O(D\log N)$
-- 空間計算量: $O(DN)$
+- `access`, `operator[]`: $O(D \log N)$
+- `insert`, `erase`, `push_back`, `pop_back`: $O(D \log N)$
+- `set`, `set_value`, `set_weight`: $O(D \log N)$
+- `rank`, `select`, `range_freq`: $O(D \log N)$
+- `kth_smallest`, `kth_largest`, `prev_value`, `next_value`: $O(D \log N)$
+- `range_sum`, `sum_k_smallest`, `sum_k_largest`: $O(D \log N)$
+
+## 空間計算量
+
+$O(DN)$。
 
 ## 注意点
 
-添字と出現番号は0-indexed、列区間と値域は半開区間 `[l,r)`,
-`[lower,upper)`。`W` はデフォルト構築、加算、減算をサポートする必要がある。
-列長上限、bit幅、添字、区間、順序の違反では `runtime_error` を送出する。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = DynamicWeightedWaveletMatrix<T, W>;
-using Fixed = DynamicWeightedWaveletMatrix<T, W, N>;
-```
-
-可変長版は入力長 $n$ とビット幅 $B$ に応じた配列だけを確保し、構築・照会の計算量は上記と同じ。
-長さに依存する固定容量の領域は $O(n)$ に、ビット段ごとの領域は $O(Bn)$ になる。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 添字と出現番号は 0-indexed、列の区間と値域はそれぞれ半開区間 $[l, r)$, $[\mathit{lower}, \mathit{upper})$ である。
+- 列長が `MAX_SIZE`（省略時は `int` の最大値）を超える操作、値が `BIT_WIDTH` bit に収まらない場合、範囲外の添字・区間・`k`、負の出現番号、`lower > upper`、空列からの `pop_back` では `std::runtime_error` を送出する。
+- クエリに渡す `upper` / `lower` / `value` は `BIT_WIDTH` bit に収まらなくてもよい（全要素より大きいものとして扱う）。

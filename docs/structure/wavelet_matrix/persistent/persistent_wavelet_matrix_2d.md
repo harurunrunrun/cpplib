@@ -3,89 +3,82 @@ title: Persistent Wavelet Matrix 2D (完全永続二次元ウェーブレット�
 documentation_of: ../../../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix_2d.hpp
 ---
 
-入力点の x 座標を固定し、y 座標を完全永続に点更新する二次元 Wavelet Matrix。
-点 id は入力順のまま保持し、x 座標で安定した検索順を内部に構築する。
+入力点の $x$ 座標を固定し、$y$ 座標を完全永続に点更新できる二次元ウェーブレット行列。任意の版から新しい版を作れる。点 ID は入力順のまま保持し、内部では $x$ 座標順（同じ $x$ では $y$、入力順）に並べた点列を `PersistentWaveletMatrix` で管理する。
 
 ## テンプレート引数
 
 ```cpp
-PersistentWaveletMatrix2D<X, Y, MAX_SIZE, MAX_VERSION, Y_BIT_WIDTH>
+PersistentWaveletMatrix2D<X, Y, MAX_SIZE = -1, MAX_VERSION = -1, Y_BIT_WIDTH = (Y の bit 数)>
 ```
 
-`X`, `Y` は `bool` 以外の整数型。`MAX_SIZE` は点数、`MAX_VERSION` は version 作成回数の
-上限。`Y_BIT_WIDTH` は y 座標を表す bit 数で、省略時は `Y` の全 bit 数である。
+- `X`, `Y`: `bool` 以外の整数型
+- `MAX_SIZE`: 点数の上限
+- `MAX_VERSION`: 版 0 の後に作成できる版の数の上限
+- `Y_BIT_WIDTH`: $y$ 座標を表す bit 数。省略時は `Y` の bit 数。符号付きの `Y` では省略しなければならない。
 
-## コンストラクタ
-
-```cpp
-PersistentWaveletMatrix2D()
-PersistentWaveletMatrix2D(const vector<X>& xs, const vector<Y>& ys)
-PersistentWaveletMatrix2D(const vector<pair<X,Y>>& points)
-```
-
-`xs[k]` と `ys[k]`、または `points[k]` を点 id `k` として version 0 を構築する。
-
-## バージョン・座標・更新
-
-```cpp
-int wm.size() const
-int wm.versions() const
-int wm.latest_version() const
-X wm.x(k) const
-Y wm.y(version, k) const
-int new_version = wm.set_y(version, k, y)
-int new_version = wm.fork(version)
-```
-
-`set_y` は任意の `version` の点 `k` の y 座標だけを更新する。`fork` は指定 version と同じ
-内容の新 version を作る。x 座標は全 version で不変である。
-
-## 矩形・順序クエリ
-
-```cpp
-int wm.rectangle_count(version, xl, xr, yl, yr) const
-int wm.range_freq(version, xl, xr, yl, yr) const
-Y wm.kth_smallest_y(version, xl, xr, k) const
-optional<Y> wm.prev_y(version, xl, xr, upper) const
-optional<Y> wm.next_y(version, xl, xr, lower) const
-```
-
-- `rectangle_count`, `range_freq`: `[xl,xr) × [yl,yr)` に含まれる点数を返す。
-- `kth_smallest_y`: x が `[xl,xr)` に入る点の y の 0-indexed な第 `k` 小要素を返す。
-- `prev_y`: 対象 x 範囲で `upper` 未満の最大 y。存在しなければ `nullopt`。
-- `next_y`: 対象 x 範囲で `lower` 以上の最小 y。存在しなければ `nullopt`。
-
-## 時間計算量
-
-`N = size()`、`D = Y_BIT_WIDTH`、version 数を `V`、実際の `set_y` 回数を `U` とする。
-
-- constructor: `O(N log N + D N)`
-- `size`, `versions`, `latest_version`, `x`: `O(1)`
-- `y`: `O(D log(N+1))`
-- `fork`: `O(D)`
-- `set_y`: `O(D log(N+1))`
-- `rectangle_count`, `range_freq`: `O(log(N+1) + D log(N+1))`
-- `kth_smallest_y`, `prev_y`, `next_y`: `O(log(N+1) + D log(N+1))`
-
-全メモリは `O(D N + U D log(N+1) + V D + N)`。
-
-## 注意点
-
-矩形は半開区間。点 id と順序統計は 0-indexed。作成済み version は後の更新で変化しない。
-不正な version・点・矩形・順序、vector 長不一致、点数・version 容量、y の bit 幅違反では
-`runtime_error`。失敗した更新は新 version を作らない。copy は禁止、move は可能。
-標準 C++20 で実装され、GCC 13 で利用できる。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
+`MAX_SIZE` と `MAX_VERSION` は省略（`-1`）すると上限なしになる。内部の永続ウェーブレット行列は必要に応じて伸長するが、`MAX_SIZE` を指定すると $x$ 座標と添字の対応表に $O(\texttt{MAX_SIZE})$ の固定長配列を確保する。
 
 ```cpp
 using Variable = PersistentWaveletMatrix2D<X, Y>;
 using Fixed = PersistentWaveletMatrix2D<X, Y, N, Versions>;
 ```
 
-可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
-再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+## コンストラクタ
+
+```cpp
+PersistentWaveletMatrix2D()
+PersistentWaveletMatrix2D(const vector<X>& xs, const vector<Y>& ys)
+explicit PersistentWaveletMatrix2D(const vector<pair<X, Y>>& points)
+```
+
+`xs[k]` と `ys[k]`、または `points[k]` を点 ID `k` として版 0 を構築する。
+
+## 版・座標・更新
+
+```cpp
+int size() const
+int versions() const
+int latest_version() const
+X x(int k) const
+Y y(int version, int k) const
+int set_y(int version, int k, Y y)
+int fork(int version)
+```
+
+`x` は点 `k` の $x$ 座標（全版で不変）を、`y` は版 `version` での点 `k` の $y$ 座標を返す。`set_y` は任意の版 `version` をもとに、点 `k` の $y$ 座標だけを更新した新しい版を作り、その番号を返す。`fork` は指定した版と同じ内容の新しい版を作る。
+
+## 矩形・順序クエリ
+
+```cpp
+int rectangle_count(int version, X xl, X xr, Y yl, Y yr) const
+int range_freq(int version, X xl, X xr, Y yl, Y yr) const
+Y kth_smallest_y(int version, X xl, X xr, int k) const
+optional<Y> prev_y(int version, X xl, X xr, Y upper) const
+optional<Y> next_y(int version, X xl, X xr, Y lower) const
+```
+
+- `rectangle_count`, `range_freq`: $[\mathit{xl}, \mathit{xr}) \times [\mathit{yl}, \mathit{yr})$ に含まれる点の個数を返す。
+- `kth_smallest_y`: $x$ 座標が $[\mathit{xl}, \mathit{xr})$ に入る点の $y$ 座標のうち、`k` 番目（0-indexed）に小さい値を返す。
+- `prev_y`: 対象の $x$ 範囲で `upper` 未満の最大の $y$ 座標を返す。存在しなければ `nullopt` を返す。
+- `next_y`: 対象の $x$ 範囲で `lower` 以上の最小の $y$ 座標を返す。存在しなければ `nullopt` を返す。
+
+## 時間計算量
+
+$N$ を点数、$D = \texttt{Y_BIT_WIDTH}$ とする。
+
+- コンストラクタ: $O(N \log N + DN)$（固定長版では配列の初期化に $O(\texttt{MAX_SIZE})$ が加わる）
+- `size`, `versions`, `latest_version`, `x`: $O(1)$
+- `y`, `set_y`: $O(D \log(N + 1))$
+- `fork`: $O(D)$
+- `rectangle_count`, `range_freq`, `kth_smallest_y`, `prev_y`, `next_y`: $O(\log(N + 1) + D \log(N + 1))$
+
+## 空間計算量
+
+版の数を $V$、`set_y` を実行した回数を $U$ とすると、全メモリは $O(DN + UD \log(N + 1) + VD + N)$ である。
+
+## 注意点
+
+- 矩形は半開区間である。点 ID と順序統計は 0-indexed である。
+- 作成済みの版は、その後の更新で変化しない。
+- 不正な版・点・矩形・`k`、入力列の長さの不一致、点数・版数の上限超過、`Y_BIT_WIDTH` bit に収まらない $y$ 座標では `std::runtime_error` を送出する。失敗した更新は新しい版を作らない。
+- コピーは禁止、ムーブは可能。

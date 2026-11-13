@@ -3,107 +3,96 @@ title: Persistent Wavelet Matrix (完全永続ウェーブレット行列)
 documentation_of: ../../../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix.hpp
 ---
 
-固定長の整数列を点更新できる完全永続 Wavelet Matrix。
-任意の過去 version から新しい version を作成でき、作成済みの version は変更されない。
-各 bit 段を決定的平衡 B+ 木で保持するため、乱数や平方分割の調整値に依存しない。
+固定長の整数列を点更新できる完全永続ウェーブレット行列。任意の過去の版から新しい版を作成でき、作成済みの版は変更されない。各 bit 段を決定的な平衡 B+ 木で保持するため、乱数や平方分割の調整値に依存しない。
 
 ## テンプレート引数
 
 ```cpp
-PersistentWaveletMatrix<T, MAX_SIZE, MAX_VERSION, BIT_WIDTH>
+PersistentWaveletMatrix<T, MAX_SIZE = -1, MAX_VERSION = -1, BIT_WIDTH = (T の bit 数)>
 ```
 
-- `T`: `bool` 以外の整数型。
-- `MAX_SIZE`: 初期列の最大長。
-- `MAX_VERSION`: 初期 version 0 の後に作成できる version 数。
-- `BIT_WIDTH`: 値を表す bit 数。省略時は `T` の全 bit 数。符号付き整数では全 bit 数を指定する。
+- `T`: `bool` 以外の整数型
+- `MAX_SIZE`: 初期列の長さの上限。`-1` なら上限なし。
+- `MAX_VERSION`: 版 0 の後に作成できる版の数。`-1` なら上限なし。
+- `BIT_WIDTH`: 値を表す bit 数。省略時は `T` の bit 数。符号付き整数では省略しなければならない（`static_assert`）。
 
-## コンストラクタ
-
-```cpp
-PersistentWaveletMatrix()
-PersistentWaveletMatrix(const vector<T>& values)
-PersistentWaveletMatrix(const array<T, N>& values)
-```
-
-`values` を version 0 として構築する。default constructor は空列を構築する。
-
-## バージョンと更新
-
-```cpp
-int wm.size() const
-int wm.versions() const
-int wm.latest_version() const
-int new_version = wm.set(version, k, value)
-int new_version = wm.fork(version)
-```
-
-- `size`: 列長を返す。
-- `versions`: 現在存在する version 数を返す。
-- `latest_version`: 最後に作成した version 番号を返す。
-- `set`: `version` の `k` 番目だけを `value` に置換した新 version を返す。
-- `fork`: `version` と同じ内容を共有する新 version を返す。
-
-## クエリ
-
-```cpp
-T wm.access(version, k) const
-int wm.rank(version, value, r) const
-int wm.rank(version, value, l, r) const
-int wm.select(version, value, occurrence) const
-T wm.kth_smallest(version, l, r, k) const
-T wm.kth_largest(version, l, r, k) const
-int wm.range_freq(version, l, r, upper) const
-int wm.range_freq(version, l, r, lower, upper) const
-optional<T> wm.prev_value(version, l, r, upper) const
-optional<T> wm.next_value(version, l, r, lower) const
-```
-
-- `access`: 指定位置の値を返す。
-- `rank`: `[l,r)`、または `[0,r)` に含まれる `value` の個数を返す。
-- `select`: 列全体で `value` が `occurrence` 回現れる位置を返す。存在しなければ `size()`。
-- `kth_smallest`, `kth_largest`: `[l,r)` の 0-indexed な第 `k` 要素を返す。
-- 1引数の `range_freq`: `[l,r)` に含まれる `upper` 未満の値の個数を返す。
-- 2引数の `range_freq`: `[l,r)` に含まれる `[lower,upper)` の値の個数を返す。
-- `prev_value`: `upper` 未満の最大値を返す。存在しなければ `nullopt`。
-- `next_value`: `lower` 以上の最小値を返す。存在しなければ `nullopt`。
-
-## 時間計算量
-
-`N = size()`、`D = BIT_WIDTH`、作成済み version 数を `V` とする。
-B+ 木の葉容量と分岐数は定数である。
-
-- constructor: `O(D N)`
-- `size`, `versions`, `latest_version`: `O(1)`
-- `fork`: `O(D)`
-- `set`: `O(D log(N+1))`
-- `access`, `rank`, `select`: `O(D log(N+1))`
-- `kth_smallest`, `kth_largest`: `O(D log(N+1))`
-- `range_freq`, `prev_value`, `next_value`: `O(D log(N+1))`
-
-初期構築のメモリは `O(D N)`。実際に `set` した回数を `U` とすると、永続ノードと
-version root を含む全メモリは `O(D N + U D log(N+1) + V D)`。
-`fork` は bit 列ノードを複製しない。
-
-## 注意点
-
-version、位置、出現番号、順序統計は 0-indexed。列区間は半開区間 `[l,r)`、値域は
-`[lower,upper)`。作成済み version への query と分岐は、その後の更新の影響を受けない。
-
-不正な version・位置・区間・順序・値域、初期列長・version 容量・bit 幅の違反では
-`runtime_error`。失敗した `set` は全 bit 段のノード使用量を更新前へ戻し、新 version を
-作らない。標準 C++20 で実装され、GCC 13 で利用できる。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
+`MAX_SIZE` と `MAX_VERSION` は検査用の上限であり、内部の B+ 木と版の記録（`std::deque`）は必要に応じて伸長するため、指定しても確保する領域は変わらない。
 
 ```cpp
 using Variable = PersistentWaveletMatrix<T>;
 using Fixed = PersistentWaveletMatrix<T, N, Versions>;
 ```
 
-可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
-再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+## コンストラクタ
+
+```cpp
+PersistentWaveletMatrix()
+explicit PersistentWaveletMatrix(const vector<T>& values)
+explicit PersistentWaveletMatrix(const array<T, N>& values)
+```
+
+`values` を版 0 として構築する。デフォルトコンストラクタは空列を構築する。
+
+## 版と更新
+
+```cpp
+int size() const
+int versions() const
+int latest_version() const
+int set(int version, int k, T value)
+int fork(int version)
+```
+
+- `size`: 列長を返す。
+- `versions`: 現在存在する版の数を返す。
+- `latest_version`: 最後に作成した版の番号を返す。
+- `set`: 版 `version` の `k` 番目だけを `value` に置き換えた新しい版を作り、その番号を返す。
+- `fork`: 版 `version` と同じ内容を共有する新しい版を作り、その番号を返す。bit 列のノードは複製しない。
+
+## クエリ
+
+```cpp
+T access(int version, int k) const
+int rank(int version, T value, int r) const
+int rank(int version, T value, int l, int r) const
+int select(int version, T value, int occurrence) const
+T kth_smallest(int version, int l, int r, int k) const
+T kth_largest(int version, int l, int r, int k) const
+int range_freq(int version, int l, int r, T upper) const
+int range_freq(int version, int l, int r, T lower, T upper) const
+optional<T> prev_value(int version, int l, int r, T upper) const
+optional<T> next_value(int version, int l, int r, T lower) const
+```
+
+いずれも版 `version` の列に対するクエリである。
+
+- `access`: `k` 番目の値を返す。
+- `rank`: 区間 $[l, r)$ または $[0, r)$ に含まれる `value` の個数を返す。
+- `select`: 列全体で `value` の `occurrence` 番目（0-indexed）の出現位置を返す。存在しなければ `size()` を返す。
+- `kth_smallest`, `kth_largest`: 区間 $[l, r)$ で `k` 番目（0-indexed）に小さい値 / 大きい値を返す。
+- 上限のみを取る `range_freq`: 区間 $[l, r)$ に含まれる `upper` 未満の値の個数を返す。
+- 下限と上限を取る `range_freq`: 区間 $[l, r)$ に含まれる $[\mathit{lower}, \mathit{upper})$ の値の個数を返す。
+- `prev_value`: `upper` 未満の最大値を返す。存在しなければ `nullopt` を返す。
+- `next_value`: `lower` 以上の最小値を返す。存在しなければ `nullopt` を返す。
+
+## 時間計算量
+
+$N$ を列長、$D = \texttt{BIT_WIDTH}$、作成済みの版の数を $V$ とする。B+ 木の葉の容量と分岐数は定数である。
+
+- コンストラクタ: $O(DN)$
+- `size`, `versions`, `latest_version`: $O(1)$
+- `fork`: $O(D)$
+- `set`: $O(D \log(N + 1))$
+- `access`, `rank`, `select`: $O(D \log(N + 1))$
+- `kth_smallest`, `kth_largest`: $O(D \log(N + 1))$
+- `range_freq`, `prev_value`, `next_value`: $O(D \log(N + 1))$
+
+## 空間計算量
+
+初期構築のメモリは $O(DN)$ である。`set` を実行した回数を $U$ とすると、永続ノードと各版の根を含む全メモリは $O(DN + UD \log(N + 1) + VD)$ となる。
+
+## 注意点
+
+- 版の番号・位置・出現番号・順序統計は 0-indexed である。列の区間は半開区間 $[l, r)$、値域は $[\mathit{lower}, \mathit{upper})$ である。
+- 作成済みの版へのクエリや分岐は、その後の更新の影響を受けない。
+- 不正な版・位置・区間・`k`、`lower > upper`、初期列長・版数の上限超過、`BIT_WIDTH` bit に収まらない値では `std::runtime_error` を送出する。失敗した `set` は全 bit 段のノード使用量を更新前に戻し、新しい版を作らない。

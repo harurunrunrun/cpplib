@@ -3,75 +3,97 @@ title: Partially Persistent Weighted Wavelet Matrix (部分永続重み付きウ
 documentation_of: ../../../../src/structure/wavelet_matrix/partially_persistent/partially_persistent_weighted_wavelet_matrix.hpp
 ---
 
-各要素に重みを持つ部分永続Wavelet Matrix。更新元は最新版だけで、すべての過去versionを参照できる。
-完全永続型をラップせず、latest-onlyの更新経路を各bit段のpayload和付き不変B+木で独立に実装する。
+各要素に重みを持つ部分永続ウェーブレット行列。更新元は最新版だけで、すべての過去の版を参照できる。完全永続版をラップせず、最新版のみを更新する経路を、各 bit 段の重みの和付き不変 B+ 木で独立に実装している。
 
-## API
+## テンプレート引数
 
 ```cpp
-PartiallyPersistentWeightedWaveletMatrix<
-    T, W, MAX_SIZE, MAX_VERSION, BIT_WIDTH
-> wm(values, weights)
-int n = wm.size()
-int count = wm.versions()
-int latest = wm.latest_version()
-T value = wm.access(version, k)
-W weight = wm.weight(version, k)
-int version2 = wm.set(k, value, weight)
-int version2 = wm.set_value(k, value)
-int version2 = wm.set_weight(k, weight)
-int count = wm.rank(version, value, r)
-int count = wm.rank(version, value, l, r)
-int position = wm.select(version, value, occurrence)
-T value = wm.kth_smallest(version, l, r, k)
-T value = wm.kth_largest(version, l, r, k)
-int count = wm.range_freq(version, l, r, upper)
-int count = wm.range_freq(version, l, r, lower, upper)
-W total = wm.sum(version, l, r)
-W total = wm.range_sum(version, l, r, upper)
-W total = wm.range_sum(version, l, r, lower, upper)
-W total = wm.sum_k_smallest(version, l, r, k)
-W total = wm.sum_k_largest(version, l, r, k)
-optional<T> value = wm.prev_value(version, l, r, upper)
-optional<T> value = wm.next_value(version, l, r, lower)
+PartiallyPersistentWeightedWaveletMatrix<T, W, MAX_SIZE = -1, MAX_VERSION = -1, BIT_WIDTH = (T の bit 数)>
 ```
 
-version 0が初期列。`set`, `set_value`, `set_weight` は最新版から新versionを作る。
-queryは任意の有効versionを読む。`select` が見つからない場合は `size()`。
-区間と値域は半開区間で、同値をまたぐ `sum_k_*` は現在の列での安定順に重みを選ぶ。
+- `T`: `bool` 以外の整数型
+- `W`: 重みの型。`W{}` を加法の単位元として、`W + W` と `W - W` が定義されている必要がある。
+- `MAX_SIZE`: 列長の上限。`-1` なら上限なし。
+- `MAX_VERSION`: 版 0 の後に実行できる更新の回数。`-1` なら上限なし。
+- `BIT_WIDTH`: 値を表す bit 数。省略時は `T` の bit 数。符号付きの `T` では省略しなければならない（`static_assert`）。
 
-## 時間計算量
-
-$D=\mathtt{BIT\_WIDTH}$、$H=O(\log(N+1))$ とする。最新版と過去versionで同じ計算量である。
-
-- vector/array constructor: $O(DN)$、default constructor: $O(D)$
-- `size`, `versions`, `latest_version`: $O(1)$
-- `weight`, `sum`: $O(H)$
-- `access`, `rank`, `select`, 順序統計、値域頻度・値域和、前後値: $O(DH)$
-- `sum_k_smallest`, `sum_k_largest`: $O(DH)$
-- `set`, `set_value`, `set_weight`: $O(DH)$
-
-初期追加メモリは $O(DN)$、更新1回の追加メモリは $O(DH)$。
-平方分割やversion履歴の線形走査には依存しない。
-
-## 注意点
-
-`T` はbool以外の整数型。符号付き `T` では `BIT_WIDTH` は型の全bit幅。
-`W{}` を加法単位元として `W + W` と `W - W` が必要。
-`MAX_SIZE` は列長、`MAX_VERSION` は初期version後に作れるversion数の上限。
-不正なversion・添字・区間・順序・値域・bit幅・容量では `runtime_error`。
-失敗した更新は全bit段のnode使用量とversion数を更新前へ戻す。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
+`MAX_SIZE` と `MAX_VERSION` は検査用の上限であり、内部の B+ 木と版の記録（`std::deque`）は必要に応じて伸長するため、指定しても確保する領域は変わらない。
 
 ```cpp
 using Variable = PartiallyPersistentWeightedWaveletMatrix<T, W>;
 using Fixed = PartiallyPersistentWeightedWaveletMatrix<T, W, N, Versions>;
 ```
 
-可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
-再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+## コンストラクタ
+
+```cpp
+PartiallyPersistentWeightedWaveletMatrix()
+PartiallyPersistentWeightedWaveletMatrix(const vector<T>& values, const vector<W>& weights)
+PartiallyPersistentWeightedWaveletMatrix(const array<T, N>& values, const array<W, N>& weights)
+```
+
+`values[k]` に重み `weights[k]` を対応させた列を版 0 として構築する。デフォルトコンストラクタは空列を構築する。
+
+## 版と更新
+
+```cpp
+int size() const
+int versions() const
+int latest_version() const
+int set(int k, T value, W weight)
+int set_value(int k, T value)
+int set_weight(int k, W weight)
+```
+
+`set` は最新版の `k` 番目の値と重みを、`set_value` は値だけを、`set_weight` は重みだけを置き換えた新しい版を作り、その番号を返す。
+
+## クエリ
+
+```cpp
+T access(int version, int k) const
+W weight(int version, int k) const
+int rank(int version, T value, int r) const
+int rank(int version, T value, int l, int r) const
+int select(int version, T value, int occurrence) const
+T kth_smallest(int version, int l, int r, int k) const
+T kth_largest(int version, int l, int r, int k) const
+int range_freq(int version, int l, int r, T upper) const
+int range_freq(int version, int l, int r, T lower, T upper) const
+W sum(int version, int l, int r) const
+W range_sum(int version, int l, int r, T upper) const
+W range_sum(int version, int l, int r, T lower, T upper) const
+W sum_k_smallest(int version, int l, int r, int k) const
+W sum_k_largest(int version, int l, int r, int k) const
+optional<T> prev_value(int version, int l, int r, T upper) const
+optional<T> next_value(int version, int l, int r, T lower) const
+```
+
+いずれも任意の有効な版 `version` を読む。
+
+- `access` / `weight`: `k` 番目の値 / 重みを返す。
+- `rank`, `select`, `kth_smallest`, `kth_largest`, `range_freq`, `prev_value`, `next_value`: Persistent Wavelet Matrix と同じ。`select` は `value` の `occurrence` 番目（0-indexed）の出現位置を返し、存在しなければ `size()` を返す。
+- `sum`: 区間 $[l, r)$ の重みの総和を返す。
+- `range_sum`: 区間 $[l, r)$ のうち、値が `upper` 未満、または $[\mathit{lower}, \mathit{upper})$ に含まれる要素の重みの総和を返す。
+- `sum_k_smallest` / `sum_k_largest`: 区間 $[l, r)$ を値の小さい順 / 大きい順に並べたときの先頭 `k` 個（$0 \le k \le r - l$）の重みの総和を返す。値が等しい要素がその境界をまたぐ場合は、現在の列での位置の順に選ぶ。
+
+## 時間計算量
+
+$N$ を列長、$D = \texttt{BIT_WIDTH}$、$H = O(\log(N + 1))$ とする。最新版と過去の版で計算量は同じである。
+
+- コンストラクタ（`vector` / `array`）: $O(DN)$、デフォルトコンストラクタ: $O(D)$
+- `size`, `versions`, `latest_version`: $O(1)$
+- `weight`, `sum`: $O(H)$
+- `access`, `rank`, `select`, `kth_smallest`, `kth_largest`: $O(DH)$
+- `range_freq`, `range_sum`, `sum_k_smallest`, `sum_k_largest`: $O(DH)$
+- `prev_value`, `next_value`: $O(DH)$
+- `set`, `set_value`, `set_weight`: $O(DH)$
+
+## 空間計算量
+
+初期の追加メモリは $O(DN)$、更新 1 回あたりの追加メモリは $O(DH)$ である。
+
+## 注意点
+
+- 版の番号・位置・出現番号・順序統計は 0-indexed、区間と値域は半開区間である。
+- 不正な版・添字・区間・`k`、`lower > upper`、`BIT_WIDTH` bit に収まらない値、列長・版数の上限超過では `std::runtime_error` を送出する。
+- B+ 木の更新途中で容量確保や重みの演算が失敗した場合も、全 bit 段のノード使用量と版の数を更新前に戻す。

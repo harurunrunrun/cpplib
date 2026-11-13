@@ -3,19 +3,24 @@ title: Weighted Wavelet Matrix 2D (二次元重み付きウェーブレット行
 documentation_of: ../../../../src/structure/wavelet_matrix/static/wavelet_matrix_2d_weighted.hpp
 ---
 
-重み付き点集合に対する静的2次元wavelet matrix。矩形内の点数と重みの総和を求める。
+重み付き点集合に対する静的な二次元ウェーブレット行列。矩形内の点の個数と重みの総和を求める。
 
 ## テンプレート引数
 
 ```cpp
-WaveletMatrix2DWeighted<X, Y, W, MAX_SIZE, Y_BIT_WIDTH>
+WaveletMatrix2DWeighted<X, Y, W, MAX_SIZE = -1, Y_BIT_WIDTH = (Y の bit 数)>
 ```
 
-- x座標の整数型 `X`
-- y座標の整数型 `Y`
-- 重みの型 `W`
-- 点数の上限 `MAX_SIZE`
-- y座標に使用するbit数 `Y_BIT_WIDTH`。省略時は `Y` のbit数
+- `X`: $x$ 座標の整数型
+- `Y`: $y$ 座標の整数型
+- `W`: 重みの型。加算・減算と値初期化 `W{}`（零元）が必要
+- `MAX_SIZE`: 点数の上限。省略時（`-1`）は `std::vector` を使う可変長版になり、入力長に応じた領域だけを確保する。非負の値を指定すると固定長配列版になる。
+- `Y_BIT_WIDTH`: $y$ 座標に使う bit 数。省略時は `Y` の bit 数。`Y` が符号付きの場合は省略しなければならない（`static_assert`）。
+
+```cpp
+using Variable = WaveletMatrix2DWeighted<X, Y, W>;
+using Fixed = WaveletMatrix2DWeighted<X, Y, W, N>;
+```
 
 ## コンストラクタ
 
@@ -25,14 +30,11 @@ WaveletMatrix2DWeighted(
     const vector<Y>& ys,
     const vector<W>& weights
 )
-WaveletMatrix2DWeighted(const vector<tuple<X, Y, W>>& points)
+explicit WaveletMatrix2DWeighted(const vector<tuple<X, Y, W>>& points)
+int size() const
 ```
 
-点をx座標でソートして構築する。
-
-## 時間計算量
-
-- $O(N\log N+\mathrm{Y\_BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
+座標 $(\mathit{xs}_i, \mathit{ys}_i)$、重み $\mathit{weights}_i$ の点の集合、または `points` から構築する。3 つの列の長さは一致しなければならない。内部で点を $x$ 座標の順に並べるため、入力の順序はクエリ結果に影響しない。`size` は点数を返す。
 
 ## 矩形内の点数
 
@@ -41,11 +43,7 @@ int rectangle_count(X xl, X xr, Y yl, Y yr) const
 int range_freq(X xl, X xr, Y yl, Y yr) const
 ```
 
-半開矩形 $[xl,xr)\times[yl,yr)$ に含まれる点数を返す。
-
-## 時間計算量
-
-- $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
+半開矩形 $[\mathit{xl}, \mathit{xr}) \times [\mathit{yl}, \mathit{yr})$ に含まれる点の個数を返す。2 つは同じ関数である。
 
 ## 矩形内の重みの総和
 
@@ -54,39 +52,21 @@ W rectangle_sum(X xl, X xr, Y yl, Y yr) const
 W range_sum(X xl, X xr, Y yl, Y yr) const
 ```
 
-半開矩形 $[xl,xr)\times[yl,yr)$ に含まれる点の重みの総和を返す。
+半開矩形 $[\mathit{xl}, \mathit{xr}) \times [\mathit{yl}, \mathit{yr})$ に含まれる点の重みの総和を返す。2 つは同じ関数である。
 
 ## 時間計算量
 
-- $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
+$N$ を点数、$H = \texttt{Y_BIT_WIDTH}$ とする。
 
-## 計算量（公開操作別）
-
-$H=\mathtt{Y\_BIT\_WIDTH}$ とする。
-
-- 2種類のconstructor: $O(N\log N+H\mathtt{MAX\_SIZE})$
+- コンストラクタ: 可変長版は $O(N \log N + H N)$、固定長版は配列の初期化を含めて $O(N \log N + H \cdot \texttt{MAX_SIZE})$
 - `size`: $O(1)$
-- `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+H)$
+- `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N + H)$
+
+## 空間計算量
+
+各段に重みの累積和を持つため $O(H N)$（固定長版では $O(H \cdot \texttt{MAX_SIZE})$）。
 
 ## 注意点
 
-constructorは `xs,ys,weights` またはtuple列を受け、内部でx順に並べる。3vectorの長さは一致が必要。
-`size` は点数。`rectangle_count/range_freq` は半開矩形
-`[xl,xr) x [yl,yr)` の点数、`rectangle_sum/range_sum` は重み総和を返す。
-
-vector長不一致、点数容量、yのbit幅、逆転した座標範囲では `runtime_error`。
-copyは禁止、moveは可能。各APIの計算量は上記表の通り。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = WaveletMatrix2DWeighted<X, Y, W>;
-using Fixed = WaveletMatrix2DWeighted<X, Y, W, N>;
-```
-
-可変長版は入力長 $n$ とビット幅 $B$ に応じた配列だけを確保し、構築・照会の計算量は上記と同じ。
-長さに依存する固定容量の領域は $O(n)$ に、ビット段ごとの領域は $O(Bn)$ になる。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 入力列の長さが異なる場合、点数が `MAX_SIZE` を超える場合、$y$ 座標が `Y_BIT_WIDTH` bit に収まらない場合、`xl > xr` または `yl > yr` の場合は `std::runtime_error` を送出する。
+- コピーは禁止、ムーブは可能。
