@@ -3,8 +3,8 @@ title: Dynamic Tree Edge Path Sum (動的木辺パス和) [ABC294_G]
 documentation_of: ../../../../src/structure/tree/query/dynamic_tree_edge_path_sum.hpp
 ---
 
-静的な無向木の辺重みを変更しながら、2頂点間の単純パス上の辺重み総和を管理する。
-辺番号はコンストラクタへ渡した順番で固定される。
+静的な無向木の辺重みを変更しながら、2 頂点間の単純パス上の辺重みの総和を求める。
+辺番号はコンストラクタに渡した順番で固定される。
 
 ## 型
 
@@ -25,7 +25,7 @@ DynamicTreeEdgePathSum(
 ```
 
 `vertex_count` 頂点の木を構築する。`edges[i]` は辺 `i` の両端点と初期重みである。
-`root` は内部の木分解にのみ使われ、各APIの結果には影響しない。
+`root` は内部の HL 分解にのみ使われ、各 API の結果には影響しない。
 
 ## `size`
 
@@ -76,11 +76,11 @@ T path_sum(int u, int v) const
 
 ## 空間計算量
 
-木、HL分解、Fenwick索引を含めて $O(N)$。
+木、HL 分解、Fenwick 木を含めて $O(N)$ である。
 
 ## 注意点
 
 - 非空木では `edges.size() == vertex_count - 1` であり、辺集合は連結かつ非巡回でなければならない。
 - 頂点番号は `0` 以上 `size()` 未満、辺番号は `0` 以上 `edge_count()` 未満でなければならない。
-- 木・添字・根の前提違反では `runtime_error`。
-- 加減算のoverflowは `T` の演算規則に従う。
+- 木・添字・根の前提違反では `runtime_error` を送出する。
+- 加減算のオーバーフローは `T` の演算規則に従う。

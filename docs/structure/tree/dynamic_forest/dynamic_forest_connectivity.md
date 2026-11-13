@@ -3,41 +3,28 @@ title: Dynamic Forest Connectivity (動的森連結性) [DYNACON1]
 documentation_of: ../../../../src/structure/tree/dynamic_forest/dynamic_forest_connectivity.hpp
 ---
 
-常に森である無向graphの辺追加・削除・連結性を扱う。
+常に森である無向グラフについて、辺の追加・削除と連結判定を扱う。内部では `LinkCutTree` を使う。
 
 ## API
 
 ### `DynamicForestConnectivity<MAX_SIZE>(n)`
 
-孤立頂点の森を作る。時間計算量は $O(n)$。
+頂点数 `n` の孤立頂点からなる森を作る。`MAX_SIZE` は省略でき、デフォルト値 `-1` では可変長版になる。時間計算量は固定長版で $O(\texttt{MAX_SIZE})$、可変長版で $O(n)$ である。
 
 ### `add_edge(left, right)`
 
-非連結なら辺を追加して `true` を返す。時間計算量は償却 $O(\log n)$。
+2 頂点が非連結なら辺を追加して `true` を、既に連結なら何もせず `false` を返す。時間計算量はならし $O(\log n)$ である。
 
 ### `remove_edge(left, right)`
 
-存在する木辺を削除できれば `true` を返す。時間計算量は償却 $O(\log n)$。
+2 頂点を直接結ぶ辺が存在すれば削除して `true` を、なければ `false` を返す。時間計算量はならし $O(\log n)$ である。
 
 ### `connected(left, right)`
 
-連結性を返す。時間計算量は償却 $O(\log n)$。
+2 頂点が連結かを返す。時間計算量はならし $O(\log n)$ である。
 
 ## 注意点
 
-- 頂点数は `MAX_SIZE` 以下でなければならない。
-- `add_edge` はcycleを作らず、`remove_edge` は指定端点間の直接辺だけを削除する。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = DynamicForestConnectivity<>;
-using Fixed = DynamicForestConnectivity<N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 頂点数は `MAX_SIZE` 以下でなければならない。範囲外の頂点では `runtime_error` を送出する。
+- `add_edge` は閉路を作らず、`remove_edge` は指定した端点間の直接の辺だけを削除する。
+- 容量を指定した固定配列版（`DynamicForestConnectivity<N>`）と可変長版（`DynamicForestConnectivity<>`）は同じヘッダで利用できる。

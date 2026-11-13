@@ -3,64 +3,49 @@ title: Self-Adjusting Top Tree Internal (自己調整トップ木内部実装)
 documentation_of: ../../../../src/structure/tree/dynamic_forest/top_tree_internal.hpp
 ---
 
-`TopTree` と `LazyTopTree` が共有する自己調整Top Tree本体。
+`TopTree` と `LazyTopTree` が共有する、自己調整 Top Tree の本体である（`top_tree_internal::SelfAdjustingTopTree<Traits, MAX_SIZE>`）。
 
 ## 型
 
-- `Type { Edge, Compress, Rake }`：clusterの種類。
-- `Vertex`：頂点値、所属clusterへのhandle、頂点番号、表現木の根markerを持つ。
-- `Cluster`：正順・逆順の積、長さ、根markerを持つ。`toggle()` は向きを反転する。
-- `Node`：cluster境界、子・親・rake子、遅延作用、反転flagを持つ内部node。
-- `Statistics`：`edge`, `compress`, `rake`, `depth` を持ち、`total()` はcluster総数を返す。
+- `Type { Edge, Compress, Rake }`: クラスタの種類。
+- `Vertex`: 頂点値、所属クラスタへのハンドル、頂点番号、表現木の根の印を持つ。
+- `Cluster`: 正順・逆順の積、長さ、根の印を持つ。`toggle()` は向きを反転する。
+- `Node`: クラスタの境界、子・親・rake 子、遅延作用、反転フラグを持つ内部ノード。
+- `Statistics`: `edge`, `compress`, `rake`, `depth` を持ち、`total()` はクラスタの総数を返す。
 
 `Traits` は `S`, `T`, `e`, `id`, `op`, `mapping`, `composition` を提供する。
 
 ## API
 
-- `SelfAdjustingTopTree()`：空の内部Top Treeを作る。コピーは禁止、moveに対応する。
-- `create_vertex(value,index)`：頂点と補助葉を作り、`Vertex*` を返す。
-- `expose(vertex)`：頂点を含むclusterをexposeして `Node*` を返す。
-- `connected(left,right)`：2頂点が同じ表現木に属するかを返す。
-- `link(left,right)` / `cut(left,right)`：表現木を辺で結ぶ／直接辺を削除する。
-- `path(left,right)`：両端間の内部path clusterを返す。
-- `set_vertex(vertex,value)` / `get_vertex(vertex)`：頂点値を更新／取得する。
-- `set_represented_root(vertex,value)`：表現木の根markerを切り替える。
-- `represented_root(vertex)`：成分内で印が付いた最小頂点番号を返す。
-- `path_product(left,right)`：端点を含む有向path積を返す。
-- `path_apply(left,right,action)`：端点を含むpathへ作用する。
-- `statistics(vertex)`：成分のcluster数と最大深さを返す。
+- `SelfAdjustingTopTree(int n = MAX_SIZE)`: 頂点数 `n` 用の領域を持つ空の内部 Top Tree を作る（可変長版では `n` のデフォルト値は `0`）。コピーは禁止で、ムーブに対応する。
+- `create_vertex(value, index)`: 頂点と補助葉を作り、`Vertex*` を返す。
+- `expose(vertex)`: 頂点を含むクラスタを expose して `Node*` を返す。
+- `connected(left, right)`: 2 頂点が同じ表現木に属するかを返す。
+- `link(left, right)` / `cut(left, right)`: 表現木を辺で結ぶ / 直接の辺を削除する。
+- `path(left, right)`: 両端間の内部パスクラスタを返す。
+- `set_vertex(vertex, value)` / `get_vertex(vertex)`: 頂点値を更新 / 取得する。
+- `set_represented_root(vertex, value)`: 表現木の根の印を切り替える。
+- `represented_root(vertex)`: 連結成分内で印が付いた最小の頂点番号を返す。
+- `path_product(left, right)`: 端点を含む有向パスの積を返す。
+- `path_apply(left, right, action)`: 端点を含むパスに作用させる。
+- `statistics(vertex)`: 連結成分のクラスタ数と最大深さを返す。
 
 ## 時間計算量
 
-`create_vertex` は $O(1)$、`statistics` は成分のcluster数を $C$ として $O(C)$。
-その他の更新・path操作はならし $O(\log N)$、保存領域は
-$O(\mathtt{MAX\_SIZE})$。
+$N$ を頂点数、$C$ を連結成分のクラスタ数とする。`create_vertex` は $O(1)$、`statistics` は $O(C)$ である。
+その他の更新・パス操作はならし $O(\log N)$ である。
 
-## 空間計算量（API別の追加領域）
+## 空間計算量（API 別の追加領域）
 
-- constructor、`create_vertex`、`expose`、`connected`、`link`、`cut`、`path`、`set_vertex`、`get_vertex`、`set_represented_root`、`represented_root`、`path_product`、`path_apply`: $O(1)$（生成nodeは固定arenaから確保）
-- `statistics`: traversal stackを含め $O(C)$
-- move constructor / move assignment: $O(1)$
-
-本体の固定保存領域は $O(\mathtt{MAX\_SIZE})$ である。
+- コンストラクタ: 固定長版は $O(\texttt{MAX_SIZE})$、可変長版は $O(n)$（内部頂点 $2n$ 個、クラスタノード $4n$ 個分を確保する）
+- `create_vertex`、`expose`、`connected`、`link`、`cut`、`path`、`set_vertex`、`get_vertex`、`set_represented_root`、`represented_root`、`path_product`、`path_apply`: $O(1)$（生成するノードは確保済みの領域から割り当てる）
+- `statistics`: 走査用スタックを含めて $O(C)$
+- ムーブコンストラクタ / ムーブ代入: $O(1)$
 
 ## 注意点
 
-- 公開 `TopTree` / `LazyTopTree` の内部部品であり、通常は直接使用しない。
-- `create_vertex` は1頂点につき内部頂点2個を使用し、最大 `MAX_SIZE` 頂点。cluster nodeは最大 `4 * MAX_SIZE`。
-- `link` は異なる木、`cut` と `path` は存在する辺・連結な両端を要求する。上位ラッパーがこれらを検査する。容量または内部不変条件の違反では `runtime_error`。
-- `Vertex*` / `Node*` はこのオブジェクトのmoveまたは破棄後に使用できない。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = top_tree_internal::SelfAdjustingTopTree<Traits>;
-using Fixed = top_tree_internal::SelfAdjustingTopTree<Traits, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 公開されている `TopTree` / `LazyTopTree` の内部部品であり、通常は直接使用しない。
+- `create_vertex` は 1 頂点につき内部頂点を 2 個使い、最大 `n`（固定長版は `MAX_SIZE`）頂点まで作れる。クラスタノードは最大 `4 * n` 個である。
+- `link` は異なる木の頂点を、`cut` と `path` は存在する辺・連結な両端を要求する。これらは上位のラッパーが検査する。容量または内部不変条件の違反では `runtime_error` を送出する。
+- `Vertex*` / `Node*` は、このオブジェクトのムーブまたは破棄の後には使用できない。
+- 容量を指定した固定配列版と可変長版（`MAX_SIZE` 省略、デフォルト値 `-1`）は同じヘッダで利用できる。可変長版も構築時の `n` で領域を確保し、後から伸長はしない。

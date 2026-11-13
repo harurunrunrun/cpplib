@@ -4,8 +4,8 @@ documentation_of: ../../../../src/structure/tree/dynamic_forest/dynamic_forest_v
 ---
 
 頂点に値を持つ動的森について、辺の追加・削除・置換、頂点加算、パス和を処理する。
-Link-Cut Tree、遅延Link-Cut Tree、Top Tree、遅延Top Treeを基盤とする4種類を提供する。
-以下では、この4種類のいずれかを `Tree` と表す。
+Link-Cut Tree、遅延 Link-Cut Tree、Top Tree、遅延 Top Tree を基盤とする 4 種類を提供する。
+以下では、この 4 種類のいずれかを `Tree` と表す。
 
 ## 型
 
@@ -16,8 +16,8 @@ DynamicForestVertexAddPathSumTopTree<T, MAX_SIZE>
 DynamicForestVertexAddPathSumLazyTopTree<T, MAX_SIZE>
 ```
 
-`MAX_SIZE` は格納できる頂点数の上限。
-非遅延版の `T` は零元としてのdefault構築と加算をサポートする型とする。
+`MAX_SIZE` は格納できる頂点数の上限である。省略するとデフォルト値 `-1` の可変長版になる。
+非遅延版の `T` は、零元としてのデフォルト構築と加算をサポートする型とする。
 遅延版ではさらに、`T(long long)` と乗算をサポートする型とする。
 
 ## コンストラクタ
@@ -27,10 +27,10 @@ Tree(int n = MAX_SIZE)
 Tree(const vector<T>& values)
 ```
 
-前者は `n` 個の孤立頂点を値 `T{}` で作る。
+前者は `n` 個の孤立頂点を値 `T{}` で作る（可変長版では `n` のデフォルト値は `0`）。
 後者は `values[v]` を頂点 `v` の初期値として孤立頂点を作る。
 
-## size
+## `size`
 
 ```cpp
 int size() const
@@ -38,7 +38,7 @@ int size() const
 
 頂点数を返す。
 
-## connected
+## `connected`
 
 ```cpp
 bool connected(int left, int right)
@@ -46,16 +46,16 @@ bool connected(int left, int right)
 
 `left` と `right` が同じ木に属するかを返す。
 
-## link
+## `link`
 
 ```cpp
 bool link(int left, int right)
 ```
 
-異なる木に属する2頂点を辺で結ぶ。
+異なる木に属する 2 頂点を辺で結ぶ。
 追加できた場合は `true`、既に連結で閉路になる場合は `false` を返す。
 
-## cut
+## `cut`
 
 ```cpp
 bool cut(int left, int right)
@@ -64,7 +64,7 @@ bool cut(int left, int right)
 辺 `left-right` を削除する。
 削除できた場合は `true`、その辺が存在しない場合は `false` を返す。
 
-## replace_edge
+## `replace_edge`
 
 ```cpp
 bool replace_edge(int old_left, int old_right, int new_left, int new_right)
@@ -75,7 +75,7 @@ bool replace_edge(int old_left, int old_right, int new_left, int new_right)
 旧辺が存在しない場合は何も変更せず `false` を返す。
 新辺が閉路を作る場合は旧辺を復元して `false` を返す。
 
-## add_vertex
+## `add_vertex`
 
 ```cpp
 void add_vertex(int vertex, const T& delta)
@@ -83,7 +83,7 @@ void add_vertex(int vertex, const T& delta)
 
 頂点 `vertex` の値に `delta` を加える。
 
-## path_sum
+## `path_sum`
 
 ```cpp
 T path_sum(int left, int right)
@@ -95,36 +95,23 @@ T path_sum(int left, int right)
 
 頂点数を $N$ とする。
 
-- コンストラクタ: $O(MAX\_SIZE+N\log(N+1))$
+- コンストラクタ: 固定長版は $O(\texttt{MAX_SIZE}+N\log(N+1))$、可変長版は $O(N\log(N+1))$
 - `size`: $O(1)$
-- `connected`: amortized $O(\log(N+1))$
-- `link`: amortized $O(\log(N+1))$
-- `cut`: amortized $O(\log(N+1))$
-- `replace_edge`: amortized $O(\log(N+1))$
-- `add_vertex`: amortized $O(\log(N+1))$
-- `path_sum`: amortized $O(\log(N+1))$
+- `connected`: ならし $O(\log(N+1))$
+- `link`: ならし $O(\log(N+1))$
+- `cut`: ならし $O(\log(N+1))$
+- `replace_edge`: ならし $O(\log(N+1))$
+- `add_vertex`: ならし $O(\log(N+1))$
+- `path_sum`: ならし $O(\log(N+1))$
 
 ## 空間計算量
 
-$O(MAX\_SIZE)$。
+固定長版は $O(\texttt{MAX_SIZE})$、可変長版は $O(N)$ である。
 
 ## 注意点
 
-- 頂点番号は `0` 以上 `size()` 未満でなければならない。違反時は `runtime_error`。
-- `path_sum` の2頂点が非連結の場合は `runtime_error`。
-- 4つの型はcopyできず、moveできる。
-- `T` の演算がoverflowする場合の動作は `T` の演算規則に従う。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = DynamicForestVertexAddPathSumLinkCutTree<T>;
-using Fixed = DynamicForestVertexAddPathSumLinkCutTree<T, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 頂点番号は `0` 以上 `size()` 未満でなければならない。違反時は `runtime_error` を送出する。
+- `path_sum` の 2 頂点が非連結の場合は `runtime_error` を送出する。
+- 4 つの型はコピーできず、ムーブできる。
+- `T` の演算がオーバーフローする場合の動作は `T` の演算規則に従う。
+- 容量を指定した固定配列版（例: `DynamicForestVertexAddPathSumLinkCutTree<T, N>`）と可変長版（`DynamicForestVertexAddPathSumLinkCutTree<T>`）は同じヘッダで利用できる。

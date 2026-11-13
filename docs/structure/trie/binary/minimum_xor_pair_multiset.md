@@ -3,8 +3,9 @@ title: Minimum XOR Pair Multiset (最小XOR対付き多重集合) [ABC308_G]
 documentation_of: ../../../../src/structure/trie/binary/minimum_xor_pair_multiset.hpp
 ---
 
-符号なし整数の多重集合を更新しながら、異なる2要素を選んだときのXORの最小値を管理する。
-同じ値を複数回格納でき、その2個を選んだXORは `0` となる。
+符号なし整数の多重集合を更新しながら、異なる 2 要素を選んだときの XOR の最小値を管理する。
+同じ値を複数回格納でき、その 2 個を選んだ XOR は `0` となる。
+ソート順で隣接する 2 要素の XOR の多重集合を `std::multiset` で管理する（最小 XOR はソート順で隣接する対で達成される）。
 
 ## 型
 
@@ -44,7 +45,7 @@ size_t count(T value) const
 void insert(T value)
 ```
 
-`value` を1個追加する。
+`value` を 1 個追加する。
 
 ## `erase`
 
@@ -52,7 +53,7 @@ void insert(T value)
 bool erase(T value)
 ```
 
-`value` を1個削除する。存在しなければ変更せず `false`、削除できれば `true` を返す。
+`value` を 1 個削除する。削除できれば `true` を、存在しなければ変更せず `false` を返す。
 
 ## `minimum_pair_xor`
 
@@ -60,7 +61,7 @@ bool erase(T value)
 T minimum_pair_xor() const
 ```
 
-集合から異なる2要素を選んだときのXORの最小値を返す。
+集合から異なる 2 要素を選んだときの XOR の最小値を返す。
 
 ## 時間計算量
 
@@ -72,8 +73,9 @@ T minimum_pair_xor() const
 
 ## 空間計算量
 
-$O(N)$。
+$O(N)$ である。
 
 ## 注意点
 
-- `minimum_pair_xor` は `size() >= 2` を必要とし、違反時は `runtime_error`。
+- `minimum_pair_xor` は `size() >= 2` を必要とし、違反時は `runtime_error` を送出する。
+- `T` が符号なし整数型でなければコンパイルエラーになる。
