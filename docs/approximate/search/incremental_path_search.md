@@ -3,12 +3,7 @@ title: Incremental D-Star and LPA Search (増分Dスター・LPA探索)
 documentation_of: ../../../src/approximate/search/incremental_path_search.hpp
 ---
 
-## 日本語
-
-正の重みを持つ可変有向グラフに対する D*、Focused D*、D* Lite、
-Lifelong Planning A* (LPA*) と、動的障害物グリッド用 Field D* を提供する。
-各 planner は `g` と一段先読み値 `rhs` を保持し、辺変更後に不整合になった
-頂点だけを再処理する。全探索を毎回やり直す API ではない。
+正の重みを持つ可変有向グラフに対する D*、Focused D*、D* Lite、Lifelong Planning A* (LPA*) と、動的障害物グリッド用 Field D* を提供する。各プランナは $g$ と 1 段先読みした値 $\mathit{rhs}$ を保持し、辺の変更後に不整合になった頂点だけを再処理する。毎回探索全体をやり直す API ではない。
 
 ```cpp
 template<class Cost>
@@ -19,11 +14,9 @@ struct IncrementalPathResult {
 };
 ```
 
-頂点は `[0, vertex_count)` の整数、辺は有向である。`Cost` は全順序、加算、
-既定構築を持つ数値型とし、辺コストは厳密に正でなければならない。正の制約は
-経路復元時のゼロコスト cycle を排除する。未到達なら `cost == nullopt`。
+頂点は `[0, vertex_count)` の整数、辺は有向である。`Cost` は全順序、加算、デフォルト構築を持つ数値型とし、辺のコストは真に正でなければならない。正という制約により、経路復元時にコスト 0 の閉路が生じることを防ぐ。到達できない場合は `cost == nullopt` となる。頂点数を $V$、辺数を $E$ とする。
 
-### Lifelong Planning A* / LPA*
+## Lifelong Planning A* / LPA*
 
 ```cpp
 LifelongPlanningAStar<Cost> planner(
@@ -36,18 +29,11 @@ planner.replan();
 planner.g_value(vertex);
 ```
 
-始点から前向きに `rhs(v)=min(g(u)+c(u,v))` を保ち、key
-`(min(g,rhs)+h(v,goal), min(g,rhs))` で不整合頂点を処理する LPA*。
-`LPAStar` は同じ正式名称 Lifelong Planning A* の型別名であり、別アルゴリズム
-ではない。
+始点から前向きに $\mathit{rhs}(v)=\min_u(g(u)+c(u,v))$ を保ち、キー $(\min(g,\mathit{rhs})+h(v,\mathrm{goal}), \min(g,\mathit{rhs}))$ の順に不整合な頂点を処理する LPA* である。`LPAStar` は同じ Lifelong Planning A* の型の別名であり、別のアルゴリズムではない。
 
-`set_edge`/`remove_edge` はハッシュ表更新が期待 \(O(1)\)、変更先の
-`rhs` 再計算が入次数 \(d^-(v)\) に対して \(O(d^-(v)+\log Q)\)。
-`g_value` は \(O(1)\)。`replan` で展開した頂点数を \(X\)、走査した辺数を
-\(A\)、最大 OPEN サイズを \(Q\) とすると時間 \(O(A+X\log Q)\)、
-全保持空間は \(O(V+E+Q)\)。
+`set_edge` / `remove_edge` は、ハッシュ表の更新が期待 $O(1)$、変更先の $\mathit{rhs}$ の再計算が入次数 $d^-(v)$ に対して $O(d^-(v)+\log Q)$。`g_value` は $O(1)$。`replan` で展開した頂点数を $X$、走査した辺数を $A$、OPEN の最大サイズを $Q$ とすると、時間計算量は $O(A+X\log Q)$、保持する空間全体は $O(V+E+Q)$。
 
-### D*
+## D*
 
 ```cpp
 DStar<Cost> planner(vertex_count, start, goal, infinity = default);
@@ -57,41 +43,29 @@ planner.move_start(new_start);
 planner.replan();
 ```
 
-目標から後向きに cost-to-go を保持する動的 D*。ヒューリスティックを使わず、
-`g>rhs` の lower と `g<=rhs` の raise を伝播する。辺変更は変更元の `rhs` を
-不整合化する。`move_start` は \(O(1)\) で、未処理の OPEN frontier を次の
-`replan` が必要な範囲まで進める。
+目標から後ろ向きに残りコスト（cost-to-go）を保持する動的な D* である。ヒューリスティックは使わず、$g>\mathit{rhs}$ の lower 状態と $g \le \mathit{rhs}$ の raise 状態を伝播する。辺を変更すると変更元の $\mathit{rhs}$ が不整合になる。`move_start` は $O(1)$ で、未処理の OPEN は次の `replan` で必要な範囲まで処理する。
 
-辺一回の更新は変更元の出次数 \(d^+(u)\) に対し
-\(O(d^+(u)+\log Q)\)。`replan` は \(O(A+X\log Q)\)、空間
-\(O(V+E+Q)\)。
+辺 1 本の更新は、変更元の出次数 $d^+(u)$ に対して $O(d^+(u)+\log Q)$。`replan` は $O(A+X\log Q)$、空間計算量は $O(V+E+Q)$。
 
-### Focused D*
+## Focused D*
 
 ```cpp
 FocusedDStar<Cost> planner(
     vertex_count, start, goal, heuristic, infinity = default);
 ```
 
-D* の後向き repair に `h(start,v)` を加え、現在位置に関係する頂点へ処理を
-focus する。ゼロヒューリスティックなら D* と同じ距離優先になるが、別の
-key 規則を持つ。開始点変更時は全不整合頂点の key を再構築するため
-`move_start` は \(O(V+Q)\)、辺更新と `replan` は D* と同じ漸近量。
+D* の後ろ向きの修復に $h(\mathrm{start},v)$ を加え、現在位置に関係する頂点へ処理を集中させる。ヒューリスティックが 0 なら D* と同じ距離優先になるが、キーの規則は異なる。開始点を変更すると全不整合頂点のキーを再構築するため `move_start` は $O(V+Q)$ で、辺の更新と `replan` の計算量は D* と同じ。
 
-### D* Lite
+## D* Lite
 
 ```cpp
 DStarLite<Cost> planner(
     vertex_count, start, goal, heuristic, infinity = default);
 ```
 
-後向き `g/rhs` repair を行い、key に
-`h(start,v)+km` を使う。`move_start` は
-`km += h(old_start,new_start)` とするため OPEN の全再構築が不要で \(O(1)\)。
-辺更新は \(O(d^+(u)+\log Q)\)、`replan` は \(O(A+X\log Q)\)、
-空間は \(O(V+E+Q)\)。
+後ろ向きに $g$ / $\mathit{rhs}$ の修復を行い、キーに $h(\mathrm{start},v)+k_m$ を使う。`move_start` は $k_m$ に $h(\mathrm{old\ start},\mathrm{new\ start})$ を加えるだけなので、OPEN の再構築が不要で $O(1)$。辺の更新は $O(d^+(u)+\log Q)$、`replan` は $O(A+X\log Q)$、空間計算量は $O(V+E+Q)$。
 
-### Field D*
+## Field D*
 
 ```cpp
 FieldDStar planner(grid, start, goal);
@@ -101,9 +75,7 @@ planner.move_start(new_start);
 planner.replan();
 ```
 
-8 近傍の動的 cost-to-go field を D* Lite で修復し、対角移動では両隣接セルが
-通行可能であることを要求する。復元した離散経路に対して、field 上で LOS の
-通る最遠点へ線形補間するため、障害物を横切らない任意角の `field_path` も返す。
+8 近傍の動的な残りコストの場（field）を D* Lite で修復し、対角移動では両隣のセルが通行可能であることを要求する。復元した離散経路について、場の上で見通し（LOS）の通る最も遠い点へ線形補間するため、障害物を横切らない任意角の `field_path` も返す。
 
 ```cpp
 struct FieldDStarResult {
@@ -115,55 +87,18 @@ struct FieldDStarResult {
 };
 ```
 
-構築は \(O(HW)\) 時間・空間。`set_passable` は変更セルを含む定数個の
-局所辺だけを更新し、期待 \(O(\log Q)\)（グリッド次数は最大 8）。
-`move_start` は \(O(1)\)。`replan` の repair は
-\(O(A+X\log Q)\)、経路補間は復元経路長を \(P\)、LOS が調べるセル総数を
-\(L\) として \(O(P+L)\)。
+グリッドの行数を $H$、列数を $W$ とすると、構築の時間計算量・空間計算量は $O(HW)$。`set_passable` は変更したセルを含む定数個の局所的な辺だけを更新し、期待 $O(\log Q)$（グリッドの次数は最大 8）。`move_start` は $O(1)$。`replan` の修復は $O(A+X\log Q)$、経路の補間は復元経路の長さを $P$、LOS が調べるセルの総数を $L$ として $O(P+L)$。
 
-### 時間計算量
+## 時間計算量
 
-各公開APIの時間・空間計算量は、上の各API節に個別に記載している。
+各公開 API の時間計算量・空間計算量は、上の各 API の節に個別に記載している。
 
-### 注意点
+## 注意点
 
-- 全 planner は負辺とゼロ辺を拒否する。
-- `infinity` は全有限経路コストと `g + edge + heuristic` より大きくする。
-- ヒューリスティックは非負かつ整合的である必要がある。ゼロは常に安全。
-- 有向辺の逆向きは自動追加されない。無向辺は両方向を更新する。
-- `set_edge` は新規追加と重み変更の両方、`remove_edge` は存在しない辺にも安全。
-- Field D* の `discrete_cost` は 8 近傍最短距離、
-  `interpolated_cost` は LOS 補間後の経路長であり、通常は前者以下になる。
-
-## English
-
-The header supplies incremental planners for a mutable, strictly
-positive-weight directed graph. Every planner retains `g`, one-step lookahead
-`rhs`, and a lazy priority queue between calls; an edge update therefore repairs
-only inconsistent states.
-
-`LifelongPlanningAStar<Cost>` is the forward LPA* algorithm.
-`LPAStar<Cost>` is its synonymous type alias. It uses
-`(min(g,rhs)+h(v,goal), min(g,rhs))`. An edge update costs expected
-\(O(d^-(v)+\log Q)\), while a repair with \(X\) expansions and \(A\) scanned
-arcs costs \(O(A+X\log Q)\).
-
-`DStar<Cost>` performs an unfocused backward raise/lower repair and changes its
-start in \(O(1)\). `FocusedDStar<Cost>` adds `h(start,v)` to the backward key;
-changing its start rebuilds all inconsistent keys in \(O(V+Q)\).
-`DStarLite<Cost>` instead maintains the standard `km` start-motion correction,
-so `move_start` is \(O(1)\) without rebuilding OPEN. Their edge updates cost
-\(O(d^+(u)+\log Q)\), repairs cost \(O(A+X\log Q)\), and retained space is
-\(O(V+E+Q)\).
-
-`FieldDStar` maintains an eight-neighbor, no-corner-cut grid field with D* Lite.
-`set_passable` changes only a constant-size local edge neighborhood.
-`replan` returns both the exact discrete grid cost/path and a collision-free
-line-of-sight interpolated field path. Construction takes \(O(HW)\);
-incremental repair takes \(O(A+X\log Q)\), followed by path extraction and LOS
-work.
-
-All graph costs must be strictly positive. Heuristics must be non-negative and
-consistent; zero is always valid. Directed reverse arcs are not inserted
-automatically, and `infinity` must exceed every representable finite path/key
-used by the application.
+- すべてのプランナは、負の辺とコスト 0 の辺を拒否する（`std::invalid_argument`）。
+- 負の `vertex_count`、正でない `infinity`、Focused D* / D* Lite でヒューリスティックが空の場合も `std::invalid_argument` を送出する。範囲外の頂点や、Field D* でグリッド外の端点・空のグリッドには `std::out_of_range` を送出する。
+- `infinity` は、すべての有限な経路コストや `g + edge + heuristic` より大きくする。
+- ヒューリスティックは非負かつ整合的でなければならない。常に 0 を返すものは安全である。
+- 有向辺の逆向きは自動では追加されない。無向辺は両方向を更新する。
+- `set_edge` は新規追加と重みの変更の両方に使える。`remove_edge` は存在しない辺に対しても安全である。
+- Field D* の `discrete_cost` は 8 近傍での最短距離、`interpolated_cost` は LOS 補間後の経路長であり、通常は後者が前者以下になる。

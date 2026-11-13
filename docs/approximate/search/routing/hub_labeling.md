@@ -3,11 +3,9 @@ title: Hub Labeling (ハブラベリング)
 documentation_of: ../../../../src/approximate/search/routing/hub_labeling.hpp
 ---
 
-各頂点 $v$ に forward label `(hub, d(v,hub))` と backward label
-`(hub, d(hub,v))` を持たせる directed 2-hop cover。重要度順に pruned Dijkstra を行い、既存ラベルで同距離以下を被覆できる頂点では探索を打ち切る。問い合わせは2ラベルの共通 hub を線形 merge する。
+各頂点 $v$ に前向きラベル `(hub, d(v, hub))` と後ろ向きラベル `(hub, d(hub, v))` を持たせる、有向グラフの 2-hop cover である。重要度の順に枝刈り付き Dijkstra 法（pruned Dijkstra）を行い、既存のラベルで同じ距離以下を被覆できる頂点では探索を打ち切る。問い合わせでは、2 つのラベルに共通するハブを線形時間のマージで求める。
 
-`graph_type` は `std::vector<std::vector<std::pair<int, Cost>>>`、
-`cost_type` は `Cost` の別名である。
+`graph_type` は `std::vector<std::vector<std::pair<int, Cost>>>`、`cost_type` は `Cost` の別名である。
 
 ## 公開 API
 
@@ -23,7 +21,7 @@ explicit HubLabeling(
 );
 ```
 
-`hub_order` は先に処理する hub から並べた全頂点の置換。空なら入次数＋出次数の大きい順を安定ソートする。
+`hub_order` は、先に処理するハブから順に並べた全頂点の順列である。空なら、入次数と出次数の和の大きい順に安定ソートした順を使う。
 
 ```cpp
 int vertex_count() const noexcept;
@@ -34,28 +32,24 @@ std::optional<Cost> query_distance(int source, int target) const;
 
 - `forward_labels(v)`: `v -> hub` のラベル。
 - `backward_labels(v)`: `hub -> v` のラベル。
-- `query_distance`: 両ラベルに現れる hub について距離和の最小を返す。到達不能なら `std::nullopt`。
+- `query_distance`: 両方のラベルに現れるハブについて、距離の和の最小値を返す。到達不能なら `std::nullopt` を返す。
 
-ラベルは `hub_order` 順に格納される。頂点番号順とは限らない。
+ラベルは `hub_order` の順に格納され、頂点番号順とは限らない。
 
 ## 時間計算量
 
-全ラベル数を $L$、問い合わせ2ラベルの長さを $L_s,L_t$ とする。
+頂点数を $V$、辺数を $E$、全ラベル数を $L$、問い合わせる 2 つのラベルの長さを $L_s$, $L_t$ とする。
 
-- 構築: 最悪時間 $O(V(E+V)\log V+V^3)$、空間 $O(E+L)$
+- 構築: 最悪時間計算量 $O(V(E+V)\log V+V^3)$、空間計算量 $O(E+L)$
 - `vertex_count`, `forward_labels`, `backward_labels`: $O(1)$
-- `query_distance`: 時間 $O(L_s+L_t)$、追加空間 $O(1)$
+- `query_distance`: 時間計算量 $O(L_s+L_t)$、追加空間計算量 $O(1)$
 
-$V^3$ 項は前処理中のラベル共通部分検査に対する疎でない最悪上界で、pruning が有効な道路網では通常かなり小さくなる。
+$V^3$ の項は、前処理中のラベルの共通部分の検査に対する最悪の上界であり、枝刈りがよく効く道路網では通常かなり小さくなる。
 
 ## 注意点
 
-- 順序はラベル数と構築時間を大きく左右するが、正しさは変えない。
-- 有向グラフでは forward/backward ラベルを交換できない。
-- 返すのは距離で、経路復元 API は提供しない。
-- 負辺、非有限コスト、不正な順序は `std::invalid_argument`。
-- ゼロコスト辺と多重辺を許す。
-
-## English
-
-`HubLabeling` builds an exact directed 2-hop cover using pruned forward and reverse Dijkstra searches. The query linearly intersects the source forward label and target backward label in $O(L_s+L_t)$ time and $O(1)$ extra space. The supplied hub order affects label size but not correctness.
+- 順序はラベル数と構築時間を大きく左右するが、正しさには影響しない。
+- 有向グラフでは、前向きラベルと後ろ向きラベルは交換できない。
+- 返すのは距離だけで、経路を復元する API は提供しない。
+- 負の辺、有限でないコスト、不正な順序に対しては `std::invalid_argument` を送出する。
+- コスト 0 の辺と多重辺を許す。

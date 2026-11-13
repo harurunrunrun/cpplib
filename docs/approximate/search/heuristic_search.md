@@ -3,11 +3,11 @@ title: Heuristic Search (ヒューリスティック探索)
 documentation_of: ../../../src/approximate/search/heuristic_search.hpp
 ---
 
-状態をキーとする汎用ヒューリスティック探索。状態型を整数に限定せず、近傍生成・ゴール判定・ヒューリスティックを callable として渡す。
+状態をキーとする汎用のヒューリスティック探索である。状態型を整数に限定せず、近傍生成・ゴール判定・ヒューリスティックを関数オブジェクトとして渡す。
 
-## 共通の型と callable
+## 共通の型と関数
 
-`neighbors(state)` は `pair<State, Cost>` の range を返す。`second` は非負の辺コストでなければならない。`goal(state)` は真偽値、`heuristic(state)` は残りコストの推定値を返す。
+`neighbors(state)` は `pair<State, Cost>` の範囲を返す。`second` は非負の辺コストでなければならない。`goal(state)` は真偽値、`heuristic(state)` は残りコストの推定値を返す。
 
 ```cpp
 template<class State, class Cost>
@@ -41,7 +41,7 @@ weighted_a_star_search(start, goal, neighbors, heuristic, weight,
                        hash = {}, equal = {})
 ```
 
-$f(v)=g(v)+w h(v)$ を使う。`weight >= 0` が必要。$w>1$ では一般に最適性を失う代わりに探索を減らせる。$w=1$ は A* と同じ優先度になる。
+$f(v)=g(v)+w h(v)$ を使う。`weight >= 0` が必要である。$w>1$ では一般に最適性を失う代わりに探索を減らせる。$w=1$ は A* と同じ優先度になる。
 
 時間計算量は $O((A+X)\log Q)$、空間計算量は $O(V_d+Q)$。
 
@@ -71,7 +71,7 @@ bidirectional_a_star_search(start, goal,
 
 ## 注意点
 
-- 負辺を生成すると `std::invalid_argument`。
+- 負の辺を生成すると `std::invalid_argument`。
 - Weighted A* の負の重みは `std::invalid_argument`。
-- `Cost` の加算、優先度の加算・乗算は表現可能範囲に収まる必要がある。
-- `neighbors` が返す range は、その呼び出しの走査終了まで有効でなければならない。
+- `Cost` の加算、優先度の加算・乗算は表現範囲に収まる必要がある。
+- `neighbors` が返す範囲は、その呼び出しの走査終了まで有効でなければならない。

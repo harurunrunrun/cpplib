@@ -3,7 +3,7 @@ title: Parallel Machine List Scheduling (並列機械リストスケジューリ
 documentation_of: ../../../src/approximate/scheduling/parallel_machine.hpp
 ---
 
-`approximate::scheduling`名前空間で、同一並列機械へjobを貪欲に割り当てる。
+`approximate::scheduling` 名前空間で、同一の並列機械へジョブを貪欲に割り当てる。ジョブ数を $N$、機械数を $M$ とする。
 
 ## `ParallelMachineSchedule`
 
@@ -17,8 +17,8 @@ struct ParallelMachineSchedule {
 };
 ```
 
-各jobの割当機械、各機械での処理順、最終負荷、最大完了時刻を持つ。
-member参照は$O(1)$、全割当列挙は$O(N+M)$である。
+各ジョブの割当先の機械、各機械での処理順、各機械の最終負荷、最大完了時刻を持つ。
+メンバの参照は $O(1)$、全割当ての列挙は $O(N + M)$ である。
 
 ## `list_schedule`
 
@@ -26,32 +26,25 @@ member参照は$O(1)$、全割当列挙は$O(N+M)$である。
 auto result = list_schedule(processing_time, machine_count, order);
 ```
 
-`order`順に、現在負荷が最小の機械へjobを割り当てる。同負荷なら機械番号が
-小さい方を選ぶ。`order`は全jobの置換でなければならない。
+`order` の順に、現在の負荷が最小の機械へジョブを割り当てる。負荷が同じなら機械番号が小さい方を選ぶ。`order` は全ジョブの順列でなければならない。
 
 ## `fifo_schedule` / `lifo_schedule`
 
-job番号の昇順、降順をそれぞれlist schedulingへ渡す。
+ジョブ番号の昇順・降順を、それぞれリストスケジューリングに渡す。
 
 ## `lpt_schedule` / `spt_schedule`
 
-処理時間の降順（Longest Processing Time）、昇順（Shortest Processing Time）で
-list schedulingを行う。同値はjob番号順である。LPTは同一並列機械のmakespanに対し
-$4/3-1/(3M)$近似である。
+処理時間の降順（Longest Processing Time）・昇順（Shortest Processing Time）でリストスケジューリングを行う。同値ならジョブ番号順である。LPT は同一並列機械の makespan に対して $4/3 - 1/(3M)$ 近似である。
 
-## 計算量
-
-$N$をjob数、$M$を機械数とする。
+## 時間計算量
 
 | API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
-| `list_schedule` | $O(N\log M+N+M)$ | $O(N+M)$ |
-| `fifo_schedule`, `lifo_schedule` | $O(N\log M+N+M)$ | $O(N+M)$ |
-| `lpt_schedule`, `spt_schedule` | $O(N\log N+N\log M+M)$ | $O(N+M)$ |
-
-機械数0、負の処理時間、不正な置換では`std::invalid_argument`を送出する。
-時刻の加算結果は`Time`に収まる必要がある。
+| `list_schedule` | $O(N \log M + N + M)$ | $O(N + M)$ |
+| `fifo_schedule`, `lifo_schedule` | $O(N \log M + N + M)$ | $O(N + M)$ |
+| `lpt_schedule`, `spt_schedule` | $O(N \log N + N \log M + M)$ | $O(N + M)$ |
 
 ## 注意点
 
-処理時間行列と付随配列は各APIの形状を満たし、時間は有限かつ指定された符号条件を満たす必要がある。時刻の加算は `Time` の表現範囲内でなければならない。
+- 機械数 0、負の処理時間、不正な順列に対しては `std::invalid_argument` を送出する。
+- 時刻の加算結果は `Time` に収まらなければならない。

@@ -15,16 +15,10 @@ struct JobShopOperation {
 shifting_bottleneck_schedule(jobs, machine_count);
 ```
 
-各 job の operation 順を precedence とし、未固定 machine ごとに現在 DAG の
-最早開始時刻 $r$ と後続 tail $q$ を計算する。$1|r_i|L_{\max}$ の Schrage
-順序を作り、最大 bound の machine を bottleneck として固定する。候補順序が
-既存 precedence と cycle を作る場合は現在の topological 順へ戻して合法性を
-保つ。
+各ジョブの工程（operation）の順序を先行制約とし、順序が未固定の機械ごとに、現在の DAG での最早開始時刻 $r$ と後続の tail $q$ を計算する。$1 \mid r_i \mid L_{\max}$ に対する Schrage の順序を作り、評価値が最大の機械をボトルネックとして順序を固定する。候補の順序が既存の先行制約と閉路を作る場合は、現在のトポロジカル順に戻して実行可能性を保つ。
 
-`ShiftingBottleneckSchedule` は operation ごとの `start_time` /
-`completion_time`、各 `machine_order`、machine の `bottleneck_order`、
-`makespan` を返す。operation 数を $V$、precedence 辺数を $E$、machine 数を
-$M$ とすると時間計算量は $O(M^2(V\log V+E))$、空間計算量は $O(V+E+M)$。
+`ShiftingBottleneckSchedule` は、工程ごとの `start_time` / `completion_time`、各機械の `machine_order`、機械を固定した順 `bottleneck_order`、`makespan` を返す。
+工程数を $V$、先行制約の辺数を $E$、機械数を $M$ とすると、時間計算量は $O(M^2 (V \log V + E))$、空間計算量は $O(V + E + M)$。
 
 ## `randomized_list_schedule`
 
@@ -32,8 +26,8 @@ $M$ とすると時間計算量は $O(M^2(V\log V+E))$、空間計算量は $O(V
 randomized_list_schedule(processing_time, machine_count, random);
 ```
 
-job 順を一様 shuffle してから最小負荷 machine へ list scheduling する。
-時間計算量は $O(N+N\log M)$、空間計算量は $O(N+M)$。
+ジョブの順序を一様にシャッフルしてから、負荷が最小の機械へ割り当てるリストスケジューリングを行う。
+ジョブ数を $N$ として、時間計算量は $O(N + N \log M)$、空間計算量は $O(N + M)$。
 
 ## `multifit_schedule`
 
@@ -41,16 +35,14 @@ job 順を一様 shuffle してから最小負荷 machine へ list scheduling �
 multifit_schedule(processing_time, machine_count, iterations = 10);
 ```
 
-LPT makespan を上界、平均負荷・最大 job・MultiFit 係数による値を下界とし、
-capacity を二分探索する。各 capacity で First-Fit Decreasing が $M$ bin
-以内か判定する。`MultiFitScheduleResult` は最良 `schedule`、最後の feasible
-`fitted_capacity`、反復数を返す。
+LPT の makespan を上界、平均負荷・最大ジョブ・MultiFit 係数による値を下界として、容量を二分探索する。各容量で First-Fit Decreasing が $M$ 個以内のビンに収まるかを判定する。
+`MultiFitScheduleResult` は、最良のスケジュール `schedule`、最後に実行可能だった容量 `fitted_capacity`、反復回数 `iterations` を返す。
 
-時間計算量は $O(I(N\log N+NM))$、空間計算量は $O(N+M)$。
+反復回数を $I$ として、時間計算量は $O(I(N \log N + NM))$、空間計算量は $O(N + M)$。
 
 ## 注意点
 
-machine 数は正、処理時間は非負有限値でなければならない。job-shop の machine
-添字範囲外では `std::out_of_range`。整数時刻の加算 overflow、浮動小数点の
-非有限結果では `std::overflow_error`。Shifting Bottleneck と MultiFit は
-heuristic であり、一般 job-shop / multiprocessor instance の最適性を保証しない。
+- 機械数は正、処理時間は非負の有限値でなければならず、違反時は `std::invalid_argument` を送出する。
+- ジョブショップの機械番号が範囲外なら `std::out_of_range` を送出する。
+- 整数時刻の加算のオーバーフローや、浮動小数点の結果が有限でない場合は `std::overflow_error` を送出する。
+- Shifting Bottleneck と MultiFit はヒューリスティックであり、一般のジョブショップ・マルチプロセッサの問題に対する最適性は保証しない。

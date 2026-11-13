@@ -32,7 +32,7 @@ GridLocation location(int index) const;
 vector<GridLocation> neighbors(GridLocation p) const;
 ```
 
-固定長ビット列で障害物を保持する4近傍格子。構築は格子セル数を $V$、初期障害数を $B$ として $O(V+B)$ 時間・$O(V)$ 空間、各照会・更新は $O(1)$、`neighbors` は $O(1)$ 時間・最大4要素。
+固定長ビット列で障害物を保持する 4 近傍の格子。構築は格子セル数を $V$、初期障害数を $B$ として $O(V+B)$ 時間・$O(V)$ 空間、各照会・更新は $O(1)$、`neighbors` は $O(1)$ 時間・最大 4 要素。
 
 ## `TimedGridLocation`, `TimedGridPathResult`
 
@@ -76,7 +76,7 @@ sipp_search(map, start, goal, reservations,
             start_time, max_time, goal_hold_until = -1);
 ```
 
-同一実装を指す正式名と略称。セルごとの安全区間を状態とし、待機をまとめて遷移する Safe Interval Path Planning。逆向き予約辺も検査するため正面交換衝突を避ける。生成した安全区間状態数を $S$、遷移候補を $A$、優先度キュー最大量を $Q$、参照した予約数を $R$ とすると $O((S+A)\log Q+R)$ 時間、$O(S+Q+L)$ 空間。
+同じ実装を指す正式名と略称である。セルごとの安全区間を状態とし、待機をまとめて遷移する Safe Interval Path Planning である。逆向き予約辺も検査するため正面からの入れ替わり衝突を避ける。生成した安全区間状態数を $S$、遷移候補を $A$、優先度キュー最大量を $Q$、参照した予約数を $R$ とすると $O((S+A)\log Q+R)$ 時間、$O(S+Q+L)$ 空間。
 
 ## `hpa_star_search`
 
@@ -98,7 +98,7 @@ struct MultiAgentPathResult {
 };
 ```
 
-各エージェントの時刻0からの経路、到着コスト和、最大到着時刻、展開量、打ち切り状態を返す。未発見時は `sum_of_costs == -1`。真偽変換は $O(1)$。
+各エージェントの時刻 0 からの経路、到着コスト和、最大到着時刻、展開量、打ち切り状態を返す。未発見時は `sum_of_costs == -1`。真偽変換は $O(1)$。
 
 ## `cooperative_a_star_search`
 
@@ -107,7 +107,7 @@ cooperative_a_star_search(map, starts, goals, max_time,
                           initial_reservations = {});
 ```
 
-固定優先順位で各エージェントを SIPP により順に計画し、得た経路とゴール待機を予約する Cooperative A*。各低レベル探索の状態・遷移数を $S_i,A_i$ とすると、時間は $\sum_i O((S_i+A_i)\log S_i)$、予約表と全経路を含む空間は $O(\sum_i(S_i+L_i))$。完全探索ではなく、優先順位によっては解が存在しても失敗する。
+固定優先順位で各エージェントを SIPP により順に計画し、得た経路とゴール待機を予約する Cooperative A*。各低レベル探索の状態・遷移数を $S_i,A_i$ とすると、時間は $\sum_i O((S_i+A_i)\log S_i)$、予約表と全経路を含む空間は $O(\sum_i(S_i+L_i))$（$L_i$ はエージェント $i$ の経路長）。完全探索ではなく、優先順位によっては解が存在しても失敗する。
 
 ## `windowed_hierarchical_cooperative_a_star_search`, `whca_star_search`
 
@@ -118,7 +118,7 @@ whca_star_search(map, starts, goals, window, max_steps,
                  initial_reservations = {});
 ```
 
-正式名と略称は同一実装。長さ `window` の時空間 A* を固定優先順位で再計画し、先頭1手だけを実行する Windowed Hierarchical Cooperative A*。1回の窓内状態数を $S_w$、エージェント数を $k$ とすると最悪 $O(\text{max_steps}\,k S_w\log S_w)$ 時間、$O(kS_w+\sum L_i)$ 空間。制限内に全員が到着しなければ `cutoff` が真となる。
+正式名と略称は同一実装。長さ `window` の時空間 A* を固定優先順位で再計画し、先頭 1 手だけを実行する Windowed Hierarchical Cooperative A*。1 回の窓内の状態数を $S_w$、エージェント数を $k$、`max_steps` を $T$ とすると、最悪時間計算量は $O(T k S_w\log S_w)$、空間計算量は $O(kS_w+\sum L_i)$。制限内に全員が到着しなければ `cutoff` が真となる。
 
 ## `bounded_conflict_based_search`
 
@@ -127,7 +127,7 @@ bounded_conflict_based_search(
     map, starts, goals, max_high_level_nodes, max_time);
 ```
 
-最小コストの衝突木ノードを展開し、最初の頂点衝突または辺交換衝突を二分する打ち切り付き CBS。上限に達して OPEN が残れば `cutoff` が真。高レベル展開数を $H$、1回の時空間 A* 状態数を $S$ とすると $O(H(kL^2+S\log S))$ 時間、$O(H(kL+S))$ 空間が上界の目安である。打ち切られず成功した解はコスト和最適。
+最小コストの衝突木ノードを展開し、最初の頂点衝突または辺交換衝突を二分する打ち切り付き CBS。上限に達して OPEN が残れば `cutoff` が真。高レベル展開数を $H$、1 回の時空間 A* 状態数を $S$ とすると $O(H(kL^2+S\log S))$ 時間、$O(H(kL+S))$ 空間が上界の目安である。打ち切られず成功した解はコスト和最適。
 
 ## `enhanced_conflict_based_search`, `enhanced_cbs_search`
 
@@ -138,7 +138,7 @@ enhanced_cbs_search(
     map, starts, goals, max_high_level_nodes, max_time);
 ```
 
-正式名と略称は同一実装。各候補衝突の両制約を試して cardinal / semi-cardinal / non-cardinal を判定し、より強い衝突を優先する。また同コストで衝突数を減らす子への bypass を行う Enhanced CBS。衝突候補数を $F$ とすると、分類により高レベル1展開当たり最大 $O(FS\log S)$ が加わる。空間量と最適性は打ち切り付き CBS と同じ。
+正式名と略称は同一実装。各候補衝突の両制約を試して cardinal / semi-cardinal / non-cardinal を判定し、より強い衝突を優先する。また同コストで衝突数を減らす子への bypass を行う Enhanced CBS。衝突候補数を $F$ とすると、分類により高レベル 1 展開当たり最大 $O(FS\log S)$ が加わる。空間量と最適性は打ち切り付き CBS と同じ。
 
 ## `ecbs_search`
 
@@ -147,15 +147,15 @@ ecbs_search(map, starts, goals, weight,
             max_high_level_nodes, max_time);
 ```
 
-OPEN の最小コストの `weight` 倍以内を FOCAL とし、その中から衝突数最小のノードを選ぶ Enhanced CBS。`weight >= 1` が必要。低レベルは最適 A* なので、許された時刻範囲内で成功した解のコスト和は最適値の `weight` 倍以下。高レベル OPEN サイズを $Q_H$ とすると、FOCAL 選択の走査を含め $O(H(Q_H+kL^2+S\log S))$ 時間、$O(H(kL+S))$ 空間。
+OPEN の最小コストの `weight` 倍以内を FOCAL とし、その中から衝突数が最小のノードを選ぶ、有界準最適な ECBS（Enhanced CBS）である。`weight >= 1` が必要。低レベルは最適 A* なので、許された時刻範囲内で成功した解のコスト和は最適値の `weight` 倍以下。高レベル OPEN サイズを $Q_H$ とすると、FOCAL 選択の走査を含め $O(H(Q_H+kL^2+S\log S))$ 時間、$O(H(kL+S))$ 空間。
 
 ## 時間計算量
 
-各公開操作の時間計算量と空間計算量は上の各 API 節に記載した。単一エージェント法は生成した時空間状態に対してほぼ線形対数、CBS 系は衝突木展開数に比例し、利用者指定の上限で停止する。
+各公開操作の時間計算量と空間計算量は、上の各 API の節に記載した。単一エージェント法は生成した時空間状態に対してほぼ線形対数、CBS 系は衝突木展開数に比例し、利用者指定の上限で停止する。
 
 ## 注意点
 
-- 格子は探索中に変更しない。開始・目標は通行可能、開始位置は互いに異なる必要がある。不正値は `std::invalid_argument` または `std::out_of_range`。
-- Cooperative A* / WHCA* は高速な不完全法、CBS系は制限付き完全法であり、用途と失敗理由が異なる。
-- CBS系では経路末尾のエージェントはゴールに待機し続けるものとして衝突判定する。`max_time` が小さすぎる場合は解なしと区別できないため、十分な上限を与える。
+- 格子は探索中に変更しない。開始位置と目標位置は通行可能で、開始位置は互いに異なっていなければならない。不正な値には `std::invalid_argument` または `std::out_of_range` を送出する。
+- Cooperative A* / WHCA* は高速な不完全法、CBS 系は制限付き完全法であり、用途と失敗理由が異なる。
+- CBS 系では経路末尾のエージェントはゴールに待機し続けるものとして衝突判定する。`max_time` が小さすぎる場合は解なしと区別できないため、十分な上限を与える。
 - ECBS の品質保証は単位非負コスト、正確な低レベル探索、および打ち切り前の成功を仮定する。
