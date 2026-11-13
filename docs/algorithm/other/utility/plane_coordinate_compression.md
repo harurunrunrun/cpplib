@@ -3,14 +3,19 @@ title: Plane Coordinate Compression (平面座標圧縮)
 documentation_of: ../../../../src/algorithm/other/utility/plane_coordinate_compression.hpp
 ---
 
-平面上で別々に与えた x 座標と y 座標を昇順の連続indexへ圧縮する。格子の連結性や座標間の空白を残したい場合は、各入力値の直前・直後の整数も集合へ加えられる。
+平面上で別々に与えた x 座標と y 座標を昇順の連続した添字へ圧縮する。格子の連結性や座標間の空白を残したい場合は、各入力値の直前・直後の整数も集合へ加えられる。
 
 ```cpp
-template<class X, class Y, int MAX_X_SIZE, int MAX_Y_SIZE>
+template<class X, class Y, int MAX_X_SIZE = -1, int MAX_Y_SIZE = -1>
 class PlaneCoordinateCompression;
 ```
 
-`X` と `Y` は `bool` 以外の整数型である。`MAX_X_SIZE` と `MAX_Y_SIZE` は、隣接値を追加して重複を除いた後の各軸の最大要素数を表す。
+`X` と `Y` は `bool` 以外の整数型である。`MAX_X_SIZE` と `MAX_Y_SIZE` は、隣接値を追加して重複を除いた後の各軸の最大要素数を表す。省略すると実行時サイズに合わせた `std::vector` を使う可変長版になる。
+
+```cpp
+PlaneCoordinateCompression<int, long long> dynamic(xs, ys);
+PlaneCoordinateCompression<int, long long, 100000, 100000> fixed(xs, ys);
+```
 
 ```cpp
 struct CoordinateNeighborPolicy {
@@ -19,9 +24,9 @@ struct CoordinateNeighborPolicy {
 };
 ```
 
-隣接値はこのpolicyでpredecessorとsuccessorを独立に指定する。
+隣接値はこの指定で、直前の値（`predecessor`）と直後の値（`successor`）を独立に追加するかを決める。
 
-## Constructor
+## コンストラクタ
 
 ```cpp
 PlaneCoordinateCompression();
@@ -34,7 +39,7 @@ PlaneCoordinateCompression(
 );
 ```
 
-default constructorは空の圧縮を作る。引数付きconstructorは `build` と同じ規則で両軸を構築する。
+デフォルトコンストラクタは空の圧縮を作る。引数付きコンストラクタは `build` と同じ規則で両軸を構築する。
 
 ## `build`
 
@@ -47,9 +52,7 @@ void build(
 );
 ```
 
-各軸を独立にsortして重複を除く。対応するpolicyの `predecessor` が真なら入力値 `v` ごとに表現可能な `v - 1`、`successor` が真なら表現可能な `v + 1` も追加する。型の最小値に対するpredecessorと最大値に対するsuccessorは追加しない。両flagは軸ごとに独立して指定できる。
-
-容量超過時に例外を送出した場合、既存の圧縮結果は変更しない。
+各軸を独立にソートして重複を除く。対応する指定の `predecessor` が真なら入力値 `v` ごとに表現可能な `v - 1`、`successor` が真なら表現可能な `v + 1` も追加する。型の最小値に対する `v - 1` と最大値に対する `v + 1` は追加しない。両フラグは軸ごとに独立して指定できる。
 
 ## `x_size`, `y_size`, `size`, `empty`
 
@@ -69,7 +72,7 @@ span<const X> x_values() const noexcept;
 span<const Y> y_values() const noexcept;
 ```
 
-圧縮後の昇順な座標列を参照するspanを返す。spanは次の `build` まで有効である。
+圧縮後の昇順の座標列を参照する `span` を返す。`span` は次の `build` まで有効である。
 
 ## `contains_x`, `contains_y`
 
@@ -87,7 +90,7 @@ size_t x_index(X value) const;
 size_t y_index(Y value) const;
 ```
 
-指定値の0-indexed圧縮indexを返す。
+指定値の 0-indexed の圧縮後の添字を返す。
 
 ## `x_value`, `y_value`
 
@@ -96,7 +99,7 @@ const X& x_value(size_t index) const;
 const Y& y_value(size_t index) const;
 ```
 
-0-indexed圧縮indexに対応する元の座標値を返す。
+0-indexed の圧縮後の添字に対応する元の座標値を返す。
 
 ## 時間計算量
 
@@ -104,28 +107,17 @@ const Y& y_value(size_t index) const;
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| constructor, `build` | $O(N_x\log N_x+N_y\log N_y)$ | $O(N_x+N_y)$ |
+| コンストラクタ, `build` | $O(N_x\log N_x+N_y\log N_y)$ | $O(N_x+N_y)$ |
 | `x_size`, `y_size`, `size`, `empty`, `x_values`, `y_values`, `x_value`, `y_value` | $O(1)$ | $O(1)$ |
 | `contains_x`, `x_index` | $O(\log K_x)$ | $O(1)$ |
 | `contains_y`, `y_index` | $O(\log K_y)$ | $O(1)$ |
 
-neighbor追加時も候補数は入力列長の高々3倍なので、漸近計算量は変わらない。
+隣接値を追加しても候補数は入力列長の高々 3 倍なので、漸近計算量は変わらない。
 
 ## 注意点
 
-- `x_index` または `y_index` に圧縮集合にない値を渡すと `runtime_error` を送出する。lower boundのindexを得るAPIではない。
-- `x_value` または `y_value` に対応する軸のsize以上のindexを渡すと `runtime_error` を送出する。
-- 圧縮後の要素数がtemplate容量を超えると `runtime_error` を送出する。
-- neighbor追加は整数の1だけ離れた値を加える。座標差そのものを保存する圧縮ではない。
-- `x_values()` と `y_values()` が返したspanは、同じobjectへの次の `build` で無効になる。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
-
-```cpp
-PlaneCoordinateCompression<int, long long> dynamic(xs, ys);
-PlaneCoordinateCompression<int, long long, 100000, 100000> fixed(xs, ys);
-```
-
-入力軸の要素数を $X,Y$ とすると構築は $O(X\log X+Y\log Y)$ 時間・$O(X+Y)$ 空間、軸ごとの検索は対数時間。
+- `x_index` または `y_index` に圧縮集合にない値を渡すと `runtime_error` を送出する。`lower_bound` の添字を得る API ではない。
+- `x_value` または `y_value` に対応する軸の要素数以上の添字を渡すと `runtime_error` を送出する。
+- 固定長版で圧縮後の要素数がテンプレート引数の容量を超えると `runtime_error` を送出する。容量超過で例外を送出した場合、既存の圧縮結果は変更しない。
+- 隣接値の追加は、整数として 1 だけ離れた値を加える。座標差そのものを保存する圧縮ではない。
+- `x_values()` と `y_values()` が返した `span` は、同じオブジェクトに対する次の `build` で無効になる。

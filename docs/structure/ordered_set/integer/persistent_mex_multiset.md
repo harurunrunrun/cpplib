@@ -3,15 +3,15 @@ title: Persistent MEX Multiset (永続MEX多重集合)
 documentation_of: ../../../../src/structure/ordered_set/integer/persistent_mex_multiset.hpp
 ---
 
-有限整数領域の多重集合を path copying で完全永続化し、任意 version の MEX を求める。
+有限の整数領域 $[0, U)$ 上の多重集合を経路コピーで完全永続化し、任意のバージョンの MEX を求める。
 
-## constructor
+## コンストラクタ
 
 ```cpp
 explicit PersistentMexMultiset(size_t universe)
 ```
 
-空集合を version 0 として構築する。
+領域の長さを $U$ = `universe` とし、空集合をバージョン 0 として構築する。
 
 ## insert / erase
 
@@ -20,7 +20,7 @@ size_t insert(size_t version, size_t value)
 size_t erase(size_t version, size_t value)
 ```
 
-指定 version から更新した新 version を作り、その番号を返す。存在しない値の `erase` も同内容の新 version を作る。
+バージョン `version` に値 `value` を 1 個追加（削除）した新しいバージョンを作り、その番号を返す。含まれていない値の `erase` も、元と同じ内容の新しいバージョンを作る。
 
 ## count / distinct_size / mex
 
@@ -30,24 +30,30 @@ size_t distinct_size(size_t version) const
 size_t mex(size_t version) const
 ```
 
-指定 version の出現数、異なる値数、MEX を返す。領域が完全なら MEX は `universe` である。
+バージョン `version` における `value` の出現数、含まれる相異なる値の個数、MEX を返す。領域内の値がすべて含まれていれば `mex` は $U$ を返す。
 
 ## universe / version_count / node_count
 
-領域長、version 数、確保 node 数を $O(1)$ で返す。
+```cpp
+size_t universe() const
+size_t version_count() const
+size_t node_count() const
+```
+
+領域の長さ、バージョン数、確保済みのノード数を $O(1)$ で返す。
 
 ## 時間計算量
 
-$U$ を領域長とする。
+$U$ を領域の長さとする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| constructor | $O(U)$ | $O(U)$ |
-| `insert`, 存在値の `erase` | $O(\log U)$ | $O(\log U)$ |
-| 不存在値の `erase` | $O(\log U)$ | $O(1)$ |
+| コンストラクタ | $O(U)$ | $O(U)$ |
+| `insert`, 含まれる値の `erase` | $O(\log U)$ | $O(\log U)$ |
+| 含まれない値の `erase` | $O(\log U)$ | $O(1)$ |
 | `count`, `mex` | $O(\log U)$ | $O(1)$ |
 | `distinct_size`, getter | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-値は `[0,U)`、version は `[0,version_count())` を要求し、違反時は `out_of_range` を送出する。既存 version は更新されない。
+値は $[0, U)$、バージョンは `[0, version_count())` にあることを要求し、範囲外なら `std::out_of_range` を送出する。既存のバージョンの内容は変更されない。

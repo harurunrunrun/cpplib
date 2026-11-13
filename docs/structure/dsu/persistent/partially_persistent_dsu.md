@@ -3,30 +3,31 @@ title: Partially Persistent DSU (部分永続素集合データ構造)
 documentation_of: ../../../../src/structure/dsu/persistent/partially_persistent_dsu.hpp
 ---
 
-過去の状態を参照できる素集合データ構造。
-
-更新は最新状態にのみ行える。
+過去の状態を参照できる部分永続な素集合データ構造。更新は最新の状態にだけ行える。
+union by size で、経路圧縮は行わない。
 
 ## テンプレート引数
 
 ```cpp
-PartiallyPersistentDSU<MAX_SIZE, MAX_UPDATE>
+PartiallyPersistentDSU<MAX_SIZE = -1, MAX_UPDATE = -1>
 ```
 
-- 頂点数の上限 `MAX_SIZE`
-- 更新回数の上限 `MAX_UPDATE`
+- `MAX_SIZE`: 頂点数の上限
+- `MAX_UPDATE`: 更新（`merge`）回数の上限
+
+省略（`-1`）した上限は、実行時の要素数・更新回数に合わせて `std::vector` を確保する可変長になる。
+
+```cpp
+using Dynamic = PartiallyPersistentDSU<>;
+```
 
 ## コンストラクタ
 
 ```cpp
-PartiallyPersistentDSU(int n = MAX_SIZE)
+explicit PartiallyPersistentDSU(int n = MAX_SIZE)
 ```
 
-version 0 として `n` 頂点の集合を作る。
-
-## 時間計算量
-
-- $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_UPDATE})$
+バージョン $0$ として $n$ 頂点の集合を作る。可変長版では `n` のデフォルトは $0$ である。
 
 ## merge
 
@@ -34,66 +35,46 @@ version 0 として `n` 頂点の集合を作る。
 int merge(int u, int v)
 ```
 
-最新 version で `u` と `v` を併合し、新しい version を返す。
+最新のバージョンで $u$ と $v$ を併合し、新しいバージョンの番号を返す。既に同じ集合でも新しいバージョンを作る。
 
-すでに同じ集合でも新しい version を作る。
-
-## 時間計算量
-
-- $O(\log N)$
-
-## same / leader / component_size
+## same / leader / component_size / groups
 
 ```cpp
-bool same(int version, int u, int v)
-int leader(int version, int v)
-int component_size(int version, int v)
-int groups(int version)
+bool same(int version, int u, int v) const
+int leader(int version, int v) const
+int component_size(int version, int v) const
+int groups(int version) const
 ```
 
-指定した version の情報を返す。
+指定したバージョンでの情報を返す。`leader` は代表元、`component_size` は成分の頂点数、`groups` は成分数である。
 
-## 時間計算量
-
-- `leader`, `same`: $O(\log N)$
-- `component_size`: $O(\log N + \log \mathrm{MAX\_UPDATE})$
-- `groups`: $O(1)$
-
-## version
+## size / versions / latest_version
 
 ```cpp
-int versions()
-int latest_version()
+int size() const
+int versions() const
+int latest_version() const
 ```
 
-現在存在する version 数と最新 version を返す。
+頂点数、現在存在するバージョン数、最新のバージョン番号を返す。
 
 ## 時間計算量
 
-- $O(1)$
+$N$ を頂点数、$U$ を更新回数とする。
 
-`size` も $O(1)$。
+- コンストラクタ: $O(N)$。固定長版では配列の初期化に $O(\texttt{MAX_SIZE}+\texttt{MAX_UPDATE})$ かかる
+- `merge`: $O(\log N)$
+- `leader`、`same`: $O(\log N)$
+- `component_size`: $O(\log N + \log U)$
+- `groups`、`size`、`versions`、`latest_version`: $O(1)$
 
-## 空間計算量（API別の追加領域）
+## 空間計算量
 
-- constructor、`size`、`versions`、`latest_version`、`leader`、`same`、`component_size`、`groups`: $O(1)$
-- `merge`: $O(1)$ の履歴slotを本体へ追加し、呼び出し中の一時領域も $O(1)$
-
-本体の保存領域は $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_UPDATE})$ である。
+- 本体: $O(N+U)$（固定長版では $O(\texttt{MAX_SIZE}+\texttt{MAX_UPDATE})$）
+- `merge` は $O(1)$ 個の履歴を本体に追加する。各関数の呼び出し中の一時領域は $O(1)$
 
 ## 注意点
 
-- `0 <= n <= MAX_SIZE`、頂点は`[0,n)`、versionは`[0,versions())`。違反時は例外。
-- version 0が初期状態。`merge`は同一成分の場合も最新状態からversionを1個追加する。
-- 更新は高々`MAX_UPDATE`回。超過した`merge`は例外で既存versionを変えない。
-- `leader`は代表、`component_size`は成分頂点数、`groups`は成分数を返す。
-
-## 可変長版
-
-```cpp
-using Dynamic = PartiallyPersistentDSU<>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n + u + v)、代表取得 O(log(n + 1))、併合は償却計算で同じ上限。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- $0 \le n \le \texttt{MAX_SIZE}$ で、頂点は $[0, n)$、バージョンは $[0, \mathrm{versions}())$ でなければならない。違反すると `std::runtime_error` を送出する。
+- バージョン $0$ が初期状態である。
+- 更新は高々 `MAX_UPDATE` 回。超過した `merge` は `std::runtime_error` を送出し、既存のバージョンを変えない。

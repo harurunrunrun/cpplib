@@ -3,8 +3,7 @@ title: Offline Segment Add Get Min (オフライン線分追加一点最小値) 
 documentation_of: ../../../../src/structure/convex_hull_trick/li_chao/offline_segment_add_get_min.hpp
 ---
 
-定義域付き一次関数の追加と一点最小値取得からなる操作列を登録し、まとめて評価する。
-内部で全取得座標を収集して `SegmentLiChaoTree` を構築するため、呼出側で座標圧縮や時系列 replay を行う必要はない。
+定義域付き一次関数の追加と一点最小値取得からなる操作列を登録し、まとめて評価する。内部で全取得座標を収集して `SegmentLiChaoTree` を構築するので、呼び出し側で座標圧縮や操作列の再生を行う必要はない。
 
 ## 初期線分の登録
 
@@ -13,8 +12,7 @@ void add_initial_segment(long long left, long long right,
                          long long slope, long long intercept)
 ```
 
-すべての操作より前から存在する $f(x)=slope\cdot x+intercept$ を登録する。
-定義域は半開区間 $[left,right)$ である。`right < left` は `invalid_argument`、空区間は許す。
+すべての操作より前から存在する一次関数 $f(x)=\mathrm{slope}\cdot x+\mathrm{intercept}$ を登録する。定義域は半開区間 $[\mathrm{left},\mathrm{right})$ である。`right < left` なら `std::invalid_argument` を投げる。空区間は許す。
 
 ## 線分追加
 
@@ -23,7 +21,7 @@ void add_segment(long long left, long long right,
                  long long slope, long long intercept)
 ```
 
-この呼出位置以降で有効な定義域付き一次関数を操作列へ追加する。区間の扱いは初期線分と同じ。
+この呼び出し以降で有効な定義域付き一次関数を操作列に追加する。区間の扱いは初期線分と同じ。
 
 ## 最小値取得の登録
 
@@ -31,17 +29,15 @@ void add_segment(long long left, long long right,
 size_t get_min(long long x)
 ```
 
-現在までに追加された線分のうち $x$ を定義域に含むものの最小値取得を登録し、`solve()` の返り値における添字を返す。
-該当する線分がない場合、その要素は `nullopt` になる。
+その時点までに追加された線分のうち $x$ を定義域に含むものの最小値の取得を登録し、`solve()` の戻り値におけるその結果の添字を返す。該当する線分がない場合、その要素は `std::nullopt` になる。
 
 ## 評価
 
 ```cpp
-vector<optional<long long>> solve() const
+std::vector<std::optional<long long>> solve() const
 ```
 
-初期線分を適用した後、登録順に追加・取得を処理して、取得結果を登録順に返す。
-複数回呼び出しても登録内容は変化しない。一次関数の評価値が `long long` に収まらない場合は `overflow_error`。
+初期線分を適用した後、登録順に追加・取得を処理して、取得結果を登録順に返す。複数回呼び出しても登録内容は変化しない。一次関数の評価値が `long long` に収まらない場合は `std::overflow_error` を投げる。
 
 ## その他
 

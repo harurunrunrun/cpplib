@@ -3,7 +3,7 @@ title: Count Dominance Pairs (支配関係を満たす順序対の数え上げ) 
 documentation_of: ../../../../src/algorithm/range/offline_query/count_dominance_pairs.hpp
 ---
 
-2列の大小関係を同時に満たす添字の順序対を数える。
+2 列の大小関係を同時に満たす添字の順序対を数える。
 
 ## 関数
 
@@ -15,12 +15,11 @@ long long count_dominance_pairs(
 )
 ```
 
-`first[i] >= first[j]`かつ`second[i] <= second[j]`を満たす
-順序対`(i, j)`の個数を返す。`i == j`も数える。
+`first[i] >= first[j]` かつ `second[i] <= second[j]` を満たす順序対 `(i, j)` の個数を返す。`i == j` も数える。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-$N=first.size()$とする。
+$N$ を `first.size()` とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -28,7 +27,6 @@ $N=first.size()$とする。
 
 ## 注意点
 
-- `first.size() == second.size()`でなければならない。
-- `A`と`B`はコピー可能な全順序型で、比較演算を提供する必要がある。
-- 結果が`long long`に収まる長さでなければならない。
-- 長さまたは結果型の前提違反では`runtime_error`を送出する。
+- `first.size() == second.size()` でなければならない。
+- `A` と `B` はコピー可能な全順序型で、比較演算を提供しなければならない。
+- 長さが一致しない場合、または結果が `long long` に収まらない可能性がある長さ（$N>3037000499$）の場合は `runtime_error` を送出する。

@@ -3,43 +3,46 @@ title: Partially Persistent Bit Range Tree Internal (部分永続ビット区間
 documentation_of: ../../../../src/structure/segtree/detail/partially_persistent_bit_range_tree.hpp
 ---
 
-bit列の区間代入・反転・区間和を扱う部分永続動的区間木の共通実装。
+ビット列に対する区間代入・区間反転・区間和を扱う、部分永続な動的区間木の共通実装である。
 
 ## API
 
 ```cpp
+template<long long MAX_SIZE = -1, int MAX_NODES = -1, int MAX_VERSIONS = -1, int MAX_CHANGES = -1>
+struct bit_range_tree_detail::PartiallyPersistentBitRangeTree;
+
 bit_range_tree_detail::PartiallyPersistentBitRangeTree<
     MAX_SIZE, MAX_NODES, MAX_VERSIONS, MAX_CHANGES
 > tree(n);
 ```
 
-- `size()`：列長を返す。
-- `versions()` / `latest_version()`：version数と最新versionを返す。
-- `nodes_used()` / `changes_used()`：使用中のnode数と変更履歴数を返す。
-- `fork(version)`：最新版と同内容の新versionを作る。
-- `assign(version,l,r,value)` / `assign(l,r,value)`：最新版の `[l,r)` を0または1へ代入した新versionを返す。
-- `flip(version,l,r)` / `flip(l,r)`：最新版の `[l,r)` を反転した新versionを返す。
-- `set_one`, `set`：最新版の `[l,r)` を1にした新versionを返す。
-- `sum(version,l,r)`：指定versionの `[l,r)` にある1の個数を返す。
-- `get(version,k)`：指定versionの `k` 番目を返す。
+- `size()`: 列の長さを返す。
+- `versions()` / `latest_version()`: バージョン数と最新のバージョン番号を返す。
+- `nodes_used()` / `changes_used()`: 使用中のノード数と変更履歴の数を返す。
+- `fork(version)`: 最新版と同じ内容の新しいバージョンを作る。`version` は最新版でなければならない。
+- `assign(version, l, r, value)` / `assign(l, r, value)`: 最新版の `[l, r)` を `value`（0 または 1）にした新しいバージョンを作り、その番号を返す。
+- `flip(version, l, r)` / `flip(l, r)`: 最新版の `[l, r)` を反転した新しいバージョンを返す。
+- `set_one(version, l, r)` / `set_one(l, r)`、および別名の `set`: 最新版の `[l, r)` を 1 にした新しいバージョンを返す。
+- `sum(version, l, r)`: 指定したバージョンの `[l, r)` にある 1 の個数を返す。
+- `get(version, k)`: 指定したバージョンの `k` 番目のビットを返す。
+
+`version` を省略した更新は `latest_version()` を更新元とする。
 
 ## 時間計算量
 
-- constructor：$O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
-- 更新、最新版の`sum` / `get`：$O(\log \mathtt{MAX\_SIZE})$
-- 過去versionの`sum` / `get`：$O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
-- `fork`と使用量取得：$O(1)$
+- コンストラクタ: $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$
+- 更新、最新版の `sum` / `get`: $O(\log \texttt{MAX_SIZE})$
+- 過去のバージョンの `sum` / `get`: $O(\log \texttt{MAX_SIZE}\log \texttt{MAX_CHANGES})$
+- `fork` と使用量の取得: $O(1)$
 
-更新1回の追加node・変更履歴は $O(\log \mathtt{MAX\_SIZE})$。
+更新 1 回で追加するノードと変更履歴は $O(\log \texttt{MAX_SIZE})$ である。
 
 ## 注意点
 
-- 公開ラッパー群の内部部品であり、通常は直接使用しない。
-- 更新元は常に `latest_version()` でなければならない。過去versionはqueryだけ可能。
-- `0 < n <= MAX_SIZE`、区間は `0 <= l <= r <= n`、点は `[0,n)`。version、範囲、node・version・履歴容量の違反では `runtime_error`。
+- 公開ラッパー群の内部部品であり、通常は直接使わない。
+- 更新元は常に `latest_version()` でなければならない。過去のバージョンにはクエリだけができる。
+- `0 < n <= MAX_SIZE`、区間は `0 <= l <= r <= n`、点は `[0, n)` を要求する。バージョン・範囲の違反や、ノード・バージョン・変更履歴の容量超過では `std::runtime_error` を送出する。
 
 ## 容量を省略する場合
 
-容量引数の既定値は `-1`。`PartiallyPersistentBitRangeTree<> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+容量のテンプレート引数のデフォルトはすべて `-1` である。`PartiallyPersistentBitRangeTree<> tree(n);` のようにすべての容量を省略すると、同じヘッダ内の可変長版を使う（一部だけを省略することはできない）。可変長版ではノード・バージョン情報・変更履歴を使用量に応じて `std::vector` で拡張し、更新・クエリのアルゴリズムは固定長版と同じである。上記の計算量の $\texttt{MAX_SIZE}$ は $n$ に置き換わり、コンストラクタの容量に比例する初期化は不要になる。`n` が大きすぎる場合は `std::length_error` を送出する。可変長版でもコンストラクタのデフォルト引数 `n = 0` は `0 < n` の条件に反するので、`n` は必ず指定する。

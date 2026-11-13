@@ -15,15 +15,15 @@ Iterator median_of_medians_select(
 )
 ```
 
-範囲を `compare` 順に並べたときの0-indexed `rank` 番目と等しい要素を指すiteratorを返す。範囲はin-placeに並べ替えるが、全体をsortはしない。
+範囲を `compare` の順に並べたときの 0-indexed で `rank` 番目と等しい要素を指すイテレータを返す。範囲はインプレースに並べ替えるが、全体をソートはしない。
 
-5要素ごとの中央値からmedian of mediansを選び、pivot未満・同値・pivot超の3区間へ分割する。同値要素をまとめて処理するため、全要素が等しい場合も線形時間。
+5 要素ごとの中央値から median of medians を選び、ピボット未満・ピボットと同値・ピボット超の 3 区間へ分割する。同値な要素をまとめて処理するため、全要素が等しい場合も線形時間である。
 
-要素型はcopy constructible、`compare` はstrict weak orderingでなければならない。空範囲または範囲外の `rank` は `out_of_range`、反転したiterator範囲は `invalid_argument`。
+要素型はコピー構築可能で、`compare` は狭義弱順序でなければならない。空範囲または範囲外の `rank` では `out_of_range` を、逆転したイテレータ範囲では `invalid_argument` を送出する。
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| `median_of_medians_select` | worst-case $O(N)$ | 再帰stack $O(\log N)$ |
+| `median_of_medians_select` | 最悪 $O(N)$ | 再帰スタック $O(\log N)$ |
 
 ## `boyer_moore_majority`
 
@@ -35,9 +35,9 @@ optional<iter_value_t<Iterator>> boyer_moore_majority(
 )
 ```
 
-範囲の半数より多く現れる要素を返す。存在しない場合と空範囲では `nullopt`。
+範囲内で半数より多く現れる要素を返す。存在しない場合と空範囲では `nullopt` を返す。
 
-1回目の走査でBoyer--Moore majority voteにより候補を絞り、2回目で出現数を検証する。要素型はcopy constructibleかつ等値比較可能で、範囲は複数回走査できる必要がある。
+1 回目の走査で Boyer–Moore の過半数投票により候補を絞り、2 回目の走査で出現数を検証する。要素型はコピー可能かつ等値比較可能で、範囲は複数回走査できなければならない。
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
@@ -45,4 +45,5 @@ optional<iter_value_t<Iterator>> boyer_moore_majority(
 
 ## 注意点
 
-空入力、退化入力、範囲外のindexと容量超過の扱いは各APIの説明に従う。参照・iterator・callbackを受け渡すAPIでは、変更可否とobjectの寿命を守る。
+- `median_of_medians_select` は範囲の要素の順序を変更する。返り値のイテレータは範囲内の要素を指す。
+- `compare` や要素の比較が送出した例外はそのまま伝わる。

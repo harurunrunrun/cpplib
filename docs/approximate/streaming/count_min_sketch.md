@@ -3,35 +3,39 @@ title: Count-Min Sketch (Count-Minスケッチ)
 documentation_of: ../../../src/approximate/streaming/count_min_sketch.hpp
 ---
 
-## Count-Min Sketch (Count-Minスケッチ)
+非負の頻度を、幅 $W$・深さ $D$ の $WD$ 個のカウンタで近似する。
 
-非負の頻度を `Width * Depth` 個の固定長 counter で近似する。
+## 使い方
+
+~~~cpp
+CountMinSketch<> sketch(1024, 5, 123); // 幅、深さ、シード
+sketch.add(42, 3);
+auto frequency = sketch.estimate(42);
+
+CountMinSketch<1024, 5> fixed(123);    // 容量をテンプレート引数で固定する版
+~~~
+
+`CountMinSketch<Width, Depth, Counter = std::uint64_t, Key = std::uint64_t>` の `Width`, `Depth` を省略すると、幅と深さを実行時に指定して `std::vector` に保存する可変長版になる。指定すると `std::array` に保存する固定長版になる。`Counter` は符号なし整数型。
 
 ## API
 
-- `CountMinSketch(seed)`: hash seed を指定して空で構築する。時間計算量は $O(Width\,Depth)$。 追加空間計算量は $O(1)$。
-- `add(key, delta)`: 頻度を `delta` 増やす。counter は飽和加算される。時間計算量は $O(Depth)$。 追加空間計算量は $O(1)$。
-- `estimate(key)`: 各 row の counter の最小値を返す。時間計算量は $O(Depth)$。 追加空間計算量は $O(1)$。
-- `clear()`: 全 counter を 0 にする。時間計算量は $O(Width\,Depth)$。 追加空間計算量は $O(1)$。
-- `total()`: 追加量の総和。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `width()`, `depth()`, `additive_error_rate()`, `failure_probability_bound()`: 時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
+- `CountMinSketch(width, depth, seed = 0)`（可変長版）/ `CountMinSketch(seed = 0)`（固定長版）: ハッシュのシードを指定して空で構築する。
+- `add(key, delta = 1)`: `key` の頻度を `delta` 増やす。カウンタは飽和加算される。
+- `estimate(key)`: 各行の対応するカウンタの最小値を返す。
+- `clear()`: 全カウンタと総和を 0 にする。
+- `total()`: 追加量の総和（飽和加算）を返す。
+- `width()`, `depth()`: 幅・深さを返す。
+- `additive_error_rate()`: $e/W$ を返す。
+- `failure_probability_bound()`: $e^{-D}$ を返す。
 
+## 時間計算量
+
+- コンストラクタ・`clear`: $O(WD)$
+- `add`, `estimate`: $O(D)$、追加空間 $O(1)$
+- その他: $O(1)$
+- 空間計算量: $O(WD)$
 
 ## 注意点
 
-counter が飽和せず、hash が独立一様なら、真の頻度を $f_x$、総和を $N$ として
-`estimate(x) >= f_x` であり、確率 $1-e^{-Depth}$ 以上で
-`estimate(x) <= f_x + e N / Width`。保存に必要な空間計算量は $O(Width\,Depth)$。
-
-## 容量を省略する可変長版
-
-~~~cpp
-CountMinSketch<> sketch(1024, 5, 123); // 幅、深さ、seed
-sketch.add(42, 3);
-auto frequency = sketch.estimate(42);
-~~~
-
-幅 $W$ と深さ $D$ を実行時に指定し、counter を `vector` に保存する。
-構築・`clear` は $O(WD)$ 時間、追加・推定は $O(D)$ 時間。
-保存領域は $O(WD)$、各操作の一時領域は $O(1)$。
-容量指定の固定配列版も同じ header にある。
+- カウンタが飽和せずハッシュが独立一様なら、真の頻度を $f_x$、総和を $N$ として $\mathrm{estimate}(x)\ge f_x$ であり、確率 $1-e^{-D}$ 以上で $\mathrm{estimate}(x)\le f_x+eN/W$ が成り立つ。
+- 可変長版で幅または深さが 0 なら `std::invalid_argument`、$WD$ が `std::size_t` に収まらなければ `std::length_error` を投げる。

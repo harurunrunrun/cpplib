@@ -3,7 +3,9 @@ title: Newton, Conjugate Gradient, and Pattern Search (Newton・共役勾配・�
 documentation_of: ../../../src/approximate/optimization/second_order_and_pattern.hpp
 ---
 
-## Newton Method
+以下、次元を $N$、反復回数を $I$、目的関数 1 回のコストを $F$、勾配 1 回のコストを $G$、ヘッセ行列 1 回のコストを $H$ とする。
+
+## ニュートン法
 
 ```cpp
 newton_method(
@@ -15,15 +17,11 @@ newton_method(
     lower = {}, upper = {});
 ```
 
-`hessian(point)` の dense Hessian に対し、対角 regularization と部分 pivoting
-付き消去で Newton 方向を求め、Armijo backtracking を行う。降下方向でなければ
-負勾配へ戻す。`NewtonOptimizationResult` は通常の `optimization` 結果と
-`hessian_evaluations` を持つ。
+`hessian(point)` が返す密なヘッセ行列に対し、対角への正則化と部分ピボット選択付きの消去法でニュートン方向を求め、Armijo 条件のバックトラッキングを行う。降下方向でなければ負の勾配方向に戻す。返り値 `NewtonOptimizationResult<Real>` は、通常の結果 `optimization`（`OptimizationResult<Real>`）とヘッセ行列の評価回数 `hessian_evaluations` を持つ。
 
-次元を `N`、line search の最大候補数を `A` とすると、時間計算量は
-`O(I(H+N^3+G+A(F+N)))`、空間計算量は `O(N^2)`。
+直線探索の最大候補数を $A$ とすると、時間計算量は $O(I(H+N^3+G+A(F+N)))$、空間計算量は $O(N^2)$ である。
 
-## Linear Conjugate Gradient
+## 線形共役勾配法
 
 ```cpp
 conjugate_gradient<Real>(
@@ -31,11 +29,9 @@ conjugate_gradient<Real>(
     maximum_iterations, tolerance = 1e-10);
 ```
 
-対称正定値線形系 `A*x=b` を matrix-vector callback のみで解く。
-時間計算量は `O(I(M+N))`、空間計算量は `O(N)`。`M` は
-`matrix_vector` の計算量。
+対称正定値な線形方程式 $Ax=b$ を、行列ベクトル積のコールバック `matrix_vector` だけを使って解く。返り値 `ConjugateGradientResult<Real>` は `point`, `residual_norm`, `iterations`, `converged` を持つ。`matrix_vector` 1 回のコストを $M$ として、時間計算量は $O(I(M+N))$、空間計算量は $O(N)$ である。
 
-## General Pattern Search
+## 一般パターン探索
 
 ```cpp
 pattern_search(
@@ -45,12 +41,10 @@ pattern_search(
     step_tolerance = 1e-8, lower = {}, upper = {});
 ```
 
-各 pattern direction の候補を調べて最良改善点へ移り、改善がなければ step を
-縮小する。方向数を `P` とすると時間計算量は `O(I*P*(F+N))`、
-空間計算量は `O(PN)`。
+各パターン方向の候補を調べて最良の改善点へ移り、改善がなければステップ幅を縮小する。方向の数を $P$ とすると、時間計算量は $O(IP(F+N))$、空間計算量は $O(PN)$ である。
 
 ## 注意点
 
-Newton の Hessian は正方・有限で、regularization 後も非特異でなければならない。
-linear CG は正曲率でない反復を `std::domain_error` とする。Pattern Search の
-方向は有限・非零・初期点と同次元、評価上限は初期評価を含む。
+- ニュートン法のヘッセ行列は正方かつ有限で、正則化後も正則でなければならない。非有限な要素や特異な行列には `std::domain_error` を送出する
+- 線形共役勾配法は、曲率が正でない反復で `std::domain_error` を送出する
+- パターン探索の方向は有限・非零で初期点と同じ次元でなければならない。評価回数の上限は初期点の評価を含む

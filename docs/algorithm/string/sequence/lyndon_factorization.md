@@ -3,22 +3,20 @@ title: Lyndon Factorization (Lyndon分解) [lyndon_factorization]
 documentation_of: ../../../../src/algorithm/string/sequence/lyndon_factorization.hpp
 ---
 
-文字列・列を辞書順で非増加となるLyndon word列へ一意に分解するDuval法。
+文字列・列を、辞書順で非増加となる Lyndon 語の列へ一意に分解する（Duval 法）。
 
 ## `lyndon_factorization(first, last, compare)`
 
 ```cpp
-auto boundaries = lyndon_factorization(first, last, compare);
+template<std::random_access_iterator Iterator, class Compare = std::less<>>
+std::vector<std::size_t> lyndon_factorization(Iterator first, Iterator last, Compare compare = Compare{});
 ```
 
-random access iteratorの半開範囲 `[first,last)` を、`compare` が定める辞書順で
-Lyndon factorizationする。返り値を
-`{a_0,a_1,...,a_k}` とすると、`a_0 == 0`、`a_k == N`であり、各factorは
+ランダムアクセスイテレータの半開範囲 `[first, last)` を、`compare` が定める辞書順で
+Lyndon 分解する。返り値を $\lbrace a_0,a_1,\ldots,a_k\rbrace$ とすると、$a_0=0$、$a_k=N$ であり、各因子は
 `[first + a_i, first + a_{i+1})` である。
 
-同値判定には`!compare(a,b) && !compare(b,a)`を使う。`compare`はstrict weak
-orderingでなければならない。`last < first`の反転範囲は
-`std::invalid_argument`を送出する。空範囲の返り値は`{0}`。
+同値判定には `!compare(a, b) && !compare(b, a)` を使う。空範囲の返り値は `{0}` である。
 
 ## `lyndon_factorization(text)`
 
@@ -28,19 +26,18 @@ std::vector<std::size_t> boundaries = lyndon_factorization(
 );
 ```
 
-文字の通常の昇順を使う文字列用overload。返す境界の意味はiterator版と同じ。
+文字の通常の昇順を使う文字列用のオーバーロードである。返す境界の意味はイテレータ版と同じ。
 
-## API別の時間計算量・空間計算量
+## 時間計算量・空間計算量
 
-`N = last - first`または`text.size()`とする。
+$N$ を `last - first` または `text.size()`、$K$ を因子の個数とする。Duval 法では各要素を定数回だけ比較する。
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| iterator版 | $O(N)$ | 返り値 $O(K)$ |
-| `string_view`版 | $O(N)$ | 返り値 $O(K)$ |
-
-`K`はfactor数。Duval法では各要素を定数回だけ比較する。
+| イテレータ版 | $O(N)$ | 返り値 $O(K)$ |
+| `string_view` 版 | $O(N)$ | 返り値 $O(K)$ |
 
 ## 注意点
 
-文字範囲、alphabet、固定容量、構築後の更新可否は各APIの説明に従う。返すindexと区間は0-indexedである。
+- `compare` は狭義弱順序でなければならない。
+- `last < first` の反転した範囲では `std::invalid_argument` を送出する。

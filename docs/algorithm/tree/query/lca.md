@@ -4,9 +4,8 @@ documentation_of: ../../../../src/algorithm/tree/query/lca.hpp
 ---
 
 根付き木上の最小共通祖先、頂点間距離、祖先方向への移動を扱う。
-Euler tour の深さ列に range minimum query の sparse table を構築するため、
-最小共通祖先とそれを使う距離問い合わせは最悪 $O(1)$ である。
-祖先方向への移動のために binary lifting table も保持する。
+Euler tour の深さ列に区間最小値クエリ（RMQ）用の Sparse Table を構築するため、最小共通祖先とそれを使う距離のクエリは最悪 $O(1)$ である。
+祖先方向への移動のために、ダブリングの表も保持する。
 
 ## API
 
@@ -20,13 +19,12 @@ Euler tour の深さ列に range minimum query の sparse table を構築する�
 
 ### `add_edge(u, v)`
 
-無向辺 $\{u,v\}$ を追加する。追加後は `build` を再実行する必要がある。
+無向辺 $\lbrace u,v\rbrace$ を追加する。追加後は `build` を再実行する必要がある。
 
 ### `build(root = 0)`
 
-追加済みの辺が連結な木をなすことを検査し、`root` を根として親、深さ、
-Euler tour RMQ、binary lifting table を構築する。同じ木を別の根で再構築してよい。
-空の木では何も構築せず正常終了する。
+追加済みの辺が連結な木をなすことを検査し、`root` を根として親、深さ、Euler tour 上の RMQ、ダブリングの表を構築する。
+同じ木を別の根で再構築してもよい。空の木では何も構築せずに正常終了する。
 
 ### `parent(v)`
 
@@ -54,8 +52,7 @@ Euler tour RMQ、binary lifting table を構築する。同じ木を別の根で
 
 ### `is_on_path(u, v, p)`
 
-頂点 `p` が `u` と `v` を結ぶ単純パス上にあるとき、かつそのときに限り
-`true` を返す。端点を含む。
+頂点 `p` が `u` と `v` を結ぶ単純パス上にあるとき、かつそのときに限り `true` を返す。端点も含む。
 
 ## 時間計算量
 
@@ -65,21 +62,16 @@ Euler tour RMQ、binary lifting table を構築する。同じ木を別の根で
 - `build`: $O(N\log(N+1))$
 - `parent(v)`, `depth(v)`: $O(1)$
 - `jump(v, k)`: $O(\log(N+1))$
-- `lca(u, v)`, `dist(u, v)`, `path_vertex_count(u, v)`,
-  `is_on_path(u, v, p)`: $O(1)$
+- `lca(u, v)`, `dist(u, v)`, `path_vertex_count(u, v)`, `is_on_path(u, v, p)`: $O(1)$
 
 ## 空間計算量
 
-隣接リスト、Euler tour の sparse table、binary lifting table を含めて
-$O(N\log(N+1))$。
+隣接リスト、Euler tour の Sparse Table、ダブリングの表を含めて $O(N\log(N+1))$ である。
 
 ## 注意点
 
 `parent`、`depth`、`jump`、`lca`、`dist`、
-`path_vertex_count`、`is_on_path` の前に、最後の辺追加より後で `build` を完了させる。
-頂点と根は範囲内でなければならず、空でない入力は自己ループや多重辺を含まない
-無向連結木でなければならない。
+`path_vertex_count`、`is_on_path` の前に、最後に辺を追加した後で `build` を完了させる。
+頂点と根は範囲内でなければならず、空でない入力は自己ループや多重辺を含まない無向連結木でなければならない。
 
-負の $n$ または $k$、範囲外の頂点または根、$k>\mathrm{depth}(v)$、
-`build` 前の問い合わせ、辺数・閉路・連結性に違反する入力では
-`std::runtime_error` を送出する。
+負の $n$ または $k$、範囲外の頂点または根、$k>\mathrm{depth}(v)$、`build` 前のクエリ、辺数・閉路・連結性に違反する入力では `std::runtime_error` を送出する。

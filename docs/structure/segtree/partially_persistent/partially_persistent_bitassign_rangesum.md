@@ -3,42 +3,59 @@ title: Partially Persistent BitAssign RangeSum (部分永続ビット代入・�
 documentation_of: ../../../../src/structure/segtree/partially_persistent/partially_persistent_bitassign_rangesum.hpp
 ---
 
-部分永続なbit列の区間代入・区間和。詳細は `Partially Persistent Bit Range Structures` を参照。
+0/1 の列に対する区間代入と区間和を部分永続化する。更新は最新のバージョンにだけ行い、過去のすべてのバージョンを参照できる。内部実装は `bit_range_tree_detail::PartiallyPersistentBitRangeTree`（部分永続ビット区間木内部実装）を継承したもので、各疎セグメント木ノードの変更履歴だけを保存する。
 
-## 時間計算量
+```cpp
+template<long long MAX_SIZE = -1, int MAX_NODES = -1, int MAX_VERSIONS = -1, int MAX_CHANGES = -1>
+struct PartiallyPersistentBitAssignRangeSum;
+```
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
-- updateと最新versionのquery: $O(\log \mathtt{MAX\_SIZE})$
-- 過去versionのquery: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
-- version・容量情報: $O(1)$
+`PartiallyPersistentDynamicBitAssignRangeSum` という同じ API の別名も定義される。`MAX_SIZE` は列の長さの上限、`MAX_NODES` はノード数、`MAX_VERSIONS` はバージョン数、`MAX_CHANGES` は変更履歴の数の上限である。
 
 ## API
 
-公開APIのsignature・最新版更新・過去version query・半開区間・容量・例外契約は
-`Partially Persistent Bit Range Structures` と同じ。各操作の計算量は下表の通り。
+```cpp
+explicit PartiallyPersistentBitAssignRangeSum(long long n = MAX_SIZE)
+int assign(int version, long long l, long long r, bool value)
+int assign(long long l, long long r, bool value)
+int flip(int version, long long l, long long r)
+int flip(long long l, long long r)
+int set_one(int version, long long l, long long r)
+int set_one(long long l, long long r)
+int set(int version, long long l, long long r)
+int set(long long l, long long r)
+long long sum(int version, long long l, long long r) const
+bool get(int version, long long k) const
+int fork(int version)
+long long size() const
+int versions() const
+int latest_version() const
+int nodes_used() const
+int changes_used() const
+```
 
-## 公開API
+- コンストラクタは長さ `n` の全要素 0 の列をバージョン 0 として作る。
+- 更新（`assign`, `flip`, `set_one`, `set`）は最新版の半開区間 `[l, r)` を書き換えた新しいバージョンを作り、その番号を返す。`version` を省略した形は最新版を更新元とする。`set` は `set_one` と同じで、区間を 1 にする。
+- `fork(version)` は最新版と同じ内容の新しいバージョンを作る。
+- `sum(version, l, r)` は任意の有効なバージョンの `[l, r)` にある 1 の個数を、`get(version, k)` は `k` 番目のビットを返す。
+- `size`, `versions`, `latest_version`, `nodes_used`, `changes_used` は列の長さ・バージョン数・最新のバージョン番号・使用中のノード数・変更履歴の数を返す。
 
-- constructor：長さ `n` の0列をversion 0として作る。
-- `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`：列長と使用量を返す。
-- `fork(version)`：最新版と同内容の新versionを返す。
-- `assign(version,l,r,value)` / `assign(l,r,value)`：最新版の区間を代入する。
-- `flip(version,l,r)` / `flip(l,r)`：最新版の区間を反転する。
-- `set_one` / `set` のversion有無overload：最新版の区間を1へ代入する。
-- `sum(version,l,r)` / `get(version,k)`：任意versionの1の個数／1点を返す。
+## 時間計算量
 
-更新と最新版queryは $O(\log \mathtt{MAX\_SIZE})$、過去version queryは
-$O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$、状態情報と `fork` は $O(1)$。
-更新1回は $O(\log \mathtt{MAX\_SIZE})$ node・履歴、queryは同量の再帰stackを使う。
+- コンストラクタ: $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$
+- `assign`, `flip`, `set_one`, `set`: $O(\log \texttt{MAX_SIZE})$
+- 最新版の `sum`, `get`: $O(\log \texttt{MAX_SIZE})$
+- 過去のバージョンの `sum`, `get`: $O(\log \texttt{MAX_SIZE}\log \texttt{MAX_CHANGES})$
+- `fork`, `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`: $O(1)$
+
+空間計算量は $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$ である。更新 1 回で $O(\log \texttt{MAX_SIZE})$ 個のノード・変更履歴を使い、クエリは同じ量の再帰スタックを使う。
 
 ## 注意点
 
-更新元は常に `latest_version()`。version引数付き更新も過去versionを受け付けない。
-`0 < n <= MAX_SIZE`、半開区間・点・versionが有効でなければならない。
-最新版条件、範囲、node/version/change容量違反では `runtime_error`。
+- 更新元は常に `latest_version()` でなければならない。バージョン引数付きの更新や `fork` も過去のバージョンは受け付けない。
+- `0 < n <= MAX_SIZE` を要求する。区間は半開区間で指定する。
+- 無効なバージョン、範囲外、最新版の条件の違反、ノード・バージョン・変更履歴の容量超過では `std::runtime_error` を送出する。失敗した更新は使用量を元に戻す。
 
 ## 容量を省略する場合
 
-容量引数の既定値は `-1`。`PartiallyPersistentBitAssignRangeSum<> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+容量のテンプレート引数のデフォルトはすべて `-1` である。`PartiallyPersistentBitAssignRangeSum<> tree(n);` のようにすべての容量を省略すると、内部実装の可変長版を使い、ノード・バージョン情報・変更履歴を使用量に応じて `std::vector` で拡張する。上記の計算量の容量は実際の使用量に置き換わる。`n` は必ず指定する（デフォルトの `n = 0` は `0 < n` の条件に反する）。

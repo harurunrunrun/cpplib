@@ -3,19 +3,18 @@ title: Persistent Dynamic Li Chao Tree (完全永続動的Li Chao木)
 documentation_of: ../../../../src/structure/convex_hull_trick/li_chao/persistent_dynamic_li_chao_tree.hpp
 ---
 
-完全永続 Dynamic Li Chao Tree。
-
-整数座標の閉区間 `[X_MIN, X_MAX]` 上で、指定したバージョンに直線を追加した新しいバージョンを作る。
+完全永続な動的 Li Chao Tree。整数座標の閉区間 $[\texttt{X_MIN},\texttt{X_MAX}]$ 上で、指定したバージョンに直線を追加した新しいバージョンを作る。バージョン 0 は直線のない状態である。
 
 ## テンプレート引数
 
 ```cpp
-PersistentDynamicLiChaoTree<X_MIN, X_MAX, MAX_VERSION>
+PersistentDynamicLiChaoTree<X_MIN, X_MAX, MAX_VERSION = -1>
 ```
 
-- 座標の下限 `X_MIN`
-- 座標の上限 `X_MAX`
-- 追加できるバージョン数の上限 `MAX_VERSION`
+- `X_MIN`, `X_MAX`: 座標の下限・上限（`long long`）
+- `MAX_VERSION`: バージョン 0 から追加できるバージョン数の上限。`-1`（省略時）なら上限なしの可変長版
+
+`MAX_VERSION` を指定すると、根の表と全更新分のノード（1 回の更新につき $D$ 個）をオブジェクト内に固定確保する。省略すると `std::vector` で必要に応じて確保する（伸長コストは償却され、各操作の計算量は変わらない）。
 
 ## add_line / fork
 
@@ -25,77 +24,48 @@ int add_line(int version, Line line)
 int fork(int version)
 ```
 
-`add_line` は `version` に直線 `a x + b` を追加した新しいバージョン番号を返す。
-`fork` は同じ状態を指す新しいバージョンを作る。
-
-## 時間計算量
-
-- `add_line`: $O(\log (X\_MAX - X\_MIN + 1))$
-- `fork`: $O(1)$
+`add_line` はバージョン `version` に直線 $ax+b$ を追加した新しいバージョンを作り、その番号を返す。`fork` は同じ状態を指す新しいバージョンを作る。
 
 ## query
 
 ```cpp
-long long query(int version, long long x)
+long long query(int version, long long x) const
 ```
 
-指定したバージョンでの `x` における最小値を返す。
+バージョン `version` での $x$ における最小値を返す。
 
-空の場合は `PersistentDynamicLiChaoTree::INF` を返す。非空の場合の値は `INF` 以上でも扱える。
+直線が 1 本もない場合は `PersistentDynamicLiChaoTree::INF` を返す。直線がある場合は、`INF` 以上の値も正しく返す。
 
-`a * x + b` は `__int128` で評価し、`long long` の範囲外だけを上下限へ丸める。node、version の容量例外が発生した場合、既存 version と使用済み node 数は変化しない。
-
-## 時間計算量
-
-- $O(\log (X\_MAX - X\_MIN + 1))$
+$ax+b$ は `__int128` で評価し、`long long` の範囲外になった場合だけ上下限に丸める。
 
 ## その他
 
 ```cpp
-bool empty(int version)
-int versions()
-int latest_version()
-int nodes_used()
+bool empty(int version) const
+int versions() const
+int latest_version() const
+int nodes_used() const
 ```
+
+順に、指定したバージョンに直線がないかどうか、バージョン数、最後に作ったバージョンの番号、使用ノード数を返す。
 
 ## 時間計算量
 
-- $O(1)$
+$W=\texttt{X_MAX}-\texttt{X_MIN}+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間の木の最大の深さとする。
 
-## API別計算量
-
-$W=X\_MAX-X\_MIN+1$、$D=\lceil\log_2 W\rceil+1$ を整数区間treeの最大level数とする。
-
-- `PersistentDynamicLiChaoTree()`: root table初期化 $O(\mathrm{MAX\_VERSION})$
-- `Line::eval128`, `Line::eval`: $O(1)$
-- `versions`, `latest_version`, `nodes_used`, `empty`: $O(1)$
-- `fork`: $O(1)$。nodeを増やさずversionだけを生成する
-- 2つの `add_line` overload: $O(D)$、新規node $O(D)$、新規version $O(1)$
+- コンストラクタ: 固定長版は根の表とノード配列の初期化で $O(\texttt{MAX_VERSION}\cdot D)$、可変長版は $O(1)$
+- `Line::eval128`, `Line::eval`, `versions`, `latest_version`, `nodes_used`, `empty`: $O(1)$
+- `fork`: $O(1)$。ノードを増やさずバージョンだけを作る
+- `add_line`（2 つのオーバーロードとも）: $O(D)$。新しいノードを $O(D)$ 個、新しいバージョンを 1 個作る
 - `query`: $O(D)$
 
 ## 空間計算量
 
-- root tableと全update用固定arena: $O((\mathrm{MAX\_VERSION}+1)D)$
-- 各操作の再帰stack: `add_line` は $O(D)$、その他は $O(1)$
+- 固定長版の根の表と全更新用のノード配列: $O((\texttt{MAX_VERSION}+1)D)$。可変長版は作ったノード数とバージョン数に比例
+- 各操作の再帰スタック: `add_line` は $O(D)$、その他は $O(1)$
 
 ## 注意点
 
-- compile時に`X_MIN <= X_MAX`, `MAX_VERSION >= 0`が必要。
-- versionは`[0,versions())`、query座標は`[X_MIN,X_MAX]`。違反時は例外。
-- `add_line`と`fork`でversion/node容量を超える場合は例外で、既存状態を変えない。
-- `latest_version`は最後のversion番号、`nodes_used`は使用node数を返す。
-- `empty(version)`は指定versionに直線がないかを返す。
-
-## 容量を省略した可変長版
-
-容量テンプレートを省略すると既定値 `-1` でvectorを使い、必要な保存領域を明示的に伸長する。
-固定容量を指定する既存版も同じヘッダに残る。
-
-```cpp
-using Variable = PersistentDynamicLiChaoTree<X_MIN, X_MAX>;
-using Fixed = PersistentDynamicLiChaoTree<X_MIN, X_MAX, Versions>;
-```
-
-伸長の費用は追加操作全体で償却され、上記の各操作の計算量を維持する。
-領域は確保済みノード・履歴・heap要素などの個数に比例する。
-整数添字の表現上限を超える要素数は例外。構造上の文字種類・bit幅・座標域は、件数容量とは別に指定できる。
+- コンパイル時に `X_MIN <= X_MAX`、`MAX_VERSION >= 0`（または `-1`）が必要である（`static_assert`）。
+- バージョンは $[0,\texttt{versions()})$、`query` の座標は $[\texttt{X_MIN},\texttt{X_MAX}]$ になければならない。違反すると `std::runtime_error` を投げる。
+- `add_line` と `fork` でバージョン数・ノード数の上限を超える場合は `std::runtime_error` を投げ、既存のバージョンと使用ノード数は変えない。

@@ -3,58 +3,81 @@ title: Incremental Component Sum (増分連結成分和)
 documentation_of: ../../../../src/structure/dsu/specialized/incremental_component_sum.hpp
 ---
 
-頂点への値の加算と無向辺の追加を処理し、各連結成分の頂点値総和を返す。
+頂点への値の加算と無向辺の追加を処理し、各連結成分の頂点値の総和を返す。
 辺は追加だけを行い、削除しない増分グラフを扱う。
 
 ## テンプレート引数
 
 ```cpp
-IncrementalComponentSum<T, MAX_SIZE>
+IncrementalComponentSum<T, MAX_SIZE = -1>
 ```
 
-- `T` は `T{}`、加算 `a + b`、代入を利用できる値型
-- `MAX_SIZE` は頂点数の上限で、正でなければならない
+- `T`: `T{}`、加算 `a + b`、代入が使える値の型
+- `MAX_SIZE`: 頂点数の上限（正）。省略（`-1`）すると、実行時の頂点数に合わせて `std::vector` を確保する可変長版になる
+
+```cpp
+IncrementalComponentSum<long long> dsu(values);  // 可変長版
+```
 
 ## コンストラクタ
 
-### `IncrementalComponentSum(n)`
-
 ```cpp
 explicit IncrementalComponentSum(int n = MAX_SIZE);
-```
-
-`n` 頂点を作り、各頂点の値を `T{}` で初期化する。
-
-### `IncrementalComponentSum(values)`
-
-```cpp
 explicit IncrementalComponentSum(const vector<T>& values);
 ```
 
-`values[v]` を頂点 `v` の初期値として作る。
+1 つ目は $n$ 頂点を作り、各頂点の値を `T{}` で初期化する。可変長版では `n` のデフォルトは $0$ である。
+2 つ目は `values[v]` を頂点 $v$ の初期値として作る。
 
-## `add_vertex(vertex, delta)`
+## add_vertex
 
-頂点 `vertex` の値に `delta` を加算する。負の `delta` も `T` が表現できれば使用できる。
+```cpp
+void add_vertex(int vertex, const T& delta)
+```
 
-## `add_edge(first, second)`
+頂点 `vertex` の値に `delta` を加算する。`T` が表現できれば負の `delta` も使える。
 
-無向辺を追加し、2頂点の成分が異なれば併合する。実際に併合した場合だけ `true` を返す。
-自己ループや同じ成分内の辺では状態を変えず `false` を返す。
+## add_edge
 
-## `component_sum(vertex)`
+```cpp
+bool add_edge(int first, int second)
+```
 
-`vertex` を含む連結成分に属する全頂点の現在値の総和を返す。
+無向辺を追加し、2 頂点の成分が異なれば併合する。実際に併合した場合だけ `true` を返す。
+自己ループや同じ成分内の辺では状態を変えず、`false` を返す。
 
-## `leader(vertex)` / `same(first, second)`
+## component_sum
 
-`leader` は成分の代表元、`same` は2頂点が同じ成分かを返す。
+```cpp
+T component_sum(int vertex)
+```
 
-## `component_size(vertex)` / `size(vertex)`
+`vertex` を含む連結成分に属するすべての頂点の現在値の総和を返す。
 
-`vertex` を含む成分の頂点数を返す。2つの API は同じ値を返す。
+## leader / same
 
-## `size()` / `groups()`
+```cpp
+int leader(int vertex)
+bool same(int first, int second)
+```
+
+`leader` は成分の代表元を、`same` は 2 頂点が同じ成分に属するかを返す。
+
+## component_size / size(vertex)
+
+```cpp
+int component_size(int vertex)
+int size(int vertex)
+```
+
+`vertex` を含む成分の頂点数を返す。2 つの関数は同じ値を返す。
+
+## size() / groups()
+
+```cpp
+int size() const
+int groups() const
+```
 
 引数なしの `size()` は全頂点数、`groups()` は現在の連結成分数を返す。
 
@@ -69,34 +92,28 @@ graph.add_vertex(2, 5);
 assert(graph.component_sum(0) == 12);
 ```
 
-## API別の時間計算量・空間計算量
+## 時間計算量
 
-頂点数を $N$、逆Ackermann関数を $\alpha$ とする。
+頂点数を $N$、逆アッカーマン関数を $\alpha$ とする。
 
-| API | 償却時間計算量 | 追加空間計算量 |
+| API | 時間計算量（償却） | 追加空間計算量 |
 | --- | --- | --- |
-| 各コンストラクタ | $O(MAX_SIZE)$ | $O(1)$ |
+| 各コンストラクタ | $O(N)$（固定長版は配列の初期化に $O(\texttt{MAX_SIZE})$） | $O(1)$ |
 | `add_vertex`, `add_edge` | $O(\alpha(N))$ | $O(\log N)$ |
 | `component_sum` | $O(\alpha(N))$ | $O(\log N)$ |
 | `leader`, `same` | $O(\alpha(N))$ | $O(\log N)$ |
 | `component_size`, `size(vertex)` | $O(\alpha(N))$ | $O(\log N)$ |
 | `size()`, `groups()` | $O(1)$ | $O(1)$ |
 
-本体は固定配列として $O(\mathtt{MAX\_SIZE})$ の領域を持つ。追加空間は代表探索の再帰スタックを含む。
+追加空間は、代表探索の再帰スタックである。
+
+## 空間計算量
+
+固定長版は $O(\texttt{MAX_SIZE})$、可変長版は $O(N)$ の領域を持つ。
 
 ## 注意点
 
-- `0 <= n <= MAX_SIZE` でなければコンストラクタは `runtime_error` を送出する。
-- 頂点引数はすべて `[0,n)`。範囲外なら `runtime_error` を送出する。
-- 辺の削除、頂点値の代入、過去状態への問い合わせは行えない。
-- 成分和が型 `T` で表現できることは呼び出し側の前提である。
-
-## 可変長版
-
-```cpp
-IncrementalComponentSum<long long> dsu(values);
-```
-
-容量の template 引数を省略すると、実行時の要素数に合わせて `std::vector` を確保する。構築・保存領域は O(n)。併合・成分和の計算量は固定長版と同じ。
-
-容量を明示した固定長版も同じヘッダに含まれる。既存の固定上限に関する説明は容量を明示した場合に適用される。
+- $0 \le n \le \texttt{MAX_SIZE}$ でなければ、コンストラクタは `std::runtime_error` を送出する。
+- 頂点引数はすべて $[0, n)$ でなければならない。範囲外なら `std::runtime_error` を送出する。
+- 辺の削除、頂点値の代入、過去の状態への問い合わせは行えない。
+- 成分和が型 `T` で表現できることは、呼び出し側の前提である。

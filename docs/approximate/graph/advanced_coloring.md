@@ -3,21 +3,23 @@ title: Saturation and Independent-Set Coloring (飽和次数順序と独立集�
 documentation_of: ../../../src/approximate/graph/advanced_coloring.hpp
 ---
 
-Additional deterministic graph-coloring constructions.
-決定的なグラフ彩色構成を `approximate::graph` 名前空間へ追加する。
+`approximate::graph` 名前空間に、決定的なグラフ彩色の構成法を追加する。以下、頂点数を $V$、辺数を $E$ とする。
 
 ## `saturation_degree_ordering`
 
-Returns the DSATUR selection order. At each step it maximizes the number of
-distinct already-used neighbor colors, then static degree, then minimizes the
-vertex index.
-各 step で「彩色済み隣接色の種類数」、静的次数、頂点番号の昇順の順に tie-break する DSATUR 順序を返す。
+```cpp
+vector<size_t> saturation_degree_ordering(
+    size_t vertex_count,
+    const vector<pair<size_t, size_t>>& edges
+)
+```
 
-- Time / 時間計算量: \(O(V^2+E\log V)\)
-- Extra space / 追加空間計算量: \(O(V+E)\)
+DSATUR の頂点選択順を返す。各ステップで、彩色済みの隣接頂点の色の種類数が最大の頂点を選び、同数なら静的な次数が大きい頂点、さらに同数なら頂点番号が小さい頂点を選ぶ。
 
-The returned vector is a permutation and can be passed to `greedy_coloring`.
-返値は頂点置換であり、`greedy_coloring` の `order` にそのまま渡せる。
+- 時間計算量: $O(V^2+E\log V)$
+- 追加空間計算量: $O(V+E)$
+
+戻り値は頂点の順列であり、`greedy_coloring` の `order` にそのまま渡せる。
 
 ## `independent_set_coloring`
 
@@ -29,17 +31,13 @@ ColoringResult independent_set_coloring(
 )
 ~~~
 
-Repeatedly constructs a priority-greedy maximal independent set and assigns one
-new color to it.
-未彩色誘導部分グラフ上で `priority` 順の極大独立集合を繰り返し構成し、集合ごとに新しい1色を割り当てる。
+未彩色の頂点が誘導する部分グラフ上で、`priority` の順に貪欲に極大独立集合を作ることを繰り返し、集合ごとに新しい 1 色を割り当てる。
 
-If \(C\) colors are produced:
+使う色数を $C$ とすると、
 
-- Time / 時間計算量: \(O(C(V+E))\)
-- Extra space / 追加空間計算量: \(O(V+E)\)
+- 時間計算量: $O(C(V+E))$
+- 追加空間計算量: $O(V+E)$
 
 ## 注意点
 
-Both functions reject out-of-range endpoints, invalid priority permutations,
-and self-loops. Parallel edges are accepted.
-端点範囲外、不正な頂点置換、自己 loop には例外を送出し、平行辺は許す。
+- どちらの関数も、範囲外の端点（`std::out_of_range`）、不正な頂点の順列 `priority`、自己ループ（`std::invalid_argument`）を拒否する。平行辺は受理する。

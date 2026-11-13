@@ -3,19 +3,19 @@ title: Diagonal Gaussian Mixture EM (対角共分散ガウス混合モデルEM�
 documentation_of: ../../../src/approximate/clustering/gaussian_mixture.hpp
 ---
 
-対角共分散Gaussian mixture modelをEM法で推定する。EMは初期値依存のheuristicであり、最大likelihoodの大域解を保証しない。
+対角共分散のガウス混合モデルを EM 法で推定する。EM 法は初期値に依存するヒューリスティックであり、尤度最大の大域解は保証しない。
 
-## GaussianMixtureResult
+## `GaussianMixtureResult`
 
-- `weights[k]`: mixture weight
+- `weights[k]`: 混合比
 - `means[k][d]`: 平均
-- `variances[k][d]`: 対角分散
-- `responsibilities[i][k]`: 点 `i` の事後確率
-- `labels[i]`: responsibility最大のcomponent
-- `log_likelihood`: 返却parameterで再計算した対数likelihood
-- `iterations`: 実行したM-step数
+- `variances[k][d]`: 対角成分の分散
+- `responsibilities[i][k]`: 点 `i` が成分 `k` に属する事後確率（負担率）
+- `labels[i]`: 負担率が最大の成分
+- `log_likelihood`: 返したパラメータで計算し直した対数尤度
+- `iterations`: 実行した M ステップの回数
 
-## gaussian_mixture_em
+## `gaussian_mixture_em`
 
 ~~~cpp
 template<class Real, class URBG>
@@ -29,15 +29,15 @@ GaussianMixtureResult gaussian_mixture_em(
 )
 ~~~
 
-異なる点番号をshuffleして初期平均を選び、全体の対角分散で初期化する。E-stepはlog-sum-expで計算し、M-stepでは逐次加重平均を使う。各分散を `minimum_variance` 以上にする。対数likelihoodの相対変化が `tolerance` 以下なら終了する。同じURBG状態では決定的である。
+相異なる点番号をシャッフルして初期平均を選び、分散は全体の対角分散で初期化する。E ステップは log-sum-exp で計算し、M ステップでは逐次的な加重平均を使う。各分散は `minimum_variance` 以上に切り上げる。対数尤度の相対変化が `tolerance` 以下になると終了する。乱数生成器の状態が同じなら結果は決定的である。
 
-点数を $N$、component数を $K$、次元を $D$、実行iteration数を $I$ とする。
+点数を $N$、成分数を $K$、次元を $D$、実行した反復回数を $I$ とする。
 
-- 時間計算量: $O((I+1)NKD)$。最後のE-stepを含む
+- 時間計算量: $O((I+1)NKD)$（最後の E ステップを含む）
 - 追加空間計算量: $O(ND+NK+KD)$
-
-入力は非空で、`1 <= component_count <= N` を要求する。`tolerance` は有限な非負値、`minimum_variance` は有限な正値でなければならない。分散・likelihoodを `long double` で表せない場合、または全componentの確率が数値的にunderflowした場合は `std::overflow_error` を送出する。
 
 ## 注意点
 
-座標列または距離callbackは、各APIで示した次元・有限性・非負性の条件を満たす必要がある。初期値や入力順に依存する手法では、明記した場合を除いて一意な分割や大域最適性を保証しない。
+- 入力は空でなく、全点が同じ正の次元と有限の座標を持ち、`1 <= component_count <= N` でなければならない。
+- `tolerance` は非負の有限値、`minimum_variance` は正の有限値でなければならず、満たさない場合は `std::invalid_argument` を送出する。
+- 分散や尤度を `long double` で表せない場合、または全成分の確率が数値的にアンダーフローした場合は `std::overflow_error` を送出する。

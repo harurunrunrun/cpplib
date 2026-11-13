@@ -3,41 +3,41 @@ title: t-digest (tダイジェストによる分位点スケッチ)
 documentation_of: ../../../src/approximate/streaming/tdigest.hpp
 ---
 
-## t-digest (tダイジェストによる分位点スケッチ)
+近い値を重み付きの重心（centroid）にまとめる分位点スケッチである。中央より裾（tail）の重心を細かく残すスケールを使う。乱数を使わず決定的に動作する。
 
-近い値を weighted centroid にまとめる分位点 sketch。中央より tail の centroid を
-細かく残す scale を使う。乱数を使わず決定的。
+## 使い方
+
+~~~cpp
+TDigest<> sketch(128);    // 重心数の上限
+sketch.add(42.0L);
+auto median = sketch.quantile(0.5L);
+
+TDigest<128> fixed;       // 上限をテンプレート引数で固定する版
+~~~
+
+`TDigest<MaxCentroids>` の `MaxCentroids` を省略すると、重心数の上限 $C$（デフォルト 200）を実行時に指定して `std::vector` に保存する可変長版になる。指定すると `std::array` に保存する固定長版になる。
 
 ## API
 
-- `TDigest::Centroid`: centroidの平均 `mean` と重み `weight` を保持する。構築・各member参照の時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `TDigest()`: centroid数と総重みを0にして構築する。時間計算量と追加空間計算量はいずれも $O(MaxCentroids)$。
-- `add(value, weight)`: 有限値と正の有限重みを追加する。centroid 挿入と必要な 1 組の
-  圧縮を行う。時間計算量は $O(MaxCentroids)$。 追加空間計算量は $O(1)$。
-- `merge(other)`: snapshot した `other` の centroid を追加する。自己 merge も可能。
-  時間計算量は $O(MaxCentroids^2)$。 追加空間計算量は $O(MaxCentroids)$。
-- `quantile(probability)`: centroid 中心間を補間する。時間計算量は $O(MaxCentroids)$。
-  空または `[0,1]` 外は例外。 追加空間計算量は $O(1)$。
-- `cdf(value)`: 累積分布を補間する。NaN は `std::invalid_argument`。時間計算量は $O(MaxCentroids)$。 追加空間計算量は $O(1)$。
-- `clear()`: 時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `centroid_count()`, `total_weight()`, `maximum_centroids()`: 時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
+- `TDigest::Centroid`: 重心の平均 `mean` と重み `weight` を保持する構造体。
+- `TDigest(maximum_centroids = 200)`（可変長版）/ `TDigest()`（固定長版）: 空で構築する。
+- `add(value, weight = 1.0L)`: 有限な値と正の有限な重みを追加する。重心を挿入し、上限を超えたら隣接する 1 組を結合する。
+- `merge(other)`: `other` の重心のコピーを順に `add` する。自分自身との `merge` も可能。
+- `quantile(probability)`: 重心の中心の間を線形補間して分位点を返す。
+- `cdf(value)`: 累積分布関数の値を線形補間して返す。空なら 0。
+- `clear()`: 空に戻す。
+- `centroid_count()`, `total_weight()`, `maximum_centroids()`: 重心の個数、総重み、$C$ を返す。
 
+## 時間計算量
+
+- コンストラクタ: $O(C)$、空間計算量 $O(C)$
+- `add`, `quantile`, `cdf`: $O(C)$、追加空間 $O(1)$
+- `merge`: $O(C^2)$、追加空間 $O(C)$
+- `clear`, `centroid_count`, `total_weight`, `maximum_centroids`: $O(1)$
 
 ## 注意点
 
-t-digest には入力分布に依存しない厳密な最大 rank 誤差保証はない。
-centroid 数を増やすと通常は誤差が下がり、この実装は tail の結合を中央より抑える。
-保存に必要な空間計算量は $O(MaxCentroids)$。
-
-## 容量を省略する可変長版
-
-~~~cpp
-TDigest<> sketch(128); // centroid 数の上限
-sketch.add(42.0L);
-auto median = sketch.quantile(0.5L);
-~~~
-
-centroid 上限 $C\ge2$ を実行時に指定し、`vector` に保存する。
-構築・追加・分位点 query・CDF は $O(C)$ 時間、merge は $O(C^2)$ 時間。
-保存領域は $O(C)$、merge の一時領域は $O(C)$、その他の一時領域は $O(1)$。
-`clear` は $O(1)$ 時間。容量を明示した固定配列版も同じ header にある。
+- t-digest には、入力分布に依存しない厳密な最大順位誤差の保証はない。重心数を増やすと通常は誤差が下がる。
+- `add` は値が非有限なら、重みが正の有限値でなければ `std::invalid_argument`、総重みが有限でなくなるなら `std::overflow_error` を投げる。
+- 空のスケッチへの `quantile` は `std::logic_error`、`probability` が $[0,1]$ の外なら `std::out_of_range`、`cdf` に NaN を渡すと `std::invalid_argument` を投げる。
+- $C$ は 2 以上でなければならない。固定長版は `static_assert`、可変長版は `std::invalid_argument` で検査する。

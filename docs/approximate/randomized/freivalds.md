@@ -1,20 +1,25 @@
 ---
-title: Freivalds' Algorithm (Freivaldsのアルゴリズム)
+title: Freivalds' Algorithm (Freivalds のアルゴリズム)
 documentation_of: ../../../src/approximate/randomized/freivalds.hpp
 ---
 
-`first * second == product` を乱択で検査する。`vector<vector<T>>` と固定長 `array`
-の overload がある。
+行列積 `first * second == product` が成り立つかを乱択で検査する。`vector<vector<T>>` 版と固定長 `array` 版のオーバーロードがある。
 
-- `freivalds_verify(first, second, product, rounds, seed)`: 各 round で 0/1 vector `r` を作り、
-  `first * (second * r)` と `product * r` を比較する。
-  行列 shape を $R\times I$, $I\times C$ とすると
-  時間計算量は $O(rounds(RI+IC+RC))$、追加空間計算量は $O(R+I+C)$。
+## API
 
-正しい積は必ず `true`。異なる積を `true` とする確率は高々 $2^{-rounds}$。
-`rounds == 0` や非矩形・非互換 shape は `std::invalid_argument`。
-演算型 `T` は 0, 1、加算、乗算、等値比較を使え、途中値が表現範囲に収まる必要がある。
+```cpp
+bool freivalds_verify(first, second, product, rounds = 20, seed = 0);
+```
+
+各ラウンドで成分が 0 または 1 のベクトル $r$ をシード `seed` の乱数で作り、`first * (second * r)` と `product * r` を比較する。
+
+行列の形を $R \times I$, $I \times C$, $R \times C$、ラウンド数を $T$ とすると、時間計算量は $O(T(RI + IC + RC))$、追加空間計算量は $O(R + I + C)$。
+
+正しい積に対しては必ず `true` を返す。誤った積を `true` と判定する確率は高々 $2^{-T}$ である。
 
 ## 注意点
 
-確率的保証は各APIで示した独立性と入力条件の下で成り立つ。同じ結果の再現には同じ乱数器状態・入力・標準ライブラリ実装が必要で、中間演算は使用型の表現範囲内でなければならない。
+- `rounds == 0`、矩形でない行列、形が合わない行列に対しては `std::invalid_argument` を送出する。
+- 演算型 `T` は 0, 1、加算、乗算、等値比較が使え、途中の値が表現範囲に収まらなければならない。
+- `seed` のデフォルトは 0 で固定なので、敵対的な入力に対しては呼び出し側で乱数のシードを与えること。
+- 確率的保証は各ラウンドの乱数が独立である場合に成り立つ。

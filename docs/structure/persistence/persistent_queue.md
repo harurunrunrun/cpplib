@@ -3,47 +3,43 @@ title: Persistent Queue (完全永続キュー)
 documentation_of: ../../../src/structure/persistence/persistent_queue.hpp
 ---
 
-任意の過去versionを保ったまま、末尾への追加または先頭の削除を行った新しいversionを作るqueue。
-version 0は空queueであり、更新に成功するたびに連番のversionを1つ生成する。
+任意の過去のバージョンを保ったまま、末尾への追加または先頭の削除を行った新しいバージョンを作るキューである。バージョン 0 は空のキューであり、更新に成功するたびに連番のバージョンを 1 つ生成する。
 
 ## テンプレート引数
 
 ```cpp
-template<class PersistentStorage, int MAX_VERSION>
+template<class PersistentStorage, int MAX_VERSION = -1>
 struct PersistentQueue
 
-template<class T, int MAX_SIZE, int MAX_VERSION>
-using PersistentArrayQueue = ...
+template<class T, int MAX_SIZE = -1, int MAX_VERSION = -1>
+using PersistentArrayQueue = PersistentQueue<PersistentArray<T, MAX_SIZE, MAX_VERSION>, MAX_VERSION>;
 
-template<auto Monoid, int MAX_SIZE, int MAX_VERSION>
-using PersistentSegtreeQueue = ...
+template<auto Monoid, int MAX_SIZE = -1, int MAX_VERSION = -1>
+using PersistentSegtreeQueue = PersistentQueue<PersistentSegtree<Monoid, MAX_SIZE, MAX_VERSION>, MAX_VERSION>;
 ```
 
-`PersistentStorage`は、version付きの`get(version, index)`と`set(version, index, value)`、
-および`size()`を持つ永続random-access storageとする。`value_type`は`get`の返り値から決まる。
+`PersistentStorage` は、バージョン付きの `get(version, index)` と、新しいバージョン番号を返す `set(version, index, value)`、および `size()` を持つ永続ランダムアクセスストレージとする。`value_type` は `get` の戻り値の型から決まる。
 
-`PersistentArrayQueue`は`PersistentArray`、`PersistentSegtreeQueue`は
-`PersistentSegtree`をstorageに使うaliasである。後者の`Monoid::S`がqueueの値型になる。
-queueはsegment積を使わないが、`Monoid`は通常どおり結合則と単位元を満たす必要がある。
+`PersistentArrayQueue` は `PersistentArray` を、`PersistentSegtreeQueue` は `PersistentSegtree` をストレージに使う別名である。後者では `Monoid::S` がキューの値型になる。キューは区間積を使わないが、`Monoid` は通常どおり結合則と単位元を満たす必要がある。
 
-`MAX_SIZE`は同時に保持できる要素数、`MAX_VERSION`は`push`と`pop`で生成できる
-version数の合計上限である。
+`MAX_SIZE` は同時に保持できる要素数の上限、`MAX_VERSION` は `push` と `pop` で生成できるバージョン数の合計の上限である。省略時（`-1`）は上限を設けず、実行時の要素数・更新数に合わせて `std::vector` で領域を確保する。
 
 ## 構築
 
 ```cpp
-Queue queue(int capacity)
+explicit PersistentQueue(int capacity)
 ```
 
-要素数上限を`capacity`として空queueを構築する。初期versionは0。
-aliasを使う場合は`0 <= capacity <= MAX_SIZE`を要求する。
+要素数の上限を `capacity` として空のキューを構築する。初期バージョンは 0 である。別名を使い `MAX_SIZE` を指定する場合は `0 <= capacity <= MAX_SIZE` を要求する。
 
-## 時間計算量
+時間計算量:
 
-- `PersistentArrayQueue`: $O(MAX\_SIZE + MAX\_VERSION)$
-- `PersistentSegtreeQueue`: $O(MAX\_SIZE + MAX\_VERSION\log MAX\_SIZE)$
+- `PersistentArrayQueue`: $O(\texttt{MAX_SIZE} + \texttt{MAX_VERSION})$
+- `PersistentSegtreeQueue`: $O(\texttt{MAX_SIZE} + \texttt{MAX_VERSION}\log \texttt{MAX_SIZE})$
 
-## versionと大きさ
+容量を省略した場合は `capacity` に比例する。
+
+## バージョンと大きさ
 
 ```cpp
 int capacity() const
@@ -53,12 +49,9 @@ int size(int version) const
 bool empty(int version) const
 ```
 
-`capacity`は要素数上限、`versions`は現在存在するversion数、`latest_version`は
-最後に生成したversion番号を返す。`size`と`empty`は指定versionの状態を調べる。
+`capacity` は要素数の上限、`versions` は現在存在するバージョン数、`latest_version` は最後に生成したバージョン番号を返す。`size` と `empty` は指定したバージョンの状態を調べる。
 
-## 時間計算量
-
-すべて$O(1)$。
+時間計算量はすべて $O(1)$。
 
 ## 先頭要素
 
@@ -66,12 +59,9 @@ bool empty(int version) const
 value_type front(int version) const
 ```
 
-指定versionの先頭要素を値で返す。空queueでは`runtime_error`。
+指定したバージョンの先頭要素を値で返す。空のキューでは `std::runtime_error` を送出する。
 
-## 時間計算量
-
-`PersistentStorage::get`の時間計算量。2つのaliasでは
-$O(\log MAX\_SIZE)$。
+時間計算量は `PersistentStorage::get` の時間計算量であり、2 つの別名では $O(\log \texttt{MAX_SIZE})$（容量省略時は $O(\log(n+1))$、$n$ は `capacity`）である。
 
 ## 末尾への追加
 
@@ -79,14 +69,9 @@ $O(\log MAX\_SIZE)$。
 int push(int version, const value_type& value)
 ```
 
-指定versionの末尾へ`value`を追加した新versionを作り、その番号を返す。
-指定versionは変更しない。要素数が`capacity`に達している場合は`runtime_error`。
+指定したバージョンの末尾へ `value` を追加した新しいバージョンを作り、その番号を返す。指定したバージョンは変更しない。要素数が `capacity` に達している場合は `std::runtime_error` を送出する。
 
-## 時間計算量
-
-`PersistentStorage::set`の時間計算量。2つのaliasでは次のとおり。
-
-- 時間・新しく使用するnode: $O(\log MAX\_SIZE)$
+時間計算量は `PersistentStorage::set` の時間計算量であり、2 つの別名では時間・新しく使用するノード数ともに $O(\log \texttt{MAX_SIZE})$ である。
 
 ## 先頭の削除
 
@@ -94,35 +79,17 @@ int push(int version, const value_type& value)
 int pop(int version)
 ```
 
-指定versionの先頭を削除した新versionを作り、その番号を返す。
-指定versionは変更しない。空queueでは`runtime_error`。
+指定したバージョンの先頭を削除した新しいバージョンを作り、その番号を返す。指定したバージョンは変更しない。空のキューでは `std::runtime_error` を送出する。
 
-## 時間計算量
-
-$O(1)$。storageの新versionは作らず、queueのversion metadataだけを追加する。
+時間計算量は $O(1)$。ストレージの新しいバージョンは作らず、キューのバージョン管理情報だけを追加する。
 
 ## 空間計算量
 
-2つのaliasはmetadataに$O(MAX\_VERSION)$を予約する。storageを含む予約領域全体は
-$O(MAX\_SIZE + MAX\_VERSION\log MAX\_SIZE)$である。
-`push`が実際に使用状態へ移すnode数は1versionあたり$O(\log MAX\_SIZE)$。
+2 つの別名は、バージョン管理情報に $O(\texttt{MAX_VERSION})$ を予約する。ストレージを含む予約領域全体は $O(\texttt{MAX_SIZE} + \texttt{MAX_VERSION}\log \texttt{MAX_SIZE})$ である。`push` が実際に使用状態へ移すノード数は 1 バージョンあたり $O(\log \texttt{MAX_SIZE})$ である。容量を省略した場合、要素数 $n$、`push` の回数 $u$、バージョン数 $v$ に対して $O(n + u\log(n+1) + v)$ となる。
 
 ## 注意点
 
-versionは0から始まり、成功した`push`または`pop`が返す番号は常に
-直前の`latest_version() + 1`である。`front`、`size`、`empty`はversionを生成しない。
-範囲外version、空queueへの`front`または`pop`、容量超過、version上限超過では
-`runtime_error`を送出する。
-
-内部添字は循環させるため、`pop`後に別の要素を`push`しても、同時要素数が
-`capacity`以下なら領域を再利用できる。過去versionの値はstorageの永続性により変化しない。
-
-## 可変長版
-
-```cpp
-using Dynamic = PersistentArrayQueue<long long>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。キューの論理容量は constructor の引数で指定する。push/pop は基礎ストレージの更新時間、ArrayQueue は O(log(n + 1))、保存領域は O(n + u log(n + 1) + v)。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- バージョンは 0 から始まり、成功した `push` または `pop` が返す番号は常に直前の `latest_version() + 1` である。`front`、`size`、`empty` はバージョンを生成しない。
+- 範囲外のバージョン、空のキューへの `front` または `pop`、容量超過、バージョン数の上限超過では `std::runtime_error` を送出する。
+- 内部の添字は循環させるので、`pop` 後に別の要素を `push` しても、同時に保持する要素数が `capacity` 以下なら領域を再利用できる。過去のバージョンの値はストレージの永続性により変化しない。
+- コピー・ムーブはできない（削除されている）。

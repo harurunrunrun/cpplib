@@ -3,30 +3,31 @@ title: Persistent Disjoint Set Union (完全永続素集合データ構造)
 documentation_of: ../../../../src/structure/dsu/persistent/persistent_dsu.hpp
 ---
 
-完全永続素集合データ構造。
-
-各バージョンの `parent_or_size` を永続配列で持つ。`merge` は指定したバージョンから新しいバージョンを作る。
+完全永続な素集合データ構造。各バージョンの `parent_or_size` を永続配列（永続セグメント木）で持ち、`merge` は指定したバージョンから新しいバージョンを作る。
+union by size で、経路圧縮は行わない。
 
 ## テンプレート引数
 
 ```cpp
-PersistentDSU<MAX_SIZE, MAX_VERSION>
+PersistentDSU<MAX_SIZE = -1, MAX_VERSION = -1>
 ```
 
-- 頂点数の上限 `MAX_SIZE`
-- 追加できるバージョン数の上限 `MAX_VERSION`
+- `MAX_SIZE`: 頂点数の上限
+- `MAX_VERSION`: 追加できるバージョン数の上限（初期バージョンを除く）
+
+省略（`-1`）した上限は、実行時の要素数に合わせて `std::vector` を確保する可変長になる。固定長版では、ノード領域として $2 \cdot \texttt{MAX_VERSION} \cdot (\lceil \log_2 \texttt{MAX_SIZE} \rceil + 1)$ 個を確保する。
+
+```cpp
+using Dynamic = PersistentDSU<>;
+```
 
 ## コンストラクタ
 
 ```cpp
-PersistentDSU(int n = MAX_SIZE)
+explicit PersistentDSU(int n = MAX_SIZE)
 ```
 
-`n` 頂点の初期バージョン `0` を作る。
-
-## 時間計算量
-
-- $O(\mathtt{MAX\_VERSION})$
+$n$ 頂点の初期バージョン $0$ を作る。可変長版では `n` のデフォルトは $0$ である。
 
 ## merge / fork
 
@@ -35,69 +36,48 @@ int merge(int version, int u, int v)
 int fork(int version)
 ```
 
-`merge` は `version` での `u, v` を併合した新しいバージョン番号を返す。
-すでに同じ集合の場合も新しいバージョンを作る。
+`merge` は `version` で $u$ と $v$ を併合した新しいバージョンを作り、その番号を返す。既に同じ集合の場合も新しいバージョンを作る。
+`fork` は `version` と同じ状態を指す新しいバージョンを作る。
 
-`fork` は同じ状態を指す新しいバージョンを作る。
-
-## 時間計算量
-
-- `merge`: $O(\log N\log \mathtt{MAX\_SIZE})$
-- `fork`: $O(1)$
-
-## same / leader / component_size
+## same / leader / component_size / groups
 
 ```cpp
-bool same(int version, int u, int v)
-int leader(int version, int v)
-int component_size(int version, int v)
-int groups(int version)
+bool same(int version, int u, int v) const
+int leader(int version, int v) const
+int component_size(int version, int v) const
+int groups(int version) const
 ```
 
-指定したバージョンで問い合わせる。
+指定したバージョンでの連結性・代表元・成分の頂点数・成分数を返す。
 
-## 時間計算量
-
-- `same`, `leader`, `component_size`: $O(\log N\log \mathtt{MAX\_SIZE})$
-- `groups`: $O(1)$
-
-## versions
+## size / versions / latest_version / nodes_used
 
 ```cpp
-int versions()
-int latest_version()
-int nodes_used()
+int size() const
+int versions() const
+int latest_version() const
+int nodes_used() const
 ```
 
-作られたバージョン数、最後に作られたバージョン番号、使用中の永続配列ノード数を返す。
+頂点数、作られたバージョン数、最後に作られたバージョンの番号、使用中の永続配列のノード数を返す。
 
 ## 時間計算量
 
-- $O(1)$
+$N$ を頂点数、$S$ を永続配列の幅（固定長版では $\texttt{MAX_SIZE}$、可変長版では $N$）とする。
 
-`size`, `nodes_used` も $O(1)$。
+- コンストラクタ: 固定長版は $O(\texttt{MAX_VERSION})$、可変長版は $O(1)$
+- `merge`: $O(\log N \log S)$
+- `same`、`leader`、`component_size`: $O(\log N \log S)$
+- `fork`、`groups`、`size`、`versions`、`latest_version`、`nodes_used`: $O(1)$
 
-## 空間計算量（API別の追加領域）
+## 空間計算量
 
-- constructor、`size`、`versions`、`latest_version`、`nodes_used`、`groups`、`fork`: $O(1)$
-- `leader`、`same`、`component_size`: 永続配列探索のstack $O(\log \mathtt{MAX\_SIZE})$
-- 異なる成分の`merge`: 新規永続node $O(\log \mathtt{MAX\_SIZE})$ と同量の再帰stack
-- 同一成分の`merge`: 代表探索のstack $O(\log \mathtt{MAX\_SIZE})$、新規nodeは $O(1)$（0個）
+- 異なる成分の `merge` は永続配列のノードを $O(\log S)$ 個生成する。同じ成分の `merge` と `fork` はノードを生成しない
+- 本体: 可変長版は $O(N + V + M \log S)$（$V$ はバージョン数、$M$ は異なる成分の `merge` の回数）
+- `set` の再帰スタックは $O(\log S)$、それ以外の関数の追加領域は $O(1)$
 
 ## 注意点
 
-- `0 <= n <= MAX_SIZE`、頂点は`[0,n)`、versionは`[0,versions())`。違反時は例外。
-- `fork`と`merge`はversionを1個追加し、追加version数が`MAX_VERSION`を超えると例外。
-- 異なる成分の`merge`は永続配列nodeを$O(\log MAX\_SIZE)$個生成する。
-- 同じ成分の`merge`と`fork`はnodeを生成しない。
-- node容量超過時はnode数とversion数を操作前へ戻す。
-
-## 可変長版
-
-```cpp
-using Dynamic = PersistentDSU<>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、併合・同一判定 O(log²(n + 1))、保存領域 O(n + u log(n + 1) + v)。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- $0 \le n \le \texttt{MAX_SIZE}$ で、頂点は $[0, n)$、バージョンは $[0, \mathrm{versions}())$ でなければならない。違反すると `std::runtime_error` を送出する。
+- `fork` と `merge` はバージョンを 1 個追加する。追加したバージョン数が `MAX_VERSION` を超えると `std::runtime_error` を送出する。
+- ノード容量を超えた場合は、ノード数とバージョン数を操作前の状態に戻してから例外を送出する。

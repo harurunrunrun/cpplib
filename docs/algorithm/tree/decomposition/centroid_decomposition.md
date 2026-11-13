@@ -3,34 +3,31 @@ title: Centroid Decomposition (重心分解)
 documentation_of: ../../../../src/algorithm/tree/decomposition/centroid_decomposition.hpp
 ---
 
-木の重心分解。
+木の重心分解を行う。
+元の木から重心を取り除く操作を再帰的に繰り返し、重心木を作る。
 
-元の木から重心を取り除く操作を再帰的に行い、重心木を作る。
+## API
 
-## 関数
-
-- `CentroidDecomposition(graph)`
-- `root()`
-    - 重心木の根。
-- `parent(v)`
-    - 重心木での親。根は `-1`。
-- `depth(v)`
-    - 重心木での深さ。
-- `tree()`
-    - 重心木の隣接リスト。
+- `CentroidDecomposition(graph)`: 隣接リスト `graph` で与えた木を重心分解する（構築時に `build` を呼ぶ）。
+- `build()`: 重心分解をやり直す。
+- `size()`: 頂点数を返す。
+- `root()`: 重心木の根を返す。
+- `parent(v)`: 重心木での親を返す。根では `-1`。
+- `depth(v)`: 重心木での深さを返す。
+- `tree()`: 重心木の隣接リストを返す。const 参照を返すため、列全体をコピーしない。
 
 ## 時間計算量
 
-- `CentroidDecomposition(tree)`: `build` を含めて $O(N\log(N+1))$
+- `CentroidDecomposition(graph)`: `build` を含めて $O(N\log(N+1))$
 - `build`: $O(N\log(N+1))$
 - `size`, `root`, `parent`, `depth`, `tree`: $O(1)$
 
-`tree()` は重心木の隣接リストへのconst referenceを返すため、列全体をコピーしない。
-
 ## 空間計算量
 
-- 元の木と重心木、作業領域を含めて $O(N)$
+元の木と重心木、作業領域を含めて $O(N)$ である。
 
 ## 注意点
 
-頂点とrootは範囲内でなければならない。空木を明記した場合を除き、入力は無向の連結木とする。端点範囲、閉路、辺数、連結性の違反時は `runtime_error` を送出する。記載した計算量には木の検査とResultの構築を含む。
+頂点は範囲内でなければならない。入力は無向の連結木とする。
+端点の範囲外、閉路、辺数、連結性の違反時は `std::runtime_error` を送出する。
+記載した計算量には木の検査を含む。

@@ -3,115 +3,107 @@ title: Persistent Palindromic Tree (永続回文木)
 documentation_of: ../../../../src/algorithm/string/palindrome/persistent_palindromic_tree.hpp
 ---
 
-prefix version を持つ Palindromic Tree。
-
-`append` するたびに 1 つ version が増える。version `v` は長さ `v` の prefix を表す。
+接頭辞ごとの version を持つ回文木である。
+`append` するたびに version が 1 つ増え、version `v` は長さ `v` の接頭辞を表す。
 
 ## テンプレート引数
 
 ```cpp
-PersistentPalindromicTree<ALPHABET, MAX_NODES, MAX_LENGTH, OFFSET>
+PersistentPalindromicTree<ALPHABET, MAX_NODES = -1, MAX_LENGTH = -1, OFFSET = 'a'>
 ```
 
-## construct
-
-```cpp
-PersistentPalindromicTree()
-PersistentPalindromicTree(string_view s)
-int append(char c)
-int add(char c)
-```
-
-`append` / `add` は追加後の version を返す。
-
-## query
-
-```cpp
-int versions()
-int size()
-int size(int version)
-int distinct_palindromes(int version)
-long long count_palindromic_substrings(int version)
-int longest_suffix_palindrome_length(int version)
-int longest_palindrome_length(int version)
-int longest_palindrome_node(int version)
-int find_node(string_view s, int version)
-bool contains(string_view s, int version)
-vector<int> palindrome_nodes(int version)
-vector<string> palindromes(int version)
-vector<int> suffix_palindrome_nodes(int version)
-vector<int> suffix_palindrome_lengths(int version)
-```
-
-## node
-
-```cpp
-int length(int node)
-int link(int node)
-int diff(int node)
-int series_link(int node)
-string palindrome(int node)
-pair<int,int> first_occurrence_range(int node)
-```
-
-`diff` と `series_link` は palindromic tree の series link DP 用の値。
-
-## 時間計算量
-
-- `append`: amortized $O(1)$
-- `distinct_palindromes`, `count_palindromic_substrings`, longest 系: $O(1)$
-- `contains`, `find_node`: $O(L)$
-- `palindromes`: 返す文字列長の合計に線形
-
-## API別の時間計算量・空間計算量
-
-$V$ を全prefixで作られたnode数、$L$ をquery長、$D$ を指定versionのdistinct回文数、$K$ をそのversionのsuffix回文数、返す回文文字列総長を $C$ とする。
-
-| API | 時間計算量 |
-| --- | --- |
-| `PersistentPalindromicTree()` | $O(MAX_NODES\cdot ALPHABET+MAX_LENGTH)$ |
-| `PersistentPalindromicTree(s)` | 上記初期化 $+O(\lvert s\rvert)$ 償却 |
-| `append(c)` / `add(c)` | 1回の最悪 $O(size())$、全prefix追加で償却 $O(1)$ / 文字 |
-| `size()` / `size(version)` / `versions()` / `node_count()` / `str()` | $O(1)$ |
-| `operator[]` / `length` / `link` / `diff` / `series_link` | $O(1)$ |
-| `last(version)` / `distinct_palindromes(version)` | $O(1)$ |
-| `count_palindromic_substrings(version)` | $O(1)$ |
-| longest系query | $O(1)$ |
-| `first_occurrence_range(node)` | $O(1)$ |
-| `palindrome(node)` | $O(\ell_{node})$（出力文字列長） |
-| `find_node(s,version)` / `contains(s,version)` | $O(L)$ |
-| `palindrome_nodes(version)` | $O(V+D)$、出力 $O(D)$ |
-| `palindromes(version)` | $O(V+C)$ |
-| `suffix_palindrome_nodes(version)` / `suffix_palindrome_lengths(version)` | $O(K)$ |
-
-`palindrome_nodes` は指定versionにまだ存在しないnodeも含め、全 $V$ nodeを走査して選別する。保持領域は $O(MAX_NODES\cdot ALPHABET+MAX_LENGTH)$。
-
-## 注意点
-
-- version 0は空文字列で、version `v` は長さ `v` のprefix。
-  `versions()` は `size()+1`、`str()` は現在の全文字列へのconst参照。
-- `append(c)` / `add(c)` は末尾へ追加し、新しいprefix versionを返す。
-  文字はalphabet内、文字数は `MAX_LENGTH` 未満、node数は `MAX_NODES` 以下が必要。
-- `size()` は現在長、`size(version)` は指定prefix長。
-  queryのversionは $0\le version<versions()$ が必要。
-- `node_count()`, `operator[]`, `length/link/diff/series_link` は
-  全prefixで共有されるnode数・node情報を返す。無効nodeでは例外。
-- `last(version)` は最長回文suffix node。
-  distinct/count/longest系は指定prefixにおける値を返す。
-- `find_node(s,version)` は `s` が回文かつ指定prefixに出現すればnode、なければ-1。
-  `contains` はそのbool版。空文字列は長さ0のroot。
-- `first_occurrence_range(node)` と `palindrome(node)` は全体文字列での
-  node初出区間・回文文字列。長さ-1のrootでは例外。
-- `palindrome_nodes/palindromes(version)` は指定prefixに存在する全非空回文。
-  suffix列挙は指定prefixの回文suffixを長い順に返す。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
+- `ALPHABET`: アルファベットの文字数（正）。文字は `[OFFSET, OFFSET + ALPHABET)` に属する必要がある。
+- `MAX_NODES`: 根 2 個を含むノード数の上限（2 以上）。
+- `MAX_LENGTH`: 文字列長の上限。
+- `MAX_NODES` と `MAX_LENGTH` のどちらかが `-1`（省略時）なら、実行時サイズに合わせて `std::vector` を伸ばす可変長版になる。
 
 ```cpp
 PersistentPalindromicTree<26> dynamic(text);
 PersistentPalindromicTree<26, 100002, 100000> fixed(text);
 ```
 
-長さ $N$、alphabet サイズ $A$ に対し $O(AN)$ 保存領域、全体の文字追加は償却 $O(AN)$ 時間。各 prefix の統計値参照は $O(1)$ 時間。
+## 構築
+
+```cpp
+PersistentPalindromicTree()
+explicit PersistentPalindromicTree(string_view s)
+int append(char c)
+int add(char c)
+```
+
+`append(c)` / `add(c)` は末尾に文字を追加し、新しい接頭辞の version を返す。
+
+## クエリ
+
+```cpp
+int versions() const
+int size() const
+int size(int version) const
+int node_count() const
+const std::string& str() const
+int last(int version) const
+int distinct_palindromes(int version) const
+long long count_palindromic_substrings(int version) const
+int longest_suffix_palindrome_length(int version) const
+int longest_palindrome_length(int version) const
+int longest_palindrome_node(int version) const
+int find_node(string_view s, int version) const
+bool contains(string_view s, int version) const
+vector<int> palindrome_nodes(int version) const
+vector<string> palindromes(int version) const
+vector<int> suffix_palindrome_nodes(int version) const
+vector<int> suffix_palindrome_lengths(int version) const
+```
+
+- version 0 は空文字列である。`versions()` は `size() + 1` を、`str()` は現在の文字列全体への const 参照を返す。
+- `size()` は現在の長さ、`size(version)` は指定した接頭辞の長さを返す。
+- `last(version)` は最長の回文接尾辞のノードを返す。相異なる回文の個数・回文の出現総数・最長系のクエリは、指定した接頭辞における値を返す。
+- `find_node(s, version)` は、`s` が回文で、かつ指定した接頭辞に出現すればノード番号を、なければ `-1` を返す。`contains` はその真偽値版である。空文字列は長さ 0 の根に対応する。
+- `palindrome_nodes(version)` / `palindromes(version)` は指定した接頭辞に存在する空でない回文をすべて返す。回文接尾辞の列挙は、指定した接頭辞の回文接尾辞を長い順に返す。
+
+## ノード
+
+```cpp
+int length(int node) const
+int link(int node) const
+int diff(int node) const
+int series_link(int node) const
+string palindrome(int node) const
+pair<int, int> first_occurrence_range(int node) const
+```
+
+- `node_count()`、`operator[]`、`length` / `link` / `diff` / `series_link` は、全接頭辞で共有されるノード数・ノード情報を返す。`diff` と `series_link` は series link を用いる DP 用の値である。
+- `first_occurrence_range(node)` と `palindrome(node)` は、文字列全体でのノードの初出区間（半開区間）と回文文字列を返す。
+
+## 時間計算量
+
+$V$ を全接頭辞を通じて作られたノード数、$L$ をクエリの文字列長、$D$ を指定 version の相異なる回文の個数、$K$ をその version の回文接尾辞の個数、返す回文文字列の長さの合計を $C$ とする。
+
+| API | 時間計算量 |
+| --- | --- |
+| `PersistentPalindromicTree()` | 固定長版 $O(\texttt{MAX_NODES}\cdot\texttt{ALPHABET}+\texttt{MAX_LENGTH})$ |
+| `PersistentPalindromicTree(s)` | 上記の初期化 $+$ 償却 $O(\lvert s\rvert)$ |
+| `append(c)` / `add(c)` | 1 回の最悪 $O(\texttt{size()})$、全体で 1 文字あたり償却 $O(1)$（新規ノードの遷移表の初期化 $O(\texttt{ALPHABET})$ を除く） |
+| `size()` / `size(version)` / `versions()` / `node_count()` / `str()` | $O(1)$ |
+| `operator[]` / `length` / `link` / `diff` / `series_link` | $O(1)$ |
+| `last(version)` / `distinct_palindromes(version)` / `count_palindromic_substrings(version)` | $O(1)$ |
+| 最長系のクエリ | $O(1)$ |
+| `first_occurrence_range(node)` | $O(1)$ |
+| `palindrome(node)` | 出力する文字列長に比例 |
+| `find_node(s, version)` / `contains(s, version)` | $O(L)$ |
+| `palindrome_nodes(version)` | $O(V+D)$、出力 $O(D)$ |
+| `palindromes(version)` | $O(V+C)$ |
+| `suffix_palindrome_nodes(version)` / `suffix_palindrome_lengths(version)` | $O(K)$ |
+
+`palindrome_nodes` は指定 version にまだ存在しないノードも含め、全 $V$ ノードを走査して選別する。
+
+## 空間計算量
+
+固定長版は $O(\texttt{MAX_NODES}\cdot\texttt{ALPHABET}+\texttt{MAX_LENGTH})$、
+可変長版は長さ $N$ に対して $O(\texttt{ALPHABET}\cdot N)$ である。
+
+## 注意点
+
+- 追加後の文字数が `MAX_LENGTH` 以下、ノード数が `MAX_NODES` 以下である必要がある。超えると例外を送出する。範囲外の文字も例外を送出する。
+- クエリの version は $0\le \mathrm{version}<\texttt{versions()}$ を満たす必要がある。
+- 無効なノード番号を渡すと例外を送出する。`first_occurrence_range` と `palindrome` は長さ $-1$ の根に対しても例外を送出する。

@@ -3,18 +3,24 @@ title: Deque Palindrome Queries (両端回文更新query) [palindromes_in_deque]
 documentation_of: ../../../../src/algorithm/string/palindrome/deque_palindrome_queries.hpp
 ---
 
-両端回文木の更新と、更新直後の回文統計取得を1回のmethodで行う。
+両端回文木（`DequePalindromicTree`）の更新と、更新直後の回文統計の取得を 1 回のメソッド呼び出しで行う。
 
 ## 構築
 
 ```cpp
-DequePalindromeQueries<ALPHABET, MAX_NODES, MAX_LENGTH, OFFSET> queries
+DequePalindromeQueries<ALPHABET, MAX_NODES = -1, MAX_LENGTH = -1, OFFSET = 'a'> queries;
 ```
 
-空文字列を作る。容量と文字範囲は `DequePalindromicTree` と同じ。
+空文字列を作る。容量と文字範囲の意味は `DequePalindromicTree` と同じである。
+`MAX_NODES` と `MAX_LENGTH` のどちらかが `-1`（省略時）なら、実行時サイズに合わせて `std::vector` を伸ばす可変長版になる。
 
-- 時間計算量: $O(MAX\_NODES\cdot ALPHABET+MAX\_LENGTH)$
-- 保存領域: $O(MAX\_NODES\cdot ALPHABET+MAX\_LENGTH)$
+```cpp
+DequePalindromeQueries<26> dynamic;
+DequePalindromeQueries<26, 100002, 100000> fixed;
+```
+
+- 時間計算量: 固定長版 $O(\texttt{MAX_NODES}\cdot\texttt{ALPHABET}+\texttt{MAX_LENGTH})$
+- 空間計算量: 固定長版 $O(\texttt{MAX_NODES}\cdot\texttt{ALPHABET}+\texttt{MAX_LENGTH})$。可変長版は、作られたノード数 $S$、最大保持長 $L$、$A$ を `ALPHABET` として $O(AS+L)$
 
 ## 更新と結果
 
@@ -25,11 +31,13 @@ DequePalindromeStatistics pop_front()
 DequePalindromeStatistics pop_back()
 ```
 
-更新後の異なる非空回文数、最長回文prefix長、最長回文suffix長を返す。
+更新後の、相異なる空でない回文の個数、最長の回文接頭辞の長さ、最長の回文接尾辞の長さを返す。
 
-- `push_front`, `push_back`: 最悪 $O(\log(N+1)+ALPHABET)$
+$N$ を更新直前の文字列長とする。
+
+- `push_front`, `push_back`: 最悪 $O(\log(N+1)+\texttt{ALPHABET})$
 - `pop_front`, `pop_back`: 最悪 $O(1)$
-- 戻り値構築の追加時間・空間: $O(1)$
+- 戻り値の構築にかかる追加の時間・空間: $O(1)$
 
 ## その他
 
@@ -38,21 +46,10 @@ int size() const
 bool empty() const
 ```
 
-いずれも $O(1)$。
+いずれも時間計算量は $O(1)$。
 
 ## 注意点
 
-- 空文字列に対する `pop_front` と `pop_back` は `runtime_error`。
-- alphabet外文字、`MAX_LENGTH` 超過、`MAX_NODES` 超過でも `runtime_error`。
-- pop後にも返り値は有効で、空文字列では3つの統計値がすべて0になる。
-
-## 容量を省略する可変長版
-
-容量テンプレート引数をすべて省略すると、実行時サイズに合わせた `std::vector` を使う。容量を明示する固定長版も同じヘッダにある。
-
-```cpp
-DequePalindromeQueries<26> dynamic;
-DequePalindromeQueries<26, 100002, 100000> fixed;
-```
-
-内部の deque 回文木と同じ時間計算量で、到達したノード数 $S$、最大保持長 $L$、alphabet サイズ $A$ に対し $O(AS+L)$ 空間。
+- 空文字列に対する `pop_front` と `pop_back` は `std::runtime_error` を送出する。
+- 範囲外の文字、`MAX_LENGTH` の超過、`MAX_NODES` の超過でも `std::runtime_error` を送出する。
+- pop 後の返り値も有効であり、空文字列では 3 つの統計値がすべて 0 になる。

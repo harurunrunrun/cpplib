@@ -3,21 +3,15 @@ title: Segment Li Chao Tree (線分Li Chao木)
 documentation_of: ../../../../src/structure/convex_hull_trick/li_chao/segment_li_chao_tree.hpp
 ---
 
-追加した直線または定義域付き線分のうち、指定した$x$で最小となる値を求める。query座標を構築時に圧縮するため、座標の大きさには依存しない。
+追加した直線または定義域付きの線分のうち、指定した $x$ で最小となる値を求める。クエリ座標を構築時に座標圧縮するので、計算量は座標の大きさに依存しない。
 
 ## 構築
 
 ```cpp
-SegmentLiChaoTree tree(vector<long long> query_coordinates)
+explicit SegmentLiChaoTree(std::vector<long long> query_coordinates)
 ```
 
-queryに使う全$x$座標を渡す。重複や未整列の入力を許す。
-
-## 時間計算量
-
-- $O(K\log K)$
-
-$K$は異なるquery座標数。
+クエリに使う全 $x$ 座標を渡す。重複や未整列の入力を許す。以下、$K$ を相異なるクエリ座標の個数とする。
 
 ## Line
 
@@ -29,7 +23,7 @@ struct Line {
 };
 ```
 
-`slope * x + intercept`を表す。結果が`long long`に収まらない場合、`eval`は例外を送出する。
+直線 `slope * x + intercept` を表す。結果が `long long` に収まらない場合、`eval` は `std::overflow_error` を投げる。
 
 ## 直線追加
 
@@ -38,11 +32,7 @@ void add_line(long long slope, long long intercept)
 void add_line(Line line)
 ```
 
-全query座標で有効な直線を追加する。
-
-## 時間計算量
-
-- $O(\log K)$
+全クエリ座標で有効な直線を追加する。
 
 ## 線分追加
 
@@ -51,33 +41,33 @@ void add_segment(long long l, long long r, long long slope, long long intercept)
 void add_segment(long long l, long long r, Line line)
 ```
 
-半開区間$[l,r)$内の登録済みquery座標で有効な直線を追加する。`l == r`、または区間内にquery座標がない場合は何もしない。`r < l`は例外。
+半開区間 $[l,r)$ 内の登録済みクエリ座標で有効な直線を追加する。`l == r`、または区間内にクエリ座標がない場合は何もしない。
 
-## 時間計算量
-
-- $O(\log^2 K)$
-
-## 最小値query
+## 最小値クエリ
 
 ```cpp
-optional<long long> query(long long x) const
+std::optional<long long> query(long long x) const
 ```
 
-`x`での最小値を返す。有効な直線がなければ`nullopt`。構築時に登録していない座標は例外を送出する。
-
-## 時間計算量
-
-- $O(\log K)$
+$x$ での最小値を返す。有効な直線がなければ `std::nullopt` を返す。
 
 ## その他
 
 ```cpp
 int size() const
 bool empty() const
-const vector<long long>& coordinates() const
+const std::vector<long long>& coordinates() const
 ```
 
-すべて$O(1)$。`empty`は有効な追加が一度もないかを返す。
+`size` は $K$、`empty` は有効な追加が一度もないかどうか、`coordinates` は整列・重複除去したクエリ座標の列を返す。
+
+## 時間計算量
+
+- 構築: $O(K\log K)$
+- `add_line`: $O(\log K)$
+- `add_segment`: $O(\log^2 K)$
+- `query`: $O(\log K)$
+- `size`, `empty`, `coordinates`: $O(1)$
 
 ## 空間計算量
 
@@ -85,8 +75,7 @@ const vector<long long>& coordinates() const
 
 ## 注意点
 
-- query座標はconstructorで与えた離散座標のいずれかでなければならない。未登録座標は `runtime_error`。
-- 線分の有効範囲は座標値の半開区間 `[left,right)`。`right < left` は `runtime_error`。
-- 有効な直線がない点の `query` は `nullopt` を返す。
-- 一次関数の評価値が `long long` に収まらない場合は `overflow_error`。
-- 追加時の再帰stackは $O(\log K)$、queryの追加領域は $O(1)$。
+- `query` の座標はコンストラクタで与えた座標のいずれかでなければならない。未登録の座標は `std::runtime_error` を投げる。
+- 線分の有効範囲は座標値の半開区間 $[l,r)$ である。`r < l` は `std::runtime_error` を投げる。
+- 一次関数の評価値が `long long` に収まらない場合は `std::overflow_error` を投げる。
+- 追加時の再帰スタックは $O(\log K)$、`query` の追加領域は $O(1)$。

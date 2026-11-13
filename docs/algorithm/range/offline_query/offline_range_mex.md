@@ -3,7 +3,7 @@ title: Offline Range MEX (オフライン区間MEX)
 documentation_of: ../../../../src/algorithm/range/offline_query/offline_range_mex.hpp
 ---
 
-静的列の区間 MEX クエリを右端順に処理する。各値の最終出現位置の最小値を segment tree に保持するため、永続版より空間が少ない。
+静的な列に対する区間 MEX クエリを、右端の昇順に処理する。各値の最終出現位置をセグメント木に保持し、その最小値で二分探索するため、永続版より空間が少ない。
 
 ## offline_range_mex
 
@@ -14,7 +14,7 @@ vector<size_t> offline_range_mex(
 )
 ```
 
-各半開区間の答えを入力順に返す。空区間は 0 である。
+各半開区間の答えを入力順に返す。空区間の答えは $0$ である。
 
 ## 時間計算量
 
@@ -24,4 +24,5 @@ vector<size_t> offline_range_mex(
 
 ## 注意点
 
-不正区間は `out_of_range` を送出する。負数と `N` より大きい値は MEX に影響しない。
+- `left > right` または `right > N` の区間では `out_of_range` を送出する。
+- 負の値と $N$ より大きい値は MEX に影響しない。

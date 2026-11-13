@@ -1,9 +1,9 @@
 ---
-title: GENI, US, GENIUS and Record-to-Record Travel (GENI・US・GENIUS・Record-to-Record探索)
+title: GENI, US, GENIUS and Record-to-Record Travel (GENI・US・GENIUS・Record-to-Record 探索)
 documentation_of: ../../../src/approximate/routing/genius_search.hpp
 ---
 
-対称TSP巡回路の一般化挿入と局所探索を提供する。巡回路は始点を末尾に重複させない `[0,N)` の置換で表す。
+対称 TSP の巡回路に対する一般化挿入と局所探索を提供する。巡回路は、始点を末尾に重複させない $[0, N)$ の順列で表す。以下、$P$ を `neighborhood_size`、$I$ をパス数の上限とする。
 
 ## `geni_tour`
 
@@ -15,9 +15,9 @@ vector<int> geni_tour(
 )
 ~~~
 
-各未挿入頂点について、通常の1辺分割挿入と、近傍頂点対の間を反転して3辺を張り替える一般化挿入を比較する。全候補中で巡回路増分が最小の頂点・位置を反復して選ぶ。
+各未挿入頂点について、通常の 1 辺を分割する挿入と、近傍頂点の対の間を反転して 3 辺を張り替える一般化挿入とを比較する。全候補の中で巡回路コストの増分が最小となる頂点と位置を選ぶことを繰り返す。
 
-- 時間計算量: $O(N^3\log N+N^2P^2)$（`P = neighborhood_size`）
+- 時間計算量: $O(N^3 \log N + N^2 P^2)$
 - 追加空間計算量: $O(N)$
 
 ## `unstringing_stringing_tour`
@@ -31,9 +31,9 @@ vector<int> unstringing_stringing_tour(
 )
 ~~~
 
-各頂点を一度巡回路から外し、GENIの一般化挿入で最良位置へ戻す。巡回路コストを厳密に減少させる変更だけを採用し、改善がないpassで終了する。
+各頂点をいったん巡回路から外し、GENI の一般化挿入で最良の位置へ戻す（US）。巡回路コストが真に減少する変更だけを採用し、改善のないパスが生じたら終了する。
 
-- 時間計算量: $O(IN^2(P^2+N))$（`I = maximum_passes`）
+- 時間計算量: $O(IN^2(P^2 + N))$
 - 追加空間計算量: $O(N)$
 
 ## `genius_tour`
@@ -47,9 +47,9 @@ vector<int> genius_tour(
 )
 ~~~
 
-GENIで初期巡回路を構築し、その結果にUSを適用する。
+GENI で初期巡回路を構築し、その結果に US を適用する。
 
-- 時間計算量: $O(N^3\log N+N^2P^2+IN^2(P^2+N))$
+- 時間計算量: $O(N^3 \log N + N^2 P^2 + IN^2(P^2 + N))$
 - 追加空間計算量: $O(N)$
 
 ## `record_to_record_travel_tour`
@@ -63,13 +63,13 @@ vector<int> record_to_record_travel_tour(
 )
 ~~~
 
-2-opt近傍を決定的に走査し、現在までのrecordから `maximum_deviation` 以内の候補を移動先として許す。探索中の最良巡回路を返すため、返り値は入力巡回路より悪化しない。非対称距離でも反転後の全コストを再計算して判定する。
+2-opt 近傍を決定的に走査し、これまでの最良値（record）から `maximum_deviation` 以内の候補への移動を許す。探索中の最良の巡回路を返すため、返値は入力の巡回路より悪くならない。非対称な距離でも、反転後のコスト全体を再計算して判定する。
 
 - 時間計算量: $O(IN^3)$
 - 追加空間計算量: $O(N)$
 
 ## 注意点
 
-GENI・US・GENIUSは対称な正方距離行列を要求し、非対称なら `std::invalid_argument`。`neighborhood_size=0`、非有限または負のdeviation、置換でない巡回路も `std::invalid_argument`。巡回路または始点の範囲外頂点は `std::out_of_range`。
-`N > INT_MAX`: `std::length_error`.
-距離の大小比較と `long double` への変換が可能でなければならない。
+- GENI・US・GENIUS は対称な正方距離行列を要求し、非対称なら `std::invalid_argument` を送出する。
+- `neighborhood_size == 0`、有限でないか負の `maximum_deviation`、順列でない巡回路にも `std::invalid_argument` を送出する。巡回路や始点に範囲外の頂点があれば `std::out_of_range` を、$N$ が `INT_MAX` を超える場合は `std::length_error` を送出する。
+- 距離は大小比較と `long double` への変換ができなければならない。

@@ -3,9 +3,7 @@ title: DAG Heterogeneous-Processor Scheduling (DAG異種プロセッサスケジ
 documentation_of: ../../../src/approximate/scheduling/dag_scheduling.hpp
 ---
 
-タスクごと・プロセッサごとに処理時間が異なるDAGを、挿入型リストスケジューリングで
-割り当てるヒューリスティック。辺の通信時間は、両端を異なるプロセッサへ割り当てたとき
-だけ加算し、同じプロセッサなら0とする。
+タスクごと・プロセッサごとに処理時間が異なる DAG を、挿入型リストスケジューリングで割り当てるヒューリスティックである。辺の通信時間は、両端を異なるプロセッサへ割り当てたときだけ加算し、同じプロセッサなら 0 とする。
 
 以下でタスク数を $V$、プロセッサ数を $P$、辺数を $E$ とする。
 
@@ -19,8 +17,7 @@ struct DagCommunicationEdge {
 };
 ```
 
-`from -> to` の先行制約と、異なるプロセッサ間で必要な通信時間を表す。構築と各member
-参照は $O(1)$。
+`from -> to` の先行制約と、異なるプロセッサ間で必要な通信時間を表す。構築と各 member 参照は $O(1)$。
 
 ## `DagTaskSlot`
 
@@ -32,7 +29,7 @@ struct DagTaskSlot {
 };
 ```
 
-1タスクの予約区間 `[start, finish)` を表す。構築と各member参照は $O(1)$。
+1 タスクの予約区間 `[start, finish)` を表す。構築と各メンバの参照は $O(1)$。
 
 ## `DagSchedule`
 
@@ -50,14 +47,7 @@ struct DagSchedule {
 };
 ```
 
-`processor_of_task[v]`、`start_time[v]`、`finish_time[v]` はタスク `v` の割当結果。
-`scheduling_order` は優先度付きready queueから取り出した順であり、実行開始時刻順とは限らない。
-`tasks_on_processor[p]` は開始時刻順の予約で、既存予約間の最初の十分な隙間も利用する。
-`priority` は処理時間と通信時間全体の最大値（全て0なら1）を共通scaleとした、各手法の
-正規化済み優先度である。このscaleは優先順位を変えずrankのoverflowを避ける。CPOPだけ
-`critical_path` と
-`critical_processor` を設定し、他手法では空列と `numeric_limits<size_t>::max()` になる。
-各member参照は $O(1)$、全割当の列挙は $O(V+P)$。
+`processor_of_task[v]`、`start_time[v]`、`finish_time[v]` はタスク `v` の割当結果。`scheduling_order` は優先度付き実行可能キューから取り出した順であり、実行開始時刻順とは限らない。`tasks_on_processor[p]` は開始時刻順の予約で、既存予約間の最初の十分な隙間も利用する。`priority` は処理時間と通信時間全体の最大値（全て 0 なら 1）を共通の尺度とした、各手法の正規化済み優先度である。この尺度は優先順位を変えず rank のオーバーフローを避ける。CPOP だけ `critical_path` と `critical_processor` を設定し、他手法では空列と `numeric_limits<size_t>::max()` になる。各メンバの参照は $O(1)$、全割当の列挙は $O(V+P)$。
 
 ## `critical_path_priority_schedule`
 
@@ -65,12 +55,9 @@ struct DagSchedule {
 critical_path_priority_schedule(processing_time, edges);
 ```
 
-各タスクの最小処理時間をノード重みとした上向きrank（そのタスクから出口までの最長長）を
-優先度に使う Critical-Path priority scheduling。readyなタスクを優先度降順で選び、全
-プロセッサのうち挿入後の完了時刻が最小となるものへ割り当てる。
+各タスクの最小処理時間をノード重みとした上向き rank（そのタスクから出口までの最長路長）を優先度に使う Critical-Path priority scheduling。実行可能なタスクを優先度降順で選び、全プロセッサのうち挿入後の完了時刻が最小となるものへ割り当てる。
 
-時間計算量は $O(V^2+P(V+E)+V\log V)$、追加空間計算量（入力を除く） $O(V+E+P)$。
-一般のDAGスケジューリングに対する近似比は保証しない。
+時間計算量は $O(V^2+P(V+E)+V\log V)$、追加空間計算量（入力を除く）$O(V+E+P)$。一般の DAG スケジューリングに対する近似比は保証しない。
 
 ## `heft_schedule`
 
@@ -78,11 +65,9 @@ critical_path_priority_schedule(processing_time, edges);
 heft_schedule(processing_time, edges);
 ```
 
-各タスクの全プロセッサ上の算術平均処理時間と通信時間から HEFT の上向きrankを求め、
-その降順で挿入型の最早完了プロセッサへ割り当てる。通信時間は入力値をrankにも用いる。
+各タスクの全プロセッサ上の算術平均処理時間と通信時間から HEFT の上向き rank を求め、その降順で挿入型の最早完了プロセッサへ割り当てる。通信時間は入力値を rank にも用いる。
 
-時間計算量は $O(V^2+P(V+E)+V\log V)$、追加空間計算量（入力を除く） $O(V+E+P)$。
-一般のDAGスケジューリングに対する近似比は保証しない。
+時間計算量は $O(V^2+P(V+E)+V\log V)$、追加空間計算量（入力を除く）$O(V+E+P)$。一般の DAG スケジューリングに対する近似比は保証しない。
 
 ## `cpop_schedule`
 
@@ -90,29 +75,18 @@ heft_schedule(processing_time, edges);
 cpop_schedule(processing_time, edges);
 ```
 
-平均処理時間から上向きrankと下向きrankを求め、その和を優先度に使う CPOP。最大上向き
-rankの入口から `communication_time + successor_upward_rank` が最大の辺をたどって
-critical pathを定め、そのpathの処理時間合計が最小の1プロセッサへpath上の全タスクを
-固定する。それ以外は挿入型の最早完了プロセッサへ割り当てる。
+平均処理時間から上向き rank と下向き rank を求め、その和を優先度に使う CPOP。上向き rank が最大の入口から `communication_time + successor_upward_rank` が最大の辺をたどってクリティカルパスを定め、そのパスの処理時間合計が最小の 1 プロセッサへパス上の全タスクを固定する。それ以外は挿入型の最早完了プロセッサへ割り当てる。
 
-時間計算量は $O(V^2+P(V+E)+V\log V)$、追加空間計算量（入力を除く） $O(V+E+P)$。
-一般のDAGスケジューリングに対する近似比は保証しない。
+時間計算量は $O(V^2+P(V+E)+V\log V)$、追加空間計算量（入力を除く）$O(V+E+P)$。一般の DAG スケジューリングに対する近似比は保証しない。
 
-3手法とも通信路自体の資源競合はモデル化しない。異なる複数の辺の通信は互いに並行できる
-ものとし、各後続タスクのready時刻だけを制約する。
+3 手法とも通信路自体の資源競合はモデル化しない。異なる複数の辺の通信は互いに並行できるものとし、各後続タスクの実行可能時刻だけを制約する。
 
 ## 入力検査・決定性
 
-`processing_time[task][processor]` と `communication_time` は非負かつ有限でなければ
-ならない。タスクがあるときは $P>0$ が必要である。非長方形行列、範囲外の辺端点、
-自己loopを含むcycle、負値、NaN、無限大では `std::invalid_argument` を投げる。
-空のタスク集合と空の辺集合には空scheduleを返す。
+`processing_time[task][processor]` と `communication_time` は非負かつ有限でなければならない。タスクがあるときは $P>0$ が必要である。非長方形行列、範囲外の辺端点、自己ループを含む閉路、負値、NaN、無限大では `std::invalid_argument` を送出する。空のタスク集合と空の辺集合には空のスケジュールを返す。
 
-同優先度ならタスク番号、同じ完了時刻なら開始時刻、さらに同じならプロセッサ番号が
-小さい候補を選ぶ。CPOPのpath・固定プロセッサも同値なら番号の小さいものを選ぶため、
-同じ入力には決定的な結果を返す。予約時刻や通信到着時刻が `Time` に収まらない候補は
-除外し、あるタスクに表現可能な候補が1つもなければ `std::overflow_error` を投げる。
+同優先度ならタスク番号、同じ完了時刻なら開始時刻、さらに同じならプロセッサ番号が小さい候補を選ぶ。CPOP のパス・固定プロセッサも同値なら番号の小さいものを選ぶため、同じ入力には決定的な結果を返す。予約時刻や通信到着時刻が `Time` に収まらない候補は除外し、あるタスクに表現可能な候補が 1 つもなければ `std::overflow_error` を送出する。
 
 ## 注意点
 
-処理時間行列と付随配列は各APIの形状を満たし、時間は有限かつ指定された符号条件を満たす必要がある。時刻の加算は `Time` の表現範囲内でなければならない。
+処理時間行列と付随配列は各 API の形状を満たし、時間は有限かつ指定された符号条件を満たす必要がある。時刻の加算は `Time` の表現範囲内でなければならない。

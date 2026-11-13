@@ -3,23 +3,57 @@ title: Group Potential DSU (群ポテンシャル付き素集合) [unionfind_wit
 documentation_of: ../../../../src/structure/dsu/basic/group_potential_dsu.hpp
 ---
 
-`GroupPotentialDSU<Group>(int n)` は非可換群の関係 `A[u] = A[v] * x` を管理する。
-`Group` は `value_type`、`identity()`、`multiply(a,b)`、`inverse(a)` を提供する。
+非可換群の値をポテンシャルとして持つ素集合データ構造。
+`GroupPotentialDSU<Group>(int n)` は $n$ 頂点について、関係 $A_u = A_v \cdot x$ を管理する。
+`Group` は型 `value_type` と、静的関数 `identity()`、`multiply(a, b)`、`inverse(a)` を提供する。
 
-- `merge(u,v,x)`: 関係が整合すれば統合して `true`、矛盾すれば状態を変えず `false`。
-- `difference(u,v)`: 同じ成分なら `A[v]^{-1}A[u]`、異なれば `nullopt`。
-- `leader(v)`, `weight(v)`, `size()`。`weight(v)` は `A[v]=A[leader(v)]*weight(v)` の右因子。
+## API
 
-`RollbackGroupPotentialDSU<Group>(n)` は同じ `merge`・`difference` を持ち、
-`snapshot()` と `rollback(snapshot)` で過去の関係集合へ戻せる。
-snapshot は成功した成分統合数であり、矛盾する関係や既に成立する関係では増加しない。
+```cpp
+explicit GroupPotentialDSU<Group>(int n)
+bool merge(int u, int v, const value_type& x)
+optional<value_type> difference(int u, int v)
+int leader(int v)
+value_type weight(int v)
+int size() const
+```
+
+- `merge(u, v, x)`: 関係 $A_u = A_v \cdot x$ を追加する。既存の関係と整合すれば `true` を返し（異なる成分なら併合する）、矛盾すれば状態を変えずに `false` を返す。
+- `difference(u, v)`: 同じ成分なら $A_v^{-1} A_u$ を、異なる成分なら `nullopt` を返す。
+- `leader(v)`: $v$ を含む成分の代表元を返す。
+- `weight(v)`: $A_v = A_{\mathrm{leader}(v)} \cdot \mathrm{weight}(v)$ を満たす右因子を返す。
+- `size()`: 頂点数を返す。
+
+## ロールバック版
+
+```cpp
+explicit RollbackGroupPotentialDSU<Group>(int n)
+bool merge(int u, int v, const value_type& x)
+optional<value_type> difference(int u, int v) const
+size_t snapshot() const
+void rollback(size_t snapshot)
+int size() const
+```
+
+`merge` と `difference` は上と同じ意味を持つ。経路圧縮を行わず、`snapshot()` で得た値を `rollback` に渡すと、その時点の関係集合に戻せる。
+`snapshot()` の値はそれまでに成功した成分の併合回数であり、矛盾する関係や既に成り立つ関係の追加では増えない。
 
 ## 時間計算量
 
-構築 $O(N)$、統合・照会は群演算を定数時間として償却 $O(\alpha(N))$、空間 $O(N)$。
-rollback 版は統合・照会が $O(\log(N+1))$、snapshot は $O(1)$、rollback は取り消した統合数を $K$ として $O(K)$。
+群演算を定数時間とし、頂点数を $N$ とする。
+
+- 構築: $O(N)$
+- `GroupPotentialDSU` の `merge`、`difference`、`leader`、`weight`: 償却 $O(\alpha(N))$
+- `RollbackGroupPotentialDSU` の `merge`、`difference`: $O(\log(N+1))$
+- `snapshot`、`size`: $O(1)$
+- `rollback`: 取り消す併合の回数を $K$ として $O(K)$
+
+## 空間計算量
+
+$O(N)$。ロールバック版は併合の履歴としてさらに併合回数に比例する領域を使う。
 
 ## 注意点
 
-頂点は `[0,n)`。範囲外は `out_of_range`、負の頂点数は `invalid_argument`。
-群演算の結合則・逆元・単位元および値の等値比較が必要。積の順序を交換してはならない。
+- 頂点は $[0, n)$ でなければならない。範囲外は `std::out_of_range`、負の頂点数は `std::invalid_argument` を送出する。
+- `rollback` に現在の `snapshot()` より大きい値を渡すと `std::out_of_range` を送出する。
+- 群演算の結合則・逆元・単位元と、値の等値比較 `==` が必要である。積の順序を入れ替えてはならない。

@@ -3,9 +3,9 @@ title: Spectral Bisection (スペクトル二分割)
 documentation_of: ../../../src/approximate/graph/spectral_bisection.hpp
 ---
 
-重み付きLaplacianのFiedler vectorを反復法で近似し、成分の中央値で頂点数が平衡な2分割を作る。密行列を構築しない。固有値の重複や反復回数により結果が変わり得るheuristicであり、最小cutを保証しない。
+重み付きラプラシアンの Fiedler ベクトルを反復法で近似し、成分の中央値で頂点数が均衡した 2 分割を作る。密行列は構築しない。固有値の重複や反復回数によって結果が変わり得るヒューリスティックであり、最小カットは保証しない。
 
-## spectral_bisection
+## `spectral_bisection`
 
 ~~~cpp
 BipartitionResult spectral_bisection(
@@ -16,13 +16,13 @@ BipartitionResult spectral_bisection(
 )
 ~~~
 
-`I` 回を上限として、定数vectorと直交する部分空間上でshifted Laplacianのpower iterationを行う。`tolerance` 以下の最大成分変化で反復を終了する。同値成分は頂点番号順に並べるため決定的である。
+最大 $I = \texttt{maximum_iterations}$ 回、定数ベクトルと直交する部分空間上でシフトしたラプラシアンのべき乗法を行う。成分の変化の最大値が `tolerance` 以下になったら反復を終了する。値が等しい成分は頂点番号順に並べるため決定的である。
 
 - 時間計算量: $O(E \log E + I(N+E)+N\log N)$
 - 追加空間計算量: $O(N+E)$
 
-辺がない場合と `maximum_iterations == 0` では番号順の平衡分割を返す。`tolerance` は有限な非負値でなければならない。
-
 ## 注意点
 
-頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。
+- 頂点数が 2 未満、辺がない（総重み 0）、または `maximum_iterations == 0` の場合は番号順の均衡分割（`balanced_bipartition`）を返す
+- `tolerance` は有限な非負値でなければならず、満たさなければ `std::invalid_argument` を送出する
+- 自己ループ・平行辺・重みの扱いは Weighted Undirected Graph Input に従う

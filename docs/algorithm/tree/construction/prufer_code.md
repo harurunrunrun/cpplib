@@ -3,17 +3,23 @@ title: Prüfer Code (プリューファーコード)
 documentation_of: ../../../../src/algorithm/tree/construction/prufer_code.hpp
 ---
 
-ラベル付き木と長さ $N-2$ のPrüfer列を相互変換する。
+$N$ 頂点のラベル付き木と、長さ $N-2$ の Prüfer 列を相互に変換する。
 
 ## API
 
-- `prufer_encode(graph)`: 木を辞書順最小の葉を用いるPrüfer列へ符号化する。
-- `prufer_decode(code)`: 頂点番号 `0..|code|+1` の木の辺列を復号する。
+```cpp
+std::vector<int> prufer_encode(const std::vector<std::vector<int>>& graph)
+std::vector<std::pair<int, int>> prufer_decode(const std::vector<int>& code)
+```
+
+- `prufer_encode(graph)`: 隣接リストで与えた木を、番号最小の葉から取り除いていく Prüfer 列に符号化する。$N \le 2$ なら空列を返す。
+- `prufer_decode(code)`: 頂点番号 $0$ から $\lvert \mathtt{code}\rvert + 1$ までの木の辺の列を復号する。
 
 ## 時間計算量
 
-- `prufer_encode`, `prufer_decode`: $O(N\log N)$。
+`prufer_encode`, `prufer_decode` ともに $O(N\log N)$ である。
 
 ## 注意点
 
-- `graph` は単純な無向木でなければならない。不正な入力では例外を送出する。
+- `graph` は単純な無向木でなければならない。木でないことを検出した場合は `std::invalid_argument` を送出する。
+- `prufer_decode` で `code` の要素が $[0, \lvert \mathtt{code}\rvert + 2)$ の範囲外なら `std::out_of_range` を送出する。

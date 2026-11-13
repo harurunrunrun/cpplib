@@ -3,41 +3,65 @@ title: Offline Tree Edge Deletion Disconnected Pairs (木辺削除後の非連�
 documentation_of: ../../../../src/structure/dsu/specialized/offline_tree_edge_deletion_disconnected_pairs.hpp
 ---
 
-木から各辺を高々1回削除する操作列を逆順に処理し、各時点の非連結なunordered頂点対数を求める。
-辺の復元時にDSUの成分サイズを使う。
+木から各辺を高々 1 回削除する操作列を逆順に処理し、各時点で非連結な頂点の非順序対の個数を求める。
+辺を復元するときに DSU の成分サイズを使う。
 
-## `OfflineTreeEdgeDeletionDisconnectedPairs<MAX_SIZE>`
+## テンプレート引数
 
-### コンストラクタ
+```cpp
+OfflineTreeEdgeDeletionDisconnectedPairs<MAX_SIZE = -1>
+```
+
+`MAX_SIZE` は頂点数の上限。省略（`-1`）すると、`solve` 内部の DSU が実行時の頂点数に合わせて `std::vector` を確保する可変長版になる。
+
+```cpp
+using Dynamic = OfflineTreeEdgeDeletionDisconnectedPairs<>;
+```
+
+## コンストラクタ
 
 ```cpp
 explicit OfflineTreeEdgeDeletionDisconnectedPairs(int vertex_count);
 ```
 
-孤立した `vertex_count` 頂点と空の操作列を作る。
+孤立した `vertex_count` 頂点と、空の操作列を作る。
 
-### `add_edge(left, right)`
+## add_edge
 
-木を構成する辺を登録し、その0-indexed辺番号を返す。
-最終的に辺数は `max(0, vertex_count - 1)` でなければならない。
+```cpp
+int add_edge(int left, int right)
+```
 
-### `delete_edge(edge)`
+木を構成する辺を登録し、その辺番号（$0$-indexed）を返す。
+最終的な辺数は `max(0, vertex_count - 1)` でなければならない。
 
-指定した辺番号の削除を操作列へ追加する。
-同じ辺を2回追加できない。
+## delete_edge
 
-### `add_query()`
+```cpp
+void delete_edge(int edge)
+```
 
-現在非連結であるunordered頂点対数を求めるqueryを操作列へ追加する。
+指定した番号の辺の削除を操作列に追加する。同じ辺の削除を 2 回追加することはできない。
 
-### `solve()`
+## add_query
 
-各 `add_query()` に対する回答を追加順に返す。
-登録辺が木であることも検査する。
+```cpp
+void add_query()
+```
 
-## API別の時間計算量・空間計算量
+その時点で非連結な頂点の非順序対の個数を求めるクエリを操作列に追加する。
 
-$N=vertex\_count$、操作数を $Q$、回答数を $A$ とする。
+## solve
+
+```cpp
+vector<long long> solve() const
+```
+
+各 `add_query()` に対する答えを追加順に返す。登録された辺が木であることもここで検査する。
+
+## 時間計算量
+
+$N$ を頂点数 `vertex_count`、操作数を $Q$、答えの個数を $A$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
@@ -45,21 +69,17 @@ $N=vertex\_count$、操作数を $Q$、回答数を $A$ とする。
 | `add_edge` | 償却 $O(1)$ | 償却 $O(1)$ |
 | `delete_edge` | 償却 $O(1)$ | 償却 $O(1)$ |
 | `add_query` | 償却 $O(1)$ | 償却 $O(1)$ |
-| `solve` | $O(MAX\_SIZE+(N+Q)\alpha(N))$ | $O(MAX\_SIZE+N+Q+A)$ |
+| `solve` | $O(\texttt{MAX_SIZE}+(N+Q)\alpha(N))$ | $O(\texttt{MAX_SIZE}+N+Q+A)$ |
+
+可変長版では、上の表の $\texttt{MAX_SIZE}$ の項は $N$ に置き換わる。
+
+## 空間計算量
+
+本体は $O(N+Q)$。`solve` は内部で DSU を 2 つ作るため、固定長版では一時領域として $O(\texttt{MAX_SIZE})$ を使う。
 
 ## 注意点
 
-- $0\leq N\leq MAX\_SIZE$ でなければならない。
-- 登録辺は頂点 $[0,N)$ 上の木でなければならない。
-- 本数、頂点番号、削除番号、重複削除の違反時は `runtime_error`、閉路を含む登録辺には `invalid_argument` を送出する。
+- $0 \le N \le \texttt{MAX_SIZE}$ でなければならない。違反するとコンストラクタが `std::runtime_error` を送出する。
+- 登録する辺は、頂点集合 $[0, N)$ 上の木でなければならない。
+- 辺の本数・頂点番号・削除する辺の番号の範囲違反と重複削除では `std::runtime_error` を、閉路を含む辺の登録では（`solve` の時点で）`std::invalid_argument` を送出する。
 - `solve` は状態を変更せず、同じ操作列に対して繰り返し呼べる。
-
-## 可変長版
-
-```cpp
-using Dynamic = OfflineTreeEdgeDeletionDisconnectedPairs<>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。保存領域 O(n + q)、solve は O((n + q) alpha(n))。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。

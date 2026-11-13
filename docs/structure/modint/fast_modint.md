@@ -3,9 +3,7 @@ title: Fast Modint (高速剰余整数)
 documentation_of: ../../../src/structure/modint/fast_modint.hpp
 ---
 
-固定 mod の整数型。
-
-乗算に Barrett reduction を使う。
+法 `mod` を固定した剰余整数の型。乗算に Barrett reduction を使う。
 
 ## テンプレート引数
 
@@ -13,7 +11,7 @@ documentation_of: ../../../src/structure/modint/fast_modint.hpp
 FastModint<mod>
 ```
 
-`mod >= 1`が必要。値は常に`[0,mod)`に正規化される。
+$\mathrm{mod} \ge 1$ が必要である。値は常に $[0, \mathrm{mod})$ に正規化される。
 
 ## 関数
 
@@ -27,15 +25,11 @@ FastModint pow(long long exponent) const
 FastModint inv() const
 ```
 
-整数constructorは`value mod mod`を作り、`val()`は正規化済み代表値を返す。
-`raw(value)`は正規化を省略するため、`0 <= value < mod`が検査されない前提。
-
-`pow`は非負の`exponent`乗を返し、負なら例外。
-`inv`は乗法逆元を返す。素数法で値が0の場合、または合成数法で値と法が
-互いに素でない場合は例外。除算も右辺の`inv()`を使う。
-
-stream入力は符号付き64bit整数を読み、入力に失敗すると例外。
-stream出力は`val()`を10進出力する。
+- 整数からのコンストラクタは $\mathrm{value} \bmod \mathrm{mod}$ を作り、`val()` は正規化済みの代表値を返す。
+- `raw(value)` は正規化を省略するので、$0 \le \mathrm{value} \lt \mathrm{mod}$ は検査されない前提である。
+- `pow` は非負の `exponent` 乗を返す。
+- `inv` は乗法逆元を返す。除算も右辺の `inv()` を使う。
+- ストリームからの入力は符号付き 64 bit 整数として読む。ストリームへの出力は `val()` を 10 進で出力する。
 
 ## 演算
 
@@ -43,6 +37,20 @@ stream出力は`val()`を10進出力する。
 単項 +, 単項 -, ++, --, +, -, *, /,
 +=, -=, *=, /=, ==, !=, operator>>, operator<<
 ```
+
+- `operator+=(rhs)`: `rhs` を加え、$[0, \mathrm{mod})$ に戻す。
+- `operator-=(rhs)`: `rhs` を引き、$[0, \mathrm{mod})$ に戻す。
+- `operator*=(rhs)`: Barrett reduction で積を正規化する。
+- `operator/=(rhs)`: `rhs.inv()` を掛ける。
+- 単項 `operator+()`: 同じ値を返す。単項 `operator-()`: 加法逆元を返す。
+- 前置 `operator++()` / `operator--()`: $1$ を加減し、$0$ と $\mathrm{mod}-1$ の間で巡回する。
+- 後置 `operator++(int)` / `operator--(int)`: 変更前の値を返してから $1$ を加減する。
+- 二項 `operator+`、`operator-`、`operator*`、`operator/`: 左辺のコピーに対応する複合代入演算を行う。
+- `operator==` / `operator!=`: 正規化済みの代表値を比較する。
+- `operator>>(istream, x)`: 符号付き 64 bit 整数を読み、`x` に正規化して代入する。
+- `operator<<(ostream, x)`: `x.val()` を 10 進で出力する。
+
+複合代入演算と前置のインクリメント・デクリメントは `*this` への参照を返し、後置のインクリメント・デクリメントと二項演算は値を返す。
 
 ## エイリアス
 
@@ -57,40 +65,23 @@ FastModint1000000007
 
 | 操作 | 時間計算量 |
 | --- | --- |
-| コピー・move構築、コピー・move代入 | $O(1)$ |
+| コピー・ムーブ構築、コピー・ムーブ代入 | $O(1)$ |
 | デフォルト構築、`FastModint(v)` | $O(1)$ |
-| `get_mod()`, `raw(v)`, `val()` | $O(1)$ |
-| `+=`, `-=`, `*=`, `+`, `-`, `*` | $O(1)$ |
-| 単項 `+`, 単項 `-`, `++`, `--` | $O(1)$ |
-| `==`, `!=` | $O(1)$ |
+| `get_mod()`、`raw(v)`、`val()` | $O(1)$ |
+| `+=`、`-=`、`*=`、`+`、`-`、`*` | $O(1)$ |
+| 単項 `+`、単項 `-`、`++`、`--` | $O(1)$ |
+| `==`、`!=` | $O(1)$ |
 | `pow(n)` | $O(\log(n+1))$ |
-| `inv()`, `/=`, `/` | $O(\log mod)$ |
-| `operator>>`, `operator<<` | $O(D)$（ストリーム自身の処理を含む） |
+| `inv()`、`/=`、`/` | $O(\log \mathrm{mod})$ |
+| `operator>>`、`operator<<` | $O(D)$（ストリーム自身の処理を含む） |
+
+## 空間計算量
+
+オブジェクトの保存領域と、入出力以外の各関数の追加領域は $O(1)$ である。`pow`、`inv`、除算は反復で実装しており、スタックを消費しない。
 
 ## 注意点
 
-`mod >= 1`。`raw(v)` は正規化と検査を省略するため `0 <= v < mod` を呼出側が保証する。
-`pow` の指数は非負。`inv` と除算は逆元の存在を要求し、0または法と非互いに素な値では
-`runtime_error`。入力失敗も `runtime_error`。
-オブジェクトの保存領域と、入出力以外の各APIの追加空間計算量は $O(1)$。
-`pow`, `inv`, 除算は反復実装でstackを増やさない。
-
-## 演算APIの詳細
-
-- `operator+=(rhs)`：`rhs` を加え、`[0,mod)` に戻す。$O(1)$。
-- `operator-=(rhs)`：`rhs` を引き、`[0,mod)` に戻す。$O(1)$。
-- `operator*=(rhs)`：Barrett reductionで積を正規化する。$O(1)$。
-- `operator/=(rhs)`：`rhs.inv()` を掛ける。$O(\log mod)$。
-- 単項 `operator+()`：同じ値を返す。$O(1)$。
-- 単項 `operator-()`：加法逆元を返す。$O(1)$。
-- 前置 `operator++()` / `operator--()`：1を加減し、0と `mod-1` の間で巡回する。$O(1)$。
-- 後置 `operator++(int)` / `operator--(int)`：変更前の値を返してから1を加減する。$O(1)$。
-- 二項 `operator+`, `operator-`, `operator*`：左辺のcopyへ対応するcompound演算を行う。$O(1)$。
-- 二項 `operator/`：左辺のcopyを右辺で割る。$O(\log mod)$。
-- `operator==` / `operator!=`：正規化済み代表値を比較する。$O(1)$。
-- `operator>>(istream,x)`：符号付き64bit整数を読み、`x`へ正規化して代入する。桁数を $D$ として $O(D)$。
-- `operator<<(ostream,x)`：`x.val()` を10進出力する。桁数を $D$ として $O(D)$。
-
-全演算の返却値以外の追加空間計算量は $O(1)$。compound演算と前置increment/decrementは
-`*this`、後置increment/decrementと二項演算は値を返す。入力演算は成功時にstream、
-失敗時に `runtime_error` を送出する。
+- $\mathrm{mod} \ge 1$ でなければならない。`raw(v)` は正規化と検査を省略するため、$0 \le v \lt \mathrm{mod}$ は呼び出し側が保証する。
+- `pow` の指数が負なら `std::runtime_error` を送出する。
+- `inv` と除算は逆元の存在を要求する。法が素数のときの $0$、合成数のときの法と互いに素でない値では `std::runtime_error` を送出する。
+- ストリームからの入力に失敗すると `std::runtime_error` を送出する。

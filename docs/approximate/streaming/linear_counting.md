@@ -3,36 +3,37 @@ title: Linear Counting (線形カウンティング)
 documentation_of: ../../../src/approximate/streaming/linear_counting.hpp
 ---
 
-## Linear Counting (線形カウンティング)
+相異なるキーをハッシュでビットマップに写し、0 のままのビット数から基数（相異なるキーの個数）を推定する。
 
-distinct key を bit map に写し、空 bit 数から cardinality を推定する。
+## 使い方
+
+~~~cpp
+LinearCounting<> sketch(4096, 123); // ビット数、シード
+sketch.add(42);
+auto cardinality = sketch.estimate();
+
+LinearCounting<4096> fixed(123);    // ビット数をテンプレート引数で固定する版
+~~~
+
+`LinearCounting<BitCount, Key = std::uint64_t>` の `BitCount` を省略すると、ビット数 $m$ を実行時に指定して `std::vector` に $\lceil m/64\rceil$ 語を保存する可変長版になる。指定すると `std::array` に保存する固定長版になる。
 
 ## API
 
-- `LinearCounting(seed)`: 空で構築する。時間計算量は $O(BitCount/64)$。 追加空間計算量は $O(1)$。
-- `add(key)`: hash 先の bit を立てる。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `estimate()`: $-m\log(V/m)$ を返す。空 bit がなければ無限大。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `merge(other)`: bit ごとの OR を取る。時間計算量は $O(BitCount/64)$。 追加空間計算量は $O(1)$。
-- `clear()`: bit map を消す。時間計算量は $O(BitCount/64)$。 追加空間計算量は $O(1)$。
-- `seed()`: hash seed を返す。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `occupied_bits()`, `bit_count()`: 時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
+- `LinearCounting(bit_count, seed = 0)`（可変長版）/ `LinearCounting(seed = 0)`（固定長版）: 空で構築する。
+- `add(key)`: ハッシュ先のビットを立てる。
+- `estimate()`: 0 のビット数を $V$ として $-m\log(V/m)$ を返す。0 のビットがなければ無限大を返す。
+- `merge(other)`: ビットごとの OR を取る。
+- `clear()`: ビットマップを消す。
+- `seed()`: シードを返す。
+- `occupied_bits()`, `bit_count()`: 立っているビット数、$m$ を返す。
 
+## 時間計算量
+
+- コンストラクタ・`merge`・`clear`: $O(\lceil m/64\rceil)$
+- `add`, `estimate`, その他のアクセサ: $O(1)$
+- 空間計算量: $O(\lceil m/64\rceil)$ 語
 
 ## 注意点
 
-異なる seed の merge は `std::invalid_argument`。一様 hash の下で maximum likelihood estimator
-となる。負荷 $n/m$ が小さい範囲では誤差は $O(1/\sqrt m)$、bit map が飽和すると
-分散が急増する。保存に必要な空間計算量は $O(BitCount)$ bit。
-
-## 容量を省略する可変長版
-
-~~~cpp
-LinearCounting<> sketch(4096, 123); // bit 数、seed
-sketch.add(42);
-auto cardinality = sketch.estimate();
-~~~
-
-bit 数 $B$ を実行時に指定し、`vector` に $\lceil B/64\rceil$ 語を保存する。
-構築・merge・`clear` は $O(\lceil B/64\rceil)$ 時間、追加・推定は $O(1)$ 時間。
-保存領域は $O(\lceil B/64\rceil)$ 語、各操作の一時領域は $O(1)$。
-容量指定の固定配列版も同じ header にある。
+- シードが異なるもの同士（可変長版ではビット数が異なるもの同士も）の `merge` は `std::invalid_argument` を投げる。可変長版でビット数が 0 の場合も `std::invalid_argument`。
+- 一様なハッシュの下で最尤推定量となる。負荷 $n/m$ が小さい範囲では相対誤差は $O(1/\sqrt{m})$ だが、ビットマップが飽和に近づくと分散が急増する。

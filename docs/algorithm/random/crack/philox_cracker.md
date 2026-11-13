@@ -3,27 +3,19 @@ title: Philox State Cracker (Philox状態復元)
 documentation_of: ../../../../src/algorithm/random/crack/philox_cracker.hpp
 ---
 
-Philoxのblock roundを順方向・逆方向に計算する。
-keyが既知なら、block境界とcounterが未知の連続出力から、取り得る全alignment、
-観測開始counter、観測直後の将来列を直接復元する。
-整数seed候補区間を調べる従来APIも保持する。
+Philox のブロックラウンドを順方向・逆方向に計算する。キーが既知なら、ブロック境界とカウンタが未知の連続出力から、取り得るすべてのブロック内位置（アラインメント）、観測開始カウンタ、観測直後の将来列を直接復元する。整数シードの候補区間を調べる従来の API も提供する。
 
-## blockの生成と逆変換
+## ブロックの生成と逆変換
 
 ~~~cpp
 philox_generate_block<Engine>(counter, key)
 philox_invert_block<Engine>(output, key)
 ~~~
 
-- `philox_generate_block`：公開順の `counter` と `key` から1blockを返す。
-- `philox_invert_block`：1blockと `key` から、そのblockを生成したcounterを返す。
+- `philox_generate_block`: 公開順の `counter` と `key` から 1 ブロックを返す。
+- `philox_invert_block`: 1 ブロックと `key` から、そのブロックを生成したカウンタを返す。
 
-counterの語順は `PhiloxEngine::set_counter` と同じく上位語が先頭。
-出力blockは `operator()` が返す順である。
-逆変換は奇数multiplierのmodulo $2^w$ における乗法逆元をNewton iterationで求め、
-roundを逆順に適用する。
-語が $[0,2^w)$ を外れる場合は `std::invalid_argument`。
-偶数multiplierは逆変換できないため `std::invalid_argument`。
+カウンタの語順は `PhiloxEngine::set_counter` と同じく上位語が先頭である。出力ブロックは `operator()` が返す順である。逆変換は、奇数の乗数の $2^w$ を法とする乗法逆元を Newton 法で求め、ラウンドを逆順に適用する。語が $[0,2^w)$ を外れる場合、および乗数が偶数で逆変換できない場合は `std::invalid_argument` を送出する。
 
 ## PhiloxKnownKeyCracker
 
@@ -35,22 +27,17 @@ PhiloxKnownKeyCracker<Engine>(
 )
 ~~~
 
-既知key、最初のblock counter、そのblock内で最初に返す語の添字から
-将来列を生成する。
+既知キー、最初のブロックカウンタ、そのブロック内で最初に返す語の添字から将来列を生成する。
 
-- `engine_type` / `result_type` / `counter_type` /
-  `key_type` / `block_type`：対応する型。
-- default constructor：zero key・zero counterで、次の呼出しからblockを生成する。
-- 3引数constructor：`first_counter` のblockを用意し、
-  `first_index` を次の語にする。
-- `next()` / `operator()()`：次の語を返す。
-- `key()`：既知keyへのconst参照を返す。
-- `next_block_counter()`：現在bufferの次に生成するblock counterへのconst参照を返す。
-- `buffer_index()`：現在bufferで次に返す添字を返す。
-  `word_count` と等しいときは次の呼出しでblockを生成する。
+- `engine_type` / `result_type` / `counter_type` / `key_type` / `block_type`: 対応する型。
+- デフォルトコンストラクタ: 零キー・零カウンタで、次の呼出しからブロックを生成する。
+- 3 引数コンストラクタ: `first_counter` のブロックを用意し、`first_index` を次の語にする。
+- `next()` / `operator()()`: 次の語を返す。
+- `key()`: 既知キーへの const 参照を返す。
+- `next_block_counter()`: 現在のバッファの次に生成するブロックカウンタへの const 参照を返す。
+- `buffer_index()`: 現在のバッファで次に返す添字を返す。`word_count` と等しいときは次の呼出しでブロックを生成する。
 
-`first_index >= word_count` は `std::out_of_range`。
-counter・keyの語幅違反は `std::invalid_argument`。
+`first_index >= word_count` なら `std::out_of_range` を、カウンタ・キーの語幅違反なら `std::invalid_argument` を送出する。
 
 ## PhiloxKnownKeyCandidate
 
@@ -58,12 +45,12 @@ counter・keyの語幅違反は `std::invalid_argument`。
 PhiloxKnownKeyCandidate<Engine>
 ~~~
 
-1個の観測開始状態を表す。
+1 個の観測開始状態を表す。
 
-- `counter_type` / `predictor_type`：対応する型。
-- `first_counter`：観測先頭語を含むblockのcounter。
-- `first_index`：そのblock内の観測開始添字。
-- `predictor`：全観測を消費した直後のcracker。
+- `counter_type` / `predictor_type`: 対応する型。
+- `first_counter`: 観測先頭語を含むブロックのカウンタ。
+- `first_index`: そのブロック内の観測開始添字。
+- `predictor`: 全観測を消費した直後の cracker。
 
 ## PhiloxKnownKeyRecovery
 
@@ -71,66 +58,52 @@ PhiloxKnownKeyCandidate<Engine>
 PhiloxKnownKeyRecovery<Engine>
 ~~~
 
-- `engine_type` / `result_type` / `candidate_type`：対応する型。
-- `maximum_candidates == word_count`：alignment候補数の上限。
-- `minimum_observation_count == 3 * word_count - 1`：
-  任意の開始添字で完全な連続2blockを含むために必要な観測数。
-- `candidates` / `candidate_count`：一致した全候補と有効要素数。
-- `unique()`：候補が1個かを返す。
-- `next()`：一意候補の次出力を返す。一意でなければ `std::logic_error`。
+- `engine_type` / `result_type` / `candidate_type`: 対応する型。
+- `maximum_candidates == word_count`: アラインメント候補数の上限。
+- `minimum_observation_count == 3 * word_count - 1`: 任意の開始添字で完全な連続 2 ブロックを含むために必要な観測数。
+- `candidates` / `candidate_count`: 一致した全候補と有効要素数。
+- `unique()`: 候補が 1 個かを返す。
+- `next()`: 一意候補の次出力を返す。一意でなければ `std::logic_error` を送出する。
 
-## 既知keyの連続列復元
+## 既知キーの連続列復元
 
 ~~~cpp
 recover_philox_known_key_stream<Engine>(outputs, key)
 ~~~
 
-$3N-1$ 語以上の連続出力と既知keyを受け取る。
-$N=mathtt{word\_count}$ 個の開始添字をすべて調べ、各候補で完全な2blockを
-`philox_invert_block` によりcounterへ戻す。
-counterが連続し、全観測を再生成できる候補だけを返す。
-counter値やseed候補範囲は走査しない。
+$N$ を `word_count` として、$3N-1$ 語以上の連続出力と既知キーを受け取る（不足すると `std::invalid_argument`）。$N$ 個の開始添字をすべて調べ、各候補で完全な 2 ブロックを `philox_invert_block` によりカウンタへ戻す。カウンタが連続し、全観測を再生成できる候補だけを返す。カウンタ値やシード候補範囲は走査しない。
 
-情報量の少ない構成では複数alignmentが同じ観測を説明し得るため、
-APIは最初の候補だけでなく全候補を返す。
+情報量の少ない構成では複数のアラインメントが同じ観測を説明し得るため、API は最初の候補だけでなく全候補を返す。
 
-## 整数seed既知の標準構成
+## 整数シード既知の標準構成
 
 ~~~cpp
 recover_philox_integer_seeded_stream<Engine>(outputs, seed)
 ~~~
 
-`PhiloxEngine::seed(value)` と同じく、key先頭語を
-`seed mod 2^word_size`、残りを0として
-`recover_philox_known_key_stream` を呼ぶ。
-`Philox4x32` と `Philox4x64` の任意のcounter・block開始位置を直接扱える。
-返り値と必要観測数は `PhiloxKnownKeyRecovery` と同じ。
+`PhiloxEngine::seed(value)` と同じく、キーの先頭語を $\mathrm{seed} \bmod 2^w$（$w$ は `word_size`）、残りを 0 として `recover_philox_known_key_stream` を呼ぶ。`Philox4x32` と `Philox4x64` の任意のカウンタ・ブロック開始位置を直接扱える。返り値と必要観測数は `PhiloxKnownKeyRecovery` と同じ。
 
-## 1-roundの未知key直接復元
+## 1 ラウンド構成の未知キーの直接復元
 
 ~~~cpp
 recover_one_round_philox_key<Engine>(counter, output)
 recover_one_round_philox_integer_seed<Engine>(counter, output)
 ~~~
 
-`Engine::round_count == 1` の構成で使用する。
-既知counterと1blockから、low productで整合性を検査し、
-high product・counter語をxorして各key語を直接求める。
-一致しなければ `std::nullopt`。
+`Engine::round_count == 1` の構成で使用する。既知カウンタと 1 ブロックから、積の下位語で整合性を検査し、積の上位語とカウンタ語の XOR をとって各キー語を直接求める。一致しなければ `std::nullopt`。
 
-整数seed版はkeyの第2語以降が0であることも検査し、
-`PhiloxIntegerSeedClass<Engine>` を返す。
+整数シード版はキーの第 2 語以降が 0 であることも検査し、`PhiloxIntegerSeedClass<Engine>` を返す。
 
 ## PhiloxIntegerSeedClass
 
-- `result_type`：`Engine::result_type`。
-- `masked_seed`：key先頭語に保存される $w$ bit。
-- `contains(seed)`：`seed mod 2^w` が同じかを返す。
-- `canonical_seed()`：`masked_seed` を代表seedとして返す。
+- `result_type`: `Engine::result_type`。
+- `masked_seed`: キー先頭語に保存される $w$ ビット。
+- `contains(seed)`: $\mathrm{seed} \bmod 2^w$ が等しいかを返す。
+- `canonical_seed()`: `masked_seed` を代表シードとして返す。
 
-`result_type` がword幅より広ければ、異なる数値seedが同じclassに属する。
+`result_type` が語幅より広ければ、異なる数値シードが同じクラスに属する。
 
-## 従来の有限候補seed探索
+## 従来の有限候補シード探索
 
 ~~~cpp
 recover_philox_seed_candidates<Engine>(
@@ -147,59 +120,34 @@ recover_philox_seed_in_range<Engine>(
 )
 ~~~
 
-`PhiloxSeedRecoveryStatus` の `none`, `unique`, `ambiguous` は、
-指定した数値seed候補中の一致数を表す。
+`PhiloxSeedRecoveryStatus` の `none`, `unique`, `ambiguous` は、指定した数値シード候補中の一致数を表す。
 
-`PhiloxSeedRecovery<Engine>` は
-`result_type`, `status`, `seed`, `predictor` を持つ。
-`unique()` は一致数が1かを返し、`recovered_seed()` は一意seedまたは
-`std::nullopt`、`next()` は一意な場合の次出力を返す。
-一意でない `next()` は `std::logic_error`。
+`PhiloxSeedRecovery<Engine>` は `result_type`, `status`, `seed`, `predictor` を持つ。`unique()` は一致数が 1 かを返し、`recovered_seed()` は一意シードまたは `std::nullopt`、`next()` は一意な場合の次出力を返す。一意でないときの `next()` は `std::logic_error` を送出する。
 
-候補数形式は `seed_first + offset`
-（$0\leq offset<candidate\_count$）を調べる。
-候補終端がresult typeを越える場合は `std::invalid_argument`。
-range形式は半開区間 $[seed\_first,seed\_last)$ で、逆順なら
-`std::invalid_argument`。
+候補数形式は `seed_first + offset`（`0 <= offset < candidate_count`）を調べる。候補の終端が `result_type` の範囲を越える場合は `std::invalid_argument` を送出する。範囲形式は半開区間 [`seed_first`, `seed_last`) を調べ、逆順なら `std::invalid_argument` を送出する。観測列が空の場合も `std::invalid_argument` を送出する。
 
 ## 時間計算量
 
-$N=mathtt{word\_count}$、$R=mathtt{round\_count}$、
-$K$ を観測語数、$D$ を従来APIのseed候補数とする。
+$N$ を `word_count`、$R$ を `round_count`、$K$ を観測語数、$D$ を従来 API のシード候補数とする。
 
 - `philox_generate_block`, `philox_invert_block`: $O(RN)$
-- `PhiloxKnownKeyCracker` の3引数constructor: $O(RN)$
-- default constructor、`key`, `next_block_counter`, `buffer_index`: $O(1)$
-- `next` / `operator()`: 最悪 $O(RN)$、ならし $O(R)$
-- `PhiloxKnownKeyRecovery::unique`, 一意な `next`: $O(1)$
-  （`next` 自体の生成計算量は上記と同じ）
-- `recover_philox_known_key_stream`,
-  `recover_philox_integer_seeded_stream`:
-  $O(RN(N+K))$ 時間、返り値を含めて $O(N^2)$ 領域
-- `recover_one_round_philox_key`,
-  `recover_one_round_philox_integer_seed`: $O(N)$ 時間・$O(N)$ 戻り値領域
+- `PhiloxKnownKeyCracker` の 3 引数コンストラクタ: $O(RN)$
+- デフォルトコンストラクタ、`key`, `next_block_counter`, `buffer_index`: $O(1)$
+- `next` / `operator()`: 最悪 $O(RN)$、償却 $O(R)$
+- `PhiloxKnownKeyRecovery::unique`, 一意な `next`: $O(1)$（`next` 自体の生成計算量は上記と同じ）
+- `recover_philox_known_key_stream`, `recover_philox_integer_seeded_stream`: $O(RN(N+K))$ 時間、返り値を含めて $O(N^2)$ 領域
+- `recover_one_round_philox_key`, `recover_one_round_philox_integer_seed`: $O(N)$ 時間・$O(N)$ 戻り値領域
 - `PhiloxIntegerSeedClass` の各操作: $O(1)$
-- `recover_philox_seed_candidates`,
-  `recover_philox_seed_in_range`: $O(D(N+R(N+K)))$
-- `PhiloxSeedRecovery` の各query: $O(1)$
-  （`next` 自体の生成計算量は上記と同じ）
+- `recover_philox_seed_candidates`, `recover_philox_seed_in_range`: $O(D(N+R(N+K)))$
+- `PhiloxSeedRecovery` の各クエリ: $O(1)$（`next` 自体の生成計算量は上記と同じ）
 
 ## 注意点
 
-- Philox roundはkeyを固定したcounter上の置換である。
-  roundの可逆性は既知keyからcounterを戻すものであり、
-  10-roundの未知keyを出力だけから高速に得られることを意味しない。
-- `Philox4x32` / `Philox4x64` の未知key復元は既知平文counterに対する
-  鍵探索問題である。このheaderは範囲総当たりを直接復元と呼ばず、
-  key既知なら標準10-round構成のcounter・alignment・将来列を直接復元し、
-  key未知を直接解ける1-round構成を別APIにする。
-- 既知key列の復元には加工前の連続出力を使う。
-- Philoxは統計的乱数生成器であり、暗号用途には使用しない。
-
-## 観測数を実行時に決める
-
-既知 key の復元、整数 seed 既知の復元、seed 候補探索には `span` overload がある。
-観測数のテンプレート引数は不要で、固定長 `array` 版も同じ header にある。
+- Philox ラウンドはキーを固定したカウンタ上の置換である。ラウンドの可逆性は既知キーからカウンタを戻すものであり、10 ラウンドの未知キーを出力だけから高速に得られることを意味しない。
+- `Philox4x32` / `Philox4x64` の未知キー復元は既知平文カウンタに対する鍵探索問題である。このヘッダは範囲の総当たりを直接復元とは呼ばない。キーが既知なら標準の 10 ラウンド構成のカウンタ・アラインメント・将来列を直接復元し、未知キーを直接解ける 1 ラウンド構成は別の API とする。
+- 既知キー列の復元には加工前の連続出力を使う。
+- Philox は統計的乱数生成器であり、暗号用途には使用しない。
+- 既知キーの復元、整数シード既知の復元、シード候補探索には `std::span` を受け取るオーバーロードがあり、観測数は実行時に決めてよい（固定長 `std::array` 版も同じヘッダにある）。観測列はコピーせず、シード候補探索は候補ごとの領域を再利用する。
 
 ~~~cpp
 Philox4x32 generator(7);
@@ -211,7 +159,3 @@ auto recovery = recover_philox_known_key_stream<Philox4x32>(
     std::span<const Philox4x32::result_type>(outputs), key
 );
 ~~~
-
-語数 $N$、round 数 $R$、観測数 $K$ に対し、既知 key 復元は
-$O(RN(N+K))$ 時間・$O(N^2)$ 追加空間。観測列はコピーせず、入力の保存領域は $O(K)$。
-seed 候補数 $D$ の探索は $O(D(N+R(N+K)))$ 時間で、候補ごとの領域を再利用する。

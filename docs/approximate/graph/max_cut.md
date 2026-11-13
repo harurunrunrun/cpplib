@@ -3,23 +3,31 @@ title: Random and Greedy Max-Cut (ランダム法と貪欲法による最大カ�
 documentation_of: ../../../src/approximate/graph/max_cut.hpp
 ---
 
-無向多重グラフのcutを `approximate::graph` 名前空間で構築する。自己ループはcutに数えず、平行辺は個別に数える。
+無向多重グラフのカットを構築する（`approximate::graph` 名前空間）。自己ループはカットに数えず、平行辺は個別に数える。
 
 ## `MaxCutResult`
 
-- `side[v]`: 頂点 $v$ のside（0または1）。
-- `cut_edges`: `side` が切る入力辺数。
+- `side[v]`: 頂点 $v$ の側（0 または 1）
+- `cut_edges`: `side` が切る入力辺の本数
 
-各member参照の時間計算量・追加空間計算量は $O(1)$、`side` 全体の列挙は時間計算量 $O(N)$、追加空間計算量 $O(1)$ である。
+各メンバの参照は時間・追加空間とも $O(1)$、`side` 全体の列挙は時間 $O(N)$、追加空間 $O(1)$ である。
 
-## cut_edge_count
+## `cut_edge_count`
 
-指定した0/1割当てが切る辺数を数える。
+~~~cpp
+size_t cut_edge_count(
+    size_t vertex_count,
+    const vector<pair<size_t, size_t>>& edges,
+    const vector<unsigned char>& side
+)
+~~~
+
+指定した 0/1 の割当てが切る辺の本数を数える。
 
 - 時間計算量: $O(N+E)$
 - 追加空間計算量: $O(1)$
 
-## random_cut
+## `random_cut`
 
 ~~~cpp
 template<class URBG>
@@ -31,20 +39,26 @@ MaxCutResult random_cut(
 )
 ~~~
 
-各頂点を独立にside 1へ置く。既定値では期待cut辺数は自己ループを除く辺数の半分である。
+各頂点を独立に確率 `probability_of_one` で側 1 に置く。デフォルト値では、カットされる辺数の期待値は自己ループを除く辺数の半分である。
 
 - 時間計算量: $O(N+E)$
 - 追加空間計算量: $O(N)$
 
-## greedy_max_cut
+## `greedy_max_cut`
 
-頂点番号順に、既に割り当てた隣接辺を多く切る側へ置く。同数ならside 0を選ぶ。自己ループを除く辺の半分以上を決定的に切る。
+~~~cpp
+MaxCutResult greedy_max_cut(
+    size_t vertex_count,
+    const vector<pair<size_t, size_t>>& edges
+)
+~~~
+
+頂点番号順に、割当て済みの隣接頂点への辺をより多く切る側へ置く。同数なら側 0 を選ぶ。自己ループを除く辺の半分以上を決定的に切る。
 
 - 時間計算量: $O(N+E)$
 - 追加空間計算量: $O(N+E)$
 
-端点範囲、sideの長さ・値、確率を検査する。不正値には `std::out_of_range` または `std::invalid_argument` を送出する。
-
 ## 注意点
 
-頂点番号は指定した頂点数の範囲内でなければならない。自己loop・平行辺・重みの扱いは各APIの記載に従い、明記した保証を除いて最適解を返すとは限らない。
+- 範囲外の端点には `std::out_of_range` を送出する
+- `side` の長さが `vertex_count` でない、0, 1 以外の値を含む、または `probability_of_one` が $[0, 1]$ の外にある場合は `std::invalid_argument` を送出する

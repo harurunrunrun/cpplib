@@ -3,16 +3,16 @@ title: Integer Optimization Heuristics (整数最適化ヒューリスティク�
 documentation_of: ../../../src/approximate/optimization/integer_heuristics.hpp
 ---
 
-binary/integer 最小化問題向けの solver-independent な primal heuristic 群。
-解は `vector<Int>`、`feasible(x)` は制約充足、`objective(x)` は最小化目的値を
-返す。This header supplies solver-independent primal heuristics for binary
-and bounded-integer minimization.
-各 API の時間計算量は以下で個別に示す。
+0-1 変数・有界整数変数の最小化問題に対する、ソルバに依存しない主ヒューリスティクス（primal heuristic）群である。解は `vector<Int>` で表し、`feasible(x)` は制約を満たすかどうか、`objective(x)` は最小化する目的値を返す。各 API の時間計算量・空間計算量は以下で個別に示す。
 
-## 共通 callback model / Common callback model
+以下、変数の数を $n$、反復回数を $I$、`feasible` 1 回のコストを $F$、`objective` 1 回のコストを $O$、近傍ソルバ 1 回のコストを $S$ とする。
+
+## 共通のコールバックモデル
 
 ```cpp
-enum class IntegerNeighborhoodPurpose;
+enum class IntegerNeighborhoodPurpose {
+    local_branching, rins, relax_and_fix, fix_and_optimize, proximity
+};
 
 template<class Int, class Value>
 struct IntegerNeighborhoodRequest {
@@ -26,16 +26,9 @@ struct IntegerNeighborhoodRequest {
 template<class Int, class Value> struct IntegerHeuristicResult;
 ```
 
-neighborhood solver は request を受け、解があれば
-`optional<vector<Int>>` を返す。`fixed[i]` は固定値、`reference` からの距離は
-整数変数では値の不一致数（Hamming 距離）、`objective_upper_bound` は厳密に
-改善すべき上限である。`purpose` により solver 側で目的（特に proximity
-では距離優先）を区別できる。
+近傍ソルバ `solve` はリクエストを受け取り、解があれば `optional<vector<Int>>` で返す。`fixed[i]` は固定値、`reference` からの距離は整数変数での値の不一致数（ハミング距離）、`objective_upper_bound` は厳密に改善すべき上限である。`purpose` により、ソルバ側で目的（特に proximity では距離を優先すること）を区別できる。
 
-`IntegerHeuristicResult` は `solution`, `objective`, `iterations`,
-`candidates`, `feasible` を持つ。各メンバ参照と `operator bool()` は $O(1)$。
-Request construction is $O(n)$ unless noted; a solver call has user-defined
-cost $S(n)$.
+`IntegerHeuristicResult` は `solution`, `objective`, `iterations`, `candidates`, `feasible` を持つ。各メンバの参照と `operator bool()` は $O(1)$ である。特に断らない限り、リクエストの構築は $O(n)$ である。
 
 ## `local_branching`
 
@@ -46,9 +39,7 @@ local_branching(
 )
 ```
 
-incumbent の Hamming 半径 `radius` 内で改善解を求め、改善した中心から反復する。
-This is Fischetti-Lodi local branching expressed through neighborhood solves.
-時間 $O(I(n+F+O+S))$、空間 $O(n)$（solver 内部を除く）。
+暫定解 `incumbent` からハミング距離 `radius` 以内で改善解を求め、改善したらその解を中心にして繰り返す。Fischetti–Lodi の local branching を近傍ソルバの呼び出しで表したものである。時間 $O(I(n+F+O+S))$、空間 $O(n)$（ソルバ内部を除く）である。
 
 ## `rins`
 
@@ -59,9 +50,7 @@ rins(
 )
 ```
 
-incumbent と relaxation が一致する変数を固定し、残りを一度再最適化する RINS。
-It fixes agreement variables and makes one subproblem call.
-時間 $O(n+F+O+S)$、空間 $O(n)$。
+暫定解と緩和解が一致する変数を固定し、残りを 1 回だけ再最適化する RINS である。時間 $O(n+F+O+S)$、空間 $O(n)$ である。
 
 ## `feasibility_pump`
 
@@ -72,10 +61,7 @@ feasibility_pump(
 )
 ```
 
-丸めた整数点と、`project(integer_point)` が返す relaxation への射影を交互に行う。
-循環時は一変数を隣の整数値へ摂動する。This is feasibility-pump control
-with a caller-supplied continuous projection callback.
-時間 $O(I(n\log I+F+P)+O)$（既出点を `set` で検出）、空間 $O(In)$。
+緩和解を丸めた整数点と、`project(integer_point)` が返す緩和問題への射影とを交互に求める。循環したら 1 変数を隣の整数値へ摂動する。連続な射影はコールバックとして呼び出し側が与える。時間 $O(I(n\log I+F+P)+O)$（$P$ は射影のコスト。既出の点は `set` で検出する）、空間 $O(In)$ である。
 
 ## `relax_and_fix`
 
@@ -85,9 +71,7 @@ relax_and_fix(
 )
 ```
 
-block 順に部分問題を解き、その block の得られた整数値を以後固定する。
-Relax-and-fix progressively grows the fixed prefix of blocks.
-block 数 $B$ に対し時間 $O(B(n+S)+F+O)$、空間 $O(n)$。
+ブロックの順に部分問題を解き、そのブロックで得られた整数値を以後固定する。固定済みのブロックが先頭から順に増えていく。ブロック数を $B$ として、時間 $O(B(n+S)+F+O)$、空間 $O(n)$ である。
 
 ## `fix_and_optimize`
 
@@ -97,23 +81,19 @@ fix_and_optimize(
 )
 ```
 
-各 block だけを自由にし、外側を現在解へ固定して改善を反復する。
-Fix-and-optimize cycles through disjoint free-variable blocks.
-時間 $O(PB(n+S+F+O))$、空間 $O(n)$。
+各ブロックだけを自由にし、それ以外を現在解に固定して改善することを、互いに素なブロックについて巡回的に繰り返す。パス数を $P$ として、時間 $O(PB(n+S+F+O))$、空間 $O(n)$ である。
 
 ## `diving_heuristic`
 
 ```cpp
 diving_heuristic(
     lower, upper, solve_relaxation, feasible, objective,
-    maximum_fixings = size_t max, integrality_tolerance = 1e-9L
+    maximum_fixings = numeric_limits<size_t>::max(),
+    integrality_tolerance = 1e-9L
 )
 ```
 
-`solve_relaxation(fixed)` を反復し、まだ固定していない中で整数に最も近い
-fractional 変数を丸めて固定する diving。At every dive it re-solves the
-relaxation and fixes the least-fractional unfixed variable.
-固定回数 $K$ に対し時間 $O(K(n+R+F)+O)$、空間 $O(n)$。
+`solve_relaxation(fixed)` を繰り返し呼び、まだ固定していない変数のうち整数に最も近い小数値の変数を丸めて固定する diving である。固定のたびに緩和問題を解き直す。固定回数を $K$、緩和問題 1 回のコストを $R$ として、時間 $O(K(n+R+F)+O)$、空間 $O(n)$ である。
 
 ## `rounding_heuristic`
 
@@ -123,8 +103,7 @@ rounding_heuristic(
 )
 ```
 
-最近整数へ丸め、失敗時だけ `repair(rounded)` を一度呼ぶ。The repair callback
-returns `optional<vector<Int>>`. 時間 $O(n+2F+O+R)$、空間 $O(n)$。
+緩和解を最も近い整数へ丸め、実行不能な場合だけ `repair(rounded)` を 1 回呼ぶ。`repair` は `optional<vector<Int>>` を返す。修復のコストを $R$ として、時間 $O(n+2F+O+R)$、空間 $O(n)$ である。
 
 ## `proximity_search`
 
@@ -135,9 +114,7 @@ proximity_search(
 )
 ```
 
-現在値より厳密に良い解という cutoff の下で、現在解との距離を優先する部分問題を
-反復する。The request purpose tells the solver to minimize proximity under
-the improvement cutoff. 時間 $O(I(n+S+F+O))$、空間 $O(n)$。
+「現在値より厳密に良い解」という打ち切り条件の下で、現在解との距離を優先して最小化する部分問題を繰り返す。リクエストの `purpose` により、ソルバに距離の最小化を指示する。時間 $O(I(n+S+F+O))$、空間 $O(n)$ である。
 
 ## `solution_polishing`
 
@@ -147,22 +124,14 @@ solution_polishing(
 )
 ```
 
-solver を使わず、現在解から $\pm1$ の一変数 move と二変数 move を全評価し、
-pass ごとの best improvement を採用する。
-It performs deterministic one- and two-coordinate polishing.
-変数数 $n$、pass 数 $P$ に対し時間 $O(Pn^2(n+F+O))$
-（候補 vector の copy を含む）、空間 $O(n)$。
+ソルバを使わず、現在解から 1 変数を $\pm1$ する移動と 2 変数を同時に動かす移動をすべて評価し、パスごとに最良の改善を採用する決定的な手法である。パス数を $P$ として、時間 $O(Pn^2(n+F+O))$（候補ベクトルのコピーを含む）、空間 $O(n)$ である。
 
 ## 注意点
 
-Notes:
-
-- 全 API は最小化用。`objective_upper_bound` は strict improvement を意味する。
-- solver callback は `fixed`、距離、目的上限を守る責任がある。返却解の制約充足は
-  ライブラリも `feasible` で確認するが、request 違反そのものは検査できない。
-- `relax_and_fix` と `fix_and_optimize` の block は範囲内かつ互いに素である必要が
-  ある。空 block は許される。
-- bounds を取る API は `Int` が整数型で、`lower <= upper` を要求する。
-  relaxation と projection は有限値でなければならない。
-- これらは primal heuristic であり、最適性や実行可能解発見を一般には保証しない。
-  Callback costs dominate on realistic mathematical programs.
+- すべての API は最小化用である。`objective_upper_bound` は厳密な改善を意味する
+- `local_branching` と `rins` の暫定解は実行可能でなければならない
+- ソルバのコールバックは `fixed`、距離、目的値の上限を守る責任がある。返された解が制約を満たすかはライブラリも `feasible` で確認するが、リクエストへの違反そのものは検査できない。返された解の長さが違う場合は例外を送出する
+- `relax_and_fix` と `fix_and_optimize` のブロックは範囲内かつ互いに素でなければならない（範囲外は `std::out_of_range`、重複は `std::invalid_argument`）。空のブロックは許す
+- 上下限を取る API では `Int` は整数型で、`lower <= upper` でなければならない。緩和解と射影は有限値でなければならない
+- 次元の不一致や不正なパラメータには `std::invalid_argument` を送出する
+- これらは主ヒューリスティクスであり、一般には最適性や実行可能解の発見を保証しない。現実的な数理計画問題では、コールバックのコストが支配的になる

@@ -3,15 +3,15 @@ title: Interval Update MEX Set (区間更新MEX集合)
 documentation_of: ../../../src/structure/interval/interval_mex_set.hpp
 ---
 
-巨大な有限整数領域に対する区間 set、clear、flip と MEX を implicit lazy segment tree で処理する。
+巨大な有限の整数領域に対する、区間の追加（set）・削除（clear）・反転（flip）と MEX の取得を、動的に節点を作る遅延セグメント木で処理する。
 
-## constructor
+## コンストラクタ
 
 ```cpp
 explicit IntervalMexSet(uint64_t universe)
 ```
 
-`[0,universe)` がすべて欠損した状態を作る。
+$[0, \mathrm{universe})$ のすべての値が欠けている状態を作る。
 
 ## assign / flip
 
@@ -20,7 +20,7 @@ void assign(uint64_t left, uint64_t right, bool present)
 void flip(uint64_t left, uint64_t right)
 ```
 
-半開区間を一括して存在・欠損にするか、存在状態を反転する。
+`assign` は半開区間 $[\mathrm{left}, \mathrm{right})$ の値を一括して、`present` が `true` なら存在する状態に、`false` なら欠けている状態にする。`flip` は区間内の存在状態を反転する。
 
 ## mex
 
@@ -28,24 +28,34 @@ void flip(uint64_t left, uint64_t right)
 uint64_t mex()
 ```
 
-最小欠損値を返す。領域が完全なら `universe` を返す。
+欠けている最小の値を返す。領域のすべての値が存在する場合は `universe` を返す。
 
 ## universe / distinct_size / node_count
 
-領域長、存在値数、現在確保した node 数を $O(1)$ で返す。
+```cpp
+uint64_t universe() const
+uint64_t distinct_size() const
+size_t node_count() const
+```
+
+領域の長さ、存在する値の個数、現在確保している節点数を返す。
 
 ## 時間計算量
 
-$C=universe$、更新で生成される node 数を $K$ とする。
+$C = \mathrm{universe}$ とし、更新で生成される節点の総数を $K$ とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| constructor | $O(1)$ | $O(1)$ |
+| コンストラクタ | $O(1)$ | $O(1)$ |
 | `assign`, `flip` | $O(\log C)$ | 償却 $O(\log C)$ |
 | `mex` | $O(\log C)$ | 償却 $O(\log C)$ |
-| getter | $O(1)$ | $O(1)$ |
-| 全体 | - | $O(K)$ |
+| `universe`, `distinct_size`, `node_count` | $O(1)$ | $O(1)$ |
+
+## 空間計算量
+
+全体で $O(K)$。
 
 ## 注意点
 
-`universe > 0` が必要である。区間は `0 <= left <= right <= universe` を要求し、違反時は例外を送出する。
+- `universe > 0` が必要である。違反するとコンストラクタが `std::invalid_argument` を送出する。
+- 区間は $0 \le \mathrm{left} \le \mathrm{right} \le \mathrm{universe}$ を満たす必要がある。違反すると `std::out_of_range` を送出する。
