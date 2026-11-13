@@ -3,35 +3,35 @@ title: Partially Persistent Dynamic BitAssign RangeSum RangeFlip (部分永続�
 documentation_of: ../../../../src/structure/segtree/partially_persistent/partially_persistent_dynamic_bitassign_rangesum_rangeflip.hpp
 ---
 
-巨大bit列に対する部分永続な区間代入・区間反転・区間和。
+巨大なビット列に対して、部分永続な区間代入・区間反転・区間和を扱う。
 
-## 時間計算量
-
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
-- updateと最新versionのquery: $O(\log \mathtt{MAX\_SIZE})$
-- 過去versionのquery: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
-- version・容量情報: $O(1)$
+このヘッダは include 互換用で、`partially_persistent_bitassign_rangesum_rangeflip.hpp` を読み込むだけである。`PartiallyPersistentDynamicBitAssignRangeSumRangeFlip` は `PartiallyPersistentBitAssignRangeSumRangeFlip` の別名テンプレートで、テンプレート引数 `MAX_SIZE`, `MAX_NODES`, `MAX_VERSIONS`, `MAX_CHANGES`（すべてデフォルト $-1$）もそのまま受け取る。API と契約は `PartiallyPersistentBitAssignRangeSumRangeFlip` と同じである。
 
 ## API
 
-公開APIのsignature・最新版更新・過去version query・半開区間・容量・例外契約は
-`Partially Persistent Bit Range Structures` と同じ。各操作の計算量は下表の通り。
+- コンストラクタ `PartiallyPersistentDynamicBitAssignRangeSumRangeFlip<...>(n)`: 長さ $n$ の全 0 列を version 0 として作る。
+- `size()`, `versions()`, `latest_version()`, `nodes_used()`, `changes_used()`: 長さ・version 数・最新 version・使用ノード数・使用履歴数を返す。
+- `fork(version)`: 最新版と同じ内容の新しい version を作って返す。
+- `assign(version, l, r, value)`: 半開区間 $[l, r)$ を `value` に代入した新しい version を返す。
+- `flip(version, l, r)`: 半開区間 $[l, r)$ を反転した新しい version を返す。
+- `set_one(version, l, r)`, `set(version, l, r)`: 半開区間 $[l, r)$ を 1 に上書きした新しい version を返す（`set` は `set_one` と同じ）。
+- 上の更新関数はすべて `version` を省略でき、そのときは `latest_version()` を更新元とする。
+- `sum(version, l, r)`: 指定 version の半開区間 $[l, r)$ の 1 の個数を返す。
+- `get(version, k)`: 指定 version の位置 $k$ のビットを `bool` で返す。
 
-## 公開API
+## 時間計算量
 
-このheaderは `PartiallyPersistentDynamicBitAssignRangeSumRangeFlip` を非`Dynamic`名の型の別名として公開する。
+$N = \texttt{MAX_SIZE}$（容量省略時は $n$）とする。
 
-- constructor：長さ `n` の0列をversion 0として作る。
-- `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`：状態情報を返す。
-- `fork`：最新版と同内容の新versionを返す。
-- `assign`, `flip`, `set_one`, `set`：最新版を更新した新versionを返す。version省略形もある。
-- `sum(version,l,r)` / `get(version,k)`：任意versionを参照する。
+- コンストラクタ: 固定容量版は $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$、容量省略版は $O(1)$
+- 更新と最新版のクエリ: $O(\log N)$
+- 過去 version のクエリ: $O(\log N \log C)$（$C$ は `changes_used()`）
+- 状態取得関数: $O(1)$
 
-更新と最新版queryは $O(\log \mathtt{MAX\_SIZE})$、過去version queryは
-$O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$。更新1回は同対数個のnode・履歴、
-queryは $O(\log \mathtt{MAX\_SIZE})$ stackを使う。
+更新 1 回あたり $O(\log N)$ 個のノードと履歴を消費し、クエリは $O(\log N)$ の再帰スタックを使う。
 
 ## 注意点
 
-include互換用header。更新元は `latest_version()` だけで、過去versionはqueryだけ可能。
-半開区間・点・version・最新版条件・各固定容量の違反では `runtime_error`。
+- 更新元にできるのは `latest_version()` だけで、過去の version はクエリにしか使えない。
+- 半開区間・位置・version の範囲外、最新版以外からの更新、各固定容量の超過では `std::runtime_error` を送出する。$n \le 0$ も `std::runtime_error` になる。
+- テンプレート引数をすべて省略した場合は、ノード・version・履歴の容量が要素の増加に応じて伸びる。

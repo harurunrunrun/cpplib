@@ -3,40 +3,58 @@ title: Rollback BitOverwrite RangeSum (ロールバック可能ビット上書�
 documentation_of: ../../../../src/structure/segtree/rollback/rollback_bitoverwrite_rangesum.hpp
 ---
 
-rollback可能なbit列の区間1上書き・区間和。詳細は `Rollback Bit Range Structures` を参照。
+ロールバック可能なビット列に対する区間 1 上書き・区間和。変更前のノードを履歴に保存し、指定した状態より後の更新を破棄できる。
 
-## 時間計算量
+```cpp
+RollbackBitOverwriteRangeSum<MAX_SIZE, MAX_NODES, MAX_VERSIONS, MAX_CHANGES>
+```
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
-- `assign`, `flip`, `set`, `sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
-- `fork`, `snapshot`, `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`: $O(1)$
-- `rollback`: 巻き戻す変更記録数を $K$ として $O(K)$
+同じ API の別名 `RollbackDynamicBitOverwriteRangeSum` も定義される。
+
+型名上の主な操作は 1 への上書き（`set`）だが、基底クラスの `assign`, `flip`, `set_one` も利用できる。
 
 ## API
 
-公開APIのsignature・snapshot・rollback・半開区間・容量・例外契約は
-`Rollback Bit Range Structures` と同じ。各操作の計算量は下表の通り。
+```cpp
+explicit RollbackBitOverwriteRangeSum(long long n = MAX_SIZE)  // 可変長版の既定値は 0
+int assign(long long l, long long r, bool value)
+int flip(long long l, long long r)
+int set_one(long long l, long long r)
+int set(long long l, long long r)
+long long sum(long long l, long long r) const
+bool get(long long k) const
+int fork()
+int snapshot() const
+void rollback(int snapshot)
+long long size() const
+int versions() const
+int latest_version() const
+int nodes_used() const
+int changes_used() const
+```
 
-## 公開API
+- コンストラクタ: 長さ $n$ の全 0 列を状態 0 として作る。
+- `assign(l, r, value)`, `flip(l, r)`: 現在の状態の半開区間 $[l, r)$ を `value` に代入する・反転する。
+- `set_one(l, r)`, `set(l, r)`: 現在の状態の半開区間 $[l, r)$ を 1 に上書きする。
+- 各更新と `fork()` は新しい状態番号を返す。`fork()` は内容を変えずに状態番号だけを進める。
+- `sum(l, r)`, `get(k)`: 現在の状態の 1 の個数・1 点のビットを返す。
+- `snapshot()`: 現在の状態番号（`latest_version()` と同じ）を返す。
+- `rollback(s)`: 状態 `s` より後の更新をすべて破棄し、状態 `s` に戻す。
+- `size()`, `versions()`, `latest_version()`, `nodes_used()`, `changes_used()`: 列の長さ・状態数・最新の状態番号・使用ノード数・変更記録数を返す。
 
-- constructorと状態情報：0列を作り、列長・version・node・履歴使用量を返す。
-- `fork`：現在と同内容の新状態を作る。
-- `set` / `set_one`：現在の半開区間を1へ代入する。
-- `assign` / `flip`：現在の半開区間を代入／反転する。
-- `sum` / `get`：現在状態の1の個数／1点を返す。
-- `snapshot` / `rollback`：状態番号を取得し、指定状態へ戻す。
+## 時間計算量
 
-更新とqueryは $O(\log \mathtt{MAX\_SIZE})$、状態情報と `fork` は $O(1)$、
-rollbackは取り消す履歴数に線形。更新は同対数個のnode・履歴、queryは同量のstackを使う。
+- コンストラクタ: 固定容量版は $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$
+- `assign`, `flip`, `set_one`, `set`, `sum`, `get`: $O(\log \texttt{MAX_SIZE})$
+- `fork`, `snapshot`, `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`: $O(1)$
+- `rollback`: 巻き戻す変更記録数を $K$ として $O(K)$
+
+更新 1 回で $O(\log \texttt{MAX_SIZE})$ 個のノードと変更記録を使い、クエリは $O(\log \texttt{MAX_SIZE})$ の再帰スタックを使う。
 
 ## 注意点
 
-型名上の主操作は1への上書きだが、public継承により `assign` と `flip` も利用できる。
-rollback後の未来側状態は破棄される。半開区間・点・snapshot・各容量の違反では
-`runtime_error`。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`RollbackBitOverwriteRangeSum<> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- `rollback` で破棄された状態番号は無効になる。
+- `0 < n <= MAX_SIZE` で、半開区間と点が有効でなければならない。
+- `MAX_VERSIONS` は状態 0 を含む状態数の上限である。
+- 範囲・状態番号の違反、ノード・状態数・変更記録の容量超過では `std::runtime_error` を送出する。失敗した更新は本体と履歴を元に戻す。
+- テンプレート引数をすべて省略すると可変長版になり、`RollbackBitOverwriteRangeSum<> tree(n);` のように使う。ノード・状態・履歴は使用量に応じて `std::vector` を拡張する。

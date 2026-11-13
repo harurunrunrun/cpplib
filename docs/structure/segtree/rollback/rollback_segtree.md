@@ -3,7 +3,7 @@ title: Rollback Segment Tree (ロールバック可能セグメント木)
 documentation_of: ../../../../src/structure/segtree/rollback/rollback_segtree.hpp
 ---
 
-1点更新を取り消せるsegment tree。
+1 点更新を取り消せるセグメント木。
 
 ## テンプレート引数
 
@@ -11,16 +11,18 @@ documentation_of: ../../../../src/structure/segtree/rollback/rollback_segtree.hp
 RollbackSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
 ```
 
-- モノイド `Monoid`
-- 配列長の上限 `MAX_SIZE`
-- 同時に保持する更新履歴数の上限 `MAX_UPDATE`
+- `Monoid`: モノイド
+- `MAX_SIZE`: 配列長の上限
+- `MAX_UPDATE`: 同時に保持する更新履歴数の上限
 
-オブジェクト自体のcopy/moveはできない。
+容量（`MAX_SIZE`, `MAX_UPDATE`）を両方省略すると可変長版になり、`RollbackSegtree<Monoid> tree(n);` のように長さを実行時に与える。履歴は使用量に応じて `std::vector` を拡張する。
+
+オブジェクト自体のコピー・ムーブはできない。
 
 ## コンストラクタ
 
 ```cpp
-(1) RollbackSegtree(int n = MAX_SIZE)
+(1) RollbackSegtree(int n = MAX_SIZE)  // 可変長版の既定値は 0
 (2) RollbackSegtree(const vector<S>& v)
 (3) RollbackSegtree(const array<S, N>& v)
 ```
@@ -31,7 +33,7 @@ RollbackSegtree<Monoid, MAX_SIZE, MAX_UPDATE>
 
 ## 時間計算量
 
-- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
+- $O(\texttt{MAX_SIZE}+\texttt{MAX_UPDATE}\log \texttt{MAX_SIZE})$（可変長版は $O(n)$）
 
 ## set
 
@@ -43,7 +45,7 @@ void set(int k, const S& x)
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## get
 
@@ -63,11 +65,11 @@ S get(int k) const
 S prod(int l, int r) const
 ```
 
-区間 $[l, r)$ の積を返す。
+区間 $[l, r)$ の総積を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## all_prod
 
@@ -75,7 +77,7 @@ S prod(int l, int r) const
 S all_prod() const
 ```
 
-全要素の積を返す。
+全要素の総積を返す。
 
 ## 時間計算量
 
@@ -87,11 +89,11 @@ S all_prod() const
 int max_right(int l, auto f, auto&&... args) const
 ```
 
-`f(Monoid.e(), args...)` がtrueであるとき、`f(prod(l, r), args...)` がtrueとなる最大の `r` を返す。
+`f(Monoid.e(), args...)` が `true` であるとき、`f(prod(l, r), args...)` が `true` となる最大の `r` を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## min_left
 
@@ -99,11 +101,11 @@ int max_right(int l, auto f, auto&&... args) const
 int min_left(int r, auto f, auto&&... args) const
 ```
 
-`f(Monoid.e(), args...)` がtrueであるとき、`f(prod(l, r), args...)` がtrueとなる最小の `l` を返す。
+`f(Monoid.e(), args...)` が `true` であるとき、`f(prod(l, r), args...)` が `true` となる最小の `l` を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## snapshot
 
@@ -115,7 +117,7 @@ Snapshot snapshot() const
 
 現在の更新履歴数を返す。
 
-`rollback` で取り消した履歴上のsnapshotは無効になる。
+`rollback` で取り消した履歴上のスナップショットは無効になる。
 
 ## 時間計算量
 
@@ -129,11 +131,11 @@ void rollback(Snapshot s)
 
 `snapshot()` が `s` を返した時点まで更新を戻す。
 
-現在より後のsnapshot、および無効になったsnapshotは指定できない。
+現在より後のスナップショット、および無効になったスナップショットは指定できない。
 
 ## 時間計算量
 
-- 戻す更新数を $k$ として $O(k \log \mathrm{MAX\_SIZE})$
+- 戻す更新数を $k$ として $O(k \log \texttt{MAX_SIZE})$
 
 ## undo
 
@@ -145,7 +147,7 @@ void undo()
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## can_undo
 
@@ -185,15 +187,7 @@ int size() const
 
 ## 注意点
 
-点は列内、区間は半開区間 `[l,r)`。`snapshot()` は現在状態を表すtokenを返し、
-`rollback(snapshot)` はそれ以後の更新を破棄する。`undo()` を持つ型では直前の更新を1つ戻し、
-`can_undo()` はその可否を返す。境界探索のpredicateは単調かつ単位元に対してtrueが必要。
-
-不正な点・区間・snapshot・predicate、空状態での `undo`、node/change/history容量超過では
-`runtime_error`。失敗した更新は本体と履歴を更新前へ戻す。各APIの計算量は上記表の通り。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`RollbackSegtree<Monoid> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 点は列内、区間は半開区間 $[l, r)$ で指定する。
+- 境界探索の述語は単調で、単位元に対して `true` を返す必要がある。
+- 不正な点・区間・スナップショット、述語が単位元で `false`、履歴が空の状態での `undo`、保持する更新数が `MAX_UPDATE` を超える場合は `std::runtime_error` を送出する。`std::array` の長さが `MAX_SIZE` を超える場合も `std::runtime_error` になる。可変長版で $n \gt 2^{28}$ の場合は `std::length_error` になる。
+- 失敗した更新は本体と履歴を更新前に戻す。

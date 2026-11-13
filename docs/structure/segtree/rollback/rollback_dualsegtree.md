@@ -3,7 +3,7 @@ title: Rollback Dual Segment Tree (ロールバック可能双対セグメント
 documentation_of: ../../../../src/structure/segtree/rollback/rollback_dualsegtree.hpp
 ---
 
-1点更新と区間作用を取り消せるdual segment tree。
+1 点更新と区間作用を取り消せる双対セグメント木。
 
 ## テンプレート引数
 
@@ -11,17 +11,27 @@ documentation_of: ../../../../src/structure/segtree/rollback/rollback_dualsegtre
 RollbackDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 ```
 
+- `Monoid_act`: 作用付きモノイド
+- `MAX_SIZE`: 配列長の上限
+- `MAX_UPDATE`: 同時に履歴に保持できる更新回数の上限（`undo`・`rollback` で取り消した分は再利用できる）
+
+容量（`MAX_SIZE`, `MAX_UPDATE`）を両方省略すると可変長版になり、`RollbackDualSegtree<Monoid_act> tree(n);` のように長さを実行時に与える。履歴は使用量に応じて `std::vector` を拡張する。
+
 ## コンストラクタ
 
 ```cpp
-(1) RollbackDualSegtree(int n = MAX_SIZE)
+(1) RollbackDualSegtree(int n = MAX_SIZE)  // 可変長版の既定値は 0
 (2) RollbackDualSegtree(const vector<S>& v)
 (3) RollbackDualSegtree(const array<S, N>& v)
 ```
 
+1. 長さ `n`、初期値 `Monoid_act.e()` で初期化する。
+2. `v` で初期化する。
+3. `v` で初期化する。
+
 ## 時間計算量
 
-- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
+- $O(\texttt{MAX_SIZE}+\texttt{MAX_UPDATE}\log \texttt{MAX_SIZE})$（可変長版は $O(n)$）
 
 ## 更新と取得
 
@@ -31,27 +41,30 @@ RollbackDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 (3) S get(int k) const
 ```
 
+1. `k` 番目の値を `x` に置き換える。
+2. 半開区間 $[l, r)$ に作用 `f` を適用する。空区間でも更新 1 回として履歴に記録する。
+3. `k` 番目の値を返す。
+
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
-## rollback
+## ロールバック
 
 ```cpp
 using Snapshot = int;
-
 Snapshot snapshot() const
 void rollback(Snapshot s)
 void undo()
 ```
 
-`rollback` は指定したsnapshotまで、`undo` は直前の更新を取り消す。
+`snapshot()` は現在の状態を表す値（履歴に残っている更新回数）を返す。`rollback(s)` は `s` より後の更新をすべて取り消し、`undo()` は直前の更新を 1 つ取り消す。
 
 ## 時間計算量
 
 - `snapshot`: $O(1)$
-- `undo`: $O(\log \mathrm{MAX\_SIZE})$
-- 戻す更新数を $k$ とした `rollback`: $O(k \log \mathrm{MAX\_SIZE})$
+- `undo`: $O(\log \texttt{MAX_SIZE})$
+- 戻す更新数を $k$ としたときの `rollback`: $O(k \log \texttt{MAX_SIZE})$
 
 ## 情報
 
@@ -61,21 +74,14 @@ int history_size() const
 bool can_undo() const
 ```
 
+順に列の長さ、履歴に残っている更新回数、`undo` できるかどうかを返す。
+
 ## 時間計算量
 
 - $O(1)$
 
 ## 注意点
 
-点は列内、区間は半開区間 `[l,r)`。`snapshot()` は現在状態を表すtokenを返し、
-`rollback(snapshot)` はそれ以後の更新を破棄する。`undo()` を持つ型では直前の更新を1つ戻し、
-`can_undo()` はその可否を返す。境界探索のpredicateは単調かつ単位元に対してtrueが必要。
-
-不正な点・区間・snapshot・predicate、空状態での `undo`、node/change/history容量超過では
-`runtime_error`。失敗した更新は本体と履歴を更新前へ戻す。各APIの計算量は上記表の通り。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`RollbackDualSegtree<Monoid_act> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 点は列内、区間は半開区間 $[l, r)$ で指定する。
+- 不正な点・区間・snapshot、履歴が空の状態での `undo`、更新回数が `MAX_UPDATE` を超える場合は `std::runtime_error` を送出する。可変長版で $n \gt 2^{28}$ の場合は `std::length_error` になる。
+- 失敗した更新は本体と履歴を更新前に戻す。

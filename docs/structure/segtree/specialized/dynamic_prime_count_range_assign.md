@@ -3,12 +3,12 @@ title: Dynamic Prime Count Range Assign (区間代入・素数個数) [CNTPRIME]
 documentation_of: ../../../../src/structure/segtree/specialized/dynamic_prime_count_range_assign.hpp
 ---
 
-整数列への区間一括代入と区間内の素数個数問い合わせを処理する。
+整数列への区間一括代入と、区間内の素数の個数の問い合わせを処理する。
 
 ## DynamicPrimeCountRangeAssign
 
 ```cpp
-template<int MAX_SIZE, int MAX_VALUE>
+template<int MAX_SIZE = -1, int MAX_VALUE = -1>
 class DynamicPrimeCountRangeAssign {
 public:
     explicit DynamicPrimeCountRangeAssign(const vector<int>& values);
@@ -18,43 +18,41 @@ public:
 };
 ```
 
-## Constructor
+各要素を「素数なら 1、そうでなければ 0」に置き換えた列を、区間代入・区間和の遅延セグメント木（`DynamicLazySegtree`）で管理する。
 
-初期列を構築し、`MAX_VALUE` 以下の素数判定表を用意する。
+## コンストラクタ
+
+初期列を構築し、`MAX_VALUE` 以下の素数判定表（篩）を用意する。
 
 ## size
 
-列長を返す。
+列の長さを返す。
 
 ## assign
 
-半開区間 `[left,right)` の全要素を `value` に置き換える。
+半開区間 $[left, right)$ の全要素を `value` に置き換える。
 
 ## count_primes
 
-半開区間 `[left,right)` にある素数の個数を返す。
+半開区間 $[left, right)$ にある素数の個数を返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-列長を $N$ とする。
+列の長さを $N$ とする。
 
-| API | 時間計算量 | 追加空間計算量 |
+| API | 時間計算量 | 追加の空間計算量 |
 | --- | --- | --- |
-| Constructor | $O(MAX\_VALUE\log\log MAX\_VALUE+N\log N)$ | $O(MAX\_VALUE+N)$ |
+| コンストラクタ | $O(\texttt{MAX_VALUE}\log\log \texttt{MAX_VALUE}+N\log N)$ | $O(\texttt{MAX_VALUE}+N)$ |
 | `size()` | $O(1)$ | $O(1)$ |
-| `assign(l,r,x)` | $O(\log N)$ | $O(1)$ |
-| `count_primes(l,r)` | $O(\log N)$ | $O(1)$ |
-
-## 注意点
-
-- 全値は素数判定表が扱える範囲でなければならない。
-- 列長は `MAX_SIZE` 以下、区間は有効な半開区間でなければならない。
-- 前提違反時は下位APIから `runtime_error` が送出される。
+| `assign(l, r, x)` | $O(\log N)$ | $O(1)$ |
+| `count_primes(l, r)` | $O(\log N)$ | $O(1)$ |
 
 ## 容量を省略する場合
 
-容量引数の既定値は `-1`。`DynamicPrimeCountRangeAssign<> tree(values);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
+テンプレート引数を両方省略した `DynamicPrimeCountRangeAssign<>` は、列の長さと値域の上限が不要になる。代入値の素数判定には Miller–Rabin 法を使い、値域全体の篩用メモリは確保しない。1 回の代入では木の更新に加えて $O(\log V)$ 回の 64 ビット剰余演算を行う（$V$ は代入値）。2 未満の値は素数でないとみなす。
 
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+## 注意点
 
-容量省略版は値域の上限も不要で、代入値の素数判定に Miller–Rabin を使用する。1回の代入は木の更新に加えて $O(\log V)$ 回の64bit剰余演算を行い、値域全体の篩用メモリを確保しない。
+- 固定容量版では、すべての値が素数判定表の扱える範囲になければならない。
+- 列の長さは `MAX_SIZE` 以下、区間は有効な半開区間でなければならない。
+- 前提に違反した場合は下位の API から `std::runtime_error` が送出される。
