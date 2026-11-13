@@ -3,45 +3,35 @@ title: Marked Tree Diameter Queries (マーク頂点直径クエリ) [QTREE4]
 documentation_of: ../../../../src/structure/tree/centroid/marked_tree_diameter_queries.hpp
 ---
 
-重み付き木でmark頂点集合を動的に変更し、その直径を返す。
+重み付き木でマークされた頂点の集合を動的に変更し、マークされた頂点間の最大距離（直径）を返す。
+`DynamicMarkedTreeDiameter` の薄いラッパーである。
 
 ## API
 
 ### `MarkedTreeDiameterQueries<Weight, MAX_SIZE>(n)`
 
-空の木を作る。時間計算量は $O(n)$。
+頂点数 `n` の辺のない木を作る。`MAX_SIZE` は省略でき、デフォルト値 `-1` では可変長版になる。
+時間計算量は固定長版で $O(\texttt{MAX_SIZE}\log \texttt{MAX_SIZE})$、可変長版で $O(n)$ である。
 
 ### `add_edge(left, right, weight)`
 
-重み付き辺を追加する。時間計算量は償却 $O(1)$。
+重み付きの無向辺を追加する。時間計算量は $O(1)$ である。
 
 ### `build(initially_marked = true)`
 
-索引を構築し、全頂点の初期mark状態を指定する。時間計算量は $O(n\log n)$。
+索引を構築し、全頂点の初期のマーク状態を指定する。時間計算量は `initially_marked` が `false` なら $O(n\log n)$、`true` なら $O(n\log^2 n)$ である。
 
 ### `toggle(vertex)`
 
-markを反転する。時間計算量は $O(\log^2 n)$。
+マークを反転し、操作後にマークされていれば `true` を返す。時間計算量は $O(\log^2 n)$ である。
 
 ### `diameter()`
 
-mark頂点間距離の最大値を返す。markがなければ `nullopt`。時間計算量は $O(1)$。
+マークされた頂点間の距離の最大値を返す。同じ頂点を両端に選べるため、マークが 1 個以上あれば 0 以上である。マークがなければ `nullopt` を返す。時間計算量は $O(1)$ である。
 
 ## 注意点
 
-- 頂点数は `MAX_SIZE` 以下で、辺集合は重み付き木でなければならない。
-- `build` 前の操作、負辺、範囲外頂点では `runtime_error`。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = MarkedTreeDiameterQueries<Weight>;
-using Fixed = MarkedTreeDiameterQueries<Weight, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 頂点数は `MAX_SIZE` 以下で、辺集合は重み付きの木でなければならない。辺の重みは負でもよい。
+- `build` 前の操作、範囲外の頂点、木でない入力では `runtime_error` を送出する。
+- 距離が `Weight` で表現できなければ `overflow_error` を送出する。
+- 容量を指定した固定配列版（`MarkedTreeDiameterQueries<Weight, N>`）と可変長版（`MarkedTreeDiameterQueries<Weight>`）は同じヘッダで利用できる。
