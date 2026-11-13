@@ -41,28 +41,30 @@ inline int minimum_binary_substring_mismatches(
         );
     }
 
-    using Mint = Modint<998244353>;
-    std::vector<Mint> text_zero(text.size());
-    std::vector<Mint> text_one(text.size());
-    std::vector<Mint> pattern_zero(pattern.size());
-    std::vector<Mint> pattern_one(pattern.size());
+    // Map '0' -> -1 and '1' -> +1; the correlation at an alignment equals
+    // matches - mismatches = |pattern| - 2 * mismatches.
+    constexpr long long MOD = 998244353;
+    using Mint = Modint<static_cast<int>(MOD)>;
+    std::vector<Mint> text_sign(text.size());
+    std::vector<Mint> pattern_sign(pattern.size());
     for(std::size_t index = 0; index < text.size(); index++){
-        text_zero[index] = text[index] == '0';
-        text_one[index] = text[index] == '1';
+        text_sign[index] = text[index] == '1' ? 1 : MOD - 1;
     }
     for(std::size_t index = 0; index < pattern.size(); index++){
         const char character = pattern[pattern.size() - 1 - index];
-        pattern_zero[index] = character == '0';
-        pattern_one[index] = character == '1';
+        pattern_sign[index] = character == '1' ? 1 : MOD - 1;
     }
 
-    const auto one_zero = convolution_ntt(text_one, pattern_zero);
-    const auto zero_one = convolution_ntt(text_zero, pattern_one);
+    const auto correlation = convolution_ntt(text_sign, pattern_sign);
+    const long long length = static_cast<long long>(pattern.size());
     int answer = static_cast<int>(pattern.size());
     for(std::size_t left = 0; left + pattern.size() <= text.size(); left++){
         const std::size_t coefficient = left + pattern.size() - 1;
-        const int mismatch = one_zero[coefficient].val() +
-            zero_one[coefficient].val();
+        long long signed_value = correlation[coefficient].val();
+        if(signed_value > MOD / 2){
+            signed_value -= MOD;
+        }
+        const int mismatch = static_cast<int>((length - signed_value) / 2);
         answer = std::min(answer, mismatch);
     }
     return answer;

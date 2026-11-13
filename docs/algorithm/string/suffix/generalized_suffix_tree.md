@@ -34,7 +34,7 @@ bool contains(std::string_view pattern) const
 | `locate` | $O(M\log 256+K\log K)$ | $O(K)$ |
 | `count`, `contains` | $O(M\log 256)$ | $O(1)$ |
 
-コンストラクタの $O(N\log N)$ は `std::vector<int>` に対する `suffix_array`（ダブリング）によるもので、木の構築自体は $O(N)$ である。
+コンストラクタの $O(N\log N)$ は `std::vector<int>` に対する `suffix_array`（座標圧縮のソートと SA-IS）によるもので、木の構築自体は $O(N)$ である。
 
 ## 注意点
 

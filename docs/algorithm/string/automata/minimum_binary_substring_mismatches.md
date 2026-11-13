@@ -4,7 +4,7 @@ documentation_of: ../../../../src/algorithm/string/automata/minimum_binary_subst
 ---
 
 二進文字列 `text` の長さ `pattern.size()` の各部分文字列と `pattern` との、不一致文字数の最小値を返す。
-NTT による畳み込みで全位置の不一致数を求める。
+文字を $\pm 1$ に写した 1 回の NTT 畳み込みで、全位置の「一致数 − 不一致数」を求め、不一致数に直す。
 
 ## 関数
 

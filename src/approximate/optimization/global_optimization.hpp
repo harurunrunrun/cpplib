@@ -194,6 +194,39 @@ inline std::vector<std::vector<long double>> cholesky_factor(
     return lower;
 }
 
+// Appends the rows matrix_rows[0..] (row known + i holds its entries for
+// columns 0..known + i) to a lower-triangular Cholesky factor whose rows
+// are stored with length row + 1. Each row is computed exactly as in
+// cholesky_factor, so the result is identical to refactoring from scratch.
+inline void append_cholesky_rows(
+    std::vector<std::vector<long double>>& lower,
+    const std::vector<std::vector<long double>>& matrix_rows
+) {
+    for(const std::vector<long double>& matrix_row : matrix_rows){
+        const std::size_t row = lower.size();
+        std::vector<long double> current(row + 1, 0.0L);
+        for(std::size_t column = 0; column <= row; ++column){
+            long double value = matrix_row[column];
+            const std::vector<long double>& other =
+                column == row ? current : lower[column];
+            for(std::size_t index = 0; index < column; ++index){
+                value -= current[index] * other[index];
+            }
+            if(row == column){
+                if(!(value > 0.0L) || !std::isfinite(value)){
+                    throw std::domain_error(
+                        "Gaussian-process kernel is not positive definite"
+                    );
+                }
+                current[column] = std::sqrt(value);
+            }else{
+                current[column] = value / lower[column][column];
+            }
+        }
+        lower.push_back(std::move(current));
+    }
+}
+
 inline std::vector<long double> solve_cholesky(
     const std::vector<std::vector<long double>>& factor,
     const std::vector<long double>& right_hand_side
@@ -380,26 +413,29 @@ template<class Real, class Objective, class UniformRandomBitGenerator>
             result.value = value;
         }
     }
+    // Earlier samples never change, so the Cholesky factor of the kernel
+    // matrix is extended by the rows of the new samples only.
+    std::vector<std::vector<long double>> factor;
     for(std::size_t iteration = 0; iteration < iterations; ++iteration){
         const std::size_t size = samples.size();
-        std::vector<std::vector<long double>> kernel(
-            size, std::vector<long double>(size)
-        );
-        for(std::size_t row = 0; row < size; ++row){
+        std::vector<std::vector<long double>> kernel_rows;
+        kernel_rows.reserve(size - factor.size());
+        for(std::size_t row = factor.size(); row < size; ++row){
+            std::vector<long double> kernel_row(row + 1);
             for(std::size_t column = 0; column <= row; ++column){
-                const long double value =
+                kernel_row[column] =
                     global_optimization_internal::rbf_kernel(
                         samples[row], samples[column],
                         static_cast<long double>(length_scale)
                     );
-                kernel[row][column] = value;
-                kernel[column][row] = value;
             }
-            kernel[row][row] +=
+            kernel_row[row] +=
                 static_cast<long double>(observation_noise);
+            kernel_rows.push_back(std::move(kernel_row));
         }
-        const auto factor =
-            global_optimization_internal::cholesky_factor(kernel);
+        global_optimization_internal::append_cholesky_rows(
+            factor, kernel_rows
+        );
         const auto alpha =
             global_optimization_internal::solve_cholesky(
                 factor, values

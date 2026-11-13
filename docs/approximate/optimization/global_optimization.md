@@ -25,7 +25,7 @@ upper_confidence_bound_optimization(...);       // 引数は上と同じ。explo
 
 RBF カーネルのガウス過程を Cholesky 分解で更新し、一様に生成した候補の中から獲得関数が最大の点を評価する。3 つのラッパーは `acquisition` を固定して `bayesian_optimization` を呼ぶ。UCB のラッパーは最小化のため `-mean + exploration * deviation` を最大化する。
 
-観測数を $T$、1 反復の候補数を $C$ とすると、時間計算量は $O(IT^3 + IC(T^2+N))$、空間計算量は $O(T^2+TN)$ である。
+観測数を $T$、1 反復の候補数を $C$ とすると、カーネル行列の Cholesky 因子は新しい観測の行だけを追加して更新する（1 行 $O(T^2+TN)$）ため、時間計算量は $O(T^3 + T^2N + IC(T^2+N))$、空間計算量は $O(T^2+TN)$ である。
 
 ## 獲得関数
 

@@ -16,6 +16,66 @@ struct MatroidPartitionResult {
     std::vector<std::size_t> uncovered;
 };
 
+namespace matroid_partition_internal {
+
+// Copy group * ground_set_size + element stands for (group, element).
+// The current selection is a common independent set, so an exchange can
+// only break the one-copy constraint at the added element and the direct
+// sum at the group receiving the added copy (matroids are hereditary).
+struct OneCopyPerElement {
+    static constexpr std::size_t none = static_cast<std::size_t>(-1);
+    std::size_t ground_set_size;
+    std::vector<std::size_t> chosen_copy;
+
+    void reset(const std::vector<unsigned char>& selected) {
+        chosen_copy.assign(ground_set_size, none);
+        for(std::size_t copy = 0; copy < selected.size(); ++copy){
+            if(selected[copy]) chosen_copy[copy % ground_set_size] = copy;
+        }
+    }
+
+    bool operator()(std::size_t removed, std::size_t added) const {
+        const std::size_t chosen = chosen_copy[added % ground_set_size];
+        return chosen == none || chosen == removed;
+    }
+};
+
+template<class IndependenceOracle>
+struct DirectSum {
+    static constexpr std::size_t none = static_cast<std::size_t>(-1);
+    std::size_t ground_set_size;
+    const std::vector<IndependenceOracle>& independent;
+    std::vector<std::vector<std::size_t>> groups;
+
+    void reset(const std::vector<unsigned char>& selected) {
+        for(std::vector<std::size_t>& group : groups) group.clear();
+        for(std::size_t copy = 0; copy < selected.size(); ++copy){
+            if(selected[copy]){
+                groups[copy / ground_set_size].push_back(
+                    copy % ground_set_size
+                );
+            }
+        }
+    }
+
+    bool operator()(std::size_t removed, std::size_t added) const {
+        const std::size_t group = added / ground_set_size;
+        const std::size_t removed_element =
+            removed != none && removed / ground_set_size == group
+                ? removed % ground_set_size
+                : none;
+        return static_cast<bool>(std::invoke(
+            independent[group],
+            matroid_intersection_internal::exchanged_elements(
+                groups[group], removed_element,
+                added % ground_set_size
+            )
+        ));
+    }
+};
+
+}  // namespace matroid_partition_internal
+
 template<class IndependenceOracle>
 MatroidPartitionResult matroid_partition(
     std::size_t ground_set_size,
@@ -38,39 +98,25 @@ MatroidPartitionResult matroid_partition(
         throw std::length_error("matroid partition copy set is too large");
     }
     const std::size_t copy_count = ground_set_size * matroid_count;
-    const auto one_copy_per_element = [ground_set_size](
-        const std::vector<std::size_t>& copies
-    ){
-        std::vector<unsigned char> used(ground_set_size, 0);
-        for(const std::size_t copy : copies){
-            const std::size_t element = copy % ground_set_size;
-            if(used[element]) return false;
-            used[element] = 1;
-        }
-        return true;
-    };
-    const auto direct_sum = [
-        ground_set_size,
-        matroid_count,
-        &independent
-    ](const std::vector<std::size_t>& copies){
-        std::vector<std::vector<std::size_t>> groups(matroid_count);
-        for(const std::size_t copy : copies){
-            groups[copy / ground_set_size].push_back(
-                copy % ground_set_size
+    for(std::size_t index = 0; index < matroid_count; ++index){
+        if(!static_cast<bool>(std::invoke(
+            independent[index], std::vector<std::size_t>{}
+        ))){
+            throw std::invalid_argument(
+                "a matroid oracle must accept the empty set"
             );
         }
-        for(std::size_t index = 0; index < matroid_count; ++index){
-            if(!static_cast<bool>(std::invoke(
-                independent[index], groups[index]
-            ))){
-                return false;
-            }
-        }
-        return true;
+    }
+    matroid_partition_internal::OneCopyPerElement first_exchange{
+        ground_set_size, {}
     };
-    const auto intersection = matroid_intersection(
-        copy_count, one_copy_per_element, direct_sum
+    matroid_partition_internal::DirectSum<IndependenceOracle> second_exchange{
+        ground_set_size, independent,
+        std::vector<std::vector<std::size_t>>(matroid_count)
+    };
+    MatroidIntersectionResult intersection;
+    intersection.elements = matroid_intersection_internal::augment(
+        copy_count, first_exchange, second_exchange
     );
     MatroidPartitionResult result;
     result.groups.resize(matroid_count);
