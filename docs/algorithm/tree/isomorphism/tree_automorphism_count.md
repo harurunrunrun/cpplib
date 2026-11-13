@@ -18,4 +18,5 @@ documentation_of: ../../../../src/algorithm/tree/isomorphism/tree_automorphism_c
 
 - `T` は乗算と整数からの構築を備える型とする。法を取る整数型も利用できる。
 - 入力は単純な無向木とする。
-- `root` が範囲外なら `std::out_of_range`、グラフが非連結なら `std::invalid_argument` を送出する。
+- `root` や隣接リスト中の頂点番号が範囲外なら `std::out_of_range` を送出する。
+- `tree_automorphism_count` は、入力が木でない（辺数が $N-1$ でない、または非連結）なら `std::invalid_argument` を送出する。`rooted_tree_automorphism_count` は、根から到達できない頂点があれば `std::invalid_argument` を送出する。

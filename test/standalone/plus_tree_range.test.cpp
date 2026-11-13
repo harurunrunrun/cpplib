@@ -43,6 +43,22 @@ int main(){
     assert(ladders.depth(3) == 2);
     assert(!rake_compress_tree_contraction(tree).empty());
     assert(rooted_tree_automorphism_count<long long>(tree, 0) == 2);
+    {
+        // Non-trees used to read out of bounds (forest) or loop forever (cycle).
+        const std::vector<std::vector<int>> forest{{1}, {0}, {3}, {2}};
+        const std::vector<std::vector<int>> cycle{{1, 2}, {0, 2}, {0, 1}};
+        for(const auto* graph: {&forest, &cycle}){
+            bool thrown = false;
+            try{
+                (void)tree_automorphism_count<long long>(*graph);
+            }catch(const std::invalid_argument&){
+                thrown = true;
+            }
+            assert(thrown);
+        }
+        const std::vector<std::vector<int>> star{{1, 2, 3}, {0}, {0}, {0}};
+        assert(tree_automorphism_count<unsigned long long>(star) == 6ULL);
+    }
     TreePathXorBasis basis(tree, {1, 2, 4, 8, 16});
     assert(basis.maximum_xor(3, 2) == 15);
     {
