@@ -131,6 +131,13 @@ class Rational{
         denominator_ = detail::divide_exact(denominator_, divisor);
     }
 
+    // 既約で分母が正と分かっている値から、正規化を省いて構築する。
+    struct NormalizedTag{};
+
+    Rational(NormalizedTag, Integer numerator, Integer denominator)
+        : numerator_(std::move(numerator)),
+          denominator_(std::move(denominator)){}
+
 public:
     Rational() = default;
 
@@ -161,7 +168,10 @@ public:
 
     Rational reciprocal() const{
         if(is_zero()) throw std::domain_error("rational division by zero");
-        return Rational(denominator_, numerator_);
+        if(numerator_.is_negative()){
+            return Rational(NormalizedTag{}, -denominator_, -numerator_);
+        }
+        return Rational(NormalizedTag{}, denominator_, numerator_);
     }
 
     Rational operator+() const{
@@ -169,7 +179,7 @@ public:
     }
 
     Rational operator-() const{
-        return Rational(-numerator_, denominator_);
+        return Rational(NormalizedTag{}, -numerator_, denominator_);
     }
 
     Rational& operator+=(const Rational& other){
@@ -245,7 +255,9 @@ public:
     }
 
     friend Rational abs(const Rational& value){
-        return Rational(abs(value.numerator_), value.denominator_);
+        return Rational(
+            NormalizedTag{}, abs(value.numerator_), value.denominator_
+        );
     }
 
     friend std::ostream& operator<<(std::ostream& stream, const Rational& value){

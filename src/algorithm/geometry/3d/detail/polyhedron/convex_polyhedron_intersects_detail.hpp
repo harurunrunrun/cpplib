@@ -153,6 +153,74 @@ inline bool exact_axis_separates(
         || sign(subtract(second_maximum, first_minimum)) < 0;
 }
 
+// exact_axis_separates で使う「first.front() からの差」を前もって計算したもの。
+struct ExactRelativeVertices{
+    std::vector<ExactVector> first;
+    std::vector<ExactVector> second;
+};
+
+inline ExactRelativeVertices exact_relative_vertices(
+    const std::vector<ExactVector>& first,
+    const std::vector<ExactVector>& second
+){
+    const ExactVector& origin = first.front();
+    ExactRelativeVertices result;
+    result.first.reserve(first.size());
+    for(const ExactVector& vertex: first){
+        result.first.push_back(exact_difference(vertex, origin));
+    }
+    result.second.reserve(second.size());
+    for(const ExactVector& vertex: second){
+        result.second.push_back(exact_difference(vertex, origin));
+    }
+    return result;
+}
+
+// exact_axis_separates(axis, first, second) と同じ判定を、前計算した差で行う。
+inline bool exact_axis_separates(
+    const ExactVector& axis,
+    const ExactRelativeVertices& relative
+){
+    using geometry3d_adaptive_detail::sign;
+    using geometry3d_adaptive_detail::subtract;
+    if(exact_zero(axis)) return false;
+    auto projection = [&](const std::vector<ExactVector>& vertices){
+        ExactScalar minimum = exact_dot(axis, vertices.front());
+        ExactScalar maximum = minimum;
+        for(std::size_t index = 1; index < vertices.size(); ++index){
+            ExactScalar value = exact_dot(axis, vertices[index]);
+            if(sign(subtract(value, minimum)) < 0) minimum = value;
+            if(sign(subtract(value, maximum)) > 0) maximum = std::move(value);
+        }
+        return std::pair<ExactScalar, ExactScalar>{
+            std::move(minimum), std::move(maximum)
+        };
+    };
+    const auto [first_minimum, first_maximum] = projection(relative.first);
+    const auto [second_minimum, second_maximum] = projection(relative.second);
+    return sign(subtract(first_maximum, second_minimum)) < 0
+        || sign(subtract(second_maximum, first_minimum)) < 0;
+}
+
+inline bool face_axis_separates(
+    const ConvexPolyhedron3& source,
+    const ExactPolyhedron& exact_source,
+    const ExactRelativeVertices& relative
+){
+    for(const auto& face: source.faces){
+        const ExactVector first_direction = exact_difference(
+            exact_source.vertices[face[1]], exact_source.vertices[face[0]]
+        );
+        const ExactVector second_direction = exact_difference(
+            exact_source.vertices[face[2]], exact_source.vertices[face[0]]
+        );
+        if(exact_axis_separates(
+            exact_cross(first_direction, second_direction), relative
+        )) return true;
+    }
+    return false;
+}
+
 inline bool face_axis_separates(
     const ConvexPolyhedron3& source,
     const ExactPolyhedron& exact_source,

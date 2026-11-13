@@ -12,10 +12,11 @@ inline std::vector<bool> minimum_enclosing_circle_boundary_flags(
 ){
     const MinimumEnclosingCircleResult circle =
         minimum_enclosing_circle(points, seed);
+    minimum_enclosing_circle_result_detail::CachedContainment tester(circle);
     std::vector<bool> result;
     result.reserve(points.size());
     for(const Point& point: points){
-        result.push_back(circle.on_boundary(point));
+        result.push_back(tester.on_boundary(point));
     }
     return result;
 }

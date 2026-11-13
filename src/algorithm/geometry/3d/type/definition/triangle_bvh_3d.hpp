@@ -30,6 +30,7 @@ class TriangleBVH3D{
 
     std::vector<Triangle3> triangles_;
     std::vector<AABB3> triangle_boxes_;
+    std::vector<Point3> centroids_;  // build 中だけ使う重心の前計算
     std::vector<std::size_t> order_;
     std::vector<Node> nodes_;
     std::size_t leaf_capacity_ = 4;
@@ -98,7 +99,7 @@ class TriangleBVH3D{
             maximum.x = std::max(maximum.x, box.maximum.x);
             maximum.y = std::max(maximum.y, box.maximum.y);
             maximum.z = std::max(maximum.z, box.maximum.z);
-            const Point3 centroid = triangle_centroid(triangles_[index]);
+            const Point3& centroid = centroids_[index];
             centroid_minimum.x = std::min(centroid_minimum.x, centroid.x);
             centroid_minimum.y = std::min(centroid_minimum.y, centroid.y);
             centroid_minimum.z = std::min(centroid_minimum.z, centroid.z);
@@ -127,8 +128,8 @@ class TriangleBVH3D{
             order_.begin() + static_cast<std::ptrdiff_t>(middle),
             order_.begin() + static_cast<std::ptrdiff_t>(end),
             [&](std::size_t left, std::size_t right){
-                const long double lhs = coordinate(triangle_centroid(triangles_[left]), axis);
-                const long double rhs = coordinate(triangle_centroid(triangles_[right]), axis);
+                const long double lhs = coordinate(centroids_[left], axis);
+                const long double rhs = coordinate(centroids_[right], axis);
                 return lhs != rhs ? lhs < rhs : left < right;
             }
         );
@@ -139,6 +140,17 @@ class TriangleBVH3D{
         return node_index;
     }
 
+    // 構築済みの箱と検査済みの range はどちらも有効なので、
+    // AABB3::intersects の有効性検査を省いた同じ比較を使う。
+    static bool boxes_overlap(const AABB3& first, const AABB3& second) noexcept{
+        return first.minimum.x <= second.maximum.x
+            && second.minimum.x <= first.maximum.x
+            && first.minimum.y <= second.maximum.y
+            && second.minimum.y <= first.maximum.y
+            && first.minimum.z <= second.maximum.z
+            && second.minimum.z <= first.maximum.z;
+    }
+
     void aabb_search(
         int node_index,
         const AABB3& range,
@@ -146,11 +158,11 @@ class TriangleBVH3D{
     ) const{
         if(node_index < 0) return;
         const Node& node = nodes_[static_cast<std::size_t>(node_index)];
-        if(!node.box.intersects(range)) return;
+        if(!boxes_overlap(node.box, range)) return;
         if(node.leaf()){
             for(std::size_t position = node.begin; position < node.end; ++position){
                 const std::size_t triangle_index = order_[position];
-                if(triangle_boxes_[triangle_index].intersects(range)){
+                if(boxes_overlap(triangle_boxes_[triangle_index], range)){
                     result.push_back(triangle_index);
                 }
             }
@@ -234,11 +246,18 @@ class TriangleBVH3D{
         long double lower,
         long double& best_parameter,
         std::size_t& best_index,
-        Point3& best_point
+        Point3& best_point,
+        const std::optional<long double>* known_entry = nullptr,
+        long double known_upper = 0
     ) const{
         if(node_index < 0) return;
         const Node& node = nodes_[static_cast<std::size_t>(node_index)];
-        if(!ray_box_entry(origin, direction, node.box, lower, best_parameter)) return;
+        // 親が同じ upper（best_parameter）で計算した入口があればそれを使う。
+        if(known_entry != nullptr && known_upper == best_parameter){
+            if(!*known_entry) return;
+        }else if(!ray_box_entry(
+            origin, direction, node.box, lower, best_parameter
+        )) return;
         if(node.leaf()){
             for(std::size_t position = node.begin; position < node.end; ++position){
                 const std::size_t triangle_index = order_[position];
@@ -254,21 +273,31 @@ class TriangleBVH3D{
             }
             return;
         }
-        const auto left_entry = ray_box_entry(
+        const long double upper = best_parameter;
+        const std::optional<long double> left_entry = ray_box_entry(
             origin, direction, nodes_[static_cast<std::size_t>(node.left)].box,
-            lower, best_parameter
+            lower, upper
         );
-        const auto right_entry = ray_box_entry(
+        const std::optional<long double> right_entry = ray_box_entry(
             origin, direction, nodes_[static_cast<std::size_t>(node.right)].box,
-            lower, best_parameter
+            lower, upper
         );
         int first = node.left;
         int second = node.right;
+        const std::optional<long double>* first_entry = &left_entry;
+        const std::optional<long double>* second_entry = &right_entry;
         if(!left_entry || (right_entry && *right_entry < *left_entry)){
             std::swap(first, second);
+            std::swap(first_entry, second_entry);
         }
-        ray_search(first, origin, direction, lower, best_parameter, best_index, best_point);
-        ray_search(second, origin, direction, lower, best_parameter, best_index, best_point);
+        ray_search(
+            first, origin, direction, lower, best_parameter, best_index,
+            best_point, first_entry, upper
+        );
+        ray_search(
+            second, origin, direction, lower, best_parameter, best_index,
+            best_point, second_entry, upper
+        );
     }
 
 public:
@@ -296,9 +325,15 @@ public:
         for(const Triangle3& triangle: triangles_) triangle_boxes_.push_back(triangle_box(triangle));
         order_.resize(size());
         std::iota(order_.begin(), order_.end(), std::size_t{0});
+        centroids_.clear();
+        centroids_.reserve(size());
+        for(const Triangle3& triangle: triangles_){
+            centroids_.push_back(triangle_centroid(triangle));
+        }
         nodes_.clear();
         nodes_.reserve(size() * 2);
         root_ = empty() ? -1 : build_node(0, size());
+        std::vector<Point3>().swap(centroids_);
     }
 
     std::size_t size() const noexcept{ return triangles_.size(); }

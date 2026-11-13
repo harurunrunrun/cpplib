@@ -4,9 +4,11 @@
 #include "../../../../math/integer/exact_integer.hpp"
 
 #include <algorithm>
+#include <compare>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <utility>
 #include <vector>
 
@@ -25,29 +27,64 @@ struct IndexedPoint{
     std::size_t index;
 };
 
+// 距離の二乗を固定長で正確に表す。座標が 64 bit 以下なら差の絶対値は
+// 2^64 未満なので各二乗は __uint128_t に収まり、和は 1 bit の繰り上がり
+// (high) を加えれば正確に表せる。
+struct SquaredDistance{
+    bool high = false;
+    __uint128_t low = 0;
+
+    friend auto operator<=>(
+        const SquaredDistance&,
+        const SquaredDistance&
+    ) = default;
+
+    ExactInteger to_exact() const{
+        ExactInteger result(low);
+        if(high) result += ExactInteger(1) << 128;
+        return result;
+    }
+};
+
 template<std::integral Coordinate>
-ExactInteger square_difference(
+SquaredDistance square_difference(
     Coordinate first,
     Coordinate second
 ){
-    const ExactInteger difference = ExactInteger(first) - ExactInteger(second);
-    return difference * difference;
+    const __int128_t difference =
+        static_cast<__int128_t>(first) - static_cast<__int128_t>(second);
+    const __uint128_t magnitude = difference < 0
+        ? static_cast<__uint128_t>(-difference)
+        : static_cast<__uint128_t>(difference);
+    return {false, magnitude * magnitude};
 }
 
 template<std::integral Coordinate>
-ExactInteger squared_distance(
+SquaredDistance squared_distance(
     const IndexedPoint<Coordinate>& first,
     const IndexedPoint<Coordinate>& second
 ){
-    return square_difference(first.x, second.x)
-        + square_difference(first.y, second.y);
+    const __uint128_t x = square_difference(first.x, second.x).low;
+    const __uint128_t y = square_difference(first.y, second.y).low;
+    const __uint128_t low = x + y;
+    return {low < x, low};
 }
 
+struct Result{
+    std::size_t first = std::numeric_limits<std::size_t>::max();
+    std::size_t second = std::numeric_limits<std::size_t>::max();
+    SquaredDistance squared_distance{};
+
+    bool exists() const{
+        return first != std::numeric_limits<std::size_t>::max();
+    }
+};
+
 inline void update(
-    ClosestPairResult& result,
+    Result& result,
     std::size_t first,
     std::size_t second,
-    const ExactInteger& distance
+    const SquaredDistance& distance
 ){
     if(first > second) std::swap(first, second);
     if(!result.exists() || distance < result.squared_distance
@@ -77,7 +114,8 @@ ClosestPairResult closest_pair_indices(
         return left.index < right.index;
     });
 
-    ClosestPairResult duplicate_result;
+    using Result = closest_pair_indices_detail::Result;
+    Result duplicate_result;
     for(std::size_t index = 1; index < sorted.size(); ++index){
         if(sorted[index - 1].x == sorted[index].x
             && sorted[index - 1].y == sorted[index].y){
@@ -85,19 +123,21 @@ ClosestPairResult closest_pair_indices(
                 duplicate_result,
                 sorted[index - 1].index,
                 sorted[index].index,
-                0
+                {}
             );
         }
     }
-    if(duplicate_result.exists()) return duplicate_result;
+    if(duplicate_result.exists()){
+        return {duplicate_result.first, duplicate_result.second, 0};
+    }
 
     std::vector<IndexedPoint> buffer(sorted.size());
     std::vector<IndexedPoint> strip;
     strip.reserve(sorted.size());
     const auto solve = [&](auto&& self, std::size_t left, std::size_t right)
-        -> ClosestPairResult {
+        -> Result {
         if(right - left <= 3){
-            ClosestPairResult result;
+            Result result;
             for(std::size_t first = left; first < right; ++first){
                 for(std::size_t second = first + 1; second < right; ++second){
                     closest_pair_indices_detail::update(
@@ -124,8 +164,8 @@ ClosestPairResult closest_pair_indices(
 
         const std::size_t middle = (left + right) / 2;
         const Coordinate middle_x = sorted[middle].x;
-        ClosestPairResult result = self(self, left, middle);
-        const ClosestPairResult right_result = self(self, middle, right);
+        Result result = self(self, left, middle);
+        const Result right_result = self(self, middle, right);
         if(right_result.exists()){
             closest_pair_indices_detail::update(
                 result,
@@ -175,7 +215,12 @@ ClosestPairResult closest_pair_indices(
         }
         return result;
     };
-    return solve(solve, 0, sorted.size());
+    const Result result = solve(solve, 0, sorted.size());
+    return {
+        result.first,
+        result.second,
+        result.squared_distance.to_exact(),
+    };
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_RESULT_POINT_SET_CLOSEST_PAIR_INDICES_POINTS_HPP_INCLUDED

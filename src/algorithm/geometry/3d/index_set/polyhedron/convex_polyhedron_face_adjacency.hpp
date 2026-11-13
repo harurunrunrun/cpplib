@@ -1,14 +1,15 @@
 #ifndef CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_INDEX_SET_POLYHEDRON_CONVEX_POLYHEDRON_FACE_ADJACENCY_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_INDEX_SET_POLYHEDRON_CONVEX_POLYHEDRON_FACE_ADJACENCY_HPP_INCLUDED
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
-#include <map>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
 #include "../../type/definition/convex_polyhedron3.hpp"
+#include "polyhedron_edges.hpp"
 
 inline std::vector<std::array<std::size_t, 3>>
 convex_polyhedron_face_adjacency(const ConvexPolyhedron3& polyhedron){
@@ -16,8 +17,11 @@ convex_polyhedron_face_adjacency(const ConvexPolyhedron3& polyhedron){
     std::vector<std::array<std::size_t, 3>> result(
         polyhedron.faces.size(), {sentinel, sentinel, sentinel}
     );
-    using Incident = std::pair<std::size_t, std::size_t>;
-    std::map<std::array<std::size_t, 2>, std::vector<Incident>> incidents;
+    // opposite に「面の添字 * 3 + 辺の添字」を入れ、安定な基数ソートで
+    // 辺の辞書順に並べる（同じ辺の中では面の順を保つ）。
+    using polyhedron_edges_detail::EdgeUse;
+    std::vector<EdgeUse> uses;
+    uses.reserve(polyhedron.faces.size() * 3);
     for(std::size_t face_index = 0; face_index < polyhedron.faces.size(); ++face_index){
         const auto& face = polyhedron.faces[face_index];
         for(std::size_t vertex: face){
@@ -26,22 +30,31 @@ convex_polyhedron_face_adjacency(const ConvexPolyhedron3& polyhedron){
             }
         }
         for(std::size_t edge_index = 0; edge_index < 3; ++edge_index){
-            std::array<std::size_t, 2> edge{
-                face[edge_index], face[(edge_index + 1) % 3]
-            };
-            if(edge[1] < edge[0]) std::swap(edge[0], edge[1]);
-            incidents[edge].push_back({face_index, edge_index});
+            const std::size_t first = face[edge_index];
+            const std::size_t second = face[(edge_index + 1) % 3];
+            uses.push_back({
+                std::min(first, second), std::max(first, second),
+                face_index * 3 + edge_index,
+            });
         }
     }
-    for(const auto& [edge, adjacent]: incidents){
-        static_cast<void>(edge);
-        if(adjacent.size() > 2)[[unlikely]]{
+    polyhedron_edges_detail::radix_sort(uses, polyhedron.vertices.size());
+    for(std::size_t begin = 0; begin < uses.size();){
+        std::size_t end = begin + 1;
+        while(end < uses.size() && uses[end].lower == uses[begin].lower
+            && uses[end].upper == uses[begin].upper){
+            ++end;
+        }
+        if(end - begin > 2)[[unlikely]]{
             throw std::domain_error("non-manifold convex polyhedron edge");
         }
-        if(adjacent.size() == 2){
-            result[adjacent[0].first][adjacent[0].second] = adjacent[1].first;
-            result[adjacent[1].first][adjacent[1].second] = adjacent[0].first;
+        if(end - begin == 2){
+            const std::size_t first = uses[begin].opposite;
+            const std::size_t second = uses[begin + 1].opposite;
+            result[first / 3][first % 3] = second / 3;
+            result[second / 3][second % 3] = first / 3;
         }
+        begin = end;
     }
     return result;
 }
