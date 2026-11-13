@@ -12,8 +12,7 @@ auto samples = approximate::randomized::gibbs_sample(
 );
 ```
 
-状態の各座標を先頭から順に条件付き分布で更新するsystematic-scan Gibbs
-Samplingである。callbackは次の形にする。
+状態の各座標を先頭から順に条件付き分布で更新する、systematic-scan 型のギブスサンプリングである。コールバックは次の形にする。
 
 ```cpp
 Value conditional_sampler(
@@ -23,17 +22,15 @@ Value conditional_sampler(
 );
 ```
 
-1 sweep内では、番号の小さい座標は更新後、番号の大きい座標は更新前の値として
-`current_state`に現れる。burn-in後、`sweeps_between_samples` sweep進めるたびに
-状態を1個保存する。`sample_count > 0` のときsweep間隔は正でなければならない。
-総sweep数の `size_t` overflowには `std::overflow_error`、返却配列が表現不能な
-場合は `std::length_error` を送出する。空状態も許す。
+1 回のスイープの中では、番号の小さい座標は更新後の値、番号の大きい座標は更新前の値として `current_state` に現れる。
+burn-in の後、`sweeps_between_samples` 回スイープを進めるたびに状態を 1 つ保存する。空の状態も許す。
 
-座標数を $D$、burn-inを $B$、標本数を $S$、標本間sweep数を $T$、
-callback 1回の時間を $Q$ とする。時間計算量は
-$O((B+ST)DQ+SD)$、返却値を含む追加空間計算量は $O(SD+D)$ である。
-callbackの戻り値、定常分布、burn-inと自己相関の妥当性は呼び出し側で管理する。
+座標数を $D$、burn-in のスイープ数を $B$、標本数を $S$、標本間のスイープ数を $T$、コールバック 1 回の時間を $Q$ とする。
+時間計算量は $O((B + ST) DQ + SD)$、返値を含む追加空間計算量は $O(SD + D)$ である。
 
 ## 注意点
 
-確率的保証は各APIで示した独立性と入力条件の下で成り立つ。同じ結果の再現には同じ乱数器状態・入力・標準ライブラリ実装が必要で、中間演算は使用型の表現範囲内でなければならない。
+- `sample_count > 0` のとき、`sweeps_between_samples` は正でなければならない（違反時は `std::invalid_argument`）。
+- 総スイープ数が `size_t` でオーバーフローする場合は `std::overflow_error`、返す配列が表現できない大きさの場合は `std::length_error` を送出する。
+- コールバックの戻り値の正しさ、定常分布、burn-in の長さや自己相関の妥当性は呼び出し側で管理する。
+- 同じ結果を再現するには、同じ乱数生成器の状態・入力・標準ライブラリ実装が必要である。
