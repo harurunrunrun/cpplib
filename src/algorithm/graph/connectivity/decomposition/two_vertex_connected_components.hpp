@@ -14,7 +14,7 @@ struct TwoVertexConnectedComponentsResult{
     std::vector<std::vector<int>> edge_groups;
 };
 
-TwoVertexConnectedComponentsResult two_vertex_connected_components(
+inline TwoVertexConnectedComponentsResult two_vertex_connected_components(
     int n,
     const std::vector<std::pair<int, int>>& edges
 ){

@@ -21,7 +21,7 @@ struct ThreeSatResult{
 
 namespace three_sat_internal{
 
-bool solve_dfs(
+inline bool solve_dfs(
     int n,
     const std::vector<ThreeSatClause>& clauses,
     std::vector<int>& assignment
@@ -101,7 +101,7 @@ bool solve_dfs(
 
 } // namespace three_sat_internal
 
-ThreeSatResult three_sat(int n, const std::vector<ThreeSatClause>& clauses){
+inline ThreeSatResult three_sat(int n, const std::vector<ThreeSatClause>& clauses){
     if(n < 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: range violation (three_sat).");
     }

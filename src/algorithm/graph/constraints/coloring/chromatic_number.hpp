@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
-int chromatic_number(const std::vector<std::vector<int>>& graph){
+inline int chromatic_number(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());
     if(n > 20)[[unlikely]]{
         throw std::runtime_error("library assertion fault: n is too large (chromatic_number).");

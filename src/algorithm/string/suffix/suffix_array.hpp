@@ -251,7 +251,7 @@ inline std::vector<int> sa_is(const std::vector<int>& sequence, int upper){
 
 } // namespace suffix_array_internal
 
-std::vector<int> suffix_array(const std::string& s){
+inline std::vector<int> suffix_array(const std::string& s){
     const int n = (int)s.size();
     if(n == 0){
         return {};

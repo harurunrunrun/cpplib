@@ -5,7 +5,7 @@
 #include <vector>
 #include "maximum_clique.hpp"
 
-std::vector<int> maximum_independent_set(const std::vector<std::vector<int>>& graph){
+inline std::vector<int> maximum_independent_set(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());
     std::vector<std::vector<char>> adjacent(static_cast<std::size_t>(n), std::vector<char>(static_cast<std::size_t>(n), 0));
     for(int v = 0; v < n; v++){

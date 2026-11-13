@@ -13,7 +13,7 @@ struct TwoEdgeConnectedComponentsResult{
     std::vector<int> bridges;
 };
 
-TwoEdgeConnectedComponentsResult two_edge_connected_components(
+inline TwoEdgeConnectedComponentsResult two_edge_connected_components(
     int n,
     const std::vector<std::pair<int, int>>& edges
 ){

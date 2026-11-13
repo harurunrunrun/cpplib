@@ -24,7 +24,7 @@ struct StronglyConnectedComponentsResult{
     }
 };
 
-StronglyConnectedComponentsResult strongly_connected_components(const std::vector<std::vector<int>>& graph){
+inline StronglyConnectedComponentsResult strongly_connected_components(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());
     std::vector<std::vector<int>> reverse_graph(static_cast<std::size_t>(n));
     for(int v = 0; v < n; v++){

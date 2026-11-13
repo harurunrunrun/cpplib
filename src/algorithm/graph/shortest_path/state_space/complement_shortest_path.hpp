@@ -10,7 +10,7 @@ struct ComplementShortestPathResult{
     std::vector<int> parent;
 };
 
-ComplementShortestPathResult complement_shortest_path(
+inline ComplementShortestPathResult complement_shortest_path(
     const std::vector<std::vector<int>>& graph,
     int source
 ){

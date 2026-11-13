@@ -13,7 +13,7 @@ struct LowlinkResult{
     std::vector<int> bridges;
 };
 
-LowlinkResult lowlink(int n, const std::vector<std::pair<int, int>>& edges){
+inline LowlinkResult lowlink(int n, const std::vector<std::pair<int, int>>& edges){
     if(n < 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: range violation (lowlink).");
     }

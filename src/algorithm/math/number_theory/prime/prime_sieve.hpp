@@ -17,7 +17,7 @@ constexpr bool square_less_equal(long long value, long long limit){
 
 } // namespace prime_sieve_internal
 
-bool is_prime_sqrt(long long n){
+inline bool is_prime_sqrt(long long n){
     if(n <= 1){
         return false;
     }

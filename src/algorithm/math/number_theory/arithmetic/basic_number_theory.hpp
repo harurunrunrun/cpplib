@@ -77,7 +77,7 @@ constexpr ExtGcdResult ext_gcd(long long a, long long b){
     return {a, x0 * sa, y0 * sb};
 }
 
-long long pow_mod(long long x, long long n, long long mod){
+inline long long pow_mod(long long x, long long n, long long mod){
     if(n < 0 || mod <= 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (pow_mod).");
     }
@@ -99,7 +99,7 @@ long long pow_mod(long long x, long long n, long long mod){
     return res;
 }
 
-long long inv_mod(long long a, long long mod){
+inline long long inv_mod(long long a, long long mod){
     if(mod <= 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (inv_mod).");
     }
@@ -114,14 +114,14 @@ long long inv_mod(long long a, long long mod){
     return x;
 }
 
-long long inv_mod_prime(long long a, long long mod){
+inline long long inv_mod_prime(long long a, long long mod){
     if(mod <= 1 || a % mod == 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (inv_mod_prime).");
     }
     return pow_mod(a, mod - 2, mod);
 }
 
-long long isqrt(long long n){
+inline long long isqrt(long long n){
     if(n < 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (isqrt).");
     }
@@ -135,7 +135,7 @@ long long isqrt(long long n){
     return x;
 }
 
-std::vector<long long> divisors(long long n){
+inline std::vector<long long> divisors(long long n){
     if(n == 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (divisors).");
     }
@@ -155,7 +155,7 @@ std::vector<long long> divisors(long long n){
     return small;
 }
 
-std::vector<QuotientRange> quotient_ranges(long long n){
+inline std::vector<QuotientRange> quotient_ranges(long long n){
     if(n < 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (quotient_ranges).");
     }
@@ -169,7 +169,7 @@ std::vector<QuotientRange> quotient_ranges(long long n){
     return res;
 }
 
-std::vector<int> to_base_digits(unsigned long long n, int base){
+inline std::vector<int> to_base_digits(unsigned long long n, int base){
     if(base < 2)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (to_base_digits).");
     }
@@ -185,7 +185,7 @@ std::vector<int> to_base_digits(unsigned long long n, int base){
     return res;
 }
 
-unsigned long long from_base_digits(const std::vector<int>& digits, int base){
+inline unsigned long long from_base_digits(const std::vector<int>& digits, int base){
     if(base < 2)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (from_base_digits).");
     }

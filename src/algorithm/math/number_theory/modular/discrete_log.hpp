@@ -8,7 +8,7 @@
 
 namespace math{
 
-long long discrete_log_coprime(long long a, long long b, long long mod){
+inline long long discrete_log_coprime(long long a, long long b, long long mod){
     if(mod <= 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (discrete_log_coprime).");
     }
@@ -55,7 +55,7 @@ long long discrete_log_coprime(long long a, long long b, long long mod){
     return -1;
 }
 
-long long discrete_log(long long a, long long b, long long mod){
+inline long long discrete_log(long long a, long long b, long long mod){
     if(mod <= 0)[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid argument (discrete_log).");
     }

@@ -42,7 +42,7 @@ void validate_vertex_count(int n, const char* message){
     }
 }
 
-int minor_index(int vertex, int removed){
+inline int minor_index(int vertex, int removed){
     return vertex < removed ? vertex : vertex - 1;
 }
 

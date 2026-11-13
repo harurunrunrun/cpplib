@@ -28,7 +28,7 @@ inline void validate_graph(const std::vector<std::vector<int>>& graph){
 
 } // namespace topological_sort_internal
 
-TopologicalSortResult topological_sort(const std::vector<std::vector<int>>& graph){
+inline TopologicalSortResult topological_sort(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());
     topological_sort_internal::validate_graph(graph);
 
@@ -70,7 +70,7 @@ TopologicalSortResult topological_sort(const std::vector<std::vector<int>>& grap
     return result;
 }
 
-TopologicalSortResult lexicographical_topological_sort(
+inline TopologicalSortResult lexicographical_topological_sort(
     const std::vector<std::vector<int>>& graph
 ){
     const int n = static_cast<int>(graph.size());
