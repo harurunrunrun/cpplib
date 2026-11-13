@@ -3,45 +3,43 @@ title: Range Parallel Union-Find (区間並列Union-Find)
 documentation_of: ../../../../src/structure/dsu/range/range_parallel_unionfind.hpp
 ---
 
-同じ長さの2区間を位置ごとに対応させ、対応する頂点をUnionfindで併合する。長さ$2^k$の区間ごとに補助Unionfindを持ち、一度処理した区間対を再帰しない。
+同じ長さの 2 区間を位置ごとに対応させ、対応する頂点どうしを Union-Find で併合する。
+長さ $2^k$ の区間ごとに補助の Union-Find を持ち、一度処理した区間の組については再帰しない。
 
-## テンプレート引数・構築
+## テンプレート引数・コンストラクタ
 
 ```cpp
-RangeParallelUnionFind<MAX_SIZE> dsu(n)
+RangeParallelUnionFind<MAX_SIZE = -1> dsu(n)
 ```
 
-`MAX_SIZE`は頂点数の上限、`n`は実際の頂点数。
+- `MAX_SIZE`: 頂点数の上限。省略（`-1`）すると、実行時の頂点数に合わせて `std::vector` を確保する可変長版になる
+- `n`: 実際の頂点数（可変長版でのデフォルトは $0$）
 
-## 時間計算量
+コピーはできず、ムーブはできる。
 
-- $O(N\log N)$
+```cpp
+using Dynamic = RangeParallelUnionFind<>;
+```
 
-## 1組の併合
+## 1 組の併合
 
 ```cpp
 int merge(int u, int v)
 int merge(int u, int v, MergeCallback callback)
 ```
 
-頂点`u`, `v`を併合し、新しく起きた頂点成分の併合回数を返す。実際に異なる成分を併合したとき、`callback(new_root, absorbed_root)`を1回呼ぶ。callback呼び出し時点で`new_root`がleaderになっている。
+頂点 $u$, $v$ を併合し、新たに起きた頂点成分の併合回数（$0$ または $1$）を返す。
+実際に異なる成分を併合したとき、`callback(new_root, absorbed_root)` を 1 回呼ぶ。呼び出し時点で `new_root` は併合後の代表元になっている。
 
-## 区間のparallel併合
+## 区間の並列併合
 
 ```cpp
 int merge_ranges(int l1, int r1, int l2, int r2)
 int merge_ranges(int l1, int r1, int l2, int r2, MergeCallback callback)
 ```
 
-`r1-l1 == r2-l2`を要求し、各`0 <= i < r1-l1`について`l1+i`と`l2+i`を併合する。返り値とcallbackは`merge`と同じ。
-
-## 時間計算量
-
-$Q$回の`merge`・`merge_ranges`全体で
-
-$$O((N\log N+Q)\alpha(N))$$
-
-1回の操作では新しく展開される補助区間数に比例する。
+半開区間 $[l_1, r_1)$ と $[l_2, r_2)$ について、$r_1 - l_1 = r_2 - l_2$ を要求し、各 $0 \le i \lt r_1 - l_1$ について $l_1 + i$ と $l_2 + i$ を併合する。
+戻り値は新たに起きた頂点成分の併合回数で、`callback` は `merge` と同様に、異なる頂点成分を併合するたびに呼ばれる。
 
 ## 検索
 
@@ -53,31 +51,28 @@ int groups() const
 int size() const
 ```
 
+代表元、同じ成分かどうか、成分の頂点数、成分数、頂点数を返す。
+
 ## 時間計算量
 
-- `leader`, `same`, `component_size`: amortized $O(\alpha(N))$
-- `groups`, `size`: $O(1)$
+$N$ を頂点数とする。
+
+- コンストラクタ: $O(N \log N)$
+- $Q$ 回の `merge`・`merge_ranges` 全体で
+
+$$O((N\log N+Q)\alpha(N))$$
+
+  1 回の操作では、新たに展開される補助区間の数に比例する。
+- `leader`、`same`、`component_size`: 償却 $O(\alpha(N))$
+- `groups`、`size`: $O(1)$
 
 ## 空間計算量
 
-- $O(N\log N)$
-
-区間は半開区間で指定する。範囲外の頂点、区間、長さの異なる区間を渡すと例外を送出する。
+- 本体: $O(N \log N)$（固定長版では $O(\texttt{MAX_SIZE} \log \texttt{MAX_SIZE})$）
+- `leader` などの検索の追加領域: $O(1)$
+- `merge_ranges` の再帰スタック: $O(\log N)$
 
 ## 注意点
 
-`0 <= n <= MAX_SIZE`、頂点は `[0,n)`、区間は半開区間で同じ長さを要求する。違反では
-`runtime_error`。callbackは実際に異なる頂点成分を併合した場合だけ呼ばれ、呼出し中は
-第1引数が新leader、第2引数が吸収されたleaderである。
-保存領域は $O(N\log N)$。通常のDSU queryの追加領域は $O(1)$、`merge_ranges` の
-再帰stackは $O(\log N)$。
-
-## 可変長版
-
-```cpp
-using Dynamic = RangeParallelUnionFind<>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log(n + 1))、各層の併合は union-by-size を用い、全処理の償却計算量は従来どおり。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- $0 \le n \le \texttt{MAX_SIZE}$ で、頂点は $[0, n)$ でなければならない。区間は半開区間で指定し、同じ長さでなければならない。違反すると `std::runtime_error` を送出する。
+- `callback` は実際に異なる頂点成分を併合した場合だけ呼ばれる。第 1 引数が新しい代表元、第 2 引数が吸収された代表元である。

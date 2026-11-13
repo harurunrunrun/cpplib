@@ -3,97 +3,79 @@ title: Rollback DSU (ロールバック可能素集合データ構造)
 documentation_of: ../../../../src/structure/dsu/rollback/rollback_dsu.hpp
 ---
 
-rollback 可能な素集合データ構造。
+ロールバック可能な素集合データ構造。経路圧縮を行わず、union by size で木の高さを $O(\log N)$ に保つ。
 
 ## テンプレート引数
 
 ```cpp
-RollbackDSU<MAX_SIZE, MAX_HISTORY>
+RollbackDSU<MAX_SIZE = -1, MAX_HISTORY = -1>
 ```
 
-- 頂点数の上限 `MAX_SIZE`
-- 履歴数の上限 `MAX_HISTORY`
+- `MAX_SIZE`: 頂点数の上限
+- `MAX_HISTORY`: 履歴数（`merge` の呼び出し回数）の上限
 
-## コンストラクタ
-
-```cpp
-RollbackDSU(int n = MAX_SIZE)
-```
-
-`n` 頂点の集合を作る。
-
-## 時間計算量
-
-- $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_HISTORY})$
-
-## merge / same
-
-```cpp
-bool merge(int u, int v)
-bool same(int u, int v)
-```
-
-`merge` は異なる集合が併合されたとき `true` を返す。
-
-## 時間計算量
-
-- $O(\log N)$
-
-`size`, `groups` は $O(1)$。
-
-## snapshot / rollback
-
-```cpp
-int snapshot()
-void rollback(int snapshot_id)
-void undo()
-```
-
-`snapshot` は現在の履歴位置を返す。
-
-`rollback(snapshot_id)` はその履歴位置まで戻す。
-
-`undo()` は直前の `merge` を取り消す。
-
-## 時間計算量
-
-- `snapshot`: $O(1)$
-- `rollback`: 戻す `merge` 1 個あたり $O(1)$
-- `undo`: $O(1)$
-
-## leader / component_size
-
-```cpp
-int leader(int v)
-int component_size(int v)
-int groups()
-```
-
-## 時間計算量
-
-- $O(\log N)$
-
-## 空間計算量（API別の追加領域）
-
-- constructor、`size`、`groups`、`snapshot`、`undo`、`rollback`: $O(1)$
-- `leader`、`same`、`component_size`、`merge`: 再帰する代表探索のstackを含め $O(\log N)$
-
-履歴は本体の固定領域 $O(\mathtt{MAX\_HISTORY})$ に保存され、各`merge`が消費する履歴slotは $O(1)$ である。
-
-## 注意点
-
-- `0 <= n <= MAX_SIZE`、頂点は`[0,n)`。違反時は例外。
-- `merge`は同一成分の場合も履歴を1個保存し、`MAX_HISTORY`到達後は例外。
-- `snapshot()`は履歴数。`rollback(s)`は`0 <= s <= snapshot()`を要求する。
-- 履歴が空の`undo()`と範囲外rollbackは例外。
-- 経路圧縮を行わずunion by sizeで木の高さを$O(\log N)$に保つ。
-
-## 可変長版
+省略（`-1`）した上限は、実行時の要素数・履歴数に合わせて `std::vector` を確保する可変長になる。
 
 ```cpp
 using Dynamic = RollbackDSU<>;
 ```
 
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、併合・代表取得 O(log(n + 1))、undo 償却 O(1)、保存領域 O(n + u)。
+## コンストラクタ
 
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+```cpp
+explicit RollbackDSU(int n = MAX_SIZE)
+```
+
+$n$ 頂点の集合を作る。可変長版では `n` のデフォルトは $0$ である。
+
+## merge / same
+
+```cpp
+bool merge(int u, int v)
+bool same(int u, int v) const
+```
+
+`merge` は異なる集合が併合されたとき `true` を返す。同じ成分どうしの `merge` も履歴を 1 個保存する。
+
+## snapshot / rollback / undo
+
+```cpp
+int snapshot() const
+void rollback(int snapshot_id)
+void undo()
+```
+
+- `snapshot()`: 現在の履歴数を返す
+- `rollback(snapshot_id)`: 履歴数が `snapshot_id` になるまで戻す
+- `undo()`: 直前の `merge` を 1 回取り消す
+
+## leader / component_size / size / groups
+
+```cpp
+int leader(int v) const
+int component_size(int v) const
+int size() const
+int groups() const
+```
+
+代表元、成分の頂点数、頂点数、成分数を返す。
+
+## 時間計算量
+
+- コンストラクタ: $O(N)$。固定長版では配列の初期化に $O(\texttt{MAX_SIZE}+\texttt{MAX_HISTORY})$ かかる
+- `merge`、`same`、`leader`、`component_size`: $O(\log N)$
+- `snapshot`、`undo`、`size`、`groups`: $O(1)$
+- `rollback`: 取り消す履歴数を $K$ として $O(K)$
+
+## 空間計算量
+
+- 本体: $O(N + H)$（$H$ は履歴数。固定長版では $O(\texttt{MAX_SIZE}+\texttt{MAX_HISTORY})$）
+- 各 `merge` は履歴を 1 個消費する
+- `leader`、`same`、`component_size`、`merge` の追加領域: 代表探索の再帰を含めて $O(\log N)$
+- それ以外の関数の追加領域: $O(1)$
+
+## 注意点
+
+- $0 \le n \le \texttt{MAX_SIZE}$ で、頂点は $[0, n)$ でなければならない。違反すると `std::runtime_error` を送出する。
+- 履歴数が `MAX_HISTORY` に達した後の `merge` は `std::runtime_error` を送出する。
+- `rollback(s)` は $0 \le s \le \mathrm{snapshot}()$ を要求する。範囲外の `rollback` と、履歴が空の `undo()` は `std::runtime_error` を送出する。

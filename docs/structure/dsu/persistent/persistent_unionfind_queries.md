@@ -3,17 +3,24 @@ title: Persistent Union-Find Queries (クエリ履歴付き完全永続素集合
 documentation_of: ../../../../src/structure/dsu/persistent/persistent_unionfind_queries.hpp
 ---
 
-各操作の番号をversion識別子として扱う完全永続Union-Find。
-更新を行わない連結性queryも履歴へ登録するため、呼び出し側で内部version番号を管理する必要がない。
+各操作の番号をバージョンの識別子として扱う完全永続 Union-Find。
+更新を行わない連結性クエリも履歴に登録するため、呼び出し側で内部のバージョン番号を管理する必要がない。内部では `PersistentDSU` を使う。
 
 ## テンプレート引数
 
 ```cpp
-PersistentUnionFindQueries<MAX_SIZE, MAX_QUERY>
+PersistentUnionFindQueries<MAX_SIZE = -1, MAX_QUERY = -1>
 ```
 
-`MAX_SIZE` は頂点数の上限、`MAX_QUERY` は登録できる操作数の上限である。
-固定長の永続データはheapに確保されるため、wrapperをlocal変数として構築しても巨大な配列をstackへ置かない。
+- `MAX_SIZE`: 頂点数の上限
+- `MAX_QUERY`: 登録できる操作数（`merge` と `same` の合計）の上限
+
+省略（`-1`）した上限は、実行時の要素数・操作数に合わせて `std::vector` を確保する可変長になる。
+固定長の永続データはヒープに確保されるため、この構造体をローカル変数として構築しても巨大な配列をスタックに置かない。
+
+```cpp
+using Dynamic = PersistentUnionFindQueries<>;
+```
 
 ## コンストラクタ
 
@@ -21,67 +28,49 @@ PersistentUnionFindQueries<MAX_SIZE, MAX_QUERY>
 explicit PersistentUnionFindQueries(int n = MAX_SIZE)
 ```
 
-`n` 個の独立な頂点を持つ初期状態を作る。初期状態の操作番号は `-1`。
+$n$ 個の独立な頂点を持つ初期状態を作る。初期状態の操作番号は `-1` である。可変長版では `n` のデフォルトは $0$ である。
 
-## 時間計算量
-
-$O(MAX\_QUERY)$。
-
-## `processed_queries`
+## processed_queries
 
 ```cpp
 int processed_queries() const
 ```
 
-登録済み操作数を返す。
+登録済みの操作数を返す。
 
-## 時間計算量
-
-$O(1)$。
-
-## `merge`
+## merge
 
 ```cpp
 void merge(int base_query, int u, int v)
 ```
 
-操作 `base_query` の直後の状態を基に `u` と `v` を併合し、現在の操作番号へ状態を登録する。
+操作 `base_query` の直後の状態をもとに $u$ と $v$ を併合し、その状態を現在の操作番号に登録する。
 
-## 時間計算量
-
-頂点数を $N$ として $O(\log N\log MAX\_SIZE)$。
-
-## `same`
+## same
 
 ```cpp
 bool same(int base_query, int u, int v)
 ```
 
-操作 `base_query` の直後の状態で `u` と `v` が同じ成分かを返す。
-状態を変更せず、同じ状態を現在の操作番号へ登録する。
+操作 `base_query` の直後の状態で $u$ と $v$ が同じ成分に属するかを返す。状態は変更せず、同じ状態を現在の操作番号に登録する。
 
 ## 時間計算量
 
-$O(\log N\log MAX\_SIZE)$。
+$N$ を頂点数、$S$ を永続配列の幅（固定長版では $\texttt{MAX_SIZE}$、可変長版では $N$）とする。
+
+- コンストラクタ: 固定長版は $O(\texttt{MAX_QUERY})$、可変長版は $O(1)$
+- `processed_queries`: $O(1)$
+- `merge`、`same`: $O(\log N \log S)$
 
 ## 空間計算量
 
-予約領域は $O(MAX\_QUERY\log MAX\_SIZE)$。wrapper本体は $O(1)$ であり、予約領域はheapに置かれる。
+固定長版の予約領域は $O(\texttt{MAX_QUERY}\log \texttt{MAX_SIZE})$ で、ヒープに置かれる。構造体本体は $O(1)$ である。
+可変長版ではバージョン管理に操作数に比例する領域を使い、永続配列の領域は `PersistentDSU` と同じである。
 
 ## 注意点
 
-- `base_query == -1` は初期状態を表す。それ以外は `[0, processed_queries())` が必要。
-- 頂点は `[0,n)`、操作数は `MAX_QUERY` 以下でなければならない。
-- 範囲違反、操作容量超過、内部永続領域の容量超過では `runtime_error`。
+- `base_query == -1` は初期状態を表す。それ以外は `[0, processed_queries())` でなければならない。
+- 頂点は $[0, n)$、操作数は `MAX_QUERY` 以下でなければならない。
+- 範囲違反、操作容量の超過、内部の永続領域の容量超過では `std::runtime_error` を送出する。
 - 失敗した操作は操作数を増やさない。
-- copyは禁止し、moveを許可する。
-
-## 可変長版
-
-```cpp
-using Dynamic = PersistentUnionFindQueries<>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。版管理は O(q) 領域、併合・同一判定は PersistentDSU の O(log²(n + 1)) に従う。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- コピーは禁止されており、ムーブはできる。

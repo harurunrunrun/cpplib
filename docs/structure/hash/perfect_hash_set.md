@@ -3,45 +3,43 @@ title: Static Perfect Hash Set (静的完全ハッシュ集合)
 documentation_of: ../../../src/structure/hash/perfect_hash_set.hpp
 ---
 
-FKS two-level hashingで構築後の衝突をなくすstatic set。
+FKS の 2 段ハッシュ法により、構築後の衝突をなくした静的な集合。
 
 ## API
 
-~~~cpp
-PerfectHashSet<Key, Hash, Equal>()
-PerfectHashSet(const vector<Key>& keys)
+```cpp
+template<class Key, class Hash = std::hash<Key>, class Equal = std::equal_to<Key>>
+class PerfectHashSet;
+
+PerfectHashSet()
+explicit PerfectHashSet(const vector<Key>& keys)
 void build(const vector<Key>& keys)
 bool empty() const
 size_t size() const
 bool contains(const Key& key) const
-~~~
+```
 
-The constructor and `build` deduplicate equal keys. They rebuild the first
-level until the sum of squared bucket sizes is linear, then rebuild every
-second-level table until it is collision-free. `contains` reads exactly one
-first-level and one second-level slot and confirms the candidate with `Equal`.
-
-There is no bounded-retry fallback. If two stored keys are not equal under
-`Equal` but have the same base `Hash` value, `build` throws
-`invalid_argument`. A failed rebuild preserves the previously constructed
-set.
+コンストラクタと `build` は、等しいキーを 1 個にまとめてから構築する。
+1 段目はバケットのサイズの 2 乗和が線形（$8N$ 以下）になるまで乱択ハッシュ（multiply-shift 族）を選び直し、続いて 2 段目の各表を衝突がなくなるまで選び直す。
+`contains` は 1 段目と 2 段目のスロットをちょうど 1 つずつ読み、候補を `Equal` で確認する。
 
 ## 時間計算量
 
-For input length $I$ and $N$ distinct keys, with worst-case $O(1)$ `Hash` and
-`Equal` and a separating base hash:
+入力の長さを $I$、相異なるキーの数を $N$ とし、`Hash` と `Equal` は最悪 $O(1)$、基底ハッシュはキーを分離できるものとする。
 
-- construction: expected $O(I+N)$ time and $O(I+N)$ temporary space
-- `contains`: worst-case $O(1)$
-- `empty`, `size`: $O(1)$
-- space after construction: expected $O(N)$
+- 構築（コンストラクタ、`build`）: 期待 $O(I+N)$
+- `contains`: 最悪 $O(1)$
+- `empty`、`size`: $O(1)$
 
-Each unbounded rebuild loop succeeds with constant probability.
+再選択のループは回数で打ち切らないが、各試行は一定の確率で成功するので、期待 $O(1)$ 回かつ確率 $1$ で終了する。
+
+## 空間計算量
+
+- 構築中の一時領域: $O(I+N)$
+- 構築後: 期待 $O(N)$
 
 ## 注意点
 
-同値keyは1個へまとめる。`Hash` と `Equal` は通常のhash契約を満たし、さらに
-格納する非同値keyのbase hash値はすべて異なる必要がある。constant hashへ
-複数の非同値keyを渡すと、遅いfallbackを作らず `invalid_argument` を送出する。
-multiply-shift familyの再選択は固定回数で打ち切らず、expected $O(1)$ 回かつ
-確率1で成功する。
+- `Hash` と `Equal` は通常のハッシュの規約を満たし、さらに格納する等しくないキーどうしの基底ハッシュ値（`Hash` の値）はすべて異なる必要がある。
+- 有限回で打ち切る遅いフォールバックは持たない。等しくない 2 つのキーの `Hash` の値が一致すると、`build` は `std::invalid_argument` を送出する（たとえば定数のハッシュに複数の異なるキーを渡した場合）。
+- 構築に失敗した場合も、それ以前に構築した集合は保たれる。

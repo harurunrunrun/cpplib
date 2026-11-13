@@ -3,51 +3,64 @@ title: Kinetic Tournament (動的トーナメント木)
 documentation_of: ../../../../src/structure/heap/priority_queue/kinetic_tournament.hpp
 ---
 
-添字ごとに一次関数 `slope * time + intercept` を持ち、単調に進む共通時刻での区間最小値または区間最大値を保つ。
-各部分木の勝者が次に変わる時刻をcertificateとして持ち、時刻を進める際に失効した部分だけを更新する。
+添字ごとに一次関数 $\mathrm{slope} \cdot t + \mathrm{intercept}$ を持ち、単調に進む共通の時刻 $t$ での区間最小値または区間最大値を管理する。
+各部分木の勝者が次に変わる時刻を証明書（certificate）として持ち、時刻を進めるときは失効した部分だけを更新する。
 
 ## 型
 
 ```cpp
-KineticTournament<T, MAX_SIZE, Minimum = true>
+KineticTournament<T, MAX_SIZE = SIZE_MAX, Minimum = true>
 ```
 
 `T` は符号付き整数型。`Minimum == true` なら最小値、`false` なら最大値を選ぶ。
-実行時の要素数は `MAX_SIZE` 以下とする。
+実行時の要素数は `MAX_SIZE` 以下とする。`MAX_SIZE` を省略（`SIZE_MAX`）すると、実行時の要素数に合わせて `std::vector` を確保する可変長版になる。
+
+```cpp
+using Dynamic = KineticTournament<long long>;
+```
 
 ```cpp
 struct Line { T slope, intercept; };
 struct Result { T value; Line line; size_t index; };
 ```
 
-同値なら、未来の時刻でも勝ち続ける傾き、それも同じなら小さい添字を選ぶ。
+値が等しい場合は、より先の時刻でも勝ち続ける傾きの方を、それも同じなら小さい添字の方を選ぶ。
 
-## API・時間計算量
+## API
 
-- `KineticTournament(size = MAX_SIZE, initial_time = T{})`: 全要素が無効な構造を作る。時間・領域 $O(MAX\_SIZE)$。
-- `size()`: 実行時の要素数を返す。時間・追加領域 $O(1)$。
-- `current_time()`: 現在時刻を返す。時間・追加領域 $O(1)$。
-- `active(index)`: 添字が有効かを返す。時間・追加領域 $O(1)$。
-- `line(index)`: 有効なら一次関数を返し、無効なら `nullopt`。時間・追加領域 $O(1)$。
-- `set(index, slope, intercept)`: 添字の一次関数を設定または置換する。時間 $O(\log(MAX\_SIZE+1))$、追加領域 $O(\log(MAX\_SIZE+1))$。
-- `erase(index)`: 添字を無効にする。時間 $O(\log(MAX\_SIZE+1))$、追加領域 $O(\log(MAX\_SIZE+1))$。
-- `advance_time(new_time)`: 時刻を進めてcertificateを更新する。失効して勝者が変わる木頂点数を $F$ として時間 $O((F+1)\log(MAX\_SIZE+1))$、追加領域 $O(\log(MAX\_SIZE+1))$。一次関数の列に対する時刻更新列ではcertificate変更回数に関するamortized評価を持つ。
-- `query(left, right)`: 半開添字区間の勝者を返す。有効要素がなければ `nullopt`。時間・追加領域 $O(\log(MAX\_SIZE+1))$。
-- `best()`: 全区間の勝者を返す。時間・追加領域 $O(1)$ 相当で、API上は `query(0,size())` を呼ぶ。
+- `explicit KineticTournament(size_t size = MAX_SIZE, T initial_time = T{})`: 全要素が無効な構造を作る（可変長版では `size` のデフォルトは $0$）。
+- `size()`: 実行時の要素数を返す。
+- `current_time()`: 現在の時刻を返す。
+- `active(index)`: 添字が有効かどうかを返す。
+- `line(index)`: 有効なら一次関数を、無効なら `nullopt` を返す。
+- `set(index, slope, intercept)`: 添字の一次関数を設定または置換する。
+- `erase(index)`: 添字を無効にする。
+- `advance_time(new_time)`: 時刻を進め、証明書を更新する。
+- `query(left, right)`: 半開区間 $[\mathrm{left}, \mathrm{right})$ の勝者を返す。有効な要素がなければ `nullopt` を返す。
+- `best()`: 全区間の勝者を返す（`query(0, size())` と同じ）。
+
+コピーはできず、ムーブはできる。
+
+## 時間計算量
+
+$N$ を実行時の要素数とする。
+
+- コンストラクタ: $O(N)$（固定長版は $O(\texttt{MAX_SIZE})$）
+- `size`、`current_time`、`active`、`line`: $O(1)$
+- `set`、`erase`: $O(\log(N+1))$
+- `advance_time`: 失効して勝者が変わる木の頂点数を $F$ として $O((F+1)\log(N+1))$。一次関数の列に対する時刻の更新列では、証明書の変更回数に関する償却評価が成り立つ
+- `query`: $O(\log(N+1))$
+- `best`: 根の勝者を読むだけなので $O(1)$
+
+## 空間計算量
+
+- 本体: $O(N)$（固定長版は $O(\texttt{MAX_SIZE})$）
+- `set`、`erase`、`advance_time`、`query` の追加領域: 再帰の深さ $O(\log(N+1))$
+- それ以外の追加領域: $O(1)$
 
 ## 注意点
 
-- `new_time` は現在時刻以上でなければならず、違反時は `invalid_argument`。
-- 範囲外の添字・区間は `out_of_range`。実行時要素数が容量を超えると `length_error`。
-- `slope * time + intercept` が `T` の範囲外になる結果取得は `overflow_error`。内部比較とcertificate計算には拡張整数を使う。
-- 浮動小数時刻や二次以上の軌跡は扱わない。
-
-## 可変長版
-
-```cpp
-using Dynamic = KineticTournament<long long>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域は O(n)。直線変更と区間最適値取得は O(log(n + 1))、時刻更新は発生するイベント数に応じた従来の計算量。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- `new_time` は現在の時刻以上でなければならない。違反すると `std::invalid_argument` を送出する。
+- 範囲外の添字・区間は `std::out_of_range` を、実行時の要素数が容量（または `INT_MAX`）を超える場合は `std::length_error` を送出する。
+- $\mathrm{slope} \cdot t + \mathrm{intercept}$ が `T` の範囲外になる結果の取得は `std::overflow_error` を送出する。内部の比較と証明書の計算には拡張整数を使う。
+- 浮動小数点数の時刻や、2 次以上の軌跡は扱わない。

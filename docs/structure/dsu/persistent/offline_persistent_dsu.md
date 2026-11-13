@@ -3,77 +3,60 @@ title: Offline Persistent Disjoint Set Union (オフライン完全永続素集�
 documentation_of: ../../../../src/structure/dsu/persistent/offline_persistent_dsu.hpp
 ---
 
-version treeを先に構築し、rollbackによる1回の走査で各versionの連結性queryを
-まとめて処理する完全永続Union-Find。
+バージョン木を先に構築し、ロールバック付きの 1 回の走査で各バージョンの連結性クエリをまとめて処理する、オフラインの完全永続 Union-Find。
 
 ## テンプレート引数
 
 ```cpp
-OfflinePersistentDSU<MAX_SIZE, MAX_VERSION, MAX_QUERY>
+OfflinePersistentDSU<MAX_SIZE = -1, MAX_VERSION = -1, MAX_QUERY = MAX_VERSION>
 ```
 
-`MAX_SIZE` は頂点数、`MAX_VERSION` は初期versionを除くversion数、
-`MAX_QUERY` は登録query数の上限。copyはできず、moveはできる。
-`MAX_VERSION <= INT_MAX / 2`、`MAX_QUERY < INT_MAX` が必要。
+- `MAX_SIZE`: 頂点数の上限
+- `MAX_VERSION`: 初期バージョンを除くバージョン数の上限
+- `MAX_QUERY`: 登録するクエリ数の上限（デフォルトは `MAX_VERSION`）
+
+省略（`-1`）した上限は、実行時の要素数に合わせて `std::vector` を確保する可変長になる。
+`MAX_VERSION` $\le$ `INT_MAX / 2`、`MAX_QUERY` $\lt$ `INT_MAX` が必要である。
+コピーはできず、ムーブはできる。
+
+```cpp
+using Dynamic = OfflinePersistentDSU<>;
+```
 
 ## コンストラクタ
 
 ```cpp
-OfflinePersistentDSU(int size = MAX_SIZE)
+explicit OfflinePersistentDSU(int size = MAX_SIZE)
 ```
 
-互いに素な `size` 頂点を持つversion `0` を作る。
+互いに素な `size` 頂点を持つバージョン $0$ を作る。可変長版では `size` のデフォルトは $0$ である。
 
-## 時間計算量
-
-$O(MAX\_SIZE+MAX\_VERSION)$。
-
-## `merge` / `fork`
+## merge / fork
 
 ```cpp
 int merge(int version, int left, int right)
 int fork(int version)
 ```
 
-`merge` は指定versionで2頂点を併合した新version、`fork` は内容が同じ新versionを
-追加し、その番号を返す。実際の併合は `solve` まで遅延する。
+`merge` は `version` で 2 頂点を併合した新しいバージョンを、`fork` は `version` と内容が同じ新しいバージョンを追加し、その番号を返す。実際の併合は `solve` まで遅延する。
 
-## 時間計算量
-
-各呼び出しamortized $O(1)$。
-
-## `query_same`
+## query_same
 
 ```cpp
 int query_same(int version, int left, int right)
 ```
 
-指定versionで2頂点が同じ成分かを問うqueryを登録し、0始まりのquery番号を返す。
+`version` で 2 頂点が同じ成分に属するかを問うクエリを登録し、$0$ 始まりのクエリ番号を返す。
 
-## 時間計算量
-
-amortized $O(1)$。
-
-## `solve`
+## solve
 
 ```cpp
 vector<int> solve()
 ```
 
-登録順に `query_same` の答えを `0` または `1` で返す。同じ内容に対して複数回
-呼び出せる。
+登録順に `query_same` の答えを `0` または `1` で返す。同じ内容に対して何度でも呼び出せる。
 
-## 時間計算量
-
-作成version数を $V$、query数を $Q$、頂点数を $N$ として
-$O((V+Q)\log N)$。
-
-## 空間計算量
-
-本体は $O(MAX\_SIZE+MAX\_VERSION+MAX\_QUERY)$、`solve` の返り値と
-走査stackは $O(V+Q)$。
-
-## `size` / `versions` / `query_count`
+## size / versions / query_count
 
 ```cpp
 int size() const
@@ -81,19 +64,23 @@ int versions() const
 int query_count() const
 ```
 
-頂点数、初期versionを含むversion数、登録query数を返す。すべて $O(1)$。
+頂点数、初期バージョンを含むバージョン数、登録済みのクエリ数を返す。
+
+## 時間計算量
+
+作成したバージョン数を $V$、クエリ数を $Q$、頂点数を $N$ とする。
+
+- コンストラクタ: $O(N)$。固定長版ではバージョンごとの配列の確保に $O(\texttt{MAX_VERSION})$ かかる
+- `merge`、`fork`、`query_same`: 償却 $O(1)$
+- `solve`: $O((V+Q)\log(N+1))$
+- `size`、`versions`、`query_count`: $O(1)$
+
+## 空間計算量
+
+- 本体: $O(N+V+Q)$（固定長版では $O(N+\texttt{MAX_VERSION})$ にクエリ数分が加わる）
+- `solve` の返り値と走査スタック: $O(V+Q)$
 
 ## 注意点
 
-頂点、version、各固定容量の範囲外では `out_of_range` または `length_error`。
-Union by sizeを使いpath compressionは行わない。
-
-## 可変長版
-
-```cpp
-using Dynamic = OfflinePersistentDSU<>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。保存領域 O(n + v + q)、solve は O((v + q) log(n + 1))。頂点数・版数・質問数の template 上限は不要。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- 頂点やバージョンが範囲外の場合は `std::out_of_range`、各固定容量を超えた場合は `std::length_error` を送出する。
+- union by size を使い、経路圧縮は行わない。
