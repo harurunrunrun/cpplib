@@ -16,7 +16,7 @@ vector<Modint<MOD>> math::catalan_numbers(size_t maximum_index);
 
 ## 時間計算量
 
-時間 $O(N)$（各項で除算を 1 回行うため、厳密には $O(N \log \mathit{MOD})$）、空間 $O(N)$。
+時間 $O(N)$、空間 $O(N)$。`MOD` が素数のとき、$1, \ldots, N + 1$ の逆元を線形時間の漸化式 $i^{-1} = -\lfloor \mathit{MOD} / i \rfloor \cdot (\mathit{MOD} \bmod i)^{-1}$ で前計算して除算を乗算に置き換える。
 
 ## 注意点
 

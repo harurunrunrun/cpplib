@@ -72,6 +72,18 @@ inline std::int64_t pairwise_lcm_sum(
                 static_cast<__int128>(numerator) * ((modulus + 1) / 2) % modulus
             );
     }
+    // Reuse the frequency table as the table of inverses 1 / g (g <= limit < modulus),
+    // built in linear time by inverse[g] = -(modulus / g) * inverse[modulus % g].
+    const bool linear_inverse = limit < modulus;
+    if(linear_inverse && limit >= 1){
+        std::vector<std::int64_t>& inverse_table = frequency;
+        inverse_table[1] = 1;
+        for(int value = 2; value <= limit; ++value){
+            inverse_table[static_cast<std::size_t>(value)] =
+                (modulus - modulus / value) *
+                inverse_table[static_cast<std::size_t>(modulus % value)] % modulus;
+        }
+    }
     std::int64_t answer = 0;
     for(int gcd = limit; gcd >= 1; --gcd){
         auto& exact = pair_product[static_cast<std::size_t>(gcd)];
@@ -79,9 +91,11 @@ inline std::int64_t pairwise_lcm_sum(
             exact -= pair_product[static_cast<std::size_t>(multiple)];
             if(exact < 0) exact += modulus;
         }
-        const std::int64_t inverse = pairwise_lcm_sum_internal::power_mod(
-            gcd % modulus, modulus - 2, modulus
-        );
+        const std::int64_t inverse = linear_inverse
+            ? frequency[static_cast<std::size_t>(gcd)]
+            : pairwise_lcm_sum_internal::power_mod(
+                gcd % modulus, modulus - 2, modulus
+            );
         answer = static_cast<std::int64_t>(
             (answer + static_cast<__int128>(exact) * inverse) % modulus
         );

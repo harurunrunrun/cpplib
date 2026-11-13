@@ -18,7 +18,7 @@ documentation_of: ../../../../../src/algorithm/math/number_theory/multiplicative
 - `dirichlet_convolution`: 時間 $O(N \log N)$、空間 $O(N)$。
 - `dirichlet_inverse`: 時間 $O(N \log N)$、空間 $O(N)$。
 
-どちらも積和の回数は $\sum_{q=1}^{N} \lfloor N/q \rfloor = O(N \log N)$ である。
+どちらも積和の回数は $\sum_{q=1}^{N} \lfloor N/q \rfloor = O(N \log N)$ である。 `dirichlet_inverse` は各 $q \ge 2$ で `values[1]` による除算を 1 回ずつ行う（`Value` が `Modint` のときは除算の代わりに `inverse[1]` を掛ける）。
 
 ## 注意点
 

@@ -104,7 +104,7 @@ pair<ExactInteger, uint64_t> divmod(uint64_t positive_divisor) const;
 
 正の 64 bit 整数で絶対値を割る。返す商の符号は元の値と同じで、0 方向へ丸める。余り $r$ は `0 <= r < positive_divisor` を満たす。返り値を `[q, r]` とすると `abs(value) == abs(q) * positive_divisor + r` である。
 
-時間計算量は $O(L)$（1 bit ずつ処理するため定数は約 32 倍）、追加領域は $O(L)$ である。`positive_divisor == 0` では `domain_error` を送出する。
+時間計算量は $O(L)$（32 bit limb ごとに 1 回の 64 bit または 128 bit 除算）、追加領域は $O(L)$ である。`positive_divisor == 0` では `domain_error` を送出する。
 
 ## 組み込み整数への変換
 

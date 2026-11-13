@@ -124,14 +124,14 @@ inline std::optional<u64> discrete_root_mod_prime(
         reduced_order
     );
 
+    // The roots are g^{first_exponent + index * reduced_order}; walk them by
+    // multiplying with the divisor-th root of unity g^{reduced_order}.
+    const u64 step = pow_mod_u64(generator, reduced_order, prime);
+    u64 root = pow_mod_u64(generator, first_exponent, prime);
     u64 answer = prime - 1;
     for(u64 index = 0; index < divisor; ++index){
-        const u64 root_exponent = static_cast<u64>(
-            static_cast<u128>(index) * reduced_order + first_exponent
-        );
-        answer = std::min(
-            answer, pow_mod_u64(generator, root_exponent, prime)
-        );
+        answer = std::min(answer, root);
+        root = mul_mod_u64(root, step, prime);
     }
     return answer;
 }

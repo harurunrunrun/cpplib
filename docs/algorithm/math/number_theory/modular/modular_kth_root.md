@@ -19,7 +19,7 @@ std::vector<math::u64> math::modular_kth_roots_prime(
 
 ## 時間計算量・空間計算量
 
-$d = \gcd(k, p-1)$ とする。原始根の計算（$p-1$ の素因数分解）の後、baby-step giant-step による離散対数と解の列挙・ソートで、期待 $O(\sqrt p + d \log p)$ 時間、$O(\sqrt p + d)$ 空間。
+$d = \gcd(k, p-1)$ とする。原始根の計算（$p-1$ の素因数分解）の後、baby-step giant-step による離散対数と解の列挙・ソートで、期待 $O(\sqrt p + d \log d + \log p)$ 時間（解は 1 の原始 $d$ 乗根 $g^{(p-1)/d}$ を順に掛けて列挙する）、$O(\sqrt p + d)$ 空間。
 
 ## 注意点
 

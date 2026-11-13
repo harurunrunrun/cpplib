@@ -42,24 +42,27 @@ minimum_pell_equation_solution(long long nonsquare){
     BigInteger previous_x = 1;
     BigInteger previous_previous_y = 1;
     BigInteger previous_y = 0;
-    while(true){
+    // The k-th convergent x / y satisfies x^2 - D y^2 = (-1)^{k+1} Q_{k+1}, where
+    // Q_{k+1} is the next continued-fraction denominator.  Hence the first convergent
+    // with x^2 - D y^2 = 1 is the first one with Q_{k+1} = 1 and k odd.
+    for(bool odd_index = false;; odd_index = !odd_index){
         BigInteger x =
             BigInteger(coefficient) * previous_x + previous_previous_x;
         BigInteger y =
             BigInteger(coefficient) * previous_y + previous_previous_y;
-        if(x * x - BigInteger(nonsquare) * y * y == BigInteger(1)){
-            return PellEquationSolution{std::move(x), std::move(y)};
-        }
-        previous_previous_x = std::move(previous_x);
-        previous_x = std::move(x);
-        previous_previous_y = std::move(previous_y);
-        previous_y = std::move(y);
         offset = denominator * coefficient - offset;
         const __int128 next_denominator =
             (static_cast<__int128>(nonsquare)
                 - static_cast<__int128>(offset) * offset)
             / denominator;
         denominator = static_cast<long long>(next_denominator);
+        if(denominator == 1 && odd_index){
+            return PellEquationSolution{std::move(x), std::move(y)};
+        }
+        previous_previous_x = std::move(previous_x);
+        previous_x = std::move(x);
+        previous_previous_y = std::move(previous_y);
+        previous_y = std::move(y);
         coefficient = (square_root + offset) / denominator;
     }
 }

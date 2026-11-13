@@ -1263,6 +1263,27 @@ public:
         ExactInteger quotient;
         quotient.limbs_.resize(limbs_.size(), 0);
         std::uint64_t remainder = 0;
+        if(positive_divisor <= std::numeric_limits<std::uint32_t>::max()){
+            // remainder < divisor < 2^32, so (remainder << 32 | limb) fits in 64 bits.
+            for(std::size_t index = limbs_.size(); index-- > 0;){
+                const std::uint64_t current = (remainder << 32) | limbs_[index];
+                quotient.limbs_[index] =
+                    static_cast<std::uint32_t>(current / positive_divisor);
+                remainder = current % positive_divisor;
+            }
+            quotient.negative_ = negative_;
+            quotient.normalize();
+            return {std::move(quotient), remainder};
+        }
+#if defined(__SIZEOF_INT128__)
+        for(std::size_t index = limbs_.size(); index-- > 0;){
+            const unsigned __int128 current =
+                (static_cast<unsigned __int128>(remainder) << 32) | limbs_[index];
+            quotient.limbs_[index] =
+                static_cast<std::uint32_t>(current / positive_divisor);
+            remainder = static_cast<std::uint64_t>(current % positive_divisor);
+        }
+#else
         for(std::size_t index = limbs_.size(); index-- > 0;){
             std::uint32_t limb_quotient = 0;
             for(int bit = 31; bit >= 0; --bit){
@@ -1287,6 +1308,7 @@ public:
             }
             quotient.limbs_[index] = limb_quotient;
         }
+#endif
         quotient.negative_ = negative_;
         quotient.normalize();
         return {std::move(quotient), remainder};
