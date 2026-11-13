@@ -45,17 +45,10 @@ public:
                 "PersistentFenwickTree: invalid position"
             );
         }
-        int root = roots_[static_cast<std::size_t>(base_version)];
-        for(int fenwick_index = position + 1;
-            fenwick_index <= n_;
-            fenwick_index += fenwick_index & -fenwick_index){
-            const T value = read(
-                root, 1, n_ + 1, fenwick_index
-            ) + delta;
-            root = assign(
-                root, 1, n_ + 1, fenwick_index, value
-            );
-        }
+        const int root = add_rec(
+            roots_[static_cast<std::size_t>(base_version)],
+            0, n_, position, delta
+        );
         roots_.push_back(root);
         return static_cast<int>(roots_.size()) - 1;
     }
@@ -71,12 +64,27 @@ public:
                 "PersistentFenwickTree: invalid range"
             );
         }
+        // 区間 [0, right) を永続セグメント木の 1 本の経路で集計する
         T result{};
-        const int root = roots_[static_cast<std::size_t>(version)];
-        for(int fenwick_index = right;
-            fenwick_index > 0;
-            fenwick_index -= fenwick_index & -fenwick_index){
-            result += read(root, 1, n_ + 1, fenwick_index);
+        int node = roots_[static_cast<std::size_t>(version)];
+        int left = 0, right_end = n_;
+        while(node != -1 && left < right){
+            const Node& current = nodes_[static_cast<std::size_t>(node)];
+            if(right_end <= right){
+                result += current.value;
+                break;
+            }
+            const int middle = left + (right_end - left) / 2;
+            if(right <= middle){
+                node = current.left;
+                right_end = middle;
+            }else{
+                if(current.left != -1){
+                    result += nodes_[static_cast<std::size_t>(current.left)].value;
+                }
+                node = current.right;
+                left = middle;
+            }
         }
         return result;
     }
@@ -99,50 +107,34 @@ private:
         }
     }
 
-    T read(int node, int left, int right, int position) const {
-        if(node == -1) return T{};
-        if(right - left == 1){
-            return nodes_[static_cast<std::size_t>(node)].value;
-        }
-        const int middle = left + (right - left) / 2;
-        if(position < middle){
-            return read(
-                nodes_[static_cast<std::size_t>(node)].left,
-                left, middle, position
-            );
-        }
-        return read(
-            nodes_[static_cast<std::size_t>(node)].right,
-            middle, right, position
-        );
-    }
-
-    int assign(
+    // node を根とする区間 [left, right) の部分木を複製し、position に delta を加える
+    int add_rec(
         int node,
         int left,
         int right,
         int position,
-        const T& value
+        const T& delta
     ){
         const int copied = static_cast<int>(nodes_.size());
         nodes_.push_back(node == -1
             ? Node{}
             : nodes_[static_cast<std::size_t>(node)]);
-        if(right - left == 1){
-            nodes_[static_cast<std::size_t>(copied)].value = value;
-            return copied;
-        }
+        nodes_[static_cast<std::size_t>(copied)].value =
+            nodes_[static_cast<std::size_t>(copied)].value + delta;
+        if(right - left == 1) return copied;
         const int middle = left + (right - left) / 2;
         if(position < middle){
-            nodes_[static_cast<std::size_t>(copied)].left = assign(
+            const int child = add_rec(
                 nodes_[static_cast<std::size_t>(copied)].left,
-                left, middle, position, value
+                left, middle, position, delta
             );
+            nodes_[static_cast<std::size_t>(copied)].left = child;
         }else{
-            nodes_[static_cast<std::size_t>(copied)].right = assign(
+            const int child = add_rec(
                 nodes_[static_cast<std::size_t>(copied)].right,
-                middle, right, position, value
+                middle, right, position, delta
             );
+            nodes_[static_cast<std::size_t>(copied)].right = child;
         }
         return copied;
     }

@@ -30,8 +30,23 @@ struct FenwickTree2D{
             if(v[y].size() != static_cast<std::size_t>(_w)) [[unlikely]] {
                 throw std::runtime_error("library assertion fault: invalid shape (constructor).");
             }
-            for(int x = 0; x < _w; x++){
-                add(y, x, v[y][x]);
+        }
+        const std::size_t h = static_cast<std::size_t>(_h), w = static_cast<std::size_t>(_w);
+        for(std::size_t i = 1; i <= h; i++){
+            for(std::size_t j = 1; j <= w; j++) data[index(i, j)] = v[i - 1][j - 1];
+            for(std::size_t j = 1; j <= w; j++){
+                const std::size_t k = j + (j & -j);
+                if(k > w) continue;
+                if constexpr(std::is_same_v<T, bool>) data[index(i, k)] = static_cast<T>(data[index(i, k)]) + data[index(i, j)];
+                else data[index(i, k)] += data[index(i, j)];
+            }
+        }
+        for(std::size_t i = 1; i <= h; i++){
+            const std::size_t k = i + (i & -i);
+            if(k > h) continue;
+            for(std::size_t j = 1; j <= w; j++){
+                if constexpr(std::is_same_v<T, bool>) data[index(k, j)] = static_cast<T>(data[index(k, j)]) + data[index(i, j)];
+                else data[index(k, j)] += data[index(i, j)];
             }
         }
     }

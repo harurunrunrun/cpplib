@@ -80,6 +80,7 @@ bool set_payload(int position, const Payload& payload)
 現在の列長を $N$、木の高さを
 $H=O(\log_{B}(N/C+1))$ とする。ここで $B$ は `INTERNAL_CAPACITY`、$C$ は `LEAF_CAPACITY` である。
 テンプレートで指定するノード容量は定数である。
+葉のビット列は 64 bit 語に詰めて持ち、`Payload` なしのときの葉内の `rank`・`select`・統計の再計算は popcount による語単位の処理である（$O(C/64)$）。
 
 - `assign`: $O(N)$
 - `size`, `ones`: $O(1)$

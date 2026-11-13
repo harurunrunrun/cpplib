@@ -32,8 +32,8 @@ string str() const
 - `empty`, `size`: $O(1)$
 - `at`, `set`: 期待 $O(\log(N+1))$
 - `erase`: 期待 $O(\log(N+1)+K)$（削除したノードの解放を含む）
-- `insert`: 期待 $O(M\log(N+M+1))$
-- 文字列からのコンストラクタ: 期待 $O(M\log(M+1))$
+- `insert`: 期待 $O(M+\log(N+M+1))$（挿入する文字列はデカルト木の線形時間構築で木にする）
+- 文字列からのコンストラクタ: $O(M)$
 - `substr`: 期待 $O(\log(N+1)+K)$
 - `str`: $O(N)$
 

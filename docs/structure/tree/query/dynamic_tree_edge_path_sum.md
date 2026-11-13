@@ -69,7 +69,7 @@ T path_sum(int u, int v) const
 
 ## 時間計算量
 
-- コンストラクタ: $O(N\log(N+1))$
+- コンストラクタ: $O(N)$（Fenwick 木は値を並べてから線形時間で構築する）
 - `size`, `edge_count`, `edge_value`: $O(1)$
 - `set_edge`: $O(\log(N+1))$
 - `path_sum`: $O(\log^2(N+1))$

@@ -4,7 +4,7 @@
 #include <bit>
 #include <cstddef>
 #include <functional>
-#include <memory>
+#include <list>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -39,7 +39,7 @@ private:
     Node* minimum_ = nullptr;
     std::size_t size_ = 0;
     Compare compare_;
-    std::vector<std::unique_ptr<Node>> storage_;
+    std::list<Node> storage_;
 
     static void remove_from_list(Node* node) {
         node->left->right = node->right;
@@ -154,11 +154,7 @@ public:
     Handle push(T&& value) { return emplace(std::move(value)); }
     template<class... Args>
     Handle emplace(Args&&... args) {
-        auto holder = std::make_unique<Node>(
-            T(std::forward<Args>(args)...)
-        );
-        Node* node = holder.get();
-        storage_.push_back(std::move(holder));
+        Node* node = &storage_.emplace_back(T(std::forward<Args>(args)...));
         insert_root(node);
         ++size_;
         return Handle(node);
@@ -218,10 +214,7 @@ public:
             }
         }
         size_ += other.size_;
-        for (auto& holder : other.storage_) {
-            storage_.push_back(std::move(holder));
-        }
-        other.storage_.clear();
+        storage_.splice(storage_.end(), other.storage_);
         other.minimum_ = nullptr;
         other.size_ = 0;
     }

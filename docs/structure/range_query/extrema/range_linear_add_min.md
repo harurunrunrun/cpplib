@@ -26,7 +26,7 @@ pair<int64_t, int> minimum_with_count(int l, int r) const
 ## 時間計算量
 
 - 構築: $O(N)$
-- `add`: $O(\sqrt N)$
+- `add`: $O(\sqrt N)$（`l == r` のときは $O(1)$ で何もしない）
 - `minimum`, `minimum_with_count`: $O(\sqrt N\log(N+1))$
 
 空間計算量は $O(N)$。凸包の辺上にある点も残し、最小値を共有する区間（plateau）は二分探索で数える。

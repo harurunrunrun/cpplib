@@ -44,7 +44,7 @@ long long s = fw.sum(1, 2, 5, 6);
 $H$, $W$ を実際の高さと幅とする。
 
 - `FenwickTree2D(int, int)`: 固定長版は $O(\texttt{MAX_H}\texttt{MAX_W})$、可変長版は $O(HW)$
-- `FenwickTree2D(vector)`: 上記に加えて $O(HW\log H\log W)$
+- `FenwickTree2D(vector)`: 上記に加えて $O(HW)$（各行・各列方向に線形時間の構築を行う）
 - `add`、`prefix_sum`、`sum`、`get`、`set`: $O(\log H \log W)$
 - `height`、`width`、`empty`: $O(1)$
 
@@ -59,3 +59,4 @@ $H$, $W$ を実際の高さと幅とする。
 - 点の添字は $[0, h) \times [0, w)$、`prefix_sum` の端点は $[0, h] \times [0, w]$ でなければならない。
 - 矩形は $0 \le y_1 \le y_2 \le h$、$0 \le x_1 \le x_2 \le w$ でなければならない。違反すると `std::runtime_error` を送出する。
 - `T` はデフォルト構築、加算、減算ができる必要がある。
+- `vector` からの構築は `add` を繰り返す場合と加算の順序が異なる。浮動小数点型では丸め誤差の出方が変わりうる。

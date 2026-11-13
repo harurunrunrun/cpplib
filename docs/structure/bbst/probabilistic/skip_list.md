@@ -33,7 +33,7 @@ std::optional<std::pair<Key, Value>> lower_bound(const Key& key) const
 
 - `find`, `insert_or_assign`, `erase`, `lower_bound`: 期待 $O(\log(N+1))$、最悪 $O(N)$
 - `empty`, `size`: $O(1)$
-- 空間計算量: $O(N\cdot\texttt{MAX_LEVEL})$（各ノードが高さによらず長さ `MAX_LEVEL` のリンク配列を持つ）
+- 空間計算量: 期待 $O(N + \texttt{MAX_LEVEL})$（各ノードは自身の高さ分だけのリンク配列を持ち、高さの期待値は 2。先頭の番兵だけが長さ `MAX_LEVEL` のリンク配列を持つ）
 
 ## 注意点
 

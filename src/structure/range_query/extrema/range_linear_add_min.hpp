@@ -43,6 +43,7 @@ public:
     int size() const{ return static_cast<int>(values.size()); }
     void add(int l, int r, std::int64_t slope, std::int64_t offset){
         check(l, r);
+        if(l == r) return;
         for(int id = l / width; id < static_cast<int>(blocks.size()) && blocks[id].l < r; ++id){
             auto& b = blocks[id];
             if(l <= b.l && b.r <= r){ b.slope += slope; b.offset += offset; }

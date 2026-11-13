@@ -326,8 +326,7 @@ public:
     }
     bool set(const Key& key, const S& value){
         int v = root_node;
-        cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(MAX_SIZE))> path;
-        if constexpr(MAX_SIZE < 0) path.ensure(static_cast<std::size_t>(used));
+        std::array<int, 128> path;
         int count = 0;
         while(v != -1){
             push(v);
