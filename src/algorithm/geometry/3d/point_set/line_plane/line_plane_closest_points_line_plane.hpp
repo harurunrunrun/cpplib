@@ -15,12 +15,12 @@ inline std::pair<Point3, Point3> closest_points(
     const Line3& line,
     const Plane3& plane
 ){
-    const Point3 direction = line3_direction(line);
-    const Point3 normal = plane3_unit_normal(plane);
-    if(geometry3d_sign(dot(direction, normal)) != 0){
-        const Point3 point = line_plane_intersection(line, plane);
-        return {point, point};
-    }
+    (void)line3_direction(line);
+    (void)plane3_unit_normal(plane);
+    const auto intersection = geometry3d_line_plane_detail::intersection_data(
+        line.a, line.b, plane
+    );
+    if(intersection) return {intersection->point, intersection->point};
     return {line.a, projection(plane, line.a)};
 }
 

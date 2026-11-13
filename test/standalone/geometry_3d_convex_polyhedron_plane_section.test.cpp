@@ -39,6 +39,27 @@ int main(){
             if(point.x != 0.5L
                 || (point.z != translation && point.z != upper)) return false;
         }
+        // Lower-dimensional hulls have no faces.
+        const ConvexPolyhedron3 single =
+            convex_hull_3d(std::vector<Point3>{{1, 2, 0}});
+        const Polygon3 single_section = convex_polyhedron_plane_section(
+            single, {{0, 0, 0}, {0, 0, 1}}
+        );
+        if(single_section.size() != 1
+            || !geometry3d_api_close(single_section[0], {1, 2, 0})) return false;
+        const ConvexPolyhedron3 segment =
+            convex_hull_3d(std::vector<Point3>{{0, 0, -1}, {0, 0, 1}});
+        const Polygon3 crossing = convex_polyhedron_plane_section(
+            segment, {{0, 0, 0}, {0, 0, 1}}
+        );
+        if(crossing.size() != 1
+            || !geometry3d_api_close(crossing[0], {0, 0, 0})) return false;
+        if(convex_polyhedron_plane_section(
+            segment, {{0, 0, 0}, {1, 0, 0}}
+        ).size() != 2) return false;
+        if(!convex_polyhedron_plane_section(
+            segment, {{0, 0, 5}, {0, 0, 1}}
+        ).empty()) return false;
         return convex_polyhedron_plane_section(
             geometry3d_test_cube(), {{0, 0, 3}, {0, 0, 1}}
         ).empty();

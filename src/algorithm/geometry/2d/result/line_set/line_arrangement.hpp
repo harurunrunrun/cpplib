@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <limits>
+#include <map>
 #include <numeric>
 #include <stdexcept>
 #include <utility>
@@ -57,31 +59,52 @@ inline LineArrangementResult line_arrangement(const std::vector<Line>& lines){
         }
     }
     std::sort(intersections.begin(), intersections.end());
-    for(const Point& point: intersections){
-        if(result.vertices.empty()
-            || !plus_geometry_detail::close(result.vertices.back(), point)){
-            result.vertices.push_back(point);
+    // Each intersection is merged into the first vertex close to it. The
+    // candidates are the vertices whose coordinates lie within twice the
+    // tolerance of `close`, so a point lying between two close points in the
+    // lexicographic order does not split their vertex.
+    const auto window = [](const Point& point){
+        return 256.0L * std::numeric_limits<long double>::epsilon()
+            * plus_geometry_detail::scale(point);
+    };
+    std::vector<std::size_t> intersection_vertex(intersections.size());
+    std::multimap<long double, std::size_t> active;
+    std::vector<std::multimap<long double, std::size_t>::iterator> handle;
+    std::size_t oldest_active = 0;
+    for(std::size_t index = 0; index < intersections.size(); ++index){
+        const Point& point = intersections[index];
+        while(oldest_active < result.vertices.size()){
+            const Point& vertex = result.vertices[oldest_active];
+            if(point.x - vertex.x <= std::max(window(point), window(vertex))){
+                break;
+            }
+            active.erase(handle[oldest_active]);
+            ++oldest_active;
         }
-    }
-    const auto vertex_id = [&](const Point& point){
-        auto iterator = std::lower_bound(
-            result.vertices.begin(), result.vertices.end(), point
-        );
-        if(iterator != result.vertices.end()
-            && plus_geometry_detail::close(*iterator, point)){
-            return static_cast<std::size_t>(
-                iterator - result.vertices.begin()
-            );
-        }
-        if(iterator != result.vertices.begin()){
-            --iterator;
-            if(plus_geometry_detail::close(*iterator, point)){
-                return static_cast<std::size_t>(
-                    iterator - result.vertices.begin()
-                );
+        std::size_t id = result.vertices.size();
+        const long double width = window(point);
+        for(auto iterator = active.lower_bound(point.y - width);
+            iterator != active.end() && iterator->first <= point.y + width;
+            ++iterator){
+            if(iterator->second < id && plus_geometry_detail::close(
+                result.vertices[iterator->second], point
+            )){
+                id = iterator->second;
             }
         }
-        throw std::logic_error("line-arrangement vertex lookup failed");
+        if(id == result.vertices.size()){
+            result.vertices.push_back(point);
+            handle.push_back(active.emplace(point.y, id));
+        }
+        intersection_vertex[index] = id;
+    }
+    const auto vertex_id = [&](const Point& point){
+        const auto iterator = std::lower_bound(
+            intersections.begin(), intersections.end(), point
+        );
+        return intersection_vertex[
+            static_cast<std::size_t>(iterator - intersections.begin())
+        ];
     };
     std::vector<std::vector<std::size_t>> vertex_on_line(count);
     for(std::size_t line = 0; line < count; ++line){

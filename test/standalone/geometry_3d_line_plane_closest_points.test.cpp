@@ -11,7 +11,15 @@ int main(){
         const Plane3 plane{{}, {0, 0, 1}};
         const auto points = closest_points(line, plane);
         const auto reversed = closest_points(plane, line);
-        return geometry3d_api_close(points.first, {0, 0, 2}) &&
+        // A short direction vector crossing the plane must not be judged
+        // parallel; the line meets z = 0 at (10, 0, 0).
+        const Line3 short_line{{0, 0, 1}, {2e-10L, 0, 1 - 2e-11L}};
+        const auto short_points = closest_points(short_line, plane);
+        const long double short_x =
+            1 / (1 - short_line.b.z) * short_line.b.x;
+        return geometry3d_api_close(short_points.first, {short_x, 0, 0}) &&
+            geometry3d_api_close(short_points.second, {short_x, 0, 0}) &&
+            geometry3d_api_close(points.first, {0, 0, 2}) &&
             geometry3d_api_close(points.second, {}) &&
             geometry3d_api_close(reversed.first, {}) &&
             geometry3d_api_close(reversed.second, {0, 0, 2});
