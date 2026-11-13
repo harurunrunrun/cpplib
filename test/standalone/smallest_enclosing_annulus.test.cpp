@@ -61,6 +61,34 @@ EnclosingAnnulusResult exhaustive(const std::vector<Point>& points){
 }  // namespace
 
 int main(){
+    // 単位円上の点の半径を相対 1e-16 程度だけ揺らした入力。修正前は内部の Voronoi 図の
+    // 構築が終わらず std::bad_alloc になっていた。
+    {
+        const std::vector<Point> perturbed_circle{
+            {0xd.8f0281fc9f346cap-4L, -0x8.7eb26de8b395aa9p-4L},
+            {-0xd.d0585eb0e1e89bep-5L, -0xe.6eb248d83ee680fp-4L},
+            {0x9.1a70277f1d61c6fp-4L, 0xd.286c50f3f511f5fp-4L},
+            {0xf.ff2bed306b6600ap-4L, -0xa.4c01376fd4182e3p-9L},
+            {-0xe.361d471d08f161ep-4L, -0xe.b3b089d5f9866f7p-5L},
+            {-0xe.d0765a3b25bf797p-5L, -0xe.2ea303bf0f5b79ep-4L},
+            {-0xc.317fa594cd8c4a7p-4L, 0xa.5c114bddada2968p-4L},
+            {0xd.82d953ad75c627cp-5L, 0xe.80fddcf70206de4p-4L},
+            {-0xc.bd58b61a982f082p-4L, -0x9.ae121f060304cf5p-4L},
+            {0xe.b7edbfb470550b2p-4L, 0xc.8c6e8012e9bfb42p-5L},
+            {-0xe.311b8290c1c53a6p-6L, -0xf.9a06d4a0a83a8aap-4L},
+            {-0xa.1cd5895e02f35adp-4L, 0xc.662366bd0f21f78p-4L},
+            {0xf.f9cde4a65d9312fp-4L, 0xe.13455006f51467p-8L},
+            {-0xb.78f23e0d914c534p-4L, -0xb.27181af3d22ddfcp-4L},
+        };
+        const auto fast = smallest_enclosing_annulus(perturbed_circle);
+        const auto slow = exhaustive(perturbed_circle);
+        assert(std::abs(
+            (fast.outer_radius - fast.inner_radius)
+            - (slow.outer_radius - slow.inner_radius)
+        ) < 1.0e-12L);
+        assert(std::abs(fast.inner_radius - 1.0L) < 1.0e-12L);
+    }
+
     int cases = 0;
     if(!(std::cin >> cases)) return 0;
     std::uint64_t state = 0x243f6a8885a308d3ULL;

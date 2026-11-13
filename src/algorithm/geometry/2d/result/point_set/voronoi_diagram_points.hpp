@@ -104,9 +104,13 @@ inline Point delaunay_triangle_circumcenter(
     });
     const Point normalized_first = first_direction / scale;
     const Point normalized_second = second_direction / scale;
-    const long double denominator = 2.0L * cross(
-        normalized_first, normalized_second
-    );
+    // ほぼ共線な三角形でも外心が正しく求まるよう、分母は元の座標から厳密に計算する。
+    const long double denominator = 2.0L
+        * delaunay_triangulation_detail::expansion_estimate(
+            delaunay_triangulation_detail::exact_orientation_expansion(
+                first, second, third
+            )
+        ) / scale / scale;
     if(denominator == 0.0L){
         throw std::overflow_error("Voronoi circumcenter is not representable");
     }
@@ -260,8 +264,10 @@ inline VoronoiDiagramResult voronoi_diagram(const std::vector<Point>& points){
             Point direction = unit(rotate90(
                 points[second_site] - points[first_site]
             ));
-            const Point midpoint = (points[first_site] + points[second_site]) / 2.0L;
-            if(dot(direction, points[opposite] - midpoint) > 0.0L){
+            // rotate90 は first -> second の左側を向く。opposite が左側にあれば反転する。
+            if(delaunay_triangulation_detail::orientation(
+                points[first_site], points[second_site], points[opposite]
+            ) > 0){
                 direction = -direction;
             }
             edge.kind = VoronoiEdgeKind::RAY;

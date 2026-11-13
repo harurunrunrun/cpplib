@@ -1,12 +1,14 @@
 // competitive-verifier: STANDALONE
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <iostream>
 #include <limits>
 #include <map>
+#include <random>
 #include <set>
 #include <stdexcept>
 #include <utility>
@@ -121,14 +123,22 @@ void verify(const std::vector<Point>& points){
                         opposite = vertex;
                     }
                 }
-                const Point midpoint = (
-                    points[edge.first_site] + points[edge.second_site]
-                ) / 2.0L;
-                assert(dot(
+                // 半直線は opposite と反対側を向く（ほぼ共線な三角形でも判定できるよう、
+                // 辺の法線との内積と opposite の向きの符号で比べる）。
+                const Point site_direction =
+                    points[edge.second_site] - points[edge.first_site];
+                const long double normal_component = dot(
                     edge.endpoint_or_direction,
-                    points[opposite] - midpoint
-                ) < 0.0L);
-                const long double step = std::max(
+                    Point{-site_direction.y, site_direction.x}
+                );
+                const int opposite_side = delaunay_triangulation_detail::orientation(
+                    points[edge.first_site],
+                    points[edge.second_site],
+                    points[opposite]
+                );
+                assert(opposite_side != 0);
+                assert((normal_component > 0.0L) != (opposite_side > 0));
+                const long double step = 2.0L * std::max(
                     1.0L,
                     std::sqrt(first_distance)
                 );
@@ -283,7 +293,73 @@ int main(){
         }
     ) == 1);
 
-    int test_count;
+    // 半径を相対 1e-16 程度だけ揺らした単位円上の点。修正前は分割統治の併合が
+    // 終わらず std::bad_alloc になっていた。
+    const std::vector<Point> perturbed_circle{
+        {0xd.8f0281fc9f346cap-4L, -0x8.7eb26de8b395aa9p-4L},
+        {-0xd.d0585eb0e1e89bep-5L, -0xe.6eb248d83ee680fp-4L},
+        {0x9.1a70277f1d61c6fp-4L, 0xd.286c50f3f511f5fp-4L},
+        {0xf.ff2bed306b6600ap-4L, -0xa.4c01376fd4182e3p-9L},
+        {-0xe.361d471d08f161ep-4L, -0xe.b3b089d5f9866f7p-5L},
+        {-0xe.d0765a3b25bf797p-5L, -0xe.2ea303bf0f5b79ep-4L},
+        {-0xc.317fa594cd8c4a7p-4L, 0xa.5c114bddada2968p-4L},
+        {0xd.82d953ad75c627cp-5L, 0xe.80fddcf70206de4p-4L},
+        {-0xc.bd58b61a982f082p-4L, -0x9.ae121f060304cf5p-4L},
+        {0xe.b7edbfb470550b2p-4L, 0xc.8c6e8012e9bfb42p-5L},
+        {-0xe.311b8290c1c53a6p-6L, -0xf.9a06d4a0a83a8aap-4L},
+        {-0xa.1cd5895e02f35adp-4L, 0xc.662366bd0f21f78p-4L},
+        {0xf.f9cde4a65d9312fp-4L, 0xe.13455006f51467p-8L},
+        {-0xb.78f23e0d914c534p-4L, -0xb.27181af3d22ddfcp-4L},
+    };
+    verify(perturbed_circle);
+    assert(delaunay_triangulation(perturbed_circle).triangles.size() == 12);
+
+    // ほぼ共円・ほぼ共線な点集合をランダムに生成して検証する。
+    std::mt19937_64 random(20261114);
+    const auto uniform = [&](long double low, long double high){
+        return low + (high - low)
+            * std::uniform_real_distribution<long double>(0.0L, 1.0L)(random);
+    };
+    const long double pi = std::acos(-1.0L);
+    for(int iteration = 0; iteration < 3000; ++iteration){
+        const int kind = iteration % 3;
+        const int size = 3 + static_cast<int>(random() % 30);
+        const long double noise = std::array<long double, 5>{
+            0.0L, 1.0e-16L, 4.0e-16L, 1.6e-15L, 1.0e-13L
+        }[random() % 5];
+        std::vector<Point> points;
+        if(kind < 2){
+            const Point center{uniform(-10.0L, 10.0L), uniform(-10.0L, 10.0L)};
+            const long double radius = std::pow(10.0L, uniform(-3.0L, 3.0L));
+            const long double rotation = uniform(0.0L, 2.0L * pi);
+            for(int index = 0; index < size; ++index){
+                const long double angle = kind == 0
+                    ? uniform(0.0L, 2.0L * pi)
+                    : rotation + 2.0L * pi * index / size;
+                const long double current = radius * (1.0L + noise * uniform(-1.0L, 1.0L));
+                points.push_back(center + Point{
+                    current * std::cos(angle), current * std::sin(angle)
+                });
+            }
+            if(random() % 3 == 0) points.push_back(center);
+        }else{
+            const Point origin{uniform(-5.0L, 5.0L), uniform(-5.0L, 5.0L)};
+            const long double angle = uniform(0.0L, pi);
+            const Point direction{std::cos(angle), std::sin(angle)};
+            for(int index = 0; index < size; ++index){
+                points.push_back(origin + direction * uniform(-10.0L, 10.0L) + Point{
+                    noise * uniform(-1.0L, 1.0L), noise * uniform(-1.0L, 1.0L)
+                });
+            }
+            if(random() % 2 == 0){
+                points.push_back({uniform(-10.0L, 10.0L), uniform(-10.0L, 10.0L)});
+            }
+        }
+        if(random() % 4 == 0) points.push_back(points[random() % points.size()]);
+        verify(points);
+    }
+
+    int test_count = 0;
     std::cin >> test_count;
     while(test_count-- > 0){
         std::size_t size;

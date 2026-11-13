@@ -23,15 +23,6 @@ inline int robust_sign(long double value, long double magnitude){
     return (value > tolerance) - (value < -tolerance);
 }
 
-inline int orientation(const Point& first, const Point& second, const Point& third){
-    const Point left = second - first;
-    const Point right = third - first;
-    const long double value = cross(left, right);
-    const long double magnitude = std::abs(left.x * right.y)
-        + std::abs(left.y * right.x);
-    return robust_sign(value, magnitude);
-}
-
 inline bool point_equal(const Point& first, const Point& second){
     return geometry_sign(first.x - second.x) == 0
         && geometry_sign(first.y - second.y) == 0;
@@ -68,6 +59,186 @@ inline bool in_circumcircle(
     const Point& query
 ){
     return circumcircle_sign(first, second, third, query) > 0;
+}
+
+// 浮動小数点展開（成分は絶対値の昇順で互いに重ならない）による厳密演算。
+// 分割統治の併合は外接円判定が実際の配置と矛盾しないことを前提とするため、
+// 許容誤差で 0 と判定された場合だけ厳密に符号を求める。
+using Expansion = std::vector<long double>;
+
+inline void two_sum(long double first, long double second,
+                    long double& sum, long double& error){
+    sum = first + second;
+    const long double second_virtual = sum - first;
+    const long double first_virtual = sum - second_virtual;
+    error = (first - first_virtual) + (second - second_virtual);
+}
+
+inline void split(long double value, long double& high, long double& low){
+    constexpr long double splitter = 4294967297.0L;
+    const long double scaled = splitter * value;
+    const long double big = scaled - value;
+    high = scaled - big;
+    low = value - high;
+}
+
+inline void two_product(long double first, long double second,
+                        long double& product, long double& error){
+    product = first * second;
+    long double first_high, first_low, second_high, second_low;
+    split(first, first_high, first_low);
+    split(second, second_high, second_low);
+    error = first_low * second_low - (((product - first_high * second_high)
+        - first_low * second_high) - first_high * second_low);
+}
+
+inline Expansion grow_expansion(const Expansion& expansion, long double value){
+    Expansion result;
+    result.reserve(expansion.size() + 1);
+    long double carry = value;
+    for(const long double component: expansion){
+        long double error;
+        two_sum(carry, component, carry, error);
+        if(error != 0.0L) result.push_back(error);
+    }
+    if(carry != 0.0L) result.push_back(carry);
+    return result;
+}
+
+inline Expansion expansion_sum(Expansion first, const Expansion& second){
+    for(const long double component: second){
+        first = grow_expansion(first, component);
+    }
+    return first;
+}
+
+inline Expansion expansion_product(const Expansion& first, const Expansion& second){
+    Expansion result;
+    for(const long double left: first){
+        for(const long double right: second){
+            long double product, error;
+            two_product(left, right, product, error);
+            if(error != 0.0L) result = grow_expansion(result, error);
+            result = grow_expansion(result, product);
+        }
+    }
+    return result;
+}
+
+inline Expansion exact_difference(long double first, long double second){
+    long double difference, error;
+    two_sum(first, -second, difference, error);
+    Expansion result;
+    if(error != 0.0L) result.push_back(error);
+    if(difference != 0.0L) result.push_back(difference);
+    return result;
+}
+
+inline int expansion_sign(const Expansion& expansion){
+    if(expansion.empty()) return 0;
+    return expansion.back() > 0.0L ? 1 : -1;
+}
+
+inline Expansion negate_expansion(Expansion expansion){
+    for(long double& component: expansion) component = -component;
+    return expansion;
+}
+
+// cross(second - first, third - first) を厳密に表す展開。
+inline Expansion exact_orientation_expansion(
+    const Point& first,
+    const Point& second,
+    const Point& third
+){
+    const Expansion left_x = exact_difference(second.x, first.x);
+    const Expansion left_y = exact_difference(second.y, first.y);
+    const Expansion right_x = exact_difference(third.x, first.x);
+    const Expansion right_y = exact_difference(third.y, first.y);
+    return expansion_sum(
+        expansion_product(left_x, right_y),
+        negate_expansion(expansion_product(left_y, right_x))
+    );
+}
+
+inline long double expansion_estimate(const Expansion& expansion){
+    long double result = 0.0L;
+    for(const long double component: expansion) result += component;
+    return result;
+}
+
+// 向きの判定。誤差の上界で符号が決まらないときは厳密に求める。
+inline int orientation(const Point& first, const Point& second, const Point& third){
+    const Point left = second - first;
+    const Point right = third - first;
+    const long double value = cross(left, right);
+    const long double magnitude = std::abs(left.x * right.y)
+        + std::abs(left.y * right.x);
+    const int sign = robust_sign(value, magnitude);
+    if(sign != 0) return sign;
+    return expansion_sign(exact_orientation_expansion(first, second, third));
+}
+
+inline int exact_circumcircle_sign(
+    const Point& first,
+    const Point& second,
+    const Point& third,
+    const Point& query
+){
+    const Expansion first_x = exact_difference(first.x, query.x);
+    const Expansion first_y = exact_difference(first.y, query.y);
+    const Expansion second_x = exact_difference(second.x, query.x);
+    const Expansion second_y = exact_difference(second.y, query.y);
+    const Expansion third_x = exact_difference(third.x, query.x);
+    const Expansion third_y = exact_difference(third.y, query.y);
+    const auto exact_cross = [](const Expansion& left_x, const Expansion& left_y,
+                                const Expansion& right_x, const Expansion& right_y){
+        return expansion_sum(
+            expansion_product(left_x, right_y),
+            negate_expansion(expansion_product(left_y, right_x))
+        );
+    };
+    const auto exact_norm = [](const Expansion& x, const Expansion& y){
+        return expansion_sum(expansion_product(x, x), expansion_product(y, y));
+    };
+    Expansion value = expansion_product(
+        exact_cross(second_x, second_y, third_x, third_y),
+        exact_norm(first_x, first_y)
+    );
+    value = expansion_sum(value, expansion_product(
+        exact_cross(third_x, third_y, first_x, first_y),
+        exact_norm(second_x, second_y)
+    ));
+    value = expansion_sum(value, expansion_product(
+        exact_cross(first_x, first_y, second_x, second_y),
+        exact_norm(third_x, third_y)
+    ));
+    return expansion_sign(value);
+}
+
+inline bool in_circumcircle_exact(
+    const Point& first,
+    const Point& second,
+    const Point& third,
+    const Point& query
+){
+    const Point first_offset = first - query;
+    const Point second_offset = second - query;
+    const Point third_offset = third - query;
+    const auto term = [](const Point& left, const Point& right, const Point& lifted,
+                         long double& permanent){
+        const long double norm = lifted.x * lifted.x + lifted.y * lifted.y;
+        permanent += (std::abs(left.x * right.y) + std::abs(left.y * right.x)) * norm;
+        return cross(left, right) * norm;
+    };
+    long double permanent = 0.0L;
+    const long double value =
+        term(second_offset, third_offset, first_offset, permanent)
+        + term(third_offset, first_offset, second_offset, permanent)
+        + term(first_offset, second_offset, third_offset, permanent);
+    // 誤差の上界（Shewchuk の静的誤差評価より十分大きい）を超えれば符号は確定する。
+    const int sign = robust_sign(value, permanent);
+    if(sign != 0) return sign > 0;
+    return exact_circumcircle_sign(first, second, third, query) > 0;
 }
 
 class Builder{
@@ -220,7 +391,7 @@ private:
     }
 
     bool in_circumcircle(int first, int second, int third, int query) const{
-        return delaunay_triangulation_detail::in_circumcircle(
+        return delaunay_triangulation_detail::in_circumcircle_exact(
             positions_[static_cast<std::size_t>(first)],
             positions_[static_cast<std::size_t>(second)],
             positions_[static_cast<std::size_t>(third)],
@@ -400,10 +571,21 @@ inline std::vector<std::vector<int>> bounded_faces(
             adjacency[vertex].begin(),
             adjacency[vertex].end(),
             [&](int first, int second){
-                return direction_less(
-                    points[static_cast<std::size_t>(first)] - points[vertex],
-                    points[static_cast<std::size_t>(second)] - points[vertex]
-                );
+                const Point& first_point = points[static_cast<std::size_t>(first)];
+                const Point& second_point = points[static_cast<std::size_t>(second)];
+                const Point first_direction = first_point - points[vertex];
+                const Point second_direction = second_point - points[vertex];
+                const auto lower_half = [](const Point& direction){
+                    return direction.y < 0.0L
+                        || (direction.y == 0.0L && direction.x < 0.0L);
+                };
+                if(lower_half(first_direction) == lower_half(second_direction)){
+                    const int direction = orientation(
+                        points[vertex], first_point, second_point
+                    );
+                    if(direction != 0) return direction > 0;
+                }
+                return direction_less(first_direction, second_direction);
             }
         );
     }
@@ -452,7 +634,14 @@ inline std::vector<std::vector<int>> bounded_faces(
                 twice_area += term;
                 magnitude += std::abs(term);
             }
-            if(robust_sign(twice_area, magnitude) > 0) faces.push_back(std::move(face));
+            const int area_sign = face.size() == 3
+                ? orientation(
+                    points[static_cast<std::size_t>(face[0])],
+                    points[static_cast<std::size_t>(face[1])],
+                    points[static_cast<std::size_t>(face[2])]
+                )
+                : robust_sign(twice_area, magnitude);
+            if(area_sign > 0) faces.push_back(std::move(face));
         }
     }
     return faces;
