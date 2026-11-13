@@ -41,7 +41,7 @@ vector<T> sliding_window_min<T, MAX_WINDOW>(values, window)
 
 $N$ を入力列長、$K$ をwindow幅とする。比較を $O(1)$ とする。
 
-- constructor: 固定長arrayの初期化を含めて $O(\mathrm{MAX\_SIZE})$
+- constructor: 固定長arrayの初期化を含めて $O(\texttt{MAX_SIZE})$
 - `size`, `empty`, `clear`, `pop_front`, `best`, `best_index`: $O(1)$
 - `expire`: $R$ 個を期限切れとして除くと $O(R+1)$。sliding window処理全体では償却 $O(1)$
 - `push`: 1回ではqueue sizeに対して線形、追加列全体では各候補を高々1回除去するため償却 $O(1)$
@@ -49,8 +49,8 @@ $N$ を入力列長、$K$ をwindow幅とする。比較を $O(1)$ とする。
 
 ## 空間計算量
 
-- queue: $O(\mathrm{MAX\_SIZE})$
-- sliding window関数: queueと戻り値を含めて $O(\mathrm{MAX\_WINDOW}+N-K+1)$
+- queue: $O(\texttt{MAX_SIZE})$
+- sliding window関数: queueと戻り値を含めて $O(\texttt{MAX_WINDOW}+N-K+1)$
 
 ## 注意点
 

@@ -7,9 +7,9 @@ documentation_of: ../../../../src/structure/segtree/basic/lazysegtree.hpp
 
 ## 時間計算量
 
-- `LazySegtree(int)`, `LazySegtree(vector)`: $O(\mathtt{MAX\_SIZE})$
-- `set`, `get`, 1点`apply`, 区間`apply`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
-- `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$
+- `LazySegtree(int)`, `LazySegtree(vector)`: $O(\texttt{MAX_SIZE})$
+- `set`, `get`, 1点`apply`, 区間`apply`, `prod`: $O(\log \texttt{MAX_SIZE})$
+- `max_right`, `min_left`: $O(\log \texttt{MAX_SIZE})$
 - `all_prod`: $O(1)$
 
 ## API
@@ -37,7 +37,7 @@ int min_left(int r, auto predicate, auto&&... args)
 `0 <= n <= MAX_SIZE`、点は `[0,n)`、区間は `[l,r)`。範囲・容量違反では
 `runtime_error`。境界探索のpredicateは単調で単位元に対してtrueが必要。
 `Monoid` は作用付きモノイドの契約を満たす。保存領域は
-$O(\mathtt{MAX\_SIZE})$、各更新・queryの追加空間計算量は $O(1)$。
+$O(\texttt{MAX_SIZE})$、各更新・queryの追加空間計算量は $O(1)$。
 
 ## 容量を省略する場合
 

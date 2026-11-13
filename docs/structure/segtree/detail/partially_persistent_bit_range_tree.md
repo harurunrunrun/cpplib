@@ -25,12 +25,12 @@ bit_range_tree_detail::PartiallyPersistentBitRangeTree<
 
 ## 時間計算量
 
-- constructor：$O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
-- 更新、最新版の`sum` / `get`：$O(\log \mathtt{MAX\_SIZE})$
-- 過去versionの`sum` / `get`：$O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
+- constructor：$O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$
+- 更新、最新版の`sum` / `get`：$O(\log \texttt{MAX_SIZE})$
+- 過去versionの`sum` / `get`：$O(\log \texttt{MAX_SIZE}\log \texttt{MAX_CHANGES})$
 - `fork`と使用量取得：$O(1)$
 
-更新1回の追加node・変更履歴は $O(\log \mathtt{MAX\_SIZE})$。
+更新1回の追加node・変更履歴は $O(\log \texttt{MAX_SIZE})$。
 
 ## 注意点
 

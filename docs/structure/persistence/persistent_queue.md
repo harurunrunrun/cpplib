@@ -40,8 +40,8 @@ aliasを使う場合は`0 <= capacity <= MAX_SIZE`を要求する。
 
 ## 時間計算量
 
-- `PersistentArrayQueue`: $O(MAX\_SIZE + MAX\_VERSION)$
-- `PersistentSegtreeQueue`: $O(MAX\_SIZE + MAX\_VERSION\log MAX\_SIZE)$
+- `PersistentArrayQueue`: $O(\texttt{MAX_SIZE} + \texttt{MAX_VERSION})$
+- `PersistentSegtreeQueue`: $O(\texttt{MAX_SIZE} + \texttt{MAX_VERSION}\log \texttt{MAX_SIZE})$
 
 ## versionと大きさ
 
@@ -71,7 +71,7 @@ value_type front(int version) const
 ## 時間計算量
 
 `PersistentStorage::get`の時間計算量。2つのaliasでは
-$O(\log MAX\_SIZE)$。
+$O(\log \texttt{MAX_SIZE})$。
 
 ## 末尾への追加
 
@@ -86,7 +86,7 @@ int push(int version, const value_type& value)
 
 `PersistentStorage::set`の時間計算量。2つのaliasでは次のとおり。
 
-- 時間・新しく使用するnode: $O(\log MAX\_SIZE)$
+- 時間・新しく使用するnode: $O(\log \texttt{MAX_SIZE})$
 
 ## 先頭の削除
 
@@ -103,9 +103,9 @@ $O(1)$。storageの新versionは作らず、queueのversion metadataだけを追
 
 ## 空間計算量
 
-2つのaliasはmetadataに$O(MAX\_VERSION)$を予約する。storageを含む予約領域全体は
-$O(MAX\_SIZE + MAX\_VERSION\log MAX\_SIZE)$である。
-`push`が実際に使用状態へ移すnode数は1versionあたり$O(\log MAX\_SIZE)$。
+2つのaliasはmetadataに$O(\texttt{MAX_VERSION})$を予約する。storageを含む予約領域全体は
+$O(\texttt{MAX_SIZE} + \texttt{MAX_VERSION}\log \texttt{MAX_SIZE})$である。
+`push`が実際に使用状態へ移すnode数は1versionあたり$O(\log \texttt{MAX_SIZE})$。
 
 ## 注意点
 

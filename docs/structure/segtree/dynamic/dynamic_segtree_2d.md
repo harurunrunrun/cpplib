@@ -20,7 +20,7 @@ seg.prod(row_begin, col_begin, row_end, col_end);
 
 ## 計算量
 
-$H=MAX\_HEIGHT$, $W=MAX\_WIDTH$ とし、Monoid操作1回を $O(1)$ とする。
+$H=\texttt{MAX_HEIGHT}$, $W=\texttt{MAX_WIDTH}$ とし、Monoid操作1回を $O(1)$ とする。
 
 | 操作 | 時間計算量 |
 | --- | --- |

@@ -25,7 +25,7 @@ explicit StaticRangeKthSmallest(const vector<Value>& values)
 ## 時間計算量
 
 配列長を $N$ として
-$O(MAX\_SIZE\log(MAX\_SIZE+1)+N\log(N+1))$。
+$O(\texttt{MAX_SIZE}\log(\texttt{MAX_SIZE}+1)+N\log(N+1))$。
 
 ## `kth_smallest`
 
@@ -38,7 +38,7 @@ Value kth_smallest(int left, int right, int order) const
 
 ## 時間計算量
 
-$O(\log(MAX\_SIZE+1))$。
+$O(\log(\texttt{MAX_SIZE}+1))$。
 
 ## `size` / `empty`
 
@@ -55,7 +55,7 @@ bool empty() const
 
 ## 空間計算量
 
-$O(MAX\_SIZE\log(MAX\_SIZE+1))$。
+$O(\texttt{MAX_SIZE}\log(\texttt{MAX_SIZE}+1))$。
 
 ## 注意点
 

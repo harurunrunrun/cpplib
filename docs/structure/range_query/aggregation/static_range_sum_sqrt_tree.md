@@ -67,14 +67,14 @@ T all_sum() const
 
 列長を $N$、$L=O(\log\log(N+2))$ とする。
 
-- default constructor: $O(\mathrm{MAX\_SIZE}\log\log(\mathrm{MAX\_SIZE}+2))$
-- vector constructor: $O(\mathrm{MAX\_SIZE}\log\log(\mathrm{MAX\_SIZE}+2)+NL)$
+- default constructor: $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$
+- vector constructor: $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2)+NL)$
 - `build`: $O(NL)$
 - `size`, `empty`, `get`, `sum`, `all_sum`: $O(1)$
 
 ## 空間計算量
 
-$O(\mathrm{MAX\_SIZE}\log\log(\mathrm{MAX\_SIZE}+2))$。
+$O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$。
 
 ## 注意点
 

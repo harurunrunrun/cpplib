@@ -8,11 +8,11 @@ documentation_of: ../../../../src/structure/segtree/dynamic/dynamic_lazysegtree.
 ## 時間計算量
 
 - constructor: $O(1)$
-- `set`, `get`, 1点`apply`, 区間`apply`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
-- `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$
+- `set`, `get`, 1点`apply`, 区間`apply`, `prod`: $O(\log \texttt{MAX_SIZE})$
+- `max_right`, `min_left`: $O(\log \texttt{MAX_SIZE})$
 - `all_prod`: $O(1)$
 
-更新で作られるノード数は $O(\log \mathtt{MAX\_SIZE})$。
+更新で作られるノード数は $O(\log \texttt{MAX_SIZE})$。
 
 ## API
 
@@ -38,7 +38,7 @@ long long min_left(long long r, auto predicate, auto&&... args) const
 領域は `[0,MAX_SIZE)`、未生成点は `Monoid.e()`。点・区間違反では `runtime_error`、
 node確保失敗では `bad_alloc`。境界探索のpredicateは単調で単位元に対してtrueが必要。
 `Monoid` は作用付きモノイドの契約を満たす。保存領域は生成node数を $K$ として $O(K)$。
-更新1回の追加nodeと各操作の再帰stackは $O(\log \mathtt{MAX\_SIZE})$、それ以外の
+更新1回の追加nodeと各操作の再帰stackは $O(\log \texttt{MAX_SIZE})$、それ以外の
 追加空間計算量は $O(1)$。
 
 ## 容量を省略する場合

@@ -51,7 +51,7 @@ void push(int base_query, const value_type& value)
 ## 時間計算量
 
 `Queue::push` と同じ。`PersistentArrayQueue` と `PersistentSegtreeQueue` では
-$O(\log MAX\_SIZE)$。
+$O(\log \texttt{MAX_SIZE})$。
 
 ## `pop`
 
@@ -64,7 +64,7 @@ value_type pop(int base_query)
 ## 時間計算量
 
 `Queue::front` と `Queue::pop` の和。上記2つのqueue aliasでは
-$O(\log MAX\_SIZE)$。
+$O(\log \texttt{MAX_SIZE})$。
 
 ## 空間計算量
 

@@ -3,7 +3,7 @@ title: Dynamic Segment Tree (動的セグメント木)
 documentation_of: ../../../../src/structure/segtree/dynamic/dynamic_segtree.hpp
 ---
 
-巨大なモノイドの列について、必要なところだけノードを作成して、1点更新、区間に対する演算を $O(\log {MAX}\_{SIZE})$ で行う。
+巨大なモノイドの列について、必要なところだけノードを作成して、1点更新、区間に対する演算を $O(\log \texttt{MAX_SIZE})$ で行う。
 
 indexはすべて0-indexed。
 
@@ -47,9 +47,9 @@ void set(long long k, const S& x)
 
 ## 時間計算量
 
-- $O(\log {MAX}\_{SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
-新規に確保するnode数も $O(\log {MAX}\_{SIZE})$。
+新規に確保するnode数も $O(\log \texttt{MAX_SIZE})$。
 
 
 ## get
@@ -62,7 +62,7 @@ S get(long long k)
 
 ## 時間計算量
 
-- $O(\log {MAX}\_{SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## prod
 
@@ -74,7 +74,7 @@ S prod(long long l, long long r)
 
 ## 時間計算量
 
-- $O(\log {MAX}\_{SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## all_prod
 
@@ -104,7 +104,7 @@ long long max_right(long long l, auto f, auto&&... args)
 
 ## 時間計算量
 
-- $O(\log {MAX}\_{SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## min_left
 
@@ -122,7 +122,7 @@ long long min_left(long long r, auto f, auto&&... args)
 
 ## 時間計算量
 
-- $O(\log {MAX}\_{SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## 注意点
 

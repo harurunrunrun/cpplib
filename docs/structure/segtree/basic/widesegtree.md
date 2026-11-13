@@ -25,7 +25,7 @@ long long get(idx)
 
 ## 時間計算量
 
-- `set`, `add`, `get`: $O(\log_B \mathtt{MAX\_SIZE})$
+- `set`, `add`, `get`: $O(\log_B \texttt{MAX_SIZE})$
 
 ## range product
 
@@ -38,7 +38,7 @@ long long all_prod()
 
 ## 時間計算量
 
-- `prod`: $O(\log_B \mathtt{MAX\_SIZE})$
+- `prod`: $O(\log_B \texttt{MAX_SIZE})$
 - `all_prod`: $O(1)$
 
 ## 構築とcopy
@@ -46,7 +46,7 @@ long long all_prod()
 - default constructor: $O(1)$
 - copy constructor, copy assignment: $O(U)$
 
-$B$ は実行環境で選ばれる分岐数、$U$ は確保済みnode数。各point updateが新規確保するnode数は $O(\log_B \mathtt{MAX\_SIZE})$。
+$B$ は実行環境で選ばれる分岐数、$U$ は確保済みnode数。各point updateが新規確保するnode数は $O(\log_B \texttt{MAX_SIZE})$。
 
 ## 注意点
 

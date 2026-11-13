@@ -17,7 +17,7 @@ const T& old = storage.get(index, old_version);
 
 | 操作 | 引数・戻り値 | 前提・例外 | 時間計算量 |
 | --- | --- | --- | --- |
-| `PartiallyPersistentStorage()` | 空のstorageを構築 | `SIZE > 0`, `MAX_CHANGE >= 0` | $O(SIZE+MAX\_CHANGE)$ |
+| `PartiallyPersistentStorage()` | 空のstorageを構築 | `SIZE > 0`, `MAX_CHANGE >= 0` | $O(SIZE+\texttt{MAX_CHANGE})$ |
 | `initialize(k, x)` | index `k` の初期値を`x`にする | `0 <= k < SIZE`。範囲外は例外 | $O(1)$ |
 | `changes()` | 現在保持する変更数 | なし | $O(1)$ |
 | `current(k)` | `k`の現在値への参照 | `0 <= k < SIZE`かつ初期化済み。実装は検査しない | $O(1)$ |
@@ -32,7 +32,7 @@ const T& old = storage.get(index, old_version);
 - constructor、`initialize`、`changes`、`current`、`get`、`rollback`: $O(1)$
 - `write`: $O(1)$ の履歴entryを本体へ追加し、一時領域も $O(1)$
 
-本体の保存領域は $O(\mathtt{SIZE}+\mathtt{MAX\_CHANGE})$ である。
+本体の保存領域は $O(\texttt{SIZE}+\texttt{MAX_CHANGE})$ である。
 
 ## 注意点
 
@@ -40,7 +40,7 @@ const T& old = storage.get(index, old_version);
 単調非減少でなければならない。これら2条件は実装が検査しない。
 `initialize` / `current` / `write` の追加空間計算量は $O(1)$、`get` は反復二分探索で
 $O(1)$、`rollback` も戻り値以外は $O(1)$ の一時領域を使う。保存領域は
-$O(\mathtt{SIZE}+\mathtt{MAX\_CHANGE})$。
+$O(\texttt{SIZE}+\texttt{MAX_CHANGE})$。
 
 ## 可変長版
 

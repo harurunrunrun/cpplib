@@ -7,9 +7,9 @@ documentation_of: ../../../../src/structure/segtree/partially_persistent/partial
 
 ## 時間計算量
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
-- updateと最新versionのquery: $O(\log \mathtt{MAX\_SIZE})$
-- 過去versionのquery: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
+- constructor: $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$
+- updateと最新versionのquery: $O(\log \texttt{MAX_SIZE})$
+- 過去versionのquery: $O(\log \texttt{MAX_SIZE}\log \texttt{MAX_CHANGES})$
 - version・容量情報: $O(1)$
 
 ## API
@@ -29,9 +29,9 @@ documentation_of: ../../../../src/structure/segtree/partially_persistent/partial
 - `assign` / `flip`：最新版の `[l,r)` を代入／反転する。version省略形もある。
 - `sum(version,l,r)` / `get(version,k)`：任意versionを参照する。
 
-更新と最新版queryは $O(\log \mathtt{MAX\_SIZE})$、過去version queryは
-$O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$。更新1回は同対数個のnode・履歴、
-queryは $O(\log \mathtt{MAX\_SIZE})$ stackを使う。
+更新と最新版queryは $O(\log \texttt{MAX_SIZE})$、過去version queryは
+$O(\log \texttt{MAX_SIZE}\log \texttt{MAX_CHANGES})$。更新1回は同対数個のnode・履歴、
+queryは $O(\log \texttt{MAX_SIZE})$ stackを使う。
 
 ## 注意点
 

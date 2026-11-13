@@ -15,13 +15,13 @@ PartiallyPersistentBitAssignRangeSumRangeFlip<MAX_SIZE, MAX_NODES, MAX_VERSIONS,
 
 ## 時間計算量
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
-- `assign`, `flip`, `set_one`, `set`: $O(\log \mathtt{MAX\_SIZE})$
-- 最新versionの`sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
-- 過去versionの`sum`, `get`: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
+- constructor: $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$
+- `assign`, `flip`, `set_one`, `set`: $O(\log \texttt{MAX_SIZE})$
+- 最新versionの`sum`, `get`: $O(\log \texttt{MAX_SIZE})$
+- 過去versionの`sum`, `get`: $O(\log \texttt{MAX_SIZE}\log \texttt{MAX_CHANGES})$
 - `fork`, `size`, `versions`, `latest_version`, `nodes_used`, `changes_used`: $O(1)$
 
-空間計算量は $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$。
+空間計算量は $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$。
 
 ## 注意点
 

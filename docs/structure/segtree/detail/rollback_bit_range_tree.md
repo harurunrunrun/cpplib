@@ -28,12 +28,12 @@ bit_range_tree_detail::RollbackBitRangeTree<
 
 ## 時間計算量
 
-- constructor：$O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS}+\mathtt{MAX\_CHANGES})$
-- 更新、`sum`, `get`：$O(\log \mathtt{MAX\_SIZE})$
+- constructor：$O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS}+\texttt{MAX_CHANGES})$
+- 更新、`sum`, `get`：$O(\log \texttt{MAX_SIZE})$
 - `fork`, `snapshot`と使用量取得：$O(1)$
 - `rollback`：取り消す変更履歴数を $K$ として $O(K)$
 
-更新1回の追加空間計算量は $O(\log \mathtt{MAX\_SIZE})$。
+更新1回の追加空間計算量は $O(\log \texttt{MAX_SIZE})$。
 
 ## 注意点
 

@@ -36,7 +36,7 @@ SegmentTreeBeats<T, MAX_SIZE>
 
 ## 時間計算量
 
-- $O(\mathrm{MAX\_SIZE})$
+- $O(\texttt{MAX_SIZE})$
 
 ## range_chmin
 

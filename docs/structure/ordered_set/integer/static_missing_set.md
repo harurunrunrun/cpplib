@@ -3,15 +3,15 @@ title: Static K-th Missing Integer Set (静的k番目欠損整数集合)
 documentation_of: ../../../../src/structure/ordered_set/integer/static_missing_set.hpp
 ---
 
-静的集合に含まれない整数を昇順に並べたときの $k$ 番目を二分探索する。
+静的な整数集合に含まれない整数を昇順に並べたときの $k$ 番目を、二分探索で求める。
 
-## constructor
+## コンストラクタ
 
 ```cpp
 explicit StaticMissingSet(vector<uint64_t> values, uint64_t first = 0)
 ```
 
-重複を除去し、`first` 未満を捨てる。
+`values` をソートして重複を除き、`first` 未満の値を捨てて保持する。
 
 ## kth_missing
 
@@ -19,7 +19,7 @@ explicit StaticMissingSet(vector<uint64_t> values, uint64_t first = 0)
 uint64_t kth_missing(uint64_t index) const
 ```
 
-`first` 以上の欠損整数のうち 0 始まり `index` 番目を返す。
+`first` 以上で集合に含まれない整数のうち、0-indexed で `index` 番目のものを返す。
 
 ## stored_size / first
 
@@ -28,7 +28,7 @@ size_t stored_size() const
 uint64_t first() const
 ```
 
-保持した異なる値数と探索開始値を返す。
+保持している相異なる値の個数と、探索の開始値 `first` を返す。
 
 ## 時間計算量
 
@@ -40,4 +40,4 @@ uint64_t first() const
 
 ## 注意点
 
-答えが `uint64_t` を超える場合は `overflow_error` を送出する。`first=1` とすれば正整数の欠損クエリになる。
+答えが `uint64_t` の範囲を超える場合は `std::overflow_error` を送出する。`first = 1` とすれば、正整数のうち含まれないものに関するクエリになる。

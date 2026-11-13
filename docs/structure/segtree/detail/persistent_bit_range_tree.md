@@ -25,11 +25,11 @@ bit_range_tree_detail::PersistentBitRangeTree<
 
 ## 時間計算量
 
-- constructor：$O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
-- `assign`, `flip`, `set_one`, `sum`, `get`：$O(\log \mathtt{MAX\_SIZE})$
+- constructor：$O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS})$
+- `assign`, `flip`, `set_one`, `sum`, `get`：$O(\log \texttt{MAX_SIZE})$
 - `fork`と使用量取得：$O(1)$
 
-更新1回につき $O(\log \mathtt{MAX\_SIZE})$ nodeを追加する。
+更新1回につき $O(\log \texttt{MAX_SIZE})$ nodeを追加する。
 
 ## 注意点
 

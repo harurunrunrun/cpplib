@@ -34,8 +34,8 @@ int x = st.prod(l, r);
 
 ## 時間計算量
 
-- `SparseTable(int)`: $O(\mathtt{MAX\_SIZE}\log \mathtt{MAX\_SIZE})$
-- `SparseTable(vector)`: $O(\mathtt{MAX\_SIZE}\log \mathtt{MAX\_SIZE}+n\log n)$
+- `SparseTable(int)`: $O(\texttt{MAX_SIZE}\log \texttt{MAX_SIZE})$
+- `SparseTable(vector)`: $O(\texttt{MAX_SIZE}\log \texttt{MAX_SIZE}+n\log n)$
 - `get`: $O(1)$
 - `prod`, `all_prod`: $O(1)$
 - `size`, `empty`: $O(1)$
@@ -44,7 +44,7 @@ int x = st.prod(l, r);
 
 - 2種類のconstructor、`size`、`empty`、`get`、`prod`、`all_prod`: $O(1)$
 
-構築済みtableの保存領域は $O(\mathtt{MAX\_SIZE}\log\mathtt{MAX\_SIZE})$ であり、constructorはそのobject内領域へ直接構築する。
+構築済みtableの保存領域は $O(\texttt{MAX_SIZE}\log\texttt{MAX_SIZE})$ であり、constructorはそのobject内領域へ直接構築する。
 
 ## 注意点
 

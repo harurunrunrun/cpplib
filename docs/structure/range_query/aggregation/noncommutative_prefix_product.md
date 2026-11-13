@@ -70,12 +70,12 @@ value_type all_product() const;
 
 ## 時間計算量
 
-$N=\mathrm{size}$ とする。
+$N=\texttt{size}$ とする。
 
 | API | 時間計算量 | 空間計算量（追加領域） |
 | --- | --- | --- |
-| size指定constructor | $O(\mathrm{MAX\_SIZE})$ | object内に $O(\mathrm{MAX\_SIZE})$ |
-| vector指定constructor | $O(\mathrm{MAX\_SIZE})$ | object内に $O(\mathrm{MAX\_SIZE})$ |
+| size指定constructor | $O(\texttt{MAX_SIZE})$ | object内に $O(\texttt{MAX_SIZE})$ |
+| vector指定constructor | $O(\texttt{MAX_SIZE})$ | object内に $O(\texttt{MAX_SIZE})$ |
 | `capacity`, `size`, `empty`, `get`, `all_product` | $O(1)$ | $O(1)$ |
 | `set`, `prefix_product`, `range_product` | $O(\log N)$ | $O(1)$ |
 

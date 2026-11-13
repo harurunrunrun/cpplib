@@ -34,8 +34,8 @@ long long x = dst.prod(l, r);
 
 ## 時間計算量
 
-- `DisjointSparseTable(int)`: $O(\mathtt{MAX\_SIZE}\log \mathtt{MAX\_SIZE})$
-- `DisjointSparseTable(vector)`: $O(\mathtt{MAX\_SIZE}\log \mathtt{MAX\_SIZE}+n\log n)$
+- `DisjointSparseTable(int)`: $O(\texttt{MAX_SIZE}\log \texttt{MAX_SIZE})$
+- `DisjointSparseTable(vector)`: $O(\texttt{MAX_SIZE}\log \texttt{MAX_SIZE}+n\log n)$
 - `get`: $O(1)$
 - `prod`, `all_prod`: $O(1)$
 - `size`, `empty`: $O(1)$
@@ -44,7 +44,7 @@ long long x = dst.prod(l, r);
 
 - 2種類のconstructor、`size`、`empty`、`get`、`prod`、`all_prod`: $O(1)$
 
-構築済みtableの保存領域は $O(\mathtt{MAX\_SIZE}\log\mathtt{MAX\_SIZE})$ であり、constructorはそのobject内領域へ直接構築する。
+構築済みtableの保存領域は $O(\texttt{MAX_SIZE}\log\texttt{MAX_SIZE})$ であり、constructorはそのobject内領域へ直接構築する。
 
 ## 注意点
 

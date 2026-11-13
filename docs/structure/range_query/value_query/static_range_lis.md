@@ -10,8 +10,8 @@ seaweed doubling と unit Monge 積で索引を構築し、wavelet matrix で照
 
 ## 時間計算量
 
-配列長 $N$ に対して構築 $O(N\log^2(N+1))$、照会 $O(\log(\mathtt{MAX\_SIZE}+1))$。
-保存空間 $O(\mathtt{MAX\_SIZE}\log(\mathtt{MAX\_SIZE}+1))$。構築中の追加空間 $O(N\log(N+1))$。
+配列長 $N$ に対して構築 $O(N\log^2(N+1))$、照会 $O(\log(\texttt{MAX_SIZE}+1))$。
+保存空間 $O(\texttt{MAX_SIZE}\log(\texttt{MAX_SIZE}+1))$。構築中の追加空間 $O(N\log(N+1))$。
 
 ## 注意点
 

@@ -17,15 +17,15 @@ sum.get(i);
 
 | 操作 | 時間計算量 |
 | --- | --- |
-| デフォルト構築、`PrefixSum(n)` | $O(MAX\_SIZE)$ |
-| `PrefixSum(values)` | $O(MAX\_SIZE+n)$ |
+| デフォルト構築、`PrefixSum(n)` | $O(\texttt{MAX_SIZE})$ |
+| `PrefixSum(values)` | $O(\texttt{MAX_SIZE}+n)$ |
 | `build(values)` | $O(n)$ |
 | `size()`, `empty()` | $O(1)$ |
 | `prefix_sum(r)` | $O(1)$ |
 | `sum(l, r)` | $O(1)$ |
 | `get(i)` | $O(1)$ |
 
-保存領域は $O(MAX\_SIZE)$。
+保存領域は $O(\texttt{MAX_SIZE})$。
 
 ## PrefixSum2D
 
@@ -36,7 +36,7 @@ sum.get(row, col);
 ```
 
 `sum` は `[row_begin, row_end) x [col_begin, col_end)` の和を返す。
-$C=(MAX\_HEIGHT+1)(MAX\_WIDTH+1)$、入力の大きさを $H\times W$ とする。
+$C=(\texttt{MAX_HEIGHT}+1)(\texttt{MAX_WIDTH}+1)$、入力の大きさを $H\times W$ とする。
 
 | 操作 | 時間計算量 |
 | --- | --- |
@@ -54,7 +54,7 @@ $C=(MAX\_HEIGHT+1)(MAX\_WIDTH+1)$、入力の大きさを $H\times W$ とする�
 - `PrefixSum`の全constructor、`build`、`size`、`empty`、`prefix_sum`、`sum`、`get`: $O(1)$
 - `PrefixSum2D`の全constructor、`build`、`height`、`width`、`empty`、`sum`、`get`: $O(1)$
 
-戻り値を除く一時領域を数えている。構築結果の固定保存領域は1次元が $O(\mathtt{MAX\_SIZE})$、2次元が $O(C)$ である。
+戻り値を除く一時領域を数えている。構築結果の固定保存領域は1次元が $O(\texttt{MAX_SIZE})$、2次元が $O(C)$ である。
 
 ## 注意点
 

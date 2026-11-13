@@ -25,7 +25,7 @@ PartiallyPersistentDualSegtree<Monoid_act, MAX_SIZE, MAX_UPDATE>
 
 ## 時間計算量
 
-- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
+- $O(\texttt{MAX_SIZE}+\texttt{MAX_UPDATE}\log \texttt{MAX_SIZE})$
 
 ## 更新
 
@@ -38,7 +38,7 @@ int apply(int l, int r, const T& f)
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## get
 
@@ -52,8 +52,8 @@ S get(int k) const
 
 ## 時間計算量
 
-- (1): $O(\log \mathrm{MAX\_SIZE}\log(\mathrm{MAX\_SIZE}\,\mathrm{MAX\_UPDATE}))$
-- (2): $O(\log \mathrm{MAX\_SIZE})$
+- (1): $O(\log \texttt{MAX_SIZE}\log(\texttt{MAX_SIZE}\,\texttt{MAX_UPDATE}))$
+- (2): $O(\log \texttt{MAX_SIZE})$
 
 ## version情報
 
@@ -69,7 +69,7 @@ int latest_version() const
 
 ## 空間計算量
 
-- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE}\log \mathrm{MAX\_SIZE})$
+- $O(\texttt{MAX_SIZE}+\texttt{MAX_UPDATE}\log \texttt{MAX_SIZE})$
 
 ## 注意点
 
