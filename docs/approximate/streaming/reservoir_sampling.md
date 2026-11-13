@@ -3,50 +3,53 @@ title: Reservoir Sampling (リザーバサンプリング)
 documentation_of: ../../../src/approximate/streaming/reservoir_sampling.hpp
 ---
 
-## Reservoir Sampling (リザーバサンプリング)
+長さが事前に分からないストリームから、固定個数 $C$ の標本を抽出する。
 
-長さ不明の stream から固定個数を抽出する。
-
-## API
-
-### `ReservoirSampler<T, Capacity>`
-
-- `ReservoirSampler(seed)`: 乱数 seed を指定する。時間計算量は $O(Capacity)$。 追加空間計算量は $O(1)$。
-- `add(value)`: Algorithm R で追加する。期待時間計算量は $O(1)$。処理数が `uint64_t` の上限なら
-  `std::overflow_error`。 追加空間計算量は $O(1)$。
-- `samples()`: 現在の標本を `vector` で返す。時間計算量は $O(Capacity)$。 追加空間計算量は $O(Capacity)$（返値を含む）。
-- `clear(seed)`: 空にして乱数を再初期化する。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `size()`, `seen()`, `capacity()`: 時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-
-
-$n\ge Capacity$ のとき、各要素が標本に含まれる確率は厳密に $Capacity/n$。
-保存に必要な空間計算量は $O(Capacity)$。
-
-### `WeightedReservoirSampler<T, Capacity>`
-
-- `WeightedReservoirSampler(seed)`: 指定seedで空sampleを構築する。時間計算量は $O(Capacity)$、追加空間計算量は $O(1)$。
-- `add(value, weight)`: 正の有限重みから priority $\log U/weight$ を作り、上位を保持する。
-  時間計算量は $O(\log Capacity)$。非正または非有限の重みは `std::invalid_argument`。 追加空間計算量は $O(1)$。
-- `samples()`: 順序を保証しない標本を返す。時間計算量は $O(Capacity)$。 追加空間計算量は $O(Capacity)$（返値を含む）。
-- `clear(seed)`, `size()`, `seen()`, `capacity()`: 時間計算量・追加空間計算量はいずれも $O(1)$。
-
-
-## 注意点
-
-指数 race による重複なしの重み付き抽出であり、次に選ばれる要素の条件付き確率は
-残存重みに比例する。保存に必要な空間計算量は $O(Capacity)$。
-
-## 容量を省略する可変長版
+## 使い方
 
 ~~~cpp
-ReservoirSampler<int> uniform(32, 123); // 標本数、seed
+ReservoirSampler<int> uniform(32, 123);           // 標本数、シード
 WeightedReservoirSampler<int> weighted(32, 123);
 uniform.add(42);
 weighted.add(42, 2.0L);
 auto samples = uniform.samples();
+
+ReservoirSampler<int, 32> fixed(123);             // 標本数をテンプレート引数で固定する版
 ~~~
 
-標本数 $C$ を実行時に指定し、`vector` に保存する。構築は $O(C)$ 時間・保存領域 $O(C)$。
-通常版の追加は期待 $O(1)$、重み付き版は $O(\log C)$ 時間で、追加の一時領域は $O(1)$。
-標本取得は $O(C)$ 時間・返り値 $O(C)$ 空間、`clear` は $O(1)$ 時間。
-容量を明示した固定配列版も同じ header にある。
+`ReservoirSampler<T, Capacity>`、`WeightedReservoirSampler<T, Capacity>` の `Capacity` を省略すると、標本数 $C$ を実行時に指定して `std::vector` に保存する可変長版になる。指定すると `std::array` に保存する固定長版になる。
+
+## API
+
+### `ReservoirSampler`
+
+- `ReservoirSampler(capacity, seed = 0)`（可変長版）/ `ReservoirSampler(seed = 0)`（固定長版）: 乱数のシードを指定して空で構築する。
+- `add(value)`: Algorithm R で値を追加する。
+- `samples()`: 現在の標本を `std::vector<T>` で返す。
+- `clear(seed = 0)`: 空にして乱数生成器を初期化し直す。
+- `size()`, `seen()`, `capacity()`: 現在の標本数、処理した要素数、$C$ を返す。
+
+処理した要素数 $n$ が $C$ 以上のとき、各要素が標本に含まれる確率は厳密に $C/n$ である。
+
+### `WeightedReservoirSampler`
+
+- `WeightedReservoirSampler(capacity, seed = 0)`（可変長版）/ `WeightedReservoirSampler(seed = 0)`（固定長版）: 空で構築する。
+- `add(value, weight)`: 正の有限な重み $w$ と一様乱数 $u\in(0,1]$ から優先度 $\log u/w$ を作り、優先度が上位 $C$ 個の要素を最小ヒープで保持する。
+- `samples()`: 標本を `std::vector<T>` で返す。順序は保証しない。
+- `clear(seed = 0)`, `size()`, `seen()`, `capacity()`: `ReservoirSampler` と同様。
+
+指数レースによる重複なしの重み付き抽出であり、次に選ばれる要素の条件付き確率は残っている要素の重みに比例する。
+
+## 時間計算量
+
+- コンストラクタ: $O(C)$、空間計算量 $O(C)$
+- `ReservoirSampler::add`: $O(1)$
+- `WeightedReservoirSampler::add`: $O(\log C)$
+- `samples`: $O(C)$（戻り値を含め追加空間 $O(C)$）
+- `clear`, `size`, `seen`, `capacity`: $O(1)$
+
+## 注意点
+
+- 処理数が `std::uint64_t` の最大値に達した状態で `add` すると `std::overflow_error` を投げる。
+- `WeightedReservoirSampler::add` は重みが正の有限値でなければ `std::invalid_argument` を投げる。
+- 可変長版で $C=0$ なら `std::invalid_argument` を投げる。

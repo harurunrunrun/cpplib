@@ -3,9 +3,7 @@ title: Set System Helpers (集合系補助)
 documentation_of: ../../../../src/approximate/set_cover/detail/set_system.hpp
 ---
 
-## Set System Helpers (集合系補助)
-
-set cover heuristicが共有する集合系正規化とgain更新の内部API。
+集合被覆のヒューリスティックが共有する、集合系の正規化と増分（gain）更新のための内部 API である。宇宙の大きさを $U$ とする。
 
 ## API
 
@@ -15,15 +13,15 @@ set cover heuristicが共有する集合系正規化とgain更新の内部API。
 
 ### `normalize_set_system(universe_size, input)`
 
-各集合を昇順・一意にし、incidence listを構築する。入力集合長を $l_i$ として時間計算量は $O(\sum_i l_i\log l_i)$、追加空間計算量は $O(U+L)$。
+入力をコピーして各集合を昇順に並べて重複を除き、各要素を含む集合の一覧（`incidence`）を構築する。入力集合の長さを $l_i$ として時間計算量は $O(U+\sum_i l_i\log l_i)$、追加空間計算量は $O(U+L)$。
 
 ### `GainEntry`, `GainEntryLess`
 
-未被覆要素数と集合添字を保持し、gain降順・同値なら添字昇順となるpriority比較を提供する。比較の時間・追加空間計算量は $O(1)$。
+`GainEntry` は増分（未被覆要素数）`gain` と集合添字 `index` を保持する。`GainEntryLess` は `std::priority_queue` で gain の大きい順、同値なら添字の小さい順に取り出されるような比較である。比較の時間・追加空間計算量は $O(1)$。
 
 ### `cover_set(selected, system, covered, gains, on_gain_changed)`
 
-選択集合で新たに覆われる要素をmarkし、関連する全集合のgainを減らしてcallbackする。走査したincidence数とcallback時間の総和に比例し、追加空間計算量は $O(1)$。
+集合 `selected` で新たに覆われる要素に印を付け、その要素を含む全集合の `gains` を 1 減らして `on_gain_changed(set_index, new_gain)` を呼ぶ。時間計算量は走査した `incidence` の要素数と、コールバックの実行時間の総和に比例する。追加空間計算量は $O(1)$。
 
 ### `collect_elements(covered, desired_state)`
 
@@ -31,4 +29,6 @@ set cover heuristicが共有する集合系正規化とgain更新の内部API。
 
 ## 注意点
 
-`approximate::set_cover::detail` の内部APIである。範囲外要素では `std::out_of_range` を送出する。`cover_set` は配列sizeと `selected` の妥当性を検査しない。
+- 名前空間 `approximate::set_cover::detail` の内部 API である。
+- `normalize_set_system` は範囲外の要素に対して `std::out_of_range` を投げる。
+- `cover_set` は配列の大きさと `selected` の妥当性を検査しない。

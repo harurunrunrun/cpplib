@@ -3,7 +3,7 @@ title: Reach-Based Routing (リーチベース経路探索)
 documentation_of: ../../../../src/approximate/search/routing/reach_based_routing.hpp
 ---
 
-頂点 $v$ の reach は、その頂点を通る最短路上で端点からどれだけ内側に位置し得るかを表す。問い合わせ中の確定距離 $g(v)$ と目的地までの許容下界 $h(v,t)$ がともに reach 上界を超えれば、$v$ は最短路上にないので安全に枝刈りできる。
+頂点 $v$ の reach は、$v$ を通る最短路上で $v$ が両端点からどれだけ内側に位置し得るかを表す。問い合わせ中の確定距離 $g(v)$ と目的地までの許容下界 $h(v,t)$ がともに reach 上界を超えれば、$v$ は最短路上にないので安全に枝刈りできる。
 
 `graph_type` は `std::vector<std::vector<std::pair<int, Cost>>>`、
 `cost_type` は `Cost` の別名である。
@@ -24,7 +24,7 @@ ReachBasedRouting(
 );
 ```
 
-外部で作った reach 上界を受け取る高速構築経路。値は真の reach 以上でなければならない。この構築では全点対距離表を作らない。
+外部で計算した reach 上界を受け取る高速な構築方法。値は真の reach 以上でなければならない。この構築では全点対距離表を作らない。
 
 ```cpp
 int vertex_count() const noexcept;
@@ -32,13 +32,13 @@ Cost reach_upper_bound(int vertex) const;
 bool has_precomputed_target_bounds() const noexcept;
 ```
 
-頂点数、頂点の reach 上界、組み込みの目的地下界表を持つかを返す。
+それぞれ頂点数、頂点の reach 上界、組み込みの目的地下界表を持つかどうかを返す。
 
 ```cpp
 std::optional<Cost> query_distance(int source, int target) const;
 ```
 
-組み込み構築なら厳密な `d(v,t)` を使う。外部 reach 構築なら下界 0 を使うため枝刈りはしないが、正確な Dijkstra として動作する。
+組み込み構築なら厳密な `d(v,t)` を下界に使う。外部 reach 構築では下界 0 を使うため枝刈りは起きないが、厳密な Dijkstra として動作する。
 
 ```cpp
 template<class RemainingDistanceLowerBound>
@@ -53,7 +53,7 @@ std::optional<Cost> query_distance(
 
 ## 時間計算量
 
-$V,E$ は頂点・弧数、下界1回の時間を $H$ とする。
+頂点数を $V$、弧数を $E$、下界の 1 回の評価にかかる時間を $H$ とする。
 
 - 組み込み構築: 時間 $O(V(E+V)\log V)$、空間 $O(V^2+E)$
 - 外部 reach 構築: 時間・空間とも入力保存を含め $O(V+E)$
@@ -65,10 +65,10 @@ $V,E$ は頂点・弧数、下界1回の時間を $H$ とする。
 ## 注意点
 
 - 外部値は reach の下界ではなく、安全な上界を渡す。小さ過ぎる値は誤った枝刈りを起こす。
-- callable の値は許容下界でなければならない。過大評価は正しさを失わせる。
-- 負の reach／下界は `std::invalid_argument`。
+- 呼び出し可能オブジェクトが返す値は許容下界でなければならない。過大評価すると正しい距離が得られない。
+- reach 上界の個数が頂点数と異なる場合、負または NaN の reach 上界、負または NaN の下界は `std::invalid_argument` を投げる。
 - 組み込み上界は安全だが、道路網専用の reach 前処理より緩い場合がある。
-- 辺コストは非負かつ有限でなければならない。
+- 辺コストは非負かつ有限でなければならない（違反時は `std::invalid_argument`）。範囲外の頂点は `std::out_of_range` を投げる。
 
 ## English
 

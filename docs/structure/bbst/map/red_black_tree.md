@@ -3,17 +3,19 @@ title: Red Black Tree (赤黒木) [ordered_set] [ORDERSET]
 documentation_of: ../../../../src/structure/bbst/map/red_black_tree.hpp
 ---
 
-Red Black Tree による集合。
+赤黒木（左傾赤黒木）による順序付き集合。
 
 ## テンプレート引数
 
 ```cpp
-RedBlackSet<Key, MAX_SIZE, Compare>
+RedBlackSet<Key, MAX_SIZE = -1, Compare = std::less<Key>>
 ```
 
-- キーの型 `Key`
-- 同時に保持する要素数の上限 `MAX_SIZE`
-- 比較関数 `Compare`
+- `Key`: キーの型
+- `MAX_SIZE`: 同時に保持する要素数の上限。`-1`（省略時）なら上限なしの可変長版
+- `Compare`: 比較関数
+
+`MAX_SIZE` を指定するとノード領域を固定確保し、省略するとノードを `std::vector` に必要に応じて確保する（伸長コストは償却 $O(1)$）。コピーはできないが、ムーブはできる。
 
 同じキーは 1 個だけ保持する。
 
@@ -21,93 +23,65 @@ RedBlackSet<Key, MAX_SIZE, Compare>
 
 ```cpp
 RedBlackSet(const Compare& compare = Compare())
+int size() const
+bool empty() const
+void clear()
 ```
-
-## 時間計算量
-
-- $O(\mathrm{MAX\_SIZE})$
 
 ## insert / erase / contains
 
 ```cpp
 bool insert(const Key& x)
 bool erase(const Key& x)
-bool contains(const Key& x)
+bool contains(const Key& x) const
 ```
 
 `insert` はすでに存在する場合 `false` を返す。
 
 `erase` は存在しない場合 `false` を返す。
 
-## 時間計算量
-
-- $O(\log N)$
-
 ## 順序
 
 ```cpp
-int order_of_key(const Key& x)
-int order_of_key_upper(const Key& x)
-optional<Key> kth(int k)
+int order_of_key(const Key& x) const
+int order_of_key_upper(const Key& x) const
+std::optional<Key> kth(int k) const
 ```
 
 `order_of_key(x)` は `x` 未満の要素数を返す。
 
 `order_of_key_upper(x)` は `x` 以下の要素数を返す。
 
-`kth(k)` は 0-indexed で `k` 番目の要素を返す。存在しない場合 `nullopt` を返す。
-
-## 時間計算量
-
-- $O(\log N)$
+`kth(k)` は 0-indexed で `k` 番目の要素を返す。存在しない場合 `std::nullopt` を返す。
 
 ## 探索
 
 ```cpp
-optional<Key> lower_bound(const Key& x)
-optional<Key> upper_bound(const Key& x)
-optional<Key> max_leq(const Key& x)
-optional<Key> max_less(const Key& x)
+std::optional<Key> lower_bound(const Key& x) const
+std::optional<Key> upper_bound(const Key& x) const
+std::optional<Key> max_leq(const Key& x) const
+std::optional<Key> max_less(const Key& x) const
 ```
 
-存在しない場合 `nullopt` を返す。
+順に、`x` 以上の最小要素、`x` より大きい最小要素、`x` 以下の最大要素、`x` 未満の最大要素を返す。存在しない場合 `std::nullopt` を返す。
 
 ## 時間計算量
 
-- $O(\log N)$
-
-## API別計算量
-
 $N$ を現在の要素数とする。比較と `Key` のコピーは $O(1)$ とする。
 
-- `RedBlackSet(compare)`: $O(\mathrm{MAX\_SIZE})$。固定長storageを確保・初期化する
+- コンストラクタ: 固定長版は $O(\texttt{MAX_SIZE})$（固定長領域を確保・初期化する）、可変長版は $O(1)$
 - `size`, `empty`, `clear`: $O(1)$
-- `contains`, `insert`, `erase`: worst-case $O(\log(N+1))$
-- `order_of_key`, `order_of_key_upper`, `kth`: worst-case $O(\log(N+1))$
-- `lower_bound`, `upper_bound`, `max_leq`, `max_less`: worst-case $O(\log(N+1))$
+- `contains`, `insert`, `erase`: 最悪 $O(\log(N+1))$
+- `order_of_key`, `order_of_key_upper`, `kth`: 最悪 $O(\log(N+1))$
+- `lower_bound`, `upper_bound`, `max_leq`, `max_less`: 最悪 $O(\log(N+1))$
 
 ## 空間計算量
 
-- object全体: $O(\mathrm{MAX\_SIZE})$
-- 各操作の追加領域: 再帰stackを含めて $O(\log(N+1))$
+- オブジェクト全体: 固定長版は $O(\texttt{MAX_SIZE})$、可変長版は一度でも確保したノード数に比例
+- 各操作の追加領域: 再帰スタックを含めて $O(\log(N+1))$
 
 ## 注意点
 
-- `Compare`はstrict weak ordering。同値キーは1個だけ保持する。
-- `insert`は既存キーなら`false`、要素数が`MAX_SIZE`の新規キーなら例外。
-- `erase`は不存在なら`false`。`kth`と各境界探索は該当なしなら`nullopt`。
-- `clear`は$O(1)$で固定node arenaを再利用する。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = RedBlackSet<Key>;
-using Fixed = RedBlackSet<Key, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- `Compare` は狭義弱順序でなければならない。同値なキーは 1 個だけ保持する。
+- `insert` は既存のキーなら `false` を返す。要素数が `MAX_SIZE` の状態で新規キーを挿入すると `std::runtime_error` を投げる。
+- `clear` は $O(1)$ で、確保済みのノード領域を再利用する。

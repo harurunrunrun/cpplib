@@ -3,41 +3,37 @@ title: Partially Persistent Array (部分永続配列)
 documentation_of: ../../../src/structure/array/partially_persistent_array.hpp
 ---
 
-過去の状態を参照できる配列。更新できるのは最新の状態だけで、更新前の状態は残る。
+過去の状態を参照できる配列（部分永続配列）。更新できるのは最新の状態だけで、更新前の状態は残る。
 
-状態は0から始まるversionで指定する。version 0は初期状態。
+状態は 0 から始まるバージョン番号で指定する。バージョン 0 は初期状態である。
 
 ## テンプレート引数
 
 ```cpp
-PartiallyPersistentArray<T, MAX_SIZE, MAX_UPDATE>
+PartiallyPersistentArray<T, MAX_SIZE = -1, MAX_UPDATE = -1>
 ```
 
-- 要素の型 `T`
-- 配列長の上限 `MAX_SIZE`
-- 更新回数の上限 `MAX_UPDATE`
+- `T`: 要素の型
+- `MAX_SIZE`: 配列長の上限。`-1`（省略時）なら上限なし
+- `MAX_UPDATE`: 更新回数の上限。`-1`（省略時）なら上限なし
 
-オブジェクト自体のcopy/moveはできない。
+`MAX_SIZE`, `MAX_UPDATE` を指定すると、初期値 `MAX_SIZE` 個分と変更値 `MAX_UPDATE` 個分の領域を構築時に固定確保する。省略すると、実行時の要素数・更新数に合わせて `std::vector` で確保する可変長版になる。
+
+オブジェクト自体はコピー・ムーブできない。
 
 ## コンストラクタ
 
 ```cpp
-(1) PartiallyPersistentArray(int n = MAX_SIZE)
+(1) explicit PartiallyPersistentArray(int n = MAX_SIZE)
 (2) PartiallyPersistentArray(int n, const T& value)
-(3) PartiallyPersistentArray(const vector<T>& v)
-(4) PartiallyPersistentArray(const array<T, N>& v)
+(3) explicit PartiallyPersistentArray(const std::vector<T>& v)
+(4) template<std::size_t N> explicit PartiallyPersistentArray(const std::array<T, N>& v)
 ```
 
-1. 長さ `n`、初期値 `T{}` で初期化する。
+1. 長さ `n`、初期値 `T{}` で初期化する。`n` のデフォルトは `MAX_SIZE`（可変長版では 0）。
 2. 長さ `n`、初期値 `value` で初期化する。
 3. `v` で初期化する。
 4. `v` で初期化する。
-
-## 時間計算量
-
-- $O(\mathtt{MAX\_SIZE}+\mathtt{MAX\_UPDATE})$
-
-固定長の値領域と各indexの履歴列を構築した後、使用する $n$ 要素を初期化する。
 
 ## set
 
@@ -45,11 +41,7 @@ PartiallyPersistentArray<T, MAX_SIZE, MAX_UPDATE>
 int set(int k, const T& x)
 ```
 
-最新状態の `k` 番目を `x` に変更し、新しいversion番号を返す。
-
-## 時間計算量
-
-- 償却 $O(1)$
+最新状態の `k` 番目を `x` に変更し、新しいバージョン番号を返す。
 
 ## get
 
@@ -58,17 +50,10 @@ int set(int k, const T& x)
 (2) const T& get(int k) const
 ```
 
-1. `version` の `k` 番目を返す。
-2. 最新versionの `k` 番目を返す。
+1. バージョン `version` の `k` 番目を返す。
+2. 最新バージョンの `k` 番目を返す。
 
-## 時間計算量
-
-- (1): $O(\log U_k)$
-- (2): $O(1)$
-
-ここで $U_k$ は添字 `k` の変更回数。
-
-## version情報
+## バージョン情報
 
 ```cpp
 int size() const
@@ -76,31 +61,25 @@ int versions() const
 int latest_version() const
 ```
 
-順に配列長、version数、最新version番号を返す。
+順に、配列長、バージョン数、最新のバージョン番号を返す。
 
 ## 時間計算量
 
-- $O(1)$
+配列長を $n$、添字 `k` の変更回数を $U_k$、総更新回数を $u$ とする。
+
+- コンストラクタ: 固定長版は $O(\texttt{MAX_SIZE}+\texttt{MAX_UPDATE})$（固定長の値領域と各添字の履歴列を構築した後、使用する $n$ 要素を初期化する）、可変長版は $O(n)$
+- `set`: 償却 $O(1)$
+- `get(version, k)`: $O(\log U_k)$（最新版を指す場合は $O(1)$）
+- `get(k)`, `size`, `versions`, `latest_version`: $O(1)$
 
 ## 空間計算量
 
-- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_UPDATE})$
+- 固定長版: $O(\texttt{MAX_SIZE}+\texttt{MAX_UPDATE})$
+- 可変長版: $O(n+u)$
 
 ## 注意点
 
-- `0 <= n <= MAX_SIZE`、indexは`[0,n)`、versionは`[0,versions())`。違反時は例外。
-- `set`は最新versionだけを更新して新しいversion番号を返す。更新数が`MAX_UPDATE`に達すると例外。
-- 容量超過や値のcopyで失敗した更新はversionを追加せず、既存状態を変えない。
-- `MAX_SIZE`個の初期値と`MAX_UPDATE`個の変更値を固定確保する。
-
-## 可変長版
-
-```cpp
-using Dynamic = PartiallyPersistentArray<long long>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n)、set は償却 O(1)、過去版取得は O(log(u + 1))、保存領域は O(n + u)。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
-
-可変長ストレージから返された値への参照は、後続の更新に伴う再確保で無効になることがある。必要な値は更新前にコピーする。
+- `0 <= n <= MAX_SIZE`、添字は $[0,n)$、バージョンは $[0,\texttt{versions()})$ でなければならない。違反すると `std::runtime_error` を投げる。
+- 更新回数が `MAX_UPDATE` に達した後の `set` は `std::runtime_error` を投げる。
+- 容量超過や値のコピーで失敗した更新はバージョンを追加せず、既存の状態を変えない。
+- 可変長版では、返された参照が後続の更新に伴う再確保で無効になることがある。必要な値は更新前にコピーする。

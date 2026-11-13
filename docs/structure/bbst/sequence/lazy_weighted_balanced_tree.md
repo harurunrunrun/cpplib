@@ -8,11 +8,13 @@ documentation_of: ../../../../src/structure/bbst/sequence/lazy_weighted_balanced
 ## テンプレート引数
 
 ```cpp
-LazyWeightedBalancedTree<MonoidActLen, MAX_SIZE>
+LazyWeightedBalancedTree<MonoidActLen, MAX_SIZE = -1>
 ```
 
-- 作用付きモノイド `MonoidActLen`
-- 同時に保持する要素数の上限 `MAX_SIZE`
+- `MonoidActLen`: 作用付きモノイド（区間長付き）のオブジェクト
+- `MAX_SIZE`: 同時に保持する要素数の上限
+
+`MAX_SIZE` を指定するとノード領域を固定確保する。省略（`-1`）するとノードを `std::vector` に必要に応じて確保する可変長版になる（伸長コストは償却 $O(1)$ で、各操作の計算量は変わらない）。
 
 `MonoidActLen` は次を持つ。
 
@@ -30,7 +32,7 @@ T id()
 
 ```cpp
 LazyWeightedBalancedTree()
-LazyWeightedBalancedTree(const vector<S>& values)
+LazyWeightedBalancedTree(const std::vector<S>& values)
 ```
 
 ## insert / erase / set / get
@@ -46,7 +48,7 @@ S get(int p)
 
 ## 時間計算量
 
-- amortized $O(\log N)$
+- 償却 $O(\log N)$
 
 ## 区間操作
 
@@ -61,43 +63,29 @@ S all_prod()
 
 ## 時間計算量
 
-- amortized $O(\log N)$
+- 償却 $O(\log N)$
 
-## API別計算量
+## API 別の計算量
 
 $N$ を操作前の列長とし、モノイド演算・作用を $O(1)$ とする。
 
-- default constructor: $O(\mathrm{MAX\_SIZE})$
-- `LazyWeightedBalancedTree(values)`: 固定長storage初期化 $O(\mathrm{MAX\_SIZE})$ と長さ $N$ の平衡木構築 $O(N)$
+- デフォルトコンストラクタ: 固定長版は $O(\texttt{MAX_SIZE})$、可変長版は $O(1)$
+- `LazyWeightedBalancedTree(values)`: 長さ $N$ の平衡木構築 $O(N)$（固定長版はさらに固定長領域の初期化 $O(\texttt{MAX_SIZE})$）
 - `size`, `empty`, `clear`, `all_prod`: $O(1)$
 - `insert`, `push_front`, `push_back`, `erase`, `set`, `get`: 再平衡化を含めて償却 $O(\log(N+1))$
-- `apply`, `reverse`, `prod`: 内部のsplit/mergeと再平衡化を含めて償却 $O(\log(N+1))$
+- `apply`, `reverse`, `prod`: 内部の分割・併合と再平衡化を含めて償却 $O(\log(N+1))$
 
 乱数には依存しない。
 
 ## 空間計算量
 
-- object全体: $O(\mathrm{MAX\_SIZE})$
-- 各操作の再帰stack: $O(\log(N+1))$
+- オブジェクト全体: 固定長版は $O(\texttt{MAX_SIZE})$、可変長版は確保したノード数に比例
+- 各操作の再帰スタック: $O(\log(N+1))$
 
 ## 注意点
 
-- insert位置は`[0,size()]`、点indexは`[0,size())`、半開区間は`0 <= l <= r <= size()`。
-- 範囲違反、または要素数が`MAX_SIZE`を超えるinsertは例外。
-- `prod`は左から右の順で合成し、空区間では単位元を返す。
-- `composition(f,g)`は先に`g`、後に`f`。
-- `clear`は固定arenaを再利用し、copyは禁止、moveは可能。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = LazyWeightedBalancedTree<MonoidActLen>;
-using Fixed = LazyWeightedBalancedTree<MonoidActLen, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- insert 位置は `[0,size()]`、点添字は `[0,size())`、半開区間は `0 <= l <= r <= size()`。
+- 範囲違反、または要素数が `MAX_SIZE` を超える `insert` は `std::runtime_error` を投げる。
+- `prod` は左から右の順で合成し、空区間では単位元を返す。
+- `composition(f,g)` は先に `g`、後に `f`。
+- `clear` は確保済みのノード領域を再利用し、コピーはできないがムーブはできる。

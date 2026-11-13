@@ -3,24 +3,26 @@ title: SimHash (類似度ハッシュ)
 documentation_of: ../../../src/approximate/streaming/simhash.hpp
 ---
 
-## SimHash (類似度ハッシュ)
-
-重み付き feature vector の cosine 類似度を bit signature に圧縮する。
+重み付きの特徴ベクトルを、`Bits` ビットのシグネチャに圧縮する。シグネチャ間の Hamming 距離から cosine 類似度（角度）を推定できる。テンプレート引数は `SimHash<Bits = 64, Key = std::uint64_t>` で、`Bits` は 1 以上 64 以下。
 
 ## API
 
-- `SimHash(seed)`: accumulator を 0 にする。時間計算量は $O(Bits)$。 追加空間計算量は $O(1)$。
-- `add(feature, weight)`: feature の符号 vector を加算する。時間計算量は $O(Bits)$。 追加空間計算量は $O(1)$。
-- `signature()`: accumulator の符号を bit 列にする。時間計算量は $O(Bits)$。 追加空間計算量は $O(1)$。
-- `similarity(other)`: $1-$正規化 Hamming 距離。時間計算量は $O(Bits)$。 追加空間計算量は $O(1)$。
-- `hamming_distance(a, b)`: Hamming 距離。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `clear()`: accumulator を 0 にする。時間計算量は $O(Bits)$。 追加空間計算量は $O(1)$。
-- `seed()`: hash seed を返す。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `bit_count()`: 時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
+- `SimHash(seed = 0)`: 累積値を 0 にして構築する。
+- `add(feature, weight = 1.0L)`: 特徴 `feature` のハッシュの各ビットに応じて、各成分の累積値に $\pm w$ を加える。
+- `signature()`: 累積値が 0 以上の成分を 1 とするビット列（`std::uint64_t`）を返す。
+- `similarity(other)`: $1-(\text{Hamming 距離})/\texttt{Bits}$ を返す。
+- `hamming_distance(a, b)`（静的）: 下位 `Bits` ビットの Hamming 距離を返す。
+- `clear()`: 累積値を 0 にする。
+- `seed()`: シードを返す。
+- `bit_count()`: `Bits` を返す。
 
+## 時間計算量
+
+- コンストラクタ・`add`・`signature`・`similarity`・`clear`: $O(\texttt{Bits})$
+- `hamming_distance`, `seed`, `bit_count`: $O(1)$
+- 空間計算量: $O(\texttt{Bits})$
 
 ## 注意点
 
-異なる seed の `similarity` は `std::invalid_argument`。
-ランダム超平面モデルでは角度を $\theta$ とした 1 bit の一致確率は $1-\theta/\pi$。
-独立 bit なら推定値の標準偏差は高々 $1/(2\sqrt{Bits})$。保存に必要な空間計算量は $O(Bits)$。
+- シードが異なるもの同士の `similarity` は `std::invalid_argument` を投げる。
+- ランダム超平面モデルでは、2 つのベクトルのなす角を $\theta$ として、1 ビットが一致する確率は $1-\theta/\pi$ である。ビットが独立なら推定値の標準偏差は高々 $1/(2\sqrt{\texttt{Bits}})$。

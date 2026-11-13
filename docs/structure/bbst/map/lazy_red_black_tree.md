@@ -3,20 +3,22 @@ title: Lazy Red Black Tree (遅延赤黒木)
 documentation_of: ../../../../src/structure/bbst/map/lazy_red_black_tree.hpp
 ---
 
-Red Black Tree によるキー付き列。キーの半開区間に対して、値の作用、値の積を行う。
+赤黒木（左傾赤黒木）によるキー付きの列。キーの半開区間に対して、値への作用と値の積を扱う。
 
 ## テンプレート引数
 
 ```cpp
-LazyRedBlackTree<Key, MonoidActLen, MAX_SIZE, Compare>
+LazyRedBlackTree<Key, MonoidActLen, MAX_SIZE = -1, Compare = std::less<Key>>
 ```
 
-- キーの型 `Key`
-- 作用付きモノイド `MonoidActLen`
-- 同時に保持する要素数の上限 `MAX_SIZE`
-- 比較関数 `Compare`
+- `Key`: キーの型
+- `MonoidActLen`: 作用付きモノイド（区間長付き）のオブジェクト
+- `MAX_SIZE`: 同時に保持する要素数の上限。`-1`（省略時）なら上限なしの可変長版
+- `Compare`: 比較関数
 
-`MonoidActLen` は次を持つ。
+`MAX_SIZE` を指定するとノード領域を固定確保し、省略するとノードを `std::vector` に必要に応じて確保する（伸長コストは償却 $O(1)$）。
+
+`MonoidActLen` は型 `S`, `T` と次の関数を持つ。
 
 ```cpp
 S op(S a, long long len_a, S b, long long len_b)
@@ -26,36 +28,35 @@ T composition(T f, T g)
 T id()
 ```
 
-## insert / erase
+## コンストラクタ・状態
+
+```cpp
+explicit LazyRedBlackTree(const Compare& compare = Compare())
+int size() const
+bool empty() const
+void clear()
+```
+
+空の木を構築する。`clear` は全要素を削除し、ノード領域を再利用する。コピーはできないが、ムーブはできる。
+
+## insert / erase / contains
 
 ```cpp
 bool insert(const Key& key, const S& value)
 bool erase(const Key& key)
-bool contains(const Key& key)
+bool contains(const Key& key) const
 ```
 
-`insert` は同じキーが存在する場合 `false` を返す。
-
-`erase` はキーが存在しない場合 `false` を返す。
-
-## 時間計算量
-
-- $O(\log N)$
+`insert` は同じキーが存在する場合は何もせず `false` を返す。`erase` はキーが存在しない場合 `false` を返す。
 
 ## get / set
 
 ```cpp
-optional<S> get(const Key& key)
+std::optional<S> get(const Key& key)
 bool set(const Key& key, const S& value)
 ```
 
-`get` はキーが存在しない場合 `nullopt` を返す。
-
-`set` はキーが存在しない場合 `false` を返す。
-
-## 時間計算量
-
-- $O(\log N)$
+`get` はキーが存在しない場合 `std::nullopt` を返す。`set` はキーが存在しない場合 `false` を返す。
 
 ## 区間操作
 
@@ -63,63 +64,43 @@ bool set(const Key& key, const S& value)
 void apply(const Key& l, const Key& r, const T& f)
 S prod(const Key& l, const Key& r)
 void all_apply(const T& f)
-S all_prod()
+S all_prod() const
 ```
 
-キーの半開区間 `[l,r)` を扱う。
-
-## 時間計算量
-
-- $O(\log N)$
+キーの半開区間 $[l,r)$ に属する要素の値に `f` を作用させる／値の積を返す。`all_apply`, `all_prod` は全体に対して行う。
 
 ## 順序
 
 ```cpp
-int order_of_key(const Key& key)
-optional<Key> kth_key(int k)
+int order_of_key(const Key& key) const
+std::optional<Key> kth_key(int k) const
 ```
+
+`order_of_key` は `key` 未満のキーの個数を返す。`kth_key` は 0-indexed で `k` 番目のキーを返し、範囲外なら `std::nullopt` を返す。
 
 ## 時間計算量
 
-- $O(\log N)$
-
-## API別計算量
-
 $N$ を現在の要素数とし、比較・モノイド演算・作用を $O(1)$ とする。
 
-- `LazyRedBlackTree(compare)`: $O(\mathrm{MAX\_SIZE})$。固定長storageを確保・初期化する
+- コンストラクタ: 固定長版は $O(\texttt{MAX_SIZE})$（固定長領域を確保・初期化する）、可変長版は $O(1)$
 - `size`, `empty`, `clear`, `all_apply`, `all_prod`: $O(1)$
-- `contains`, `insert`, `erase`, `get`, `set`: worst-case $O(\log(N+1))$
-- `apply`, `prod`: worst-case $O(\log(N+1))$
-- `order_of_key`, `kth_key`: worst-case $O(\log(N+1))$
+- `contains`, `insert`, `erase`, `get`: 最悪 $O(\log(N+1))$
+- `set`: 木の探索は $O(\log(N+1))$ だが、経路を記録する一時配列の初期化に固定長版では $O(\texttt{MAX_SIZE})$、可変長版では $O(N)$ かかる
+- `apply`, `prod`: 最悪 $O(\log(N+1))$
+- `order_of_key`, `kth_key`: 最悪 $O(\log(N+1))$
 
-キー区間操作は境界に至るpathだけを展開し、完全に含まれる部分木はlazy tagまたはaggregateでまとめて処理する。
+キー区間の操作は境界に至る経路だけを展開し、区間に完全に含まれる部分木は遅延タグまたは集約値でまとめて処理する。
 
 ## 空間計算量
 
-- object全体: $O(\mathrm{MAX\_SIZE})$
-- setの固定長祖先array: $O(\mathrm{MAX\_SIZE})$（使用要素数は $O(\log(N+1))$）
-- insert / erase / apply / prodの再帰stack: $O(\log(N+1))$
+- オブジェクト全体: 固定長版は $O(\texttt{MAX_SIZE})$、可変長版は一度でも確保したノード数に比例
+- `set` の経路用の一時配列: 固定長版は $O(\texttt{MAX_SIZE})$（スタック上）、可変長版は $O(N)$。実際に使うのは $O(\log(N+1))$ 要素
+- `insert`, `erase`, `apply`, `prod` の再帰スタック: $O(\log(N+1))$
 - その他の操作の追加領域: $O(1)$
 
 ## 注意点
 
-- `Compare`はstrict weak ordering。同値キーは1個だけ保持する。
-- 新規insertで要素数が`MAX_SIZE`を超える場合は例外。
-- `apply(l,r,f)`と`prod(l,r)`は`Compare(r,l)==false`を要求し、逆転時は例外。
-- `get`は不存在なら`nullopt`、`set`と`erase`は不存在なら`false`。
-- `kth_key`は範囲外なら`nullopt`。`clear`は固定arenaを再利用する。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = LazyRedBlackTree<Key, MonoidActLen>;
-using Fixed = LazyRedBlackTree<Key, MonoidActLen, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- `Compare` は狭義弱順序でなければならない。同値なキーは 1 個だけ保持する。
+- 新規の `insert` で要素数が `MAX_SIZE` を超える場合は `std::runtime_error` を投げる。
+- `apply(l, r, f)` と `prod(l, r)` は `Compare(l, r)` が偽（区間が空または逆転）なら、何もしない／単位元を返す。例外は投げない。
+- 固定長版で `MAX_SIZE` が大きいと、`set` の一時配列がスタックを圧迫する。

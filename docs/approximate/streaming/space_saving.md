@@ -3,37 +3,39 @@ title: Space-Saving (頻出要素推定)
 documentation_of: ../../../src/approximate/streaming/space_saving.hpp
 ---
 
-## Space-Saving (頻出要素推定)
+頻出要素の候補を、頻度の推定値と誤差の上界付きで $C$ 個まで保持する。
 
-頻出候補を推定値と誤差上界付きで保持する。
+## 使い方
+
+~~~cpp
+SpaceSaving<int> sketch(16);   // 保持する候補数
+sketch.add(42, 3);
+auto estimate = sketch.estimate(42);
+
+SpaceSaving<int, 16> fixed;    // 容量をテンプレート引数で固定する版
+~~~
+
+`SpaceSaving<Key, Capacity, Count = std::uint64_t>` の `Capacity` を省略すると、容量 $C$ を実行時に指定して `std::vector` に保存する可変長版になる。指定すると `std::array` に保存する固定長版になる。キーは `==` で比較する。
 
 ## API
 
-- `SpaceSaving::Candidate`: `key`, 頻度推定値 `estimate`, 過大評価幅 `error` を保持する。構築・各member参照の時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `SpaceSaving()`: 全slotを空にして構築する。時間計算量と追加空間計算量はいずれも $O(Capacity)$。
-- `add(key, delta)`: 候補を加算する。未登録かつ満杯なら最小 counter を置換する。
-  時間計算量は $O(Capacity)$。総重みが `Count` の上限を超える更新は `std::overflow_error`。 追加空間計算量は $O(1)$。
-- `estimate(key)`: `Candidate{key, estimate, error}` を返す。時間計算量は $O(Capacity)$。 追加空間計算量は $O(1)$。
-- `candidates()`: 推定値の降順で候補を返す。時間計算量は $O(Capacity\log Capacity)$。 追加空間計算量は $O(Capacity)$（返値を含む）。
-- `clear()`: 時間計算量は $O(Capacity)$。 追加空間計算量は $O(1)$。
-- `total()`, `size()`, `capacity()`: 時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
+- `SpaceSaving::Candidate`: キー `key`、頻度の推定値 `estimate`、過大評価幅の上界 `error` を保持する構造体。
+- `SpaceSaving(capacity)`（可変長版）/ `SpaceSaving()`（固定長版）: 全枠を空にして構築する。
+- `add(key, delta = 1)`: 候補の推定値に `delta` を加える。未登録で満杯なら、推定値が最小の候補を置き換える（新しい推定値は旧最小値 $+$ `delta`、`error` は旧最小値）。`delta` が 0 なら何もしない。
+- `estimate(key)`: `Candidate{key, estimate, error}` を返す。保持していなければ推定値・誤差とも 0。
+- `candidates()`: 推定値の降順に並べた候補を返す。
+- `clear()`: 空に戻す。
+- `total()`, `size()`, `capacity()`: 総重み、保持中の候補数、$C$ を返す。
 
+## 時間計算量
+
+- コンストラクタ・`add`・`estimate`・`clear`: $O(C)$、追加空間 $O(1)$
+- `candidates`: $O(C\log C)$、戻り値を含め追加空間 $O(C)$
+- `total`, `size`, `capacity`: $O(1)$
+- 空間計算量: $O(C)$
 
 ## 注意点
 
-候補について `estimate - error <= true_frequency <= estimate`。単位更新では
-最小 counter は高々 $N/Capacity$ なので、頻度が $N/Capacity$ を超える要素は
-必ず候補となる。保存に必要な空間計算量は $O(Capacity)$。
-
-## 容量を省略する可変長版
-
-~~~cpp
-SpaceSaving<int> sketch(16); // 保持する候補数
-sketch.add(42, 3);
-auto estimate = sketch.estimate(42);
-~~~
-
-容量 $C$ を実行時に指定し、候補を `vector` に保存する。
-構築・追加・推定・`clear` は $O(C)$ 時間、候補列挙は $O(C\log C)$ 時間。
-保存領域は $O(C)$、候補列挙は返り値に $O(C)$ 空間を使い、その他の一時領域は $O(1)$。
-容量指定の固定配列版も同じ header にある。
+- 候補について $\texttt{estimate}-\texttt{error}\le f_x\le\texttt{estimate}$（$f_x$ は真の頻度）が成り立つ。単位重みの更新では最小カウンタは高々 $N/C$（$N$ は総重み）なので、頻度が $N/C$ を超える要素は必ず候補に残る。
+- 総重みが `Count` の上限を超える更新は `std::overflow_error` を投げる。
+- `Count` は符号なし整数型でなければならない。可変長版で $C=0$ なら `std::invalid_argument`。

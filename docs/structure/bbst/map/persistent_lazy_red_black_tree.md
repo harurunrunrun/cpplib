@@ -3,23 +3,23 @@ title: Persistent Lazy Red Black Tree (完全永続遅延赤黒木)
 documentation_of: ../../../../src/structure/bbst/map/persistent_lazy_red_black_tree.hpp
 ---
 
-path-copy left-leaning red-black tree による完全永続構造。
+経路コピーを行う左傾赤黒木による、完全永続なキー付きの列。
 
-永続平衡二分探索木によるキー付き列。
-
-キーの半開区間 `[l,r)` に対して、値の作用、値の積を行う。更新は元の version を変更せず、新しい version を返す。
+キーの半開区間 $[l,r)$ に対して、値への作用と値の積を扱う。更新は元のバージョンを変更せず、新しいバージョンを作ってその番号を返す。
 
 ## テンプレート引数
 
 ```cpp
-PersistentLazyRedBlackTree<Key, MonoidActLen, MAX_NODE, MAX_VERSION, Compare>
+PersistentLazyRedBlackTree<Key, MonoidActLen, MAX_NODE = -1, MAX_VERSION = -1, Compare = std::less<Key>>
 ```
 
-- キーの型 `Key`
-- 作用付きモノイド `MonoidActLen`
-- 確保するノード数の上限 `MAX_NODE`
-- 保持する version 数の上限 `MAX_VERSION`
-- 比較関数 `Compare`
+- `Key`: キーの型
+- `MonoidActLen`: 作用付きモノイド（区間長付き）のオブジェクト
+- `MAX_NODE`: 確保できるノード数の上限
+- `MAX_VERSION`: バージョン数（バージョン 0 を含む）の上限
+- `Compare`: 比較関数
+
+`MAX_NODE`, `MAX_VERSION` を指定するとノードと根の表をオブジェクト内に固定確保する。省略（`-1`）すると `std::vector` で必要に応じて確保する可変長版になる（再確保のコストは償却され、各操作の計算量は変わらない）。
 
 `MonoidActLen` は次を持つ。
 
@@ -31,50 +31,50 @@ T composition(T f, T g)
 T id()
 ```
 
-version `0` は空列。
+バージョン 0 は空の列である。`versions()`, `size(version = 0)`, `empty(version = 0)` でバージョン数・要素数・空かどうかを取得できる。
 
 ## insert / erase / contains
 
 ```cpp
 int insert(const Key& key, const S& value, int version = 0)
 int erase(const Key& key, int version = 0)
-bool contains(const Key& key, int version = 0)
+bool contains(const Key& key, int version = 0) const
 ```
 
-`insert` と `erase` は更新後の version を返す。
+`insert` と `erase` は更新後のバージョンを返す。
 
-同じキーの重複は保持しない。`insert` で同じキーが存在する場合、値は変更せずに新しい version を返す。
+同じキーの重複は保持しない。`insert` で同じキーが存在する場合、値は変更せずに新しいバージョンを返す。
 
 ## get / set
 
 ```cpp
-optional<S> get(const Key& key, int version = 0)
+std::optional<S> get(const Key& key, int version = 0) const
 int set(const Key& key, const S& value, int version = 0)
 ```
 
 `get` はキーが存在しない場合 `nullopt` を返す。
 
-`set` は更新後の version を返す。キーが存在しない場合、内容は変更しない。
+`set` は更新後のバージョンを返す。キーが存在しない場合、内容は変更しない。
 
 ## 区間操作
 
 ```cpp
 int apply(const Key& l, const Key& r, const T& f, int version = 0)
-S prod(const Key& l, const Key& r, int version = 0)
+S prod(const Key& l, const Key& r, int version = 0) const
 int all_apply(const T& f, int version = 0)
-S all_prod(int version = 0)
+S all_prod(int version = 0) const
 ```
 
 キーの半開区間 `[l,r)` を扱う。
 
-`apply` と `all_apply` は更新後の version を返す。
+`apply` と `all_apply` は更新後のバージョンを返す。
 
 ## 順序
 
 ```cpp
-int order_of_key(const Key& key, int version = 0)
-optional<Key> kth_key(int k, int version = 0)
-vector<pair<Key, S>> to_vector(int version = 0)
+int order_of_key(const Key& key, int version = 0) const
+std::optional<Key> kth_key(int k, int version = 0) const
+std::vector<std::pair<Key, S>> to_vector(int version = 0) const
 ```
 
 `order_of_key` は `key` より小さいキーの個数を返す。
@@ -83,43 +83,28 @@ vector<pair<Key, S>> to_vector(int version = 0)
 
 `to_vector` は `(key, value)` をキー昇順で返す。
 
-## API別の時間計算量
+## 時間計算量
 
-$N$ を対象versionの要素数とし、比較・モノイド演算・作用を $O(1)$ とする。
+$N$ を対象バージョンの要素数とし、比較・モノイド演算・作用を $O(1)$ とする。
 
-- `PersistentLazyRedBlackTree(compare)`: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
+- コンストラクタ: 固定長版は $O(\texttt{MAX_NODE}+\texttt{MAX_VERSION})$、可変長版は $O(1)$
 - `versions`, `size`, `empty`, `all_prod`: $O(1)$
-- `contains`, `get`, `prod`, `order_of_key`, `kth_key`: worst-case $O(\log(N+1))$
-- `insert`, `erase`, `set`, `apply`: worst-case $O(\log(N+1))$、新規version $O(1)$、path-copy node $O(\log(N+1))$
-- `all_apply`: $O(1)$、新規version $O(1)$、非空なら新規node $O(1)$
+- `contains`, `get`, `prod`, `order_of_key`, `kth_key`: 最悪 $O(\log(N+1))$
+- `insert`, `erase`, `set`, `apply`: 最悪 $O(\log(N+1))$、新規バージョン $O(1)$、経路コピーノード $O(\log(N+1))$
+- `all_apply`: $O(1)$、新規バージョン $O(1)$、非空なら新規ノード $O(1)$
 - `to_vector`: 出力要素数 $N$ に対して $O(N)$
 
-内容が変わらない更新も新しいversionを返す。探索だけで終了する場合や空区間ではnodeを複製しないことがある。
+内容が変わらない更新も新しいバージョンを返す。探索だけで終了する場合や空区間ではノードを複製しないことがある。
 
 ## 空間計算量
 
-- 固定arenaとroot table: $O(\mathrm{MAX\_NODE}+\mathrm{MAX\_VERSION})$
-- `to_vector` の戻り値と再帰stack: $O(N)$
+- 固定長版のノードと根の表: $O(\texttt{MAX_NODE}+\texttt{MAX_VERSION})$。可変長版は作ったノード数とバージョン数に比例
+- `to_vector` の戻り値と再帰スタック: $O(N)$
 
 ## 注意点
 
-- `Compare`はstrict weak ordering、versionは`[0,versions())`。違反時は例外。
-- キー区間は`Compare(r,l)==false`を要求し、逆転時は例外。
-- updateでversion/node容量を超える場合は例外で、既存versionとnode数を変えない。
-- updateは内容が変わらない場合もversionを1個作り、queryは容量を消費しない。
-- `get`, `kth_key`は該当なしなら`nullopt`。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_NODE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = PersistentLazyRedBlackTree<Key, MonoidActLen>;
-using Fixed = PersistentLazyRedBlackTree<Key, MonoidActLen, Nodes, Versions>;
-```
-
-可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
-再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
-内部vectorの再確保をまたいでノード参照を保持せず、ノード番号から取り直す。
+- `Compare` は狭義弱順序、バージョンは $[0,\texttt{versions()})$。違反すると `std::runtime_error` を投げる。
+- キー区間が空または逆転している（`Compare(l, r)` が偽）場合、`apply` は内容を変えずに新しいバージョンを作り、`prod` は単位元を返す。例外は投げない。
+- 更新でバージョン/ノード容量を超える場合は `std::runtime_error` を投げ、既存バージョンとノード数を変えない。
+- 更新は内容が変わらない場合もバージョンを 1 個作り、クエリは容量を消費しない。
+- `get`, `kth_key` は該当なしなら `nullopt`。

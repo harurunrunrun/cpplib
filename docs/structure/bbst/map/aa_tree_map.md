@@ -3,16 +3,16 @@ title: AA Tree Ordered Dictionary (AA木順序付き辞書)
 documentation_of: ../../../../src/structure/bbst/map/aa_tree_map.hpp
 ---
 
-AA treeで実装した順序付き連想配列。赤黒木の水平linkを右向きに限定した平衡条件を
-`skew` と `split` で保つ。nodeは容量 `MAX_SIZE` の `std::array` poolに置き、
-削除nodeを再利用する。部分木sizeも保持するため順位queryを行える。
+AA tree で実装した順序付き連想配列。赤黒木の水平リンクを右向きに限定した平衡条件を `skew` と `split` で保つ。ノードは配列上のプールに置き、削除したノードを再利用する。部分木の大きさも保持するので順位クエリを行える。
 
 ```cpp
-template<class Key, class T, int MAX_SIZE, class Compare = std::less<Key>>
+template<class Key, class T, int MAX_SIZE = -1, class Compare = std::less<Key>>
 struct AATreeMap;
 ```
 
-`Compare` はstrict weak orderingを満たす必要がある。
+`MAX_SIZE` を指定すると、容量 `MAX_SIZE` のノードプールを `std::array` で固定確保する。省略（`-1`）すると、ノードを `std::vector` に必要に応じて確保する可変長版になる（ノード追加の伸長コストは償却 $O(1)$ で、以下の計算量は変わらない）。要素型は `value_type = std::pair<Key, T>`。
+
+`Compare` は狭義弱順序を満たす必要がある。以下、現在の要素数を $N$ とする。
 
 ## 構築・状態
 
@@ -24,11 +24,12 @@ bool empty() const
 void clear()
 ```
 
-空の辞書を作る。`clear` は全keyを削除する。
+空の辞書を作る。`clear` は全キーを削除する。
 
-- 構築: 時間 $O(MAX\_SIZE)$、保存領域 $O(MAX\_SIZE)$
+- 構築: 固定長版は時間・保存領域とも $O(\texttt{MAX_SIZE})$、可変長版は $O(1)$
+- `capacity`: 固定長版は `MAX_SIZE`、可変長版は `std::numeric_limits<int>::max()` を返す
 - `capacity`, `size`, `empty`: $O(1)$
-- `clear`: $O(A)$（一度でも確保したnode数 $A$）
+- `clear`: $O(A)$（一度でも確保したノード数 $A$）
 
 ## `insert` / `insert_or_assign`
 
@@ -37,11 +38,10 @@ bool insert(const Key& key, const T& mapped)
 bool insert_or_assign(const Key& key, const T& mapped)
 ```
 
-`insert` は未登録keyだけを追加する。`insert_or_assign` は既存なら値を置換する。
-戻り値は新しいkeyを追加したか。満杯で新規追加すると `runtime_error`。
+`insert` は未登録キーだけを追加する。`insert_or_assign` は既存なら値を置換する。戻り値は新しいキーを追加したかどうか。満杯の状態で新規追加すると `std::runtime_error` を投げる。
 
 - 時間計算量: $O(\log(N+1))$
-- 追加空間計算量: 再帰stack $O(\log(N+1))$
+- 追加空間計算量: 再帰スタック $O(\log(N+1))$
 
 ## `erase`
 
@@ -49,10 +49,10 @@ bool insert_or_assign(const Key& key, const T& mapped)
 bool erase(const Key& key)
 ```
 
-keyを削除する。戻り値は存在したか。解放nodeは次回の挿入で再利用する。
+キーを削除する。戻り値はキーが存在したかどうか。解放したノードは次回以降の挿入で再利用する。
 
 - 時間計算量: $O(\log(N+1))$
-- 追加空間計算量: 再帰stack $O(\log(N+1))$
+- 追加空間計算量: 再帰スタック $O(\log(N+1))$
 
 ## 検索
 
@@ -64,53 +64,38 @@ T& at(const Key& key)
 const T& at(const Key& key) const
 ```
 
-`find` は未登録なら `nullptr`。`at` は未登録なら `runtime_error`。
+`find` は未登録なら `nullptr` を返す。`at` は未登録なら `std::runtime_error` を投げる。
 
 - 時間計算量: $O(\log(N+1))$
 - 追加空間計算量: $O(1)$
 
-## bound query
+## lower_bound / upper_bound
 
 ```cpp
 const value_type* lower_bound(const Key& key) const
 const value_type* upper_bound(const Key& key) const
 ```
 
-`lower_bound` は `key` 以上、`upper_bound` は `key` より大きい最初の要素を
-`Compare` 順で返す。該当なしなら `nullptr`。返したpointerは辞書の次の変更まで
-有効である。
+`lower_bound` は `key` 以上、`upper_bound` は `key` より大きい最初の要素を `Compare` 順で返す。該当なしなら `nullptr`。返したポインタは辞書の次の変更まで有効である。
 
 - 時間計算量: $O(\log(N+1))$
 - 追加空間計算量: $O(1)$
 
-## 順位query
+## 順位クエリ
 
 ```cpp
 int order_of_key(const Key& key) const
 const value_type& kth(int index) const
 ```
 
-`order_of_key` は `key` 未満のkey数を返す。`kth` は0-indexedで `Compare` 順の
-要素を返し、範囲外なら `runtime_error`。
+`order_of_key` は `key` 未満のキーの個数を返す。`kth` は `Compare` 順で 0-indexed の `index` 番目の要素を返し、範囲外なら `std::runtime_error` を投げる。
 
 - 時間計算量: $O(\log(N+1))$
 - 追加空間計算量: $O(1)$
 
 ## 注意点
 
-keyは重複しない。objectの保存領域は常に $O(MAX\_SIZE)$。再帰の深さはAA treeの
-高さ $O(\log(N+1))$。`Key` と `T` はcopy可能である必要がある。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = AATreeMap<Key, T>;
-using Fixed = AATreeMap<Key, T, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- キーは重複しない。
+- 固定長版のオブジェクトの保存領域は常に $O(\texttt{MAX_SIZE})$、可変長版は一度でも確保したノード数に比例する。
+- 再帰の深さは AA tree の高さ $O(\log(N+1))$ である。
+- `Key` と `T` はコピー可能である必要がある。

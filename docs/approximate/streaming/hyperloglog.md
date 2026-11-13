@@ -3,36 +3,39 @@ title: HyperLogLog (基数推定)
 documentation_of: ../../../src/approximate/streaming/hyperloglog.hpp
 ---
 
-## HyperLogLog (基数推定)
+ストリーム中の相異なるキーの個数を、$M=2^P$ 個のレジスタで推定する（$P$ は precision）。
 
-stream の distinct key 数を $2^{Precision}$ 個の register で推定する。
+## 使い方
+
+~~~cpp
+HyperLogLog<> sketch(12, 123); // precision、シード
+sketch.add(42);
+auto cardinality = sketch.estimate();
+
+HyperLogLog<12> fixed(123);    // precision をテンプレート引数で固定する版
+~~~
+
+`HyperLogLog<Precision, Key = std::uint64_t>` の `Precision` を省略すると、$P$ を実行時に指定してレジスタを `std::vector` に保存する可変長版になる。指定すると `std::array` に保存する固定長版になる。
 
 ## API
 
-- `HyperLogLog(seed)`: hash seed を指定する。時間計算量は $O(2^{Precision})$。 追加空間計算量は $O(1)$。
-- `add(key)`: key を追加する。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `estimate()`: harmonic mean と small-range correction から要素数を返す。時間計算量は $O(2^{Precision})$。 追加空間計算量は $O(1)$。
-- `merge(other)`: 対応 register の最大値を取る。時間計算量は $O(2^{Precision})$。 追加空間計算量は $O(1)$。
-- `clear()`: register を 0 にする。時間計算量は $O(2^{Precision})$。 追加空間計算量は $O(1)$。
-- `seed()`: hash seed を返す。時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
-- `register_count()`, `relative_standard_error()`: 時間計算量は $O(1)$。 追加空間計算量は $O(1)$。
+- `HyperLogLog(precision, seed = 0)`（可変長版）/ `HyperLogLog(seed = 0)`（固定長版）: ハッシュのシードを指定して空で構築する。
+- `add(key)`: キーを追加する。
+- `estimate()`: 調和平均による推定値に、小さい範囲の補正（linear counting）と 64 bit ハッシュ空間に対する大きい範囲の補正をかけて返す。
+- `merge(other)`: 対応するレジスタの最大値を取り、2 つのストリームの和集合を表す状態にする。
+- `clear()`: レジスタを 0 にする。
+- `seed()`: シードを返す。
+- `register_count()`: $M$ を返す。
+- `relative_standard_error()`: $1.04/\sqrt{M}$ を返す。
 
+## 時間計算量
+
+- コンストラクタ・`estimate`・`merge`・`clear`: $O(M)$
+- `add`, `seed`, `register_count`, `relative_standard_error`: $O(1)$
+- 空間計算量: $O(M)$ バイト
 
 ## 注意点
 
-異なる seed の merge は `std::invalid_argument`。一様な 64-bit hash を仮定する。
-十分大きい cardinality で相対標準誤差は約 $1.04/\sqrt{2^{Precision}}$。
-保存に必要な空間計算量は $O(2^{Precision})$ byte。
-
-## 容量を省略する可変長版
-
-~~~cpp
-HyperLogLog<> sketch(12, 123); // precision、seed
-sketch.add(42);
-auto cardinality = sketch.estimate();
-~~~
-
-precision $P\in[4,18]$ を実行時に指定し、$M=2^P$ 個の register を `vector` に保存する。
-構築・推定・merge・`clear` は $O(M)$ 時間、追加は $O(1)$ 時間。
-保存領域は $O(M)$ byte、各操作の一時領域は $O(1)$。
-`HyperLogLog<P>` は同じ header の固定配列版を選ぶ。
+- $P$ は 4 以上 18 以下でなければならない。固定長版は `static_assert`、可変長版は `std::invalid_argument` で検査する。
+- シードが異なるもの同士（可変長版では precision が異なるもの同士も）の `merge` は `std::invalid_argument` を投げる。
+- 一様な 64 bit ハッシュを仮定する。十分大きい基数で相対標準誤差は約 $1.04/\sqrt{M}$ である。

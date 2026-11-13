@@ -3,59 +3,55 @@ title: Dynamic Maximum Subarray Sum Sequence (動的列最大部分配列和) [G
 documentation_of: ../../../../src/structure/bbst/sequence/dynamic_maximum_subarray_sum_sequence.hpp
 ---
 
-挿入・削除・一点代入に対応する列で、非空区間の最大部分配列和を返します。
+挿入・削除・一点代入に対応する列で、指定区間の非空な部分配列の和の最大値を返す。内部では `ReversibleSplayTree` を使う。
+
+## テンプレート引数
+
+```cpp
+DynamicMaximumSubarraySumSequence<T, MAX_SIZE = -1>
+```
+
+`MAX_SIZE` は同時に保持する要素数の上限で、指定するとノード領域を固定確保する。省略（`-1`）するとノードを `std::vector` に必要に応じて確保する可変長版になる。
 
 ## API
 
 ### `DynamicMaximumSubarraySumSequence(values)`
 
-初期列から構築します。
+初期列 `values`（`std::vector<T>`）から構築する。
 
 ### `size()` / `empty()`
 
-現在の要素数、空かどうかを返します。
+現在の要素数と、空かどうかを返す。
 
 ### `insert(position, value)`
 
-`position` の直前へ値を挿入します。
+位置 `position` の直前に値を挿入する（`position == size()` なら末尾）。
 
 ### `erase(position)`
 
-指定位置を削除します。
+位置 `position` の要素を削除する。
 
 ### `set(position, value)`
 
-指定位置を代入します。
+位置 `position` に値を代入する。
 
 ### `maximum_sum(left, right)`
 
-非空半開区間 `[left,right)` の最大部分配列和を返します。
+非空の半開区間 $[\mathrm{left},\mathrm{right})$ に含まれる、非空の部分配列の和の最大値を返す。
 
-## API別の時間計算量・空間計算量
+## 時間計算量
+
+要素数を $N$ とする。
 
 | API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
-| Constructor | $O(N)$ | $O(MAX\_SIZE)$ |
+| コンストラクタ | 固定長版 $O(\texttt{MAX_SIZE})$、可変長版 $O(N)$ | 固定長版 $O(\texttt{MAX_SIZE})$、可変長版 $O(N)$ |
 | `size()` / `empty()` | $O(1)$ | $O(1)$ |
 | `insert` / `erase` / `set` | 償却 $O(\log N)$ | $O(1)$ |
 | `maximum_sum` | 償却 $O(\log N)$ | $O(1)$ |
 
 ## 注意点
 
-- 同時に保持する要素数は `MAX_SIZE` 以下でなければなりません。
-- `maximum_sum` は非空区間だけを受け付けます。
-- 添字・容量違反では `runtime_error` を送出します。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = DynamicMaximumSubarraySumSequence<T>;
-using Fixed = DynamicMaximumSubarraySumSequence<T, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 固定長版では、同時に保持する要素数が `MAX_SIZE` 以下でなければならない。
+- `maximum_sum` は非空区間だけを受け付け、`right <= left` なら `std::runtime_error` を投げる。
+- 添字・容量の違反でも `std::runtime_error` を投げる。
