@@ -3,9 +3,9 @@ title: Selection Hyper-Heuristics (選択型ハイパーヒューリスティク
 documentation_of: ../../../src/approximate/metaheuristic/hyper_heuristic.hpp
 ---
 
-`heuristics` は同じ callable 型の range で、各要素は
-`heuristic(current, rng) -> State` を満たす。Both APIs minimize by default,
-accept only improving moves, and return the best `SearchResult`.
+低レベルのヒューリスティック（演算子）を選んで適用する選択型ハイパーヒューリスティクスである。`heuristics` は同じ呼び出し可能型の range で、各要素は `heuristic(current, rng) -> State` を満たす。どちらの API もデフォルトでは最小化を行い、改善する遷移だけを受理し、最良解を `SearchResult` で返す。
+
+以下、反復回数を $I$、演算子の個数を $H$、演算子の適用コストを $A$、評価 1 回のコストを $E$ とする。
 
 ## `hyper_heuristic`
 
@@ -15,10 +15,7 @@ hyper_heuristic(
 )
 ```
 
-各反復で low-level heuristic を一様ランダムに一つ選ぶ selection
-Hyper-Heuristic。operator 数を $H$、適用を $A$、評価を $E$ とすると
-時間計算量 $O(E+I(H+A+E))$。forward iterator から選択位置まで進むため $H$
-を含み、random-access range でも現在の API は同じ。追加空間 $O(1)$。
+各反復で低レベルのヒューリスティックを一様ランダムに 1 つ選ぶ選択型ハイパーヒューリスティクスである。時間計算量は $O(E+I(H+A+E))$、追加空間計算量は $O(1)$ である。選んだ位置まで前方向イテレータで進めるため $H$ の項を含み、ランダムアクセス可能な range でも現在の実装では同じである。
 
 ## `choice_function_hyper_heuristic`
 
@@ -30,21 +27,17 @@ choice_function_hyper_heuristic(
 )
 ```
 
-operator 自身の exponential reward、未使用期間、直前 operator からの
-transition reward の和が最大の operator を選ぶ Choice Function
-Hyper-Heuristic。改善を reward 1、非改善を 0 として更新する。
-operator 群は非空、reaction は $(0,1]$、二つの weight は非負。
+演算子自身の指数平滑化した報酬、未使用の期間、直前の演算子からの遷移報酬の和が最大となる演算子を選ぶ Choice Function 型ハイパーヒューリスティクスである。改善したら報酬 1、改善しなければ 0 として更新する。`reaction_factor` は $(0,1]$、`recency_weight` と `transition_weight` は非負でなければならない。
 
-時間計算量 $O(E+I(H+A+E))$、追加空間は transition table の $O(H^2)$。
+時間計算量は $O(E+I(H+A+E))$、追加空間計算量は遷移表の $O(H^2)$ である。
 
-## 共通操作の計算量 / Common operations
+## 共通操作の計算量
 
-`SearchResult` の各 member 参照は時間・追加空間 $O(1)$。
+`SearchResult` の各メンバの参照は時間・追加空間とも $O(1)$ である。
 
 ## 注意点
 
-- operator range は探索中変更せず、各 callable の戻り状態は独立でなければならない。
-- choice function の reward は score の改善量でなく改善の有無。尺度を考慮した
-  reward が必要なら low-level operator 側で正規化する。
-- The random baseline and learned choice function are finite-budget
-  heuristics and provide no global-optimality guarantee.
+- `heuristics` が空の場合やパラメータが上記の条件を満たさない場合は `std::invalid_argument` を送出する
+- 演算子の range は探索中に変更してはならず、各演算子が返す状態は独立でなければならない
+- Choice Function の報酬は目的値の改善量ではなく改善の有無である。尺度を考慮した報酬が必要なら、低レベルの演算子の側で正規化する
+- ランダム選択も学習型の選択も有限の計算量の範囲で動くヒューリスティックであり、大域最適性は保証しない

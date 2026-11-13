@@ -3,7 +3,7 @@ title: Metaheuristic Search Result (メタヒューリスティック探索結�
 documentation_of: ../../../src/approximate/metaheuristic/search_result.hpp
 ---
 
-`approximate::metaheuristic`の探索アルゴリズムが共通で返す結果型である。
+`approximate::metaheuristic` の探索アルゴリズムが共通で返す結果型である。
 
 ## `SearchResult`
 
@@ -18,14 +18,13 @@ struct SearchResult {
 };
 ```
 
-`state`と`score`は探索中に得た最良解と目的値、`iterations`は実行した反復数、
-`evaluations`は目的関数の呼び出し回数、`accepted_moves`は受理した遷移数である。
+`state` と `score` は探索中に得た最良解とその目的値、`iterations` は実行した反復回数、`evaluations` は目的関数の呼び出し回数、`accepted_moves` は受理した遷移の回数である。
 
 | API・操作 | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
-| 構築・コピー・move | `State`と`Score`の同操作に等しい | `State`と`Score`の大きさ |
-| 各memberの参照 | $O(1)$ | $O(1)$ |
+| 構築・コピー・ムーブ | `State` と `Score` の同じ操作に等しい | `State` と `Score` の大きさ |
+| 各メンバの参照 | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-各メンバは公開されており直接書き換えられる。書き換え時の整合性検査は行われず、反復数・評価回数・最良値の意味はこの値を生成した探索アルゴリズムに従う。
+各メンバは公開されており、直接書き換えられる。書き換え時の整合性検査は行わない。反復回数・評価回数・最良値の意味は、この値を生成した探索アルゴリズムに従う。
