@@ -3,7 +3,9 @@ title: Stochastic Descent Methods (確率的降下法)
 documentation_of: ../../../src/approximate/optimization/stochastic_descent.hpp
 ---
 
-## Stochastic Gradient Descent
+以下、次元を $N$、反復回数を $I$、目的関数 1 回のコストを $F$ とする。返り値はいずれも `OptimizationResult<Real>` である。
+
+## 確率的勾配降下法
 
 ```cpp
 stochastic_gradient_descent(
@@ -12,12 +14,9 @@ stochastic_gradient_descent(
     lower = {}, upper = {});
 ```
 
-各反復で一様ランダムな sample index を選び、
-`sample_gradient(point, sample)` で更新する。時間計算量は
-`O(I(F+G+N))`、空間計算量は `O(N)`。`F` は目的関数、`G` はsample勾配、
-`N` は次元の計算量。
+各反復で $[0, \texttt{sample_count})$ から一様ランダムに標本の添字を選び、`sample_gradient(point, sample)` で更新する。標本勾配 1 回のコストを $G$ として、時間計算量は $O(I(F+G+N))$、空間計算量は $O(N)$ である。
 
-## Mini-Batch Gradient Descent
+## ミニバッチ勾配降下法
 
 ```cpp
 mini_batch_gradient_descent(
@@ -26,10 +25,9 @@ mini_batch_gradient_descent(
     lower = {}, upper = {});
 ```
 
-復元抽出した `batch_size` 個の sample 勾配を平均する。時間計算量は
-`O(I(F+B(G+N)))`、空間計算量は `O(N)`。
+復元抽出した `batch_size` 個の標本勾配を平均して更新する。$B = \texttt{batch_size}$ として、時間計算量は $O(I(F+B(G+N)))$、空間計算量は $O(N)$ である。
 
-## Stochastic Coordinate Descent
+## 確率的座標降下法
 
 ```cpp
 stochastic_coordinate_descent(
@@ -38,12 +36,12 @@ stochastic_coordinate_descent(
     lower = {}, upper = {});
 ```
 
-一様ランダムな座標を選び、その偏微分だけで直ちに更新する。時間計算量は
-`O(I(F+C))`、空間計算量は `O(N)`。`C` は偏微分 callback の計算量。
+一様ランダムに座標を選び、その偏微分だけで直ちに更新する。偏微分のコールバック 1 回のコストを $C$ として、時間計算量は $O(I(F+C))$、空間計算量は $O(N)$ である。
 
 ## 注意点
 
-`Real` は浮動小数点型、初期点・目的値・勾配・学習率は有限でなければならない。
-sample 数と batch size は正である。box bounds を渡すと各更新後に射影する。
-`gradient_evaluations` はsample勾配または偏微分 callback の実呼出し回数である。
-確率的勾配に対する `tolerance` 判定は選ばれた推定値だけに基づく。
+- `Real` は浮動小数点型で、初期点・目的値・勾配・学習率は有限でなければならない
+- 標本数と `batch_size` は正でなければならない
+- 箱制約を渡すと、各更新の後に射影する
+- `gradient_evaluations` は、標本勾配または偏微分のコールバックを実際に呼んだ回数である
+- 確率的勾配に対する `tolerance` の判定は、選ばれた推定値だけに基づく
