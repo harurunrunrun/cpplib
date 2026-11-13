@@ -3,28 +3,29 @@ title: Sqrt Tree (平方根木)
 documentation_of: ../../../../src/structure/range_query/aggregation/sqrt_tree.hpp
 ---
 
-静的semigroup列の区間積。演算は結合的であればよく、単位元と可換性を要求しない。
+静的な半群の列に対して区間積を求める。演算は結合的であればよく、単位元と可換性は要求しない。
 
 ## テンプレート引数
 
 ~~~cpp
-SqrtTree<Semigroup, MAX_SIZE>
+template<auto Semigroup, int MAX_SIZE = -1>
+struct SqrtTree;
 ~~~
 
-`Semigroup` は次を持つ。
+`MAX_SIZE` は列の長さの上限である。省略時（`-1`）は上限を設けず、実行時の長さに合わせて `std::vector` で領域を確保する。`Semigroup` は次を持つ。
 
 ~~~cpp
 using S = ...;
 S op(S a, S b);
 ~~~
 
-`op(a,b)` は `a` の区間の後ろに `b` の区間を連結する順序で呼ばれる。
+`op(a, b)` は、`a` の区間の後ろに `b` の区間を連結する順序で呼ばれる。
 
 ## 構築・操作
 
 ~~~cpp
 SqrtTree()
-SqrtTree(const vector<S>& values)
+explicit SqrtTree(const vector<S>& values)
 void build(const vector<S>& values)
 int size() const
 bool empty() const
@@ -33,38 +34,27 @@ S prod(int l, int r) const
 S all_prod() const
 ~~~
 
-`prod` は非空半開区間 `[l,r)` を扱う。空列の `all_prod` は例外を送出する。
+`prod` は空でない半開区間 `[l, r)` の積を返す。空列に対する `all_prod` は例外を送出する。
 
 ## 時間計算量
 
-$N$ を列長、$L=O(\log\log(N+2))$ をlayer数とし、semigroup演算を $O(1)$ とする。
+$N$ を列の長さ、$L=O(\log\log(N+2))$ を層の数とし、半群の演算を $O(1)$ とする。
 
-- default constructor: 固定長arena初期化 $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$
-- vector constructor: 固定長arena初期化とbuildを含めて $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2)+NL)$
+- デフォルトコンストラクタ: 固定長の領域の初期化に $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$
+- `vector` を受け取るコンストラクタ: 固定長の領域の初期化と `build` を合わせて $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2)+NL)$
 - `build`: $O(NL)$
 - `size`, `empty`, `get`, `prod`, `all_prod`: $O(1)$
 
-各layerでblock内prefix/suffixとblock間積を前計算し、queryでは異なる最上位bitに対応するlayerをtableから直接選ぶ。
+各層でブロック内の接頭辞積・接尾辞積とブロック間の積を前計算し、クエリでは両端の添字の最上位の異なるビットに対応する層を表から直接選ぶ。
+
+`MAX_SIZE` を省略した場合、構築は $O(NL)$ である。
 
 ## 空間計算量
 
-- 固定arena: $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$
-- queryの追加領域: $O(1)$
+- 固定長の領域: $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$（省略時は $O(NL)$）
+- クエリの追加領域: $O(1)$
 
 ## 注意点
 
-`Semigroup.op` は結合的でなければならない。単位元と可換性は不要で、代数則は実行時に
-検査しない。`0 <= size() <= MAX_SIZE`、点は `[0,size())`、`prod` は非空半開区間を
-要求する。空列の `all_prod` を含む範囲違反では `runtime_error`。
-固定保存領域は $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$。
-`get`, `prod`, `all_prod` の追加領域は $O(1)$。
-
-## 可変長版
-
-```cpp
-using Dynamic = SqrtTree<Semigroup>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log log(n + 2))、区間積 O(1)。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- `Semigroup.op` は結合的でなければならない。単位元と可換性は不要で、代数的な性質は実行時に検査しない。
+- `0 <= size() <= MAX_SIZE`、`get` の添字は `[0, size())`、`prod` は空でない半開区間を要求する。空列への `all_prod` を含め、範囲違反では `std::runtime_error` を送出する。

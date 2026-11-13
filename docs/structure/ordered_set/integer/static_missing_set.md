@@ -34,7 +34,7 @@ uint64_t first() const
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| constructor | $O(N\log N)$ | $O(N)$ |
+| コンストラクタ | $O(N\log N)$ | $O(N)$ |
 | `kth_missing` | $O(\log N)$ | $O(1)$ |
 | `stored_size`, `first` | $O(1)$ | $O(1)$ |
 

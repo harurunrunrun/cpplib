@@ -3,21 +3,22 @@ title: Static Range Sum Sqrt Tree (静的区間和平方根木) [static_range_su
 documentation_of: ../../../../src/structure/range_query/aggregation/static_range_sum_sqrt_tree.hpp
 ---
 
-静的な数列に対する区間和を Sqrt Tree で求める。
+静的な数列の区間和を Sqrt Tree で求める。
 
 ## 型
 
 ```cpp
-StaticRangeSumSqrtTree<T, MAX_SIZE>
+template<class T, int MAX_SIZE = -1>
+class StaticRangeSumSqrtTree;
 ```
 
-`T` は加算、`T(0)`、コピーを使用できる型とする。
+`T` は加算・`T(0)`・コピーが使える型とする。`MAX_SIZE` は列の長さの上限であり、省略時（`-1`）は上限を設けず、実行時の長さに合わせて `std::vector` で領域を確保する。
 
 ## コンストラクタ
 
 ```cpp
 StaticRangeSumSqrtTree()
-StaticRangeSumSqrtTree(const vector<T>& values)
+explicit StaticRangeSumSqrtTree(const vector<T>& values)
 ```
 
 空の構造、または `values` を格納した構造を作る。
@@ -28,7 +29,7 @@ StaticRangeSumSqrtTree(const vector<T>& values)
 void build(const vector<T>& values)
 ```
 
-格納列を `values` で再構築する。
+格納する列を `values` で再構築する。
 
 ## `size`, `empty`
 
@@ -37,7 +38,7 @@ int size() const
 bool empty() const
 ```
 
-列長と、列が空かどうかを返す。
+列の長さと、列が空かどうかを返す。
 
 ## `get`
 
@@ -53,7 +54,7 @@ T get(int index) const
 T sum(int left, int right) const
 ```
 
-半開区間 `[left, right)` の和を返す。空区間の和は `T(0)`。
+半開区間 `[left, right)` の和を返す。空区間の和は `T(0)` である。
 
 ## `all_sum`
 
@@ -61,32 +62,24 @@ T sum(int left, int right) const
 T all_sum() const
 ```
 
-全要素の和を返す。空列の和は `T(0)`。
+全要素の和を返す。空列の和は `T(0)` である。
 
 ## 時間計算量
 
-列長を $N$、$L=O(\log\log(N+2))$ とする。
+列の長さを $N$、$L=O(\log\log(N+2))$ とする。
 
-- default constructor: $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$
-- vector constructor: $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2)+NL)$
+- デフォルトコンストラクタ: $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$
+- `vector` を受け取るコンストラクタ: $O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2)+NL)$
 - `build`: $O(NL)$
 - `size`, `empty`, `get`, `sum`, `all_sum`: $O(1)$
 
+`MAX_SIZE` を省略した場合、構築は $O(NL)$ である。
+
 ## 空間計算量
 
-$O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$。
+$O(\texttt{MAX_SIZE}\log\log(\texttt{MAX_SIZE}+2))$（省略時は $O(NL)$）。
 
 ## 注意点
 
-- `values.size() <= MAX_SIZE` が必要。
-- `get` の添字と `sum` の区間は列の範囲内でなければならず、違反時は `runtime_error`。
-
-## 可変長版
-
-```cpp
-using Dynamic = StaticRangeSumSqrtTree<long long>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log log(n + 2))、区間和 O(1)。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- `values.size() <= MAX_SIZE` が必要である。
+- `get` の添字と `sum` の区間は列の範囲内でなければならず、違反時は `std::runtime_error` を送出する。

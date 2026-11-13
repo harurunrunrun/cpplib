@@ -3,42 +3,41 @@ title: Static Range Maximum Frequency (静的区間最大頻度) [FREQUENT]
 documentation_of: ../../../../src/structure/range_query/value_query/static_range_maximum_frequency.hpp
 ---
 
-非減少列の任意区間で、同じ値が現れる回数の最大値を返します。
+非減少な列の任意の区間で、同じ値が現れる回数の最大値を返す。
 
 ## API
 
+```cpp
+template<class T, int MAX_SIZE = -1>
+class StaticRangeMaximumFrequency;
+```
+
+`MAX_SIZE` は値の連（同じ値が連続する部分）の個数の上限であり、省略時（`-1`）は上限を設けない。
+
 ### `StaticRangeMaximumFrequency(values)`
 
-非減少な初期列から構築します。
+非減少な初期列から構築する。
 
 ### `size()`
 
-要素数を返します。
+要素数を返す。
 
 ### `maximum_frequency(left, right)`
 
-非空半開区間 `[left, right)` における最大出現回数を返します。
+空でない半開区間 `[left, right)` における、値の出現回数の最大値を返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
+
+要素数を $N$ とする。
 
 | API | 時間計算量 | 追加空間計算量 |
 | --- | --- | --- |
-| Constructor | $O(N\log N)$ | $O(N\log N)$ |
+| コンストラクタ | $O(N\log N)$ | $O(N\log N)$ |
 | `size()` | $O(1)$ | $O(1)$ |
-| `maximum_frequency(l,r)` | $O(1)$ | $O(1)$ |
+| `maximum_frequency(l, r)` | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-- 初期列は非減少でなければならず、違反時は `runtime_error` を送出します。
-- 非空区間だけを受け付けます。
-- 値の連長数が `MAX_SIZE` 以下でなければなりません。
-
-## 可変長版
-
-```cpp
-using Dynamic = StaticRangeMaximumFrequency<int>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log(n + 1))、整列済み列の区間最大頻度は O(1)。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- 初期列は非減少でなければならず、違反時は `std::runtime_error` を送出する。
+- 空でない区間 `0 <= left < right <= size()` だけを受け付け、違反時は `std::runtime_error` を送出する。
+- 値の連の個数が `MAX_SIZE` 以下でなければならない。

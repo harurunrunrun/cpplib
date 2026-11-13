@@ -3,60 +3,51 @@ title: Wide Segtree (ワイドセグメント木) [point_add_range_sum]
 documentation_of: ../../../../src/structure/segtree/basic/widesegtree.hpp
 ---
 
-広い分岐数を持つ動的セグメント木。
-
-値は `long long`、演算は和。
+分岐数の大きい動的セグメント木である。値は `long long`、演算は和である。
 
 ## テンプレート引数
 
 ```cpp
-Wide_Segtree<MAX_SIZE>
+template<long long MAX_SIZE = -1>
+struct Wide_Segtree;
 ```
 
-`[0, MAX_SIZE)` を扱う。
+添字の範囲 $[0, \texttt{MAX_SIZE})$ を扱う。ノードは必要な部分だけ動的に確保する。
 
-## point update
+## 1 点更新
 
 ```cpp
-void set(idx, x)
-void add(idx, x)
-long long get(idx)
+void set(long long idx, long long x)
+void add(long long idx, long long x)
+long long get(long long idx)
 ```
 
-## 時間計算量
+`set(idx, x)` は 1 点を `x` に置き換え、`add(idx, x)` は 1 点に `x` を加え、`get(idx)` は 1 点の値を返す。
 
-- `set`, `add`, `get`: $O(\log_B \texttt{MAX_SIZE})$
+時間計算量: `set`, `add`, `get` は $O(\log_B \texttt{MAX_SIZE})$
 
-## range product
+## 区間和
 
 ```cpp
-long long prod(l, r)
+long long prod(long long l, long long r)
 long long all_prod()
 ```
 
-`prod(l, r)` は半開区間 `[l,r)` の和を返す。
+`prod(l, r)` は半開区間 `[l, r)` の和を、`all_prod` は全体の和を返す。
 
-## 時間計算量
+時間計算量: `prod` は $O(\log_B \texttt{MAX_SIZE})$、`all_prod` は $O(1)$
 
-- `prod`: $O(\log_B \texttt{MAX_SIZE})$
-- `all_prod`: $O(1)$
+## 構築とコピー
 
-## 構築とcopy
+- デフォルトコンストラクタ: $O(1)$
+- コピーコンストラクタ、コピー代入: $O(U)$
 
-- default constructor: $O(1)$
-- copy constructor, copy assignment: $O(U)$
-
-$B$ は実行環境で選ばれる分岐数、$U$ は確保済みnode数。各point updateが新規確保するnode数は $O(\log_B \texttt{MAX_SIZE})$。
+$B$ は実行環境に応じて選ばれる分岐数、$U$ は確保済みのノード数である。1 点更新 1 回で新しく確保するノード数は $O(\log_B \texttt{MAX_SIZE})$ である。
 
 ## 注意点
 
-`set(idx,x)` は1点を置換し、`add(idx,x)` は加算する。`get` は1点、
-`prod(l,r)` は半開区間 `[l,r)`、`all_prod` は全域の和を返す。
-点・区間が `[0,MAX_SIZE)` 外なら `runtime_error`、確保失敗は `bad_alloc`。
-各APIの計算量は上記の通り。
+- 点・区間が $[0, \texttt{MAX_SIZE})$ の外なら `std::runtime_error` を送出する。メモリの確保に失敗すると `std::bad_alloc` を送出する。
 
 ## 容量を省略する場合
 
-容量引数の既定値は `-1`。`Wide_Segtree<> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+`MAX_SIZE` のデフォルトは `-1` である。`Wide_Segtree<> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使い、添字の範囲は $[0, n)$ になる（上記の計算量の $\texttt{MAX_SIZE}$ は $n$ に置き換わる）。このコンストラクタは `explicit Wide_Segtree(long long n = 0)` で、`n` が負または大きすぎる場合は `std::length_error` を送出する。

@@ -3,9 +3,9 @@ title: Monoid Merge Sort Tree (モノイドマージソート木)
 documentation_of: ../../../../src/structure/range_query/value_query/monoid_merge_sort_tree.hpp
 ---
 
-静的な key 列と重み列に対し、index 区間と key 上限を同時に指定して重みを集約する。
+静的なキーの列と重みの列に対して、添字の区間とキーの上限を同時に指定して重みを集約する。
 
-各重みは可換 Monoid の要素とする。同じ key を持つ要素も別々に集約する。
+各重みは可換なモノイドの要素とする。同じキーを持つ要素も別々に集約する。
 
 ## 使い方
 
@@ -22,25 +22,30 @@ long long y = tree.fold_less_equal(left, right, upper);
 
 ## テンプレート引数
 
+```cpp
+template<class Key, auto Monoid, int MAX_SIZE = -1, class Compare = std::less<Key>>
+struct MonoidMergeSortTree;
+```
+
 - `Key`
-    - key の型。
+    - キーの型。
 - `Monoid`
-    - `S op(S,S)` と `S e()` を持つ可換 Monoid。
+    - `S op(S, S)` と `S e()` を持つ可換なモノイド。
 - `MAX_SIZE`
-    - 列長の上限。
+    - 列の長さの上限。省略時（`-1`）は上限を設けず、実行時の長さに合わせて `std::vector` で領域を確保する。
 - `Compare`
-    - key の狭義弱順序。省略時は `std::less<Key>`。
+    - キーの狭義弱順序。省略時は `std::less<Key>`。
 
 ## メンバ関数
 
-- `MonoidMergeSortTree(vector<Key> keys, vector<S> weights, Compare compare = {})`
+- `explicit MonoidMergeSortTree(const vector<Key>& keys, const vector<S>& weights, Compare compare = {})`
     - `keys[i]` と `weights[i]` を組にして構築する。
-- `MonoidMergeSortTree(array<Key,N> keys, array<S,N> weights, Compare compare = {})`
-    - 固定長配列から構築する。
+- `explicit MonoidMergeSortTree(const array<Key, N>& keys, const array<S, N>& weights, Compare compare = {})`
+    - 固定長配列から構築する。`N <= MAX_SIZE` は `static_assert` で検査する。
 - `int size() const`
-    - 列長を返す。
+    - 列の長さを返す。
 - `bool empty() const`
-    - 列長が `0` かを返す。
+    - 列の長さが `0` かどうかを返す。
 - `const Key& key(int index) const`
     - `keys[index]` を返す。
 - `const S& weight(int index) const`
@@ -48,40 +53,32 @@ long long y = tree.fold_less_equal(left, right, upper);
 - `S fold(int left, int right) const`
     - `left <= i < right` を満たすすべての `weights[i]` を集約する。
 - `S fold_less(int left, int right, const Key& upper) const`
-    - `left <= i < right` かつ `Compare{}(keys[i], upper)` を満たす重みを集約する。
+    - `left <= i < right` かつ `compare(keys[i], upper)` を満たす重みを集約する。
 - `S fold_less_equal(int left, int right, const Key& upper) const`
-    - `left <= i < right` かつ `!Compare{}(upper, keys[i])` を満たす重みを集約する。
+    - `left <= i < right` かつ `!compare(upper, keys[i])` を満たす重みを集約する。
 
 ## 時間計算量
 
-- 2 種類の constructor: $O(N\log N)$
+列の長さを $N$ とする。
+
+- 2 種類のコンストラクタ: $O(N\log N)$
 - `size`, `empty`, `key`, `weight`: $O(1)$
 - `fold`: $O(\log N)$
 - `fold_less`, `fold_less_equal`: $O(\log^2 N)$
 
 ## 空間計算量（API 別の追加領域）
 
-- 2 種類の constructor: $O(N)$
+- 2 種類のコンストラクタ: $O(N)$
 - `fold`, `fold_less`, `fold_less_equal`: $O(\log N)$
 - `size`, `empty`, `key`, `weight`: $O(1)$
 
-構築済み object の保存領域は $O(N\log N)$。
+構築済みのオブジェクトの保存領域は $O(N\log N)$ である。
 
 ## 注意点
 
-- `keys.size() == weights.size() <= MAX_SIZE`。違反時は例外。
-- `key(index)` と `weight(index)` は `0 <= index < size()`。違反時は例外。
-- 3 種類の `fold` は `0 <= left <= right <= size()`。違反時は例外。
-- 空の対象集合は `Monoid.e()` を返す。
-- `Monoid.op` は結合的かつ可換で、`Monoid.e()` は単位元である必要がある。node 内では key 順に重みを保持するため、非可換 Monoid では元の index 順を保存できない。
-- `Compare` は狭義弱順序である必要がある。constructor に渡した比較 object が各 query でも使われる。
-
-## 可変長版
-
-```cpp
-using Dynamic = MonoidMergeSortTree<int, Monoid>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築 O(n log(n + 1))、保存領域 O(n log(n + 1))、値の上限付き区間集約は O(log²(n + 1))。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- `keys.size() == weights.size() <= MAX_SIZE` を要求し、違反時は `std::runtime_error` を送出する。
+- `key(index)` と `weight(index)` は `0 <= index < size()` を要求し、違反時は `std::runtime_error` を送出する。
+- 3 種類の `fold` は `0 <= left <= right <= size()` を要求し、違反時は `std::runtime_error` を送出する。
+- 集約の対象が空なら `Monoid.e()` を返す。
+- `Monoid.op` は結合的かつ可換で、`Monoid.e()` は単位元である必要がある。ノード内ではキーの順に重みを保持するので、非可換なモノイドでは元の添字の順序を保てない。
+- `Compare` は狭義弱順序である必要がある。コンストラクタに渡した比較オブジェクトが各クエリでも使われる。

@@ -3,7 +3,7 @@ title: Sparse Table (スパーステーブル) [staticrmq]
 documentation_of: ../../../../src/structure/range_query/aggregation/sparse_table.hpp
 ---
 
-静的な列に対する冪等な演算の区間取得。
+静的な列に対して、冪等な演算の区間積を求める。
 
 演算は結合的かつ冪等である必要がある。最小値、最大値、gcd などに使える。
 
@@ -15,16 +15,23 @@ SparseTable<min_monoid, 200000> st(a);
 int x = st.prod(l, r);
 ```
 
+```cpp
+template<auto Semilattice, int MAX_SIZE = -1>
+struct SparseTable;
+```
+
+`MAX_SIZE` は列の長さの上限である。省略時（`-1`）は上限を設けず、実行時の長さに合わせて `std::vector` で領域を確保する。
+
 ## メンバ関数
 
-- `SparseTable(int n = MAX_SIZE)`
-    - 長さ `n` の列を単位元で初期化する。
-- `SparseTable(vector<S> v)`
+- `explicit SparseTable(int n = MAX_SIZE)`
+    - 長さ `n` の列を単位元で初期化する（`MAX_SIZE` 省略時のデフォルトは `n = 0`）。
+- `explicit SparseTable(const vector<S>& v)`
     - `v` で初期化する。
 - `int size() const`
-    - 長さを返す。
+    - 列の長さを返す。
 - `bool empty() const`
-    - 長さが `0` かを返す。
+    - 長さが `0` かどうかを返す。
 - `S get(int k) const`
     - `a[k]` を返す。
 - `S prod(int l, int r) const`
@@ -40,25 +47,17 @@ int x = st.prod(l, r);
 - `prod`, `all_prod`: $O(1)$
 - `size`, `empty`: $O(1)$
 
-## 空間計算量（API別の追加空間計算量）
+`MAX_SIZE` を省略した場合、構築は $O(n\log(n+1))$ である。
 
-- 2種類のconstructor、`size`、`empty`、`get`、`prod`、`all_prod`: $O(1)$
+## 空間計算量（API 別の追加空間計算量）
 
-構築済みtableの保存領域は $O(\texttt{MAX_SIZE}\log\texttt{MAX_SIZE})$ であり、constructorはそのobject内領域へ直接構築する。
+- 2 種類のコンストラクタ、`size`、`empty`、`get`、`prod`、`all_prod`: $O(1)$
+
+構築済みのテーブルの保存領域は $O(\texttt{MAX_SIZE}\log\texttt{MAX_SIZE})$（省略時は $O(n\log(n+1))$）であり、コンストラクタはオブジェクト内の領域へ直接構築する。
 
 ## 注意点
 
-- `0 <= n <= MAX_SIZE`。vector長超過を含むconstructor違反は例外。
-- `get(k)`は`0 <= k < n`、`prod(l,r)`は`0 <= l <= r <= n`。違反時は例外。
-- 空区間の`prod`と空列の`all_prod`は単位元を返す。
-- `Semilattice.op`は結合的かつ冪等で、`e`は単位元である必要がある。
-
-## 可変長版
-
-```cpp
-using Dynamic = SparseTable<Semilattice>;
-```
-
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築・保存領域 O(n log(n + 1))、区間積 O(1)。
-
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+- `0 <= n <= MAX_SIZE` を要求する。`vector` の長さが上限を超える場合を含め、コンストラクタの引数が不正なら `std::runtime_error` を送出する。
+- `get(k)` は `0 <= k < n`、`prod(l, r)` は `0 <= l <= r <= n` を要求し、違反時は `std::runtime_error` を送出する。
+- 空区間の `prod` と空列の `all_prod` は単位元を返す。
+- `Semilattice.op` は結合的かつ冪等で、`e` は単位元である必要がある。

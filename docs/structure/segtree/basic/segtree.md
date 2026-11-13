@@ -3,26 +3,30 @@ title: Segment Tree (セグメント木) [DSL_2_A]
 documentation_of: ../../../../src/structure/segtree/basic/segtree.hpp
 ---
 
-モノイドの列について、1点更新、区間に対する演算を $O(\log n)$ で行う。
+モノイドの列について、1 点の更新と区間積を $O(\log n)$ で行う。
 
-indexはすべて0-indexed。
+添字はすべて 0-indexed である。
 
 ## コンストラクタ
 
 ```cpp
-(1) Segtree<auto Monoid, int MAX_SIZE>(int n = MAX_SIZE)
-(2) Segtree<auto Monoid, int MAX_SIZE>(const vector<S>& v)
+template<auto Monoid, int MAX_SIZE = -1>
+struct Segtree;
+
+(1) explicit Segtree(int n = MAX_SIZE)
+(2) explicit Segtree(const vector<S>& v)
 ```
-- モノイド `Monoid`
-- モノイドの型 `S`
-- 配列の最大制約 `MAX_SIZE`
 
-1. モノイド `Monoid`、サイズ `n` で初期化する。各要素は単位元 `Monoid.e()`。
-2. モノイド `Monoid`、配列 `v` で初期化。
+- `Monoid`: モノイド
+- `S`: モノイドの値の型
+- `MAX_SIZE`: 列の長さの上限
 
-ここで使用する `Monoid` は `constexpr` である必要がある。
+1. 長さ `n` で初期化する。各要素は単位元 `Monoid.e()` である。
+2. 配列 `v` で初期化する。
 
-例えば Range Minimum Query のモノイドは以下のようになる。
+`Monoid` は `constexpr` である必要がある。
+
+例えば区間最小値のモノイドは次のように書ける。
 
 ```cpp
 int op(int a, int b){
@@ -36,11 +40,13 @@ int e(){
 constexpr Monoid<op,e> monoid;
 ```
 
-## 時間計算量
+### 時間計算量
 
 - $O(\texttt{MAX_SIZE})$
 
-固定容量のtree配列全体を単位元で初期化する。
+固定容量の木の配列全体を単位元で初期化する。
+
+以下、$M$ を `MAX_SIZE` 以上の最小の 2 冪とする（容量省略時は $n$ 以上の最小の 2 冪）。
 
 ## set
 
@@ -50,93 +56,75 @@ void set(int k, const S& x)
 
 `k` 番目の要素を `x` に変更する。
 
-## 時間計算量
-
-- $O(\log n)$
-
+時間計算量: $O(\log M)$
 
 ## get
 
 ```cpp
-S get(int k)
+S get(int k) const
 ```
 
-`k` 番目の要素を取得する。
+`k` 番目の要素を返す。
 
-## 時間計算量
-
-- $O(1)$
+時間計算量: $O(1)$
 
 ## prod
 
 ```cpp
-S prod(int l, int r)
+S prod(int l, int r) const
 ```
 
-区間 `[l,r)` の演算結果を返す。
+区間 `[l, r)` の演算結果を返す。
 
-## 時間計算量
-
-- $O(\log n)$
+時間計算量: $O(\log M)$
 
 ## all_prod
 
 ```cpp
-S all_prod()
+S all_prod() const
 ```
 
-区間 `[0,n)`の演算結果を返す。
+区間 `[0, n)` の演算結果を返す。
 
-## 時間計算量
-
-- $O(1)$
+時間計算量: $O(1)$
 
 ## max_right
 
 ```cpp
-int max_right(int l, auto f, auto&&... args)
+int max_right(int l, auto f, auto&&... args) const
 ```
 
-関数 `bool f(S x, auto args)` を定義し、segtree上で二分探索をする。
+関数 `bool f(S x, auto... args)` を使って、セグメント木上で二分探索をする。`args` は `f` に渡す可変長引数である。
 
-`args` は `f` で用いる可変引数。
+`f` が単調であるとき、`f(prod(l, r), args...) == true` となる最大の `r` を返す。
 
-`f` を単調としたとき、 `f(prod(l,r), args...)= true` となる最大の `r` を返す。
+`f(Monoid.e(), args...) == true` が必要である。
 
-`f(Monoid.e(), args...) = true` が必要。
-
-## 時間計算量
-
-- $O(\log n)$
+時間計算量: $O(\log M)$
 
 ## min_left
 
 ```cpp
-int min_left(int r, auto f, auto&&... args)
+int min_left(int r, auto f, auto&&... args) const
 ```
 
-関数 `bool f(S x, auto args)` を定義し、segtree上で二分探索をする。
+関数 `bool f(S x, auto... args)` を使って、セグメント木上で二分探索をする。`args` は `f` に渡す可変長引数である。
 
-`args` は `f` で用いる可変引数。
+`f` が単調であるとき、`f(prod(l, r), args...) == true` となる最小の `l` を返す。
 
-`f` を単調としたとき、 `f(prod(l,r), args...)= true` となる最小の `l` を返す。
+`f(Monoid.e(), args...) == true` が必要である。
 
-`f(Monoid.e(), args...) = true` が必要。
-
-## 時間計算量
-
-- $O(\log n)$
+時間計算量: $O(\log M)$
 
 ## 注意点
 
-実際の列長を (n) とする。コンストラクタの `n` と `v.size()` は
-`MAX_SIZE` 以下でなければならない。点 `k` は `0 <= k < n`、
-区間は `0 <= l <= r <= n` の半開区間 `[l,r)` で指定する。
-境界探索のpredicateは単調で、`f(Monoid.e(), args...) == true` が必要である。
-容量、添字、区間またはpredicateの前提違反では `runtime_error` を送出する。
+- 実際の列の長さを $n$ とする。コンストラクタの `n` と `v.size()` は `MAX_SIZE` 以下でなければならない。
+- 点 `k` は `0 <= k < n`、区間は `0 <= l <= r <= n` の半開区間 `[l, r)` で指定する。
+- 境界探索の述語は単調で、`f(Monoid.e(), args...) == true` を満たす必要がある。
+- 容量、添字、区間、または述語の前提に違反すると `std::runtime_error` を送出する。
 
 ## 容量を省略する場合
 
-容量引数の既定値は `-1`。`Segtree<Monoid> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
+容量のテンプレート引数のデフォルトは `-1` である。`Segtree<Monoid> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使う。非負の容量を指定する固定長配列版も利用できる。容量以外のテンプレート引数（モノイドなど）は引き続き指定する。
 
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+可変長版では木の幅・高さを実行時の入力から求め、要素数に比例する記憶領域を確保する。更新・クエリのアルゴリズムは固定長配列版と同じであり、上記の計算量の $\texttt{MAX_SIZE}$ は実際の要素数 $n$ に置き換わる。添字に使う整数型の表現範囲と実メモリの容量が上限となる。
