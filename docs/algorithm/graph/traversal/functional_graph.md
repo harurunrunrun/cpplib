@@ -21,7 +21,7 @@ FunctionalGraph<> dynamic(successors);
 FunctionalGraph<100000> fixed(successors);
 ```
 
-64 段のダブリング表を構築するため、前処理は $O(64N)$ 時間を使う。表の領域は可変長版で $O(64N)$、固定長版ではオブジェクト内に $O(64\,\texttt{MAX_SIZE})$ である。64 は移動回数に使う `unsigned long long` のビット幅であり、頂点の容量とは独立している。閉路への分解自体は $O(N)$ 時間である。
+木の部分（閉路に入るまでの長さは $N$ 未満）の移動だけに使う $\lfloor\log_2 N\rfloor+1$ 段のダブリング表を構築するため、前処理は $O(N\log N)$ 時間を使う。表の領域は可変長版で $O(N\log N)$、固定長版ではオブジェクト内に $O(\texttt{MAX_SIZE}\log\texttt{MAX_SIZE})$ である。閉路に入った後の移動は閉路上の位置と閉路の頂点列から $O(1)$ で求める。閉路への分解自体は $O(N)$ 時間である。
 
 デフォルトコンストラクタは頂点数 0 の空のグラフを作る。`build(successor)` は以前の内容を破棄して再構築する。
 
@@ -81,18 +81,18 @@ long long graph.steps_to(from, to)
 
 `steps_to(from, to)` は、`from` から辺を進んで初めて `to` に到達するまでの辺数を返す。到達できなければ `-1` を返す。
 
-- `jump`: $O(64)$
-- `steps_to`: $O(64)$
+- `jump`: $O(\log N)$
+- `steps_to`: $O(\log N)$
 
 ## API別の時間計算量・空間計算量
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| コンストラクタ / `build(successor)` | $O(64N)$ | 可変長版 $O(64N)$、固定長版はオブジェクト内に $O(64\,\texttt{MAX_SIZE})$ |
+| コンストラクタ / `build(successor)` | $O(N\log N)$ | 可変長版 $O(N\log N)$、固定長版はオブジェクト内に $O(\texttt{MAX_SIZE}\log\texttt{MAX_SIZE})$ |
 | `size`, `empty`, `component_count`, `successor` | $O(1)$ | $O(1)$ |
 | 頂点ごとの分解結果のクエリ | $O(1)$ | $O(1)$ |
 | `component_size`, `cycle_size`, `cycle` | $O(1)$ | $O(1)$（`cycle` はビュー） |
-| `jump`, `steps_to` | $O(64)$ | $O(1)$ |
+| `jump`, `steps_to` | $O(\log N)$ | $O(1)$ |
 
 ## 注意点
 

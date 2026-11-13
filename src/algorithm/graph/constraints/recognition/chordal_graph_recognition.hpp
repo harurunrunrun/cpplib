@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <queue>
-#include <set>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -45,25 +44,74 @@ inline ChordalGraphRecognitionResult chordal_graph_recognition(
     std::vector<unsigned char> selected(
         static_cast<std::size_t>(vertex_count)
     );
-    std::set<std::pair<int, int>> queue;
-    for(int vertex = 0; vertex < vertex_count; ++vertex){
-        queue.insert({0, vertex});
+    // Indexed binary max-heap of the unselected vertices keyed by
+    // (weight, vertex). Keys are distinct, so the top is the same vertex an
+    // ordered set of these pairs would give; a weight increment is a sift-up.
+    std::vector<int> heap(static_cast<std::size_t>(vertex_count));
+    std::vector<int> position(static_cast<std::size_t>(vertex_count));
+    const auto higher = [&](int left, int right){
+        const int left_weight = weight[static_cast<std::size_t>(left)];
+        const int right_weight = weight[static_cast<std::size_t>(right)];
+        return left_weight != right_weight
+            ? left_weight > right_weight
+            : left > right;
+    };
+    const auto place = [&](int slot, int vertex){
+        heap[static_cast<std::size_t>(slot)] = vertex;
+        position[static_cast<std::size_t>(vertex)] = slot;
+    };
+    const auto sift_up = [&](int slot){
+        const int vertex = heap[static_cast<std::size_t>(slot)];
+        while(slot > 0){
+            const int parent_slot = (slot - 1) / 2;
+            const int parent = heap[static_cast<std::size_t>(parent_slot)];
+            if(!higher(vertex, parent)) break;
+            place(slot, parent);
+            slot = parent_slot;
+        }
+        place(slot, vertex);
+    };
+    int heap_size = vertex_count;
+    const auto sift_down = [&](int slot){
+        const int vertex = heap[static_cast<std::size_t>(slot)];
+        while(true){
+            int child_slot = 2 * slot + 1;
+            if(child_slot >= heap_size) break;
+            if(child_slot + 1 < heap_size &&
+               higher(
+                   heap[static_cast<std::size_t>(child_slot + 1)],
+                   heap[static_cast<std::size_t>(child_slot)]
+               )){
+                ++child_slot;
+            }
+            const int child = heap[static_cast<std::size_t>(child_slot)];
+            if(!higher(child, vertex)) break;
+            place(slot, child);
+            slot = child_slot;
+        }
+        place(slot, vertex);
+    };
+    // All weights start at 0, so the vertices in decreasing order form a heap.
+    for(int slot = 0; slot < vertex_count; ++slot){
+        place(slot, vertex_count - 1 - slot);
     }
     std::vector<int> selection_order;
     selection_order.reserve(static_cast<std::size_t>(vertex_count));
-    while(!queue.empty()){
-        const auto iterator = std::prev(queue.end());
-        const int vertex = iterator->second;
-        queue.erase(iterator);
+    while(heap_size > 0){
+        const int vertex = heap[0];
+        --heap_size;
+        if(heap_size > 0){
+            place(0, heap[static_cast<std::size_t>(heap_size)]);
+            sift_down(0);
+        }
         index[static_cast<std::size_t>(vertex)] =
             static_cast<int>(selection_order.size());
         selection_order.push_back(vertex);
         selected[static_cast<std::size_t>(vertex)] = 1;
         for(int to: graph[static_cast<std::size_t>(vertex)]){
             if(selected[static_cast<std::size_t>(to)]) continue;
-            queue.erase({weight[static_cast<std::size_t>(to)], to});
             ++weight[static_cast<std::size_t>(to)];
-            queue.insert({weight[static_cast<std::size_t>(to)], to});
+            sift_up(position[static_cast<std::size_t>(to)]);
         }
     }
 

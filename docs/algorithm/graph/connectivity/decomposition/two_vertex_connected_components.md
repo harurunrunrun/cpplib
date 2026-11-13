@@ -36,7 +36,7 @@ vector<vector<int>> edge_groups;
 
 - `two_vertex_connected_components`: $O(N + M \log (M + 1) + A \log (A + 1))$
 
-Lowlink（関節点を求めるため `lowlink` を別に呼ぶ）と成分を求める DFS は $O(N + M)$。各成分の頂点と辺 ID をソートする時間の合計が $O(M \log (M + 1))$、関節点のソートが $O(A \log (A + 1))$。孤立点を含む戻り値の総要素数は $O(N + M)$。
+成分を求める DFS（同じ DFS の中で関節点も判定する）は $O(N + M)$。各成分の頂点と辺 ID をソートする時間の合計が $O(M \log (M + 1))$、関節点のソートが $O(A \log (A + 1))$。孤立点を含む戻り値の総要素数は $O(N + M)$。
 
 ## 空間計算量
 

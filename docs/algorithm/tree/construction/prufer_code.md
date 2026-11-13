@@ -17,7 +17,7 @@ std::vector<std::pair<int, int>> prufer_decode(const std::vector<int>& code)
 
 ## 時間計算量
 
-`prufer_encode`, `prufer_decode` ともに $O(N\log N)$ である。
+`prufer_encode`, `prufer_decode` ともに $O(N)$ である（番号最小の葉は、単調に進むポインタと直前に葉になった 1 頂点だけで管理する）。
 
 ## 注意点
 

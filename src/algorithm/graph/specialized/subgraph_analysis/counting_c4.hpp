@@ -22,12 +22,22 @@ inline std::vector<long long> simple_graph(
         ++degree[static_cast<std::size_t>(from[static_cast<std::size_t>(edge)])];
         ++degree[static_cast<std::size_t>(to[static_cast<std::size_t>(edge)])];
     }
+    // Stable counting sort of the vertices by degree (same order as a
+    // stable_sort by degree).
+    int maximum_degree = 0;
+    for(int value: degree) maximum_degree = std::max(maximum_degree, value);
+    std::vector<int> bucket_start(static_cast<std::size_t>(maximum_degree) + 2);
+    for(int value: degree) ++bucket_start[static_cast<std::size_t>(value) + 1];
+    for(int value = 0; value <= maximum_degree; ++value){
+        bucket_start[static_cast<std::size_t>(value) + 1] +=
+            bucket_start[static_cast<std::size_t>(value)];
+    }
     std::vector<int> order(static_cast<std::size_t>(vertex_count));
-    std::iota(order.begin(), order.end(), 0);
-    std::stable_sort(order.begin(), order.end(), [&](int left, int right){
-        return degree[static_cast<std::size_t>(left)] <
-            degree[static_cast<std::size_t>(right)];
-    });
+    for(int vertex = 0; vertex < vertex_count; ++vertex){
+        order[static_cast<std::size_t>(bucket_start[
+            static_cast<std::size_t>(degree[static_cast<std::size_t>(vertex)])
+        ]++)] = vertex;
+    }
     std::vector<int> rank(static_cast<std::size_t>(vertex_count));
     for(int index = 0; index < vertex_count; ++index){
         rank[static_cast<std::size_t>(

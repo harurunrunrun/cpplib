@@ -37,6 +37,11 @@ inline std::optional<CactusDecompositionResult> cactus_decomposition(
     TwoVertexConnectedComponentsResult components =
         two_vertex_connected_components(vertex_count, edges);
     CactusDecompositionResult result;
+    // Shared adjacency buffer; only the vertices of the current component are
+    // filled, and they are cleared again before the next component.
+    std::vector<std::vector<std::pair<int, int>>> graph(
+        static_cast<std::size_t>(vertex_count)
+    );
     for(std::size_t index = 0; index < components.edge_groups.size(); ++index){
         const auto& edge_group = components.edge_groups[index];
         const auto& vertex_group = components.vertex_groups[index];
@@ -46,9 +51,6 @@ inline std::optional<CactusDecompositionResult> cactus_decomposition(
             continue;
         }
         if(edge_group.size() != vertex_group.size()) return std::nullopt;
-        std::vector<std::vector<std::pair<int, int>>> graph(
-            static_cast<std::size_t>(vertex_count)
-        );
         for(int edge_id: edge_group){
             auto [from, to] = edges[static_cast<std::size_t>(edge_id)];
             graph[static_cast<std::size_t>(from)].emplace_back(to, edge_id);
@@ -80,6 +82,9 @@ inline std::optional<CactusDecompositionResult> cactus_decomposition(
             if(cycle.size() > edge_group.size()) return std::nullopt;
         }while(vertex != start);
         if(cycle_edges.size() != edge_group.size()) return std::nullopt;
+        for(int vertex_in_group: vertex_group){
+            graph[static_cast<std::size_t>(vertex_in_group)].clear();
+        }
         result.cycles.push_back(std::move(cycle));
         result.cycle_edge_ids.push_back(std::move(cycle_edges));
     }
