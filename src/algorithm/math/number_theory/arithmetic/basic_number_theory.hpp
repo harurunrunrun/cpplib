@@ -30,6 +30,9 @@ struct QuotientRange{
 };
 
 constexpr long long abs_ll(long long x){
+    if(x == std::numeric_limits<long long>::min())[[unlikely]]{
+        throw std::runtime_error("library assertion fault: overflow (abs_ll).");
+    }
     return x < 0 ? -x : x;
 }
 

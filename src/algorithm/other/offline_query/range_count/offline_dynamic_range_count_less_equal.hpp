@@ -53,6 +53,10 @@ public:
             points.add(index, current[static_cast<std::size_t>(index)], 1);
         }
         std::vector<int> answer;
+        // Count over positions [0, end); avoids passing -1 as a coordinate of type T.
+        auto prefix = [&](int end, const T& upper) -> int {
+            return end == 0 ? 0 : points.prefix_sum_leq(end - 1, upper);
+        };
         for(const auto& operation: operations_){
             if(operation.update){
                 T& value = current[static_cast<std::size_t>(operation.first)];
@@ -61,8 +65,8 @@ public:
                 points.add(operation.first, value, 1);
             }else{
                 answer.push_back(
-                    points.prefix_sum_leq(operation.second - 1, operation.value)
-                    - points.prefix_sum_leq(operation.first - 1, operation.value)
+                    prefix(operation.second, operation.value)
+                    - prefix(operation.first, operation.value)
                 );
             }
         }

@@ -26,6 +26,6 @@ using Basis = std::array<std::uint64_t, Bits>;
 
 ## 注意点
 
-- `1 <= Bits <= 64` でなければならない（`static_assert`）。各値は $2^{\mathrm{Bits}}$ 未満であることを前提とする（`Bits` 以上のビットは無視される）。
+- `1 <= Bits <= 64` でなければならない（`static_assert`）。各値は $2^{\mathrm{Bits}}$ 未満でなければならず、そうでない値があるとコンストラクタが `std::invalid_argument` を送出する。
 - 入力は連結な無向木とし、`values` の長さは頂点数と一致させる。
 - 長さの不一致・非連結では `std::invalid_argument`、`root` や頂点が範囲外では `std::out_of_range` を送出する。

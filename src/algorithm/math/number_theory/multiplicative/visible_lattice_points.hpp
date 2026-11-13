@@ -14,11 +14,10 @@ class VisibleLatticePointsTable{
 
 public:
     explicit VisibleLatticePointsTable(int limit):
-        mertens(static_cast<std::size_t>(limit) + 1)
+        mertens((limit < 1
+            ? throw std::invalid_argument("visible lattice limit must be positive")
+            : static_cast<std::size_t>(limit)) + 1)
     {
-        if(limit < 1)[[unlikely]]{
-            throw std::invalid_argument("visible lattice limit must be positive");
-        }
         std::vector<int> primes;
         std::vector<int> mobius(static_cast<std::size_t>(limit) + 1);
         std::vector<bool> composite(static_cast<std::size_t>(limit) + 1);

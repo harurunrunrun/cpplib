@@ -13,11 +13,10 @@ class LcmSumTable{
 
 public:
     explicit LcmSumTable(int limit):
-        smallest_prime(static_cast<std::size_t>(limit) + 1)
+        smallest_prime((limit < 1
+            ? throw std::invalid_argument("LcmSumTable requires a positive limit")
+            : static_cast<std::size_t>(limit)) + 1)
     {
-        if(limit < 1)[[unlikely]]{
-            throw std::invalid_argument("LcmSumTable requires a positive limit");
-        }
         for(int value = 2; value <= limit; ++value){
             if(smallest_prime[static_cast<std::size_t>(value)] != 0) continue;
             smallest_prime[static_cast<std::size_t>(value)] =

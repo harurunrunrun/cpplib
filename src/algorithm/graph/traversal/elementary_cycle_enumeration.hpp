@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <functional>
 #include <stdexcept>
 #include <unordered_set>
 #include <utility>
@@ -130,36 +129,65 @@ inline std::vector<std::vector<int>> enumerate_elementary_cycles(
             static_cast<std::size_t>(vertex_count)
         );
         std::vector<int> path;
-        std::function<void(int)> unblock = [&](int vertex) -> void {
-            blocked[static_cast<std::size_t>(vertex)] = 0;
-            std::unordered_set<int> waiting =
-                std::move(dependency[static_cast<std::size_t>(vertex)]);
-            dependency[static_cast<std::size_t>(vertex)].clear();
-            for(int to: waiting){
-                if(blocked[static_cast<std::size_t>(to)] != 0) unblock(to);
+        // Iterative versions of Johnson's UNBLOCK and CIRCUIT, so that the
+        // depth of the search does not consume the call stack.
+        std::vector<int> pending;
+        auto unblock = [&](int vertex) -> void {
+            pending.assign(1, vertex);
+            bool first = true;
+            while(!pending.empty()){
+                const int current = pending.back();
+                pending.pop_back();
+                if(!first && blocked[static_cast<std::size_t>(current)] == 0){
+                    continue;
+                }
+                first = false;
+                blocked[static_cast<std::size_t>(current)] = 0;
+                std::unordered_set<int> waiting =
+                    std::move(dependency[static_cast<std::size_t>(current)]);
+                dependency[static_cast<std::size_t>(current)].clear();
+                for(int to: waiting){
+                    if(blocked[static_cast<std::size_t>(to)] != 0){
+                        pending.push_back(to);
+                    }
+                }
             }
         };
-        std::function<bool(int)> circuit = [&](int vertex) -> bool {
-            bool found = false;
+        struct Frame{
+            int vertex;
+            std::size_t cursor;
+            bool found;
+        };
+        std::vector<Frame> frames;
+        auto enter = [&](int vertex) -> void {
             path.push_back(vertex);
             blocked[static_cast<std::size_t>(vertex)] = 1;
-            for(int to: graph[static_cast<std::size_t>(vertex)]){
+            frames.push_back({vertex, 0, false});
+        };
+        enter(start);
+        while(!frames.empty()){
+            Frame& frame = frames.back();
+            const int vertex = frame.vertex;
+            const auto& next = graph[static_cast<std::size_t>(vertex)];
+            if(frame.cursor < next.size()){
+                const int to = next[frame.cursor++];
                 if(component[static_cast<std::size_t>(to)]
                     != selected_component){
                     continue;
                 }
                 if(to == start){
                     result.push_back(path);
-                    found = true;
-                }else if(blocked[static_cast<std::size_t>(to)] == 0
-                    && circuit(to)){
-                    found = true;
+                    frame.found = true;
+                }else if(blocked[static_cast<std::size_t>(to)] == 0){
+                    enter(to);
                 }
+                continue;
             }
+            const bool found = frame.found;
             if(found){
                 unblock(vertex);
             }else{
-                for(int to: graph[static_cast<std::size_t>(vertex)]){
+                for(int to: next){
                     if(component[static_cast<std::size_t>(to)]
                         != selected_component){
                         continue;
@@ -168,9 +196,9 @@ inline std::vector<std::vector<int>> enumerate_elementary_cycles(
                 }
             }
             path.pop_back();
-            return found;
-        };
-        circuit(start);
+            frames.pop_back();
+            if(found && !frames.empty()) frames.back().found = true;
+        }
         lower_bound = start + 1;
     }
     std::sort(result.begin(), result.end());

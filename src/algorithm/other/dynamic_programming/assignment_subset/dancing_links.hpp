@@ -45,9 +45,15 @@ struct DancingLinks{
     }
 
     int add_row(const std::vector<int>& columns){
-        const int row_id = row_count++;
         std::vector<int> sorted = columns;
         std::sort(sorted.begin(), sorted.end());
+        if(!sorted.empty() &&
+           (sorted.front() < 0 || column_count <= sorted.back()))[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation "
+                "(DancingLinks::add_row)."
+            );
+        }
         if(std::adjacent_find(sorted.begin(), sorted.end()) != sorted.end())
             [[unlikely]]{
             throw std::runtime_error(
@@ -55,16 +61,10 @@ struct DancingLinks{
                 "(DancingLinks::add_row)."
             );
         }
+        const int row_id = row_count++;
         int first_node = -1;
         int previous_node = -1;
         for(int zero_based_column: columns){
-            if(zero_based_column < 0 || column_count <= zero_based_column)
-                [[unlikely]]{
-                throw std::runtime_error(
-                    "library assertion fault: range violation "
-                    "(DancingLinks::add_row)."
-                );
-            }
             const int header = zero_based_column + 1;
             const int node = static_cast<int>(left.size());
             left.push_back(node);

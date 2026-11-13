@@ -11,6 +11,10 @@
 namespace math{
 namespace garner_internal{
 
+inline u64 add_mod(u64 left, u64 right, u64 modulus){
+    return left >= modulus - right ? left - (modulus - right) : left + right;
+}
+
 inline u64 inverse_coprime(u64 value, u64 modulus){
     if(modulus == 1) return 0;
     __int128 old_remainder = value;
@@ -77,8 +81,9 @@ inline u64 garner_algorithm(
     for(std::size_t index = 0; index < count; ++index){
         const u64 modulus = extended_moduli[index];
         const u64 residue = remainders[index] % modulus;
-        const u64 difference =
-            (residue + modulus - constant[index]) % modulus;
+        const u64 difference = garner_internal::add_mod(
+            residue, modulus - constant[index], modulus
+        );
         const u64 digit = mul_mod_u64(
             difference,
             garner_internal::inverse_coprime(
@@ -88,10 +93,11 @@ inline u64 garner_algorithm(
         );
         for(std::size_t other = index + 1; other <= count; ++other){
             const u64 other_modulus = extended_moduli[other];
-            constant[other] = (
-                constant[other]
-                + mul_mod_u64(coefficient[other], digit, other_modulus)
-            ) % other_modulus;
+            constant[other] = garner_internal::add_mod(
+                constant[other],
+                mul_mod_u64(coefficient[other], digit, other_modulus),
+                other_modulus
+            );
             coefficient[other] = mul_mod_u64(
                 coefficient[other], modulus % other_modulus, other_modulus
             );

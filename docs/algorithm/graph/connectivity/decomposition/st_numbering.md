@@ -47,4 +47,4 @@ optional<STNumberingResult> st_numbering(
 
 ## 注意点
 
-`vertex_count` が負、`source` または `sink` が範囲外（頂点数 0 の場合を含む）、辺の端点が範囲外、または自己ループを含む場合は `std::runtime_error` を送出する。ただし、上記の頂点数 1 の場合と `source == sink` の場合は辺の検査より前に返る。
+`vertex_count` が負、`source` または `sink` が範囲外（頂点数 0 の場合を含む）、辺の端点が範囲外、または自己ループを含む場合は `std::runtime_error` を送出する。これらの検査は、頂点数 1 の場合や `source == sink` の場合を含め、常に結果を返す前に行う。

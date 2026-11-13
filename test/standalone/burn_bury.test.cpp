@@ -82,6 +82,17 @@ void self_test(){
             {{0, 1, 0, 5, 5, 0}},
             res.assignment
         ) == res.cost);
+        const auto again = graph.solve();
+        assert(again.cost == res.cost);
+        assert(again.assignment == res.assignment);
+        graph.add_one_cost(0, 0, 4);
+        const auto extended = graph.solve();
+        assert(extended.cost == brute(
+            2, {{3, 4}, {0, 3}}, {{0, 1, 0, 5, 5, 0}}
+        ));
+        assert(assignment_cost(
+            2, {{3, 4}, {0, 3}}, {{0, 1, 0, 5, 5, 0}}, extended.assignment
+        ) == extended.cost);
     }
     {
         BurnBury<long long> graph(2);

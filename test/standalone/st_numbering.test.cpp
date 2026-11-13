@@ -139,6 +139,21 @@ void test_boundaries(){
     try{ (void)st_numbering(3, {{1, 1}}, 0, 2); }
     catch(const std::runtime_error&){ thrown = true; }
     assert(thrown);
+    // Edges are validated even when the result is decided without them.
+    thrown = false;
+    try{ (void)st_numbering(1, {{0, 0}}, 0, 0); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+    thrown = false;
+    try{ (void)st_numbering(1, {{0, 1}}, 0, 0); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+    thrown = false;
+    try{ (void)st_numbering(3, {{0, 3}}, 1, 1); }
+    catch(const std::runtime_error&){ thrown = true; }
+    assert(thrown);
+    assert(st_numbering(1, {}, 0, 0).has_value());
+    assert(!st_numbering(3, {{0, 1}}, 1, 1).has_value());
 }
 
 int main(){

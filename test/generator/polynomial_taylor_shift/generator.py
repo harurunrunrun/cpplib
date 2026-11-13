@@ -31,7 +31,8 @@ def main() -> None:
     args.out_dir.mkdir(parents=True, exist_ok=True)
     rng = random.Random(0x71A710)
     cases: list[tuple[list[int], int]] = [
-        ([], 0), ([7], 123), ([1, 2, 3], 0), ([1, 2, 3], 5)
+        ([], 0), ([7], 123), ([1, 2, 3], 0), ([1, 2, 3], 5),
+        ([0, 1], 0), ([0, 0, 5], 0), ([0, 0, 0], 3),
     ]
     for size in [2, 4, 8, 17, 40, 100]:
         cases.append((

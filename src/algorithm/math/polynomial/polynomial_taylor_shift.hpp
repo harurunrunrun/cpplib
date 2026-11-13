@@ -49,7 +49,10 @@ Polynomial<MOD> polynomial_taylor_shift(
     );
     Polynomial<MOD> result(size);
     for(std::size_t index = 0; index < size; ++index){
-        result[index] = product[size - 1 - index] * inverse_factorial[index];
+        const std::size_t position = size - 1 - index;
+        if(position < product.size()){
+            result[index] = product[position] * inverse_factorial[index];
+        }
     }
     return result;
 }

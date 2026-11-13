@@ -65,7 +65,13 @@ struct BurnBury{
     }
 
     BurnBuryResult<T> solve(){
-        T flow = graph.max_flow(source, sink);
+        graph.max_flow(source, sink);
+        // Use the total net flow out of source so that repeated calls (possibly
+        // after adding more costs) count the flow pushed by earlier calls too.
+        T flow = T(0);
+        for(int id: graph.graph[static_cast<std::size_t>(source)]){
+            flow += graph.edges[static_cast<std::size_t>(id)].flow;
+        }
         auto reachable = graph.min_cut(source);
         BurnBuryResult<T> result;
         result.cost = constant + flow;

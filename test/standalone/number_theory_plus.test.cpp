@@ -43,6 +43,15 @@ int main(){
         return 8;
     }catch(const std::runtime_error&){
     }
+    {
+        const math::u64 big = 18446744073709551557ULL;
+        if(math::garner_algorithm({big - 1, 0}, {big, 2}, big - 2) != 1)
+            return 9;
+        if(math::garner_algorithm({1, big - 1}, {3, big}, ~0ULL)
+            != 18446744073709551556ULL) return 10;
+        if(math::garner_algorithm({big - 1}, {big}, big - 3) != 2)
+            return 11;
+    }
     int case_count;
     if(!(std::cin >> case_count)) return 1;
     while(case_count-- > 0){

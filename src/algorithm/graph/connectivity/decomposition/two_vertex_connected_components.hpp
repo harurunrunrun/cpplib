@@ -33,6 +33,9 @@ inline TwoVertexConnectedComponentsResult two_vertex_connected_components(
         auto [u, v] = edges[static_cast<std::size_t>(id)];
         graph[static_cast<std::size_t>(u)].push_back({v, id});
         graph[static_cast<std::size_t>(v)].push_back({u, id});
+        // Self loops do not connect a vertex to anything else; a vertex with
+        // only self loops is treated like an isolated vertex.
+        if(u == v) continue;
         degree[static_cast<std::size_t>(u)]++;
         degree[static_cast<std::size_t>(v)]++;
     }
