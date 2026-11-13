@@ -14,6 +14,27 @@ class SkewHeap {
         std::unique_ptr<Node> left;
         std::unique_ptr<Node> right;
         explicit Node(T value_) : value(std::move(value_)) {}
+        Node(const Node&) = delete;
+        Node& operator=(const Node&) = delete;
+        // Releases descendants iteratively so that long paths do not
+        // overflow the call stack.
+        ~Node() {
+            release(left);
+            release(right);
+        }
+
+        static void release(std::unique_ptr<Node>& node) noexcept {
+            while (node) {
+                if (node->left) {
+                    auto next = std::move(node->left);
+                    node->left = std::move(next->right);
+                    next->right = std::move(node);
+                    node = std::move(next);
+                } else {
+                    node = std::move(node->right);
+                }
+            }
+        }
     };
     std::unique_ptr<Node> root_;
     std::size_t size_ = 0;
@@ -25,8 +46,23 @@ class SkewHeap {
         if (!a) return b;
         if (!b) return a;
         if (compare_(b->value, a->value)) std::swap(a, b);
-        a->right = meld_nodes(std::move(a->right), std::move(b));
-        std::swap(a->left, a->right);
+        // Iterative form of: a->right = meld(a->right, b); swap(a->left, a->right).
+        Node* current = a.get();
+        while (true) {
+            auto rest = std::move(current->right);
+            current->right = std::move(current->left);
+            if (!rest) {
+                current->left = std::move(b);
+                break;
+            }
+            if (!b) {
+                current->left = std::move(rest);
+                break;
+            }
+            if (compare_(b->value, rest->value)) std::swap(rest, b);
+            current->left = std::move(rest);
+            current = current->left.get();
+        }
         return a;
     }
 

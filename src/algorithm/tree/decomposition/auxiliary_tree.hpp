@@ -272,7 +272,7 @@ public:
 
     int compress(std::span<const int> vertices){
         require_prepared("library assertion fault: AuxiliaryTree is not built (compress).");
-        if(vertices.size() > static_cast<std::size_t>(MAX_SIZE))[[unlikely]]{
+        if(vertices.size() > selected_vertices.size())[[unlikely]]{
             throw std::runtime_error(
                 "library assertion fault: capacity exceeded (AuxiliaryTree::compress)."
             );

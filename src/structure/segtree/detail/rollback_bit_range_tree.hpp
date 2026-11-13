@@ -420,7 +420,7 @@ private:
 public:
     explicit RollbackBitRangeTree(long long n = 0): _n(n){
         initialize_storage(n);
-        if(n <= 0 || MAX_SIZE < n)[[unlikely]]{
+        if(n < 0 || MAX_SIZE < n)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (constructor).");
         }
         root_at.fill(-1);

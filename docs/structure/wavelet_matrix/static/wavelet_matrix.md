@@ -93,5 +93,5 @@ $O(D W)$ ワードと $O(N)$（固定長版では $O(\texttt{MAX_SIZE})$）の�
 
 - 列の区間は半開区間 $[l, r)$、値域も半開区間 $[\mathit{lower}, \mathit{upper})$ である。
 - 列長が `MAX_SIZE` を超える場合、値が `BIT_WIDTH` bit に収まらない場合、添字・区間・`k` が範囲外の場合、`lower > upper` の場合は `std::runtime_error` を送出する。
-- `range_freq` などに渡す `upper` / `lower` は `BIT_WIDTH` bit に収まる値を前提とする（上位 bit は検査されず無視される）。
+- `range_freq` / `prev_value` / `next_value` などに渡す `upper` / `lower` が $2^{\texttt{BIT_WIDTH}}$ 以上の場合は、すべての要素より大きい値として扱う。`rank` / `select` に $2^{\texttt{BIT_WIDTH}}$ 以上の値を渡すと、出現しない値として扱う。
 - コピーは禁止、ムーブは可能。

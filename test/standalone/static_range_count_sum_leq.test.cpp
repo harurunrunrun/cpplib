@@ -67,6 +67,15 @@ void self_test(){
         thrown = true;
     }
     assert(thrown);
+
+    const std::vector<unsigned> narrow_values = {0, 3, 7, 5, 1, 7};
+    StaticRangeCountSumLeq<unsigned, long long, -1, 3> narrow(narrow_values);
+    const auto narrow_all = narrow.query(0, 6, 7u);
+    assert(narrow_all.count == 6 && narrow_all.sum == 23);
+    const auto narrow_large = narrow.query(0, 6, 100u);
+    assert(narrow_large.count == 6 && narrow_large.sum == 23);
+    const auto narrow_part = narrow.query(1, 4, 6u);
+    assert(narrow_part.count == 2 && narrow_part.sum == 8);
 }
 
 int main(){

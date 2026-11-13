@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <vector>
 
-#if defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+#if defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__)) && !defined(WST_NO_AVX2)
 #pragma GCC target("avx2,popcnt")
 #include <immintrin.h>
 #define BIT01_WST_USE_AVX2 1

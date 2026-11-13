@@ -38,7 +38,18 @@ void check_persistent_state_api(){
     assert(tree.sum(flipped, 0, 8) == 3);
 }
 
+template<class Tree>
+void check_persistent_default_empty(){
+    Tree tree;
+    assert(tree.size() == 0 && tree.versions() == 1);
+    const int next = tree.flip(0, 0, 0);
+    assert(next == 1 && tree.sum(next, 0, 0) == 0 && tree.nodes_used() == 0);
+}
+
 void self_test(){
+    check_persistent_default_empty<PersistentBitAssignRangeSum<>>();
+    check_persistent_default_empty<PersistentBitAssignRangeSumRangeFlip<>>();
+    check_persistent_default_empty<PersistentBitOverwriteRangeSum<>>();
     check_persistent_state_api<PersistentBitAssignRangeSum<16, 512, 16>>();
     check_persistent_state_api<PersistentDynamicBitAssignRangeSum<16, 512, 16>>();
     check_persistent_state_api<PersistentBitAssignRangeSumRangeFlip<16, 512, 16>>();

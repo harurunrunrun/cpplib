@@ -5,10 +5,39 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include "../../src/structure/wavelet_matrix/static/compressed_weighted_wavelet_matrix.hpp"
 #include "../../src/structure/wavelet_matrix/static/functional_wavelet_matrix.hpp"
+
+void check_narrow_id_bit_width(){
+    const std::vector<long long> values = {40, -5, 40, 7, 1000, -5};
+    const std::vector<long long> weights = {1, 2, 4, 8, 16, 32};
+    CompressedWeightedWaveletMatrix<long long, long long, -1, 2> weighted(values, weights);
+    assert(weighted.value_count() == 4);
+    assert(weighted.access(4) == 1000);
+    assert(weighted.rank(-5, 0, 6) == 2);
+    assert(weighted.rank(8, 0, 6) == 0);
+    assert(weighted.kth_smallest(0, 6, 3) == 40);
+    assert(weighted.range_freq(0, 6, 40) == 3);
+    assert(weighted.range_freq(0, 6, 7, 2000) == 4);
+    assert(weighted.range_sum(0, 6, 41) == 47);
+    assert(weighted.range_sum(0, 6, 5000) == 63);
+    assert(weighted.sum_k_largest(0, 6, 1) == 16);
+    FunctionalWaveletMatrix<long long, 8, long long, 3> functional(values);
+    assert(functional.range_sum(0, 6, 41) == 77);
+    assert(functional.kth_largest(0, 6, 0) == 1000);
+
+    bool thrown = false;
+    try{
+        CompressedWeightedWaveletMatrix<int, long long, -1, 1> too_many(
+            std::vector<int>{0, 1, 2}, std::vector<long long>{1, 1, 1});
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+}
 
 int main(){
     int input_n, q;
@@ -52,6 +81,7 @@ int main(){
         return 0;
     }
 
+    check_narrow_id_bit_width();
     constexpr int n = 157;
     std::mt19937 rng(57721);
     std::vector<int> values(n);

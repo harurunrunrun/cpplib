@@ -40,8 +40,36 @@ void dynamic_capacity_test(){
     }
 }
 
+template<class Sketch>
+void check_kll_level_overflow(Sketch& small_kll){
+    small_kll.add(10);
+    small_kll.add(20);
+    small_kll.add(30);
+    for(int attempt = 0; attempt < 2; ++attempt){
+        bool level_thrown = false;
+        try{
+            small_kll.add(40);
+        }catch(const std::overflow_error&){
+            level_thrown = true;
+        }
+        assert(level_thrown);
+        assert(small_kll.size() == 3U && small_kll.retained_items() == 2U);
+        assert(small_kll.quantile(1.0L) == 30);
+        const int low = small_kll.quantile(0.0L);
+        assert(low == 10 || low == 20);
+    }
+}
+
+void kll_level_overflow_test(){
+    KLLSketch<int, 2, 2> fixed_small_kll(5);
+    check_kll_level_overflow(fixed_small_kll);
+    KLLSketch<int> dynamic_small_kll(2, 2, 5);
+    check_kll_level_overflow(dynamic_small_kll);
+}
+
 int main(){
     dynamic_capacity_test();
+    kll_level_overflow_test();
     int count;
     if(!(std::cin >> count)) return 0;
     MisraGries<int, 15> misra_gries;

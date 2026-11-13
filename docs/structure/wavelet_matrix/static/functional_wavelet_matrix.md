@@ -59,5 +59,5 @@ $N$ を列長、$D$ を相異なる値の個数、$H = \texttt{ID_BIT_WIDTH}$ �
 
 - 列の区間は半開区間 $[l, r)$、値域も半開区間 $[\mathit{lower}, \mathit{upper})$ である。
 - 列長が `MAX_SIZE` を超える場合や、添字・区間・`k` が範囲外の場合などは `std::runtime_error` を送出する。
-- 基底クラスの制約により、現状 `ID_BIT_WIDTH` に 32 以外を指定するとコンパイルエラーになる。
+- 相異なる値の個数 $D$ は $D \le 2^{\texttt{ID_BIT_WIDTH}}$ を満たす必要がある。満たさない場合は構築時に `std::runtime_error` を送出する。
 - 和が `Sum` の範囲に収まることは利用者が保証する。

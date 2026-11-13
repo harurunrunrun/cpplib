@@ -39,5 +39,5 @@ $N$ を列の長さとする。
 - 添字は 0-indexed、区間は半開区間 $[l, r)$ である。`0 <= l <= r <= size()` と `k < size()` を要求し、違反は `assert` の失敗になる。
 - `std::vector` から構築するとき、非零の値は 1 として扱う。
 - 保存領域は $O(N/64)$ ワードで、構築以外の各 API の追加の空間計算量は $O(1)$ である。
-- x86 の GCC では、ヘッダ内で `#pragma GCC target("avx2,popcnt")` を指定する。AVX2 に対応しない環境では実行できない。
-- `bitassign_rangesum.hpp` と `bitassign_rangesum_rangeflip.hpp` はどちらもクラス `Bit01WST` を定義するため、同じ翻訳単位で両方を include することはできない。
+- x86 の GCC では、`WST_NO_AVX2` を定義しない限りヘッダ内で `#pragma GCC target("avx2,popcnt")` を指定する。AVX2 に対応しない環境では `WST_NO_AVX2` を定義してから include すると、AVX2 を使わない実装になる。
+- `bitassign_rangesum.hpp` と `bitassign_rangesum_rangeflip.hpp` はどちらもクラス `Bit01WST` を定義するため、同じ翻訳単位で両方をそのまま include することはできない。両方が必要な場合は、`#define Bit01WST 別名` としてから include し直後に `#undef Bit01WST` することを、ヘッダごとに別の名前で行う。

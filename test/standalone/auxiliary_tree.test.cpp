@@ -26,8 +26,8 @@ void self_test(){
     assert(tree.is_ancestor(1, 4));
     assert(!tree.is_ancestor(1, 6));
     const std::vector<int> vertices = {3, 4, 6, 3};
-    assert(tree.compress(vertices) == 6);
-    assert(tree.compressed_size() == 6);
+    assert(tree.compress(vertices) == 5);
+    assert(tree.compressed_size() == 5);
     assert(tree.vertex(0) == 0);
     assert(tree.parent_index(0) == -1);
     assert(tree.edge_length(0) == 0);
@@ -49,6 +49,21 @@ void self_test(){
     thrown = false;
     try{
         (void)not_built.depth(0);
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+
+    AuxiliaryTree<> dynamic_tree(3);
+    dynamic_tree.add_edge(0, 1);
+    dynamic_tree.add_edge(1, 2);
+    dynamic_tree.build();
+    const std::vector<int> three = {2, 0, 2};
+    assert(dynamic_tree.compress(three) == 2);
+    const std::vector<int> too_many = {0, 1, 2, 2};
+    thrown = false;
+    try{
+        (void)dynamic_tree.compress(too_many);
     }catch(const std::runtime_error&){
         thrown = true;
     }

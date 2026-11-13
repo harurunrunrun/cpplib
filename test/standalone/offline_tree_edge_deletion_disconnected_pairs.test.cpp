@@ -8,7 +8,23 @@
 
 #include "../../src/structure/dsu/specialized/offline_tree_edge_deletion_disconnected_pairs.hpp"
 
+void check_large_fixed_capacity(){
+    // Two fixed-capacity DSUs of this size would not fit on a typical 8 MiB stack.
+    OfflineTreeEdgeDeletionDisconnectedPairs<4000000> structure(4);
+    const int first = structure.add_edge(0, 1);
+    structure.add_edge(1, 2);
+    const int third = structure.add_edge(2, 3);
+    structure.add_query();
+    structure.delete_edge(first);
+    structure.add_query();
+    structure.delete_edge(third);
+    structure.add_query();
+    const std::vector<long long> expected{0, 3, 5};
+    assert(structure.solve() == expected);
+}
+
 int main(){
+    check_large_fixed_capacity();
     // Dynamic wrappers: runtime capacities.
     {
         OfflineTreeEdgeDeletionDisconnectedPairs<> tree(129);

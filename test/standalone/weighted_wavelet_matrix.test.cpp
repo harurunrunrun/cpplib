@@ -10,6 +10,25 @@
 #include <vector>
 #include "../../src/structure/wavelet_matrix/static/weighted_wavelet_matrix.hpp"
 
+void check_narrow_bit_width(){
+    const std::vector<unsigned> values = {0, 3, 7, 5, 1, 7};
+    const std::vector<long long> weights = {1, 10, 100, 1000, 10000, 100000};
+    WeightedWaveletMatrix<unsigned, long long, -1, 3> matrix(values, weights);
+    assert(matrix.range_freq(0, 6, 7u) == 4);
+    assert(matrix.range_freq(0, 6, 8u) == 6);
+    assert(matrix.range_freq(0, 6, 1000u) == 6);
+    assert(matrix.range_freq(0, 6, 1u, 8u) == 5);
+    assert(matrix.range_sum(0, 6, 8u) == 111111);
+    assert(matrix.range_sum(0, 6, 9u) == 111111);
+    assert(matrix.range_sum(1, 6, 1u, 8u) == 111110);
+    assert(matrix.range_sum(0, 6, 8u, 9u) == 0);
+    assert(matrix.prev_value(0, 6, 8u) == std::optional<unsigned>(7u));
+    assert(!matrix.next_value(0, 6, 8u).has_value());
+    assert(matrix.rank(8u, 0, 6) == 0);
+    WeightedWaveletMatrix<unsigned, long long, 8, 3> fixed(values, weights);
+    assert(fixed.range_sum(2, 4, 8u) == 1100);
+}
+
 int main(){
     int input_n, q;
     if(std::cin >> input_n >> q){
@@ -69,6 +88,7 @@ int main(){
         return 0;
     }
 
+    check_narrow_bit_width();
     constexpr int n = 151;
     std::mt19937 rng(314159);
     std::vector<int> values(n);

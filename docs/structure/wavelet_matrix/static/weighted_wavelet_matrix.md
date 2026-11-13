@@ -100,5 +100,5 @@ $N$ を列長、$D = \texttt{BIT_WIDTH}$ とする。
 
 - 列の区間は半開区間 $[l, r)$、値域も半開区間 $[\mathit{lower}, \mathit{upper})$ である。
 - 2 つの入力列の長さが異なる場合、列長が `MAX_SIZE` を超える場合、値が `BIT_WIDTH` bit に収まらない場合、添字・区間・`k` が範囲外の場合、`lower > upper` の場合は `std::runtime_error` を送出する。
-- `upper` / `lower` は `BIT_WIDTH` bit に収まる値を前提とする（上位 bit は検査されず無視される）。
+- `range_freq` / `range_sum` / `prev_value` / `next_value` などに渡す `upper` / `lower` が $2^{\texttt{BIT_WIDTH}}$ 以上の場合は、すべての要素より大きい値として扱う。`rank` に $2^{\texttt{BIT_WIDTH}}$ 以上の値を渡すと、出現しない値として扱う。
 - コピーは禁止、ムーブは可能。

@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_FENWICK_TREE_FENWICK_ORDERED_SETS_HPP_INCLUDED
 
 #include <algorithm>
+#include <cstddef>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -23,8 +24,10 @@ class FenwickOrderedSets{
 
 public:
     FenwickOrderedSets(int n, const std::vector<std::pair<int, Value>>& possible_updates)
-        : n_(n), coordinates_(n + 1), bit_(n + 1){
+        : n_(n){
         if(n < 0) throw std::invalid_argument("FenwickOrderedSets: negative size");
+        coordinates_.resize(static_cast<std::size_t>(n) + 1);
+        bit_.resize(static_cast<std::size_t>(n) + 1);
         for(const auto& [position, value]: possible_updates){
             if(position < 0 || position >= n_) throw std::out_of_range("FenwickOrderedSets: invalid position");
             for(int p = position + 1; p <= n_; p += p & -p) coordinates_[p].push_back(value);

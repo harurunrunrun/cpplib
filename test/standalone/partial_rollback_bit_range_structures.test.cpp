@@ -71,7 +71,31 @@ void check_rollback_state_api(){
     assert(tree.nodes_used() == 0 && tree.changes_used() == 0 && tree.sum(0, 8) == 0);
 }
 
+template<class Tree>
+void check_partial_default_empty(){
+    Tree tree;
+    assert(tree.size() == 0 && tree.versions() == 1);
+    const int next = tree.flip(0, 0);
+    assert(next == 1 && tree.sum(next, 0, 0) == 0 && tree.nodes_used() == 0);
+}
+
+template<class Tree>
+void check_rollback_default_empty(){
+    Tree tree;
+    assert(tree.size() == 0 && tree.versions() == 1);
+    const int next = tree.flip(0, 0);
+    assert(next == 1 && tree.sum(0, 0) == 0 && tree.nodes_used() == 0);
+    tree.rollback(0);
+    assert(tree.versions() == 1);
+}
+
 void self_test(){
+    check_partial_default_empty<PartiallyPersistentBitAssignRangeSum<>>();
+    check_partial_default_empty<PartiallyPersistentBitAssignRangeSumRangeFlip<>>();
+    check_partial_default_empty<PartiallyPersistentBitOverwriteRangeSum<>>();
+    check_rollback_default_empty<RollbackBitAssignRangeSum<>>();
+    check_rollback_default_empty<RollbackBitAssignRangeSumRangeFlip<>>();
+    check_rollback_default_empty<RollbackBitOverwriteRangeSum<>>();
     check_partial_state_api<PartiallyPersistentBitAssignRangeSum<16, 512, 16, 1024>>();
     check_partial_state_api<PartiallyPersistentDynamicBitAssignRangeSum<16, 512, 16, 1024>>();
     check_partial_state_api<PartiallyPersistentBitAssignRangeSumRangeFlip<16, 512, 16, 1024>>();

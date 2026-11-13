@@ -39,6 +39,16 @@ class KLLSketch {
         for(const T& promoted_value: promoted) insert_at(level + 1U, promoted_value);
     }
 
+    // Simulates only the level sizes of the cascade caused by adding one item.
+    bool add_exceeds_levels() const noexcept {
+        std::size_t carry = 1;
+        for(std::size_t level = 0; carry != 0; ++level){
+            if(level == MaxLevels) return true;
+            carry = (sizes_[level] + carry) / K * (K / 2U);
+        }
+        return false;
+    }
+
 public:
     explicit KLLSketch(std::uint64_t seed = 0, Compare compare = Compare{})
         : engine_(seed), compare_(std::move(compare)) {}
@@ -53,6 +63,7 @@ public:
         if(count_ == std::numeric_limits<std::uint64_t>::max()){
             throw std::overflow_error("KLLSketch item count overflow");
         }
+        if(add_exceeds_levels()) throw std::overflow_error("KLLSketch level capacity exceeded");
         insert_at(0, value);
         ++count_;
     }
@@ -141,6 +152,16 @@ class KLLSketch<T, static_cast<std::size_t>(-1), static_cast<std::size_t>(-1), C
         for(const T& promoted_value: promoted) insert_at(level + 1U, promoted_value);
     }
 
+    // Simulates only the level sizes of the cascade caused by adding one item.
+    bool add_exceeds_levels() const noexcept {
+        std::size_t carry = 1;
+        for(std::size_t level = 0; carry != 0; ++level){
+            if(level == maximum_levels_) return true;
+            carry = (sizes_[level] + carry) / capacity_ * (capacity_ / 2U);
+        }
+        return false;
+    }
+
 public:
     explicit KLLSketch(std::size_t capacity = 200, std::size_t maximum_levels = 32, std::uint64_t seed = 0, Compare compare = Compare{})
         : capacity_(capacity), maximum_levels_(maximum_levels),  engine_(seed), compare_(std::move(compare)) {
@@ -163,6 +184,7 @@ public:
         if(count_ == std::numeric_limits<std::uint64_t>::max()){
             throw std::overflow_error("KLLSketch item count overflow");
         }
+        if(add_exceeds_levels()) throw std::overflow_error("KLLSketch level capacity exceeded");
         insert_at(0, value);
         ++count_;
     }

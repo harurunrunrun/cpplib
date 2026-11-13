@@ -55,6 +55,9 @@ private:
     }
 
     int count_less_encoded(int l, int r, U upper) const{
+        if constexpr(BIT_WIDTH < digits){
+            if((upper >> BIT_WIDTH) != 0) return r - l;
+        }
         int result = 0;
         for(int level = 0; level < BIT_WIDTH; level++){
             int bit_index = BIT_WIDTH - 1 - level;
@@ -144,6 +147,9 @@ public:
     int rank(T value, int l, int r) const{
         check_range(l, r, "library assertion fault: range violation (rank).");
         U key = encode(value);
+        if constexpr(BIT_WIDTH < digits){
+            if((key >> BIT_WIDTH) != 0) return 0;
+        }
         for(int level = 0; level < BIT_WIDTH; level++){
             bool bit = (key >> (BIT_WIDTH - 1 - level)) & 1;
             if(bit){

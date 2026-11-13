@@ -95,5 +95,5 @@ $O(H N)$（固定長版では $O(H \cdot \texttt{MAX_SIZE})$）。
 - 列の区間は半開区間 $[l, r)$、値域も半開区間 $[\mathit{lower}, \mathit{upper})$ である。
 - `range_min` / `range_max` / `median_floor` / `median_ceil` は空でない区間を前提とする。
 - 2 つの入力列の長さが異なる場合、列長が `MAX_SIZE` を超える場合、添字・区間・圧縮 ID・`k` が範囲外の場合、`lower > upper` の場合は `std::runtime_error` を送出する。
-- 内部で圧縮 ID を `int` 値の `WeightedWaveletMatrix` に格納しており、符号付き整数では bit 数を省略しなければならない制約により、現状 `ID_BIT_WIDTH` に 32 以外を指定するとコンパイルエラーになる。
+- 圧縮 ID は内部で符号なし整数として保持するので、相異なる値の個数 $D$ は $D \le 2^{\texttt{ID_BIT_WIDTH}}$ を満たす必要がある。満たさない場合は構築時に `std::runtime_error` を送出する。
 - コピーは禁止、ムーブは可能。
