@@ -34,7 +34,7 @@ $N$ を `text` の長さ、$M$ をパターン長、$K$ を一致件数とする
 | `equal_range`, `count` | $O(M)$ | $O(1)$ |
 | `locate` | $O(M+K)$ | $O(K)$ |
 
-コンストラクタの $O(N\log N)$ は、`std::vector<int>` に対する `suffix_array`（座標圧縮のソートと SA-IS）による。
+コンストラクタの $O(N\log N)$ は、`std::vector<int>` に対する `suffix_array`（座標圧縮のソートと、入力に応じて選ぶ SA-IS またはダブリング）による。
 
 ## 注意点
 
