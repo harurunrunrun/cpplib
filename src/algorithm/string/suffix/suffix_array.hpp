@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <numeric>
 #include <stdexcept>
 #include <string>
@@ -10,7 +11,82 @@
 
 namespace suffix_array_internal{
 
-inline std::vector<int> build_from_ranks(std::vector<int> rank, int classes){
+// sa is sorted by the first k elements of each suffix and rank[i] is the class of
+// suffix i under that order.  If few suffixes share a class with another one,
+// keeps doubling only inside those classes and returns the suffix array;
+// otherwise, or if the tied suffixes summed over the rounds exceed n (which keeps
+// the work O(n log n)), returns an empty vector.
+inline std::vector<int> refine_small_groups(
+    std::vector<int> sa, const std::vector<int>& rank, int k
+){
+    const int n = (int)sa.size();
+    std::vector<int> group_rank(n);
+    std::vector<std::pair<int, int>> groups;
+    int unresolved = 0;
+    for(int l = 0, r; l < n; l = r){
+        r = l + 1;
+        while(r < n && rank[sa[r]] == rank[sa[l]]){
+            r++;
+        }
+        for(int i = l; i < r; i++){
+            group_rank[sa[i]] = l;
+        }
+        if(r - l >= 2){
+            groups.emplace_back(l, r);
+            unresolved += r - l;
+        }
+    }
+    if(unresolved > n / 64){
+        return {};
+    }
+
+    std::vector<std::pair<int, int>> keyed(unresolved), next_groups;
+    long long budget = n;
+    for(; !groups.empty(); k <<= 1){
+        int offset = 0;
+        for(const auto& [l, r]: groups){
+            for(int i = l; i < r; i++){
+                const int x = sa[i];
+                keyed[offset++] = {x + k < n ? group_rank[x + k] : -1, x};
+            }
+        }
+        budget -= offset;
+        if(budget < 0){
+            return {};
+        }
+        offset = 0;
+        next_groups.clear();
+        for(const auto& [l, r]: groups){
+            auto first = keyed.begin() + offset;
+            std::sort(first, first + (r - l));
+            for(int i = l, j; i < r; i = j){
+                j = i + 1;
+                while(j < r && keyed[offset + (j - l)].first == keyed[offset + (i - l)].first){
+                    j++;
+                }
+                for(int t = i; t < j; t++){
+                    sa[t] = keyed[offset + (t - l)].second;
+                    group_rank[sa[t]] = i;
+                }
+                if(j - i >= 2){
+                    next_groups.emplace_back(i, j);
+                }
+            }
+            offset += r - l;
+        }
+        groups.swap(next_groups);
+    }
+    return sa;
+}
+
+// Prefix doubling.  If max_rounds is given, stops after that many rounds (each
+// doubles the compared prefix length) and finishes with refine_small_groups;
+// it also gives up early when, after a round, clearly more suffixes are still
+// tied than in a random sequence over log_alphabet = log(classes) symbols.
+// Returns an empty vector when it gives up.
+inline std::vector<int> build_from_ranks(
+    std::vector<int> rank, int classes, int max_rounds = -1, double log_alphabet = 0
+){
     const int n = (int)rank.size();
     if(n == 0){
         return {};
@@ -29,6 +105,9 @@ inline std::vector<int> build_from_ranks(std::vector<int> rank, int classes){
     }
 
     for(int k = 1; k < n && classes < n; k <<= 1){
+        if(max_rounds-- == 0){
+            return refine_small_groups(std::move(sa), rank, k);
+        }
         std::iota(idx.begin(), idx.end(), 0);
 
         auto radix_sort = [&](const std::vector<int>& in, std::vector<int>& out, auto key){
@@ -51,18 +130,106 @@ inline std::vector<int> build_from_ranks(std::vector<int> rank, int classes){
         radix_sort(buf, sa, [&](int x){ return rank[x] + 1; });
 
         nrank[sa[0]] = 0;
-        int next_classes = 1;
+        int next_classes = 1, singletons = 0, run = 1;
         for(int i = 1; i < n; i++){
             const int a = sa[i - 1], b = sa[i];
             const int a2 = a + k < n ? rank[a + k] : -1;
             const int b2 = b + k < n ? rank[b + k] : -1;
             if(rank[a] != rank[b] || a2 != b2){
                 next_classes++;
+                singletons += run == 1;
+                run = 0;
             }
+            run++;
             nrank[b] = next_classes - 1;
         }
+        singletons += run == 1;
         rank.swap(nrank);
         classes = next_classes;
+        if(max_rounds >= 0 && classes < n){
+            // n balls into alphabet^(2k) bins: the expected number of balls
+            // sharing a bin is n (1 - exp(-n / alphabet^(2k))).
+            const double load = std::exp(std::log((double)n) - 2.0 * k * log_alphabet);
+            const double expected = n * -std::expm1(-load);
+            if(n - singletons > 2.0 * expected + n / 64.0){
+                return {};
+            }
+        }
+    }
+    return sa;
+}
+
+inline std::vector<int> sa_is(const std::vector<int>& sequence, int upper);
+
+// Uses prefix doubling (cheaper for large alphabets) when a random sequence over
+// the same number of symbols would leave at most n / 64 tied suffixes within a
+// few rounds, and SA-IS otherwise or when doubling gives up.  The suffix array
+// is unique, so both give the same result.
+inline std::vector<int> build_general(std::vector<int> rank, int classes){
+    const int n = (int)rank.size();
+    if(classes == n){
+        return build_from_ranks(std::move(rank), classes);
+    }
+    if(classes == 1){
+        return sa_is(rank, 0);
+    }
+    const double log_alphabet = std::log((double)classes);
+    const double target = std::log(64.0 * n);
+    int rounds = 0;
+    while(std::ldexp(log_alphabet, rounds) < target){
+        rounds++;
+    }
+    // Rounds affordable before SA-IS becomes faster (measured).
+    const int max_rounds = n < (1 << 12) ? 3 : n < (1 << 16) ? 5 : 3;
+    if(rounds > max_rounds){
+        return sa_is(rank, classes - 1);
+    }
+    // Counts (or bounds from above) the distinct q-grams, where q = 2 or the largest
+    // q with classes^q <= n.  If it is clearly below the expected number for a
+    // random sequence, the sequence is repetitive and doubling would need many
+    // rounds.
+    double distinct = 0, expected = 0;
+    if((long long)classes * classes <= n){
+        long long grams = classes;
+        int q = 1;
+        while(grams * classes <= n){
+            grams *= classes;
+            q++;
+        }
+        std::vector<char> seen(grams, 0);
+        const long long top = grams / classes;  // weight of the oldest symbol
+        long long code = 0;
+        for(int i = 0; i < n; i++){
+            if(i >= q){
+                code -= rank[i - q] * top;
+            }
+            code = code * classes + rank[i];
+            if(i >= q - 1 && !seen[code]){
+                seen[code] = 1;
+                distinct++;
+            }
+        }
+        expected = grams * -std::expm1(-(n - q + 1) / (double)grams);
+    }else{
+        std::vector<int> first_next(classes, -1);
+        distinct = classes;
+        for(int i = 0; i + 1 < n; i++){
+            int& next = first_next[rank[i]];
+            if(next == -1){
+                next = rank[i + 1];
+            }else if(next != rank[i + 1]){
+                distinct++;
+            }
+        }
+        const double pairs = (double)classes * classes;
+        expected = pairs * -std::expm1(-(n - 1) / pairs);
+    }
+    if(distinct < 0.75 * expected){
+        return sa_is(rank, classes - 1);
+    }
+    std::vector<int> sa = build_from_ranks(rank, classes, rounds, log_alphabet);
+    if(sa.empty()){
+        sa = sa_is(rank, classes - 1);
     }
     return sa;
 }
@@ -291,7 +458,7 @@ std::vector<int> suffix_array(const std::vector<T>& s){
     for(int i = 0; i < n; i++){
         rank[i] = (int)(std::lower_bound(values.begin(), values.end(), s[i]) - values.begin());
     }
-    return suffix_array_internal::sa_is(rank, (int)values.size() - 1);
+    return suffix_array_internal::build_general(std::move(rank), (int)values.size());
 }
 
 template<class Sequence>
