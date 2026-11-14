@@ -45,9 +45,11 @@ inline HistogramPerimeterPermutations maximum_histogram_perimeter_permutations(
         unsigned long long count = 0;
     };
     const int mask_count = 1 << n;
-    std::vector<State> dp(static_cast<std::size_t>(mask_count * n));
+    const std::size_t width = static_cast<std::size_t>(n);
+    std::vector<State> dp(static_cast<std::size_t>(mask_count) * width);
     auto state = [&](int mask, int last) -> State& {
-        return dp[static_cast<std::size_t>(mask * n + last)];
+        return dp[static_cast<std::size_t>(mask) * width +
+                  static_cast<std::size_t>(last)];
     };
     for(int first = 0; first < n; first++){
         state(1 << first, first) = {heights[static_cast<std::size_t>(first)], 1};

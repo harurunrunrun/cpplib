@@ -41,6 +41,6 @@ $\sum_{i=1}^{n} \operatorname{lcm}(i, n)$ を返す。
 
 ## 注意点
 
-- `limit >= 1` が必要である。`limit == 0` では `std::invalid_argument` を送出する（負の値は表の確保の時点で失敗する）。
+- `limit >= 1` が必要である。`limit <= 0`（負の値を含む）では表を確保する前に `std::invalid_argument` を送出する。
 - `n < 1` または `n > limit()` なら `std::out_of_range` を送出する。
 - `value(n)` の答えは `uint64_t` に収まる必要がある（中間値は `unsigned __int128` で計算する）。

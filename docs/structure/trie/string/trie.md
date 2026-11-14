@@ -3,39 +3,42 @@ title: Trie (トライ)
 documentation_of: ../../../../src/structure/trie/string/trie.hpp
 ---
 
-文字列の Trie。重複を持つ。
+文字列の多重集合を管理するトライである。同じ文字列を重複して登録できる。
 
 ## テンプレート引数
 
 ```cpp
-Trie<ALPHABET, MAX_NODES, OFFSET>
+Trie<ALPHABET = 26, MAX_NODES = -1, OFFSET = 'a'>
 ```
 
 - 文字種類数 `ALPHABET`
-- ノード数の上限 `MAX_NODES`
+- ノード数の上限 `MAX_NODES`（省略するとデフォルト値 `-1` の可変長版）
 - 先頭文字 `OFFSET`
 
-## insert / erase
+## `insert` / `erase`
 
 ```cpp
 void insert(string_view s)
 bool erase(string_view s)
 ```
 
-`erase` は文字列が存在しない場合 `false` を返す。
+`insert` は `s` を 1 個登録する。`erase` は `s` を 1 個削除して `true` を返し、文字列が存在しない場合は `false` を返す。ノードは回収しない。
 
-## count
+## 個数
 
 ```cpp
 int count(string_view s)
 bool contains(string_view s)
 int prefix_count(string_view s)
 int node(string_view s)
+int size()
+int node_count()
+bool empty()
 ```
 
-`count` は文字列の個数を返す。
+`count` は文字列の個数を返す。`size` は重複を含む登録数、`node_count` は使用ノード数を返す。
 
-`prefix_count` は prefix を持つ文字列の個数を返す。
+`prefix_count` は接頭辞 `s` を持つ登録文字列の個数を返す。
 
 `node` は対応するノード番号を返す。存在しない場合 `-1` を返す。
 
@@ -50,7 +53,7 @@ int terminal_count(int state)
 
 `terminal_count` はノード `state` で終わる文字列の登録個数を返す。
 
-## clear
+## `clear`
 
 ```cpp
 void clear()
@@ -58,7 +61,7 @@ void clear()
 
 登録済みの文字列とノードをすべて破棄し、空の Trie に戻す。
 
-## is_prefix_free
+## `is_prefix_free`
 
 ```cpp
 bool is_prefix_free() const
@@ -67,46 +70,30 @@ bool is_prefix_free() const
 登録されたどの文字列も、別の登録文字列の接頭辞でなければ `true` を返す。
 同じ文字列が複数回登録されている場合も `false` を返す。
 
-## API別の時間計算量
+## API 別の時間計算量
 
-$L$ を入力文字列長とする。
+$L$ を入力文字列の長さとする。
 
-- `Trie()`: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES})$。固定長node arrayを初期化する
+- `Trie()`: 固定長版は $O(\texttt{ALPHABET}\cdot\texttt{MAX_NODES})$（ノード配列を初期化する）、可変長版は $O(\texttt{ALPHABET})$
 - `size`, `node_count`, `empty`: $O(1)$
 - `next_node`, `terminal_count`: $O(1)$
 - `is_prefix_free`: $O(V)$。$V$ は `node_count()`
-- `node`, `count`, `contains`, `prefix_count`: worst-case $O(L)$
-- `insert`: $O(L)$、新規nodeは高々 $L$ 個
-- `erase`: $O(L)$。nodeは回収しない
-- `clear`: $O(V\cdot\mathrm{ALPHABET})$。$V$ は呼び出し直前の `node_count()`
+- `node`, `count`, `contains`, `prefix_count`: 最悪 $O(L)$
+- `insert`: $O(L + K \cdot \texttt{ALPHABET})$。$K \le L$ は新しく作るノードの個数（各ノードの子配列を初期化する）
+- `erase`: $O(L)$。ノードは回収しない
+- `clear`: $O(V\cdot\texttt{ALPHABET})$。$V$ は呼び出し直前の `node_count()`
 
 ## 空間計算量
 
-- 固定node array: $O(\mathrm{ALPHABET}\cdot\mathrm{MAX\_NODES})$
+- ノード配列: 固定長版は $O(\texttt{ALPHABET}\cdot\texttt{MAX_NODES})$、可変長版は使用ノード数に比例
 - 各操作の追加領域: $O(1)$
 
 ## 注意点
 
-- 各文字は`[OFFSET, OFFSET + ALPHABET)`に含まれる必要があり、範囲外なら例外。
-- `insert`で必要node数が`MAX_NODES`を超える場合は例外。
-- `node(s)`は対応node番号、不存在なら`-1`。`prefix_count(s)`は接頭辞`s`を持つ文字列数。
-- `next_node(state, c)`は遷移先がなければ`-1`。`state`が現在のノード番号の範囲外なら例外。
-- `terminal_count(state)`は`state`が現在のノード番号の範囲外なら例外。
-- `is_prefix_free()`は挿入順に依存しない。空の Trie と、空文字列だけを1個登録した Trie は `true`。
-- `clear()`後は`size() == 0`かつ`node_count() == 1`となり、それ以前に得たノード番号は無効。
-- `erase`は不存在なら`false`、成功時`true`。nodeは回収しない。
-- 空文字列も通常の文字列としてroot nodeに登録できる。
-
-## 容量を省略した可変長版
-
-容量テンプレートを省略すると既定値 `-1` でvectorを使い、必要な保存領域を明示的に伸長する。
-固定容量を指定する既存版も同じヘッダに残る。
-
-```cpp
-using Variable = Trie<Alphabet>;
-using Fixed = Trie<Alphabet, Nodes>;
-```
-
-伸長の費用は追加操作全体で償却され、上記の各操作の計算量を維持する。
-領域は確保済みノード・履歴・heap要素などの個数に比例する。
-整数添字の表現上限を超える要素数は例外。構造上の文字種類・bit幅・座標域は、件数容量とは別に指定できる。
+- 各文字は `[OFFSET, OFFSET + ALPHABET)` に含まれる必要があり、範囲外なら `runtime_error` を送出する。
+- `insert` で必要なノード数が `MAX_NODES` を超える場合は `runtime_error` を送出する。
+- `next_node(state, c)` と `terminal_count(state)` は、`state` が現在のノード番号の範囲外なら例外を送出する。
+- `is_prefix_free()` の結果は挿入順に依存しない。空のトライと、空文字列だけを 1 個登録したトライは `true` である。
+- `clear()` 後は `size() == 0` かつ `node_count() == 1` となり、それ以前に得たノード番号は無効になる。
+- 空文字列も通常の文字列として根ノードに登録できる。
+- 容量を指定した固定配列版（`Trie<ALPHABET, NODES>`）と可変長版（`Trie<ALPHABET>`）は同じヘッダで利用できる。可変長版は必要に応じて領域を伸長し、その費用はならして上記の計算量に含まれる。

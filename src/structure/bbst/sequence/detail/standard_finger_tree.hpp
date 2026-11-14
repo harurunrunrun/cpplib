@@ -624,11 +624,13 @@ public:
     }
 
     void pop_front() {
+        if (empty()) throw std::out_of_range("FingerTree::pop_front");
         auto [item, rest] = view_left(std::move(root_));
         if (!item->is_leaf()) throw std::logic_error("finger tree level");
         root_ = std::move(rest);
     }
     void pop_back() {
+        if (empty()) throw std::out_of_range("FingerTree::pop_back");
         auto [item, rest] = view_right(std::move(root_));
         if (!item->is_leaf()) throw std::logic_error("finger tree level");
         root_ = std::move(rest);

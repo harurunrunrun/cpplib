@@ -70,7 +70,7 @@ public:
           size_(static_cast<std::size_t>(n), 1){
         std::iota(parent.begin(), parent.end(), 0);
         for(int i = 0; i < n; i++){
-            intervals[i] = {i + 1, i};
+            intervals.emplace_hint(intervals.end(), i, Interval{i + 1, i});
         }
     }
 

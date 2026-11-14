@@ -13,11 +13,10 @@ class SmallestPrimeFactorPrefixSum{
 
 public:
     explicit SmallestPrimeFactorPrefixSum(int limit):
-        prefix(static_cast<std::size_t>(limit) + 1)
+        prefix((limit < 0
+            ? throw std::invalid_argument("negative SPF prefix limit")
+            : static_cast<std::size_t>(limit)) + 1)
     {
-        if(limit < 0)[[unlikely]]{
-            throw std::invalid_argument("negative SPF prefix limit");
-        }
         std::vector<std::uint32_t> smallest(static_cast<std::size_t>(limit) + 1);
         for(int value = 2; value <= limit; ++value){
             if(smallest[static_cast<std::size_t>(value)] == 0){

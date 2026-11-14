@@ -72,7 +72,7 @@ struct Solver{
 
 } // namespace maximum_clique_internal
 
-std::vector<int> maximum_clique(const std::vector<std::vector<int>>& graph){
+inline std::vector<int> maximum_clique(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());
     maximum_clique_internal::Solver solver;
     solver.n = n;

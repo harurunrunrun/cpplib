@@ -80,6 +80,18 @@ int main(){
         return 7;
     }catch(const std::runtime_error&){
     }
+    {
+        DancingLinks solver(2);
+        try{
+            (void)solver.add_row({0, 2});
+            return 8;
+        }catch(const std::runtime_error&){
+        }
+        if(solver.row_count != 0) return 9;
+        if(solver.add_row({0, 1}) != 0) return 10;
+        const auto all = solver.solve(16);
+        if(all != std::vector<std::vector<int>>{{0}}) return 11;
+    }
     int case_count;
     if(!(std::cin >> case_count)) return 1;
     while(case_count-- > 0){

@@ -40,18 +40,17 @@ struct GramSchmidt {
     std::vector<long double> squared_norm;
 };
 
-inline GramSchmidt gram_schmidt(
-    const std::vector<std::vector<long long>>& basis
+// Recomputes rows first_row, ..., count - 1 of the Gram-Schmidt data.  Row j depends
+// only on basis rows 0..j, so rows before first_row stay exactly as a full recomputation
+// would produce them.
+inline void recompute_gram_schmidt_rows(
+    const std::vector<std::vector<long long>>& basis,
+    GramSchmidt& result,
+    std::size_t first_row
 ) {
     const std::size_t count = basis.size();
     const std::size_t dimension = basis.empty() ? 0 : basis.front().size();
-    GramSchmidt result;
-    result.orthogonal.assign(
-        count, std::vector<long double>(dimension)
-    );
-    result.mu.assign(count, std::vector<long double>(count));
-    result.squared_norm.assign(count, 0.0L);
-    for(std::size_t vector_index = 0;
+    for(std::size_t vector_index = first_row;
         vector_index < count;
         ++vector_index){
         for(std::size_t coordinate = 0;
@@ -84,6 +83,7 @@ inline GramSchmidt gram_schmidt(
                     * result.orthogonal[previous][coordinate];
             }
         }
+        result.squared_norm[vector_index] = 0.0L;
         for(const long double value : result.orthogonal[vector_index]){
             result.squared_norm[vector_index] += value * value;
         }
@@ -94,6 +94,20 @@ inline GramSchmidt gram_schmidt(
             );
         }
     }
+}
+
+inline GramSchmidt gram_schmidt(
+    const std::vector<std::vector<long long>>& basis
+) {
+    const std::size_t count = basis.size();
+    const std::size_t dimension = basis.empty() ? 0 : basis.front().size();
+    GramSchmidt result;
+    result.orthogonal.assign(
+        count, std::vector<long double>(dimension)
+    );
+    result.mu.assign(count, std::vector<long double>(count));
+    result.squared_norm.assign(count, 0.0L);
+    recompute_gram_schmidt_rows(basis, result, 0);
     return result;
 }
 
@@ -169,8 +183,8 @@ inline LllLatticeReductionResult lll_lattice_reduction(
                 result.transformation[previous],
                 multiplier
             );
-            gram = lll_lattice_reduction_internal::gram_schmidt(
-                result.basis
+            lll_lattice_reduction_internal::recompute_gram_schmidt_rows(
+                result.basis, gram, current
             );
         }
         const long double lovasz_right =
@@ -187,7 +201,9 @@ inline LllLatticeReductionResult lll_lattice_reduction(
             result.transformation[current - 1]
         );
         ++result.swaps;
-        gram = lll_lattice_reduction_internal::gram_schmidt(result.basis);
+        lll_lattice_reduction_internal::recompute_gram_schmidt_rows(
+            result.basis, gram, current - 1
+        );
         if(current > 1) --current;
     }
     return result;

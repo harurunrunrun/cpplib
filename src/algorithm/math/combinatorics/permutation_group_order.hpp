@@ -68,6 +68,99 @@ inline void sort_unique(std::vector<Permutation>& permutations){
     );
 }
 
+inline int first_moved_point(const Permutation& permutation){
+    for(std::size_t point = 0; point < permutation.size(); ++point){
+        if(permutation[point] != static_cast<int>(point)) return static_cast<int>(point);
+    }
+    return static_cast<int>(permutation.size());
+}
+
+// Deterministic Schreier-Sims algorithm with the base 0, 1, ..., degree - 1.
+// transversal[level][point] maps level to point and fixes 0, ..., level - 1
+// (empty if point is not in the orbit).  The strong generators used at a level
+// are those fixing every smaller base point.
+struct SchreierSims{
+    int degree;
+    std::vector<Permutation> strong_generators;
+    std::vector<int> generator_levels;  // first moved point of each strong generator
+    std::vector<std::vector<Permutation>> transversal;
+
+    SchreierSims(int degree_, const std::vector<Permutation>& generators)
+        : degree(degree_),
+          transversal(
+              static_cast<std::size_t>(degree_),
+              std::vector<Permutation>(static_cast<std::size_t>(degree_))
+          ){
+        for(const Permutation& generator: generators){
+            if(!is_identity(generator)){
+                strong_generators.push_back(generator);
+                generator_levels.push_back(first_moved_point(generator));
+            }
+        }
+        int level = degree - 1;
+        while(level >= 0){
+            build_orbit(level);
+            const int failed = check_level(level);
+            if(failed < 0) --level;
+            else level = failed;
+        }
+    }
+
+    void build_orbit(int level){
+        auto& table = transversal[static_cast<std::size_t>(level)];
+        std::fill(table.begin(), table.end(), Permutation());
+        table[static_cast<std::size_t>(level)] = identity(degree);
+        std::queue<int> queue;
+        queue.push(level);
+        while(!queue.empty()){
+            const int point = queue.front();
+            queue.pop();
+            for(std::size_t index = 0; index < strong_generators.size(); ++index){
+                if(generator_levels[index] < level) continue;
+                const Permutation& generator = strong_generators[index];
+                const int next = generator[static_cast<std::size_t>(point)];
+                if(!table[static_cast<std::size_t>(next)].empty()) continue;
+                table[static_cast<std::size_t>(next)] =
+                    compose(generator, table[static_cast<std::size_t>(point)]);
+                queue.push(next);
+            }
+        }
+    }
+
+    // Sifts every Schreier generator of the level through the higher levels.  On the
+    // first one that does not sift, adds its residue as a strong generator and returns
+    // the level where sifting stopped; returns -1 if all of them sift.
+    int check_level(int level){
+        const auto& table = transversal[static_cast<std::size_t>(level)];
+        for(int point = 0; point < degree; ++point){
+            const Permutation& representative = table[static_cast<std::size_t>(point)];
+            if(representative.empty()) continue;
+            for(std::size_t index = 0; index < strong_generators.size(); ++index){
+                if(generator_levels[index] < level) continue;
+                const Permutation moved = compose(strong_generators[index], representative);
+                Permutation residue = compose(
+                    inverse(table[static_cast<std::size_t>(
+                        moved[static_cast<std::size_t>(level)])]),
+                    moved
+                );
+                int stop = level + 1;
+                for(; stop < degree; ++stop){
+                    const auto& element = transversal[static_cast<std::size_t>(stop)][
+                        static_cast<std::size_t>(residue[static_cast<std::size_t>(stop)])];
+                    if(element.empty()) break;
+                    residue = compose(inverse(element), residue);
+                }
+                if(stop < degree){
+                    strong_generators.push_back(std::move(residue));
+                    generator_levels.push_back(stop);
+                    return stop;
+                }
+            }
+        }
+        return -1;
+    }
+};
+
 } // namespace permutation_group_order_internal
 
 inline PermutationGroupOrderResult permutation_group_order(
@@ -99,75 +192,19 @@ inline PermutationGroupOrderResult permutation_group_order(
         }
     }
 
-    std::vector<Permutation> generators;
-    generators.reserve(input_generators.size() * 2);
-    for(const Permutation& generator: input_generators){
-        if(is_identity(generator)) continue;
-        generators.push_back(generator);
-        generators.push_back(inverse(generator));
-    }
-    sort_unique(generators);
+    // The orbit sizes are those of the pointwise stabilizer chain, so they do not
+    // depend on the generators chosen.
+    const SchreierSims chain(degree, input_generators);
 
     PermutationGroupOrderResult result{BigInteger(1), {}};
     result.stabilizer_orbit_sizes.reserve(static_cast<std::size_t>(degree));
-    const Permutation identity_permutation = identity(degree);
-
-    for(int base = 0; base < degree; ++base){
-        std::vector<char> reached(static_cast<std::size_t>(degree), 0);
-        std::vector<Permutation> transversal(
-            static_cast<std::size_t>(degree), identity_permutation
-        );
-        std::vector<int> orbit;
-        orbit.reserve(static_cast<std::size_t>(degree));
-        std::queue<int> queue;
-        reached[static_cast<std::size_t>(base)] = 1;
-        orbit.push_back(base);
-        queue.push(base);
-        while(!queue.empty()){
-            const int point = queue.front();
-            queue.pop();
-            for(const Permutation& generator: generators){
-                const int next = generator[static_cast<std::size_t>(point)];
-                if(reached[static_cast<std::size_t>(next)]) continue;
-                reached[static_cast<std::size_t>(next)] = 1;
-                transversal[static_cast<std::size_t>(next)] = compose(
-                    generator,
-                    transversal[static_cast<std::size_t>(point)]
-                );
-                orbit.push_back(next);
-                queue.push(next);
-            }
+    for(int level = 0; level < degree; ++level){
+        std::size_t orbit_size = 0;
+        for(const auto& element: chain.transversal[static_cast<std::size_t>(level)]){
+            if(!element.empty()) ++orbit_size;
         }
-        result.stabilizer_orbit_sizes.push_back(orbit.size());
-        result.order *= static_cast<unsigned long long>(orbit.size());
-        if(orbit.size() == 1) continue;
-
-        std::vector<Permutation> inverse_transversal(
-            static_cast<std::size_t>(degree)
-        );
-        for(const int point: orbit){
-            inverse_transversal[static_cast<std::size_t>(point)] =
-                inverse(transversal[static_cast<std::size_t>(point)]);
-        }
-        std::vector<Permutation> stabilizer_generators;
-        stabilizer_generators.reserve(orbit.size() * generators.size());
-        for(const int point: orbit){
-            for(const Permutation& generator: generators){
-                const int next = generator[static_cast<std::size_t>(point)];
-                Permutation schreier = compose(
-                    inverse_transversal[static_cast<std::size_t>(next)],
-                    compose(
-                        generator,
-                        transversal[static_cast<std::size_t>(point)]
-                    )
-                );
-                if(!is_identity(schreier)){
-                    stabilizer_generators.push_back(std::move(schreier));
-                }
-            }
-        }
-        sort_unique(stabilizer_generators);
-        generators = std::move(stabilizer_generators);
+        result.stabilizer_orbit_sizes.push_back(orbit_size);
+        result.order *= static_cast<unsigned long long>(orbit_size);
     }
     return result;
 }

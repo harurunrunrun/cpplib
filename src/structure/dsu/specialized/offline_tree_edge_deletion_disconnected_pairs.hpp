@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_STRUCTURE_DSU_SPECIALIZED_OFFLINE_TREE_EDGE_DELETION_DISCONNECTED_PAIRS_HPP_INCLUDED
 
 #include <algorithm>
+#include <memory>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -85,23 +86,24 @@ public:
             );
         }
 
-        DSU<MAX_SIZE> validator(vertex_count);
+        // Fixed-capacity DSUs hold std::array storage; keep them off the stack.
+        const auto validator = std::make_unique<DSU<MAX_SIZE>>(vertex_count);
         for(const auto& [left, right]: edges){
-            if(!validator.merge(left, right))[[unlikely]]{
+            if(!validator->merge(left, right))[[unlikely]]{
                 throw std::invalid_argument(
                     "OfflineTreeEdgeDeletionDisconnectedPairs requires a tree"
                 );
             }
         }
 
-        DSU<MAX_SIZE> dsu(vertex_count);
+        const auto dsu = std::make_unique<DSU<MAX_SIZE>>(vertex_count);
         long long disconnected =
             static_cast<long long>(vertex_count) * (vertex_count - 1LL) / 2LL;
         const auto restore = [&](int edge){
             const auto [left, right] = edges[static_cast<std::size_t>(edge)];
-            disconnected -= static_cast<long long>(dsu.component_size(left)) *
-                dsu.component_size(right);
-            dsu.merge(left, right);
+            disconnected -= static_cast<long long>(dsu->component_size(left)) *
+                dsu->component_size(right);
+            dsu->merge(left, right);
         };
         for(int edge = 0; edge < static_cast<int>(edges.size()); ++edge){
             if(!deleted[static_cast<std::size_t>(edge)]) restore(edge);

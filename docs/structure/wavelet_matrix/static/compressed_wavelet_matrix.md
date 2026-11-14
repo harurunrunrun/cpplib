@@ -3,34 +3,43 @@ title: Compressed Wavelet Matrix (座標圧縮ウェーブレット行列) [KQUE
 documentation_of: ../../../../src/structure/wavelet_matrix/static/compressed_wavelet_matrix.hpp
 ---
 
-値を座標圧縮して扱う静的wavelet matrix。任意の比較可能な型を値として使える。
+値を座標圧縮して扱う静的なウェーブレット行列。`<` で比較でき、`!=` を持つ任意の型を値として使える。
 
 ## テンプレート引数
 
 ```cpp
-CompressedWaveletMatrix<T, MAX_SIZE, ID_BIT_WIDTH>
+CompressedWaveletMatrix<T, MAX_SIZE = -1, ID_BIT_WIDTH = 32>
 ```
 
-- 値の型 `T`
-- 配列長の上限 `MAX_SIZE`
-- 圧縮後のidに使用するbit数 `ID_BIT_WIDTH`
+- `T`: 値の型
+- `MAX_SIZE`: 列長の上限。省略時（`-1`）は `std::vector` を使う可変長版になり、入力長に応じた領域だけを確保する。非負の値を指定すると固定長配列版になる。
+- `ID_BIT_WIDTH`: 圧縮後の ID に使う bit 数。省略時は `unsigned` の bit 数（通常 32）。
 
-`ID_BIT_WIDTH` は省略できる。
-異なる値の個数を $D$ とすると、$D\le 2^{\mathtt{ID\_BIT\_WIDTH}}$ が必要。
-圧縮idは内部では符号なし整数として保持するため、たとえば15 bitならid `0` から
-`32767` まで、すなわち32768種類の値を表現できる。配列長はこの種類数を超えてもよい。
+```cpp
+using Variable = CompressedWaveletMatrix<T>;
+using Fixed = CompressedWaveletMatrix<T, N>;
+```
+
+相異なる値の個数を $D$ とすると、$D \le 2^{\texttt{ID_BIT_WIDTH}}$ が必要である。圧縮 ID は内部で符号なし整数として保持するため、たとえば 15 bit なら ID `0` から `32767` まで、すなわち 32768 種類の値を表現できる。列長はこの種類数を超えてもよい。
 
 ## コンストラクタ
 
 ```cpp
-CompressedWaveletMatrix(const vector<T>& values)
+explicit CompressedWaveletMatrix(const vector<T>& values)
+explicit CompressedWaveletMatrix(const array<T, N>& values)
 ```
 
 `values` を座標圧縮して構築する。
 
-## 時間計算量
+## 列と圧縮 ID の情報
 
-- $O(N\log N+\mathtt{MAX\_SIZE}+\mathrm{ID\_BIT\_WIDTH}(N+\lceil\mathtt{MAX\_SIZE}/64\rceil))$
+```cpp
+int size() const
+int value_count() const
+const T& value(int id) const
+```
+
+`size` は列長、`value_count` は相異なる値の個数を返す。`value(id)` は圧縮 ID `id` に対応する元の値を返す。
 
 ## 要素取得
 
@@ -38,6 +47,8 @@ CompressedWaveletMatrix(const vector<T>& values)
 T access(int k) const
 T operator[](int k) const
 ```
+
+`k` 番目（0-indexed）の値を返す。
 
 ## rank / select
 
@@ -47,9 +58,9 @@ int rank(const T& value, int l, int r) const
 int select(const T& value, int k) const
 ```
 
-`select` は存在しない場合 `size()` を返す。
+`rank` は区間 $[0, r)$ または $[l, r)$ にある `value` の個数を返す。`select` は `value` が `k` 回目（0-indexed）に現れる位置を返し、存在しない場合は `size()` を返す。
 
-## k番目 / 中央値
+## k 番目の値 / 中央値
 
 ```cpp
 T kth_smallest(int l, int r, int k) const
@@ -61,7 +72,7 @@ T median_floor(int l, int r) const
 T median_ceil(int l, int r) const
 ```
 
-`k` は0-indexed。
+区間 $[l, r)$ について、`kth_smallest` / `kth_largest` は `k` 番目（0-indexed）に小さい値 / 大きい値を返す。`quantile` は `kth_smallest` の別名である。`range_min` / `range_max` は最小値 / 最大値を返す。`median_floor` / `median_ceil` は小さい方から $\lfloor (r - l - 1) / 2 \rfloor$ 番目 / $\lfloor (r - l) / 2 \rfloor$ 番目の値を返す。
 
 ## 頻度
 
@@ -71,8 +82,7 @@ int range_freq(int l, int r, const T& lower, const T& upper) const
 int count_greater(int l, int r, const T& value) const
 ```
 
-区間 $[l,r)$ にある `upper` 未満、または `[lower, upper)` の値の個数を返す。
-`count_greater` は同じ区間にある `value` より大きい値の個数を返す。
+`range_freq` は区間 $[l, r)$ にある `upper` 未満の値の個数、または $[\mathit{lower}, \mathit{upper})$ に含まれる値の個数を返す。`count_greater` は同じ区間にある `value` より大きい値の個数を返す。
 
 ## 前後の値
 
@@ -81,41 +91,22 @@ optional<T> prev_value(int l, int r, const T& upper) const
 optional<T> next_value(int l, int r, const T& lower) const
 ```
 
+区間 $[l, r)$ 内で `upper` 未満の最大値、または `lower` 以上の最小値を返す。存在しない場合は `nullopt` を返す。
+
 ## 時間計算量
 
-- 構築以外: $O(\log N + \mathrm{ID\_BIT\_WIDTH})$
+$N$ を列長、$D$ を相異なる値の個数、$H = \texttt{ID_BIT_WIDTH}$ とし、$W$ を固定長版では $\lceil \texttt{MAX_SIZE} / 64 \rceil$、可変長版では $\lceil N / 64 \rceil$ とする。
 
-## 計算量（公開操作別）
-
-$D$ を異なる値の個数、$H=\mathtt{ID\_BIT\_WIDTH}$、$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
-
-- vector/array constructor: $O(N\log N+\mathtt{MAX\_SIZE}+H(N+W))$
+- コンストラクタ: $O(N \log N + H(N + W))$（固定長版では作業配列の初期化に $O(\texttt{MAX_SIZE})$ が加わる）
 - `size`, `value_count`, `value`: $O(1)$
 - `access`, `operator[]`, `kth_smallest`, `kth_largest`, `quantile`, `range_min`, `range_max`, `median_floor`, `median_ceil`: $O(H)$
-- `rank`, `range_freq`, `count_greater`, `prev_value`, `next_value`: $O(\log D+H)$
-- `select`: $O(\log D+H\log N)$
+- `rank`, `range_freq`, `count_greater`, `prev_value`, `next_value`: $O(\log D + H)$
+- `select`: $O(\log D + H \log N)$
 
 ## 注意点
 
-constructorは上記の値列を座標圧縮して構築する。`size` は列長、`value_count` は異なる値数、
-`value(id)` は圧縮idの元の値を返す。`access/operator[]`、出現番号、順序統計は0-indexed。
-列区間は `[l,r)`、値域は `[lower,upper)`。`quantile` は `kth_smallest` の別名。
-`range_min/max` と `median_floor/ceil` は空でない区間が前提。前後値は該当なしなら `nullopt`。
-
-列長容量、異なる値数に対するID bit幅、点・区間・圧縮id・順序・値域の違反では
-`runtime_error`。公開APIの圧縮id・添字・個数は `int` であり、圧縮idだけを内部で
-符号なし整数へ変換する。copyは禁止、moveは可能。各APIの計算量は上記表の通り。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = CompressedWaveletMatrix<T>;
-using Fixed = CompressedWaveletMatrix<T, N>;
-```
-
-可変長版は入力長 $n$ とビット幅 $B$ に応じた配列だけを確保し、構築・照会の計算量は上記と同じ。
-長さに依存する固定容量の領域は $O(n)$ に、ビット段ごとの領域は $O(Bn)$ になる。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 列の区間は半開区間 $[l, r)$、値域も半開区間 $[\mathit{lower}, \mathit{upper})$ である。
+- `range_min` / `range_max` / `median_floor` / `median_ceil` は空でない区間を前提とする。
+- 列長が `MAX_SIZE` を超える場合、相異なる値の個数が $2^{\texttt{ID_BIT_WIDTH}}$ を超える場合、添字・区間・圧縮 ID・`k` が範囲外の場合、`lower > upper` の場合は `std::runtime_error` を送出する。
+- 公開 API の圧縮 ID・添字・個数は `int` で、内部でのみ符号なし整数に変換する。
+- コピーは禁止、ムーブは可能。

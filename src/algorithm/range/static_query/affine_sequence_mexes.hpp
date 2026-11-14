@@ -56,15 +56,26 @@ inline std::vector<std::size_t> affine_sequence_mexes(
         }
     }
 
+    // Only values not taken by a constant sequence can be the MEX; each one
+    // skipped at a step is taken at that step, so a scan costs at most
+    // values_at[step].size() + 1.
+    std::vector<std::size_t> candidates;
+    for(std::size_t value = 0; value <= limit; value++){
+        if(!constant_present[value]) candidates.push_back(value);
+    }
     std::vector<std::size_t> answer(step_count, 0);
     std::vector<std::size_t> stamp(limit + 1, 0);
     for(std::size_t step = 0; step < step_count; step++){
         const std::size_t token = step + 1;
         for(const std::size_t value: values_at[step]) stamp[value] = token;
-        while(answer[step] <= limit &&
-              (constant_present[answer[step]] || stamp[answer[step]] == token)){
-            ++answer[step];
+        std::size_t mex = limit + 1;
+        for(const std::size_t value: candidates){
+            if(stamp[value] != token){
+                mex = value;
+                break;
+            }
         }
+        answer[step] = mex;
     }
     return answer;
 }

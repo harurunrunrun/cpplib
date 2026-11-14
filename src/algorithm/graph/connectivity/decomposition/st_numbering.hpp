@@ -24,6 +24,12 @@ inline std::optional<STNumberingResult> st_numbering(
        sink < 0 || vertex_count <= sink)[[unlikely]]{
         throw std::runtime_error(message);
     }
+    for(const auto& [left, right]: edges){
+        if(left < 0 || vertex_count <= left ||
+           right < 0 || vertex_count <= right || left == right)[[unlikely]]{
+            throw std::runtime_error(message);
+        }
+    }
     if(vertex_count == 1){
         if(source != sink) return std::nullopt;
         return STNumberingResult{{0}, {0}};
@@ -34,10 +40,6 @@ inline std::optional<STNumberingResult> st_numbering(
         static_cast<std::size_t>(vertex_count)
     );
     for(const auto& [left, right]: edges){
-        if(left < 0 || vertex_count <= left ||
-           right < 0 || vertex_count <= right || left == right)[[unlikely]]{
-            throw std::runtime_error(message);
-        }
         graph[static_cast<std::size_t>(left)].push_back(right);
         graph[static_cast<std::size_t>(right)].push_back(left);
     }

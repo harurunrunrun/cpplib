@@ -3,16 +3,33 @@ title: Dynamic Functional Wavelet Matrix (動的多機能ウェーブレット�
 documentation_of: ../../../../src/structure/wavelet_matrix/dynamic/dynamic_functional_wavelet_matrix.hpp
 ---
 
-`DynamicWeightedWaveletMatrix` の各重みを値自身に保つ派生型。
-列全体の再構築を行わず、値の挿入・削除・置換を動的 bitvector の木へ反映する。
+`DynamicWeightedWaveletMatrix<T, Sum, MAX_SIZE, BIT_WIDTH>` の各要素の重みを、常にその値自身に保つ派生型。列全体を再構築せず、値の挿入・削除・置換を動的ビットベクトルの木に反映する。
+
+## テンプレート引数
+
+```cpp
+DynamicFunctionalWaveletMatrix<T, MAX_SIZE = -1, Sum = long long, BIT_WIDTH = (T の bit 数)>
+```
+
+- `T`: 値の整数型。`Sum` へ変換できる必要がある。
+- `MAX_SIZE`: 列長の上限。省略時（`-1`）は上限なし（`int` の範囲内）。内部は B+ 木なので、指定しても確保する領域は変わらない。
+- `Sum`: 和の型
+- `BIT_WIDTH`: 値に使う bit 数。省略時は `T` の bit 数。符号付きの `T` では省略しなければならない。
+
+```cpp
+using Variable = DynamicFunctionalWaveletMatrix<T>;
+using Fixed = DynamicFunctionalWaveletMatrix<T, N>;
+```
 
 ## 構築
 
 ```cpp
 DynamicFunctionalWaveletMatrix()
-DynamicFunctionalWaveletMatrix(const vector<T>& values)
-DynamicFunctionalWaveletMatrix(const array<T, N>& values)
+explicit DynamicFunctionalWaveletMatrix(const vector<T>& values)
+explicit DynamicFunctionalWaveletMatrix(const array<T, N>& values)
 ```
+
+各要素の重みを `static_cast<Sum>(values[k])` として構築する。
 
 ## 更新
 
@@ -25,45 +42,27 @@ void push_back(T value)
 T pop_back()
 ```
 
-`set` と `set_value` は値と重みをともに `value` へ置換する。
-`insert` と `push_back` も重みに値自身を設定し、`erase` と `pop_back` は
-削除した値を返す。
+`set` と `set_value` は値と重みをともに `value` に置き換える。`insert` と `push_back` も重みに値自身を設定する。`erase` と `pop_back` は削除した値を返す。
 
 ## クエリ
 
-`size`, `access`, `operator[]`, `weight`, `rank`, `select`,
-`range_freq`, `kth_smallest`, `kth_largest`, `prev_value`,
-`next_value`, `sum`, `range_sum`, `sum_k_smallest`,
-`sum_k_largest` を基底型から継承する。
+`size`, `access`, `operator[]`, `weight`, `rank`, `select`, `range_freq`, `kth_smallest`, `kth_largest`, `prev_value`, `next_value`, `sum`, `range_sum`, `sum_k_smallest`, `sum_k_largest` を基底型から継承する。意味は Dynamic Weighted Wavelet Matrix と同じで、`sum` 系は値の総和を `Sum` 型で返す。
 
 ## 時間計算量
 
-$D = BIT_WIDTH$、現在の列長を $N$ とする。基底型の動的 bitvector は
-決定的な平衡 B+ 木なので、以下は worst-case 計算量である。
+現在の列長を $N$、$D = \texttt{BIT_WIDTH}$ とする。基底型の動的ビットベクトルは決定的な平衡 B+ 木なので、以下は最悪計算量である。
 
-- vector/array constructor: $O(DN)$
-- default constructor, `size`: $O(1)$
+- コンストラクタ（`vector` / `array`）: $O(DN)$
+- デフォルトコンストラクタ、`size`: $O(1)$
 - `weight`, `sum`: $O(\log N)$
-- その他の公開更新・クエリ: $O(D\log N)$
-- 空間計算量: $O(DN)$
+- その他の公開されている更新・クエリ: $O(D \log N)$
+
+## 空間計算量
+
+$O(DN)$。
 
 ## 注意点
 
-添字・出現番号は0-indexed、区間は半開区間。`MAX_SIZE`、bit幅、添字、
-区間、順序の違反では `runtime_error` を送出する。
-基底型の `set_weight` を明示的に呼ぶと「重み=値」の不変条件を崩せるため、
-多機能版では通常使用しない。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = DynamicFunctionalWaveletMatrix<T>;
-using Fixed = DynamicFunctionalWaveletMatrix<T, N>;
-```
-
-可変長版は入力長 $n$ とビット幅 $B$ に応じた配列だけを確保し、構築・照会の計算量は上記と同じ。
-長さに依存する固定容量の領域は $O(n)$ に、ビット段ごとの領域は $O(Bn)$ になる。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 添字・出現番号は 0-indexed、区間は半開区間である。
+- `MAX_SIZE` の超過、`BIT_WIDTH` bit に収まらない値、範囲外の添字・区間・`k`、空列からの `pop_back` では `std::runtime_error` を送出する。
+- 基底型の `set_weight` は隠されておらず呼び出せるが、呼ぶと「重み = 値」の不変条件が崩れるため使わないこと。

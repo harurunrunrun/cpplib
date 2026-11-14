@@ -3,22 +3,27 @@ title: Offline Indexed Rectangle Affine Sum (点 ID 付き長方形アフィン�
 documentation_of: ../../../src/structure/spatial/offline_indexed_rectangle_affine_sum.hpp
 ---
 
-`OfflineIndexedRectangleAffineSum<T>(coordinates)` に全点の座標を先に登録する。
-登録順の点 ID を使い、各点は最初は無効である。同じ座標の点も独立に管理する。
+全点の座標をコンストラクタ `OfflineIndexedRectangleAffineSum<T>(coordinates)` で先に登録し、
+点の有効化・無効化、長方形内の有効な点へのアフィン作用、長方形内の和を処理する。
+`coordinates` は `std::vector<std::pair<int64_t, int64_t>>` である。
+点 ID は登録順の添字（0-indexed）で、各点は最初は無効である。同じ座標の点もそれぞれ独立に管理する。
 
-- `point_set(id,value)`: 点を有効化するか、現在値を置き換える。
-- `point_erase(id)`: 点を無効化し、以前有効なら `true`。再び `point_set` すると有効化する。
-- `rectangle_affine(l,d,r,u,a,b)`: 現在有効な半開長方形内の点へ `value -> a*value+b` を適用。
-- `rectangle_sum(l,d,r,u)`: 現在有効な点の値の総和。
-- `size()`: 登録点数。
+## API
+
+- `point_set(id, value)`: 点 `id` を有効化するか、既に有効なら現在値を `value` に置き換える。
+- `point_erase(id)`: 点 `id` を無効化する。以前有効だった場合に `true` を返す。再び `point_set` すると有効化される。
+- `rectangle_affine(l, d, r, u, a, b)`: 半開長方形 `[l, r) × [d, u)` 内の現在有効な点の値 `value` を `a * value + b` に置き換える。
+- `rectangle_sum(l, d, r, u)`: 半開長方形 `[l, r) × [d, u)` 内の現在有効な点の値の総和を返す。遅延作用を伝播するため非 `const` である。
+- `size()`: 登録した点数を返す。
 
 ## 時間計算量
 
-登録点数 $N$ として構築は `nth_element` の平均線形性のもとで $O(N\log N)$、
-点更新 $O(\log N)$、長方形更新・照会 $O(\sqrt N)$、保存空間 $O(N)$。
+登録点数を $N$ とする。構築は `nth_element` の平均線形性のもとで $O(N\log N)$、
+点の更新は $O(\log N)$、長方形への作用・和の取得は $O(\sqrt N)$ である。空間計算量は $O(N)$ である。
 
 ## 注意点
 
-無効だった期間に行った作用は、その後の有効化でその点へ適用しない。
-座標は負を含む `int64_t`。長方形は `l<=r`, `d<=u`、逆順なら `invalid_argument`。
-`T` は整数からの構築、比較、加減乗算を提供し、中間結果を表現できる必要がある。
+- 無効だった期間に行った作用は、その後に有効化した点には適用されない。
+- 座標は負の値を含む `int64_t` である。長方形は `l <= r` かつ `d <= u` を要求し、逆順なら `invalid_argument` を送出する。
+- `id` が `[0, size())` の範囲外なら `out_of_range` を送出する。
+- `T` は整数からの構築、比較、加算・乗算を提供し、中間結果を表現できる必要がある。

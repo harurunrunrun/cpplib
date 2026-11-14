@@ -46,6 +46,15 @@ template<class Real, class DirectionRange>
         if(direction.size() != dimension)[[unlikely]]{
             throw std::invalid_argument("rounding direction dimension differs");
         }
+        for(std::size_t coordinate = 0; coordinate < dimension; ++coordinate){
+            if(!std::isfinite(static_cast<long double>(
+                direction[coordinate]
+            )))[[unlikely]]{
+                throw std::invalid_argument(
+                    "rounding directions must be finite"
+                );
+            }
+        }
         MaxCutResult candidate;
         candidate.side.resize(unit_vectors.size());
         for(std::size_t vertex = 0; vertex < unit_vectors.size(); ++vertex){
@@ -53,13 +62,6 @@ template<class Real, class DirectionRange>
             for(std::size_t coordinate = 0;
                 coordinate < dimension;
                 ++coordinate){
-                if(!std::isfinite(static_cast<long double>(
-                    direction[coordinate]
-                )))[[unlikely]]{
-                    throw std::invalid_argument(
-                        "rounding directions must be finite"
-                    );
-                }
                 product += static_cast<long double>(
                     unit_vectors[vertex][coordinate]
                 ) * static_cast<long double>(direction[coordinate]);

@@ -40,6 +40,11 @@ public:
                      const std::vector<std::uint64_t>& values, int root = 0)
         : n_(static_cast<int>(graph.size())){
         if(static_cast<int>(values.size()) != n_) throw std::invalid_argument("TreePathXorBasis: size mismatch");
+        if constexpr(Bits < 64){
+            for(const std::uint64_t value: values){
+                if((value >> Bits) != 0) throw std::invalid_argument("TreePathXorBasis: value out of range");
+            }
+        }
         if(n_ == 0) return;
         if(root < 0 || root >= n_) throw std::out_of_range("TreePathXorBasis: invalid root");
         log_ = static_cast<int>(std::bit_width(static_cast<unsigned int>(n_)));

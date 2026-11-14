@@ -25,6 +25,9 @@ std::vector<Modint<MOD>> polya_exponential(
         );
     }
     std::vector<Modint<MOD>> exponent(size);
+    if(values.size() <= 1 || size <= 1) return fps_exp<MOD>(exponent, size);
+    const std::vector<Modint<MOD>> inverse =
+        formal_power_series_internal::integer_inverses<MOD>(size);
     for(std::size_t source_degree = 1;
         source_degree < values.size() && source_degree < size;
         ++source_degree){
@@ -32,8 +35,7 @@ std::vector<Modint<MOD>> polya_exponential(
         for(std::size_t multiplier = 1;
             multiplier <= maximum_multiplier; ++multiplier){
             exponent[source_degree * multiplier] +=
-                values[source_degree] /
-                Modint<MOD>(static_cast<long long>(multiplier));
+                values[source_degree] * inverse[multiplier];
         }
     }
     return fps_exp<MOD>(exponent, size);

@@ -3,7 +3,7 @@ title: Implicit Treap (暗黙トレープ) [range_reverse_range_sum]
 documentation_of: ../../../../src/structure/tree/treap/implicit_treap.hpp
 ---
 
-乱択平衡二分探索木による列。
+乱択平衡二分探索木（暗黙の treap）で列を管理し、任意位置の挿入・削除、区間反転、区間のモノイド積を扱う。
 
 ## テンプレート引数
 
@@ -11,8 +11,8 @@ documentation_of: ../../../../src/structure/tree/treap/implicit_treap.hpp
 ImplicitTreap<Monoid, MAX_SIZE>
 ```
 
-- モノイド `Monoid`
-- 同時に保持する要素数の上限 `MAX_SIZE`
+- モノイドのオブジェクト `Monoid`（非型テンプレート引数）
+- 同時に保持する要素数の上限 `MAX_SIZE`（省略するとデフォルト値 `-1` の可変長版）
 
 `Monoid` は `S op(S, S)` と `S e()` を持つ。反転を扱うため、非可換モノイドでも使える。
 
@@ -23,16 +23,16 @@ ImplicitTreap(uint64_t seed = ...)
 ImplicitTreap(const vector<S>& values, uint64_t seed = ...)
 ```
 
-空列、または `values` で初期化する。
+空列、または `values` で初期化する。`values` からの構築はスタックを用いて線形時間で行う。
 
 ## 時間計算量
 
-- 空列: $O(\mathtt{MAX\_SIZE})$
-- `values`: $O(\mathtt{MAX\_SIZE}+N)$
+- 空列: 固定長版は $O(\texttt{MAX_SIZE})$、可変長版は $O(1)$
+- `values`: 固定長版は $O(\texttt{MAX_SIZE}+N)$、可変長版は $O(N)$
 
-固定容量の値・集約値・node領域を構築する。
+固定長版は容量分の値・集約値・ノード領域を構築する。
 
-## insert / erase
+## `insert` / `erase`
 
 ```cpp
 void insert(int p, const S& x)
@@ -47,9 +47,9 @@ void erase(int p)
 
 ## 時間計算量
 
-- expected $O(\log N)$
+- 期待 $O(\log N)$
 
-## set / get
+## `set` / `get`
 
 ```cpp
 void set(int p, const S& x)
@@ -60,9 +60,9 @@ S get(int p)
 
 ## 時間計算量
 
-- expected $O(\log N)$
+- 期待 $O(\log N)$
 
-## reverse
+## `reverse`
 
 ```cpp
 void reverse(int l, int r)
@@ -72,9 +72,9 @@ void reverse(int l, int r)
 
 ## 時間計算量
 
-- expected $O(\log N)$
+- 期待 $O(\log N)$
 
-## prod
+## `prod`
 
 ```cpp
 S prod(int l, int r)
@@ -85,37 +85,24 @@ S all_prod()
 
 ## 時間計算量
 
-- expected $O(\log N)$
+- 期待 $O(\log N)$
 
 `all_prod`, `size`, `empty`, `clear` は $O(1)$。
 
-## 空間計算量（API別の追加領域）
+## 空間計算量（API 別の追加領域）
 
-- constructor、`size`、`empty`、`clear`、`all_prod`: $O(1)$
-- `insert`、`push_front`、`push_back`、`erase`、`set`、`get`、`reverse`、`prod`: expected $O(\log N)$ の再帰stack
-- move constructor / move assignment: $O(1)$
+- コンストラクタ、`size`、`empty`、`clear`、`all_prod`: $O(1)$
+- `insert`、`push_front`、`push_back`、`erase`、`set`、`get`、`reverse`、`prod`: 期待 $O(\log N)$ の再帰スタック
+- ムーブコンストラクタ / ムーブ代入: $O(1)$
 
-nodeは固定arena $O(\mathtt{MAX\_SIZE})$ に保存し、1回の挿入が消費するslotは1個である。
+ノードは固定長版では容量 $O(\texttt{MAX_SIZE})$ の領域に保存し、1 回の挿入が消費するスロットは 1 個である。削除したスロットは再利用する。
 
 ## 注意点
 
-- `insert(p,x)`は`0 <= p <= size()`、点操作は`0 <= p < size()`を要求する。
-- 区間操作は`0 <= l <= r <= size()`。範囲違反は例外。
-- `insert`で要素数が`MAX_SIZE`を超える場合は例外。
-- `prod(l,r)`は左から右の順で非可換monoidを合成し、空区間では単位元を返す。
-- seedはpriority生成に使用し、同じseedと操作列なら同じ結果になる。
-- `clear`は$O(1)$で固定arenaを再利用し、copyは禁止、moveは可能。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = ImplicitTreap<Monoid>;
-using Fixed = ImplicitTreap<Monoid, N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- `insert(p, x)` は `0 <= p <= size()`、点操作は `0 <= p < size()` を要求する。
+- 区間操作は `0 <= l <= r <= size()` を要求する。範囲違反では `runtime_error` を送出する。
+- 固定長版で `insert` により要素数が `MAX_SIZE` を超える場合は `runtime_error` を送出する。
+- `prod(l, r)` は左から右の順で非可換モノイドを合成し、空区間では単位元を返す。
+- `seed` は優先度の生成に使い、同じ `seed` と操作列なら同じ結果になる。
+- `clear` は $O(1)$ でノード領域を再利用する。コピーは禁止、ムーブは可能である。
+- 容量を指定した固定配列版（`ImplicitTreap<Monoid, N>`）と可変長版（`ImplicitTreap<Monoid>`）は同じヘッダで利用できる。

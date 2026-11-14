@@ -3,9 +3,7 @@ title: Persistent Dynamic 2D Segment Tree (完全永続動的二次元セグメ�
 documentation_of: ../../../../src/structure/segtree/persistent/persistent_dynamic_segtree_2d.hpp
 ---
 
-必要な経路だけを生成する、固定容量の完全永続二次元segment tree。
-任意の過去versionから更新を分岐できる。座標領域は
-`[0, MAX_HEIGHT) x [0, MAX_WIDTH)`、未更新点の値は `Monoid.e()` である。
+必要な経路だけを生成する完全永続二次元セグメント木。任意の過去の version から更新を分岐できる。座標領域は $[0, \texttt{MAX_HEIGHT}) \times [0, \texttt{MAX_WIDTH})$ で、未更新の点の値は `Monoid.e()` である。
 
 ```cpp
 PersistentDynamicSegtree2D<
@@ -14,10 +12,11 @@ PersistentDynamicSegtree2D<
 > seg;
 ```
 
-`Monoid.op` は結合的かつ可換でなければならない。version 0が初期状態で、
-`MAX_VERSIONS` はversion 0を除いて追加できるversion数である。
+`Monoid.op` は結合的かつ可換でなければならない。version 0 が初期状態で、`MAX_VERSIONS` は version 0 を除いて追加できる version 数である。
 
-## Versionと使用量
+容量（5 つのテンプレート引数）をすべて省略すると可変長版になり、`PersistentDynamicSegtree2D<Monoid> tree(height, width);` のように大きさを実行時に与える。ノードと version は使用量に応じて `std::vector` を拡張する。
+
+## version と使用量
 
 ```cpp
 int versions() const
@@ -26,8 +25,7 @@ int row_nodes_used() const
 int column_nodes_used() const
 ```
 
-`versions` は現在存在するversion数、`latest_version` は最後に追加したversion番号を返す。
-残り2つは全versionで共有する固定poolの使用node数を返す。すべて $O(1)$。
+`versions` は現在存在する version 数、`latest_version` は最後に追加した version 番号を返す。残りの 2 つは全 version で共有するノードプール（行方向・列方向）の使用ノード数を返す。すべて $O(1)$ である。
 
 ## 更新と分岐
 
@@ -39,13 +37,9 @@ int apply(long long row, long long col, const S& value)
 int fork(int version)
 ```
 
-`set` は点を置換し、`apply` は現在値を `Monoid.op(current, value)` へ更新する。
-version引数なしのoverloadは最新versionから更新する。どの更新も元versionを変更せず、
-新しいversion番号を返す。`fork` は指定versionと同じ根を共有するversionを追加する。
+`set` は点の値を置き換え、`apply` は現在の値を `Monoid.op(current, value)` に更新する。`version` を省略した版は最新 version から更新する。どの更新も元の version を変更せず、新しい version 番号を返す。`fork` は指定 version と同じ根を共有する version を追加する。
 
-$R$ をrow方向の更新経路長、$C$ をcolumn方向の更新経路長とすると、
-`set` と `apply` は $O(RC)=O(\log H\log W)$ 時間で、成功時にrow nodeを
-ちょうど $R$ 個、column nodeをちょうど $RC$ 個複製する。`fork` は $O(1)$ でnodeを生成しない。
+$R$ を行方向の更新経路長、$C$ を列方向の更新経路長とすると、`set` と `apply` は成功時に行方向のノードをちょうど $R$ 個、列方向のノードをちょうど $RC$ 個複製する。`fork` はノードを生成しない。
 
 ## 取得
 
@@ -58,33 +52,24 @@ S all_prod(int version) const
 S all_prod() const
 ```
 
-version引数なしのoverloadは最新versionを参照する。`get` は1点を
-$O(\log H+\log W)$、`prod` は半開矩形 `[rb,re) x [cb,ce)` の積を
-$O(\log H\log W)$、`all_prod` は全領域の積を $O(1)$ で返す。
+`version` を省略した版は最新 version を参照する。`get` は 1 点の値、`prod` は半開矩形 $[rb, re) \times [cb, ce)$ の総積、`all_prod` は全領域の総積を返す。
+
+## 時間計算量
+
+$H=\texttt{MAX_HEIGHT}$、$W=\texttt{MAX_WIDTH}$ とする。`version` を省略した版も同じである。
+
+| API | 時間計算量 | 永続保存領域 / 一時領域 |
+| --- | --- | --- |
+| コンストラクタ | $O(\texttt{MAX_ROW_NODES}+\texttt{MAX_COLUMN_NODES}+\texttt{MAX_VERSIONS})$ | 同量の固定領域 |
+| `versions`, `latest_version`, `row_nodes_used`, `column_nodes_used` | $O(1)$ | $O(1)$ |
+| `set`, `apply` | $O(\log H\log W)$ | 行ノード $O(\log H)$、列ノード $O(\log H\log W)$、スタック $O(\log H+\log W)$ |
+| `fork` | $O(1)$ | ノード追加なし、一時 $O(1)$ |
+| `get` | $O(\log H+\log W)$ | スタック $O(\log H+\log W)$ |
+| `prod` | $O(\log H\log W)$ | スタック $O(\log H+\log W)$ |
+| `all_prod` | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-構築は $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_VERSIONS)$、
-保存領域も同量。点・矩形・versionの範囲違反、逆区間、各固定容量の超過は
-`runtime_error`。容量不足や値のコピーで更新が失敗した場合、version数とpool使用量は
-更新前へ戻る。コピー構築・コピー代入は禁止している。
-
-## API別の時間計算量
-
-| API | 時間 | 永続保存領域 / 一時領域 |
-| --- | --- | --- |
-| constructor | $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_VERSIONS)$ | 同量の固定領域 |
-| `versions`, `latest_version`, `row_nodes_used`, `column_nodes_used` | $O(1)$ | $O(1)$ |
-| `set`, `apply` | $O(\log H\log W)$ | row node $O(\log H)$、column node $O(\log H\log W)$、stack $O(\log H+\log W)$ |
-| `fork` | $O(1)$ | node追加なし、一時 $O(1)$ |
-| `get` | $O(\log H+\log W)$ | stack $O(\log H+\log W)$ |
-| `prod` | $O(\log H\log W)$ | stack $O(\log H+\log W)$ |
-| `all_prod` | $O(1)$ | $O(1)$ |
-
-$H=\mathtt{MAX\_HEIGHT}$、$W=\mathtt{MAX\_WIDTH}$。version省略overloadも同じ。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`PersistentDynamicSegtree2D<Monoid> tree(height, width);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 点・矩形・version の範囲外、逆向きの区間、各容量の超過では `std::runtime_error` を送出する。
+- 容量不足や値のコピーの失敗で更新が失敗した場合、version 数とノードプールの使用量は更新前に戻る。
+- コピーコンストラクタとコピー代入は削除されている。

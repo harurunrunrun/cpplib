@@ -22,10 +22,10 @@ ConstrainedDelaunayTriangulationResult constrained_delaunay_triangulation(
 
 - 制約辺の分割: $O(NC)$
 - 制約辺どうしの交差検査: $O(C^2)$
-- 制約辺の回復: 各制約辺について最大 $T^2$ 回 flip し、flip のたびに隣接関係を $O(T \log T)$ で再構築するので $O(C T^3 \log T)$
-- 局所 Delaunay 性の修復: 最大 $T^2$ パスで、各パスで最大 $T$ 本の辺について保護された制約辺との交差判定を行うので $O(T^3 (C + \log T))$
+- 制約辺の回復: 隣接関係を flip ごとに差分更新し、各制約辺と交差する flip 可能な辺の集合を保つ。各制約辺について集合の初期化が $O(T \log T)$、flip 1 回あたり $O(\log T)$ で、flip は最大 $T^2$ 回なので最悪 $O(C T^2 \log T)$（各制約辺の flip 回数は通常その制約辺と交差する辺の数程度）
+- 局所 Delaunay 性の修復: flip すべき辺の集合を保ち、flip のたびに接続が変わった高々 5 本の辺だけを再評価する。各辺の評価は保護された制約辺との交差判定を含めて $O(C + \log T)$ で、初期化が $O(T (C + \log T))$、flip は最大 $T^2$ 回なので最悪 $O(T^2 (C + \log T))$
 
-全体で時間計算量は $O(NC + C^2 + C T^3 \log T + T^3 (C + \log T))$、空間計算量は $O(T + C)$ である。
+全体で時間計算量は $O(NC + C^2 + C T^2 \log T + T^2 (C + \log T))$、空間計算量は $O(T + C)$ である。
 
 ## 注意点
 

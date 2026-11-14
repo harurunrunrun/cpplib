@@ -24,8 +24,13 @@ struct FenwickTree{
     }
 
     explicit FenwickTree(const std::vector<T>& v) : FenwickTree(cpplib_detail::checked_int_size(v.size())){
-        for(std::size_t i = 0; i < v.size(); i++){
-            add(static_cast<int>(i), v[i]);
+        const std::size_t n = static_cast<std::size_t>(_n);
+        for(std::size_t i = 1; i <= n; i++) data[i] = v[i - 1];
+        for(std::size_t i = 1; i <= n; i++){
+            const std::size_t j = i + (i & -i);
+            if(j > n) continue;
+            if constexpr(std::is_same_v<T, bool>) data[j] = static_cast<T>(data[j]) + data[i];
+            else data[j] += data[i];
         }
     }
 

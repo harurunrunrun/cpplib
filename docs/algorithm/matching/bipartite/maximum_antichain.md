@@ -31,9 +31,9 @@ struct MaximumAntichainResult {
 
 - DAG 判定: $O(N + M)$
 - ビット集合による推移閉包: $O((N + M) \lceil N/W \rceil)$
-- 推移閉包からの二部グラフ構築: $O(N^2)$
+- 推移閉包からの二部グラフ構築: $O(N \lceil N/W \rceil + R)$（各ワードの立っているビットだけを列挙する）
 - Hopcroft–Karp 法と反鎖の復元: $O(R \sqrt{N} + N)$
-- `maximum_antichain` 全体: $O((N + M) \lceil N/W \rceil + N^2 + R \sqrt{N})$
+- `maximum_antichain` 全体: $O((N + M) \lceil N/W \rceil + R \sqrt{N})$
 
 ## 空間計算量
 

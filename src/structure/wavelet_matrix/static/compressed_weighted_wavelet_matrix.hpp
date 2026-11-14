@@ -23,9 +23,11 @@ struct CompressedWeightedWaveletMatrix{
     static_assert(0 < ID_BIT_WIDTH && ID_BIT_WIDTH <= std::numeric_limits<unsigned>::digits);
 
 private:
+    using internal_id_type = unsigned;
+
     int _n = 0;
     std::vector<T> values;
-    std::unique_ptr<WeightedWaveletMatrix<int, W, MAX_SIZE, ID_BIT_WIDTH>> matrix;
+    std::unique_ptr<WeightedWaveletMatrix<internal_id_type, W, MAX_SIZE, ID_BIT_WIDTH>> matrix;
 
     void check_range(int l, int r, const char* message) const{
         if(l < 0 || r < l || _n < r)[[unlikely]] throw std::runtime_error(message);
@@ -45,13 +47,13 @@ private:
         check_range(l, r, "library assertion fault: range violation (range_freq).");
         if(upper <= 0) return 0;
         if(cpplib_detail::checked_int_size(values.size()) <= upper) return r - l;
-        return matrix->range_freq(l, r, upper);
+        return matrix->range_freq(l, r, static_cast<internal_id_type>(upper));
     }
     W sum_id_less(int l, int r, int upper) const{
         check_range(l, r, "library assertion fault: range violation (range_sum).");
         if(upper <= 0) return W{};
         if(cpplib_detail::checked_int_size(values.size()) <= upper) return matrix->sum(l, r);
-        return matrix->range_sum(l, r, upper);
+        return matrix->range_sum(l, r, static_cast<internal_id_type>(upper));
     }
 
 public:
@@ -67,11 +69,12 @@ public:
         }
         std::sort(values.begin(), values.end());
         values.erase(std::unique(values.begin(), values.end()), values.end());
-        std::vector<int> ids(sequence.size());
+        std::vector<internal_id_type> ids(sequence.size());
         for(int k = 0; k < _n; k++){
-            ids[static_cast<std::size_t>(k)] = lower_id(sequence[static_cast<std::size_t>(k)]);
+            ids[static_cast<std::size_t>(k)] = static_cast<internal_id_type>(
+                lower_id(sequence[static_cast<std::size_t>(k)]));
         }
-        matrix = std::make_unique<WeightedWaveletMatrix<int, W, MAX_SIZE, ID_BIT_WIDTH>>(
+        matrix = std::make_unique<WeightedWaveletMatrix<internal_id_type, W, MAX_SIZE, ID_BIT_WIDTH>>(
             ids, weights);
     }
 
@@ -108,7 +111,7 @@ public:
         check_range(l, r, "library assertion fault: range violation (rank).");
         auto id = find_id(value);
         if(!id) return 0;
-        return matrix->rank(*id, l, r);
+        return matrix->rank(static_cast<internal_id_type>(*id), l, r);
     }
 
     T kth_smallest(int l, int r, int k) const{

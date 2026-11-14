@@ -142,8 +142,17 @@ inline Polygon3 convex_polyhedron_plane_section(
     for(const Point3& point: polyhedron.vertices){
         values.push_back(value(data, point));
     }
+    // A point or segment has no faces; its only edge joins the endpoints.
+    std::vector<std::array<std::size_t, 2>> edges;
+    if(polyhedron.affine_dimension <= 1){
+        if(!polyhedron.vertices.empty()){
+            edges.push_back({0, polyhedron.vertices.size() - 1});
+        }
+    }else{
+        edges = convex_polyhedron_edges(polyhedron);
+    }
     std::vector<Point3> points;
-    for(const auto& edge: convex_polyhedron_edges(polyhedron)){
+    for(const auto& edge: edges){
         const int first = values[edge[0]];
         const int second = values[edge[1]];
         if(first == 0){

@@ -64,6 +64,49 @@ std::vector<mint<MOD>> multiply_truncated(
 }
 
 template<int MOD>
+void check_transform_capacity(std::size_t need){
+    std::size_t transform_size = 1;
+    while(transform_size < need) transform_size *= 2;
+    if(static_cast<std::size_t>(MOD - 1) % transform_size != 0)[[unlikely]]{
+        throw std::runtime_error("formal power series exceeds the NTT capacity of the modulus");
+    }
+}
+
+template<int MOD>
+constexpr bool modulus_is_prime(){
+    if(MOD < 2) return false;
+    for(long long divisor = 2; divisor * divisor <= MOD; ++divisor){
+        if(MOD % divisor == 0) return false;
+    }
+    return true;
+}
+
+// inverse[i] = i^{-1} for 1 <= i < count. MOD must be prime and count <= MOD.
+template<int MOD>
+std::vector<mint<MOD>> inverse_table(std::size_t count){
+    std::vector<mint<MOD>> inverse(std::max<std::size_t>(count, 2));
+    inverse[1] = mint<MOD>(1);
+    for(std::size_t i = 2; i < count; ++i){
+        inverse[i] = -(inverse[static_cast<std::size_t>(MOD) % i] *
+                       mint<MOD>(static_cast<long long>(static_cast<std::size_t>(MOD) / i)));
+    }
+    return inverse;
+}
+
+// inverse[i] = i^{-1} for 1 <= i < count, propagating Modint::inv's exception when i is not invertible.
+template<int MOD>
+std::vector<mint<MOD>> integer_inverses(std::size_t count){
+    if constexpr(modulus_is_prime<MOD>()){
+        if(count <= static_cast<std::size_t>(MOD)) return inverse_table<MOD>(count);
+    }
+    std::vector<mint<MOD>> inverse(std::max<std::size_t>(count, 2));
+    for(std::size_t i = 1; i < count; ++i){
+        inverse[i] = mint<MOD>(static_cast<long long>(i % MOD)).inv();
+    }
+    return inverse;
+}
+
+template<int MOD>
 std::optional<mint<MOD>> modular_sqrt(mint<MOD> value){
     static_assert(MOD >= 2);
     if(value == mint<MOD>(0)) return mint<MOD>(0);
@@ -118,6 +161,16 @@ template<int MOD>
 std::vector<Modint<MOD>> fps_integral(const std::vector<Modint<MOD>>& values){
     static_assert(MOD >= 2);
     std::vector<Modint<MOD>> result(values.size() + 1);
+    if constexpr(formal_power_series_internal::modulus_is_prime<MOD>()){
+        if(values.size() < static_cast<std::size_t>(MOD)){
+            const std::vector<Modint<MOD>> inverse =
+                formal_power_series_internal::inverse_table<MOD>(values.size() + 1);
+            for(std::size_t i = 0; i < values.size(); ++i){
+                result[i + 1] = values[i] * inverse[i + 1];
+            }
+            return result;
+        }
+    }
     for(std::size_t i = 0; i < values.size(); ++i){
         const Modint<MOD> denominator(static_cast<long long>((i + 1) % MOD));
         result[i + 1] = values[i] / denominator;
@@ -199,19 +252,61 @@ std::vector<Modint<MOD>> fps_exp(
         throw std::runtime_error("formal power series exponential requires constant term zero");
     }
     std::vector<Modint<MOD>> result{Modint<MOD>(1)};
+    if(size == 1) return result;
+    {
+        // Keep the NTT-capacity condition of the plain Newton iteration g <- g(1 + f - log g).
+        std::size_t previous = 1;
+        while(previous * 2 < size) previous *= 2;
+        formal_power_series_internal::check_transform_capacity<MOD>(previous + size - 1);
+    }
+    const std::vector<Modint<MOD>> inverse_integer =
+        formal_power_series_internal::integer_inverses<MOD>(size);
+    // Invariant: result = exp(f) mod x^m and inverse = result^{-1} mod x^m, where m = result.size().
+    std::vector<Modint<MOD>> inverse{Modint<MOD>(1)};
     while(result.size() < size){
-        const std::size_t next_size = std::min(size, result.size() * 2);
-        const std::vector<Modint<MOD>> logarithm = fps_log(result, next_size);
-        std::vector<Modint<MOD>> correction(next_size);
-        for(std::size_t i = 0; i < next_size; ++i){
-            const Modint<MOD> source = i < values.size() ? values[i] : Modint<MOD>(0);
-            correction[i] = source - logarithm[i];
+        const std::size_t current = result.size();
+        const std::size_t next_size = std::min(size, current * 2);
+        const std::size_t extra = next_size - current;
+
+        // Extend inverse to result^{-1} mod x^{next_size}.
+        std::vector<Modint<MOD>> product =
+            formal_power_series_internal::multiply_truncated<MOD>(result, inverse, next_size);
+        product.resize(next_size);
+        std::vector<Modint<MOD>> high(product.begin() + static_cast<std::ptrdiff_t>(current),
+                                      product.end());
+        std::vector<Modint<MOD>> correction =
+            formal_power_series_internal::multiply_truncated<MOD>(inverse, high, extra);
+        correction.resize(extra);
+        inverse.resize(next_size);
+        for(std::size_t i = 0; i < extra; ++i) inverse[current + i] = -correction[i];
+
+        // log(result) mod x^{next_size}; its first current coefficients equal f.
+        const std::vector<Modint<MOD>> quotient =
+            formal_power_series_internal::multiply_truncated<MOD>(
+                fps_derivative(result), inverse, next_size - 1
+            );
+        std::vector<Modint<MOD>> difference(extra);
+        for(std::size_t i = 0; i < extra; ++i){
+            const std::size_t degree = current + i;
+            const Modint<MOD> source = degree < values.size() ? values[degree] : Modint<MOD>(0);
+            const Modint<MOD> logarithm = degree - 1 < quotient.size()
+                ? quotient[degree - 1] * inverse_integer[degree] : Modint<MOD>(0);
+            difference[i] = source - logarithm;
         }
-        correction[0] += Modint<MOD>(1);
-        result = formal_power_series_internal::multiply_truncated<MOD>(
-            result, correction, next_size
-        );
+
+        // result <- result (1 + difference x^current).
+        std::vector<Modint<MOD>> increment =
+            formal_power_series_internal::multiply_truncated<MOD>(result, difference, extra);
+        increment.resize(extra);
+        if(next_size < size){
+            // inverse <- inverse (1 - difference x^current) mod x^{next_size}.
+            std::vector<Modint<MOD>> decrement =
+                formal_power_series_internal::multiply_truncated<MOD>(inverse, difference, extra);
+            decrement.resize(extra);
+            for(std::size_t i = 0; i < extra; ++i) inverse[current + i] -= decrement[i];
+        }
         result.resize(next_size);
+        for(std::size_t i = 0; i < extra; ++i) result[current + i] = increment[i];
     }
     return result;
 }
@@ -292,19 +387,49 @@ std::optional<std::vector<Modint<MOD>>> fps_sqrt(
     for(Modint<MOD>& value: unit) value *= inverse_constant;
     std::vector<Modint<MOD>> root{Modint<MOD>(1)};
     const Modint<MOD> inverse_two = Modint<MOD>(2).inv();
+    if(unit_size > 1){
+        // Keep the NTT-capacity condition of the plain Newton iteration g <- (g + f / g) / 2.
+        std::size_t previous = 1;
+        while(previous * 2 < unit_size) previous *= 2;
+        formal_power_series_internal::check_transform_capacity<MOD>(
+            std::max(std::min(unit.size(), unit_size), previous) + unit_size - 1
+        );
+    }
+    // Invariant: inverse = root^{-1} mod x^m, where m = root.size().
+    std::vector<Modint<MOD>> inverse{Modint<MOD>(1)};
     while(root.size() < unit_size){
-        const std::size_t next_size = std::min(unit_size, root.size() * 2);
-        const std::vector<Modint<MOD>> inverse = fps_inv(root, next_size);
-        std::vector<Modint<MOD>> quotient =
-            formal_power_series_internal::multiply_truncated<MOD>(
-                formal_power_series_internal::prefix<MOD>(unit, next_size),
-                inverse,
-                next_size
-            );
-        quotient.resize(next_size);
+        const std::size_t current = root.size();
+        const std::size_t next_size = std::min(unit_size, current * 2);
+        const std::size_t extra = next_size - current;
+
+        // root <- root + (unit - root^2) / (2 root); unit - root^2 = O(x^current).
+        std::vector<Modint<MOD>> square =
+            formal_power_series_internal::multiply_truncated<MOD>(root, root, next_size);
+        square.resize(next_size);
+        std::vector<Modint<MOD>> residual(extra);
+        for(std::size_t i = 0; i < extra; ++i){
+            const std::size_t degree = current + i;
+            const Modint<MOD> source = degree < unit.size() ? unit[degree] : Modint<MOD>(0);
+            residual[i] = source - square[degree];
+        }
+        std::vector<Modint<MOD>> increment =
+            formal_power_series_internal::multiply_truncated<MOD>(residual, inverse, extra);
+        increment.resize(extra);
         root.resize(next_size);
-        for(std::size_t i = 0; i < next_size; ++i){
-            root[i] = (root[i] + quotient[i]) * inverse_two;
+        for(std::size_t i = 0; i < extra; ++i) root[current + i] = increment[i] * inverse_two;
+
+        if(next_size < unit_size){
+            // Extend inverse to root^{-1} mod x^{next_size}.
+            std::vector<Modint<MOD>> product =
+                formal_power_series_internal::multiply_truncated<MOD>(root, inverse, next_size);
+            product.resize(next_size);
+            std::vector<Modint<MOD>> high(product.begin() + static_cast<std::ptrdiff_t>(current),
+                                          product.end());
+            std::vector<Modint<MOD>> correction =
+                formal_power_series_internal::multiply_truncated<MOD>(inverse, high, extra);
+            correction.resize(extra);
+            inverse.resize(next_size);
+            for(std::size_t i = 0; i < extra; ++i) inverse[current + i] = -correction[i];
         }
     }
 

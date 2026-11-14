@@ -3,7 +3,7 @@ title: Persistent Fenwick Tree (永続Fenwick木)
 documentation_of: ../../../src/structure/fenwick_tree/persistent_fenwick_tree.hpp
 ---
 
-任意の過去のバージョンから分岐して更新できる、完全永続な Fenwick Tree。Fenwick Tree の各ノードの値を永続セグメント木に格納する。
+任意の過去のバージョンから分岐して更新できる、完全永続な Fenwick Tree。内部では一点加算・区間和を持つ永続セグメント木で実装する。
 
 ## API
 
@@ -20,17 +20,17 @@ template<class T> class PersistentFenwickTree;
 ## 時間計算量
 
 - 構築: $O(1)$
-- `add`: $O(\log^2 N)$。ノードを $O(\log^2 N)$ 個追加する
-- `prefix_sum`、`sum`: $O(\log^2 N)$
+- `add`: $O(\log N)$。ノードを $O(\log N)$ 個追加する
+- `prefix_sum`、`sum`: $O(\log N)$
 - `size`、`version_count`: $O(1)$
 
 ## 空間計算量
 
-$O(V + U\log^2 N)$（$V$ はバージョン数、$U$ は `add` の回数）。
+$O(V + U\log N)$（$V$ はバージョン数、$U$ は `add` の回数）。
 
 ## 注意点
 
 - 更新後も、もとにしたバージョンを含む既存のすべてのバージョンは変化しない。
 - `T` には `T{}`、加算、減算が使える型を用いる。
-- 負の長さは `std::invalid_argument` を、長さ `INT_MAX` は内部の 1-indexed の境界を表現できないため `std::length_error` を送出する。
+- 負の長さは `std::invalid_argument` を、長さ `INT_MAX` は `std::length_error` を送出する。
 - 不正なバージョン・位置・区間は `std::out_of_range` を送出する。

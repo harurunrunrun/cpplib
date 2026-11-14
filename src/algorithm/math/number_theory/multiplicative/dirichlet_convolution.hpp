@@ -3,9 +3,25 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <type_traits>
 #include <vector>
 
+template<int mod>
+struct Modint;
+
 namespace math {
+
+namespace dirichlet_convolution_internal {
+
+// Types for which a / b equals a * (1 / b) exactly, so the division by
+// values[1] may be replaced with a multiplication by its inverse.
+template<class Value>
+struct exact_division_by_inverse : std::false_type {};
+
+template<int mod>
+struct exact_division_by_inverse<Modint<mod>> : std::true_type {};
+
+}  // namespace dirichlet_convolution_internal
 
 template<class Value>
 std::vector<Value> dirichlet_convolution(
@@ -45,8 +61,13 @@ std::vector<Value> dirichlet_inverse(
     result[1] = Value{1} / values[1];
     for(std::size_t quotient = 1; quotient <= maximum; ++quotient){
         if(quotient != 1){
-            result[quotient] =
-                -contribution[quotient] / values[1];
+            if constexpr(dirichlet_convolution_internal::
+                    exact_division_by_inverse<Value>::value){
+                result[quotient] = -contribution[quotient] * result[1];
+            }else{
+                result[quotient] =
+                    -contribution[quotient] / values[1];
+            }
         }
         for(std::size_t divisor = 2;
             divisor <= maximum / quotient;

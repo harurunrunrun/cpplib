@@ -3,9 +3,9 @@ title: Persistent Segment Tree (完全永続セグメント木)
 documentation_of: ../../../../src/structure/segtree/persistent/persistent_segtree.hpp
 ---
 
-任意の過去の状態を残したまま、1点更新した新しい状態を作るsegment tree。
+任意の過去の状態を残したまま、1 点更新を行った新しい状態を作るセグメント木。
 
-状態は0から始まるversionで指定する。version 0は初期状態。
+状態は 0 から始まる version 番号で指定し、version 0 が初期状態である。
 
 ## テンプレート引数
 
@@ -13,27 +13,29 @@ documentation_of: ../../../../src/structure/segtree/persistent/persistent_segtre
 PersistentSegtree<Monoid, MAX_SIZE, MAX_VERSION>
 ```
 
-- モノイド `Monoid`
-- 配列長の上限 `MAX_SIZE`
-- version 0から追加できるversion数の上限 `MAX_VERSION`
+- `Monoid`: モノイド
+- `MAX_SIZE`: 配列長の上限
+- `MAX_VERSION`: version 0 から追加できる version 数の上限
 
-オブジェクト自体のcopy/moveはできない。
+容量（`MAX_SIZE`, `MAX_VERSION`）を両方省略すると可変長版になり、`PersistentSegtree<Monoid> tree(n);` のように長さを実行時に与える。ノードと version は使用量に応じて `std::vector` を拡張する。
+
+オブジェクト自体のコピー・ムーブはできない。
 
 ## コンストラクタ
 
 ```cpp
-(1) PersistentSegtree(int n = MAX_SIZE)
+(1) PersistentSegtree(int n = MAX_SIZE)  // 可変長版の既定値は 0
 (2) PersistentSegtree(const vector<S>& v)
 (3) PersistentSegtree(const array<S, N>& v)
 ```
 
 1. 長さ `n`、初期値 `Monoid.e()` で初期化する。
 2. `v` で初期化する。
-3. `v` で初期化する。
+3. `v` で初期化する（$N \le \texttt{MAX_SIZE}$ を `static_assert` で確認する）。
 
 ## 時間計算量
 
-- $O(\mathrm{MAX\_SIZE}+\mathrm{MAX\_VERSION}\log \mathrm{MAX\_SIZE})$
+- $O(\texttt{MAX_SIZE}+\texttt{MAX_VERSION}\log \texttt{MAX_SIZE})$（可変長版は $O(n)$）
 
 ## set
 
@@ -41,11 +43,11 @@ PersistentSegtree<Monoid, MAX_SIZE, MAX_VERSION>
 int set(int version, int k, const S& x)
 ```
 
-`version` の `k` 番目を `x` に変更した新しいversionを作り、その番号を返す。
+`version` の `k` 番目を `x` に変更した新しい version を作り、その番号を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## fork
 
@@ -53,7 +55,7 @@ int set(int version, int k, const S& x)
 int fork(int version)
 ```
 
-`version` と同じ内容の新しいversionを作り、その番号を返す。
+`version` と同じ内容の新しい version を作り、その番号を返す。
 
 ## 時間計算量
 
@@ -69,7 +71,7 @@ S get(int version, int k) const
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## prod
 
@@ -77,11 +79,11 @@ S get(int version, int k) const
 S prod(int version, int l, int r) const
 ```
 
-`version` の区間 $[l, r)$ の積を返す。
+`version` の区間 $[l, r)$ の総積を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## all_prod
 
@@ -89,7 +91,7 @@ S prod(int version, int l, int r) const
 S all_prod(int version) const
 ```
 
-`version` の全要素の積を返す。
+`version` の全要素の総積を返す。
 
 ## 時間計算量
 
@@ -101,11 +103,11 @@ S all_prod(int version) const
 int max_right(int version, int l, auto f, auto&&... args) const
 ```
 
-`f(Monoid.e(), args...)` がtrueであるとき、`f(prod(version, l, r), args...)` がtrueとなる最大の `r` を返す。
+`f(Monoid.e(), args...)` が `true` であるとき、`f(prod(version, l, r), args...)` が `true` となる最大の `r` を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## min_left
 
@@ -113,11 +115,11 @@ int max_right(int version, int l, auto f, auto&&... args) const
 int min_left(int version, int r, auto f, auto&&... args) const
 ```
 
-`f(Monoid.e(), args...)` がtrueであるとき、`f(prod(version, l, r), args...)` がtrueとなる最小の `l` を返す。
+`f(Monoid.e(), args...)` が `true` であるとき、`f(prod(version, l, r), args...)` が `true` となる最小の `l` を返す。
 
 ## 時間計算量
 
-- $O(\log \mathrm{MAX\_SIZE})$
+- $O(\log \texttt{MAX_SIZE})$
 
 ## size
 
@@ -137,7 +139,7 @@ int size() const
 int versions() const
 ```
 
-現在存在するversion数を返す。
+現在存在する version 数を返す。
 
 ## 時間計算量
 
@@ -149,7 +151,7 @@ int versions() const
 int latest_version() const
 ```
 
-最後に作ったversionの番号を返す。
+最後に作った version の番号を返す。
 
 ## 時間計算量
 
@@ -157,17 +159,9 @@ int latest_version() const
 
 ## 注意点
 
-version 0が初期状態で、`0 <= version < versions()` のversionだけを参照できる。
-更新と `fork` は指定versionを変更せず、新しいversion番号を返す。`latest_version()` は
-`versions()-1`。点は実際の列内、区間は半開区間 `[l,r)` で指定する。
-境界探索を持つ型ではpredicateは単調かつ単位元に対してtrueでなければならない。
-
-不正なversion・点・区間・predicate、version/node容量超過では `runtime_error`。
-容量不足で更新が失敗した場合、version数と使用node数は更新前へ戻る。
-各APIの計算量は上記表の通り。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`PersistentSegtree<Monoid> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- version 0 が初期状態で、`0 <= version < versions()` の version だけを参照できる。
+- 更新と `fork` は指定した version を変更せず、新しい version 番号を返す。`latest_version()` は `versions() - 1` である。
+- 点は実際の列内、区間は半開区間 $[l, r)$ で指定する。
+- 境界探索の述語は単調で、単位元に対して `true` を返す必要がある。
+- 不正な version・点・区間、述語が単位元で `false`、version の容量超過では `std::runtime_error` を送出する。可変長版で $n \gt 2^{28}$ の場合は `std::length_error` になる。
+- 更新が失敗した場合、version 数と使用ノード数は更新前に戻る。

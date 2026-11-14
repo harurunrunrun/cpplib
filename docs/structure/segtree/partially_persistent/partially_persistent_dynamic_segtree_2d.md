@@ -3,9 +3,7 @@ title: Partially Persistent Dynamic 2D Segment Tree (部分永続動的二次元
 documentation_of: ../../../../src/structure/segtree/partially_persistent/partially_persistent_dynamic_segtree_2d.hpp
 ---
 
-必要な経路だけを生成する、固定容量の部分永続二次元segment tree。
-更新は最新versionにだけ行い、すべての過去versionを参照できる。
-完全永続版のwrapperではなく、共有した疎な座標木に値の変更履歴を保持する。
+必要な経路だけを生成する部分永続二次元セグメント木。更新は最新 version に対してだけ行い、すべての過去 version を参照できる。完全永続版のラッパーではなく、共有した疎な座標木の各ノードに値の変更履歴を保持する。
 
 ```cpp
 PartiallyPersistentDynamicSegtree2D<
@@ -14,11 +12,11 @@ PartiallyPersistentDynamicSegtree2D<
 > seg;
 ```
 
-座標領域は `[0, MAX_HEIGHT) x [0, MAX_WIDTH)`、未更新点の値は `Monoid.e()`。
-`Monoid.op` は結合的かつ可換でなければならない。version 0が初期状態で、
-`MAX_CHANGES` はcolumn nodeへ記録できる値変更の総数である。
+座標領域は $[0, \texttt{MAX_HEIGHT}) \times [0, \texttt{MAX_WIDTH})$ で、未更新の点の値は `Monoid.e()` である。`Monoid.op` は結合的かつ可換でなければならない。version 0 が初期状態で、`MAX_CHANGES` は列方向のノードに記録できる値変更の総数である。
 
-## Versionと使用量
+容量（6 つのテンプレート引数）をすべて省略すると可変長版になり、`PartiallyPersistentDynamicSegtree2D<Monoid> tree(height, width);` のように大きさを実行時に与える。ノード・version・履歴は使用量に応じて `std::vector` を拡張する。
+
+## version と使用量
 
 ```cpp
 int versions() const
@@ -28,24 +26,18 @@ int column_nodes_used() const
 int changes_used() const
 ```
 
-順にversion数、最新version、row/column poolの使用node数、値履歴の使用数を返す。
-すべて $O(1)$。
+順に version 数、最新 version 番号、行方向・列方向のノードプールの使用ノード数、値履歴の使用数を返す。すべて $O(1)$ である。
 
-## 最新versionの更新
+## 最新 version の更新
 
 ```cpp
 int set(long long row, long long col, const S& value)
 int apply(long long row, long long col, const S& value)
 ```
 
-`set` は点を置換し、`apply` は `Monoid.op(current, value)` を格納する。
-新しいversion番号を返す。過去versionを指定する更新APIはなく、version分岐はできない。
+`set` は点の値を置き換え、`apply` は `Monoid.op(current, value)` を格納する。どちらも新しい version 番号を返す。過去の version を指定する更新 API はなく、version の分岐はできない。
 
-$R,C$ をrow/columnの更新経路長、$L=\lceil\log_2(MAX\_CHANGES+1)\rceil$
-とすると、時間計算量は $O(RCL)$。1更新につき値履歴をちょうど $RC$ 件追加し、
-座標木についてはまだ存在しない経路nodeだけを生成する。
-
-## 過去versionの取得
+## 任意 version の取得
 
 ```cpp
 S get(int version, long long row, long long col) const
@@ -56,21 +48,23 @@ S all_prod(int version) const
 S all_prod() const
 ```
 
-version引数なしのoverloadは最新versionを参照する。`get` は
-$O(\log H+\log W+L)$、半開矩形を返す `prod` は
-$O(\log H\log W L)$、`all_prod` は $O(L)$。最新versionの履歴参照は先頭記録から
-直接返せるが、表では任意versionの上界を示している。
+`version` を省略した版は最新 version を参照する。`prod` は半開矩形 $[rb, re) \times [cb, ce)$ の総積を返す。
+
+## 時間計算量
+
+$H = \texttt{MAX_HEIGHT}$, $W = \texttt{MAX_WIDTH}$ とし、$R, C$ を行方向・列方向の更新経路長、$L=\lceil\log_2(\texttt{MAX_CHANGES}+1)\rceil$ とする。
+
+- コンストラクタ: $O(\texttt{MAX_ROW_NODES}+\texttt{MAX_COLUMN_NODES}+\texttt{MAX_CHANGES}\,L)$
+- `set`, `apply`: $O(RCL)$。1 回の更新で値履歴をちょうど $RC$ 件追加し、座標木はまだ存在しない経路上のノードだけを生成する。
+- `get`: $O(\log H+\log W+L)$
+- `prod`: $O(L\log H\log W)$
+- `all_prod`: $O(L)$
+- version と使用量の取得: $O(1)$
+
+最新 version の履歴参照は先頭の記録から直接返せるが、上の値は任意の version に対する上界である。保存領域は $O(\texttt{MAX_ROW_NODES}+\texttt{MAX_COLUMN_NODES}+\texttt{MAX_CHANGES}\,L)$ である。
 
 ## 注意点
 
-構築時間と保存領域は
-$O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_CHANGES\,L)$。
-点・矩形・versionの範囲違反、逆区間、version/node/history容量超過は
-`runtime_error`。失敗した更新が生成したnodeと履歴は取り消され、version数も変化しない。
-コピー構築・コピー代入は禁止している。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`PartiallyPersistentDynamicSegtree2D<Monoid> tree(height, width);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 点・矩形・version の範囲外、逆向きの区間、version・ノード・履歴の容量超過では `std::runtime_error` を送出する。
+- 失敗した更新が生成したノードと履歴は取り消され、version 数も変化しない。
+- コピーコンストラクタとコピー代入は削除されている。

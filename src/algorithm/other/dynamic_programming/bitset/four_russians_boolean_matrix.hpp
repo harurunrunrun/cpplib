@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <bit>
 #include <cstddef>
+#include <cstdint>
 #include <limits>
 #include <stdexcept>
 #include <vector>
@@ -71,16 +72,29 @@ inline BooleanMatrix four_russians_boolean_matrix_multiply(
         );
     }
 
+    // Rows are packed into 64-bit words so that table entries and result
+    // rows are OR-ed a word at a time.
+    constexpr std::size_t word_bits = 64;
+    const std::size_t word_count = (column_count + word_bits - 1) / word_bits;
+    std::vector<std::uint64_t> packed_second(shared * word_count, 0);
+    for(std::size_t index = 0; index < shared; ++index){
+        std::uint64_t* const destination =
+            packed_second.data() + index * word_count;
+        for(std::size_t column = 0; column < column_count; ++column){
+            destination[column / word_bits] |=
+                static_cast<std::uint64_t>(second[index][column])
+                << (column % word_bits);
+        }
+    }
+    std::vector<std::uint64_t> packed_result(row_count * word_count, 0);
+    std::vector<std::uint64_t> table;
     for(std::size_t block_begin = 0;
         block_begin < shared;
         block_begin += block_size){
         const std::size_t length =
             std::min(block_size, shared - block_begin);
         const std::size_t pattern_count = std::size_t{1} << length;
-        BooleanMatrix table(
-            pattern_count,
-            std::vector<unsigned char>(column_count)
-        );
+        table.assign(pattern_count * word_count, 0);
         for(std::size_t pattern = 1;
             pattern < pattern_count;
             ++pattern){
@@ -88,12 +102,14 @@ inline BooleanMatrix four_russians_boolean_matrix_multiply(
                 std::countr_zero(pattern);
             const std::size_t previous =
                 pattern & (pattern - 1);
-            table[pattern] = table[previous];
-            const auto& source = second[block_begin + bit_index];
-            for(std::size_t column = 0;
-                column < column_count;
-                ++column){
-                table[pattern][column] |= source[column];
+            std::uint64_t* const destination =
+                table.data() + pattern * word_count;
+            const std::uint64_t* const base =
+                table.data() + previous * word_count;
+            const std::uint64_t* const source = packed_second.data()
+                + (block_begin + bit_index) * word_count;
+            for(std::size_t word = 0; word < word_count; ++word){
+                destination[word] = base[word] | source[word];
             }
         }
         for(std::size_t row = 0; row < row_count; ++row){
@@ -104,11 +120,23 @@ inline BooleanMatrix four_russians_boolean_matrix_multiply(
                         first[row][block_begin + offset]
                     ) << offset;
             }
-            for(std::size_t column = 0;
-                column < column_count;
-                ++column){
-                result[row][column] |= table[pattern][column];
+            if(pattern == 0) continue;
+            std::uint64_t* const destination =
+                packed_result.data() + row * word_count;
+            const std::uint64_t* const source =
+                table.data() + pattern * word_count;
+            for(std::size_t word = 0; word < word_count; ++word){
+                destination[word] |= source[word];
             }
+        }
+    }
+    for(std::size_t row = 0; row < row_count; ++row){
+        const std::uint64_t* const source =
+            packed_result.data() + row * word_count;
+        for(std::size_t column = 0; column < column_count; ++column){
+            result[row][column] = static_cast<unsigned char>(
+                (source[column / word_bits] >> (column % word_bits)) & 1U
+            );
         }
     }
     return result;

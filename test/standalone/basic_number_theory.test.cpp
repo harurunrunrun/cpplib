@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -95,6 +96,16 @@ void test_exceptions(){
         thrown = true;
     }
     assert(thrown);
+
+    thrown = false;
+    try{
+        (void)math::abs_ll(std::numeric_limits<long long>::min());
+    }catch(const std::runtime_error&){
+        thrown = true;
+    }
+    assert(thrown);
+    assert(math::abs_ll(std::numeric_limits<long long>::min() + 1)
+        == std::numeric_limits<long long>::max());
 }
 
 int main(){

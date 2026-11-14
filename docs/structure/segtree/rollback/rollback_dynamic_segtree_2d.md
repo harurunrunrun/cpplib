@@ -3,8 +3,7 @@ title: Rollback Dynamic 2D Segment Tree (ロールバック可能動的二次元
 documentation_of: ../../../../src/structure/segtree/rollback/rollback_dynamic_segtree_2d.hpp
 ---
 
-必要な経路だけを生成する、固定容量のrollback可能な二次元segment tree。
-更新前の値と疎な木のpool位置を記録し、更新を逆順に取り消す。
+必要な経路だけを生成する、ロールバック可能な二次元セグメント木。更新前の値と疎な木のノードプールの位置を記録し、更新を逆順に取り消す。
 
 ```cpp
 RollbackDynamicSegtree2D<
@@ -13,8 +12,9 @@ RollbackDynamicSegtree2D<
 > seg;
 ```
 
-座標領域は `[0, MAX_HEIGHT) x [0, MAX_WIDTH)`、未更新点の値は `Monoid.e()`。
-`Monoid.op` は結合的かつ可換でなければならない。`Snapshot` は `int` の別名である。
+座標領域は $[0, \texttt{MAX_HEIGHT}) \times [0, \texttt{MAX_WIDTH})$ で、未更新の点の値は `Monoid.e()` である。`Monoid.op` は結合的かつ可換でなければならない。`Snapshot` は `int` の別名である。
+
+容量（5 つのテンプレート引数）をすべて省略すると可変長版になり、`RollbackDynamicSegtree2D<Monoid> tree(height, width);` のように大きさを実行時に与える。ノードと履歴は使用量に応じて `std::vector` を拡張する。
 
 ## 使用量と履歴
 
@@ -26,8 +26,7 @@ int changes_used() const
 bool can_undo() const
 ```
 
-順に現在残っている更新数、row/column poolの使用node数、値変更記録数、
-取り消せる更新があるかを返す。すべて $O(1)$。
+順に現在残っている更新数、行方向・列方向のノードプールの使用ノード数、値の変更記録数、取り消せる更新があるかどうかを返す。すべて $O(1)$ である。
 
 ## 更新
 
@@ -36,9 +35,7 @@ void set(long long row, long long col, const S& value)
 void apply(long long row, long long col, const S& value)
 ```
 
-`set` は点を置換し、`apply` は `Monoid.op(current, value)` を格納する。
-$R,C$ をrow/columnの更新経路長とすると $O(RC)=O(\log H\log W)$ 時間。
-値変更をちょうど $RC$ 件記録し、まだ存在しない経路nodeだけを生成する。
+`set` は点の値を置き換え、`apply` は `Monoid.op(current, value)` を格納する。$R, C$ を行方向・列方向の更新経路長とすると、値の変更をちょうど $RC$ 件記録し、まだ存在しない経路上のノードだけを生成する。
 
 ## 取得
 
@@ -48,10 +45,9 @@ S prod(long long rb, long long cb, long long re, long long ce) const
 S all_prod() const
 ```
 
-`get` は1点を $O(\log H+\log W)$、`prod` は半開矩形
-`[rb,re) x [cb,ce)` を $O(\log H\log W)$、`all_prod` は全領域を $O(1)$ で返す。
+`get` は 1 点の値、`prod` は半開矩形 $[rb, re) \times [cb, ce)$ の総積、`all_prod` は全領域の総積を返す。
 
-## Rollback
+## ロールバック
 
 ```cpp
 Snapshot snapshot() const
@@ -59,36 +55,26 @@ void undo()
 void rollback(Snapshot target)
 ```
 
-`snapshot` は現在の更新数を $O(1)$ で返す。`undo` は最後の更新1回を
-$O(RC)$ で取り消す。`rollback(target)` は `snapshot()==target` になるまで取り消し、
-時間は取り消した各更新の変更記録数と解放した疎node数の合計に比例する。
+`snapshot` は現在の更新数を返す。`undo` は最後の更新を 1 回取り消す。`rollback(target)` は `snapshot() == target` になるまで更新を取り消す。
+
+## 時間計算量
+
+$H=\texttt{MAX_HEIGHT}$、$W=\texttt{MAX_WIDTH}$ とする。
+
+| API | 時間計算量 | 履歴・一時領域 |
+| --- | --- | --- |
+| コンストラクタ | $O(\texttt{MAX_ROW_NODES}+\texttt{MAX_COLUMN_NODES}+\texttt{MAX_CHANGES})$ | 同量の固定領域 |
+| `history_size`, `row_nodes_used`, `column_nodes_used`, `changes_used`, `can_undo` | $O(1)$ | $O(1)$ |
+| `set`, `apply` | $O(\log H\log W)$ | 変更履歴 $O(\log H\log W)$、スタック $O(\log H+\log W)$ |
+| `get` | $O(\log H+\log W)$ | スタック $O(\log H+\log W)$ |
+| `prod` | $O(\log H\log W)$ | スタック $O(\log H+\log W)$ |
+| `all_prod`, `snapshot` | $O(1)$ | $O(1)$ |
+| `undo` | $O(\log H\log W)$ | $O(1)$ |
+| `rollback(target)` | 取り消す変更記録数と解放する疎ノード数の合計に線形 | $O(1)$ |
 
 ## 注意点
 
-構築時間と保存領域は
-$O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_CHANGES)$。
-点・矩形・snapshotの範囲違反、逆区間、空履歴の `undo`、node/history容量超過は
-`runtime_error`。失敗した更新の値変更と新規nodeは更新前へ戻る。
-rollback後に新しい更新を行えるが、取り消した先の履歴へ分岐して戻ることはできない。
-コピー構築・コピー代入は禁止している。
-
-## API別の時間計算量
-
-| API | 時間 | 履歴・一時領域 |
-| --- | --- | --- |
-| constructor | $O(MAX\_ROW\_NODES+MAX\_COLUMN\_NODES+MAX\_CHANGES)$ | 同量の固定領域 |
-| `history_size`, `row_nodes_used`, `column_nodes_used`, `changes_used`, `can_undo` | $O(1)$ | $O(1)$ |
-| `set`, `apply` | $O(\log H\log W)$ | 変更履歴 $O(\log H\log W)$、stack $O(\log H+\log W)$ |
-| `get` | $O(\log H+\log W)$ | stack $O(\log H+\log W)$ |
-| `prod` | $O(\log H\log W)$ | stack $O(\log H+\log W)$ |
-| `all_prod`, `snapshot` | $O(1)$ | $O(1)$ |
-| `undo` | $O(\log H\log W)$ | $O(1)$ |
-| `rollback(target)` | 取り消す変更履歴数に線形 | $O(1)$ |
-
-$H=\mathtt{MAX\_HEIGHT}$、$W=\mathtt{MAX\_WIDTH}$。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`RollbackDynamicSegtree2D<Monoid> tree(height, width);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 点・矩形・snapshot の範囲外、逆向きの区間、履歴が空の状態での `undo`、ノード・履歴の容量超過では `std::runtime_error` を送出する。
+- 失敗した更新の値の変更と新規ノードは更新前に戻る。
+- ロールバック後に新しい更新を行えるが、取り消した先の履歴へ分岐して戻ることはできない。
+- コピーコンストラクタとコピー代入は削除されている。

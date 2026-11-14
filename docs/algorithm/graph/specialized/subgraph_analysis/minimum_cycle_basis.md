@@ -41,7 +41,7 @@ struct MinimumCycleBasisResult {
 頂点数を $N$、辺数を $M$、ワード長を $W=64$、Horton 候補の個数を $H\le NM$ とする。
 
 - 全始点からの Dijkstra 法: $O(N(M+N)\log(M+N+1))$
-- 最短路の辺ビット集合と Horton 候補の構築: $O(N^2\lceil M/W\rceil+HM)$
+- 最短路の辺ビット集合と Horton 候補の構築: $O(N^2\lceil M/W\rceil+H(\lceil M/W\rceil+N))$（候補の重みは立っているビットだけを走査して求め、各候補の辺数は $2N-1$ 以下）
 - 候補の整列: $O(H\log(H+1)\lceil M/W\rceil)$
 - $\mathbb F_2$ 上の基底への挿入: $O(HM\lceil M/W\rceil)$
 

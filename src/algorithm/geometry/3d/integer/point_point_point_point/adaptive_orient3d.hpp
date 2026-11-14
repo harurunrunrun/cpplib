@@ -169,18 +169,9 @@ inline int adaptive_orient3d(
     }catch(const std::overflow_error&){
         // The exact dyadic fallback does not form overflowing coordinate differences.
     }
-    int expansion_sign = 0;
-    try{
-        expansion_sign = geometry3d_adaptive_detail::expansion_orient3d_sign(
-            first, second, third, fourth
-        );
-    }catch(const std::overflow_error&){
-        expansion_sign = 0;
-    }
-    const int exact_sign = geometry3d_adaptive_detail::exact_orient3d_sign(
+    return geometry3d_adaptive_detail::exact_orient3d_sign(
         first, second, third, fourth
     );
-    return expansion_sign == exact_sign ? expansion_sign : exact_sign;
 }
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_3D_INTEGER_POINT_POINT_POINT_POINT_ADAPTIVE_ORIENT3D_HPP_INCLUDED

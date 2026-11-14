@@ -23,7 +23,9 @@ $M$ を `values` の最大値とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `pairwise_lcm_sum` | $O(M \log M + M \log 998244353)$ | $O(M)$ |
+| `pairwise_lcm_sum` | $O(M \log M)$ | $O(M)$ |
+
+$1, \ldots, M$ の逆元は線形時間の漸化式 $i^{-1} = -\lfloor p / i \rfloor \cdot (p \bmod i)^{-1}$（$p = 998244353$）で前計算する（$M \ge p$ のときは各 $g$ で冪乗により逆元を求め、$O(M \log M + M \log p)$ になる）。
 
 ## 注意点
 

@@ -40,7 +40,7 @@ long long s = fw.sum(2, 5);
 ## 時間計算量
 
 - `FenwickTree(int)`: $O(n)$。固定長版では配列全体の初期化に $O(\texttt{MAX_SIZE})$ かかる
-- `FenwickTree(vector)`: 上記に加えて $O(n\log n)$
+- `FenwickTree(vector)`: 上記に加えて $O(n)$（各ノードの値を親へ足し込む線形時間の構築）
 - `add`、`prefix_sum`、`sum`、`get`、`set`: $O(\log n)$
 - `size`、`empty`: $O(1)$
 
@@ -54,3 +54,4 @@ long long s = fw.sum(2, 5);
 - $0 \le n \le \texttt{MAX_SIZE}$ でなければならない。`vector` の長さが上限を超える場合を含め、コンストラクタの範囲違反は `std::runtime_error` を送出する。
 - 添字は $[0, n)$、`prefix_sum` の終端は $[0, n]$、区間は $0 \le l \le r \le n$ でなければならない。違反すると `std::runtime_error` を送出する。
 - `T` はデフォルト構築、加算、減算ができる必要がある。
+- `vector` からの構築は `add` を繰り返す場合と加算の順序が異なる。浮動小数点型では丸め誤差の出方が変わりうる。

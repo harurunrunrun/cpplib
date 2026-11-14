@@ -3,14 +3,16 @@ title: Static 2D KD Tree (静的二次元KD木) [DSL_2_C]
 documentation_of: ../../../src/structure/spatial/kd_tree_2d.hpp
 ---
 
-静的な2次元点集合に対する直交長方形range search。
-同じ点集合に対するEuclid距離の最近傍探索にも対応する。
+静的な二次元点集合に対して、軸平行な長方形の範囲検索を行う。
+同じ点集合に対するユークリッド距離の最近傍探索にも対応する。
 
-## point
+## 点の型
 
 ~~~cpp
 KdTreePoint2D<T>{x, y, id}
 ~~~
+
+`id` のデフォルト値は `-1` である。
 
 ## 構築
 
@@ -20,7 +22,8 @@ KdTree2D<T, MAX_POINTS>(const vector<Point>& points)
 void build(const vector<Point>& points)
 ~~~
 
-各depthで軸を交互に選び、medianで分割する。各部分木はbounding boxを保持する。
+深さごとに分割軸を交互に選び、中央値で分割する。各部分木はバウンディングボックスを保持する。
+コピーは禁止されており、ムーブのみ可能である。
 
 ## 操作
 
@@ -32,9 +35,9 @@ vector<int> range_search(min_x, max_x, min_y, max_y) const
 KdTreeNearestResult2D nearest_neighbor(x, y) const
 ~~~
 
-`range_search` は閉長方形 `[min_x,max_x] x [min_y,max_y]` に含まれるpoint idを列挙する。戻り値の順序は規定しない。
+`range_search` は閉長方形 `[min_x, max_x] × [min_y, max_y]` に含まれる点の `id` を列挙する。戻り値の順序は規定しない。
 
-nearest_neighborはEuclid距離が最小の点を返す。同距離ならidが最小の点を選ぶ。
+`nearest_neighbor` はユークリッド距離が最小の点を返す。距離が等しければ `id` が最小の点を選ぶ。
 
 ~~~cpp
 struct KdTreeNearestResult2D {
@@ -45,37 +48,27 @@ struct KdTreeNearestResult2D {
 };
 ~~~
 
-空集合ではfoundとexists()がfalseになる。空でない場合、idは選ばれた点のid、squared_distanceは二乗距離である。idが-1の点も格納できるため、有無はexists()で判定する。
+点集合が空のとき、`found` と `exists()` は `false` になる。空でなければ、`id` は選ばれた点の `id`、`squared_distance` は距離の二乗である。`id` が `-1` の点も格納できるため、結果の有無は `exists()` で判定する。
 
 ## 時間計算量
 
-$N$ を点数、$K$ を列挙する点数とする。座標比較を $O(1)$ とする。
+$N$ を点数、$K$ を列挙する点数とする。座標の比較を $O(1)$ とする。
 
-- default constructor: 固定長storage初期化 $O(\mathrm{MAX\_POINTS})$
-- vector constructor: 固定長storage初期化とbuildを含めて expected $O(\mathrm{MAX\_POINTS}+N\log(N+1))$
-- `build`: `nth_element` の平均計算量に基づき expected $O(N\log(N+1))$
+- デフォルトコンストラクタ: 固定長領域の初期化に $O(\texttt{MAX_POINTS})$
+- `std::vector` を受け取るコンストラクタ: 固定長領域の初期化と `build` を含めて期待 $O(\texttt{MAX_POINTS}+N\log(N+1))$
+- `build`: `nth_element` の平均計算量に基づき期待 $O(N\log(N+1))$
 - `size`, `empty`, `clear`: $O(1)$
-- `range_search`: worst-case $O(N+K)$、戻り値構築 $O(K)$
+- `range_search`: 最悪 $O(N+K)$（戻り値の構築は $O(K)$）
+- `nearest_neighbor`: 最悪 $O(N)$。均衡した KD 木と一般的な点分布では平均 $O(\log(N+1))$ が目安である。結果のメンバ参照と `exists()` は $O(1)$
 
-- nearest_neighbor: worst-case O(N)。均衡KD-treeと一般的な点分布では平均O(log(N+1))が目安。結果memberとexists()はO(1)
-
-均衡KD-treeの2次元直交range searchは、一般的な分布では $O(\sqrt N+K)$ が目安になるが、worst-case保証は線形である。
+均衡した KD 木の二次元直交範囲検索は、一般的な分布では $O(\sqrt{N}+K)$ が目安になるが、最悪計算量の保証は線形である。
 
 ## 空間計算量
 
-- 固定storage: $O(\mathrm{MAX\_POINTS})$
-- 構築の再帰stack: $O(\log(N+1))$
-- `range_search`: 再帰stackと戻り値を含めて $O(\log(N+1)+K)$
-- nearest_neighbor: 通常の均衡時は再帰stack O(log(N+1))、worst-case O(N)
-
-## 注意点
-
-- 座標型はlong doubleへ変換でき、格納点の座標は有限値であること。nearest_neighborのquery座標が非有限値ならinvalid_argument。
-- 最近傍の二乗距離はlong doubleで計算する。極端に大きい座標や非常に近い浮動小数点座標では丸め誤差を含み得る。
-- 点数が`MAX_POINTS`を超えるconstructorまたは`build`は例外。
-- `range_search(min_x,max_x,min_y,max_y)`は各下限が上限以下であること。逆転時は例外。
-- 戻り値はpointの`id`であり、idの一意性や範囲は構造側では検査しない。
-- `clear`は$O(1)$で論理的に空にし、次の`build`で固定storageを再利用する。
+- 固定長領域: $O(\texttt{MAX_POINTS})$
+- 構築時の再帰スタック: $O(\log(N+1))$
+- `range_search`: 再帰スタックと戻り値を含めて $O(\log(N+1)+K)$
+- `nearest_neighbor`: 均衡時は再帰スタック $O(\log(N+1))$、最悪 $O(N)$
 
 ## 可変長版
 
@@ -83,6 +76,15 @@ $N$ を点数、$K$ を列挙する点数とする。座標比較を $O(1)$ と�
 using Dynamic = KdTree2D<long long>;
 ```
 
-容量の template 引数を省略すると、実行時の要素数・更新数に合わせて `std::vector` を確保する。構築は平均 O(n log n)、保存領域は O(n)。範囲検索・最近傍探索の時間は固定長版と同じで、最悪 O(n)。
+容量のテンプレート引数を省略すると、実行時の点数に合わせて `std::vector` を確保する。構築は平均 $O(N \log N)$、保存領域は $O(N)$ である。範囲検索・最近傍探索の時間計算量は固定長版と同じで、最悪 $O(N)$ である。
 
-容量を明示した固定長版も同じヘッダ・このページの code に含まれる。上記の固定上限に関する説明は容量を明示した場合に適用される。
+容量を明示した固定長版も同じヘッダに含まれる。上記の固定上限に関する説明は、容量を明示した場合に適用される。
+
+## 注意点
+
+- 座標型は `long double` へ変換できなければならず、格納する点の座標は有限値であること。`nearest_neighbor` のクエリ座標が非有限値なら `invalid_argument` を送出する。
+- 最近傍の距離の二乗は `long double` で計算する。極端に大きい座標や非常に近い浮動小数点座標では丸め誤差を含み得る。
+- 固定長版で点数が `MAX_POINTS` を超える構築・`build` は `runtime_error` を送出する。
+- `range_search(min_x, max_x, min_y, max_y)` は各下限が上限以下であること。逆転していれば `runtime_error` を送出する。
+- 戻り値は点の `id` であり、`id` の一意性や範囲は構造側では検査しない。
+- `clear` は $O(1)$ で論理的に空にし、次の `build` で領域を再利用する。

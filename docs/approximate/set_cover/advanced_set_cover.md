@@ -37,7 +37,7 @@ lp_rounding_set_cover(universe_size, sets, fractional);
 - `lp_rounding_set_cover`: `deterministic_rounding_set_cover` と同じ。
 - `iterative_rounding_set_cover`: 添字最小の未被覆要素を取り、それを含む集合のうち $x_i$ が最大（同値なら添字最小）のものを選ぶことを繰り返す。
 
-時間計算量はラウンド数を $R$ として、乱択版が $O(RS+L\log L)$、決定的丸め・LP 丸めが $O(S+L\log L)$、反復丸めが最悪 $O(U\min(U,S)+L\log L)$。空間計算量はいずれも $O(U+S+L)$。
+時間計算量はラウンド数を $R$ として、乱択版が $O(RS+L\log L)$、決定的丸め・LP 丸めが $O(S+L\log L)$、反復丸めが $O(U+L\log L)$（未被覆要素の走査位置を保持して再開する）。空間計算量はいずれも $O(U+S+L)$。
 
 ## 従属丸め・Pipage 丸め
 

@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_GRAPH_SPECIALIZED_SUBGRAPH_ANALYSIS_MINIMUM_CYCLE_BASIS_HPP_INCLUDED
 
 #include <algorithm>
+#include <bit>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
@@ -177,13 +178,14 @@ inline MinimumCycleBasisResult minimum_cycle_basis(
                 std::uint64_t{1}
                     << (static_cast<unsigned>(edge_id) & 63U);
             Wide weight = 0;
-            for(int id = 0; id < edge_count; ++id){
-                if(((bits[static_cast<std::size_t>(id) >> 6U]
-                    >> (static_cast<unsigned>(id) & 63U)) & 1U) != 0){
+            // Visit only the set bits, in increasing edge id order.
+            for(std::size_t word = 0; word < word_count; ++word){
+                for(std::uint64_t rest = bits[word]; rest != 0;
+                    rest &= rest - 1){
+                    const std::size_t id = (word << 6U)
+                        + static_cast<std::size_t>(std::countr_zero(rest));
                     nonzero = true;
-                    weight += static_cast<Wide>(
-                        edges[static_cast<std::size_t>(id)].weight
-                    );
+                    weight += static_cast<Wide>(edges[id].weight);
                 }
             }
             if(nonzero){
@@ -255,10 +257,13 @@ inline MinimumCycleBasisResult minimum_cycle_basis(
         if(pivot == -1) continue;
         basis[static_cast<std::size_t>(pivot)] = std::move(reduced);
         std::vector<int> cycle;
-        for(int edge_id = 0; edge_id < edge_count; ++edge_id){
-            if(((candidate.bits[static_cast<std::size_t>(edge_id) >> 6U]
-                >> (static_cast<unsigned>(edge_id) & 63U)) & 1U) != 0){
-                cycle.push_back(edge_id);
+        for(std::size_t word = 0; word < word_count; ++word){
+            for(std::uint64_t rest = candidate.bits[word]; rest != 0;
+                rest &= rest - 1){
+                cycle.push_back(static_cast<int>(
+                    (word << 6U)
+                    + static_cast<std::size_t>(std::countr_zero(rest))
+                ));
             }
         }
         result.cycles.push_back(std::move(cycle));

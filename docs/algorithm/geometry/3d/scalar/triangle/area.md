@@ -14,4 +14,4 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/scalar/triangle/ar
 ## 注意点
 
 - 退化した三角形では $0$ を返す（浮動小数点誤差により厳密に $0$ になるとは限らない）。
-- 座標は有限値でなければならない。外積が非有限値になった場合（座標が巨大な場合）は `std::invalid_argument` を送出する。
+- 座標は有限値でなければならず、非有限な座標には `std::invalid_argument` を送出する。座標が巨大で外積またはその長さが `long double` で表現できない場合は `std::overflow_error` を送出する（同じディレクトリの `triangle_circumradius` などと同じ慣例）。

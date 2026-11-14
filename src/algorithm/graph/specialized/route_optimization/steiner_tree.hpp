@@ -55,7 +55,8 @@ T steiner_tree(
     for(int mask = 1; mask < full; mask++){
         for(int sub = (mask - 1) & mask; sub; sub = (sub - 1) & mask){
             int other = mask ^ sub;
-            if(other == 0) continue;
+            // Each unordered split {sub, other} is merged once.
+            if(other == 0 || other < sub) continue;
             for(int v = 0; v < n; v++){
                 if(!reachable[static_cast<std::size_t>(sub)][static_cast<std::size_t>(v)] ||
                    !reachable[static_cast<std::size_t>(other)][static_cast<std::size_t>(v)]){

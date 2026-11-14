@@ -9,7 +9,7 @@
 
 namespace math{
 
-long long segmented_sieve_isqrt(long long n){
+inline long long segmented_sieve_isqrt(long long n){
     long long x = (long long)__builtin_sqrt((long double)n);
     while((__int128)(x + 1) * (x + 1) <= n){
         x++;
@@ -20,7 +20,7 @@ long long segmented_sieve_isqrt(long long n){
     return x;
 }
 
-std::vector<char> segmented_sieve(long long l, long long r){
+inline std::vector<char> segmented_sieve(long long l, long long r){
     if(l < 0 || l > r)[[unlikely]]{
         throw std::runtime_error("library assertion fault: range violation (segmented_sieve).");
     }
@@ -81,7 +81,7 @@ std::vector<char> segmented_sieve(long long l, long long r){
     return is_prime;
 }
 
-std::vector<long long> primes_in_range(long long l, long long r){
+inline std::vector<long long> primes_in_range(long long l, long long r){
     const auto is_prime = segmented_sieve(l, r);
     std::vector<long long> res;
     for(long long i = 0; i < (long long)is_prime.size(); i++){

@@ -2,6 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_TREE_ISOMORPHISM_TREE_AUTOMORPHISM_COUNT_HPP_INCLUDED
 
 #include <algorithm>
+#include <cstddef>
 #include <map>
 #include <stdexcept>
 #include <utility>
@@ -35,7 +36,7 @@ T rooted_tree_automorphism_count(const std::vector<std::vector<int>>& graph, int
         for(int l = 0; l < static_cast<int>(children.size()); ){
             int r = l + 1;
             while(r < static_cast<int>(children.size()) && children[r] == children[l]) ++r;
-            for(int k = 2; k <= r - l; ++k) count[v] *= T{k};
+            for(int k = 2; k <= r - l; ++k) count[v] *= static_cast<T>(k);
             l = r;
         }
         const auto [it, inserted] = ids.emplace(children, static_cast<int>(ids.size()));
@@ -49,6 +50,34 @@ template<class T>
 T tree_automorphism_count(const std::vector<std::vector<int>>& graph){
     const int n = static_cast<int>(graph.size());
     if(n == 0) return T{1};
+    // The center search below assumes a tree: reject other graphs first,
+    // since a forest would read past the leaf list and a cycle never ends.
+    std::size_t degree_sum = 0;
+    for(const auto& adjacent: graph){
+        for(const int to: adjacent){
+            if(to < 0 || to >= n) throw std::out_of_range("tree_automorphism_count: invalid vertex");
+        }
+        degree_sum += adjacent.size();
+    }
+    if(degree_sum != 2 * static_cast<std::size_t>(n - 1)){
+        throw std::invalid_argument("tree_automorphism_count: not a tree");
+    }
+    {
+        std::vector<char> seen(n, false);
+        std::vector<int> stack{0};
+        seen[0] = true;
+        int visited = 1;
+        while(!stack.empty()){
+            const int v = stack.back();
+            stack.pop_back();
+            for(const int to: graph[v]) if(!seen[to]){
+                seen[to] = true;
+                ++visited;
+                stack.push_back(to);
+            }
+        }
+        if(visited != n) throw std::invalid_argument("tree_automorphism_count: disconnected graph");
+    }
     std::vector<int> degree(n);
     std::vector<char> removed(n, false);
     std::vector<int> leaves;

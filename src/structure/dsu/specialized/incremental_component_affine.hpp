@@ -54,8 +54,11 @@ private:
     HistoryTree history;
 
     static int checked_runtime_size(int n){
-        if(n < 0 || n > std::numeric_limits<int>::max() / 2 || (MAX_SIZE >= 0 && n > MAX_SIZE))
-            throw std::length_error("IncrementalComponentAffine size is out of range");
+        if(n < 0 || n > std::numeric_limits<int>::max() / 2 || (MAX_SIZE >= 0 && n > MAX_SIZE))[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: range violation (constructor)."
+            );
+        }
         return n;
     }
 

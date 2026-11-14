@@ -24,4 +24,4 @@ $x \equiv \mathrm{remainders}[i] \pmod{\mathrm{moduli}[i]}$ をすべて満た�
 ## 注意点
 
 - 入力の法はすべて $2$ 以上で、どの 2 つも互いに素でなければならない。また `remainders` と `moduli` の長さは等しく、`output_modulus` は正でなければならない。違反時は `std::runtime_error` を送出する。
-- 法が $2^{63}$ 以上の場合、内部の加算がオーバーフローしうる。
+- 法と `output_modulus` は `u64` の範囲（$2^{64}$ 未満）であれば $2^{63}$ 以上でもよい。内部の加算はオーバーフローしないように行う。

@@ -3,42 +3,44 @@ title: Rollback Wide Segtree (ロールバック可能ワイドセグメント�
 documentation_of: ../../../../src/structure/segtree/rollback/rollback_widesegtree.hpp
 ---
 
-`long long`の和を扱うrollback可能な疎セグメント木。
+`long long` の和を扱う、ロールバック可能な疎セグメント木。`RollbackDynamicSegtree` に和のモノイドを与えたラッパーである。
 
 ```cpp
 RollbackWideSegtree<MAX_SIZE, MAX_NODES, MAX_CHANGES>
 ```
 
+別名 `RollbackWide_Segtree` も定義されている。固定容量版はデフォルトコンストラクタで構築し、範囲は $[0, \texttt{MAX_SIZE})$ になる。容量（3 つのテンプレート引数）をすべて省略すると可変長版になり、`RollbackWideSegtree<> tree(n);` のように長さを実行時に与える。
+
+## API
+
 ```cpp
 void set(long long index, long long value)
 void add(long long index, long long value)
-long long get(long long index)
-long long prod(long long l, long long r)
-long long all_prod()
-Snapshot snapshot()
+long long get(long long index) const
+long long prod(long long l, long long r) const
+long long all_prod() const
+Snapshot snapshot() const
 void undo()
 void rollback(Snapshot snapshot)
+int history_size() const
+int nodes_used() const
+int changes_used() const
+bool can_undo() const
 ```
+
+`set`, `add` は 1 点への代入・加算、`get`, `prod`, `all_prod` は 1 点の値・半開区間 $[l, r)$ の和・全体の和を返す。`Snapshot` は `int` である。
 
 ## 時間計算量
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES})$
-- `set`, `add`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
+- コンストラクタ: $O(\texttt{MAX_NODES}+\texttt{MAX_CHANGES})$
+- `set`, `add`, `get`, `prod`: $O(\log \texttt{MAX_SIZE})$
 - `all_prod`, `snapshot`, `history_size`, `nodes_used`, `changes_used`, `can_undo`: $O(1)$
-- `undo`: 直前の更新が作ったノード・変更数に線形。$O(\log \mathtt{MAX\_SIZE})$
-- `rollback`: 取り消す更新が作ったノード・変更数の合計に線形
+- `undo`: 直前の更新が作ったノード数・変更数に線形で、$O(\log \texttt{MAX_SIZE})$
+- `rollback`: 取り消す更新が作ったノード数・変更数の合計に線形
 
 ## 注意点
 
-点は列内、区間は半開区間 `[l,r)`。`snapshot()` は現在状態を表すtokenを返し、
-`rollback(snapshot)` はそれ以後の更新を破棄する。`undo()` を持つ型では直前の更新を1つ戻し、
-`can_undo()` はその可否を返す。境界探索のpredicateは単調かつ単位元に対してtrueが必要。
-
-不正な点・区間・snapshot・predicate、空状態での `undo`、node/change/history容量超過では
-`runtime_error`。失敗した更新は本体と履歴を更新前へ戻す。各APIの計算量は上記表の通り。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`RollbackWideSegtree<> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 点は範囲内、区間は半開区間 $[l, r)$ で指定する。
+- `snapshot()` は現在の状態を表す値を返し、`rollback(s)` は `s` より後の更新をすべて破棄する。`undo()` は直前の更新を 1 つ取り消し、`can_undo()` はその可否を返す。
+- 不正な点・区間・スナップショット、履歴が空の状態での `undo`、ノード・変更履歴の容量超過では `std::runtime_error` を送出する。
+- 失敗した更新は本体と履歴を更新前に戻す。

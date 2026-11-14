@@ -17,36 +17,49 @@ enum class MinimumEnclosingCircleContainment : int{
     INSIDE = 1,
 };
 
+namespace minimum_enclosing_circle_result_detail{
+
+inline MinimumEnclosingCircleContainment compare_value(
+    long double value,
+    long double scale
+){
+    const int sign = advanced_geometry_detail::scaled_sign(value, scale);
+    if(sign < 0) return MinimumEnclosingCircleContainment::INSIDE;
+    if(sign == 0) return MinimumEnclosingCircleContainment::ON_BOUNDARY;
+    return MinimumEnclosingCircleContainment::OUTSIDE;
+}
+
+inline MinimumEnclosingCircleContainment compare_distance(
+    long double point_distance,
+    long double boundary_distance
+){
+    if(!std::isfinite(boundary_distance)){
+        throw std::overflow_error(
+            "minimum enclosing circle is not representable"
+        );
+    }
+    if(!std::isfinite(point_distance)){
+        return MinimumEnclosingCircleContainment::OUTSIDE;
+    }
+    return compare_value(
+        point_distance - boundary_distance,
+        std::max(point_distance, boundary_distance)
+    );
+}
+
+}  // namespace minimum_enclosing_circle_result_detail
+
 struct MinimumEnclosingCircleResult{
     std::array<Point, 3> support{};
     std::size_t support_size = 0;
 
 private:
-    static MinimumEnclosingCircleContainment compare_value(
-        long double value,
-        long double scale
-    ){
-        const int sign = advanced_geometry_detail::scaled_sign(value, scale);
-        if(sign < 0) return MinimumEnclosingCircleContainment::INSIDE;
-        if(sign == 0) return MinimumEnclosingCircleContainment::ON_BOUNDARY;
-        return MinimumEnclosingCircleContainment::OUTSIDE;
-    }
-
     static MinimumEnclosingCircleContainment compare_distance(
         long double point_distance,
         long double boundary_distance
     ){
-        if(!std::isfinite(boundary_distance)){
-            throw std::overflow_error(
-                "minimum enclosing circle is not representable"
-            );
-        }
-        if(!std::isfinite(point_distance)){
-            return MinimumEnclosingCircleContainment::OUTSIDE;
-        }
-        return compare_value(
-            point_distance - boundary_distance,
-            std::max(point_distance, boundary_distance)
+        return minimum_enclosing_circle_result_detail::compare_distance(
+            point_distance, boundary_distance
         );
     }
 
@@ -128,5 +141,51 @@ public:
         return result;
     }
 };
+
+namespace minimum_enclosing_circle_result_detail{
+
+// support を変えない間の containment 判定を、外心と半径を使い回して行う。
+// 判定結果と例外は MinimumEnclosingCircleResult::containment と同じ。
+class CachedContainment{
+public:
+    explicit CachedContainment(const MinimumEnclosingCircleResult& result):
+        result_(result){}
+
+    // result の support を変更した後に呼ぶ。
+    void reset(){ cached_ = false; }
+
+    MinimumEnclosingCircleContainment containment(const Point& point){
+        if(result_.support_size != 3) return result_.containment(point);
+        if(!cached_){
+            center_ = circumcenter(
+                result_.support[0], result_.support[1], result_.support[2]
+            );
+            radius_ = advanced_geometry_detail::length(
+                result_.support[0] - center_
+            );
+            cached_ = true;
+        }
+        const long double point_distance =
+            advanced_geometry_detail::length(point - center_);
+        return compare_distance(point_distance, radius_);
+    }
+
+    bool contains(const Point& point){
+        return containment(point) != MinimumEnclosingCircleContainment::OUTSIDE;
+    }
+
+    bool on_boundary(const Point& point){
+        return containment(point)
+            == MinimumEnclosingCircleContainment::ON_BOUNDARY;
+    }
+
+private:
+    const MinimumEnclosingCircleResult& result_;
+    bool cached_ = false;
+    Point center_{};
+    long double radius_ = 0;
+};
+
+}  // namespace minimum_enclosing_circle_result_detail
 
 #endif  // CPPLIB_SRC_ALGORITHM_GEOMETRY_2D_TYPE_DEFINITION_MINIMUM_ENCLOSING_CIRCLE_RESULT_HPP_INCLUDED

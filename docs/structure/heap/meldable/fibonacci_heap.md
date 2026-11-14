@@ -35,7 +35,7 @@ $N$ を要素数とする。
 - `empty`、`size`、`top`: $O(1)$
 - `push`、`emplace`、`decrease_key`: 償却 $O(1)$
 - `pop`: 償却 $O(\log N)$
-- `meld`: 根リストの連結は $O(1)$ だが、`other` が保持するノードの所有権を移すため、`other` にこれまで追加された要素数（削除済みを含む）を $M$ として $O(M)$
+- `meld`: $O(1)$（根リストの連結と、ノードを保持する `std::list` の `splice`）
 
 ## 空間計算量
 

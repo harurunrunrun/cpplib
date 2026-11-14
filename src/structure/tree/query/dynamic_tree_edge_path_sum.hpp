@@ -91,7 +91,15 @@ public:
             }
             edge_position[edge] = decomposition.in(child);
             edge_values[edge] = weight;
-            add_index(edge_position[edge], weight);
+            fenwick[static_cast<std::size_t>(edge_position[edge]) + 1] += weight;
+        }
+        // 値を直接置いた配列から Fenwick を線形時間で組み立てる
+        for(int index = 1; index <= _n; ++index){
+            const int parent = index + (index & -index);
+            if(parent <= _n){
+                fenwick[static_cast<std::size_t>(parent)] +=
+                    fenwick[static_cast<std::size_t>(index)];
+            }
         }
     }
 

@@ -32,7 +32,7 @@ for(int i = 0; i < m; ++i){
 - `add_edge(u, v)`: 無向辺を追加する。
 - `build(root)`: `root` を根として深さ・DFS 順・ダブリング表を構築する。
 - `depth(v)`, `tin(v)`, `is_ancestor(u, v)`, `lca(u, v)`, `dist(u, v)`: 元の木での深さ、DFS の訪問時刻、祖先判定（同じ頂点も祖先とみなす）、LCA、距離を返す。
-- `compress(vertices)`: `vertices`（`std::span<const int>`）を圧縮し、圧縮後の頂点数を返す。指定頂点の重複は除去される。空集合を圧縮した場合は頂点数 $0$ となる。
+- `compress(vertices)`: `vertices`（`std::span<const int>`）を圧縮し、圧縮後の頂点数を返す。指定頂点の重複は除去される。`vertices` の長さ（重複を含む）は、固定容量版では `MAX_SIZE` 以下、可変長版では頂点数 `size` 以下でなければならない。空集合を圧縮した場合は頂点数 $0$ となる。
 - `compressed_size()`: 直近の `compress` の結果の頂点数を返す。
 - `vertex(i)`, `parent_index(i)`, `edge_length(i)`, `selected(i)`: 圧縮後の $i$ 番目の頂点について、元の頂点番号、圧縮木での親の添字（根では `-1`）、親との元の木での距離、指定された頂点かどうかを返す。
 

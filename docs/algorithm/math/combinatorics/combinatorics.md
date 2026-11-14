@@ -50,10 +50,12 @@ Combinatorics<mint> dynamic(n);     // 可変長版（上限を実行時に指�
 | コンストラクタ | $O(N)$ |
 | `factorial(n)` / `inverse_factorial(n)` / `inverse(n)` | $O(1)$ |
 | `permutation(n, k)` / `combination(n, k)` / `homogeneous(n, k)` | $O(1)$ |
-| `bell_number(n)` | $O(n^2)$ |
+| `bell_number(n)` | $O(n \log n)$ |
 | 公開配列 `fact` / `inv_fact` / `inv` の 1 要素参照 | $O(1)$ |
 
-保持領域は $O(N)$。`bell_number` の一時領域は、固定長版では $O(N)$、可変長版では $O(n)$。
+保持領域は $O(N)$。`bell_number` の一時領域は $O(n)$。
+
+`bell_number(n)` は $B_n = \sum_{i=0}^{n} \frac{i^n}{i!} \sum_{j=0}^{n-i} \frac{(-1)^j}{j!}$ を前計算済みの `inv_fact` と交代和の接頭辞和で評価する。$i^n$ は二分累乗で求める。
 
 ## 注意点
 

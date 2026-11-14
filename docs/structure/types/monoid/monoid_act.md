@@ -3,7 +3,7 @@ title: Monoid (作用素付き)
 documentation_of: ../../../../src/structure/types/monoid/monoid_act.hpp
 ---
 
-`Monoid` に、区間値へ適用する作用を加えた型。`LazySegtree` などに使う。
+`Monoid` に、区間値へ適用する作用を加えた型である。`LazySegtree` などに使う。各関数は非型テンプレート引数として渡す。
 
 ```cpp
 constexpr long long minimum(long long a, long long b){
@@ -47,14 +47,14 @@ constexpr Monoid_Act<
 | --- | --- | --- |
 | `using S` | 区間値の型 | - |
 | `using T` | 作用の型 | - |
-| `op(a, b)` | `op_func(a, b)` を呼ぶ | `O(op_func の計算量)` |
-| `e()` | `e_func()` を呼ぶ | `O(e_func の計算量)` |
-| `mapping(f, x)` | `mapping_func(f, x)` を呼ぶ | `O(mapping_func の計算量)` |
-| `composition(f, g)` | `composition_func(f, g)` を呼ぶ | `O(composition_func の計算量)` |
-| `id()` | `id_func()` を呼ぶ | `O(id_func の計算量)` |
+| `op(a, b)` | `op_func(a, b)` を呼ぶ | `op_func` の計算量 |
+| `e()` | `e_func()` を呼ぶ | `e_func` の計算量 |
+| `mapping(f, x)` | `mapping_func(f, x)` を呼ぶ | `mapping_func` の計算量 |
+| `composition(f, g)` | `composition_func(f, g)` を呼ぶ | `composition_func` の計算量 |
+| `id()` | `id_func()` を呼ぶ | `id_func` の計算量 |
 
-`Monoid_Act` オブジェクトのデフォルト生成は `O(1)`。
-各メンバは対応する関数を1回呼び出すだけで、それ以外の漸近的な追加コストを持たない。
+`Monoid_Act` オブジェクトのデフォルト構築の時間計算量は $O(1)$ である。
+各メンバは対応する関数を 1 回呼び出すだけで、それ以外の漸近的な追加コストを持たない。
 
 ## 使用例
 
@@ -66,8 +66,6 @@ LazySegtree<add_min, 200000> seg(n);
 
 ## 注意点
 
-`op` は結合的、`e` は単位元。`composition(f,g)` は `g` の後に `f` を適用する作用を
-返し、`mapping` と分配則を満たす必要がある。`id` は作用の単位元。これらの代数則は
-実行時に検査しない。
-各member呼出しの時間・追加空間計算量は指定した関数のコストであり、通常の定数時間演算なら
-ともに $O(1)$。
+- `op` は結合的、`e` は単位元でなければならない。`composition(f, g)` は `g` の後に `f` を適用する作用を返し、`mapping` は分配則を満たす必要がある。`id` は作用の単位元である。
+- これらの代数則は実行時に検査しない。
+- 各メンバ呼び出しの時間・追加空間計算量は指定した関数のコストであり、通常の定数時間演算ならともに $O(1)$ である。

@@ -193,9 +193,17 @@ T sum_shortest_path_query_costs_johnson(
         sum_shortest_path_query_costs_internal::group_queries_by_source(
             vertex_count, queries
         );
-    (void)sum_shortest_path_query_costs_internal::build_graph(
-        vertex_count, edges, false
-    );
+    // Same edge validation as build_graph (vertex_count was already checked
+    // by group_queries_by_source), without building a graph.
+    for(const auto& edge: edges){
+        if(edge.from < 0 || vertex_count <= edge.from ||
+           edge.to < 0 || vertex_count <= edge.to)[[unlikely]]{
+            throw std::runtime_error(
+                "library assertion fault: edge violation "
+                "(sum_shortest_path_query_costs)."
+            );
+        }
+    }
 
     std::vector<T> potential(static_cast<std::size_t>(vertex_count), T(0));
     for(int iteration = 0; iteration < vertex_count; ++iteration){

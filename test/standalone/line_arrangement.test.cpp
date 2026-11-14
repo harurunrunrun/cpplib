@@ -1,5 +1,6 @@
 // competitive-verifier: STANDALONE
 #include <cassert>
+#include <cmath>
 #include <iostream>
 #include <vector>
 #include "../../src/algorithm/geometry/2d/result/line_set/line_arrangement.hpp"
@@ -40,6 +41,25 @@ int main(){
         assert(concurrent_result.rays.size() == 42);
         const auto isolated = line_arrangement({{{0, 0}, {1, 1}}});
         assert(isolated.unbounded_lines.size() == 1);
+        {
+            // A vertical line passes one ulp to the right of the crossing
+            // of two lines; the far horizontal line puts the point
+            // (x, -100) between the close points in lexicographic order.
+            const Line first{{0, 0}, {3, 1}};
+            const Line second{{0, 1}, {1, 0}};
+            const Point crossing =
+                line_arrangement({first, second}).vertices.front();
+            const long double x = std::nextafter(crossing.x, 10.0L);
+            const Line vertical{{x, 0}, {x, 1}};
+            const Line horizontal{{-5, -100}, {5, -100}};
+            const auto merged =
+                line_arrangement({vertical, first, second});
+            assert(merged.vertices.size() == 1);
+            const auto separated =
+                line_arrangement({vertical, first, second, horizontal});
+            assert(separated.vertices.size() == 4);
+            assert(separated.bounded_edges.size() == 5);
+        }
         std::cout << "OK\n";
     }
 }

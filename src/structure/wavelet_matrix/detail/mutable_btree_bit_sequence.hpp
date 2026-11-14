@@ -1,7 +1,10 @@
 #ifndef CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DETAIL_MUTABLE_BTREE_BIT_SEQUENCE_HPP_INCLUDED
 #define CPPLIB_SRC_STRUCTURE_WAVELET_MATRIX_DETAIL_MUTABLE_BTREE_BIT_SEQUENCE_HPP_INCLUDED
 
+#include <array>
+#include <bit>
 #include <cstddef>
+#include <cstdint>
 #include <iterator>
 #include <memory>
 #include <stdexcept>
@@ -97,13 +100,107 @@ private:
         virtual ~Node() = default;
     };
 
+    // 葉のビット列。容量 LEAF_CAPACITY + 1 ビット（分割直前の一時的な超過分を含む）の
+    // 固定長の 64 bit 語に詰め、rank・select を popcount と語内 select で行う。
+    // 長さ以降のビットは常に 0 に保つ。
+    class LeafBits{
+        static constexpr int word_count = (LEAF_CAPACITY + 1 + 63) / 64;
+        std::array<std::uint64_t, word_count> words_{};
+        int size_ = 0;
+
+        static constexpr std::uint64_t low_mask(int count){
+            return count >= 64
+                ? ~std::uint64_t{0}
+                : (std::uint64_t{1} << count) - 1;
+        }
+
+    public:
+        std::size_t size() const{ return static_cast<std::size_t>(size_); }
+        bool operator[](std::size_t index) const{
+            return (words_[index >> 6] >> (index & 63)) & 1;
+        }
+        void set(int index, bool bit){
+            const std::uint64_t mask = std::uint64_t{1} << (index & 63);
+            if(bit) words_[static_cast<std::size_t>(index >> 6)] |= mask;
+            else words_[static_cast<std::size_t>(index >> 6)] &= ~mask;
+        }
+        void insert(int position, bool bit){
+            const int word = position >> 6;
+            for(int index = size_ >> 6; index > word; --index){
+                words_[static_cast<std::size_t>(index)] =
+                    (words_[static_cast<std::size_t>(index)] << 1) |
+                    (words_[static_cast<std::size_t>(index - 1)] >> 63);
+            }
+            const std::uint64_t current = words_[static_cast<std::size_t>(word)];
+            const std::uint64_t low = current & low_mask(position & 63);
+            words_[static_cast<std::size_t>(word)] =
+                low | ((current & ~low) << 1) |
+                (static_cast<std::uint64_t>(bit) << (position & 63));
+            ++size_;
+        }
+        void erase(int position){
+            const int word = position >> 6;
+            const int last = (size_ - 1) >> 6;
+            const std::uint64_t current = words_[static_cast<std::size_t>(word)];
+            words_[static_cast<std::size_t>(word)] =
+                (current & low_mask(position & 63)) |
+                ((current & ~low_mask((position & 63) + 1)) >> 1);
+            for(int index = word + 1; index <= last; ++index){
+                words_[static_cast<std::size_t>(index - 1)] |=
+                    (words_[static_cast<std::size_t>(index)] & 1) << 63;
+                words_[static_cast<std::size_t>(index)] >>= 1;
+            }
+            --size_;
+        }
+        void append(const LeafBits& other, int first, int last){
+            for(int index = first; index < last; ++index){
+                set(size_, other[static_cast<std::size_t>(index)]);
+                ++size_;
+            }
+        }
+        void truncate(int length){
+            for(int index = length; index < size_; ++index) set(index, false);
+            size_ = length;
+        }
+        void clear(){
+            words_.fill(0);
+            size_ = 0;
+        }
+        int count_ones(int end) const{
+            int result = 0;
+            const int full = end >> 6;
+            for(int index = 0; index < full; ++index){
+                result += std::popcount(words_[static_cast<std::size_t>(index)]);
+            }
+            if(end & 63){
+                result += std::popcount(
+                    words_[static_cast<std::size_t>(full)] & low_mask(end & 63)
+                );
+            }
+            return result;
+        }
+        // kth 番目（0-indexed）の bit の位置。なければ -1
+        int select(bool bit, int kth) const{
+            for(int index = 0; index * 64 < size_; ++index){
+                std::uint64_t word = words_[static_cast<std::size_t>(index)];
+                if(!bit) word = ~word & low_mask(size_ - index * 64);
+                const int count = std::popcount(word);
+                if(kth < count){
+                    for(; kth > 0; --kth) word &= word - 1;
+                    return index * 64 + std::countr_zero(word);
+                }
+                kth -= count;
+            }
+            return -1;
+        }
+    };
+
     struct Leaf final : Node{
-        std::vector<bool> bits;
+        LeafBits bits;
         [[no_unique_address]]
         MutableBTreePayloadStorage<Payload, stores_payload> payload;
 
         Leaf(): Node(true){
-            bits.reserve(static_cast<std::size_t>(LEAF_CAPACITY + 1));
             if constexpr(stores_payload){
                 payload.values.reserve(
                     static_cast<std::size_t>(LEAF_CAPACITY + 1)
@@ -151,10 +248,7 @@ private:
     }
 
     static void leaf_insert(Leaf* leaf, int position, Entry entry){
-        leaf->bits.insert(
-            leaf->bits.begin() + static_cast<std::ptrdiff_t>(position),
-            entry.bit
-        );
+        leaf->bits.insert(position, entry.bit);
         if constexpr(stores_payload){
             leaf->payload.values.insert(
                 leaf->payload.values.begin() +
@@ -166,9 +260,7 @@ private:
 
     static Entry leaf_erase(Leaf* leaf, int position){
         Entry result = leaf_entry(leaf, position);
-        leaf->bits.erase(
-            leaf->bits.begin() + static_cast<std::ptrdiff_t>(position)
-        );
+        leaf->bits.erase(position);
         if constexpr(stores_payload){
             leaf->payload.values.erase(
                 leaf->payload.values.begin() +
@@ -179,11 +271,7 @@ private:
     }
 
     static void leaf_append(Leaf* left, Leaf* right){
-        left->bits.insert(
-            left->bits.end(),
-            right->bits.begin(),
-            right->bits.end()
-        );
+        left->bits.append(right->bits, 0, leaf_size(right));
         right->bits.clear();
         if constexpr(stores_payload){
             left->payload.values.insert(
@@ -198,6 +286,10 @@ private:
     void recalculate(Leaf* leaf) const{
         leaf->stats = {};
         leaf->stats.size = leaf_size(leaf);
+        if constexpr(!stores_payload){
+            leaf->stats.ones = leaf->bits.count_ones(leaf_size(leaf));
+            return;
+        }
         for(int position = 0; position < leaf_size(leaf); position++){
             const bool bit = leaf->bits[static_cast<std::size_t>(position)];
             leaf->stats.ones += bit ? 1 : 0;
@@ -287,12 +379,8 @@ private:
         leaf_insert(leaf, position, std::move(entry));
         const int left_size = leaf_size(leaf) / 2;
         auto right = std::make_unique<Leaf>();
-        right->bits.insert(
-            right->bits.end(),
-            leaf->bits.begin() + left_size,
-            leaf->bits.end()
-        );
-        leaf->bits.erase(leaf->bits.begin() + left_size, leaf->bits.end());
+        right->bits.append(leaf->bits, left_size, leaf_size(leaf));
+        leaf->bits.truncate(left_size);
         if constexpr(stores_payload){
             right->payload.values.insert(
                 right->payload.values.end(),
@@ -541,7 +629,7 @@ private:
             Leaf* leaf = as_leaf(node);
             Entry old = leaf_entry(leaf, position);
             if(update_bit){
-                leaf->bits[static_cast<std::size_t>(position)] = bit;
+                leaf->bits.set(position, bit);
             }
             if constexpr(stores_payload){
                 if(update_payload){
@@ -577,6 +665,10 @@ private:
         result.size = end;
         if(node->is_leaf){
             const Leaf* leaf = as_leaf(node);
+            if constexpr(!stores_payload){
+                result.ones = leaf->bits.count_ones(end);
+                return result;
+            }
             for(int index = 0; index < end; index++){
                 const bool bit =
                     leaf->bits[static_cast<std::size_t>(index)];
@@ -661,13 +753,8 @@ private:
 
     int select_recursive(const Node* node, bool bit, int kth) const{
         if(node->is_leaf){
-            const Leaf* leaf = as_leaf(node);
-            for(int index = 0; index < leaf_size(leaf); index++){
-                if(leaf->bits[static_cast<std::size_t>(index)] == bit &&
-                   kth-- == 0){
-                    return index;
-                }
-            }
+            const int index = as_leaf(node)->bits.select(bit, kth);
+            if(index != -1) return index;
             throw std::logic_error("MutableBTreeBitSequence select failure.");
         }
         int offset = 0;

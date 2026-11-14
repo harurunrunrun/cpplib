@@ -28,7 +28,7 @@ LllLatticeReductionResult lll_lattice_reduction(
 
 ## 時間計算量
 
-基底の本数を $b$、次元を $d$、size reduction と交換の実行回数を $I$ とする。この実装は Gram-Schmidt 直交化を明示的に再計算するため、時間計算量は $O(Ib^2d)$、空間計算量は $O(b^2+bd)$ である。固定した `delta < 1` では、$I$ は入力の bit 長に対して多項式で抑えられる。
+基底の本数を $b$、次元を $d$、size reduction と交換の実行回数を $I$ とする。この実装は size reduction・交換のたびに Gram-Schmidt 直交化を明示的に再計算する（変更した行より前の行は結果が変わらないので、変更した行以降だけを再計算する）ため、時間計算量は $O(Ib^2d)$、空間計算量は $O(b^2+bd)$ である。固定した `delta < 1` では、$I$ は入力の bit 長に対して多項式で抑えられる。
 
 ## 注意点
 

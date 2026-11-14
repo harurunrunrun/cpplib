@@ -63,22 +63,24 @@ inline MinimumEnclosingCircleResult minimum_enclosing_circle(
 ){
     minimum_enclosing_circle_detail::deterministic_shuffle(points, seed);
     MinimumEnclosingCircleResult result;
+    minimum_enclosing_circle_result_detail::CachedContainment tester(result);
     for(std::size_t first = 0; first < points.size(); ++first){
-        if(result.contains(points[first])) continue;
+        if(tester.contains(points[first])) continue;
         result.support_size = 1;
         result.support[0] = points[first];
         for(std::size_t second = 0; second < first; ++second){
-            if(result.contains(points[second])) continue;
+            if(tester.contains(points[second])) continue;
             result.support_size = 2;
             result.support[0] = points[first];
             result.support[1] = points[second];
             for(std::size_t third = 0; third < second; ++third){
-                if(result.contains(points[third])) continue;
+                if(tester.contains(points[third])) continue;
                 result.support_size = 3;
                 result.support[0] = points[first];
                 result.support[1] = points[second];
                 result.support[2] = points[third];
                 minimum_enclosing_circle_detail::reduce_collinear_support(result);
+                tester.reset();
             }
         }
     }

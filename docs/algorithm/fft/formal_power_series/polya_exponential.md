@@ -63,10 +63,10 @@ std::vector<Modint<MOD>> polya_logarithm(const std::vector<Modint<MOD>>& values)
 
 | 操作 | 時間計算量 | 追加の空間計算量 |
 | --- | --- | --- |
-| `polya_exponential`（両オーバーロード） | $O(N \log N \log \texttt{MOD})$ | $O(N)$ |
+| `polya_exponential`（両オーバーロード） | $O(N \log N)$ | $O(N)$ |
 | `polya_logarithm`（両オーバーロード） | $O(N \log N + N \log \texttt{MOD})$ | $O(N)$ |
 
-`polya_exponential` では $\sum_k f(x^k)/k$ の各項（調和級数個）で `Modint` の除算を行うため $\log \texttt{MOD}$ の因子がかかる。`fps_exp` と `fps_log` 自体は $O(N \log N)$ である。
+`polya_exponential` は $1, 2, \ldots, N - 1$ の逆元を線形時間で前計算し、$\sum_k f(x^k)/k$ の各項（調和級数個）を乗算で足し込む。`polya_logarithm` は $\mu(k) \ne 0$ の各 $k$ で `Modint` の除算を行うため $N \log \texttt{MOD}$ の項が残る。`fps_exp` と `fps_log` 自体は $O(N \log N)$ である。
 
 ## 注意点
 

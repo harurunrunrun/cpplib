@@ -3,45 +3,57 @@ title: Rollback Dynamic Lazy Segment Tree (ロールバック可能動的遅延�
 documentation_of: ../../../../src/structure/segtree/rollback/rollback_dynamic_lazysegtree.hpp
 ---
 
-巨大な添字範囲を扱うrollback可能な遅延セグメント木。
+巨大な添字範囲を扱う、ロールバック可能な遅延セグメント木。
 
 ```cpp
-RollbackDynamicLazySegtree<MonoidActLen, MAX_SIZE, MAX_NODES, MAX_CHANGES>
+RollbackDynamicLazySegtree<Monoid, MAX_SIZE, MAX_NODES, MAX_CHANGES>
 ```
 
+`Monoid` は区間長付きの作用モノイド（`MonoidActLen` 等）のオブジェクトである。
+
+- `MAX_SIZE`: 添字範囲の長さの上限
+- `MAX_NODES`: 疎ノード数の上限
+- `MAX_CHANGES`: ノードの状態と疎な子リンクの変更履歴数の上限
+
+容量（3 つのテンプレート引数）をすべて省略すると可変長版になり、`RollbackDynamicLazySegtree<Monoid> tree(n);` のように長さを実行時に与える。ノードと履歴は使用量に応じて `std::vector` を拡張する。
+
+## API
+
 ```cpp
+explicit RollbackDynamicLazySegtree(long long n = MAX_SIZE)  // 可変長版の既定値は 0
 void set(long long index, S value)
 void apply(long long index, T action)
 void apply(long long l, long long r, T action)
-S get(long long index)
-S prod(long long l, long long r)
-S all_prod()
-Snapshot snapshot()
+S get(long long index) const
+S prod(long long l, long long r) const
+S all_prod() const
+long long max_right(long long l, F f, Args... args) const
+long long min_left(long long r, F f, Args... args) const
+Snapshot snapshot() const
 void undo()
 void rollback(Snapshot snapshot)
+long long size() const
+int history_size() const
+int nodes_used() const
+int changes_used() const
+bool can_undo() const
 ```
 
-`MAX_CHANGES`はノード状態と疎な子リンクの変更履歴数の上限。
+`Snapshot` は `int` の別名である。空区間への `apply` も更新 1 回として履歴に記録する。
 
 ## 時間計算量
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES})$
-- `set`, 1点`apply`, 区間`apply`, `get`, `prod`, `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$
+- コンストラクタ: $O(\texttt{MAX_NODES}+\texttt{MAX_CHANGES})$
+- `set`, 1 点 `apply`, 区間 `apply`, `get`, `prod`, `max_right`, `min_left`: $O(\log \texttt{MAX_SIZE})$
 - `all_prod`, `snapshot`, `size`, `history_size`, `nodes_used`, `changes_used`, `can_undo`: $O(1)$
-- `undo`: 直前の更新が作ったノード・変更数に線形。$O(\log \mathtt{MAX\_SIZE})$
-- `rollback`: 取り消す更新が作ったノード・変更数の合計に線形
+- `undo`: 直前の更新が作ったノード数・変更数に線形で、$O(\log \texttt{MAX_SIZE})$
+- `rollback`: 取り消す更新が作ったノード数・変更数の合計に線形
 
 ## 注意点
 
-点は列内、区間は半開区間 `[l,r)`。`snapshot()` は現在状態を表すtokenを返し、
-`rollback(snapshot)` はそれ以後の更新を破棄する。`undo()` を持つ型では直前の更新を1つ戻し、
-`can_undo()` はその可否を返す。境界探索のpredicateは単調かつ単位元に対してtrueが必要。
-
-不正な点・区間・snapshot・predicate、空状態での `undo`、node/change/history容量超過では
-`runtime_error`。失敗した更新は本体と履歴を更新前へ戻す。各APIの計算量は上記表の通り。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`RollbackDynamicLazySegtree<Monoid> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 点は範囲内、区間は半開区間 $[l, r)$ で指定する。
+- `snapshot()` は現在の状態を表す値（履歴に残っている更新回数）を返し、`rollback(s)` は `s` より後の更新をすべて破棄する。`undo()` は直前の更新を 1 つ取り消し、`can_undo()` はその可否を返す。
+- 境界探索の述語は単調で、単位元に対して `true` を返す必要がある。
+- 不正な点・区間・snapshot、述語が単位元で `false`、履歴が空の状態での `undo`、ノード・変更履歴の容量超過では `std::runtime_error` を送出する。
+- 失敗した更新は本体と履歴を更新前に戻す。
+- コピーコンストラクタとコピー代入は削除されている。

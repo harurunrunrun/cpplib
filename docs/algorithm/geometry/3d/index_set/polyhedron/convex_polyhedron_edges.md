@@ -9,7 +9,7 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/index_set/polyhedr
 
 ## API別の時間計算量・空間計算量
 
-- 三角形の面数を $F$ として、時間 $O(F\log F)$、領域 $O(F)$。
+- 頂点数を $V$、三角形の面数を $F$ として、辺を基数ソートでまとめるので時間 $O(V + F)$、領域 $O(V + F)$。
 
 ## 注意点
 

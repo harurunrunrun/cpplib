@@ -27,7 +27,7 @@ class HilbertMo{
 public:
     explicit HilbertMo(int n): n_(n) {
         if(n < 0) throw std::invalid_argument("HilbertMo: negative size");
-        while((1U << bits_) < static_cast<unsigned int>(std::max(1, n_))) ++bits_;
+        while((1U << bits_) <= static_cast<unsigned int>(n_)) ++bits_;
     }
     int add_query(int left, int right){
         if(left < 0 || left > right || right > n_) throw std::out_of_range("HilbertMo: invalid query");

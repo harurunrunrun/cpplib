@@ -39,7 +39,7 @@ documentation_of: ../../../../../src/algorithm/math/number_theory/arithmetic/bas
 
 ### `abs_ll(x)`
 
-`x` の絶対値を返す。
+`x` の絶対値を返す。`x == LLONG_MIN` のときは絶対値が `long long` に収まらないため例外を送出する。
 
 ### `gcd(a, b)` / `lcm(a, b)`
 
@@ -102,5 +102,5 @@ $D$ を桁数、$K$ を返す要素数とする。固定幅整数の算術を $O
 
 ## 注意点
 
-- `abs_ll(LLONG_MIN)` などの絶対値がオーバーフローする入力は扱わない。
+- `abs_ll(LLONG_MIN)` は例外を送出する。内部で `abs_ll` を使う `gcd`・`lcm`・`ext_gcd`・`divisors` も、引数に `LLONG_MIN` を含むと同様に例外を送出する。
 - `lcm` は結果が `long long` に収まることを前提とし、オーバーフローを検査しない。

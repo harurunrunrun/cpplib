@@ -3,12 +3,12 @@ title: Dynamic Parentheses Sequence (動的括弧列) [BRCKTS]
 documentation_of: ../../../../src/structure/segtree/specialized/dynamic_parentheses_sequence.hpp
 ---
 
-丸括弧列の1点反転と、列全体が正しい括弧列かの判定を行う。
+丸括弧列の 1 点反転と、列全体が正しい括弧列かどうかの判定を行う。
 
 ## DynamicParenthesesSequence
 
 ```cpp
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class DynamicParenthesesSequence {
 public:
     explicit DynamicParenthesesSequence(string sequence);
@@ -18,41 +18,37 @@ public:
 };
 ```
 
-## Constructor
+`MAX_SIZE` を省略すると可変長版の `Segtree` を内部で使い、`DynamicParenthesesSequence<> seq(s);` のように長さの上限なしで構築できる。
 
-`'('` と `')'` だけからなる列を構築する。
+## コンストラクタ
+
+`'('` と `')'` だけからなる列から構築する。
 
 ## size
 
-列長を返す。
+列の長さを返す。
 
 ## toggle
 
-指定位置の括弧を反転する。
+指定した位置の括弧を反転する（`'('` と `')'` を入れ替える）。
 
 ## balanced
 
-列全体が正しい括弧列なら真を返す。
+列全体が正しい括弧列なら `true` を返す。空列も正しい括弧列とみなす。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-列長を $N$ とする。
+列の長さを $N$ とする。
 
-| API | 時間計算量 | 追加空間計算量 |
+| API | 時間計算量 | 追加の空間計算量 |
 | --- | --- | --- |
-| Constructor | $O(N)$ | $O(N)$ |
+| コンストラクタ | $O(N)$ | $O(N)$ |
 | `size()` | $O(1)$ | $O(1)$ |
 | `toggle(position)` | $O(\log N)$ | $O(1)$ |
 | `balanced()` | $O(1)$ | $O(1)$ |
 
 ## 注意点
 
-- 入力文字列は丸括弧のみで、長さは `MAX_SIZE` 以下でなければならない。
-- 位置は $[0,N)$ で指定する。
-- 前提違反時は `runtime_error` を送出する。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`DynamicParenthesesSequence<> tree(values);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 入力文字列は丸括弧のみからなり、固定容量版では長さが `MAX_SIZE` 以下でなければならない。
+- 位置は $[0, N)$ で指定する。
+- 括弧以外の文字や範囲外の位置では `std::runtime_error` を送出する。

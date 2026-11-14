@@ -15,6 +15,27 @@ class PairingHeap {
         std::unique_ptr<Node> child;
         std::unique_ptr<Node> sibling;
         explicit Node(T value_) : value(std::move(value_)) {}
+        Node(const Node&) = delete;
+        Node& operator=(const Node&) = delete;
+        // Releases descendants iteratively so that long chains do not
+        // overflow the call stack.
+        ~Node() {
+            release(child);
+            release(sibling);
+        }
+
+        static void release(std::unique_ptr<Node>& node) noexcept {
+            while (node) {
+                if (node->child) {
+                    auto next = std::move(node->child);
+                    node->child = std::move(next->sibling);
+                    next->sibling = std::move(node);
+                    node = std::move(next);
+                } else {
+                    node = std::move(node->sibling);
+                }
+            }
+        }
     };
 
     std::unique_ptr<Node> root_;

@@ -306,11 +306,13 @@ template<class URBG>
         );
     std::vector<unsigned char> selected(system.sets.size(), 0);
     std::vector<bool> covered(universe_size, false);
+    // Covered elements stay covered, so the scan resumes where it stopped.
+    std::size_t next_candidate = 0;
     while(true){
         std::size_t element = universe_size;
-        for(std::size_t candidate = 0; candidate < universe_size; ++candidate){
-            if(!covered[candidate]){
-                element = candidate;
+        for(; next_candidate < universe_size; ++next_candidate){
+            if(!covered[next_candidate]){
+                element = next_candidate;
                 break;
             }
         }

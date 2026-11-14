@@ -13,6 +13,7 @@ std::vector<int> prefix_lengths(
     std::span<const Value> first,
     std::span<const Value> second
 ){
+    // current[0] is never written, so it stays 0 across swaps.
     std::vector<int> previous(second.size() + 1, 0);
     std::vector<int> current(second.size() + 1, 0);
     for(const Value& value: first){
@@ -25,7 +26,6 @@ std::vector<int> prefix_lengths(
             }
         }
         std::swap(previous, current);
-        std::fill(current.begin(), current.end(), 0);
     }
     return previous;
 }
@@ -35,6 +35,7 @@ std::vector<int> suffix_lengths(
     std::span<const Value> first,
     std::span<const Value> second
 ){
+    // current[second.size()] is never written, so it stays 0 across swaps.
     std::vector<int> previous(second.size() + 1, 0);
     std::vector<int> current(second.size() + 1, 0);
     for(auto first_iterator = first.rbegin();
@@ -49,7 +50,6 @@ std::vector<int> suffix_lengths(
             }
         }
         std::swap(previous, current);
-        std::fill(current.begin(), current.end(), 0);
     }
     return previous;
 }
@@ -69,12 +69,15 @@ void solve(
         return;
     }
     const std::size_t middle = first.size() / 2;
-    const auto left = prefix_lengths(first.first(middle), second);
-    const auto right = suffix_lengths(first.subspan(middle), second);
     std::size_t split = 0;
-    for(std::size_t index = 1; index <= second.size(); ++index){
-        if(left[index] + right[index] > left[split] + right[split]){
-            split = index;
+    {
+        // Released before recursing so that only O(M) work memory is live.
+        const auto left = prefix_lengths(first.first(middle), second);
+        const auto right = suffix_lengths(first.subspan(middle), second);
+        for(std::size_t index = 1; index <= second.size(); ++index){
+            if(left[index] + right[index] > left[split] + right[split]){
+                split = index;
+            }
         }
     }
     solve(first.first(middle), second.first(split), result);

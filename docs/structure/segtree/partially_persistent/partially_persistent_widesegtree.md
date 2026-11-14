@@ -3,41 +3,30 @@ title: Partially Persistent Wide Segtree (部分永続ワイドセグメント�
 documentation_of: ../../../../src/structure/segtree/partially_persistent/partially_persistent_widesegtree.hpp
 ---
 
-`long long`の和を扱う部分永続な疎セグメント木。更新対象は最新versionだけで、過去versionは読み取り専用。
+`long long` の和を扱う部分永続な疎セグメント木。`PartiallyPersistentDynamicSegtree` に和のモノイドを与えたラッパーである。更新できるのは最新 version だけで、過去の version は読み取り専用である。
 
 ```cpp
 PartiallyPersistentWideSegtree<MAX_SIZE, MAX_NODES, MAX_VERSIONS, MAX_CHANGES>
 ```
 
+別名 `PartiallyPersistentWide_Segtree` も定義されている。
+
+容量（4 つのテンプレート引数）をすべて省略すると可変長版になり、`PartiallyPersistentWideSegtree<> tree(n);` のように長さを実行時に与える。固定容量版はデフォルトコンストラクタで構築し、範囲は $[0, \texttt{MAX_SIZE})$ になる。
+
+## API
+
 ```cpp
 int set(long long index, long long value)
 int add(long long index, long long value)
-long long get(int version, long long index)
-long long prod(int version, long long l, long long r)
-long long all_prod(int version)
+long long get(int version, long long index) const
+long long prod(int version, long long l, long long r) const
+long long all_prod(int version) const
 ```
 
-## 時間計算量
+- `set`, `add`: 最新 version の 1 点に代入・加算した新しい version を作り、その番号を返す。
+- `get`, `prod`, `all_prod`: 指定 version の値・半開区間 $[l, r)$ の和・全体の和を返す。`version` を省略すると最新 version を参照する。
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_CHANGES}\log \mathtt{MAX\_CHANGES})$
-- `set`, `add`: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
-- 最新versionの`get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
-- 過去versionの`get`: $O(\log \mathtt{MAX\_SIZE}+\log \mathtt{MAX\_CHANGES})$
-- 過去versionの`prod`: $O(\log \mathtt{MAX\_SIZE}\log \mathtt{MAX\_CHANGES})$
-- 最新versionの`all_prod`: $O(1)$、過去versionの`all_prod`: $O(\log \mathtt{MAX\_CHANGES})$
-- version・node・change情報: $O(1)$
-
-## 注意点
-
-version 0が初期状態で、queryは `0 <= version < versions()` の任意versionを参照できる。
-更新は `latest_version()` だけを元に行い、新しいversion番号を返す。過去versionを更新元に
-指定すると `runtime_error`。点は列内、区間は半開区間 `[l,r)` である。
-境界探索のpredicateは単調かつ単位元に対してtrueが必要。
-
-不正なversion・点・区間・predicate、version/node/change容量超過では `runtime_error`。
-失敗した更新はversion・node・履歴使用量を更新前へ戻す。各APIの計算量は上記表の通り。
-
-## 状態API
+状態取得用に次の関数がある。順に version 数、最新 version 番号、使用ノード数、変更履歴数を返し、すべて $O(1)$ である。
 
 ```cpp
 int versions() const
@@ -46,10 +35,22 @@ int nodes_used() const
 int changes_used() const
 ```
 
-順にversion数、最新番号、使用node数、変更履歴数を返し、すべて (O(1))。
+## 時間計算量
 
-## 容量を省略する場合
+$N = \texttt{MAX_SIZE}$、$C = \texttt{MAX_CHANGES}$ とする。
 
-容量引数の既定値は `-1`。`PartiallyPersistentWideSegtree<> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
+- コンストラクタ: $O(\texttt{MAX_NODES}+C\log C)$
+- `set`, `add`: $O(\log N\log C)$
+- 最新 version の `get`, `prod`: $O(\log N)$
+- 過去 version の `get`: $O(\log N+\log C)$
+- 過去 version の `prod`: $O(\log N\log C)$
+- 最新 version の `all_prod`: $O(1)$、過去 version の `all_prod`: $O(\log C)$
+- 状態取得関数: $O(1)$
 
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+## 注意点
+
+- version 0 が初期状態（全要素 0）で、クエリは `0 <= version < versions()` の任意の version を参照できる。
+- 更新は常に `latest_version()` を元に行い、新しい version 番号を返す。
+- 点は範囲内、区間は半開区間 $[l, r)$ である。
+- 不正な version・点・区間、version・ノード・履歴の容量超過では `std::runtime_error` を送出する。
+- 失敗した更新は version・ノード・履歴の使用量を更新前に戻す。

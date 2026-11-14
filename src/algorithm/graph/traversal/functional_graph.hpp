@@ -4,6 +4,7 @@
 #include "../../../structure/array/static_or_vector.hpp"
 
 #include <array>
+#include <bit>
 #include <cstddef>
 #include <span>
 #include <stdexcept>
@@ -14,11 +15,19 @@ struct FunctionalGraph{
     static_assert(MAX_SIZE >= -1);
 
 private:
-    static constexpr int LOG = 64;
+    // Doubling levels for the tree parts only (a tree path has fewer than
+    // N edges, so levels with 2^level >= N are never used); steps that reach
+    // the cycle are resolved with the cycle arrays.
+    static constexpr int LOG = MAX_SIZE < 0
+        ? -1
+        : (MAX_SIZE < 1
+            ? 1
+            : static_cast<int>(std::bit_width(static_cast<unsigned>(MAX_SIZE))));
 
     int _size = 0;
     int _component_count = 0;
     int _cycle_vertex_count = 0;
+    int _jump_levels = 0;
     cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _successor;
     cpplib_detail::StaticOrVector<cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))>, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(LOG))> _jump;
     cpplib_detail::StaticOrVector<int, (MAX_SIZE < 0 ? -1 : static_cast<std::ptrdiff_t>(static_cast<std::size_t>(MAX_SIZE)))> _component;
@@ -49,7 +58,10 @@ private:
         }
         _size = n;
         _successor.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
-        _jump.resize(static_cast<std::size_t>(LOG));
+        _jump_levels = n < 1
+            ? 1
+            : static_cast<int>(std::bit_width(static_cast<unsigned>(n)));
+        _jump.resize(static_cast<std::size_t>(_jump_levels));
         for(auto& row: _jump) row.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
         _component.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
         _distance_to_cycle.resize(static_cast<std::size_t>(static_cast<std::size_t>(n)));
@@ -141,7 +153,7 @@ private:
             ++_component_size[static_cast<std::size_t>(id)];
         }
 
-        for(int level = 1; level < LOG; ++level){
+        for(int level = 1; level < _jump_levels; ++level){
             for(int v = 0; v < n; ++v){
                 _jump[static_cast<std::size_t>(level)][static_cast<std::size_t>(v)] =
                     _jump[static_cast<std::size_t>(level - 1)][static_cast<std::size_t>(
@@ -266,15 +278,32 @@ public:
 
     int jump(int v, unsigned long long step) const{
         check_vertex(v, "library assertion fault: range violation (FunctionalGraph::jump).");
-        int level = 0;
-        while(step != 0){
-            if(step & 1ULL){
-                v = _jump[static_cast<std::size_t>(level)][static_cast<std::size_t>(v)];
+        const int depth = _distance_to_cycle[static_cast<std::size_t>(v)];
+        if(step < static_cast<unsigned long long>(depth)){
+            // Stays in the tree part: step < depth < N <= 2^_jump_levels.
+            int level = 0;
+            while(step != 0){
+                if(step & 1ULL){
+                    v = _jump[static_cast<std::size_t>(level)][static_cast<std::size_t>(v)];
+                }
+                step >>= 1;
+                ++level;
             }
-            step >>= 1;
-            ++level;
+            return v;
         }
-        return v;
+        step -= static_cast<unsigned long long>(depth);
+        const int entry = _cycle_entry[static_cast<std::size_t>(v)];
+        const int id = _component[static_cast<std::size_t>(entry)];
+        const auto length = static_cast<unsigned long long>(
+            _cycle_length[static_cast<std::size_t>(entry)]
+        );
+        const auto position = (static_cast<unsigned long long>(
+            _cycle_position[static_cast<std::size_t>(entry)]
+        ) + step % length) % length;
+        return _cycle_vertices[
+            static_cast<std::size_t>(_cycle_offset[static_cast<std::size_t>(id)])
+                + static_cast<std::size_t>(position)
+        ];
     }
 
     long long steps_to(int from, int to) const{

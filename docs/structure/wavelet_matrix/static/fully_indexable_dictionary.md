@@ -3,23 +3,30 @@ title: Fully Indexable Dictionary (完備辞書)
 documentation_of: ../../../../src/structure/wavelet_matrix/static/fully_indexable_dictionary.hpp
 ---
 
-固定bit列に対するrank/select辞書。
+構築後に変更しない bit 列に対する rank / select 辞書。
 
 ## テンプレート引数
 
 ```cpp
-FullyIndexableDictionary<MAX_SIZE>
+FullyIndexableDictionary<MAX_SIZE = -1>
+```
+
+- `MAX_SIZE`: bit 列長の上限。省略時（`-1`）は `std::vector` を使う可変長版になり、入力長に応じた領域だけを確保する。非負の値を指定すると固定長配列版になる。
+
+```cpp
+using Variable = FullyIndexableDictionary<>;
+using Fixed = FullyIndexableDictionary<N>;
 ```
 
 ## コンストラクタ
 
 ```cpp
-(1) FullyIndexableDictionary(int n = 0)
-(2) FullyIndexableDictionary(const vector<bool>& v)
+(1) explicit FullyIndexableDictionary(int n = 0)
+(2) explicit FullyIndexableDictionary(const vector<bool>& v)
 ```
 
-1. 長さ `n` の0列を作る。`set` の後に `build` を呼ぶ。
-2. `v` から構築する。
+1. 長さ `n` の全 0 の bit 列を作る。`set` で値を設定した後に `build` を呼ぶ。
+2. `v` から構築する（`build` まで行う）。
 
 ## set / build
 
@@ -28,12 +35,7 @@ void set(int k, bool value = true)
 void build()
 ```
 
-`k` 番目を設定し、rank用の累積和を構築する。`build` 後に `set` した場合は再度 `build` が必要。
-
-## 時間計算量
-
-- `set`: $O(1)$
-- `build`: $O(\mathrm{MAX\_SIZE}/64)$
+`set` は `k` 番目の bit を `value` にする。`build` は rank 用の累積和を構築する。`build` 後に `set` した場合は、再度 `build` が必要である。
 
 ## rank
 
@@ -42,11 +44,7 @@ int rank(bool value, int r) const
 int rank(bool value, int l, int r) const
 ```
 
-区間 $[0,r)$ または $[l,r)$ にある `value` の個数を返す。
-
-## 時間計算量
-
-- $O(1)$
+区間 $[0, r)$ または $[l, r)$ にある `value` の個数を返す。
 
 ## select
 
@@ -54,44 +52,32 @@ int rank(bool value, int l, int r) const
 int select(bool value, int k) const
 ```
 
-`value` が `k` 回目に現れる位置を返す。存在しない場合は `size()` を返す。`k` は0-indexed。
+`value` が `k` 回目（0-indexed）に現れる位置を返す。存在しない場合は `size()` を返す。
 
-## 時間計算量
-
-- $O(\log (\lceil N/64 \rceil + 1) + 64)$
-
-## 計算量（公開操作別）
-
-$W=\lceil\mathtt{MAX\_SIZE}/64\rceil$ とする。
-
-- `FullyIndexableDictionary(int)`: 固定長配列の初期化を含めて $O(W)$
-- `FullyIndexableDictionary(vector<bool>)`: $O(W+N)$
-- `set`, `operator[]`, `rank`, `size`: $O(1)$
-- `build`: $O(W)$
-- `select`: $O(\log(\lceil N/64\rceil+1)+64)$
-
-## 注意点
+## その他
 
 ```cpp
 int size() const
 bool operator[](int k) const
 ```
 
-`size` はbit列長、`operator[]` は `k` 番目を返す。`rank/select` の前に
-`build()` が必要で、`set` 後は再度buildする。長さは `MAX_SIZE` 以下、
-点と区間は列内、`select` の `k` は非負でなければならない。
-違反時は `runtime_error`。各APIの計算量は上記表の通り。
+`size` は bit 列長を、`operator[]` は `k` 番目の bit を返す。
 
-## 容量を省略した可変長版
+## 時間計算量
 
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
+$N$ を bit 列長とし、$W$ を固定長版では $\lceil \texttt{MAX_SIZE} / 64 \rceil$、可変長版では $\lceil N / 64 \rceil$ とする。
 
-```cpp
-using Variable = FullyIndexableDictionary<>;
-using Fixed = FullyIndexableDictionary<N>;
-```
+- コンストラクタ (1): 配列の初期化を含めて $O(W)$
+- コンストラクタ (2): $O(W + N)$
+- `set`, `operator[]`, `rank`, `size`: $O(1)$
+- `build`: $O(W)$
+- `select`: $O(\log(\lceil N / 64 \rceil + 1) + 64)$
 
-可変長版は入力長 $n$ とビット幅 $B$ に応じた配列だけを確保し、構築・照会の計算量は上記と同じ。
-長さに依存する固定容量の領域は $O(n)$ に、ビット段ごとの領域は $O(Bn)$ になる。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+## 空間計算量
+
+$O(W)$ ワード。
+
+## 注意点
+
+- `rank` / `select` の前に `build()` が必要で、`set` の後は再度 `build()` する。
+- 長さは `MAX_SIZE` 以下（固定長版）、点と区間は列内、`select` の `k` は非負でなければならない。違反時は `std::runtime_error` を送出する。

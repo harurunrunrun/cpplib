@@ -13,6 +13,7 @@ class WeightedParentForestDistance{
     int vertex_count_;
     std::vector<int> parent_;
     std::vector<T> distance_to_parent_;
+    std::vector<int> path_;  // compress の作業領域（呼び出しごとの確保を避けて再利用する）
 
     static int checked_size(int vertex_count){
         if(vertex_count < 0 || (MAX_SIZE >= 0 && MAX_SIZE < vertex_count))[[unlikely]]{
@@ -32,7 +33,8 @@ class WeightedParentForestDistance{
     }
 
     std::pair<int, T> compress(int vertex){
-        std::vector<int> path;
+        std::vector<int>& path = path_;
+        path.clear();
         int current = vertex;
         T total{};
         while(parent_[static_cast<std::size_t>(current)] != current){

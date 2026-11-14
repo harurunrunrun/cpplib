@@ -121,10 +121,13 @@ inline std::vector<u64> modular_kth_roots_prime(
         );
     }
     roots.reserve(static_cast<std::size_t>(divisor));
+    // The roots are g^{first_exponent + index * reduced_modulus}; walk them by
+    // multiplying with the divisor-th root of unity g^{reduced_modulus}.
+    const u64 step = pow_mod_u64(generator, reduced_modulus, prime);
+    u64 root = pow_mod_u64(generator, first_exponent, prime);
     for(u64 index = 0; index < divisor; ++index){
-        const u64 root_exponent =
-            first_exponent + index * reduced_modulus;
-        roots.push_back(pow_mod_u64(generator, root_exponent, prime));
+        roots.push_back(root);
+        root = mul_mod_u64(root, step, prime);
     }
     std::sort(roots.begin(), roots.end());
     return roots;

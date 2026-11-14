@@ -30,7 +30,7 @@ $I$ を現在の区間数、$K$ を対象範囲と交差して走査・削除す
 
 | API | 時間計算量 |
 | --- | --- |
-| `RangeDSU(n)` | $O(n\log n)$（初期区間の `std::map` の構築） |
+| `RangeDSU(n)` | $O(n)$（初期区間を末尾ヒント付きで `std::map` に挿入） |
 | 非 `const` `leader(x)` | 償却 $O(\alpha(n))$ |
 | `const` `leader(x)` | $O(\log n)$（union by size による木の高さ） |
 | `same(x,y)` | $O(\log n)$（`const` オーバーロード） |

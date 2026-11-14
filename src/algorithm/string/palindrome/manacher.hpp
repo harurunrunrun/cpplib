@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-std::vector<int> manacher_odd(const std::string& s){
+inline std::vector<int> manacher_odd(const std::string& s){
     const int n = (int)s.size();
     std::vector<int> d(n);
     int l = 0, r = -1;
@@ -24,7 +24,7 @@ std::vector<int> manacher_odd(const std::string& s){
     return d;
 }
 
-std::vector<int> manacher_even(const std::string& s){
+inline std::vector<int> manacher_even(const std::string& s){
     const int n = (int)s.size();
     std::vector<int> d(n);
     int l = 0, r = -1;
@@ -42,7 +42,7 @@ std::vector<int> manacher_even(const std::string& s){
     return d;
 }
 
-std::pair<int, int> longest_palindrome(const std::string& s){
+inline std::pair<int, int> longest_palindrome(const std::string& s){
     const int n = (int)s.size();
     auto odd = manacher_odd(s);
     auto even = manacher_even(s);

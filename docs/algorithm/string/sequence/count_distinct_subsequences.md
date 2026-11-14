@@ -17,11 +17,11 @@ long long count_distinct_subsequences(const string& text,
 
 ## 時間計算量・空間計算量
 
-$N$ を `text` の長さ、$\sigma$ を現れる文字の種類数（256 以下）とする。
+$N$ を `text` の長さとする。文字ごとの値は大きさ 256 の固定長配列で持つ。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| `count_distinct_subsequences` | 期待 $O(N)$ | $O(\sigma)$ |
+| `count_distinct_subsequences` | $O(N)$ | $O(1)$（256 要素の配列） |
 
 ## 注意点
 

@@ -3,41 +3,54 @@ title: Persistent BitOverwrite RangeSum (完全永続ビット上書き・区間
 documentation_of: ../../../../src/structure/segtree/persistent/persistent_bitoverwrite_rangesum.hpp
 ---
 
-完全永続なbit列の区間1上書き・区間和。APIと計算量は `Persistent Bit Range Structures` を参照。
+完全永続なビット列に対する区間 1 上書き・区間和。経路複製（path copy）を行う疎な暗黙セグメント木で実装している。
 
-## 時間計算量
+```cpp
+PersistentBitOverwriteRangeSum<MAX_SIZE, MAX_NODES, MAX_VERSIONS>
+```
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
-- `assign`, `flip`, `set_one`, `set`, `sum`, `get`: $O(\log \mathtt{MAX\_SIZE})$
-- `fork`とversion・容量情報: $O(1)$
+同じ API の別名 `PersistentDynamicBitOverwriteRangeSum` も定義される。
+
+型名上の主な操作は 1 への上書き（`set`）だが、基底クラスの `assign`, `flip`, `set_one` も利用できる。
 
 ## API
 
-公開APIのsignature・version・半開区間・容量・例外契約は `Persistent Bit Range Structures` と同じ。
-この型で利用できる各操作の計算量は下表の通り。
+```cpp
+explicit PersistentBitOverwriteRangeSum(long long n = MAX_SIZE)  // 可変長版の既定値は 0
+long long size() const
+int versions() const
+int latest_version() const
+int nodes_used() const
+int fork(int version)
+int assign(int version, long long l, long long r, bool value)
+int flip(int version, long long l, long long r)
+int set_one(int version, long long l, long long r)
+long long sum(int version, long long l, long long r) const
+bool get(int version, long long k) const
+```
 
-## 公開API
+- コンストラクタ: 長さ $n$ の全 0 列を version 0 として作る。
+- `size()`, `versions()`, `latest_version()`, `nodes_used()`: 列の長さ・version 数・最新 version 番号・使用中の疎セグメント木のノード数を返す。
+- `fork(version)`: 指定 version と同じ内容の新しい version を返す。
+- `assign(version, l, r, value)`: 指定 version の半開区間 $[l, r)$ を `value`（0 または 1）に代入した新しい version を返す。
+- `flip(version, l, r)`: 指定 version の半開区間 $[l, r)$ を反転した新しい version を返す。
+- `set_one(version, l, r)`: 指定 version の半開区間 $[l, r)$ を 1 に代入した新しい version を返す。
+- `set(version, l, r)`: `set_one` と同じ。
+- `sum(version, l, r)`: 指定 version の半開区間 $[l, r)$ にある 1 の個数を返す。
+- `get(version, k)`: 指定 version の $k$ 番目のビットを返す。
 
-- constructor：長さ `n` の0列をversion 0として作る。
-- `size`, `versions`, `latest_version`, `nodes_used`：列長と使用量を返す。
-- `fork(version)`：指定versionと同内容の新versionを返す。
-- `set(version,l,r)` / `set_one(version,l,r)`：`[l,r)` を1へ代入した新versionを返す。
-- `assign(version,l,r,value)`：`[l,r)` を0または1へ代入した新versionを返す。
-- `flip(version,l,r)`：`[l,r)` を反転した新versionを返す。
-- `sum(version,l,r)` / `get(version,k)`：1の個数／1点を返す。
+## 時間計算量
 
-`set`, `set_one`, `assign`, `flip`, `sum`, `get` は
-$O(\log \mathtt{MAX\_SIZE})$、`fork` と状態情報は $O(1)$。更新1回は
-$O(\log \mathtt{MAX\_SIZE})$ node、queryは同量の再帰stackを使う。
+- コンストラクタ: 固定容量版は $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS})$
+- `assign`, `flip`, `set_one`, `set`, `sum`, `get`: $O(\log \texttt{MAX_SIZE})$
+- `fork` と状態取得関数: $O(1)$
+
+更新 1 回で $O(\log \texttt{MAX_SIZE})$ 個のノードを追加し、クエリは $O(\log \texttt{MAX_SIZE})$ の再帰スタックを使う。
 
 ## 注意点
 
-型名上の主操作は1への上書きだが、public継承により `assign`, `flip`, `set_one` も利用できる。
-任意の有効versionから分岐できる。`0 < n <= MAX_SIZE`、半開区間・点・versionが
-有効でなければならず、範囲・node/version容量違反では `runtime_error`。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`PersistentBitOverwriteRangeSum<> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- 任意の有効な version から分岐でき、既存の version は変更されない。
+- `0 < n <= MAX_SIZE`、`0 <= l <= r <= n`、`0 <= k < n` が必要である。
+- `MAX_VERSIONS` は version 0 を含む総 version 数の上限である。空区間の更新も version を 1 つ消費する。
+- version・範囲の違反、ノード・version の容量超過では `std::runtime_error` を送出する。失敗した更新は version 数とノード使用量を元に戻す。
+- テンプレート引数をすべて省略すると可変長版になり、`PersistentBitOverwriteRangeSum<> tree(n);` のように使う。ノードと version は使用量に応じて `std::vector` を拡張する。

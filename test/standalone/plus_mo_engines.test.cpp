@@ -22,6 +22,21 @@ int main(){
         assert((answers == std::vector<int>{6, 9}));
     }
     {
+        // n is a power of two: queries with right == n must stay inside the
+        // Hilbert grid, otherwise the order degrades (281 moves before the fix).
+        const int n = 16;
+        HilbertMo mo(n);
+        for(int left = 0; left <= n; ++left){
+            for(int right = left; right <= n; ++right) mo.add_query(left, right);
+        }
+        long long moves = 0;
+        int answered = 0;
+        auto step = [&](int){ ++moves; };
+        mo.run(step, step, step, step, [&](int){ ++answered; });
+        assert(answered == (n + 1) * (n + 2) / 2);
+        assert(moves <= 200);
+    }
+    {
         RollbackMo mo(4);
         mo.add_query(0, 3);
         mo.add_query(1, 4);

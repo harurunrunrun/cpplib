@@ -91,6 +91,30 @@ void run_direct_tests(){
         vertex_threw = true;
     }
     assert(vertex_threw);
+
+    for(const int bad_size: {-1, 5}){
+        bool size_threw = false;
+        try{
+            IncrementalComponentAffine<sum_affine_action, 4> invalid(bad_size);
+        }catch(const std::runtime_error&){
+            size_threw = true;
+        }
+        assert(size_threw);
+    }
+    bool dynamic_size_threw = false;
+    try{
+        IncrementalComponentAffine<sum_affine_action> invalid(-1);
+    }catch(const std::runtime_error&){
+        dynamic_size_threw = true;
+    }
+    assert(dynamic_size_threw);
+    bool values_size_threw = false;
+    try{
+        IncrementalComponentAffine<sum_affine_action, 4> invalid(std::vector<long long>(5, 0));
+    }catch(const std::runtime_error&){
+        values_size_threw = true;
+    }
+    assert(values_size_threw);
 }
 
 int main(){

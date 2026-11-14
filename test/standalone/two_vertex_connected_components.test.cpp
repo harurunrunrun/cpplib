@@ -37,6 +37,15 @@ void self_test(){
         validate(3, edges, res);
         assert(res.count == 2);
     }
+    {
+        // Self loops are ignored; a vertex with only self loops is a singleton.
+        std::vector<std::pair<int, int>> edges = {{0, 0}, {1, 2}, {1, 1}, {0, 0}};
+        auto res = two_vertex_connected_components(4, edges);
+        assert(res.count == 3);
+        assert((res.vertex_groups == std::vector<std::vector<int>>{{0}, {1, 2}, {3}}));
+        assert((res.edge_groups == std::vector<std::vector<int>>{{}, {1}, {}}));
+        assert(res.articulation.empty());
+    }
     std::mt19937 rng(20260819);
     for(int n = 0; n <= 30; n++){
         for(int step = 0; step < 80; step++){

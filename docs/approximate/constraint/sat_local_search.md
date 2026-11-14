@@ -24,10 +24,10 @@ documentation_of: ../../../src/approximate/constraint/sat_local_search.hpp
 auto result = gsat(formula, rng, steps_per_restart, restart_limit);
 ```
 
-各ステップで全ての反転を評価し、充足節数が最大になるものを選ぶ。同数なら変数番号が最小のものを選ぶ。
+各ステップで全ての反転を評価し、充足節数が最大になるものを選ぶ。同数なら変数番号が最小のものを選ぶ。各節の真リテラル数から全変数の反転による充足節数の増減を 1 回の走査でまとめて求める。
 
-- 時間計算量: $O(V+L+R(V+L+SV(V+L)))$
-- 追加空間計算量: $O(V)$
+- 時間計算量: $O(V+L+R(V+L+S(V+L)))$
+- 追加空間計算量: $O(V+L)$
 
 ## `walksat`
 

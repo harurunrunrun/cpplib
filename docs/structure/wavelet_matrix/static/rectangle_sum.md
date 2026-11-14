@@ -3,15 +3,20 @@ title: Rectangle Sum (長方形和) [rectangle_sum]
 documentation_of: ../../../../src/structure/wavelet_matrix/static/rectangle_sum.hpp
 ---
 
-重み付き点集合に対して、静的な矩形和を求める。
+重み付き点集合に対して、静的に矩形内の重みの総和を求める。`WaveletMatrix2DWeighted` を継承し、コンストラクタもそのまま引き継ぐ。
 
 ## テンプレート引数
 
 ```cpp
-RectangleSum<X, Y, W, MAX_SIZE, Y_BIT_WIDTH>
+RectangleSum<X, Y, W, MAX_SIZE = -1, Y_BIT_WIDTH = (Y の bit 数)>
 ```
 
-`WaveletMatrix2DWeighted` と同じ。
+意味は `WaveletMatrix2DWeighted` と同じである。`MAX_SIZE` を省略すると可変長版になる。
+
+```cpp
+using Variable = RectangleSum<X, Y, W>;
+using Fixed = RectangleSum<X, Y, W, N>;
+```
 
 ## コンストラクタ
 
@@ -21,48 +26,30 @@ RectangleSum(
     const vector<Y>& ys,
     const vector<W>& weights
 )
-RectangleSum(const vector<tuple<X, Y, W>>& points)
+explicit RectangleSum(const vector<tuple<X, Y, W>>& points)
 ```
 
-## 矩形内の重みの総和
+## 矩形内の点数・重みの総和
 
 ```cpp
+int size() const
+int rectangle_count(X xl, X xr, Y yl, Y yr) const
+int range_freq(X xl, X xr, Y yl, Y yr) const
 W rectangle_sum(X xl, X xr, Y yl, Y yr) const
 W range_sum(X xl, X xr, Y yl, Y yr) const
 ```
 
-半開矩形 $[xl,xr)\times[yl,yr)$ に含まれる点の重みの総和を返す。
+`size` は点数を返す。`rectangle_count` / `range_freq` は半開矩形 $[\mathit{xl}, \mathit{xr}) \times [\mathit{yl}, \mathit{yr})$ に含まれる点の個数を、`rectangle_sum` / `range_sum` は重みの総和を返す。
 
 ## 時間計算量
 
-- 構築: $O(N\log N+\mathrm{Y\_BIT\_WIDTH}\cdot\mathtt{MAX\_SIZE})$
-- クエリ: $O(\log N + \mathrm{Y\_BIT\_WIDTH})$
+$N$ を点数、$H = \texttt{Y_BIT_WIDTH}$ とする。
 
-## 計算量（公開操作別）
-
-$H=\mathtt{Y\_BIT\_WIDTH}$ とする。
-
-- 2種類のconstructor: $O(N\log N+H\mathtt{MAX\_SIZE})$
+- コンストラクタ: 可変長版は $O(N \log N + H N)$、固定長版は $O(N \log N + H \cdot \texttt{MAX_SIZE})$
 - `size`: $O(1)$
-- `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N+H)$
+- `rectangle_count`, `range_freq`, `rectangle_sum`, `range_sum`: $O(\log N + H)$
 
 ## 注意点
 
-`RectangleSum` は `WaveletMatrix2DWeighted` の矩形和用別名である。constructorは
-`xs,ys,weights` または `(x,y,weight)` 列を受ける。`size`、`rectangle_count/range_freq`、
-`rectangle_sum/range_sum` を利用でき、矩形は `[xl,xr) x [yl,yr)`。
-vector長・点数容量・bit幅・矩形の違反では `runtime_error`。各APIの計算量は上記表の通り。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = RectangleSum<X, Y, W>;
-using Fixed = RectangleSum<X, Y, W, N>;
-```
-
-可変長版は入力長 $n$ とビット幅 $B$ に応じた配列だけを確保し、構築・照会の計算量は上記と同じ。
-長さに依存する固定容量の領域は $O(n)$ に、ビット段ごとの領域は $O(Bn)$ になる。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- 入力列の長さが異なる場合、点数が `MAX_SIZE` を超える場合、$y$ 座標が `Y_BIT_WIDTH` bit に収まらない場合、`xl > xr` または `yl > yr` の場合は `std::runtime_error` を送出する。
+- コピーは禁止、ムーブは可能。

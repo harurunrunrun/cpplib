@@ -5,6 +5,7 @@
 #include <deque>
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -24,8 +25,35 @@ struct StringMonoid {
 };
 constexpr StringMonoid string_monoid{};
 
+void check_empty_pop() {
+    FingerTree<sum> tree;
+    for (int attempt = 0; attempt < 2; ++attempt) {
+        bool thrown = false;
+        try {
+            tree.pop_front();
+        } catch (const std::out_of_range&) {
+            thrown = true;
+        }
+        assert(thrown);
+        thrown = false;
+        try {
+            tree.pop_back();
+        } catch (const std::out_of_range&) {
+            thrown = true;
+        }
+        assert(thrown);
+        assert(tree.empty() && tree.size() == 0 && tree.fold() == 0);
+    }
+    tree.push_back(5);
+    tree.push_front(3);
+    assert(tree.size() == 2 && tree.fold() == 8);
+    tree.pop_front();
+    tree.pop_back();
+    assert(tree.empty());
+}
 
 int main() {
+    check_empty_pop();
     FingerTree<sum> tree;
     std::deque<long long> expected;
     long long expected_sum = 0;

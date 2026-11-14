@@ -9,6 +9,7 @@
 #include <random>
 #include <span>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "cnf.hpp"
@@ -116,6 +117,62 @@ inline void consider_assignment(
     return score;
 }
 
+// Per clause, the distinct variables with their positive and negative
+// occurrence counts; used by gsat to evaluate all flips in O(V + L).
+struct ClauseOccurrence {
+    std::size_t variable;
+    std::size_t positive;
+    std::size_t negative;
+};
+
+[[nodiscard]] inline std::vector<std::vector<ClauseOccurrence>>
+clause_occurrences(const CnfFormula& formula){
+    constexpr std::size_t none = std::numeric_limits<std::size_t>::max();
+    std::vector<std::size_t> slot(formula.variable_count(), none);
+    std::vector<std::vector<ClauseOccurrence>> result;
+    result.reserve(formula.clause_count());
+    for(const CnfFormula::Clause& clause : formula.clauses()){
+        std::vector<ClauseOccurrence> entries;
+        for(const CnfLiteral literal : clause){
+            const std::size_t variable = sat_variable_index(literal);
+            if(slot[variable] == none){
+                slot[variable] = entries.size();
+                entries.push_back(ClauseOccurrence{variable, 0, 0});
+            }
+            ClauseOccurrence& entry = entries[slot[variable]];
+            if(literal > 0) ++entry.positive;
+            else ++entry.negative;
+        }
+        for(const ClauseOccurrence& entry : entries) slot[entry.variable] = none;
+        result.push_back(std::move(entries));
+    }
+    return result;
+}
+
+// gain[v] = (satisfied clauses after flipping v) - (satisfied clauses now).
+inline void flip_gains(
+    const std::vector<std::vector<ClauseOccurrence>>& occurrences,
+    const BooleanAssignment& assignment,
+    std::vector<long long>& gain
+){
+    std::fill(gain.begin(), gain.end(), 0LL);
+    for(const std::vector<ClauseOccurrence>& entries : occurrences){
+        std::size_t true_count = 0;
+        for(const ClauseOccurrence& entry : entries){
+            true_count += assignment[entry.variable] != 0
+                ? entry.positive : entry.negative;
+        }
+        const long long before = true_count > 0 ? 1 : 0;
+        for(const ClauseOccurrence& entry : entries){
+            const bool value = assignment[entry.variable] != 0;
+            const std::size_t after = true_count
+                - (value ? entry.positive : entry.negative)
+                + (value ? entry.negative : entry.positive);
+            gain[entry.variable] += (after > 0 ? 1 : 0) - before;
+        }
+    }
+}
+
 [[nodiscard]] inline std::size_t break_count_after_flip(
     const CnfFormula& formula,
     BooleanAssignment& assignment,
@@ -164,6 +221,8 @@ template<class UniformRandomBitGenerator>
 ){
     SatSearchResult result = detail::initial_sat_result(formula);
     if(result.found || detail::has_empty_clause(formula)) return result;
+    const auto occurrences = detail::clause_occurrences(formula);
+    std::vector<long long> gain(formula.variable_count());
 
     for(std::size_t restart = 0; restart < restart_limit; ++restart){
         detail::checked_increment(result.restarts, "SAT restart counter overflow");
@@ -175,17 +234,18 @@ template<class UniformRandomBitGenerator>
         if(result.found) return result;
 
         for(std::size_t step = 0; step < steps_per_restart; ++step){
+            detail::flip_gains(occurrences, assignment, gain);
             std::size_t best_variable = 0;
-            std::size_t best_score = detail::score_after_flip(formula, assignment, 0);
+            long long best_gain = gain[0];
             for(std::size_t variable = 1; variable < formula.variable_count(); ++variable){
-                const std::size_t candidate = detail::score_after_flip(
-                    formula, assignment, variable
-                );
-                if(candidate > best_score){
-                    best_score = candidate;
+                if(gain[variable] > best_gain){
+                    best_gain = gain[variable];
                     best_variable = variable;
                 }
             }
+            const std::size_t best_score = static_cast<std::size_t>(
+                static_cast<long long>(score) + best_gain
+            );
             assignment[best_variable] ^= static_cast<unsigned char>(1);
             score = best_score;
             detail::checked_increment(result.steps, "SAT step counter overflow");

@@ -8,6 +8,7 @@
 #include <string>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 class Rope {
     struct Node {
@@ -64,13 +65,30 @@ class Rope {
         update(node.get());
         return {std::move(node), std::move(right)};
     }
+    // 右端への merge を繰り返すのと同じ木を、右の背骨をスタックに持つ
+    // デカルト木の線形時間構築で作る（stack[k + 1] が stack[k]->right になる）
     static std::unique_ptr<Node> build(std::string_view text) {
-        std::unique_ptr<Node> result;
+        std::vector<std::unique_ptr<Node>> spine;
         for (char character : text) {
-            result = merge(
-                std::move(result),
-                std::make_unique<Node>(character, random_priority())
-            );
+            auto node = std::make_unique<Node>(character, random_priority());
+            std::unique_ptr<Node> last;
+            while (!spine.empty() && spine.back()->priority <= node->priority) {
+                std::unique_ptr<Node> top = std::move(spine.back());
+                spine.pop_back();
+                top->right = std::move(last);
+                update(top.get());
+                last = std::move(top);
+            }
+            node->left = std::move(last);
+            spine.push_back(std::move(node));
+        }
+        std::unique_ptr<Node> result;
+        while (!spine.empty()) {
+            std::unique_ptr<Node> top = std::move(spine.back());
+            spine.pop_back();
+            top->right = std::move(result);
+            update(top.get());
+            result = std::move(top);
         }
         return result;
     }

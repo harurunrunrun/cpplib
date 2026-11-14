@@ -3,7 +3,7 @@ title: Persistent Binary Trie (完全永続二進トライ)
 documentation_of: ../../../../src/structure/trie/binary/persistent_binary_trie.hpp
 ---
 
-永続 Binary Trie。重複を持つ。
+完全永続の Binary Trie である。整数の多重集合を版（バージョン）ごとに管理し、同じ値を重複して保持できる。構築直後は空の版 0 だけが存在する。
 
 ## テンプレート引数
 
@@ -11,9 +11,9 @@ documentation_of: ../../../../src/structure/trie/binary/persistent_binary_trie.h
 PersistentBinaryTrie<T, BIT, MAX_NODES, MAX_VERSIONS>
 ```
 
-BIT は T のビット幅以下とする。更新が容量不足で失敗した場合、version と node は消費されない。
+`BIT` は `T` のビット幅以下とする（デフォルトは `T` に対応する符号なし型のビット幅）。`MAX_NODES` と `MAX_VERSIONS` は省略でき、デフォルト値 `-1` では可変長版になる。更新が容量不足で失敗した場合、版とノードは消費されない。
 
-## version
+## 版
 
 ```cpp
 int fork(int version)
@@ -23,28 +23,28 @@ int root(int version)
 int size(int version)
 ```
 
-`fork` は同じ根を持つ新しい version を作る。
+`fork` は `version` と同じ根を持つ新しい版を作り、その番号を返す。
 
-`versions`はversion数、`node_count`は使用node数、`root`はroot node番号、
-`size`は重複込み要素数を返す。version範囲外は例外。
+`versions` は版の数、`node_count` は使用ノード数、`root` は根ノードの番号、
+`size` は重複を含む要素数を返す。版の番号が範囲外なら `runtime_error` を送出する。
 
-## count
+## 個数
 
 ```cpp
 int count(int version, T value) const
 bool contains(int version, T value) const
 ```
 
-指定versionでの個数と存在有無を返す。どちらも$O(BIT)$。
+指定した版での個数と、存在するかどうかを返す。
 
-## insert / erase
+## `insert` / `erase`
 
 ```cpp
 int insert(int version, T x)
 int erase(int version, T x)
 ```
 
-新しい version を返す。`erase` は値が存在しない場合、同じ内容の新しい version を返す。
+`version` に `x` を 1 個追加 / 削除した新しい版の番号を返す。`erase` は値が存在しない場合、同じ内容の新しい版を返す。
 
 ## 順序
 
@@ -55,41 +55,28 @@ optional<T> max_element(int version, T xor_value = 0)
 int count_less(int version, T x, T xor_value = 0)
 ```
 
-`xor_value` を指定した場合、値 `y` は `y xor xor_value` の順で比較される。
+`xor_value` を指定した場合、値 `y` は `y ^ xor_value` の大小で順序付けられる。
 
-## API別の時間計算量
+## API 別の時間計算量
 
-$B=\mathrm{BIT}$ とする。
+$B$ を `BIT` とする。
 
-- `PersistentBinaryTrie()`: $O(\mathrm{MAX\_NODES}+\mathrm{MAX\_VERSIONS})$
-- `versions`, `node_count`, `root`, `size`, `fork`: $O(1)$。`fork` はnodeを増やさずversionだけを生成する
+- `PersistentBinaryTrie()`: 固定長版は $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS})$、可変長版は $O(1)$
+- `versions`, `node_count`, `root`, `size`, `fork`: $O(1)$。`fork` はノードを増やさず版だけを生成する
 - `count`, `contains`, `kth`, `min_element`, `max_element`, `count_less`: $O(B)$
-- `insert`: $O(B)$、path-copy node $B+1$ 個と1 versionを生成する
-- `erase`: $O(B)$。存在すればpath-copy node $B+1$ 個、存在しなければ0個。どちらも1 versionを生成する
+- `insert`: $O(B)$。経路コピーでノード $B+1$ 個と版 1 個を生成する
+- `erase`: $O(B)$。値が存在すれば経路コピーでノード $B+1$ 個、存在しなければ 0 個を生成する。どちらも版を 1 個生成する
 
 ## 空間計算量
 
-- 固定node/version array: $O(\mathrm{MAX\_NODES}+\mathrm{MAX\_VERSIONS})$
+- ノード・版の配列: 固定長版は $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS})$、可変長版は使用量に比例
 - 各操作の追加領域: $O(1)$
 
 ## 注意点
 
-- `T`は整数型、`0 < BIT <= T`のbit数。versionは`[0,versions())`。
-- updateでnode/version容量を超える場合は例外で、既存versionとnode数を変えない。
-- `kth`はkが範囲外なら`nullopt`、min/maxは空versionなら`nullopt`。
-- erase対象が存在しない場合はnodeを生成せず、同じ内容のversionを1個作る。
-- 順序queryは`value xor xor_value`で比較し、保存値を返す。
-
-## 容量を省略した可変長版
-
-容量テンプレートを省略すると既定値 `-1` でvectorを使い、必要な保存領域を明示的に伸長する。
-固定容量を指定する既存版も同じヘッダに残る。
-
-```cpp
-using Variable = PersistentBinaryTrie<T>;
-using Fixed = PersistentBinaryTrie<T, Bits, Nodes, Versions>;
-```
-
-伸長の費用は追加操作全体で償却され、上記の各操作の計算量を維持する。
-領域は確保済みノード・履歴・heap要素などの個数に比例する。
-整数添字の表現上限を超える要素数は例外。構造上の文字種類・bit幅・座標域は、件数容量とは別に指定できる。
+- `T` は整数型で、`0 < BIT <=` （`T` のビット幅）でなければならない。版の番号は `[0, versions())` である。
+- 更新でノード・版の容量を超える場合は `runtime_error` を送出し、既存の版とノード数は変えない。
+- `kth` は `k` が範囲外なら `nullopt` を、`min_element` / `max_element` は空の版なら `nullopt` を返す。
+- `erase` の対象が存在しない場合はノードを生成せず、同じ内容の版を 1 個作る。
+- 順序に関するクエリは `value ^ xor_value` で比較し、保存値を返す。
+- 容量を指定した固定配列版（`PersistentBinaryTrie<T, BIT, NODES, VERSIONS>`）と可変長版（`PersistentBinaryTrie<T>`）は同じヘッダで利用できる。可変長版は必要に応じて領域を伸長し、その費用はならして上記の計算量に含まれる。

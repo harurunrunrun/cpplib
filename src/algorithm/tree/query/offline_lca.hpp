@@ -41,7 +41,7 @@ struct OfflineLcaDsu{
 
 }
 
-std::vector<int> offline_lca(
+inline std::vector<int> offline_lca(
     const std::vector<std::vector<int>>& graph,
     const std::vector<std::pair<int, int>>& queries,
     int root = 0

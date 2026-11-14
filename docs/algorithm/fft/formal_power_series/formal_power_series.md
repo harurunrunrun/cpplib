@@ -50,7 +50,7 @@ template<int MOD>
 std::vector<Modint<MOD>> fps_exp(const std::vector<Modint<MOD>>& values, std::size_t size)
 ```
 
-$\exp f$ を返す。$N \gt 0$ のとき定数項は $0$ でなければならず、違反すると `std::runtime_error` を送出する。Newton 法 $g \leftarrow g(1 + f - \log g)$ で計算する。
+$\exp f$ を返す。$N \gt 0$ のとき定数項は $0$ でなければならず、違反すると `std::runtime_error` を送出する。Newton 法 $g \leftarrow g(1 + f - \log g)$ で計算する。$g^{-1}$ も各段で Newton 法により更新しながら持ち回すため、$\log g$ を毎回最初から計算することはない。
 
 ## `fps_pow`
 
@@ -75,21 +75,21 @@ $g^2 \equiv f \pmod{x^N}$ を満たす $g$ を返し、存在しなければ `st
 - 零級数（打ち切った範囲がすべて $0$）に対しては零級数を返す。
 - 最初の非零係数の次数が奇数、またはその係数が平方非剰余なら `std::nullopt` を返す。
 - 最初の非零係数の平方根は Tonelli-Shanks 法で求め、2 つの候補のうち代表値が小さい方を使う。
-- その後 Newton 法 $g \leftarrow (g + f / g) / 2$ を行うため、`MOD` は奇素数であることを前提とする。`MOD == 2` のとき、最初の非零係数の次数が偶数の入力に対しては `std::runtime_error` を送出する。
+- その後 Newton 法 $g \leftarrow (g + f / g) / 2$ を行う（$g^{-1}$ も各段で更新しながら持ち回す）ため、`MOD` は奇素数であることを前提とする。`MOD == 2` のとき、最初の非零係数の次数が偶数の入力に対しては `std::runtime_error` を送出する。
 
 ## 計算量
 
 | API | 時間計算量 | 追加の空間計算量 |
 | --- | --- | --- |
 | `fps_derivative` | $O(N)$ | $O(N)$ |
-| `fps_integral` | $O(N \log \texttt{MOD})$ | $O(N)$ |
+| `fps_integral` | $O(N)$ | $O(N)$ |
 | `fps_inv` | $O(N \log N)$ | $O(N)$ |
-| `fps_log` | $O(N \log N + N \log \texttt{MOD})$ | $O(N)$ |
-| `fps_exp` | $O(N \log N + N \log \texttt{MOD})$ | $O(N)$ |
-| `fps_pow` | $O(N \log N + N \log \texttt{MOD})$ | $O(N)$ |
+| `fps_log` | $O(N \log N)$ | $O(N)$ |
+| `fps_exp` | $O(N \log N)$ | $O(N)$ |
+| `fps_pow` | $O(N \log N + \log \texttt{MOD})$ | $O(N)$ |
 | `fps_sqrt` | $O(N \log N + \log^2 \texttt{MOD})$ | $O(N)$ |
 
-`fps_derivative` と `fps_integral` の $N$ は入力の長さである。`fps_integral` の $\log \texttt{MOD}$ は各係数で逆元を求めるためにかかる。
+`fps_derivative` と `fps_integral` の $N$ は入力の長さである。`MOD` が素数で入力の長さが `MOD` 未満のとき、`fps_integral` は $1, 2, \ldots, N$ の逆元を線形時間の漸化式 $i^{-1} = -\lfloor \texttt{MOD} / i \rfloor \cdot (\texttt{MOD} \bmod i)^{-1}$ で前計算する。それ以外の場合は各係数で `Modint::inv` を呼ぶため $O(N \log \texttt{MOD})$ かかる（`fps_log`・`fps_exp`・`fps_pow` も同様）。
 
 ## 注意点
 

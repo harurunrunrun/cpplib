@@ -2,7 +2,7 @@
 #define CPPLIB_SRC_ALGORITHM_OTHER_DYNAMIC_PROGRAMMING_ASSIGNMENT_SUBSET_EXACT_COVER_HPP_INCLUDED
 
 #include <algorithm>
-#include <functional>
+#include <cstddef>
 #include <limits>
 #include <optional>
 #include <stdexcept>
@@ -51,23 +51,43 @@ inline std::optional<std::vector<int>> exact_cover(
     std::vector<unsigned char> covered(
         static_cast<std::size_t>(column_count), 0
     );
+    // conflict[r]: number of covered columns in row r (r is usable iff 0).
+    // active[c]: number of usable rows containing column c.
+    std::vector<int> conflict(rows.size(), 0);
+    std::vector<std::size_t> active(static_cast<std::size_t>(column_count));
+    for(int column = 0; column < column_count; ++column){
+        active[static_cast<std::size_t>(column)] =
+            column_rows[static_cast<std::size_t>(column)].size();
+    }
     std::vector<int> solution;
-    const auto compatible = [&](int row_id){
+    const auto cover_row = [&](int row_id){
         for(int column: rows[static_cast<std::size_t>(row_id)]){
-            if(covered[static_cast<std::size_t>(column)] != 0) return false;
+            covered[static_cast<std::size_t>(column)] = 1;
+            for(int other: column_rows[static_cast<std::size_t>(column)]){
+                if(conflict[static_cast<std::size_t>(other)]++ != 0) continue;
+                for(int other_column: rows[static_cast<std::size_t>(other)]){
+                    --active[static_cast<std::size_t>(other_column)];
+                }
+            }
         }
-        return true;
     };
-    const std::function<bool()> search = [&]{
+    const auto uncover_row = [&](int row_id){
+        for(int column: rows[static_cast<std::size_t>(row_id)]){
+            covered[static_cast<std::size_t>(column)] = 0;
+            for(int other: column_rows[static_cast<std::size_t>(column)]){
+                if(--conflict[static_cast<std::size_t>(other)] != 0) continue;
+                for(int other_column: rows[static_cast<std::size_t>(other)]){
+                    ++active[static_cast<std::size_t>(other_column)];
+                }
+            }
+        }
+    };
+    const auto search = [&](const auto& self) -> bool {
         int selected_column = -1;
         std::size_t selected_count = rows.size() + 1;
         for(int column = 0; column < column_count; ++column){
             if(covered[static_cast<std::size_t>(column)] != 0) continue;
-            std::size_t count = 0;
-            for(int row_id:
-                column_rows[static_cast<std::size_t>(column)]){
-                if(compatible(row_id)) ++count;
-            }
+            const std::size_t count = active[static_cast<std::size_t>(column)];
             if(count == 0) return false;
             if(count < selected_count){
                 selected_count = count;
@@ -78,20 +98,16 @@ inline std::optional<std::vector<int>> exact_cover(
 
         for(int row_id:
             column_rows[static_cast<std::size_t>(selected_column)]){
-            if(!compatible(row_id)) continue;
-            for(int column: rows[static_cast<std::size_t>(row_id)]){
-                covered[static_cast<std::size_t>(column)] = 1;
-            }
+            if(conflict[static_cast<std::size_t>(row_id)] != 0) continue;
+            cover_row(row_id);
             solution.push_back(row_id);
-            if(search()) return true;
+            if(self(self)) return true;
             solution.pop_back();
-            for(int column: rows[static_cast<std::size_t>(row_id)]){
-                covered[static_cast<std::size_t>(column)] = 0;
-            }
+            uncover_row(row_id);
         }
         return false;
     };
-    if(!search()) return std::nullopt;
+    if(!search(search)) return std::nullopt;
     return solution;
 }
 

@@ -24,9 +24,13 @@ std::uint32_t number_of_distinct_subsequences(
     std::uint32_t including_empty = 1 % modulus;
     for(const T& value: values){
         const auto iterator = previous.find(value);
-        const std::uint32_t duplicated =
-            iterator == previous.end() ? 0 : iterator->second;
-        previous[value] = including_empty;
+        std::uint32_t duplicated = 0;
+        if(iterator == previous.end()){
+            previous.emplace(value, including_empty);
+        }else{
+            duplicated = iterator->second;
+            iterator->second = including_empty;
+        }
         const std::uint64_t doubled =
             static_cast<std::uint64_t>(including_empty) * 2;
         including_empty = static_cast<std::uint32_t>(

@@ -13,6 +13,6 @@ documentation_of: ../../../../../../src/algorithm/geometry/3d/point_set/line_pla
 
 ## 注意点
 
-- 平行判定は、方向ベクトル `line.b - line.a`（単位化しない）と単位法線の内積の絶対値が `GEOMETRY3D_EPS`（$10^{-10}$） 以下かどうかで行う。平行と判定した場合は、直線の `a` とその平面への射影を返す。
-- 平行でない場合は `line_plane_intersection` で交点を求める。交点を表現できない場合は `std::overflow_error` を送出する。
+- 平行判定は、方向ベクトル `line.b - line.a` と法線の内積の符号を厳密に求めて行う（`line_plane_intersection` と同じ判定）。厳密に平行な場合は、直線の `a` とその平面への射影を返す。
+- 平行でない場合は交点を厳密に求めて丸める。わずかに傾いているだけの直線でも、遠方の交点を返す。交点を表現できない場合は `std::overflow_error` を送出する。
 - 方向ベクトルの長さが `GEOMETRY3D_EPS` 以下の退化直線、零法線の平面、非有限入力には `std::invalid_argument` を送出する。

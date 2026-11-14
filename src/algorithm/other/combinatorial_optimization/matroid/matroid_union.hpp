@@ -82,6 +82,7 @@ MatroidUnionResult matroid_union(
                     break;
                 }
                 for(const std::size_t displaced: result.groups[group]){
+                    if(reached[displaced] != 0) continue;
                     candidate.clear();
                     candidate.reserve(result.groups[group].size());
                     for(const std::size_t member: result.groups[group]){
@@ -91,12 +92,10 @@ MatroidUnionResult matroid_union(
                     if(!static_cast<bool>(
                         std::invoke(independent, candidate)
                     )) continue;
-                    if(reached[displaced] == 0){
-                        reached[displaced] = 1;
-                        predecessor[displaced] = element;
-                        exchange_group[displaced] = group;
-                        queue.push(displaced);
-                    }
+                    reached[displaced] = 1;
+                    predecessor[displaced] = element;
+                    exchange_group[displaced] = group;
+                    queue.push(displaced);
                 }
             }
         }

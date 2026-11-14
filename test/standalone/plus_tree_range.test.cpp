@@ -43,8 +43,36 @@ int main(){
     assert(ladders.depth(3) == 2);
     assert(!rake_compress_tree_contraction(tree).empty());
     assert(rooted_tree_automorphism_count<long long>(tree, 0) == 2);
+    {
+        // Non-trees used to read out of bounds (forest) or loop forever (cycle).
+        const std::vector<std::vector<int>> forest{{1}, {0}, {3}, {2}};
+        const std::vector<std::vector<int>> cycle{{1, 2}, {0, 2}, {0, 1}};
+        for(const auto* graph: {&forest, &cycle}){
+            bool thrown = false;
+            try{
+                (void)tree_automorphism_count<long long>(*graph);
+            }catch(const std::invalid_argument&){
+                thrown = true;
+            }
+            assert(thrown);
+        }
+        const std::vector<std::vector<int>> star{{1, 2, 3}, {0}, {0}, {0}};
+        assert(tree_automorphism_count<unsigned long long>(star) == 6ULL);
+    }
     TreePathXorBasis basis(tree, {1, 2, 4, 8, 16});
     assert(basis.maximum_xor(3, 2) == 15);
+    {
+        bool thrown = false;
+        try{
+            const TreePathXorBasis<4> narrow(tree, {1, 2, 4, 8, 16});
+            (void)narrow;
+        }catch(const std::invalid_argument&){
+            thrown = true;
+        }
+        assert(thrown);
+        const TreePathXorBasis<5> wide(tree, {1, 2, 4, 8, 16});
+        assert(wide.maximum_xor(3, 2) == 15);
+    }
 
     std::mt19937 tree_random(83'711U);
     for(int tree_size = 1; tree_size <= 8; ++tree_size){
@@ -306,6 +334,15 @@ int main(){
     FenwickOrderedSets<int> ordered(3, {{0, 4}, {1, 2}, {2, 7}});
     ordered.add(0, 4); ordered.add(1, 2); ordered.add(2, 7);
     assert(ordered.count_less(0, 3, 5) == 2);
+    for(const int negative_size: {-1, -2}){
+        bool negative_thrown = false;
+        try{
+            FenwickOrderedSets<int> negative(negative_size, {});
+        }catch(const std::invalid_argument&){
+            negative_thrown = true;
+        }
+        assert(negative_thrown);
+    }
 
     SparseTable2D<int, std::function<int(int, int)>> sparse(
         {{5, 2, 7}, {3, 4, 1}}, [](int a, int b){ return std::min(a, b); });

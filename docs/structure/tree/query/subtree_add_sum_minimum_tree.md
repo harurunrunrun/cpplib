@@ -3,19 +3,19 @@ title: Subtree Add Sum Minimum Tree (部分木加算・総和・最小値木) [S
 documentation_of: ../../../../src/structure/tree/query/subtree_add_sum_minimum_tree.hpp
 ---
 
-根付き木の各頂点に `long long` 値を持たせ、部分木一括加算・部分木総和・
-部分木最小値を処理します。
+根付き木の各頂点に `long long` 値を持たせ、部分木への一括加算・部分木の総和・
+部分木の最小値を処理する。
 
 ## API
 
 ### `SubtreeAddSumMinimumTree<MAX_SIZE>(vertex_count)`
 
 ```cpp
-template<int MAX_SIZE>
+template<int MAX_SIZE = -1>
 class SubtreeAddSumMinimumTree;
 ```
 
-`vertex_count` 頂点の構造を作ります。初期値はすべて0です。
+`vertex_count` 頂点の構造を作る。初期値はすべて 0 である。`MAX_SIZE` を省略すると可変長版になる。
 
 ### `size()`
 
@@ -23,7 +23,7 @@ class SubtreeAddSumMinimumTree;
 int size() const;
 ```
 
-頂点数を返します。
+頂点数を返す。
 
 ### `set_value(vertex, value)`
 
@@ -31,7 +31,7 @@ int size() const;
 void set_value(int vertex, long long value);
 ```
 
-`build` 前に頂点の初期値を設定します。同じ頂点へ再設定できます。
+`build` 前に頂点の初期値を設定する。同じ頂点に再設定できる。
 
 ### `add_edge(left, right)`
 
@@ -39,7 +39,7 @@ void set_value(int vertex, long long value);
 void add_edge(int left, int right);
 ```
 
-`build` 前に無向辺を追加します。
+`build` 前に無向辺を追加する。
 
 ### `build(root)`
 
@@ -47,7 +47,7 @@ void add_edge(int left, int right);
 void build(int root = 0);
 ```
 
-入力辺が作る木を `root` で根付き化し、部分木用の検索構造を構築します。
+入力した辺が作る木を `root` を根として根付け、オイラーツアー上の遅延セグメント木を構築する。
 
 ### `subtree_sum(vertex)`
 
@@ -55,7 +55,7 @@ void build(int root = 0);
 long long subtree_sum(int vertex) const;
 ```
 
-`vertex` の部分木にある値の総和を返します。
+`vertex` の部分木にある値の総和を返す。
 
 ### `subtree_minimum(vertex)`
 
@@ -63,7 +63,7 @@ long long subtree_sum(int vertex) const;
 long long subtree_minimum(int vertex) const;
 ```
 
-`vertex` の部分木にある値の最小値を返します。
+`vertex` の部分木にある値の最小値を返す。
 
 ### `subtree_add(vertex, delta)`
 
@@ -71,7 +71,7 @@ long long subtree_minimum(int vertex) const;
 void subtree_add(int vertex, long long delta);
 ```
 
-`vertex` の部分木に `delta` を一括加算します。
+`vertex` の部分木の全頂点に `delta` を加算する。
 
 ### `add_subtree_by_capped_minimum(vertex, cap)`
 
@@ -82,42 +82,28 @@ long long add_subtree_by_capped_minimum(
 );
 ```
 
-`delta = min(cap, subtree_minimum(vertex))` を部分木全体へ加え、
-実際に加えた `delta` を返します。
+`delta = min(cap, subtree_minimum(vertex))` を部分木全体に加え、
+実際に加えた `delta` を返す。
 
-## API別の時間計算量・空間計算量
+## API 別の時間計算量・空間計算量
 
-$N=vertex\_count$ とします。
+$N$ を `vertex_count` とする。
 
 | API | 時間計算量 | 空間計算量 |
 | --- | --- | --- |
-| コンストラクタ | $O(N)$ | $O(N+MAX\_SIZE)$ |
+| コンストラクタ | $O(N)$ | $O(N+\texttt{MAX_SIZE})$（可変長版は $O(N)$） |
 | `size`, `set_value`, `add_edge` | $O(1)$ | $O(1)$ |
-| `build` | $O(N+MAX\_SIZE)$ | $O(MAX\_SIZE)$ |
+| `build` | $O(N+\texttt{MAX_SIZE})$（可変長版は $O(N)$） | $O(\texttt{MAX_SIZE})$（可変長版は $O(N)$） |
 | `subtree_sum`, `subtree_minimum` | $O(\log N)$ | $O(1)$ |
 | `subtree_add` | $O(\log N)$ | $O(1)$ |
 | `add_subtree_by_capped_minimum` | $O(\log N)$ | $O(1)$ |
 
 ## 注意点
 
-- `0 <= vertex_count <= MAX_SIZE` かつ `MAX_SIZE > 0` が必要です。
-- `build` 前にちょうど1本の木を入力してください。
-- 初期設定用APIは `build` 後に呼べず、`build` も1回だけ呼べます。
-- queryと更新は `build` 後に呼んでください。
-- 値・総和・遅延加算の全中間値は `long long` に収まる必要があります。
-- サイズ・頂点範囲違反、木でない入力、呼出し順違反には対応する標準例外を
-  送出します。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
-
-```cpp
-using Variable = SubtreeAddSumMinimumTree<>;
-using Fixed = SubtreeAddSumMinimumTree<N>;
-```
-
-可変長版は実行時の要素数・頂点数に応じて配列を確保する。ノードを追加する構造では伸長費用が償却 $O(1)$、既存の操作計算量を維持する。
-領域は使用ノード数に比例し、木の距離索引など既存の段別領域は上記と同じ漸近量。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+- `0 <= vertex_count` が必要で、固定長版では `vertex_count <= MAX_SIZE` かつ `MAX_SIZE > 0` が必要である。
+- `build` 前に、ちょうど 1 本の木になるように辺を入力する。
+- 初期設定用の API（`set_value`, `add_edge`）は `build` 後には呼べず、`build` も 1 回だけ呼べる。
+- クエリと更新は `build` 後に呼ぶ。
+- 値・総和・遅延加算のすべての中間値は `long long` に収まる必要がある。
+- 頂点数・頂点番号の範囲違反では `out_of_range`、呼び出し順の違反では `logic_error`、木でない入力では `runtime_error` を送出する。
+- 容量を指定した固定配列版（`SubtreeAddSumMinimumTree<N>`）と可変長版（`SubtreeAddSumMinimumTree<>`）は同じヘッダで利用できる。

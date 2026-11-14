@@ -31,7 +31,7 @@ void bit_reverse_permute(std::vector<T>& a){
 
 } // namespace fft_internal
 
-void fast_fourier_transform(std::vector<std::complex<double>>& a, bool inverse = false){
+inline void fast_fourier_transform(std::vector<std::complex<double>>& a, bool inverse = false){
     const int n = (int)a.size();
     if(!fft_internal::is_power_of_two(a.size()))[[unlikely]]{
         throw std::runtime_error("library assertion fault: invalid size (fast_fourier_transform).");
@@ -62,7 +62,7 @@ void fast_fourier_transform(std::vector<std::complex<double>>& a, bool inverse =
     }
 }
 
-std::vector<double> convolution_fft(const std::vector<double>& a, const std::vector<double>& b){
+inline std::vector<double> convolution_fft(const std::vector<double>& a, const std::vector<double>& b){
     if(a.empty() || b.empty()){
         return {};
     }
@@ -94,7 +94,7 @@ std::vector<double> convolution_fft(const std::vector<double>& a, const std::vec
     return res;
 }
 
-std::vector<long long> convolution_ll(const std::vector<long long>& a, const std::vector<long long>& b){
+inline std::vector<long long> convolution_ll(const std::vector<long long>& a, const std::vector<long long>& b){
     std::vector<double> da(a.begin(), a.end());
     std::vector<double> db(b.begin(), b.end());
     auto c = convolution_fft(da, db);

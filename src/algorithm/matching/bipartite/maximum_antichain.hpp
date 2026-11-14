@@ -1,6 +1,7 @@
 #ifndef CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_MAXIMUM_ANTICHAIN_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_MATCHING_BIPARTITE_MAXIMUM_ANTICHAIN_HPP_INCLUDED
 
+#include <bit>
 #include <cstddef>
 #include <cstdint>
 #include <queue>
@@ -47,10 +48,13 @@ inline MaximumAntichainResult maximum_antichain(
     BipartiteMatching matching(vertex_count, vertex_count);
     for(int left = 0; left < vertex_count; ++left){
         const auto& row = reachable[static_cast<std::size_t>(left)];
-        for(int right = 0; right < vertex_count; ++right){
-            if(((row[static_cast<std::size_t>(right) >> 6U]
-                >> (static_cast<unsigned>(right) & 63U)) & 1U) != 0){
-                matching.add_edge(left, right);
+        // Enumerate only the set bits, in increasing order of right.
+        for(std::size_t word = 0; word < word_count; ++word){
+            for(std::uint64_t rest = row[word]; rest != 0; rest &= rest - 1){
+                matching.add_edge(left, static_cast<int>(
+                    (word << 6U)
+                    + static_cast<std::size_t>(std::countr_zero(rest))
+                ));
             }
         }
     }

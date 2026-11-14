@@ -251,7 +251,7 @@ inline std::vector<int> sa_is(const std::vector<int>& sequence, int upper){
 
 } // namespace suffix_array_internal
 
-std::vector<int> suffix_array(const std::string& s){
+inline std::vector<int> suffix_array(const std::string& s){
     const int n = (int)s.size();
     if(n == 0){
         return {};
@@ -291,7 +291,7 @@ std::vector<int> suffix_array(const std::vector<T>& s){
     for(int i = 0; i < n; i++){
         rank[i] = (int)(std::lower_bound(values.begin(), values.end(), s[i]) - values.begin());
     }
-    return suffix_array_internal::build_from_ranks(std::move(rank), (int)values.size());
+    return suffix_array_internal::sa_is(rank, (int)values.size() - 1);
 }
 
 template<class Sequence>

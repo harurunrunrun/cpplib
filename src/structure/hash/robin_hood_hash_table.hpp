@@ -3,6 +3,7 @@
 
 #include <bit>
 #include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <optional>
 #include <stdexcept>
@@ -23,6 +24,18 @@ class RobinHoodHashTable {
     Equal equal_;
 
     [[nodiscard]] std::size_t mask() const { return table_.size() - 1; }
+    // std::hash<整数> が恒等写像でも下位ビットが偏らないよう SplitMix64 で混ぜてから mask する
+    static std::uint64_t mix(std::uint64_t value) {
+        value += 0x9e3779b97f4a7c15ULL;
+        value = (value ^ (value >> 30)) * 0xbf58476d1ce4e5b9ULL;
+        value = (value ^ (value >> 27)) * 0x94d049bb133111ebULL;
+        return value ^ (value >> 31);
+    }
+    std::size_t bucket(const Key& key) {
+        return static_cast<std::size_t>(
+            mix(static_cast<std::uint64_t>(hash_(key)))
+        ) & mask();
+    }
     void rehash(std::size_t capacity) {
         capacity = std::max<std::size_t>(8, std::bit_ceil(capacity));
         auto old = std::move(table_);
@@ -39,7 +52,7 @@ class RobinHoodHashTable {
         if (table_.empty() || (size_ + 1) * 10 > table_.size() * 8) {
             rehash(table_.empty() ? 8 : table_.size() * 2);
         }
-        std::size_t index = hash_(key) & mask();
+        std::size_t index = bucket(key);
         Entry incoming{
             std::forward<K>(key), std::forward<V>(value), 0
         };
@@ -75,7 +88,7 @@ public:
     }
     Value* find(const Key& key) {
         if (table_.empty()) return nullptr;
-        std::size_t index = hash_(key) & mask();
+        std::size_t index = bucket(key);
         std::size_t distance = 0;
         while (table_[index] && table_[index]->distance >= distance) {
             if (equal_(table_[index]->key, key)) return &table_[index]->value;
@@ -101,7 +114,7 @@ public:
         return *result;
     }
     bool erase(const Key& key) {
-        std::size_t index = hash_(key) & mask();
+        std::size_t index = bucket(key);
         std::size_t distance = 0;
         while (table_[index] && table_[index]->distance >= distance) {
             if (equal_(table_[index]->key, key)) {

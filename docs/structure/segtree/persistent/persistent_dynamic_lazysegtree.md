@@ -3,50 +3,60 @@ title: Persistent Dynamic Lazy Segment Tree (完全永続動的遅延セグメ�
 documentation_of: ../../../../src/structure/segtree/persistent/persistent_dynamic_lazysegtree.hpp
 ---
 
-巨大な添字範囲を扱う完全永続遅延セグメント木。
+巨大な添字範囲を扱う完全永続遅延セグメント木。更新ごとに必要なノードを複製し、任意の version から分岐できる。
 
 ```cpp
-PersistentDynamicLazySegtree<MonoidActLen, MAX_SIZE, MAX_NODES, MAX_VERSIONS>
+PersistentDynamicLazySegtree<Monoid, MAX_SIZE, MAX_NODES, MAX_VERSIONS>
 ```
 
-`MAX_NODES`は全versionで共有するノード数、`MAX_VERSIONS`はversion 0を除くversion数の上限。
+`Monoid` は区間長付きの作用モノイド（`MonoidActLen` 等）のオブジェクトである。
+
+- `MAX_SIZE`: 添字範囲の長さの上限
+- `MAX_NODES`: 全 version で共有するノード数の上限
+- `MAX_VERSIONS`: version 0 を除く version 数の上限
+
+容量（3 つのテンプレート引数）をすべて省略すると可変長版になり、`PersistentDynamicLazySegtree<Monoid> tree(n);` のように長さを実行時に与える。ノードと version は使用量に応じて `std::vector` を拡張する。
+
+## API
 
 ```cpp
+explicit PersistentDynamicLazySegtree(long long n = MAX_SIZE)  // 可変長版の既定値は 0
 int set(int version, long long index, S value)
 int apply(int version, long long index, T action)
 int apply(int version, long long l, long long r, T action)
 int fork(int version)
-S get(int version, long long index)
-S prod(int version, long long l, long long r)
-S all_prod(int version)
-long long max_right(int version, long long l, F f)
-long long min_left(int version, long long r, F f)
+S get(int version, long long index) const
+S prod(int version, long long l, long long r) const
+S all_prod(int version) const
+long long max_right(int version, long long l, F f, Args... args) const
+long long min_left(int version, long long r, F f, Args... args) const
+long long size() const
+int versions() const
+int latest_version() const
+int nodes_used() const
 ```
 
-更新は指定versionから分岐し、新しいversion番号を返す。
+- コンストラクタ: 長さ $n$（$0 \le n \le \texttt{MAX_SIZE}$）の範囲を全要素 `e()` として version 0 を作る。
+- `set`, `apply`, `fork`: 指定 version から分岐した新しい version を作り、その番号を返す。空区間への `apply` は `fork` と同じである。
+- `get`, `prod`, `all_prod`, `max_right`, `min_left`: 指定 version を参照する。述語は追加引数 `args...` を受け取れる。
 
 ## 時間計算量
 
-- constructor: $O(\mathtt{MAX\_NODES}+\mathtt{MAX\_VERSIONS})$
-- `set`, 1点`apply`, 区間`apply`, `get`, `prod`: $O(\log \mathtt{MAX\_SIZE})$
-- `max_right`, `min_left`: $O(\log \mathtt{MAX\_SIZE})$
+$N = \texttt{MAX_SIZE}$（可変長版では $n$）とする。
+
+- コンストラクタ: 固定容量版は $O(\texttt{MAX_NODES}+\texttt{MAX_VERSIONS})$
+- `set`, 1 点 `apply`, 区間 `apply`, `get`, `prod`: $O(\log N)$
+- `max_right`, `min_left`: $O(\log N)$
 - `fork`, `all_prod`, `size`, `versions`, `latest_version`, `nodes_used`: $O(1)$
 
-各更新が複製するノード数は $O(\log \mathtt{MAX\_SIZE})$。
+各更新で複製するノード数は $O(\log N)$ である。
 
 ## 注意点
 
-version 0が初期状態で、`0 <= version < versions()` のversionだけを参照できる。
-更新と `fork` は指定versionを変更せず、新しいversion番号を返す。`latest_version()` は
-`versions()-1`。点は実際の列内、区間は半開区間 `[l,r)` で指定する。
-境界探索を持つ型ではpredicateは単調かつ単位元に対してtrueでなければならない。
-
-不正なversion・点・区間・predicate、version/node容量超過では `runtime_error`。
-容量不足で更新が失敗した場合、version数と使用node数は更新前へ戻る。
-各APIの計算量は上記表の通り。
-
-## 容量を省略する場合
-
-容量引数の既定値は `-1`。`PersistentDynamicLazySegtree<Monoid> tree(n);` のように容量を省略すると、同じヘッダ内の可変長版を使用する。既存の非負容量を指定する固定配列版も利用できる。 モノイド・係数型・剰余の数・分岐数など、容量以外のテンプレート引数は引き続き指定する。
-
-木の幅・高さは実行時の入力から求め、通常の密な木は要素数に比例する記憶領域を確保する。疎な木のノード、永続版の版情報、更新・rollbackの履歴は使用量に応じてvectorを拡張する。固定配列版と同じ更新・照会アルゴリズムを用い、拡張に伴う再配置は償却計算量に含める。整数添字の表現範囲と実メモリ容量は上限となる。
+- version 0 が初期状態で、`0 <= version < versions()` の version だけを参照できる。
+- 更新と `fork` は指定した version を変更せず、新しい version 番号を返す。`latest_version()` は `versions() - 1` である。
+- 点は実際の範囲内、区間は半開区間 $[l, r)$ で指定する。
+- 境界探索の述語は単調で、単位元に対して `true` を返す必要がある。
+- 不正な version・点・区間、述語が単位元で `false`、version・ノードの容量超過では `std::runtime_error` を送出する。
+- 容量不足で更新が失敗した場合、version 数と使用ノード数は更新前に戻る。
+- コピーコンストラクタとコピー代入は削除されている。

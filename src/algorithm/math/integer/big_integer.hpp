@@ -4,12 +4,14 @@
 #include <compare>
 #include <concepts>
 #include <cstddef>
+#include <cstdint>
 #include <istream>
 #include <ostream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 #include "exact_integer.hpp"
 
@@ -30,16 +32,65 @@ private:
         if(position == text.size()){
             throw std::invalid_argument("BigInteger literal has no digits");
         }
-        ExactInteger result = 0;
-        for(; position < text.size(); ++position){
-            const char character = text[position];
+        for(std::size_t index = position; index < text.size(); ++index){
+            const char character = text[index];
             if(character < '0' || character > '9'){
                 throw std::invalid_argument("invalid BigInteger decimal digit");
             }
-            result *= 10;
-            result += character - '0';
         }
+        ExactInteger result = parse_digits(text.substr(position));
         return negative ? -result : result;
+    }
+
+    static constexpr std::size_t chunk_digits = 18;
+    static constexpr std::size_t base_case_digits = chunk_digits * 32;
+
+    // digits consists of '0'..'9' only.  Reads chunk_digits digits per multiplication.
+    static ExactInteger parse_digits_simple(std::string_view digits){
+        ExactInteger result = 0;
+        std::size_t position = 0;
+        std::size_t length = digits.size() % chunk_digits;
+        if(length == 0) length = chunk_digits;
+        while(position < digits.size()){
+            std::uint64_t chunk = 0;
+            std::uint64_t scale = 1;
+            for(std::size_t index = 0; index < length; ++index){
+                chunk = chunk * 10 + static_cast<std::uint64_t>(digits[position + index] - '0');
+                scale *= 10;
+            }
+            if(!result.is_zero()) result *= scale;
+            result += chunk;
+            position += length;
+            length = chunk_digits;
+        }
+        return result;
+    }
+
+    // powers[k] = 10^(base_case_digits * 2^k).
+    static ExactInteger parse_digits_recursive(
+        std::string_view digits,
+        const std::vector<ExactInteger>& powers
+    ){
+        if(digits.size() <= base_case_digits) return parse_digits_simple(digits);
+        std::size_t level = 0;
+        while((base_case_digits << (level + 1)) < digits.size()) ++level;
+        const std::size_t low_size = base_case_digits << level;
+        ExactInteger result = parse_digits_recursive(
+            digits.substr(0, digits.size() - low_size), powers
+        );
+        result *= powers[level];
+        result += parse_digits_recursive(digits.substr(digits.size() - low_size), powers);
+        return result;
+    }
+
+    static ExactInteger parse_digits(std::string_view digits){
+        if(digits.size() <= base_case_digits) return parse_digits_simple(digits);
+        std::vector<ExactInteger> powers;
+        powers.push_back(parse_digits_simple("1" + std::string(base_case_digits, '0')));
+        while((base_case_digits << powers.size()) < digits.size()){
+            powers.push_back(powers.back() * powers.back());
+        }
+        return parse_digits_recursive(digits, powers);
     }
 
 public:
@@ -103,19 +154,34 @@ public:
         ExactInteger remainder = dividend.value_.absolute();
         ExactInteger positive_divisor = divisor.value_.absolute();
         ExactInteger quotient = 0;
-        if(remainder >= positive_divisor){
-            const std::size_t shift =
-                remainder.bit_length() - positive_divisor.bit_length();
-            ExactInteger shifted_divisor = positive_divisor << shift;
-            ExactInteger quotient_bit = ExactInteger(1) << shift;
-            while(true){
-                if(remainder >= shifted_divisor){
-                    remainder -= shifted_divisor;
-                    quotient += quotient_bit;
-                }
-                if(quotient_bit == 1) break;
-                shifted_divisor >>= 1;
-                quotient_bit >>= 1;
+        const std::size_t divisor_bits = positive_divisor.bit_length();
+        if(remainder < positive_divisor){
+        }else if(divisor_bits <= 64){
+            auto [magnitude_quotient, magnitude_remainder] =
+                remainder.divmod(positive_divisor.checked_to<std::uint64_t>());
+            quotient = std::move(magnitude_quotient);
+            remainder = magnitude_remainder;
+        }else{
+            // Long division producing about 31 quotient bits per step.  The top 32 bits of
+            // the divisor, rounded up, give an underestimate of each quotient digit.
+            const std::size_t divisor_shift = divisor_bits - 32;
+            const std::uint64_t divisor_top =
+                (positive_divisor >> divisor_shift).checked_to<std::uint64_t>() + 1;
+            while(remainder >= positive_divisor){
+                const std::size_t remainder_bits = remainder.bit_length();
+                const std::size_t shift = remainder_bits - divisor_shift > 64
+                    ? remainder_bits - divisor_shift - 64 : 0;
+                const std::uint64_t remainder_top =
+                    (remainder >> (divisor_shift + shift)).checked_to<std::uint64_t>();
+                std::uint64_t digit = remainder_top / divisor_top;
+                if(digit == 0) digit = 1;
+                ExactInteger product = positive_divisor;
+                product *= digit;
+                product <<= shift;
+                remainder -= product;
+                ExactInteger quotient_digit(digit);
+                quotient_digit <<= shift;
+                quotient += quotient_digit;
             }
         }
         if(dividend.is_negative() != divisor.is_negative()) quotient = -quotient;

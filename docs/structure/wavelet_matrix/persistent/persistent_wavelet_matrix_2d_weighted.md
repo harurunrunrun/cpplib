@@ -3,56 +3,68 @@ title: Persistent Weighted Wavelet Matrix 2D (完全永続二次元重み付き�
 documentation_of: ../../../../src/structure/wavelet_matrix/persistent/persistent_wavelet_matrix_2d_weighted.hpp
 ---
 
-入力順の点idとx座標を固定し、y座標と重みを任意versionから更新できる完全永続二次元Wavelet Matrix。
-x順に並べた点列を永続重み付きWavelet Matrixで管理する。
+入力順の点 ID と $x$ 座標を固定し、$y$ 座標と重みを任意の版から更新できる完全永続の重み付き二次元ウェーブレット行列。$x$ 座標順に並べた点列を `PersistentWeightedWaveletMatrix` で管理する。
 
-## API
+## テンプレート引数
 
 ```cpp
-PersistentWaveletMatrix2DWeighted<X,Y,W,MAX_SIZE,MAX_VERSION,Y_BIT_WIDTH> wm(xs, ys, weights)
-X x = wm.x(k)
-Y y = wm.y(version, k)
-W weight = wm.weight(version, k)
-int version2 = wm.set(version, k, y, weight)
-int version2 = wm.set_y(version, k, y)
-int version2 = wm.set_weight(version, k, weight)
-int version2 = wm.fork(version)
-int count = wm.rectangle_count(version, xl, xr, yl, yr)
-W total = wm.rectangle_sum(version, xl, xr, yl, yr)
+PersistentWaveletMatrix2DWeighted<X, Y, W, MAX_SIZE = -1, MAX_VERSION = -1, Y_BIT_WIDTH = (Y の bit 数)>
 ```
 
-`range_freq` は `rectangle_count`、`range_sum` は `rectangle_sum` と同じ。
-コンストラクタは3本のvectorまたは `tuple<X,Y,W>` のvectorも受け取る。
-矩形は $[x_l,x_r)\times[y_l,y_r)$。
+- `X`, `Y`: 整数型
+- `W`: 重みの型。`W{}` を零元として加算・減算が必要
+- `MAX_SIZE`: 点数の上限
+- `MAX_VERSION`: 版 0 の後に作成できる版の数の上限
+- `Y_BIT_WIDTH`: $y$ 座標を表す bit 数。省略時は `Y` の bit 数。符号付きの `Y` では省略しなければならない。
 
-## 時間計算量
-
-$D=\mathtt{Y\_BIT\_WIDTH}$、$H=O(\log(N+1))$。
-
-- 構築: $O(\mathtt{MAX\_SIZE}+N\log N+DN)$
-- `size/versions/latest_version/x`: $O(1)$
-- `weight`: $O(H)$、`y`: $O(DH)$、`fork`: $O(D)$
-- `set/set_y/set_weight`: $O(DH)$
-- 矩形count/sumと別名: $O(\log N+DH)$
-
-更新1回の追加メモリは $O(DH)$。平方分割は使用しない。
-
-## 注意点
-
-同じxの点も入力idで区別する。copyは禁止、moveは可能。
-不正なversion・点・矩形、入力長不一致、yのbit幅、容量では `runtime_error`。
-失敗した更新はversion数と全bit段のnode使用量を戻す。
-
-## 容量を省略した可変長版
-
-容量のテンプレート引数 `MAX_SIZE`, `MAX_VERSION` は省略でき、既定値 `-1` ではvectorを使う。
-容量を指定した既存の固定配列版も同じヘッダで利用できる。
+`MAX_SIZE` と `MAX_VERSION` は省略（`-1`）すると上限なしになる。内部の永続ウェーブレット行列は必要に応じて伸長するが、`MAX_SIZE` を指定すると $x$ 座標と添字の対応表に $O(\texttt{MAX_SIZE})$ の固定長配列を確保する。
 
 ```cpp
 using Variable = PersistentWaveletMatrix2DWeighted<X, Y, W>;
 using Fixed = PersistentWaveletMatrix2DWeighted<X, Y, W, N, Versions>;
 ```
 
-可変長版は必要なノード・版・履歴を明示的に追加し、保存要素数を $K$ として追加領域は $O(K)$。
-再確保の費用は追加操作全体で償却され、上記各操作の計算量を維持する。
-整数添字の表現上限は残り、不正な添字や上限超過は検証する。
+## API
+
+```cpp
+PersistentWaveletMatrix2DWeighted()
+PersistentWaveletMatrix2DWeighted(const vector<X>& xs, const vector<Y>& ys, const vector<W>& weights)
+explicit PersistentWaveletMatrix2DWeighted(const vector<tuple<X, Y, W>>& points)
+int size() const
+int versions() const
+int latest_version() const
+X x(int k) const
+Y y(int version, int k) const
+W weight(int version, int k) const
+int set(int version, int k, Y y, W weight)
+int set_y(int version, int k, Y y)
+int set_weight(int version, int k, W weight)
+int fork(int version)
+int rectangle_count(int version, X xl, X xr, Y yl, Y yr) const
+W rectangle_sum(int version, X xl, X xr, Y yl, Y yr) const
+int range_freq(int version, X xl, X xr, Y yl, Y yr) const
+W range_sum(int version, X xl, X xr, Y yl, Y yr) const
+```
+
+- コンストラクタ: 3 本の列、または `tuple<X, Y, W>` の列の `k` 番目を点 ID `k` として版 0 を構築する。
+- `x` / `y` / `weight`: 点 `k` の $x$ 座標（全版で不変）/ 版 `version` での $y$ 座標 / 重みを返す。
+- `set` / `set_y` / `set_weight`: 版 `version` をもとに点 `k` の $y$ 座標と重み / $y$ 座標だけ / 重みだけを更新した新しい版を作り、その番号を返す。`fork` は指定した版と同じ内容の新しい版を作る。
+- `rectangle_count` / `rectangle_sum`: 版 `version` で半開矩形 $[\mathit{xl}, \mathit{xr}) \times [\mathit{yl}, \mathit{yr})$ に含まれる点の個数 / 重みの総和を返す。`range_freq` / `range_sum` はそれぞれの別名である。
+
+## 時間計算量
+
+$N$ を点数、$D = \texttt{Y_BIT_WIDTH}$、$H = O(\log(N + 1))$ とする。
+
+- 構築: $O(N \log N + DN)$（固定長版では配列の初期化に $O(\texttt{MAX_SIZE})$ が加わる）
+- `size`, `versions`, `latest_version`, `x`: $O(1)$
+- `weight`: $O(H)$、`y`: $O(DH)$、`fork`: $O(D)$
+- `set`, `set_y`, `set_weight`: $O(DH)$
+- 矩形の個数・総和とその別名: $O(\log N + DH)$
+
+更新 1 回あたりの追加メモリは $O(DH)$ である。
+
+## 注意点
+
+- 同じ $x$ 座標の点も入力時の ID で区別する。
+- 不正な版・点・矩形、入力列の長さの不一致、`Y_BIT_WIDTH` bit に収まらない $y$ 座標、容量超過では `std::runtime_error` を送出する。失敗した更新は、版の数と全 bit 段のノード使用量を元に戻す。
+- コピーは禁止、ムーブは可能。

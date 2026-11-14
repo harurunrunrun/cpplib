@@ -3,7 +3,7 @@ title: Big Integer (多倍長整数)
 documentation_of: ../../../../src/algorithm/math/integer/big_integer.hpp
 ---
 
-符号付き多倍長整数。`ExactInteger` の加減算・乗算・シフトを利用し、10 進文字列の入出力と多倍長整数同士の除算・剰余を加えた型である。除算は 2 進の筆算（long division）で、C++ の整数除算と同じく 0 方向へ丸める。
+符号付き多倍長整数。`ExactInteger` の加減算・乗算・シフトを利用し、10 進文字列の入出力と多倍長整数同士の除算・剰余を加えた型である。除算は筆算（long division）で、C++ の整数除算と同じく 0 方向へ丸める。
 
 以下、値の bit 長を $B$、32 bit limb の個数を $L$（$L \approx B/32$）、10 進桁数を $D$ とする。乗算の計算量 $M(L)$ は `ExactInteger` と同じで、長さに応じて筆算・Karatsuba 法・Toom-Cook-3 法・NTT を切り替え、NTT の対応範囲では $O(L \log L)$ である。
 
@@ -21,7 +21,7 @@ BigInteger& assign(std::string_view decimal)
 組み込み整数、`ExactInteger`、または符号付き 10 進文字列から作る。文字列は先頭の `+` / `-` を許す。空文字列、符号だけの文字列、10 進数字以外を含む文字列では `invalid_argument` を送出する。
 
 - 整数からの構築: $O(1)$
-- $D$ 桁の文字列からの構築・代入: $O(D^2)$（1 桁ずつ 10 倍して加える）
+- $D$ 桁の文字列からの構築・代入: $O(M(L) \log L)$（576 桁以下は 18 桁ずつ $10^{18}$ 倍して加える筆算、それより長い文字列は上位と下位に分割して `上位` $\times 10^k +$ `下位` で結合する分割統治）
 - 空間計算量: $O(B)$
 
 ## 状態取得
@@ -66,7 +66,7 @@ BigInteger& operator%=(const BigInteger&)
 
 - 加減算: $O(L)$
 - 乗算: $O(M(L))$
-- 除算・剰余: $O(BL)$（被除数と除数の bit 長の差を $s$ として、$s + 1$ 回の比較・減算・シフト）
+- 除算・剰余: $O(L (s/32 + 1))$（被除数と除数の bit 長の差を $s$ とする。除数が 64 bit 以下なら `ExactInteger::divmod` で $O(L)$、それ以外は除数の上位 32 bit から商を 1 回あたり約 31 bit ずつ下から見積もる筆算）
 - 空間計算量: $O(L)$
 
 ## `divmod`
@@ -80,7 +80,7 @@ static std::pair<BigInteger, BigInteger> divmod(
 
 商と余りを 1 回の筆算で返す。除数が 0 なら `domain_error` を送出する。
 
-- 時間計算量: $O(BL)$
+- 時間計算量: $O(L (s/32 + 1))$（$s$ は被除数と除数の bit 長の差）
 - 追加空間計算量: $O(L)$
 
 ## シフト・単項演算・増減
@@ -113,9 +113,9 @@ std::istream& operator>>(std::istream&, BigInteger&)
 通常の符号付き整数の順序で比較する。入力で空白区切りのトークンが不正な 10 進文字列なら、ストリームに `failbit` を設定し、代入先は変更しない。
 
 - 比較: $O(L)$
-- 入力: $O(D^2)$
+- 入力: $O(M(L) \log L)$
 - 出力: `to_string` と同じ
 
 ## 注意点
 
-保存領域は値の bit 長に比例する。除算は Newton 法や Half-GCD などの高速な手法を使わない 2 進の筆算なので、巨大な数同士の除算は遅い（高速な除算が必要なら `FastBigInteger` を参照）。
+保存領域は値の bit 長に比例する。除算は Newton 法や Half-GCD などの高速な手法を使わない筆算（$O(L^2)$）なので、巨大な数同士の除算は遅い（高速な除算が必要なら `FastBigInteger` を参照）。

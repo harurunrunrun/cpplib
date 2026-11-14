@@ -39,5 +39,5 @@ std::uint64_t value(int n) const;
 
 ## 注意点
 
-- `limit >= 1` が必要で、`limit == 0` では `std::invalid_argument` を送出する（負の値は表の確保の時点で失敗する）。
+- `limit >= 1` が必要で、`limit <= 0`（負の値を含む）では表を確保する前に `std::invalid_argument` を送出する。
 - `value` は $1 \le n \le \mathrm{limit}$ が必要で、範囲外では `std::out_of_range` を送出する。

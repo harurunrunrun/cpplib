@@ -39,6 +39,6 @@ KLLSketch<int, 128> fixed(123);      // 容量をテンプレート引数で固�
 ## 注意点
 
 - 圧縮時の偶奇選択が独立なら、順位の誤差は典型的に $O(N/\sqrt{K})$、相対誤差 $\varepsilon$ を超える確率は $e^{-\Theta(K\varepsilon^2)}$ である。
-- 最上位レベルからさらに昇格が必要になると `std::overflow_error` を投げる。$N$ が 64 bit を超えた場合も同様。
+- `add` で最上位レベルからさらに昇格が必要になる場合は、状態を変更せずに `std::overflow_error` を投げる（強い例外保証）。$N$ が 64 bit を超えた場合も同様。
 - 空のスケッチへの `quantile` は `std::logic_error`、`probability` が $[0,1]$ の外なら `std::out_of_range` を投げる。
 - $K$ は 2 以上の偶数、$L$ は 1 以上 63 以下でなければならない。固定長版は `static_assert`、可変長版は `std::invalid_argument` で検査する。

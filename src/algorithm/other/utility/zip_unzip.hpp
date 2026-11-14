@@ -1,6 +1,7 @@
 #ifndef CPPLIB_SRC_ALGORITHM_OTHER_UTILITY_ZIP_UNZIP_HPP_INCLUDED
 #define CPPLIB_SRC_ALGORITHM_OTHER_UTILITY_ZIP_UNZIP_HPP_INCLUDED
 
+#include <cstddef>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -21,14 +22,14 @@ std::vector<std::pair<T, int>> run_length_zip(const std::vector<T>& data){
 template<class T>
 std::vector<T> run_length_unzip(const std::vector<std::pair<T, int>>& data){
     std::vector<T> result;
-    int total = 0;
+    std::size_t total = 0;
     for(const auto& [value, count]: data){
         if(count < 0)[[unlikely]]{
             throw std::runtime_error("library assertion fault: negative length (run_length_unzip).");
         }
-        total += count;
+        total += static_cast<std::size_t>(count);
     }
-    result.reserve(static_cast<std::size_t>(total));
+    result.reserve(total);
     for(const auto& [value, count]: data){
         for(int i = 0; i < count; i++){
             result.push_back(value);

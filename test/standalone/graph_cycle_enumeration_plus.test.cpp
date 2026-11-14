@@ -28,6 +28,17 @@ void print_sets(const std::vector<std::vector<int>>& sets){
 int main(){
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
+    {
+        // A single long cycle must not overflow the call stack.
+        const int length = 1000000;
+        std::vector<std::vector<int>> cycle(static_cast<std::size_t>(length));
+        for(int vertex = 0; vertex < length; ++vertex){
+            cycle[static_cast<std::size_t>(vertex)].push_back((vertex + 1) % length);
+        }
+        const auto cycles = enumerate_elementary_cycles(cycle);
+        if(cycles.size() != 1
+            || cycles[0].size() != static_cast<std::size_t>(length)) return 9;
+    }
     int case_count;
     if(!(std::cin >> case_count)) return 1;
     while(case_count-- > 0){

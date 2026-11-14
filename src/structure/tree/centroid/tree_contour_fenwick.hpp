@@ -25,6 +25,14 @@ class TreeContourFenwick{
         T interval(Distance l, Distance r) const{ return prefix(lower(r)) - prefix(lower(l)); }
         void range_add(Distance l, Distance r, const T& x){ add(lower(l), x); add(lower(r), -x); }
         T point(Distance x) const{ return prefix(std::upper_bound(coordinates.begin(), coordinates.end(), x) - coordinates.begin()); }
+        // bit[p + 1] に各座標の値を直接積んだ後、Fenwick を線形時間で組み立てる
+        void build_fenwick(){
+            const int n = cpplib_detail::checked_int_size(bit.size());
+            for(int i = 1; i < n; ++i){
+                const int j = i + (i & -i);
+                if(j < n) bit[j] += bit[i];
+            }
+        }
     };
     CentroidDistanceIndex<Distance, MAX_SIZE> index;
     std::vector<Bucket> buckets;
@@ -41,7 +49,13 @@ public:
             if(e.branch != -1 && e.centroid != v) buckets[size() + e.branch].coordinates.push_back(e.distance);
         }
         for(auto& b: buckets) b.build();
-        if constexpr(!RangeAdd) for(int v = 0; v < size(); ++v) point_add(v, values[v]);
+        if constexpr(!RangeAdd){
+            for(int v = 0; v < size(); ++v) for(const auto& e: index.entries(v)){
+                auto& a = buckets[e.centroid]; a.bit[a.lower(e.distance) + 1] += values[v];
+                if(e.branch != -1 && e.centroid != v){ auto& b = buckets[size() + e.branch]; b.bit[b.lower(e.distance) + 1] += values[v]; }
+            }
+            for(auto& b: buckets) b.build_fenwick();
+        }
     }
     int size() const{ return index.size(); }
     void point_add(int v, const T& x) requires(!RangeAdd){

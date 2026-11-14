@@ -5,6 +5,38 @@
 #include <stdexcept>
 #include <vector>
 
+namespace combinatorics_internal{
+
+template<class Mint>
+Mint power(Mint base, int exponent){
+    Mint result(1);
+    while(exponent > 0){
+        if(exponent & 1) result *= base;
+        base *= base;
+        exponent >>= 1;
+    }
+    return result;
+}
+
+// B_n = sum_{i=0}^{n} (i^n / i!) sum_{j=0}^{n-i} (-1)^j / j!, using inv_fact[0..n].
+template<class Mint, class Table>
+Mint bell_number(int n, const Table& inv_fact){
+    std::vector<Mint> alternating(static_cast<std::size_t>(n) + 1);
+    Mint sum(0);
+    for(int j = 0; j <= n; j++){
+        if(j & 1) sum -= inv_fact[j];
+        else sum += inv_fact[j];
+        alternating[j] = sum;
+    }
+    Mint res(0);
+    for(int i = 0; i <= n; i++){
+        res += power(Mint(i), n) * inv_fact[i] * alternating[n - i];
+    }
+    return res;
+}
+
+} // namespace combinatorics_internal
+
 template<class Mint, int MAX_N = -1>
 struct Combinatorics{
     static_assert(MAX_N >= 0);
@@ -86,19 +118,7 @@ struct Combinatorics{
         if(n < 0 || MAX_N < n)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (bell_number).");
         }
-        std::array<Mint, MAX_N + 1> dp{};
-        dp[0] = Mint(1);
-        for(int i = 0; i < n; i++){
-            for(int k = i + 1; k >= 1; k--){
-                dp[k] = dp[k - 1] + dp[k] * Mint(k);
-            }
-            dp[0] = Mint(0);
-        }
-        Mint res = 0;
-        for(int k = 0; k <= n; k++){
-            res += dp[k];
-        }
-        return res;
+        return combinatorics_internal::bell_number<Mint>(n, inv_fact);
     }
 };
 
@@ -187,19 +207,7 @@ struct Combinatorics<Mint, -1>{
         if(n < 0 || maximum_ < n)[[unlikely]]{
             throw std::runtime_error("library assertion fault: range violation (bell_number).");
         }
-        std::vector<Mint> dp(static_cast<std::size_t>(n) + 1);
-        dp[0] = Mint(1);
-        for(int i = 0; i < n; i++){
-            for(int k = i + 1; k >= 1; k--){
-                dp[k] = dp[k - 1] + dp[k] * Mint(k);
-            }
-            dp[0] = Mint(0);
-        }
-        Mint res = 0;
-        for(int k = 0; k <= n; k++){
-            res += dp[k];
-        }
-        return res;
+        return combinatorics_internal::bell_number<Mint>(n, inv_fact);
     }
 };
 

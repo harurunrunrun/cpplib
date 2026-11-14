@@ -24,6 +24,23 @@ int main(){
         const auto shared = circle_arrangement(coaxial);
         assert(shared.vertices.size() == 2);
         assert(shared.arcs.size() == 2 * coaxial.size());
+        {
+            // Two extra circles cross at (1, -9), whose x lies between the
+            // rounded copies of the shared point (1, 0) in lexicographic
+            // order. The shared point must remain a single vertex.
+            std::vector<Circle> extended = coaxial;
+            extended.push_back({{0, -10}, std::sqrt(2.0L)});
+            extended.push_back({{2, -10}, std::sqrt(2.0L)});
+            const auto extended_result = circle_arrangement(extended);
+            int near_shared = 0;
+            for(const Point& vertex: extended_result.vertices){
+                if(std::abs(vertex.x - 1) < 1e-9L
+                    && std::abs(vertex.y) < 1e-9L){
+                    ++near_shared;
+                }
+            }
+            assert(near_shared == 1);
+        }
         std::cout << "OK\n";
     }
 }
